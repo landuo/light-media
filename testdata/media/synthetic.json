@@ -1,0 +1,69 @@
+{
+  "evidence": "synthetic",
+  "samples": [
+    {
+      "name": "synthetic-movie",
+      "filename": "合成电影 (2024).mkv",
+      "media_id": "synthetic:movie-1",
+      "nfo": {
+        "kind": "movie",
+        "title": "合成电影 <测试> & 示例",
+        "original_title": "Synthetic Movie",
+        "year": 2024,
+        "plot": "虚构样本，仅验证 XML 与编号契约。",
+        "unique_ids": [{"type":"tmdb","default":true,"value":"900000001"}],
+        "actors": [{"name":"合成演员 & A","role":"测试 <角色>","order":0}]
+      }
+    },
+    {
+      "name": "synthetic-tvshow",
+      "filename": "合成普通剧 S01E02.mkv",
+      "media_id": "synthetic:series-1",
+      "known_episodes": [{"season":1,"episode":2}],
+      "nfo": {
+        "kind": "tvshow",
+        "title": "合成普通剧",
+        "year": 2024,
+        "unique_ids": [{"type":"tmdb","default":true,"value":"900000002"}],
+        "actors": [{"name":"合成演员 B","role":"测试角色","order":0}]
+      }
+    },
+    {
+      "name": "synthetic-episode",
+      "filename": "合成普通剧 S01E02.mkv",
+      "media_id": "synthetic:series-1",
+      "known_episodes": [{"season":1,"episode":2}],
+      "nfo": {
+        "kind": "episode",
+        "title": "合成第二集",
+        "show_title": "合成普通剧",
+        "season": 1,
+        "episode": 2,
+        "aired": "2024-01-02",
+        "unique_ids": [{"type":"tmdb","default":true,"value":"900000003"}],
+        "actors": [{"name":"合成演员 B","role":"测试角色","order":0}]
+      }
+    },
+    {
+      "name": "synthetic-animation-mapping",
+      "filename": "合成国漫 EP101.mkv",
+      "media_id": "synthetic:animation-1",
+      "source": {"site":"synthetic-site","group":"synthetic-group"},
+      "rules": [{
+        "id":"synthetic-offset-101","revision":1,
+        "media_id":"synthetic:animation-1","target_season":2,
+        "from":101,"to":112,"offset":-100,"confirmed":true,
+        "source":{"site":"synthetic-site","group":"synthetic-group","form":"absolute_episode"}
+      }],
+      "known_episodes":[{"season":2,"episode":1}],
+      "nfo": {
+        "kind": "episode",
+        "title": "合成国漫映射样本",
+        "show_title": "合成国漫",
+        "season": 2,
+        "episode": 1,
+        "unique_ids": [{"type":"tmdb","default":true,"value":"900000004"}]
+      }
+    }
+  ]
+}

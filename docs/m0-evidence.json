@@ -1,0 +1,1600 @@
+{
+  "started_date": "2026-10-14",
+  "reported_date": "2026-10-15",
+  "phase": "M0",
+  "status": "core_feasibility_verified_metadata_gate_open",
+  "project": "/Users/accidia/projects/light-media",
+  "readonly_integrations": [
+    {
+      "id": "qbittorrent-0",
+      "kind": "qbittorrent",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "version": "v5.1.2",
+      "protocol": "2.11.4",
+      "requests": 6,
+      "sample_identity": "e11ac03d30a100d65525ad007c4b21b7",
+      "sample_count": 1,
+      "file_count": 1,
+      "path_fields_present": 2,
+      "capabilities": [
+        {
+          "name": "add_stopped",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "pause",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "resume",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "verify",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "relocate_existing",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "move_data",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "remove_keep_data",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "probe",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "list",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "files",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    },
+    {
+      "id": "transmission-1",
+      "kind": "transmission",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "version": "4.1.3 (838877323f)",
+      "protocol": "jsonrpc2",
+      "requests": 5,
+      "sample_identity": "7aeced45990ea693d59961fac25ac439",
+      "sample_count": 1,
+      "file_count": 22,
+      "path_fields_present": 1,
+      "capabilities": [
+        {
+          "name": "add_stopped",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "pause",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "resume",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "verify",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "relocate_existing",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "move_data",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "remove_keep_data",
+          "protocol_known": true,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "probe",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "recent_list",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "files",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    },
+    {
+      "id": "mteam",
+      "kind": "mteam",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "protocol": "mteam_api_candidate",
+      "requests": 2,
+      "sample_count": 10,
+      "file_count": 0,
+      "path_fields_present": 0,
+      "capabilities": [
+        {
+          "name": "resolve_metainfo",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "recent",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "check",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "search_page_shape",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    },
+    {
+      "id": "hhan",
+      "kind": "hhanclub",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "protocol": "hhanclub_html_candidate",
+      "requests": 2,
+      "sample_count": 100,
+      "file_count": 0,
+      "path_fields_present": 0,
+      "capabilities": [
+        {
+          "name": "resolve_metainfo",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "recent",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "check",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "search_page_shape",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    },
+    {
+      "id": "ubits",
+      "kind": "ubits",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "protocol": "nexusphp_candidate",
+      "requests": 2,
+      "sample_count": 100,
+      "file_count": 0,
+      "path_fields_present": 0,
+      "capabilities": [
+        {
+          "name": "resolve_metainfo",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "recent",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "check",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "search_page_shape",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    },
+    {
+      "id": "jiayuan",
+      "kind": "jiayuan",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "protocol": "nexusphp_candidate",
+      "requests": 2,
+      "sample_count": 10,
+      "file_count": 0,
+      "path_fields_present": 0,
+      "capabilities": [
+        {
+          "name": "resolve_metainfo",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "recent",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "check",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "search_page_shape",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    },
+    {
+      "id": "1ptba",
+      "kind": "1ptba",
+      "status": "ok",
+      "stage": "complete",
+      "evidence": "live_request",
+      "protocol": "nexusphp_candidate",
+      "requests": 2,
+      "sample_count": 25,
+      "file_count": 0,
+      "path_fields_present": 0,
+      "capabilities": [
+        {
+          "name": "resolve_metainfo",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "recent",
+          "protocol_known": false,
+          "read_observed": false,
+          "write_verified": false
+        },
+        {
+          "name": "check",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        },
+        {
+          "name": "search_page_shape",
+          "protocol_known": true,
+          "read_observed": true,
+          "write_verified": false
+        }
+      ]
+    }
+  ],
+  "fnos_readonly": {
+    "status": "passed",
+    "frontend": "0.9.8",
+    "backend": "0.8.43",
+    "authenticated": true,
+    "admin": true,
+    "libraries": [
+      {
+        "name": "电视剧",
+        "category": "TV",
+        "directories": [
+          "/vol2/1000/media/电视剧/日韩剧/",
+          "/vol2/1000/media/电视剧/国产剧/",
+          "/vol2/1000/media/电视剧/欧美剧/"
+        ],
+        "samples": [
+          {
+            "type": "TV",
+            "title": "小谢尔顿",
+            "source_id": "tt71728",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "name": "国漫",
+        "category": "Mix",
+        "directories": [
+          "/vol2/1000/media/国漫/"
+        ],
+        "samples": [
+          {
+            "type": "TV",
+            "title": "吞噬星空 第1季",
+            "source_id": "tt101172",
+            "season": 1,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "name": "电影",
+        "category": "Movie",
+        "directories": [
+          "/vol2/1000/media/电影/华语电影/",
+          "/vol2/1000/media/电影/外语电影/"
+        ],
+        "samples": [
+          {
+            "type": "Movie",
+            "title": "小丑2：双重妄想",
+            "source_id": "tm889737",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "name": "动漫",
+        "category": "Mix",
+        "directories": [
+          "/vol2/1000/media/动漫/"
+        ],
+        "samples": [
+          {
+            "type": "TV",
+            "title": "怪奇物语：1985故事集",
+            "source_id": "tt224263",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "name": "动画",
+        "category": "Mix",
+        "directories": [
+          "/vol2/1000/media/电影/动画电影/",
+          "/vol2/1000/media/动画/"
+        ],
+        "samples": [
+          {
+            "type": "Movie",
+            "title": "玩具总动员5",
+            "source_id": "tm1084244",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "name": "纪录片",
+        "category": "Mix",
+        "directories": [
+          "/vol2/1000/media/电视剧/纪录片/"
+        ]
+      },
+      {
+        "name": "迅雷",
+        "category": "Mix",
+        "directories": [
+          "/vol2/@appshare/xunlei/downloads/"
+        ],
+        "samples": [
+          {
+            "type": "Movie",
+            "title": "误杀3",
+            "source_id": "tm1311537",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      }
+    ],
+    "search_samples": [
+      {
+        "query": "夜王",
+        "status": "ok",
+        "samples": [
+          {
+            "type": "Movie",
+            "title": "夜王",
+            "source_id": "tm1602727",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "query": "生活大爆炸",
+        "status": "ok",
+        "samples": [
+          {
+            "type": "TV",
+            "title": "生活大爆炸",
+            "source_id": "tt1418",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "query": "诛仙",
+        "status": "ok",
+        "samples": [
+          {
+            "type": "TV",
+            "title": "诛仙",
+            "source_id": "tt206484",
+            "season": 4,
+            "episode": 0
+          }
+        ]
+      }
+    ],
+    "requests": 14,
+    "write_operations_tested": false,
+    "nfo_import_tested": false,
+    "truncated": false
+  },
+  "existing_nfo": {
+    "evidence": "existing_read_only_nfo",
+    "root": "tvshow",
+    "title": "生活大爆炸",
+    "unique_ids": [
+      {
+        "type": "tmdb",
+        "value": "1418"
+      },
+      {
+        "type": "tvdb",
+        "value": "80379"
+      },
+      {
+        "type": "imdb",
+        "value": "tt0898266"
+      }
+    ],
+    "actor_count": 7
+  },
+  "sqlite_quota": {
+    "schema_version": "m0-nasbench/v1",
+    "status": "passed",
+    "runtime": "single_synthetic_run",
+    "evidence": "single_synthetic_database_run_with_observed_environment",
+    "platform": "linux/amd64",
+    "go_version": "go1.26.2",
+    "gomemlimit": "256MiB",
+    "benchmark": {
+      "status": "passed",
+      "evidence": "synthetic_local_filesystem",
+      "driver": "modernc",
+      "driver_module_version": "v1.60.1",
+      "sqlite_version": "3.53.4",
+      "sqlite_source_id": "2026-07-24 19:02:57 bf7c7f30031888f4e796e429ab3978879485813aaca6f641c7b33e4e09459bcc",
+      "wal_reset_fix_present": true,
+      "go_version": "go1.26.2",
+      "platform": "linux/amd64",
+      "counts": {
+        "claim_attempts": 400,
+        "claims": 101,
+        "files": 50000,
+        "jobs": 101,
+        "metadata": 5000,
+        "paged_reads": 1000,
+        "subscriptions": 200
+      },
+      "pragmas": {
+        "busy_timeout": 5000,
+        "cache_size": -2048,
+        "foreign_keys": 1,
+        "journal_mode": "wal",
+        "synchronous": 2,
+        "wal_autocheckpoint": 1000
+      },
+      "checks": {
+        "claim_and_job_transaction_rollback": "passed",
+        "foreign_key_enforcement": "passed",
+        "reopen_and_expired_job_lease_recovery": "passed",
+        "source_integrity": "passed",
+        "ungraceful_process_exit_recovery": "passed",
+        "unique_reservation_with_contention": "passed",
+        "vacuum_into_snapshot_integrity_and_isolation": "passed"
+      },
+      "timings_ms": {
+        "consistent_backup_verify": 1747.72,
+        "controlled_crash_process": 275.227,
+        "mixed_workload": 10545.659,
+        "paged_read_max": 3.201,
+        "paged_read_p50": 0.091,
+        "paged_read_p95": 0.839,
+        "seed": 17680.008,
+        "total": 31057.481
+      },
+      "memory_after_seed": {
+        "heap_alloc_bytes": 3650608,
+        "heap_inuse_bytes": 4153344,
+        "go_sys_bytes": 12949768,
+        "goroutines": 3
+      },
+      "memory_after_workload": {
+        "heap_alloc_bytes": 2868104,
+        "heap_inuse_bytes": 3407872,
+        "go_sys_bytes": 12949768,
+        "goroutines": 3
+      },
+      "peak_sampled_go_sys_bytes": 12949768,
+      "database_bytes": 8953856,
+      "wal_bytes_before_close": 4474352
+    },
+    "child_usage": {
+      "available": true,
+      "maximum_rss_bytes": 26935296,
+      "scope": "sqlitebench_wait4_maxrss_includes_waited_descendants_max_not_sum"
+    },
+    "cgroup_before": {
+      "cpu.max": {
+        "value": "100000 100000"
+      },
+      "memory.current": {
+        "value": "5861376"
+      },
+      "memory.max": {
+        "value": "536870912"
+      },
+      "memory.peak": {
+        "value": "6889472"
+      }
+    },
+    "cgroup_after": {
+      "cpu.max": {
+        "value": "100000 100000"
+      },
+      "memory.current": {
+        "value": "12574720"
+      },
+      "memory.max": {
+        "value": "536870912"
+      },
+      "memory.peak": {
+        "value": "52736000"
+      }
+    },
+    "wrapper_self_status": {
+      "Threads": {
+        "value": "5"
+      },
+      "VmHWM": {
+        "value": "6668 kB"
+      },
+      "VmRSS": {
+        "value": "6668 kB"
+      },
+      "VmSize": {
+        "value": "1227932 kB"
+      },
+      "scope": {
+        "value": "wrapper_only_not_sqlitebench_or_process_tree"
+      }
+    },
+    "elapsed_ms": 31090.697,
+    "limitations": [
+      "one_synthetic_sqlite_workload_not_production_application_or_idle_memory_acceptance",
+      "cgroup_memory_peak_covers_current_cgroup_members_not_only_sqlitebench",
+      "child_maxrss_is_wait4_maximum_for_the_child_and_waited_descendants_not_summed_process_tree_memory",
+      "wrapper_proc_self_status_is_wrapper_only",
+      "does_not_prove_power_loss_fsync_or_72_hour_stability"
+    ]
+  },
+  "metainfo": {
+    "status": "incomplete",
+    "results": [
+      {
+        "id": "mteam",
+        "kind": "mteam",
+        "evidence": "live_request",
+        "status": "ok",
+        "stage": "complete",
+        "requests": 4,
+        "controlled_redirects": 1,
+        "protected_material_available": true,
+        "summary": {
+          "info_dictionary_valid": true,
+          "raw_info_hash_computed": true,
+          "v1": true,
+          "v2": false,
+          "piece_layers_checked": false,
+          "file_count": 1,
+          "total_bytes": 1581113835,
+          "payload_verified": false
+        }
+      },
+      {
+        "id": "hhan",
+        "kind": "hhanclub",
+        "evidence": "live_request",
+        "status": "ok",
+        "stage": "complete",
+        "requests": 2,
+        "controlled_redirects": 0,
+        "protected_material_available": true,
+        "summary": {
+          "info_dictionary_valid": true,
+          "raw_info_hash_computed": true,
+          "v1": true,
+          "v2": false,
+          "piece_layers_checked": false,
+          "file_count": 6,
+          "total_bytes": 49064060667,
+          "payload_verified": false
+        }
+      },
+      {
+        "id": "ubits",
+        "kind": "ubits",
+        "evidence": "live_request",
+        "status": "ok",
+        "stage": "complete",
+        "requests": 2,
+        "protected_material_available": true,
+        "summary": {
+          "info_dictionary_valid": true,
+          "raw_info_hash_computed": true,
+          "v1": true,
+          "v2": false,
+          "piece_layers_checked": false,
+          "file_count": 1,
+          "total_bytes": 1565188927,
+          "payload_verified": false
+        }
+      },
+      {
+        "id": "jiayuan",
+        "kind": "jiayuan",
+        "evidence": "live_request",
+        "status": "ok",
+        "stage": "complete",
+        "requests": 2,
+        "protected_material_available": true,
+        "summary": {
+          "info_dictionary_valid": true,
+          "raw_info_hash_computed": true,
+          "v1": true,
+          "v2": false,
+          "piece_layers_checked": false,
+          "file_count": 1,
+          "total_bytes": 446872198,
+          "payload_verified": false
+        }
+      },
+      {
+        "id": "1ptba",
+        "kind": "1ptba",
+        "evidence": "live_request",
+        "status": "ok",
+        "stage": "complete",
+        "requests": 2,
+        "protected_material_available": true,
+        "summary": {
+          "info_dictionary_valid": true,
+          "raw_info_hash_computed": true,
+          "v1": true,
+          "v2": false,
+          "piece_layers_checked": false,
+          "file_count": 1,
+          "total_bytes": 1581113835,
+          "payload_verified": false
+        }
+      }
+    ]
+  },
+  "paths": {
+    "date": "2026-10-15",
+    "evidence": "readonly_mount_configuration_and_actual_container_file_probe",
+    "qb_mounts": [
+      {
+        "Type": "bind",
+        "Source": "/vol2/1000/docker/qbittorrent/downloads",
+        "Destination": "/downloads",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/vol2/1000/media/download",
+        "Destination": "/media/download",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "transmission": {
+      "native": true,
+      "download_dir": "/vol2/1000/media/download/电视剧",
+      "incomplete_dir": "/var/apps/transmission/shares/transmission/incomplete",
+      "incomplete_dir_enabled": false
+    },
+    "test_container": {
+      "image": "alpine:3.22",
+      "image_id": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+      "uid": 1000,
+      "gid": 1001,
+      "network": "none",
+      "rootfs_readonly": true,
+      "capabilities_dropped": "ALL",
+      "no_new_privileges": true,
+      "media_mount": {
+        "host": "/vol2/1000/media",
+        "container": "/media",
+        "readwrite": true
+      },
+      "probes": [
+        {
+          "source": "/media/download",
+          "target": "/media/国漫",
+          "result": {
+            "evidence": "actual_filesystem_probe",
+            "status": "passed",
+            "link_succeeded": true,
+            "same_file": true,
+            "source_content_kept": true,
+            "rename_source_kept": true,
+            "unlink_source_kept": true,
+            "cleanup_succeeded": true,
+            "limitations": [
+              "valid_only_for_tested_directories_and_current_mount",
+              "does_not_prove_cross_subvolume_or_other_mount_compatibility",
+              "hardlink_shares_contents_do_not_modify_media_in_place"
+            ]
+          }
+        },
+        {
+          "source": "/media/download/电视剧",
+          "target": "/media/国漫",
+          "result": {
+            "evidence": "actual_filesystem_probe",
+            "status": "passed",
+            "link_succeeded": true,
+            "same_file": true,
+            "source_content_kept": true,
+            "rename_source_kept": true,
+            "unlink_source_kept": true,
+            "cleanup_succeeded": true,
+            "limitations": [
+              "valid_only_for_tested_directories_and_current_mount",
+              "does_not_prove_cross_subvolume_or_other_mount_compatibility",
+              "hardlink_shares_contents_do_not_modify_media_in_place"
+            ]
+          }
+        }
+      ]
+    },
+    "filesystem": {
+      "mount": "/vol2",
+      "fstype": "ext4"
+    },
+    "qb_default_save_path_verified": false,
+    "existing_media_read_or_modified": false
+  },
+  "nfo_experiment": {
+    "observed": {
+      "status": "observed",
+      "action": "observe",
+      "experiment_id": "97f462b1-b27c-4a31-a912-ace48d6380db",
+      "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db",
+      "root": "/vol2/1000/media/light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db",
+      "owned_guid": "039c662bd68f43fda501c2f2f0fd0255",
+      "requests": 23,
+      "baseline_unchanged": true,
+      "items": [
+        {
+          "children_count": 1,
+          "detail_keys": [
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "backdrops",
+            "can_play",
+            "duration",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "posters",
+            "release_date",
+            "season_number",
+            "title",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "guid": "5bc8d0aede574f2cbf90387056400a20",
+          "image_bytes_verified": false,
+          "image_fields": {
+            "backdrops": {
+              "kind": "string",
+              "present": true
+            },
+            "posters": {
+              "kind": "string",
+              "present": true
+            }
+          },
+          "local_number_of_episodes": 1,
+          "local_number_of_seasons": 1,
+          "number_of_episodes": 0,
+          "parent_guid": "039c662bd68f43fda501c2f2f0fd0255",
+          "persons": [],
+          "persons_status": "observed",
+          "release_date": "2024-01-01",
+          "season_number": 0,
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成国漫",
+          "tree_depth": 0,
+          "trim_id": "",
+          "tv_title": "",
+          "type": "TV",
+          "vote_average": "0"
+        },
+        {
+          "children_count": 1,
+          "detail_keys": [
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "backdrops",
+            "can_play",
+            "duration",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "posters",
+            "release_date",
+            "season_number",
+            "title",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "guid": "a4872ab603354ab6a9c78bf40a17b2ac",
+          "image_bytes_verified": false,
+          "image_fields": {
+            "backdrops": {
+              "kind": "string",
+              "present": true
+            },
+            "posters": {
+              "kind": "string",
+              "present": true
+            }
+          },
+          "local_number_of_episodes": 1,
+          "local_number_of_seasons": 1,
+          "number_of_episodes": 0,
+          "parent_guid": "039c662bd68f43fda501c2f2f0fd0255",
+          "persons": [],
+          "persons_status": "observed",
+          "release_date": "2024-01-01",
+          "season_number": 0,
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成普通剧",
+          "tree_depth": 0,
+          "trim_id": "",
+          "tv_title": "",
+          "type": "TV",
+          "vote_average": "0"
+        },
+        {
+          "air_date": "2024-01-01",
+          "detail_keys": [
+            "air_date",
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "backdrops",
+            "can_play",
+            "duration",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "original_title",
+            "overview",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "posters",
+            "release_date",
+            "season_number",
+            "title",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "guid": "8a9c60a818344ec38a7876d8e7066bfd",
+          "image_bytes_verified": false,
+          "image_fields": {
+            "backdrops": {
+              "kind": "string",
+              "present": true
+            },
+            "posters": {
+              "kind": "string",
+              "present": true
+            }
+          },
+          "local_number_of_episodes": 0,
+          "local_number_of_seasons": 0,
+          "number_of_episodes": 0,
+          "original_title": "M0 Synthetic Movie",
+          "overview": "M0 隔离合成样本，不是真实影视条目。",
+          "parent_guid": "039c662bd68f43fda501c2f2f0fd0255",
+          "persons": [
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "order": 1,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "person_guid": "6d4ea5aa5872490b8d8a6669308a6f29",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role001"
+            },
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "order": 2,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "person_guid": "646c9e4b256d43aabdb2a186234a4b15",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role002"
+            }
+          ],
+          "persons_status": "observed",
+          "release_date": "2024-01-01",
+          "season_number": 0,
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成电影 <验证> & 本地NFO",
+          "tree_depth": 0,
+          "trim_id": "",
+          "tv_title": "",
+          "type": "Movie",
+          "vote_average": "0"
+        },
+        {
+          "children_count": 1,
+          "detail_keys": [
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "can_play",
+            "duration",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "season_number",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "guid": "1e616e66b5464e9bbf532bfdeb480c60",
+          "image_bytes_verified": false,
+          "image_fields": {},
+          "local_number_of_episodes": 1,
+          "local_number_of_seasons": 1,
+          "number_of_episodes": 0,
+          "parent_guid": "5bc8d0aede574f2cbf90387056400a20",
+          "persons": [
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "order": 1,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "person_guid": "6d4ea5aa5872490b8d8a6669308a6f29",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role001"
+            },
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "order": 2,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "person_guid": "646c9e4b256d43aabdb2a186234a4b15",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role002"
+            }
+          ],
+          "persons_status": "observed",
+          "season_number": 2,
+          "tree_depth": 1,
+          "trim_id": "",
+          "tv_title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成国漫",
+          "type": "Season",
+          "vote_average": "0"
+        },
+        {
+          "children_count": 1,
+          "detail_keys": [
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "can_play",
+            "duration",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "season_number",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "guid": "9153ca5fb24346cebcddc5ace41553c3",
+          "image_bytes_verified": false,
+          "image_fields": {},
+          "local_number_of_episodes": 1,
+          "local_number_of_seasons": 1,
+          "number_of_episodes": 0,
+          "parent_guid": "a4872ab603354ab6a9c78bf40a17b2ac",
+          "persons": [
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "order": 1,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "person_guid": "6d4ea5aa5872490b8d8a6669308a6f29",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role001"
+            },
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "order": 2,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "person_guid": "646c9e4b256d43aabdb2a186234a4b15",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role002"
+            }
+          ],
+          "persons_status": "observed",
+          "season_number": 1,
+          "tree_depth": 1,
+          "trim_id": "",
+          "tv_title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成普通剧",
+          "type": "Season",
+          "vote_average": "0"
+        },
+        {
+          "air_date": "2024-01-02",
+          "detail_keys": [
+            "air_date",
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "can_play",
+            "duration",
+            "episode_number",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "posters",
+            "release_date",
+            "season_number",
+            "still_path",
+            "title",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "episode_number": 1,
+          "guid": "6a1d7b2869f242939f7e17d4b1e60416",
+          "image_bytes_verified": false,
+          "image_fields": {
+            "posters": {
+              "kind": "string",
+              "present": true
+            }
+          },
+          "local_number_of_episodes": 0,
+          "local_number_of_seasons": 0,
+          "number_of_episodes": 0,
+          "parent_guid": "1e616e66b5464e9bbf532bfdeb480c60",
+          "persons": [
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "order": 1,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "person_guid": "6d4ea5aa5872490b8d8a6669308a6f29",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role001"
+            },
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "order": 2,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "person_guid": "646c9e4b256d43aabdb2a186234a4b15",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role002"
+            }
+          ],
+          "persons_status": "observed",
+          "release_date": "2024-01-02",
+          "season_number": 2,
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成国漫映射第一集",
+          "tree_depth": 2,
+          "trim_id": "",
+          "tv_title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成国漫",
+          "type": "Episode",
+          "vote_average": "0"
+        },
+        {
+          "air_date": "2024-01-02",
+          "detail_keys": [
+            "air_date",
+            "ancestor_category",
+            "ancestor_guid",
+            "ancestor_name",
+            "can_play",
+            "duration",
+            "episode_number",
+            "guid",
+            "is_favorite",
+            "is_watched",
+            "local_number_of_episodes",
+            "local_number_of_seasons",
+            "logic_type",
+            "media_stream",
+            "number_of_episodes",
+            "parent_guid",
+            "parent_title",
+            "play_error",
+            "play_item_guid",
+            "posters",
+            "release_date",
+            "season_number",
+            "still_path",
+            "title",
+            "trim_id",
+            "tv_title",
+            "type",
+            "vote_average",
+            "watched_ts"
+          ],
+          "episode_number": 2,
+          "guid": "bdff62f4fcc3456293572315d5968df0",
+          "image_bytes_verified": false,
+          "image_fields": {
+            "posters": {
+              "kind": "string",
+              "present": true
+            }
+          },
+          "local_number_of_episodes": 0,
+          "local_number_of_seasons": 0,
+          "number_of_episodes": 0,
+          "parent_guid": "9153ca5fb24346cebcddc5ace41553c3",
+          "persons": [
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "order": 1,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor001",
+              "person_guid": "6d4ea5aa5872490b8d8a6669308a6f29",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role001"
+            },
+            {
+              "job": "Actor",
+              "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "order": 2,
+              "original_name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Actor002",
+              "person_guid": "646c9e4b256d43aabdb2a186234a4b15",
+              "profile_present": false,
+              "role": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db-Role002"
+            }
+          ],
+          "persons_status": "observed",
+          "release_date": "2024-01-02",
+          "season_number": 1,
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成第二集",
+          "tree_depth": 2,
+          "trim_id": "",
+          "tv_title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成普通剧",
+          "type": "Episode",
+          "vote_average": "0"
+        }
+      ],
+      "note": "Synthetic experiment observations only; no real metadata IDs were supplied. Empty or mismatched metadata is not an NFO pass."
+    },
+    "images": {
+      "status": "observed",
+      "action": "images",
+      "experiment_id": "97f462b1-b27c-4a31-a912-ace48d6380db",
+      "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db",
+      "root": "/vol2/1000/media/light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db",
+      "owned_guid": "039c662bd68f43fda501c2f2f0fd0255",
+      "requests": 14,
+      "baseline_unchanged": true,
+      "items": [
+        {
+          "guid": "5bc8d0aede574f2cbf90387056400a20",
+          "images": {
+            "backdrops": {
+              "extension": ".jpg",
+              "fetch_allowed": true,
+              "field_type": "string",
+              "present": true,
+              "route_template": "/v/api/v1/sys/img/<opaque>",
+              "segments": 3,
+              "status": "same_origin_local_image",
+              "verification": {
+                "byte_count": 825,
+                "bytes_verified": true,
+                "fixture_exact_match": true,
+                "fixture_matches": [
+                  "Animation:poster.jpg",
+                  "Animation:fanart.jpg"
+                ],
+                "format": "jpeg",
+                "height": 64,
+                "sha256": "db3e4d1e3b63bf66341aa7f1fae31f6ca89e875cf2595614b70a24a03e5f7cad",
+                "width": 64
+              }
+            },
+            "posters": {
+              "extension": ".jpg",
+              "fetch_allowed": true,
+              "field_type": "string",
+              "present": true,
+              "route_template": "/v/api/v1/sys/img/<opaque>",
+              "segments": 3,
+              "status": "same_origin_local_image",
+              "verification": {
+                "byte_count": 825,
+                "bytes_verified": true,
+                "fixture_exact_match": true,
+                "fixture_matches": [
+                  "Animation:poster.jpg",
+                  "Animation:fanart.jpg"
+                ],
+                "format": "jpeg",
+                "height": 64,
+                "sha256": "db3e4d1e3b63bf66341aa7f1fae31f6ca89e875cf2595614b70a24a03e5f7cad",
+                "width": 64
+              }
+            }
+          },
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成国漫",
+          "type": "TV"
+        },
+        {
+          "guid": "a4872ab603354ab6a9c78bf40a17b2ac",
+          "images": {
+            "backdrops": {
+              "extension": ".jpg",
+              "fetch_allowed": true,
+              "field_type": "string",
+              "present": true,
+              "route_template": "/v/api/v1/sys/img/<opaque>",
+              "segments": 3,
+              "status": "same_origin_local_image",
+              "verification": {
+                "byte_count": 825,
+                "bytes_verified": true,
+                "fixture_exact_match": true,
+                "fixture_matches": [
+                  "Series:poster.jpg",
+                  "Series:fanart.jpg"
+                ],
+                "format": "jpeg",
+                "height": 64,
+                "sha256": "6d7f91888f54def29f8f4cd2cd3f6c6f1c8c1a863f16274fa6a37fa9f5d2e6eb",
+                "width": 64
+              }
+            },
+            "posters": {
+              "extension": ".jpg",
+              "fetch_allowed": true,
+              "field_type": "string",
+              "present": true,
+              "route_template": "/v/api/v1/sys/img/<opaque>",
+              "segments": 3,
+              "status": "same_origin_local_image",
+              "verification": {
+                "byte_count": 825,
+                "bytes_verified": true,
+                "fixture_exact_match": true,
+                "fixture_matches": [
+                  "Series:poster.jpg",
+                  "Series:fanart.jpg"
+                ],
+                "format": "jpeg",
+                "height": 64,
+                "sha256": "6d7f91888f54def29f8f4cd2cd3f6c6f1c8c1a863f16274fa6a37fa9f5d2e6eb",
+                "width": 64
+              }
+            }
+          },
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成普通剧",
+          "type": "TV"
+        },
+        {
+          "guid": "8a9c60a818344ec38a7876d8e7066bfd",
+          "images": {
+            "backdrops": {
+              "extension": ".jpg",
+              "fetch_allowed": true,
+              "field_type": "string",
+              "present": true,
+              "route_template": "/v/api/v1/sys/img/<opaque>",
+              "segments": 3,
+              "status": "same_origin_local_image",
+              "verification": {
+                "byte_count": 823,
+                "bytes_verified": true,
+                "fixture_exact_match": true,
+                "fixture_matches": [
+                  "Movie (2024):poster.jpg",
+                  "Movie (2024):fanart.jpg"
+                ],
+                "format": "jpeg",
+                "height": 64,
+                "sha256": "f1834cc17c989c791432ad17580fa777e8c48adc30313304bfe1f99ce5ea8f29",
+                "width": 64
+              }
+            },
+            "posters": {
+              "extension": ".jpg",
+              "fetch_allowed": true,
+              "field_type": "string",
+              "present": true,
+              "route_template": "/v/api/v1/sys/img/<opaque>",
+              "segments": 3,
+              "status": "same_origin_local_image",
+              "verification": {
+                "byte_count": 823,
+                "bytes_verified": true,
+                "fixture_exact_match": true,
+                "fixture_matches": [
+                  "Movie (2024):poster.jpg",
+                  "Movie (2024):fanart.jpg"
+                ],
+                "format": "jpeg",
+                "height": 64,
+                "sha256": "f1834cc17c989c791432ad17580fa777e8c48adc30313304bfe1f99ce5ea8f29",
+                "width": 64
+              }
+            }
+          },
+          "title": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db 合成电影 <验证> & 本地NFO",
+          "type": "Movie"
+        }
+      ],
+      "note": "Only image references returned by this owned library were inspected. A nonempty reference is not byte verification; each fetched image reports a separate hash/match result."
+    },
+    "library_cleanup": {
+      "status": "cleaned",
+      "action": "cleanup",
+      "experiment_id": "97f462b1-b27c-4a31-a912-ace48d6380db",
+      "name": "light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db",
+      "root": "/vol2/1000/media/light-media-m0-test-97f462b1-b27c-4a31-a912-ace48d6380db",
+      "owned_guid": "039c662bd68f43fda501c2f2f0fd0255",
+      "requests": 7,
+      "baseline_unchanged": true,
+      "note": "Temporary library absence verified. Runner does not delete files; remove only this experiment's own synthetic directory separately."
+    },
+    "file_cleanup": {
+      "status": "cleaned",
+      "removed_files": 14,
+      "root_absence_verified": true
+    }
+  },
+  "metadata": {
+    "status": "unverified",
+    "evidence": "not_requested",
+    "requests": 0,
+    "results": [
+      {
+        "sample": "movie-nightking",
+        "type": "movie",
+        "requested_source_id": 1602727,
+        "status": "unverified",
+        "reason": "credential_not_configured",
+        "source": "tmdb"
+      },
+      {
+        "sample": "series-bigbang",
+        "type": "tv",
+        "requested_source_id": 1418,
+        "status": "unverified",
+        "reason": "credential_not_configured",
+        "source": "tmdb"
+      },
+      {
+        "sample": "episode-bigbang",
+        "type": "episode",
+        "requested_source_id": 1418,
+        "status": "unverified",
+        "reason": "credential_not_configured",
+        "source": "tmdb"
+      },
+      {
+        "sample": "series-zhuxian",
+        "type": "tv",
+        "requested_source_id": 206484,
+        "status": "unverified",
+        "reason": "credential_not_configured",
+        "source": "tmdb"
+      },
+      {
+        "sample": "episode-zhuxian",
+        "type": "episode",
+        "requested_source_id": 206484,
+        "status": "unverified",
+        "reason": "credential_not_configured",
+        "source": "tmdb"
+      }
+    ]
+  },
+  "verification": {
+    "date": "2026-10-15",
+    "checks": {
+      "go_test_all": "passed",
+      "go_test_race_all": "passed",
+      "go_test_modernconly_cgo_disabled": "passed",
+      "go_vet_all": "passed",
+      "go_mod_verify": "passed",
+      "macos_arm64_static_cli_build": "passed",
+      "linux_amd64_static_cli_build": "passed",
+      "isolated_experiment_cli_build": "passed",
+      "metadata_unconfigured_requests_zero_exit_one": "passed"
+    },
+    "logs": [
+      "work/final-checks.txt",
+      "work/final-builds.txt"
+    ],
+    "live_metadata_verified": false
+  },
+  "pending_gates": [
+    "authoritative_provider_and_episode_metadata_binding"
+  ],
+  "compatibility_findings": [
+    "custom_uniqueid_not_mapped",
+    "tv_root_persons_empty_season_episode_persons_present",
+    "actor_order_normalized_to_one_based",
+    "year_exposed_as_release_date",
+    "poster_fanart_same_bytes_role_distinction_unverified"
+  ],
+  "old_project_worktree_status_unchanged": true
+}
