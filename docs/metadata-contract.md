@@ -43,6 +43,8 @@ CGO_ENABLED=0 go build -o work/metadatacheck ./cmd/metadatacheck
 
 目前未配置用户自用凭据，实际五次来源验证 **pending**；编译及模拟测试不能替代 live_request 证据。获得已授权凭据后由 broker 一次执行并保留脱敏摘要。通过也仅确认这三个样本的标准来源 ID/目标季集，不代表文件内容、所有国漫集号、飞牛 NFO 读取或整库识别全部通过。
 
+后续五记录报告可由独立的 [experiments/metadata-nfo](../experiments/metadata-nfo/README.md) 核对并生成 canonical NFO 计划；它不获取元数据，不把 supplied `live_request` 或哈希当成远端真实性证明，也不做飞牛读回。当前未配置报告在默认/apply两模式实跑均被拒绝、零文件创建，标准身份门槛保持未验证。
+
 测试覆盖固定 origin/五个路由/zh-CN/key 与 Bearer 鉴权、未配置零请求、任意 host 输入拒绝、来源 ID/名称/年份/类型/季集/父上下文不一致、HTTP/业务鉴权失败、限流、404、过大响应、HTML/格式错误、URL/错误正文/标题中的凭据不泄露和重定向拒绝。所有单集 ID 与日期 fixture 为合成数据，未编造实际 API 成功结果。
 
 依据官方主源：[电影详情](https://developer.themoviedb.org/reference/movie-details)、[剧详情](https://developer.themoviedb.org/reference/tv-series-details)、[集详情](https://developer.themoviedb.org/reference/tv-episode-details)、[应用鉴权](https://developer.themoviedb.org/docs/authentication-application) 和 [官方 OpenAPI](https://developer.themoviedb.org/openapi/tmdb-api.json)。

@@ -43,6 +43,8 @@ go run ./cmd/sqlitebench --driver mattn
 
 HTTP 验证 CLI 的 stdout 为结果 JSON，stderr 为每次运行独立、有总量限制的 JSONL；通过生成的 run、target、request ID 关联。凭据与完整 URL 不进入日志。日志接线验证不能代替业务成功判定。
 
+`experiments/metadata-nfo` 为剩余三代表样本准备标准 NFO：只接受固定五条完整标准元数据核对报告，默认输出计划，显式 apply 才在独占新 work 子目录创建五份 XML。它不联网、不创建视频或演员、不写 NAS；保留 supplied evidence 与输入/NFO 哈希，不把报告中的 `live_request` 声明当成独立的来源真实性证明。未配置报告会在落盘前拒绝。真实来源及飞牛读回验收仍须另行完成，见 `docs/m0-final-steps.md`。
+
 ## M0 证据
 
 详细结果与仍待验证的门槛见 `docs/m0-report.md`，逐项状态见 `docs/m0-acceptance-matrix.md`。SQLite 独立基线见 `docs/sqlite-baseline.md`。实测结果只对应标明的版本、路径、样本和负载；完整应用内存、长时间稳定性、自动化闭环及 P1 插件尚须后续验收。

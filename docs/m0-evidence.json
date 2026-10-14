@@ -4249,6 +4249,47 @@
     "known_shared_default": false,
     "self_configured_metadata_available": false
   },
+  "metadata_access_revalidation": {
+    "checked_at_utc": "2026-10-14 18:16:15 UTC",
+    "sources": {
+      "memos": {
+        "query": "TMDB/tmdb/TheMovieDB",
+        "matched_memos": 0,
+        "request_ok": true
+      },
+      "bitwarden": {
+        "status": "unlocked",
+        "queries": [
+          "TMDB",
+          "https://www.themoviedb.org"
+        ],
+        "matched_items": 0,
+        "request_ok": true
+      }
+    },
+    "self_metadata_credential_available": false,
+    "known_public_shared_key_not_used": true
+  },
+  "metadata_nfo_preparation": {
+    "input_evidence": "actual_unconfigured_metadata_report",
+    "input_sha256": "c0861850ac43fcfa17dbfa6828481035155e14310bba561e8b570f1cae95a243",
+    "input_provider_requests": 0,
+    "dry_exit": 1,
+    "dry_result": {
+      "code": "REPORT_NOT_FULLY_VERIFIED",
+      "status": "failed"
+    },
+    "apply_exit": 1,
+    "apply_result": {
+      "code": "REPORT_NOT_FULLY_VERIFIED",
+      "status": "failed"
+    },
+    "output_root_absent": true,
+    "nfo_files_created": 0,
+    "network_requests": 0,
+    "fnos_readback": "not_requested",
+    "standard_identity_verified": false
+  },
   "metadata": {
     "status": "unverified",
     "evidence": "not_requested",
@@ -4314,15 +4355,18 @@
       "all_seven_item_ancestry_actual_fnos": "passed",
       "owned_two_libraries_and_28_files_removed": "passed",
       "credential_broker_closed_and_staging_removed": "passed",
-      "git_diff_whitespace": "passed"
+      "git_diff_whitespace": "passed",
+      "metadata_nfo_static_macos_linux_build": "passed",
+      "actual_unconfigured_metadata_nfo_zero_file_rejection": "passed",
+      "strict_five_record_metadata_nfo_tests": "passed"
     },
     "logs": [
-      "work/continuation-checks.txt",
-      "work/continuation-builds.txt"
+      "work/metadata-nfo-final-checks.txt",
+      "work/metadata-nfo-final-builds.txt"
     ],
     "live_metadata_verified": false,
-    "execution_scope": "M0 continuation including canonical fixture layout, strict ownership, offline XML comparison, provider probe and HTTP tracing",
-    "evidence_note": "The full check/build commands ran after empty-result tracing and provider-ID conflict fixes. These are fresh output logs; earlier logs belong to the first run."
+    "execution_scope": "M0 continuation including canonical fixture layout, strict ownership, offline XML comparison, provider probe and HTTP tracing; fixed standard metadata-to-NFO local experiment",
+    "evidence_note": "Full checks/build ran after the metadata-nfo parser and root/episode date fixes. The actual stored unconfigured report was separately run in dry/apply modes and rejected before file creation; no real verified metadata report was available."
   },
   "pending_gates": [
     "authoritative_provider_and_episode_metadata_binding",

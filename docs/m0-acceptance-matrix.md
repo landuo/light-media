@@ -64,3 +64,5 @@
 TV 根演员为空、Season/Episode 有演员、year 2024 返回 2024-01-01、演员 order 0/1→1/2 及 custom uniqueid 未采用等兼容发现继续保留。第一次同字节图片的局限保留，第三次 distinct 图片已另行证明角色；第二次 E01 失败也不能被覆盖。完整演员资料/相关推荐页面、所有NFO扩展字段、完整站点筛选、下载/整理端到端、全局暂停、72小时资源验收与P1插件不应成为这次M0逐项验收的额外门槛。
 
 本矩阵的路径和资源条目已使用持久脱敏证据，不需重复实机实验。新增补证应另外记录版本、样本、结果与清理，不能把此处的 `部分/未验证` 仅通过改文字变成 `通过`。
+
+补证工具 `experiments/metadata-nfo` 已准备：严格核对固定五条标准报告，保留来源/类型/ID与父关系，离线生成五份 canonical XML 的计划，显式 apply 才创建独占新 work 目录。测试、race、静态 Mac/Linux 构建通过；实际 `metadata-unconfigured.json` 分别跑默认和 apply 均退出 1、拒绝为 `REPORT_NOT_FULLY_VERIFIED`，输出根不存在、文件数零。Memos 与已解锁 Bitwarden 复核仍无相关凭据。工具不联网、不宣称报告的来源真实性已独立证明，也没有飞牛读回；D03、D05–D07、G03/G04 和 6/10、4/6 的验收计数保持不变。剩余步骤见 [m0-final-steps.md](m0-final-steps.md)。

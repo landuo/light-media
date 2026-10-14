@@ -159,6 +159,17 @@ M0 尚未全部验收，不进入 M1。10 项交付物中 6 项通过、4 项部
 | 家园 | ok | {"info_dictionary_valid":true,"raw_info_hash_computed":true,"v1":true,"v2":false,"piece_layers_checked":false,"file_count":1,"total_bytes":446872198,"payload_verified":false} |
 | 1PTBA | ok | {"info_dictionary_valid":true,"raw_info_hash_computed":true,"v1":true,"v2":false,"piece_layers_checked":false,"file_count":1,"total_bytes":1581113835,"payload_verified":false} |
 
+## 剩余标准 NFO 验证工具
+
+| 项目 | 结果与验收边界 |
+| --- | --- |
+| 工具 | experiments/metadata-nfo：固定五条标准报告到五份canonical NFO；默认计划，apply只创建独占新work子目录；零网络/零NAS写入。 |
+| 身份与输入 | 逐项校验来源+类型+ID、父剧上下文、季集与日期；独立单集使用自己的SourceID，不复制父剧ID；不同类型相同数字保持独立。重复/别名JSON键、未知字段和不完整报告拒绝。 |
+| 来源真实性 | 保存supplied evidence、输入/NFO哈希；input_source_authenticity=not_independently_verified，fnos_readback=unverified。编写JSON中的live_request不能证明真实请求。 |
+| 实际未配置报告 | 输入报告provider requests=0，default/apply退出1/1；REPORT_NOT_FULLY_VERIFIED，输出根不存在、NFO创建0份。 |
+| 凭据复核 | 2026-10-14 18:16:15 UTC；Memos相关条目0，已解锁Bitwarden按TMDB名称和目标URL查询均0；仍无自用来源凭据。 |
+| 仍待完成 | 实际标准来源请求、真实三代表样本NFO绑定和安全服务状态下的飞牛读回；验收计数保持6/10与4/6。步骤见docs/m0-final-steps.md。 |
+
 ## 可靠性、日志与插件草案
 
 - SQLite：唯一占位冲突、占位与 job 同事务回滚、外键、异常进程退出后的已提交保留/未提交回滚、重开租约恢复、VACUUM INTO 快照一致性/隔离与源完整性通过。
@@ -187,6 +198,9 @@ M0 尚未全部验收，不进入 M1。10 项交付物中 6 项通过、4 项部
 | owned_two_libraries_and_28_files_removed | passed |
 | credential_broker_closed_and_staging_removed | passed |
 | git_diff_whitespace | passed |
+| metadata_nfo_static_macos_linux_build | passed |
+| actual_unconfigured_metadata_nfo_zero_file_rejection | passed |
+| strict_five_record_metadata_nfo_tests | passed |
 
 完整源码测试、race、无 cgo 构建测试、vet 与依赖校验通过；Mac arm64 和静态 Linux amd64 CLI 构建通过。TMDB 未配置路径实跑为 unverified、0 请求、退出码 1，未被计为真实接口通过。
 
