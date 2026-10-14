@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"light-media/internal/logging"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -45,6 +46,7 @@ type Capability struct {
 	WriteVerified bool   `json:"write_verified"`
 }
 type Result struct {
+	TraceTargetID     string       `json:"trace_target_id,omitempty"`
 	ID                string       `json:"id"`
 	Kind              string       `json:"kind"`
 	Status            string       `json:"status"`
@@ -133,7 +135,7 @@ func newTransport(raw string) (*transport, string) {
 		return nil, "invalid_input"
 	}
 	jar, _ := cookiejar.New(nil)
-	return &transport{base: u, client: &http.Client{Timeout: 10 * time.Second, Jar: jar, CheckRedirect: func(req *http.Request, via []*http.Request) error { return http.ErrUseLastResponse }}}, ""
+	return &transport{base: u, client: &http.Client{Timeout: 10 * time.Second, Jar: jar, Transport: logging.Transport(nil), CheckRedirect: func(req *http.Request, via []*http.Request) error { return http.ErrUseLastResponse }}}, ""
 }
 func (t *transport) endpoint(path string) string {
 	u := *t.base
@@ -145,7 +147,7 @@ func (t *transport) request(ctx context.Context, method, endpoint string, data [
 		return nil, nil, "request_limit"
 	}
 	t.count++
-	req, e := http.NewRequestWithContext(ctx, method, endpoint, bytes.NewReader(data))
+	req, e := http.NewRequestWithContext(logging.EndpointContext(ctx, "integration", endpoint), method, endpoint, bytes.NewReader(data))
 	if e != nil {
 		return nil, nil, "invalid_input"
 	}
@@ -204,6 +206,7 @@ func writes(kind string) []Capability {
 }
 func ProbeDownloader(ctx context.Context, d Downloader) (r Result) {
 	r = Result{ID: safe(d.ID), Kind: safe(d.Kind), Status: "unverified", Stage: "configuration", Evidence: "live_request"}
+	ctx, r.TraceTargetID = logging.Target(ctx, "downloader")
 	if !safeToken.MatchString(d.ID) {
 		r.Status = "invalid_input"
 		return

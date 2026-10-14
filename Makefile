@@ -19,6 +19,7 @@ experiments:
 	mkdir -p bin/experiments
 	CGO_ENABLED=0 go build -o bin/experiments/fnos-nfo ./experiments/fnos-nfo
 	CGO_ENABLED=0 go build -o bin/experiments/nfo-fixtures ./experiments/nfo-fixtures
+	CGO_ENABLED=0 go build -o bin/experiments/nfo-compare ./experiments/nfo-compare
 
 offline:
 	mkdir -p work

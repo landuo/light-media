@@ -89,7 +89,7 @@ func TestSyntheticLifecycle(t *testing.T) {
 			}
 			data = map[string]any{"list": []any{map[string]string{"guid": "synthetic-item-guid"}}}
 		case "/v/api/v1/item/synthetic-item-guid":
-			data = map[string]any{"guid": "synthetic-item-guid", "title": "synthetic-password https://invalid.example/?secret=test\nInjected", "type": "Movie", "trim_id": "synthetic-only-id", "overview": "synthetic-token"}
+			data = map[string]any{"guid": "synthetic-item-guid", "ancestor_guid": own.GUID, "parent_guid": "", "title": "synthetic-password https://invalid.example/?secret=test\nInjected", "type": "Movie", "trim_id": "synthetic-only-id", "overview": "synthetic-token"}
 		case "/v/api/v1/person/list/synthetic-item-guid":
 			data = map[string]any{"list": []any{map[string]any{"name": "Synthetic Actor", "role": "synthetic-password", "job": "Actor", "profile_path": "https://invalid.example/avatar", "order": 1}}}
 		default:
@@ -196,15 +196,15 @@ func TestSyntheticRecursiveSeasonEpisode(t *testing.T) {
 		case "/v/api/v1/item/list":
 			data = map[string]any{"list": []any{map[string]string{"guid": "tv-own", "type": "TV"}}}
 		case "/v/api/v1/item/tv-own":
-			data = map[string]any{"guid": "tv-own", "type": "TV", "title": "Synthetic & <TV>", "year": 2025, "posters": "/local/opaque", "poster_width": 32, "poster_height": 48}
+			data = map[string]any{"guid": "tv-own", "ancestor_guid": "test-library", "parent_guid": "", "type": "TV", "title": "Synthetic & <TV>", "year": 2025, "posters": "/local/opaque", "poster_width": 32, "poster_height": 48}
 		case "/v/api/v1/season/list/tv-own":
 			data = []any{map[string]string{"guid": "season-own", "type": "Season"}}
 		case "/v/api/v1/item/season-own":
-			data = map[string]any{"guid": "season-own", "type": "Season", "title": "Synthetic Season", "season_number": 1}
+			data = map[string]any{"guid": "season-own", "ancestor_guid": "test-library", "parent_guid": "tv-own", "type": "Season", "title": "Synthetic Season", "season_number": 1}
 		case "/v/api/v1/episode/list/season-own":
 			data = []any{map[string]string{"guid": "episode-own", "type": "Episode"}}
 		case "/v/api/v1/item/episode-own":
-			data = map[string]any{"guid": "episode-own", "type": "Episode", "title": "Synthetic & <Episode>", "season_number": 1, "episode_number": 2}
+			data = map[string]any{"guid": "episode-own", "ancestor_guid": "test-library", "parent_guid": "season-own", "type": "Episode", "title": "Synthetic & <Episode>", "season_number": 1, "episode_number": 2}
 		case "/v/api/v1/person/list/tv-own", "/v/api/v1/person/list/season-own", "/v/api/v1/person/list/episode-own":
 			data = map[string]any{"list": []any{map[string]any{"name": "Synthetic Actor", "job": "Actor", "role": "Synthetic Role"}}}
 		default:

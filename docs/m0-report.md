@@ -1,10 +1,12 @@
-# light-media · M0 首轮技术验证
+# light-media · M0 逐项技术验证
 
 ## 结论与 M0 门槛
 
-独立项目已经建立，首轮 M0 实验已完成：Go/SQLite、双下载器只读协议、五站有限鉴权/搜索及种子材料、真实 NAS 与容器硬链接、飞牛新 NFO 核心字段和旁车图片读取均有代码及实测证据，技术路线可行。M0 尚未全部验收，不自动进入 M1。标准 TMDB / 单集来源 ID 的权威元数据绑定仍需自用凭据验证；剧级演员语义和完整 NFO 字段不能从本轮结果推定。
+独立项目已建立，多轮 M0 实测证明 Go/SQLite、双下载器只读协议、五站有限鉴权/搜索及种子材料、真实 NAS 与容器硬链接可行。飞牛的三类合成 NFO 已通过标准目录下的字段比较，六张不同海报/背景图与条目归属也已逐一核对，HTTP 日志接线已运行。
 
-五站当前是有限协议探针；完整资源属性、促销、筛选、分页与稳定原生适配仍需后续实现。下载器添加/校验/迁移等写操作没有拿现有种子做实验。
+M0 尚未全部验收，不进入 M1。10 项交付物中 6 项通过、4 项部分通过；6 项进入 M1 条件中 4 项通过、2 项部分通过。剩余缺口是三种真实代表作品的标准来源/独立单集身份与新 NFO 闭环；尚无自用 TMDB 凭据，同源飞牛查询仅返回不透明 Trim ID。真实标准 ID 导入前还需证明独立状态或共享缓存隔离。
+
+五站当前是有限协议探针；完整资源属性、促销、筛选、分页与稳定原生适配仍需后续实现。下载器添加/校验/迁移等写操作没有拿现有种子做实验。未覆盖的剧级演员、头像与其他 NFO 字段不能从本轮结果推定。
 
 ## 独立项目与验证范围
 
@@ -85,7 +87,7 @@
 
 完整路径与逐实例映射限制见 docs/path-baseline.md。硬链接共享内容，禁止原地改写共享视频。
 
-## 新 NFO 与图片隔离实测
+## 历史首轮 NFO 与图片实测
 
 | 项目 | 观察与界限 |
 | --- | --- |
@@ -99,6 +101,51 @@
 | 未覆盖 | 真实provider ID写入、完整剧级演员/头像、所有NFO字段、全量正式条目元数据一致性、共享演员/图片缓存的完全回收 |
 
 详细复现与兼容结论见 docs/nfo-verification-plan.md；实验源码位于 experiments/fnos-nfo 和 experiments/nfo-fixtures。标准元数据探针结果：unverified。
+
+## 后续两次 NFO 对照与严格检查
+
+| 项目 | 结果与界限 |
+| --- | --- |
+| 第二次 namespaced 路径 | UUID 12567b4f-a170-40c4-acec-79bf497c9e01；7节点归属通过、6图不同SHA且逐字段匹配。普通剧期望S01E02却读回S01E01；只改集文件basename并单库scan后仍E01。两次离线比较均failed，失败证据保留。 |
+| 第三次 canonical 目录 | UUID 06208206-17d8-42e2-b052-9e84c315040d；合成电影 (2024)、合成普通剧/Season 1/合成普通剧 S01E02、合成国漫/Season 2/合成国漫 S02E01；仍以UUID隔离标题/演员/custom ID。43条XML/API字段比较全部通过，普通剧E02、国漫E01正确。 |
+| 实际条目归属 | 所有7个detail的ancestor_guid为所建库；Movie/TV实际parent_guid为空字符串，Season/Episode实际父GUID正确；不从遍历路径补造父关系。 |
+| 图片角色 | 3作品×2字段：posters匹配poster，backdrops匹配fanart；全部6个SHA/格式/尺寸精确匹配。海报48×72、背景96×54；同字节互换盲点已在新实验关闭，首轮证据不追溯改写。 |
+| API与验收区分 | observe/HTTP成功只表示读取成功；离线比较核对真实XML、类型/标题/日期/季集/父关系/有限演员。所有结果provider_ids_verified=false；图片字节由独立images动作核对。 |
+| 目录结论 | 当前版本下canonical发布布局已有实际可行证据。第三次同时改变UUID/时间，不能确认第二次错误唯一根因；M1采用此布局并对季集不一致进入待确认。 |
+| 清理 | 两库均cleaned/cleaned，各自14个文件经清单与SHA确认后删除，目录消失；原有7库配置不变。broker关闭、自己staging已清理；全局演员/图片缓存完全回收未验证。 |
+
+详细证据与原始失败边界见 docs/nfo-verification-plan.md。新标准ID实验须先有独立服务状态或共享作用域证据；只读schema研究未取得DDL，见 docs/fnos-identity-isolation.md。
+
+## 标准身份门槛与逐项状态
+
+| 交付物/门槛 | 状态 | 证据或剩余条件 |
+| --- | --- | --- |
+| D01 五站协议样本 | 通过，有限样本 | 鉴权、一页搜索、每站一份材料结构；不是完整生产适配。 |
+| D02 双下载器版本/能力 | 通过，只读检测 | 实际版本/hash/files历史样本；全部write_verified=false。 |
+| D03 飞牛兼容 | 部分 | 合成字段/不同图片/实际归属通过；真实标准ID与单集尚未闭环。 |
+| D04 NAS路径/硬链接 | 通过，列明布局 | 宿主与1CPU容器所选两组路径实际验证；其他卷/目录不推广。 |
+| D05 电影命名/NFO | 部分 | 夜王真实文件名+Trim来源参考；同一标准来源/新NFO闭环未通过。 |
+| D06 普通剧命名/NFO | 部分 | 生活大爆炸 S07E17名称；独立单集ID/真实来源绑定未通过。 |
+| D07 常看国漫命名/NFO | 部分 | 诛仙 S04E05名称；实际标准分集与来源绑定未通过。 |
+| D08 Go+SQLite基线 | 通过，合成数据库 | 选定modernc；资源和七项正确性检查有实际证据。 |
+| D09 日志草案/接线 | 通过，M0 CLI范围 | stdout/stderr关联、有界脱敏、实际调用日志和HTTP错误回归。 |
+| D10 扩展接口草案 | 通过，文字契约 | v0.1事件/幂等/能力/控制草案；P1运行器未实现。 |
+| G01/G02/G05/G06 | 通过 | 五站可行、双下载器只读可行、驱动基线、接口错误可追踪。 |
+| G03/G04 | 部分 | 样本NFO与稳定作品/单集身份仍需同一真实样本闭环。 |
+
+直连标准元数据探针 unverified，0 请求；现有授权配置中没有自用 TMDB 设置。Memos 两组相关关键词及 Bitwarden 同步后查询均未找到对应凭据，不能将缺配置零请求标成通过。
+
+飞牛同源 provider 查询实际 5 请求，partial_evidence：三作品可查询，返回 source=trim_id 与 tm1602727/tt1418/tt206484；provider_identity_complete=false，episode_identity_complete=false。电影返回first_air_date字段，但未确认其作为标准电影日期的语义；不声称完全无日期。官方公共页受访问限制，未换客户端绕过。逐项矩阵见 docs/m0-acceptance-matrix.md。
+
+## 实际日志与当前重查边界
+
+| 运行 | 实际记录 | 判定 |
+| --- | --- | --- |
+| 第三次FN observe | 23请求 / 48事件 / 18664字节 | 7节点字段由独立compare验证，不把日志status=observed当通过。 |
+| 第三次FN images | 14请求 / 30事件 | 6张图片实际匹配；每个请求可关联run/target/request。 |
+| 当前双下载器+MTeam重查 | 29事件 / 10625字节；总状态incomplete | qB/MTeam当前读检查成功。TR当前bounded recent无样本，4请求/0files为unverified；历史5请求/1hash/22files成功不被当成当前重查结果。 |
+| 错误与空结果回归 | CLI HTTP400/redirect/断连；HTTP200业务失败；正常空结果、异常空表、缺鉴权 | synthetic HTTP测试验证错误关联与区别，不替代真实接口验收。 |
+| 日志预算 | 每run独立stderr JSONL预算256KiB；本次实际日志written正常、dropped=failed=0 | 固定operation/生成关联ID/秘密与URL脱敏；完整文件轮转和网页日志中心待应用阶段。 |
 
 ## 种子材料验证
 
@@ -117,7 +164,7 @@
 - SQLite：唯一占位冲突、占位与 job 同事务回滚、外键、异常进程退出后的已提交保留/未提交回滚、重开租约恢复、VACUUM INTO 快照一致性/隔离与源完整性通过。
 - 协议：鉴权失败/挑战/限流/模板变化区别于空结果；禁止跨源重定向；输入、响应、请求次数与超时有界；不回显敏感服务错误或秘密。
 - 命名：中文显示集号与 SxxExx 不一致进入待确认；原始编号与标准编号分开；范围外/多映射冲突/未知目标集拒绝自动猜测；不改写源文件。
-- 日志：slog、关联 ID、字段白名单、已知秘密和 URL 脱敏、JSONL 防换行注入、有界输出及失败/丢弃统计；轮转/网页日志中心留待应用阶段。
+- 日志：slog与Run/HTTP接线、run/target/request ID、固定operation、字段白名单、已知秘密和URL脱敏、JSONL防换行注入、有界输出及失败/丢弃统计；正确区别正常空结果与失败。轮转/网页日志中心留待应用阶段。
 - 插件：v0.1 事件封套/幂等/能力/控制边界草案，未运行 P1 插件，不宣称权限执行或事件持久化已经实现。
 
 ## 最终检查
@@ -133,6 +180,13 @@
 | linux_amd64_static_cli_build | passed |
 | isolated_experiment_cli_build | passed |
 | metadata_unconfigured_requests_zero_exit_one | passed |
+| nfo_comparison_cli_build | passed |
+| canonical_nfo_fields_actual_fnos | passed |
+| distinct_six_image_roles_actual_fnos | passed |
+| all_seven_item_ancestry_actual_fnos | passed |
+| owned_two_libraries_and_28_files_removed | passed |
+| credential_broker_closed_and_staging_removed | passed |
+| git_diff_whitespace | passed |
 
 完整源码测试、race、无 cgo 构建测试、vet 与依赖校验通过；Mac arm64 和静态 Linux amd64 CLI 构建通过。TMDB 未配置路径实跑为 unverified、0 请求、退出码 1，未被计为真实接口通过。
 
@@ -148,6 +202,6 @@ make offline
 
 实机运行需按各契约从 stdin 提供目标配置。不要把凭据放进命令行、Git 或普通配置，不关闭 TLS 校验。项目报告见 docs/m0-report.md，受限实验及驱动选择见 docs/sqlite-baseline.md。
 
-- 补齐自用 TMDB 配置，复核电影及普通剧/国漫标准单集身份；确认剧级演员聚合策略及未覆盖 NFO 字段。隔离导入与图片实测已完成，边界在 docs/nfo-verification-plan.md。
+- 补齐授权的标准元数据来源，复核电影及普通剧/国漫独立单集身份；在独立服务状态或已证明共享作用域下做真实标准ID的NFO闭环。合成字段与不同图片实测已完成，不替代真实身份。
 - 将有限站点协议结构扩展为五站真实资源属性/促销/下载材料契约；M0 仅为接口可行性证据。
 - 后续以一个站点、一类下载器先实现 M1 手动闭环，再按既定里程碑扩展；M0 未通过的门槛须明确关闭或修订后再推进。

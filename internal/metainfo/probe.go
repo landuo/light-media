@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"html"
 	"io"
+	"light-media/internal/logging"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -16,6 +17,7 @@ import (
 )
 
 type Result struct {
+	TraceTargetID              string   `json:"trace_target_id,omitempty"`
 	ID                         string   `json:"id"`
 	Kind                       string   `json:"kind"`
 	Evidence                   string   `json:"evidence"`
@@ -72,6 +74,7 @@ func ProbeSite(ctx context.Context, s integrations.Site) Result { return probe(c
 
 func probe(ctx context.Context, s integrations.Site, syntheticClient *http.Client) (r Result) {
 	r = Result{ID: "invalid_id", Kind: "unsupported", Evidence: "live_request", Status: "unverified", Stage: "configuration"}
+	ctx, r.TraceTargetID = logging.Target(ctx, "material")
 	if safeID.MatchString(s.ID) {
 		r.ID = s.ID
 	}
@@ -99,6 +102,7 @@ func probe(ctx context.Context, s integrations.Site, syntheticClient *http.Clien
 	if syntheticClient != nil {
 		client.Transport = syntheticClient.Transport
 	}
+	client.Transport = logging.Transport(client.Transport)
 	maxRequests := 2
 	if s.Kind == "mteam" {
 		maxRequests = 4
@@ -110,7 +114,7 @@ func probe(ctx context.Context, s integrations.Site, syntheticClient *http.Clien
 			return nil, "request_limit"
 		}
 		r.Requests++
-		req, e := http.NewRequestWithContext(ctx, method, u.String(), bytes.NewReader(data))
+		req, e := http.NewRequestWithContext(logging.EndpointContext(ctx, "material", u.String()), method, u.String(), bytes.NewReader(data))
 		if e != nil {
 			return nil, "invalid_input"
 		}

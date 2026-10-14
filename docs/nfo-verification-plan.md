@@ -1,6 +1,6 @@
 # M0 新 NFO 隔离入库实测与剩余边界
 
-2026-10-15 已在飞牛影视 0.9.8 / mediasrv 0.8.43 完成一次**真实服务上的合成样本实验**。它验证新生成 NFO 的有限字段和本地旁车图片能被实际导入；不等于完整 NFO 标准、真实元数据供应商 ID 或生产整理流程全部通过。
+2026-10-15 已在飞牛影视 0.9.8 / mediasrv 0.8.43 完成三次**真实服务上的合成样本实验**。下列首轮记录保留原有证据；后续两个实验另列，不能把后补检查追溯算作首轮已验证。它们验证新生成 NFO 的有限字段和本地旁车图片能被实际导入；不等于完整 NFO 标准、真实元数据供应商 ID 或生产整理流程全部通过。
 
 ## 实验范围及隔离
 
@@ -45,4 +45,22 @@ cleanup 返回 `cleaned`，7 次请求后确认测试库已消失，原有七个
 - [experiments/nfo-fixtures](../experiments/nfo-fixtures/README.md)：本地合成 XML/JPEG 生成器，显式 UUID，默认 dry-run，拒绝覆盖现有根目录，不执行 ffmpeg、远端命令或服务 API。
 - 合成验证命令：`go test -race ./experiments/fnos-nfo ./experiments/nfo-fixtures`、`go vet ./experiments/fnos-nfo ./experiments/nfo-fixtures`。
 
-尚未覆盖真实 provider ID 的写入/匹配、完整演员信息与头像、TV 根演员语义、海报与背景图的不同内容区分、字幕、评分/所有标签、多版本冲突、覆盖既有元数据、长视频、容器路径变化和生产恢复流程。`prefer_local_nfo=1` 仅证明单库优先项已设置，不能推断云刮削回退彻底关闭。此前对真实作品既有 NFO/API 的只读核对仍只属于兼容性参考，不作为这次合成导入的真实来源 ID 验收。
+首轮尚未覆盖真实 provider ID 的写入/匹配、完整演员信息与头像、TV 根演员语义、海报与背景图的不同内容区分、字幕、评分/所有标签、多版本冲突、覆盖既有元数据、长视频、容器路径变化和生产恢复流程。`prefer_local_nfo=1` 仅证明单库优先项已设置，不能推断云刮削回退彻底关闭。此前对真实作品既有 NFO/API 的只读核对仍只属于兼容性参考，不作为合成导入的真实来源 ID 验收。
+
+## 后续实测：独立归属、不同图片及字段比较
+
+两个新实验均保持 3 段新生成视频、5 份 NFO、6 张独立 JPEG，标题/演员/角色/custom ID 保留各自 UUID，不使用真实 provider ID。海报为 48×72，背景图为 96×54，六张字节和 SHA-256 全部不同。实际 detail 必须提供测试库 ancestor_guid；Movie/TV 根 parent_guid 必须是实际明确空字符串，Season/Episode 必须返回真实父 GUID，不能用遍历路径补造父关系。
+
+| 实验 | 实际结果 |
+| --- | --- |
+| `12567b4f-a170-40c4-acec-79bf497c9e01`：历史 namespaced 路径 | 7 节点归属通过；6 张图的作品、poster/backdrop 字段、SHA、格式、尺寸均逐一通过。普通剧 NFO/文件名为 S01E02，飞牛却返回 S01E01，离线比较判失败；国漫 S02E01 正确。 |
+| 同一第二库，只改两个集视频/NFO basename | 本地和远端 NFO 原始内容 SHA 一致，改名不改预期集号；单库 scan 被接受后再次读取，普通剧仍 E01，比较仍失败。scan accepted 不等于字段成功。未重复创建或重复 scan。 |
+| `06208206-17d8-42e2-b052-9e84c315040d`：canonical 发布目录 | 目录/视频/NFO stem 使用 `合成电影 (2024)`、`合成普通剧/Season 1/合成普通剧 S01E02`、`合成国漫/Season 2/合成国漫 S02E01`。创建后的自动导入读取 7 节点，43 条离线字段检查通过：普通剧 S01E02、国漫 S02E01、标题/类型/父关系/日期/有限演员角色正确；6 图各自精确匹配。没有追加 scan 请求。 |
+
+canonical 工具测试证明同一 UUID、同一 image mode 的两套布局 XML 与图片逐字节相同，预期 E02 保持不变。不过第三次实机使用了新 UUID、不同导入时间，不能据此确定第二次错误的唯一根因，更不能宣称所有命名均已兼容。M1 应采用已实测的 canonical 目录，发布后核对实际季集；不匹配时进入待确认，不能自动更改目标集号来适配错误结果。
+
+三个实验均保留各自原始脱敏结果。第二次比较失败保留在 `work/nfo-distinct-compare-before-rename-current.json` 与 `work/nfo-distinct-compare-after-rename.json`；第三次为 `work/nfo-canonical-compare.json`。比较器只核对实际 XML 与 API 摘要，不请求网络；`api_read_success` 与字段 passed 分开，所有结果仍 `provider_ids_verified=false`。图片校验另行提供证据，比较器不冒充验证图像字节。
+
+第二/第三次实际 observe 各 23 请求/48 条 JSONL，images 各 14 请求/30 条 JSONL；第三次日志包含固定业务 operation、run/target/request ID。各日志独立受 256 KiB 总量预算控制，未丢弃/写入失败。两库 cleanup 分别确认不存在，既有七库配置不变；共 28 个自建远端文件经精确清单与 SHA 核对后删除，目录消失；凭据 broker 关闭，自己的 NAS staging reader 已清理。
+
+真实三代表样本的标准来源/独立单集 ID 和新 NFO 闭环仍未完成。同源 provider 查询返回的 Trim 不透明 ID不能填作 TMDB ID，详见 `fnos-provider-contract.md`。标准 ID 的写入还需要独立服务状态或已证明的共享缓存隔离；schema 只读研究未取得 DDL，详见 `fnos-identity-isolation.md`。不因 UUID 目录或原库配置不变而声称所有全局元数据/演员缓存无变化。

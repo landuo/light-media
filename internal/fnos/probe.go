@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"light-media/internal/logging"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -53,6 +54,7 @@ type SearchSample struct {
 	Samples []Sample `json:"samples"`
 }
 type Result struct {
+	TraceTargetID         string         `json:"trace_target_id,omitempty"`
 	Status                string         `json:"status"`
 	Code                  string         `json:"code,omitempty"`
 	Frontend              string         `json:"frontend,omitempty"`
@@ -115,7 +117,7 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 		wireURL += "?" + url.Values{"q": {query}}.Encode()
 		signingPayload = "q=" + query
 	}
-	r, err := http.NewRequestWithContext(ctx, method, wireURL, bytes.NewReader(payload))
+	r, err := http.NewRequestWithContext(logging.EndpointContext(ctx, "fnos", path), method, wireURL, bytes.NewReader(payload))
 	if err != nil {
 		return nil, fmt.Errorf("INVALID_REQUEST")
 	}
@@ -160,6 +162,7 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 
 func Probe(ctx context.Context, cfg Config) (out Result) {
 	out.Status = "failed"
+	ctx, out.TraceTargetID = logging.Target(ctx, "fnos")
 	if len(cfg.SampleTitles) > 3 {
 		out.Code = "SAMPLE_TITLE_LIMIT"
 		return
@@ -184,7 +187,7 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 	if !strings.HasSuffix(host, "/v") {
 		host += "/v"
 	}
-	c := client{host: host, http: &http.Client{Timeout: 12 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}}
+	c := client{host: host, http: &http.Client{Timeout: 12 * time.Second, Transport: logging.Transport(nil), CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}}
 	defer func() { out.Requests = c.requests; sanitizeResult(&out, []string{cfg.Username, cfg.Password, c.token}) }()
 	step := func(path string, body any, dst any) bool {
 		data, e := c.request(ctx, path, body)

@@ -3,6 +3,7 @@ package integrations
 import (
 	"context"
 	"encoding/json"
+	"light-media/internal/logging"
 	"net/url"
 	"regexp"
 	"strings"
@@ -65,6 +66,7 @@ func pageState(b []byte) string {
 }
 func ProbeSite(ctx context.Context, s Site) (r Result) {
 	r = Result{ID: safe(s.ID), Kind: safe(s.Kind), Status: "unverified", Stage: "configuration", Evidence: "live_request"}
+	ctx, r.TraceTargetID = logging.Target(ctx, "site")
 	if !safeToken.MatchString(s.ID) || len(s.Query) > 256 {
 		r.Status = "invalid_input"
 		return

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"light-media/internal/fnos"
+	"light-media/internal/logging"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -28,8 +29,10 @@ type config struct {
 	Password      string `json:"password"`
 	ExperimentID  string `json:"experiment_id"`
 	FilesPrepared bool   `json:"files_prepared"`
+	FixtureDir    string `json:"fixture_dir,omitempty"`
 }
 type output struct {
+	TraceTargetID     string           `json:"trace_target_id,omitempty"`
 	Status            string           `json:"status"`
 	Code              string           `json:"code,omitempty"`
 	Action            string           `json:"action"`
@@ -81,7 +84,7 @@ func (a *api) call(ctx context.Context, method, endpoint string, body any, dst a
 	if e != nil {
 		return errors.New("NONCE_FAILED")
 	}
-	req, e := http.NewRequestWithContext(ctx, method, a.host+"/api/v1"+endpoint, bytes.NewReader(payload))
+	req, e := http.NewRequestWithContext(logging.EndpointContext(ctx, "fnos", endpoint), method, a.host+"/api/v1"+endpoint, bytes.NewReader(payload))
 	if e != nil {
 		return errors.New("INVALID_REQUEST")
 	}
@@ -189,6 +192,7 @@ func unchanged(r receipt, libs []library) bool {
 }
 func run(ctx context.Context, c config, action string, apply bool) (out output) {
 	out = output{Status: "failed", Action: action}
+	ctx, out.TraceTargetID = logging.Target(ctx, "fnos_experiment")
 	if !uuidPattern.MatchString(c.ExperimentID) {
 		out.Code = "INVALID_EXPERIMENT_ID"
 		return
@@ -223,7 +227,7 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 	}
 	lock.Close()
 	defer os.Remove(receiptPath(c.ExperimentID) + ".lock")
-	a := api{host: host, client: &http.Client{Timeout: 12 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}
+	a := api{host: host, client: &http.Client{Timeout: 12 * time.Second, Transport: logging.Transport(nil), CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}
 	defer func() { out.Requests = a.requests; sanitize(&out, []string{c.Username, c.Password, a.token}) }()
 	var auth struct {
 		Token string `json:"token"`
@@ -376,7 +380,7 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 		out.Status = "scan_accepted"
 		out.Note = "Accepted only; scan completion and NFO import require observe."
 	case "image_shape", "images":
-		out.Items, e = a.images(ctx, r, action == "images")
+		out.Items, e = a.images(ctx, r, action == "images", c.FixtureDir)
 		if e != nil {
 			out.Code = e.Error()
 			return
@@ -449,7 +453,7 @@ func (a *api) observe(ctx context.Context, r receipt) ([]map[string]any, error) 
 		return nil, errors.New("INVALID_OR_EXCESS_ITEMS")
 	}
 	queue := []observedNode{}
-	seen := map[string]bool{}
+	seen := map[string]observedNode{}
 	for _, v := range page.List {
 		queue = append(queue, observedNode{guid: stringField(v, "guid"), parent: r.OwnedGUID, kind: stringField(v, "type")})
 	}
@@ -460,10 +464,13 @@ func (a *api) observe(ctx context.Context, r receipt) ([]map[string]any, error) 
 		if !guidPattern.MatchString(n.guid) {
 			return out, errors.New("INVALID_ITEM_GUID")
 		}
-		if seen[n.guid] {
+		if old, ok := seen[n.guid]; ok {
+			if old.parent != n.parent || old.depth != n.depth || old.kind != n.kind {
+				return out, errors.New("ITEM_TREE_CONFLICT")
+			}
 			continue
 		}
-		seen[n.guid] = true
+		seen[n.guid] = n
 		if len(seen) > 10 {
 			return out, errors.New("ITEM_TREE_LIMIT")
 		}
@@ -474,15 +481,14 @@ func (a *api) observe(ctx context.Context, r receipt) ([]map[string]any, error) 
 		if detail == nil {
 			return out, errors.New("INVALID_ITEM_DETAIL")
 		}
-		if stringField(detail, "guid") != n.guid {
-			return out, errors.New("ITEM_ID_MISMATCH")
+		if err := verifyItemScope(detail, r, n); err != nil {
+			return append(out, scopeDiagnostic(detail, n)), err
 		}
 		kind := stringField(detail, "type")
-		if n.kind != "" && kind != n.kind {
-			return out, errors.New("ITEM_TYPE_MISMATCH")
-		}
 		summary := selected(detail, []string{"guid", "type", "title", "original_title", "tv_title", "trim_id", "overview", "plot", "tagline", "release_date", "premiere_date", "first_air_date", "air_date", "year", "season_number", "episode_number", "vote_average", "runtime", "genres", "genre", "country", "studio", "uniqueid", "uniqueids", "poster_width", "poster_height", "backdrop_width", "backdrop_height", "number_of_seasons", "number_of_episodes", "local_number_of_seasons", "local_number_of_episodes"})
-		summary["parent_guid"] = n.parent
+		summary["parent_guid"] = stringField(detail, "parent_guid")
+		summary["ancestor_guid"] = stringField(detail, "ancestor_guid")
+		summary["scope_verified"] = true
 		summary["tree_depth"] = n.depth
 		keys := []string{}
 		for k := range detail {
@@ -666,6 +672,11 @@ func sanitize(out *output, secrets []string) {
 	out.Note = clean(out.Note)
 }
 func main() {
+	trace, err := logging.NewRun(os.Stderr)
+	if err != nil {
+		json.NewEncoder(os.Stdout).Encode(map[string]string{"status": "trace_initialization_failed"})
+		os.Exit(1)
+	}
 	flags := flag.NewFlagSet("fnos-nfo-experiment", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
 	apply := flags.Bool("apply", false, "apply isolated action")
@@ -673,13 +684,15 @@ func main() {
 	var c config
 	b, e := io.ReadAll(io.LimitReader(os.Stdin, 65537))
 	if flags.Parse(os.Args[1:]) != nil || flags.NArg() != 0 || e != nil || len(b) > 65536 || json.Unmarshal(b, &c) != nil {
-		json.NewEncoder(os.Stdout).Encode(output{Status: "failed", Code: "INVALID_INPUT"})
+		_ = trace.Report(os.Stdout, output{Status: "failed", Code: "INVALID_INPUT"}, "invalid_input")
 		os.Exit(2)
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	ctx, cancel := context.WithTimeout(trace.Context(context.Background()), 90*time.Second)
 	defer cancel()
 	out := run(ctx, c, *action, *apply)
-	json.NewEncoder(os.Stdout).Encode(out)
+	if trace.Report(os.Stdout, out, out.Status, c.Username, c.Password) != nil {
+		os.Exit(1)
+	}
 	if out.Status == "failed" {
 		os.Exit(1)
 	}

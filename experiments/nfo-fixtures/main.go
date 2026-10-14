@@ -9,6 +9,7 @@ import (
 	"image/color"
 	"image/jpeg"
 	"io"
+	"light-media/experiments/internal/fixturelayout"
 	"light-media/internal/media"
 	"os"
 	"path/filepath"
@@ -53,7 +54,14 @@ func exclusive(p string, b []byte) error {
 	}
 	return ce
 }
-func generate(id, root string, apply bool) error {
+func generate(id, root string, apply bool, imageMode, layout string) error {
+	works, err := fixturelayout.Names(layout, id)
+	if err != nil {
+		return err
+	}
+	if imageMode != "distinct" && imageMode != "legacy" {
+		return errors.New("INVALID_IMAGE_MODE")
+	}
 	if e := validate(id, root); e != nil {
 		return e
 	}
@@ -72,11 +80,11 @@ func generate(id, root string, apply bool) error {
 		rel      string
 		metadata media.NFOMetadata
 	}{
-		{ns + "-Movie (2024)/" + ns + "-Movie (2024).nfo", media.NFOMetadata{Kind: "movie", Title: ns + " 合成电影 <验证> & 本地NFO", OriginalTitle: "M0 Synthetic Movie", Year: 2024, Plot: "M0 隔离合成样本，不是真实影视条目。", UniqueIDs: ids("900000101"), Actors: actors}},
-		{ns + "-Series/tvshow.nfo", media.NFOMetadata{Kind: "tvshow", Title: ns + " 合成普通剧", Year: 2024, UniqueIDs: ids("900000102"), Actors: actors}},
-		{ns + "-Series/Season 1/" + ns + "-Series S01E02.nfo", media.NFOMetadata{Kind: "episode", Title: ns + " 合成第二集", ShowTitle: ns + " 合成普通剧", Season: 1, Episode: 2, Aired: "2024-01-02", UniqueIDs: ids("900000103"), Actors: actors}},
-		{ns + "-Animation/tvshow.nfo", media.NFOMetadata{Kind: "tvshow", Title: ns + " 合成国漫", Year: 2024, UniqueIDs: ids("900000104"), Actors: actors}},
-		{ns + "-Animation/Season 2/" + ns + "-Animation S02E01.nfo", media.NFOMetadata{Kind: "episode", Title: ns + " 合成国漫映射第一集", ShowTitle: ns + " 合成国漫", Season: 2, Episode: 1, Aired: "2024-01-02", UniqueIDs: ids("900000105"), Actors: actors}},
+		{filepath.Join(works[0].Dir, works[0].Dir+".nfo"), media.NFOMetadata{Kind: "movie", Title: ns + " 合成电影 <验证> & 本地NFO", OriginalTitle: "M0 Synthetic Movie", Year: 2024, Plot: "M0 隔离合成样本，不是真实影视条目。", UniqueIDs: ids("900000101"), Actors: actors}},
+		{filepath.Join(works[1].Dir, "tvshow.nfo"), media.NFOMetadata{Kind: "tvshow", Title: ns + " 合成普通剧", Year: 2024, UniqueIDs: ids("900000102"), Actors: actors}},
+		{filepath.Join(works[1].Dir, works[1].Season, works[1].EpisodeStem+".nfo"), media.NFOMetadata{Kind: "episode", Title: ns + " 合成第二集", ShowTitle: ns + " 合成普通剧", Season: 1, Episode: 2, Aired: "2024-01-02", UniqueIDs: ids("900000103"), Actors: actors}},
+		{filepath.Join(works[2].Dir, "tvshow.nfo"), media.NFOMetadata{Kind: "tvshow", Title: ns + " 合成国漫", Year: 2024, UniqueIDs: ids("900000104"), Actors: actors}},
+		{filepath.Join(works[2].Dir, works[2].Season, works[2].EpisodeStem+".nfo"), media.NFOMetadata{Kind: "episode", Title: ns + " 合成国漫映射第一集", ShowTitle: ns + " 合成国漫", Season: 2, Episode: 1, Aired: "2024-01-02", UniqueIDs: ids("900000105"), Actors: actors}},
 	}
 	for _, v := range records {
 		b, e := media.EncodeNFO(v.metadata)
@@ -88,15 +96,22 @@ func generate(id, root string, apply bool) error {
 			return errors.New("FIXTURE_WRITE_FAILED")
 		}
 	}
-	for i, suffix := range []string{"-Movie (2024)", "-Series", "-Animation"} {
-		for _, name := range []string{"poster.jpg", "fanart.jpg"} {
-			img := image.NewRGBA(image.Rect(0, 0, 64, 64))
-			for y := 0; y < 64; y++ {
-				for x := 0; x < 64; x++ {
-					img.Set(x, y, color.RGBA{uint8(50 + i*80), uint8(40 + x), uint8(40 + y), 255})
+	for i, work := range works {
+		for kind, name := range []string{"poster.jpg", "fanart.jpg"} {
+			w, h, red := 64, 64, 50+i*80
+			if imageMode == "distinct" {
+				w, h, red = 48, 72, 50+i*65
+				if kind == 1 {
+					w, h, red = 96, 54, red+20
 				}
 			}
-			f, e := os.OpenFile(filepath.Join(root, ns+suffix, name), os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+			img := image.NewRGBA(image.Rect(0, 0, w, h))
+			for y := 0; y < h; y++ {
+				for x := 0; x < w; x++ {
+					img.Set(x, y, color.RGBA{uint8(red), uint8(40 + x), uint8(40 + y), 255})
+				}
+			}
+			f, e := os.OpenFile(filepath.Join(root, work.Dir, name), os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 			if e != nil {
 				return errors.New("FIXTURE_WRITE_FAILED")
 			}
@@ -114,12 +129,14 @@ func main() {
 	flags.SetOutput(io.Discard)
 	id := flags.String("experiment-id", "", "explicit lowercase UUID")
 	root := flags.String("out-dir", "work/nfo-live-fixture-v2", "new local output root under work")
+	mode := flags.String("image-mode", "distinct", "distinct (default) or legacy historical same-byte pairs")
+	layout := flags.String("layout", "namespaced", "namespaced (historical default) or canonical publishing paths")
 	apply := flags.Bool("apply", false, "create local synthetic XML/JPEG")
 	if flags.Parse(os.Args[1:]) != nil || flags.NArg() != 0 {
 		json.NewEncoder(os.Stdout).Encode(map[string]string{"status": "failed", "code": "INVALID_FLAGS"})
 		os.Exit(2)
 	}
-	if e := generate(*id, *root, *apply); e != nil {
+	if e := generate(*id, *root, *apply, *mode, *layout); e != nil {
 		json.NewEncoder(os.Stdout).Encode(map[string]string{"status": "failed", "code": e.Error()})
 		os.Exit(1)
 	}
@@ -127,5 +144,5 @@ func main() {
 	if *apply {
 		status = "generated"
 	}
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"status": status, "uuid": *id, "root": *root, "synthetic": true, "video_generated": false, "nfo_count": 5, "jpeg_count": 6})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"status": status, "uuid": *id, "root": *root, "synthetic": true, "video_generated": false, "nfo_count": 5, "jpeg_count": 6, "image_mode": *mode, "layout": *layout})
 }

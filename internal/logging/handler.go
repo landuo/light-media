@@ -59,7 +59,7 @@ var address = regexp.MustCompile(`(?i)\bhttps?://[^\s<>"']+`)
 var authLine = regexp.MustCompile(`(?im)(?:cookie|set-cookie|authorization|proxy-authorization)\s*["']?\s*[:=]\s*[^\r\n]+`)
 var credential = regexp.MustCompile(`(?i)(?:password|passwd|pwd|api[_-]?key|access[_-]?token|refresh[_-]?token|token|passkey|secret|session[_-]?id)\s*["']?\s*[:=]\s*(?:"[^"\r\n]*"|'[^'\r\n]*'|[^\s,;}&]+)`)
 var bearer = regexp.MustCompile(`(?i)\bbearer\s+[^\s,;"']+`)
-var stringKeys = map[string]bool{"module": true, "event": true, "status": true, "error_code": true, "request_id": true, "workflow_id": true, "job_id": true, "instance_id": true, "site_id": true, "capability": true}
+var stringKeys = map[string]bool{"module": true, "event": true, "status": true, "error_code": true, "request_id": true, "workflow_id": true, "job_id": true, "instance_id": true, "site_id": true, "capability": true, "run_id": true, "target_id": true, "target_kind": true, "operation": true, "method": true}
 var numberKeys = map[string]bool{"duration_ms": true, "count": true, "http_status": true, "attempt": true}
 
 func New(out io.Writer, options Options) (*Handler, error) {

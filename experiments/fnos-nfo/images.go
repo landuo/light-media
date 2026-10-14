@@ -6,12 +6,15 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
+	"light-media/experiments/internal/fixturelayout"
+	"light-media/internal/logging"
 	"net/http"
 	"net/url"
 	"os"
@@ -86,38 +89,118 @@ func imageReference(host, ref string) (string, map[string]any) {
 	return base.Scheme + "://" + base.Host + p, shape
 }
 func shaHex(b []byte) string { v := sha256.Sum256(b); return hex.EncodeToString(v[:]) }
-func fixtureHashes(id string) (map[string][]string, error) {
-	hashes := map[string][]string{}
-	for _, suffix := range []string{"-Movie (2024)", "-Series", "-Animation"} {
-		for _, name := range []string{"poster.jpg", "fanart.jpg"} {
-			f := filepath.Join("work", "nfo-live-fixture-v2", prefix+id+suffix, name)
-			info, e := os.Lstat(f)
-			if e != nil || !info.Mode().IsRegular() || info.Size() > 2*1024*1024 {
-				return nil, errors.New("FIXTURE_UNAVAILABLE")
+
+type expectedImage struct {
+	Label, Hash, Format string
+	Width, Height       int
+}
+type expectedWork struct {
+	Kind, Title string
+	Fields      map[string]expectedImage
+}
+
+func fixtureRead(f string) ([]byte, error) {
+	info, e := os.Lstat(f)
+	if e != nil || !info.Mode().IsRegular() || info.Size() > 2*1024*1024 {
+		return nil, errors.New("FIXTURE_UNAVAILABLE")
+	}
+	actual, e := filepath.EvalSymlinks(f)
+	if e != nil {
+		return nil, errors.New("FIXTURE_UNAVAILABLE")
+	}
+	abs, _ := filepath.Abs(f)
+	resolved, _ := filepath.Abs(actual)
+	if abs != resolved {
+		return nil, errors.New("FIXTURE_SYMLINK_REFUSED")
+	}
+	b, e := os.ReadFile(f)
+	if e != nil {
+		return nil, errors.New("FIXTURE_UNAVAILABLE")
+	}
+	return b, nil
+}
+func fixtureCatalog(id, root string) (map[string]expectedWork, error) {
+	if !uuidPattern.MatchString(id) {
+		return nil, errors.New("INVALID_EXPERIMENT_ID")
+	}
+	if root == "" {
+		root = filepath.Join("work", "nfo-live-fixture-v2")
+	}
+	abs, e := filepath.Abs(root)
+	if e != nil {
+		return nil, errors.New("INVALID_FIXTURE_ROOT")
+	}
+	work, _ := filepath.Abs("work")
+	rel, e := filepath.Rel(work, abs)
+	if e != nil || rel == "." || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return nil, errors.New("INVALID_FIXTURE_ROOT")
+	}
+	works, e := fixturelayout.Detect(root, id)
+	if e != nil {
+		return nil, e
+	}
+	out := map[string]expectedWork{}
+	seenHashes := map[string]bool{}
+	for _, work := range works {
+		dirname := work.Dir
+		nfo := "tvshow.nfo"
+		wantXML, wantType := "tvshow", "TV"
+		if work.Group == "movie" {
+			nfo = dirname + ".nfo"
+			wantXML, wantType = "movie", "Movie"
+		}
+		b, e := fixtureRead(filepath.Join(root, dirname, nfo))
+		if e != nil {
+			return nil, e
+		}
+		var m struct {
+			XMLName xml.Name
+			Title   string `xml:"title"`
+		}
+		if xml.Unmarshal(b, &m) != nil || m.XMLName.Local != wantXML || !strings.HasPrefix(m.Title, prefix+id+" ") {
+			return nil, errors.New("FIXTURE_IDENTITY_INVALID")
+		}
+		v := expectedWork{Kind: wantType, Title: m.Title, Fields: map[string]expectedImage{}}
+		for _, role := range []struct{ field, base string }{{"posters", "poster"}, {"backdrops", "fanart"}} {
+			var file string
+			for _, ext := range []string{".jpg", ".png"} {
+				candidate := filepath.Join(root, dirname, role.base+ext)
+				if _, e := os.Lstat(candidate); e == nil {
+					if file != "" {
+						return nil, errors.New("AMBIGUOUS_FIXTURE_FILE")
+					}
+					file = candidate
+				} else if !os.IsNotExist(e) {
+					return nil, errors.New("FIXTURE_UNAVAILABLE")
+				}
 			}
-			actual, e := filepath.EvalSymlinks(f)
+			b, e = fixtureRead(file)
 			if e != nil {
-				return nil, errors.New("FIXTURE_UNAVAILABLE")
+				return nil, e
 			}
-			abs, _ := filepath.Abs(f)
-			resolved, _ := filepath.Abs(actual)
-			if abs != resolved {
-				return nil, errors.New("FIXTURE_SYMLINK_REFUSED")
+			cfg, format, e := image.DecodeConfig(bytes.NewReader(b))
+			if e != nil || (format != "jpeg" && format != "png") || cfg.Width < 1 || cfg.Height < 1 || cfg.Width > 8192 || cfg.Height > 8192 || int64(cfg.Width)*int64(cfg.Height) > 32*1024*1024 {
+				return nil, errors.New("INVALID_FIXTURE_IMAGE")
 			}
-			b, e := os.ReadFile(f)
-			if e != nil {
-				return nil, errors.New("FIXTURE_UNAVAILABLE")
-			}
-			if _, format, e := image.DecodeConfig(bytes.NewReader(b)); e != nil || format != "jpeg" {
-				return nil, errors.New("INVALID_FIXTURE_JPEG")
+			if _, _, e = image.Decode(bytes.NewReader(b)); e != nil {
+				return nil, errors.New("INVALID_FIXTURE_IMAGE")
 			}
 			hash := shaHex(b)
-			hashes[hash] = append(hashes[hash], strings.TrimPrefix(suffix, "-")+":"+name)
+			if seenHashes[hash] {
+				return nil, errors.New("AMBIGUOUS_FIXTURE_IMAGE_ROLES")
+			}
+			seenHashes[hash] = true
+			v.Fields[role.field] = expectedImage{Label: work.Label + ":" + filepath.Base(file), Hash: hash, Format: format, Width: cfg.Width, Height: cfg.Height}
 		}
+		key := wantType + "\x00" + m.Title
+		if _, ok := out[key]; ok {
+			return nil, errors.New("DUPLICATE_FIXTURE_IDENTITY")
+		}
+		out[key] = v
 	}
-	return hashes, nil
+	return out, nil
 }
-func (a *api) fetchImage(ctx context.Context, target string, hashes map[string][]string) (map[string]any, error) {
+func (a *api) fetchImage(ctx context.Context, target string, expected expectedImage) (map[string]any, error) {
 	out := map[string]any{"bytes_verified": false}
 	checked, _ := imageReference(a.host, target)
 	if checked == "" || checked != target {
@@ -126,7 +209,7 @@ func (a *api) fetchImage(ctx context.Context, target string, hashes map[string][
 	if a.requests >= 32 {
 		return out, errors.New("REQUEST_LIMIT")
 	}
-	r, e := http.NewRequestWithContext(ctx, "GET", target, nil)
+	r, e := http.NewRequestWithContext(logging.EndpointContext(ctx, "fnos", target), "GET", target, nil)
 	if e != nil {
 		return out, errors.New("INVALID_IMAGE_REQUEST")
 	}
@@ -165,18 +248,22 @@ func (a *api) fetchImage(ctx context.Context, target string, hashes map[string][
 	out["width"] = cfg.Width
 	out["height"] = cfg.Height
 	out["sha256"] = hash
-	matches := hashes[hash]
-	out["fixture_exact_match"] = len(matches) > 0
-	if len(matches) > 0 {
-		out["fixture_matches"] = matches
+	out["fixture_expected"] = expected.Label
+	out["dimensions_match"] = cfg.Width == expected.Width && cfg.Height == expected.Height
+	out["format_match"] = format == expected.Format
+	exact := hash == expected.Hash && cfg.Width == expected.Width && cfg.Height == expected.Height && format == expected.Format
+	out["fixture_exact_match"] = exact
+	if !exact {
+		return out, errors.New("IMAGE_FIXTURE_ROLE_MISMATCH")
 	}
+
 	return out, nil
 }
-func (a *api) images(ctx context.Context, r receipt, fetch bool) ([]map[string]any, error) {
-	var hashes map[string][]string
+func (a *api) images(ctx context.Context, r receipt, fetch bool, fixtureDir string) ([]map[string]any, error) {
+	var catalog map[string]expectedWork
 	var e error
 	if fetch {
-		hashes, e = fixtureHashes(r.ExperimentID)
+		catalog, e = fixtureCatalog(r.ExperimentID, fixtureDir)
 		if e != nil {
 			return nil, e
 		}
@@ -192,6 +279,10 @@ func (a *api) images(ctx context.Context, r receipt, fetch bool) ([]map[string]a
 	}
 	out := []map[string]any{}
 	gets := 0
+	seen := map[string]bool{}
+	if fetch && len(page.List) != 3 {
+		return out, errors.New("IMAGE_ITEMS_INCOMPLETE")
+	}
 	for _, item := range page.List {
 		guid := stringField(item, "guid")
 		if !guidPattern.MatchString(guid) {
@@ -201,10 +292,29 @@ func (a *api) images(ctx context.Context, r receipt, fetch bool) ([]map[string]a
 		if e = a.call(ctx, "GET", "/item/"+guid, nil, &d); e != nil {
 			return out, e
 		}
-		if stringField(d, "guid") != guid {
-			return out, errors.New("ITEM_ID_MISMATCH")
+		n := observedNode{guid: guid, parent: r.OwnedGUID, kind: stringField(item, "type")}
+		if err := verifyItemScope(d, r, n); err != nil {
+			return append(out, scopeDiagnostic(d, n)), err
 		}
-		entry := selected(d, []string{"guid", "title", "type"})
+		kind := stringField(d, "type")
+		if kind != "Movie" && kind != "TV" {
+			return out, errors.New("ITEM_TYPE_MISMATCH")
+		}
+		entry := selected(d, []string{"guid", "title", "type", "ancestor_guid", "parent_guid"})
+		entry["scope_verified"] = true
+		var expected expectedWork
+		if fetch {
+			key := kind + "\x00" + stringField(d, "title")
+			var ok bool
+			expected, ok = catalog[key]
+			if !ok {
+				return out, errors.New("UNKNOWN_IMAGE_FIXTURE_IDENTITY")
+			}
+			if seen[key] {
+				return out, errors.New("DUPLICATE_IMAGE_FIXTURE_IDENTITY")
+			}
+			seen[key] = true
+		}
 		fields := map[string]any{}
 		entry["images"] = fields
 		out = append(out, entry)
@@ -212,23 +322,32 @@ func (a *api) images(ctx context.Context, r receipt, fetch bool) ([]map[string]a
 			raw, exists := d[key]
 			if !exists {
 				fields[key] = map[string]any{"status": "missing"}
+				if fetch {
+					return out, errors.New("IMAGE_FIELD_MISSING")
+				}
 				continue
 			}
 			var ref string
 			if json.Unmarshal(raw, &ref) != nil {
 				fields[key] = map[string]any{"status": "unsupported_field_type"}
+				if fetch {
+					return out, errors.New("IMAGE_FIELD_INVALID")
+				}
 				continue
 			}
 			target, shape := imageReference(a.host, ref)
 			fields[key] = shape
-			if !fetch || target == "" {
+			if !fetch {
 				continue
+			}
+			if target == "" {
+				return out, errors.New("IMAGE_REFERENCE_REFUSED")
 			}
 			if gets >= 6 {
 				return out, errors.New("IMAGE_REQUEST_LIMIT")
 			}
 			gets++
-			result, err := a.fetchImage(ctx, target, hashes)
+			result, err := a.fetchImage(ctx, target, expected.Fields[key])
 			shape["verification"] = result
 			if err != nil {
 				shape["error_code"] = err.Error()

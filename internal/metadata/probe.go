@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"light-media/internal/logging"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -39,10 +40,11 @@ type Result struct {
 	Episode           int    `json:"episode,omitempty"`
 }
 type Report struct {
-	Status   string   `json:"status"`
-	Evidence string   `json:"evidence"`
-	Requests int      `json:"requests"`
-	Results  []Result `json:"results"`
+	TraceTargetID string   `json:"trace_target_id,omitempty"`
+	Status        string   `json:"status"`
+	Evidence      string   `json:"evidence"`
+	Requests      int      `json:"requests"`
+	Results       []Result `json:"results"`
 }
 
 type sample struct {
@@ -65,6 +67,7 @@ var tokenPattern = regexp.MustCompile(`^[A-Za-z0-9._-]+$`)
 func Run(ctx context.Context, credentials Credentials) Report { return run(ctx, credentials, nil) }
 func run(ctx context.Context, c Credentials, syntheticClient *http.Client) Report {
 	r := Report{Status: "unverified", Evidence: "not_requested", Results: make([]Result, len(samples))}
+	ctx, r.TraceTargetID = logging.Target(ctx, "metadata")
 	for i, s := range samples {
 		r.Results[i] = Result{Sample: s.name, Type: s.kind, RequestedSourceID: s.id, Status: "unverified", Reason: "credential_not_configured", Source: "tmdb"}
 	}
@@ -87,6 +90,7 @@ func run(ctx context.Context, c Credentials, syntheticClient *http.Client) Repor
 	} else {
 		r.Evidence = "live_request"
 	}
+	client.Transport = logging.Transport(client.Transport)
 	verifiedSeries := map[int64]bool{}
 	r.Status = "ok"
 	for i, s := range samples {
@@ -98,7 +102,7 @@ func run(ctx context.Context, c Credentials, syntheticClient *http.Client) Repor
 			query.Set("api_key", c.APIKey)
 		}
 		u.RawQuery = query.Encode()
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
+		req, err := http.NewRequestWithContext(logging.EndpointContext(ctx, "metadata", u.String()), http.MethodGet, u.String(), nil)
 		if err != nil {
 			result.Status = "invalid_input"
 			r.Status = "incomplete"
