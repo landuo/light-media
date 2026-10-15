@@ -12,9 +12,10 @@ import (
 )
 
 type historyDeleteRequest struct {
-	Confirm      bool `json:"confirm"`
-	DeleteSource bool `json:"delete_source"`
-	DeleteTarget bool `json:"delete_target"`
+	Confirm      bool   `json:"confirm"`
+	DeleteSource bool   `json:"delete_source"`
+	DeleteTarget bool   `json:"delete_target"`
+	FileID       string `json:"file_id,omitempty"`
 }
 type historySourceRemoval struct {
 	HistoryID string           `json:"history_id"`
@@ -27,6 +28,10 @@ type historySourceRemoval struct {
 func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryItem, in historyDeleteRequest) (any, error) {
 	if !in.Confirm {
 		return nil, bad("CONFIRM_REQUIRED", "请确认删除整理记录及所选文件")
+	}
+	if (in.FileID != "" && in.FileID != item.executionFileID()) ||
+		(in.FileID == "" && (in.DeleteSource || in.DeleteTarget) && item.executionFileID() != item.ID) {
+		return nil, bad("HISTORY_CHANGED", "整理记录已更新，请刷新后重新确认删除")
 	}
 	var active int
 	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, item.PlanID).Scan(&active); e != nil {
@@ -58,6 +63,7 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 	}
 	if e := a.Store.Put(ctx, "transfer_history_hidden", item.ID, map[string]any{
 		"at": now(), "plan_id": item.PlanID, "delete_source": in.DeleteSource, "delete_target": in.DeleteTarget,
+		"file_id": item.executionFileID(), "execution_key": item.ExecutionKey,
 	}); e != nil {
 		return nil, e
 	}
@@ -76,7 +82,7 @@ func (a *App) removeHistoricalTarget(ctx context.Context, item transferHistoryIt
 	}
 	var historical PlanFile
 	for _, file := range plan.Files {
-		if file.ID == item.ID {
+		if file.ID == item.executionFileID() {
 			historical = file
 			break
 		}
@@ -125,7 +131,7 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	}
 	var expected importSnapshot
 	for _, file := range plan.Files {
-		if file.ID == item.ID {
+		if file.ID == item.executionFileID() {
 			expected = planSnapshot(file)
 			break
 		}
@@ -133,8 +139,8 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	actual, e := snapshotPath(item.Source)
 	if errors.Is(e, os.ErrNotExist) {
 		var receipt historySourceRemoval
-		if a.Store.Get(ctx, "history_source_removal", item.ID, &receipt) == nil {
-			if receipt.HistoryID != item.ID || receipt.File.Path != item.Source || receipt.File.Snapshot != expected {
+		if a.Store.Get(ctx, "history_source_removal", item.executionFileID(), &receipt) == nil {
+			if receipt.HistoryID != item.executionFileID() || receipt.File.Path != item.Source || receipt.File.Snapshot != expected {
 				return importSnapshot{}, false, bad("HISTORY_SOURCE_RECEIPT", "源文件删除收据不一致")
 			}
 			location, checkErr := removalLocation(receipt.File)
@@ -216,14 +222,14 @@ func (a *App) removeHistorySource(ctx context.Context, item transferHistoryItem,
 	defer parent.Close()
 	name := filepath.Base(item.Source)
 	var receipt historySourceRemoval
-	if a.Store.Get(ctx, "history_source_removal", item.ID, &receipt) != nil {
-		receipt = historySourceRemoval{HistoryID: item.ID, File: assetRemovalFile{Path: item.Source, Snapshot: expected,
-			Kind: "source", Quarantine: ".light-media-remove-" + tokenHash(item.ID + now())[:32] + ".part"}, State: "deleting"}
-		if e = a.Store.Put(ctx, "history_source_removal", item.ID, receipt); e != nil {
+	if a.Store.Get(ctx, "history_source_removal", item.executionFileID(), &receipt) != nil {
+		receipt = historySourceRemoval{HistoryID: item.executionFileID(), File: assetRemovalFile{Path: item.Source, Snapshot: expected,
+			Kind: "source", Quarantine: ".light-media-remove-" + tokenHash(item.executionFileID() + now())[:32] + ".part"}, State: "deleting"}
+		if e = a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt); e != nil {
 			return e
 		}
 	}
-	if receipt.File.Path != item.Source || receipt.File.Snapshot != expected {
+	if receipt.HistoryID != item.executionFileID() || receipt.File.Path != item.Source || receipt.File.Snapshot != expected {
 		return bad("HISTORY_SOURCE_RECEIPT", "源文件删除收据不一致")
 	}
 	location, e := removalLocation(receipt.File)
@@ -246,7 +252,7 @@ func (a *App) removeHistorySource(ctx context.Context, item transferHistoryItem,
 	}
 	if location != "gone" {
 		receipt.File.Quarantined = true
-		if e = a.Store.Put(ctx, "history_source_removal", item.ID, receipt); e != nil {
+		if e = a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt); e != nil {
 			return e
 		}
 		if e = unix.Unlinkat(int(parent.Fd()), receipt.File.Quarantine, 0); e != nil {
@@ -259,5 +265,5 @@ func (a *App) removeHistorySource(ctx context.Context, item transferHistoryItem,
 	}
 	receipt.State = "completed"
 	receipt.File.Deleted = true
-	return a.Store.Put(ctx, "history_source_removal", item.ID, receipt)
+	return a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt)
 }

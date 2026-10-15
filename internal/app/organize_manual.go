@@ -86,6 +86,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (man
 	}
 	histories := map[string]transferHistoryItem{}
 	historyOwners := map[string]string{}
+	historySources := map[string]string{}
 	paths := append([]string{}, in.Paths...)
 	if len(in.HistoryIDs) > 0 {
 		paths = nil
@@ -100,12 +101,13 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (man
 			}
 			paths = append(paths, path)
 			histories[path] = h
+			historySources[path] = h.ResourceSource
 			var original ImportPlan
 			if e = a.Store.Get(ctx, "import_plan", h.PlanID, &original); e != nil {
 				return out, e
 			}
 			for _, file := range original.Files {
-				if file.ID == h.ID {
+				if file.ID == h.executionFileID() {
 					historyOwners[path] = file.AssetID
 					break
 				}
@@ -120,7 +122,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (man
 			item.ErrorCode = api.Code
 		}
 		if !in.Preview {
-			job, storeErr := a.recordManualOrganizeFailure(ctx, source, wf, e)
+			job, storeErr := a.recordManualOrganizeFailure(ctx, source, wf, e, historySources[source])
 			if storeErr != nil {
 				return storeErr
 			}
@@ -179,6 +181,7 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (man
 		request := ImportRequest{MediaType: in.MediaType, TMDBID: in.TMDBID, TargetPath: in.TargetPath, Mode: in.Mode, Renaming: in.Renaming, Scraping: in.Scraping, LibraryTypeFolder: in.LibraryTypeFolder, WorkflowID: wf, Files: []ImportFileRequest{{Path: file.Path}}}
 		request.Manual = true
 		request.ReorganizeAssetID = historyOwners[file.Path]
+		request.HistorySource = historySources[file.Path]
 		if len(in.HistoryIDs) == 0 {
 			var owned managedFile
 			if e := a.Store.Get(ctx, "managed_file", tokenHash(file.Path), &owned); e == nil && owned.Kind == "video" && owned.AssetID != "" {
@@ -188,11 +191,13 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (man
 				}
 				if asset.Path == file.Path && (asset.State == "present" || asset.State == "external") {
 					request.ReorganizeAssetID = asset.ID
+					request.HistorySource = asset.SourcePath
 				}
 			} else if e != nil && !errors.Is(e, sql.ErrNoRows) {
 				return out, e
 			}
 		}
+		historySources[file.Path] = request.HistorySource
 		if h, ok := histories[file.Path]; ok && in.FromHistory {
 			if !validMedia(request.MediaType, request.TMDBID) {
 				request.MediaType, request.TMDBID = h.Media.MediaType, h.Media.ID
@@ -323,8 +328,11 @@ func (a *App) manualOrganize(ctx context.Context, in manualOrganizeRequest) (man
 	return out, nil
 }
 
-func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, cause error) (Job, error) {
+func (a *App) recordManualOrganizeFailure(ctx context.Context, path, wf string, cause error, historySource ...string) (Job, error) {
 	plan := ImportPlan{ID: id("plan_"), WorkflowID: wf, State: "failed", CreatedAt: now(), Files: []PlanFile{{ID: id("file_"), Source: path, Status: "blocked", Reason: a.clean(cause.Error())}}}
+	if len(historySource) > 0 {
+		plan.Files[0].HistorySource = historySource[0]
+	}
 	if stamp, e := snapshotPath(path); e == nil {
 		f := &plan.Files[0]
 		f.Size, f.Device, f.Inode, f.ModNS = stamp.Size, stamp.Device, stamp.Inode, stamp.ModNS
@@ -593,7 +601,7 @@ func historySearchPattern(value string) string {
 }
 
 func (a *App) cancelOrganizeQueueFile(ctx context.Context, key string) (any, error) {
-	item, e := a.transferHistoryItem(ctx, key)
+	item, e := a.transferHistoryExecution(ctx, key)
 	if e != nil {
 		return nil, e
 	}

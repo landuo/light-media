@@ -11,48 +11,85 @@ import (
 )
 
 type transferHistoryItem struct {
-	ID           string        `json:"id"`
-	PlanID       string        `json:"plan_id"`
-	WorkflowID   string        `json:"workflow_id"`
-	JobID        string        `json:"job_id"`
-	JobState     string        `json:"job_state"`
-	Media        catalog.Media `json:"media"`
-	Season       int           `json:"season"`
-	Episodes     []int         `json:"episodes"`
-	Part         string        `json:"part,omitempty"`
-	Source       string        `json:"source"`
-	Target       string        `json:"target"`
-	Mode         string        `json:"mode"`
-	Size         int64         `json:"size"`
-	Status       string        `json:"status"`
-	FileStatus   string        `json:"file_status"`
-	Error        string        `json:"error"`
-	CreatedAt    string        `json:"created_at"`
-	UpdatedAt    string        `json:"updated_at"`
-	CanRetry     bool          `json:"can_retry"`
-	CanRecognize bool          `json:"can_recognize"`
+	ID             string        `json:"id"`
+	FileID         string        `json:"file_id"`
+	ResourceSource string        `json:"-"`
+	ExecutionKey   string        `json:"-"`
+	PlanID         string        `json:"plan_id"`
+	WorkflowID     string        `json:"workflow_id"`
+	JobID          string        `json:"job_id"`
+	JobState       string        `json:"job_state"`
+	Media          catalog.Media `json:"media"`
+	Season         int           `json:"season"`
+	Episodes       []int         `json:"episodes"`
+	Part           string        `json:"part,omitempty"`
+	Source         string        `json:"source"`
+	Target         string        `json:"target"`
+	Mode           string        `json:"mode"`
+	Size           int64         `json:"size"`
+	Status         string        `json:"status"`
+	FileStatus     string        `json:"file_status"`
+	Error          string        `json:"error"`
+	CreatedAt      string        `json:"created_at"`
+	UpdatedAt      string        `json:"updated_at"`
+	CanRetry       bool          `json:"can_retry"`
+	CanRecognize   bool          `json:"can_recognize"`
 }
 
-// History is a paginated projection of durable per-file import plans and the
-// latest execution job. Merely opening a preview does not create history.
+// The visible record is stable per source resource; execution plans stay
+// intact for recovery. Only submitted attempts participate, never previews.
 const transferHistoryJobMatch = `j.kind='import' AND json_extract(j.payload,'$.id')=r.id AND (
  (COALESCE(json_array_length(j.payload,'$.file_ids'),0)=0 AND json_extract(f.value,'$.status')!='blocked')
  OR EXISTS(SELECT 1 FROM json_each(j.payload,'$.file_ids') selected WHERE selected.value=json_extract(f.value,'$.id'))
 )`
 
-const transferHistoryCTE = `WITH history AS (
+// Normalize RFC3339Nano fractions before comparing creation times. This key
+// survives VACUUM/backup restoration, unlike SQLite's implicit job rowid.
+const transferHistoryBaseCTE = `WITH import_jobs AS (
+ SELECT *,substr(created_at,1,19)||'.'||substr(
+ CASE WHEN substr(created_at,20,1)='.' THEN substr(created_at,21,length(created_at)-21) ELSE '' END
+ ||'000000000',1,9)||'/'||id AS execution_key FROM jobs WHERE kind='import'
+), executed_files AS (
  SELECT r.id AS plan_id, json_remove(r.payload,'$.files','$.media.cast','$.media.recommendations','$.media.seasons') AS plan, f.value AS file, r.updated_at AS updated_at,
- COALESCE((SELECT j.id FROM jobs j WHERE ` + transferHistoryJobMatch + ` ORDER BY j.created_at DESC LIMIT 1),'') AS job_id,
- COALESCE((SELECT j.state FROM jobs j WHERE ` + transferHistoryJobMatch + ` ORDER BY j.created_at DESC LIMIT 1),'') AS job_state,
- COALESCE((SELECT j.error_message FROM jobs j WHERE ` + transferHistoryJobMatch + ` ORDER BY j.created_at DESC LIMIT 1),'') AS job_error,
+ j.id AS job_id,j.state AS job_state,j.error_message AS job_error,j.created_at AS executed_at,j.execution_key,
+ MIN(j.execution_key) OVER (PARTITION BY r.id,json_extract(f.value,'$.id')) AS first_execution_key,
+ ROW_NUMBER() OVER (PARTITION BY r.id,json_extract(f.value,'$.id') ORDER BY j.execution_key DESC) AS file_rank,
+ COALESCE(NULLIF(json_extract(f.value,'$.history_source'),''),
+ NULLIF(json_extract(meta.payload,'$.reorganize.asset.source_path'),''),
+ NULLIF(json_extract(f.value,'$.source'),''),'file:'||json_extract(f.value,'$.id')) AS resource_source,
  CASE WHEN json_extract(f.value,'$.status') IN ('imported','already_imported') THEN 'success'
- WHEN EXISTS (SELECT 1 FROM jobs j WHERE ` + transferHistoryJobMatch + ` AND j.state IN ('queued','running','retry_wait','waiting_paused')) THEN 'pending'
+ WHEN j.state IN ('queued','running','retry_wait','waiting_paused') THEN 'pending'
  ELSE 'failed' END AS status
  FROM records r,json_each(r.payload,'$.files') f
- WHERE r.kind='import_plan' AND json_extract(r.payload,'$.state') NOT IN ('preview','superseded')
- AND NOT EXISTS(SELECT 1 FROM records hidden WHERE hidden.kind='transfer_history_hidden' AND hidden.id=json_extract(f.value,'$.id'))
- AND EXISTS(SELECT 1 FROM jobs j WHERE ` + transferHistoryJobMatch + `)
+ JOIN import_jobs j ON ` + transferHistoryJobMatch + `
+ LEFT JOIN records meta ON meta.kind='import_meta' AND meta.id=r.id
+ WHERE r.kind='import_plan'
+), attempts AS (SELECT * FROM executed_files WHERE file_rank=1) `
+
+const transferHistoryCTE = transferHistoryBaseCTE + `, ranked_history AS (
+ SELECT *,
+ FIRST_VALUE(json_extract(file,'$.id')) OVER (PARTITION BY resource_source ORDER BY first_execution_key,json_extract(file,'$.id')) AS history_id,
+ FIRST_VALUE(json_extract(plan,'$.created_at')) OVER (PARTITION BY resource_source ORDER BY first_execution_key,json_extract(file,'$.id')) AS history_created_at,
+ ROW_NUMBER() OVER (PARTITION BY resource_source ORDER BY execution_key DESC,json_extract(file,'$.id')) AS history_rank
+ FROM attempts
+), history AS (
+ SELECT * FROM ranked_history h WHERE history_rank=1 AND NOT EXISTS (
+ SELECT 1 FROM records hidden JOIN attempts old ON hidden.id=json_extract(old.file,'$.id')
+ WHERE hidden.kind='transfer_history_hidden' AND old.resource_source=h.resource_source
+ AND (CASE WHEN COALESCE(json_extract(hidden.payload,'$.execution_key'),'')!=''
+ THEN json_extract(hidden.payload,'$.execution_key')>=h.execution_key
+ ELSE julianday(hidden.updated_at)>=julianday(h.executed_at) END)
+ )
 ) `
+
+const transferHistoryColumns = `plan,file,job_id,job_state,job_error,updated_at,status,history_id,history_created_at,resource_source,execution_key`
+
+func (item transferHistoryItem) executionFileID() string {
+	if item.FileID != "" {
+		return item.FileID
+	}
+	return item.ID
+}
 
 func (a *App) transferHistoryAPI(r *http.Request, p string) (any, error) {
 	parts := strings.Split(p, "/")
@@ -93,7 +130,7 @@ func (a *App) transferHistoryAPI(r *http.Request, p string) (any, error) {
 			if !item.CanRetry {
 				return nil, bad("TRANSFER_RETRY_UNAVAILABLE", "该记录无法直接重试，请重新识别并预览")
 			}
-			return a.executeImport(r.Context(), item.PlanID, []string{item.ID})
+			return a.executeImport(r.Context(), item.PlanID, []string{item.executionFileID()})
 		}
 	}
 	return nil, &APIError{"NOT_FOUND", "接口不存在", 404}
@@ -134,7 +171,7 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	if e := a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
 		return nil, e
 	}
-	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`SELECT plan,file,job_id,job_state,job_error,updated_at,status FROM history`+where+` ORDER BY updated_at DESC,plan_id,json_extract(file,'$.id') LIMIT ? OFFSET ?`, append(args, size, (page-1)*size)...)
+	rows, e := a.Store.DB.QueryContext(ctx, transferHistoryCTE+`SELECT `+transferHistoryColumns+` FROM history`+where+` ORDER BY updated_at DESC,execution_key DESC,history_id LIMIT ? OFFSET ?`, append(args, size, (page-1)*size)...)
 	if e != nil {
 		return nil, e
 	}
@@ -161,7 +198,9 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 func scanTransferHistory(row interface{ Scan(...any) error }) (transferHistoryItem, error) {
 	var planRaw, fileRaw []byte
 	var jobID, jobState, jobError, updated, status string
-	if e := row.Scan(&planRaw, &fileRaw, &jobID, &jobState, &jobError, &updated, &status); e != nil {
+	var historyID, createdAt, resourceSource string
+	var executionKey string
+	if e := row.Scan(&planRaw, &fileRaw, &jobID, &jobState, &jobError, &updated, &status, &historyID, &createdAt, &resourceSource, &executionKey); e != nil {
 		return transferHistoryItem{}, e
 	}
 	var plan ImportPlan
@@ -183,15 +222,20 @@ func scanTransferHistory(row interface{ Scan(...any) error }) (transferHistoryIt
 	if message == "" && status == "failed" {
 		message = "整理未完成，请查看关联任务"
 	}
-	return transferHistoryItem{ID: file.ID, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: plan.CreatedAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
+	return transferHistoryItem{ID: historyID, FileID: file.ID, ResourceSource: resourceSource, ExecutionKey: executionKey, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: createdAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
 }
 func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHistoryItem, error) {
-	item, e := scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT plan,file,job_id,job_state,job_error,updated_at,status FROM history WHERE json_extract(file,'$.id')=? LIMIT 1`, id))
+	item, e := scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT `+transferHistoryColumns+` FROM history WHERE history_id=? OR resource_source=(SELECT resource_source FROM attempts WHERE json_extract(file,'$.id')=? LIMIT 1) LIMIT 1`, id, id))
 	if e != nil {
 		return item, e
 	}
 	a.transferHistoryCapabilities(ctx, &item)
 	return item, nil
+}
+
+// Queue controls address an exact execution, never a stable-history redirect.
+func (a *App) transferHistoryExecution(ctx context.Context, fileID string) (transferHistoryItem, error) {
+	return scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryBaseCTE+`SELECT plan,file,job_id,job_state,job_error,updated_at,status,json_extract(file,'$.id'),json_extract(plan,'$.created_at'),resource_source,execution_key FROM attempts WHERE json_extract(file,'$.id')=? LIMIT 1`, fileID))
 }
 func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHistoryItem) {
 	_, e := snapshotPath(item.Source)
@@ -218,7 +262,7 @@ func (a *App) transferHistoryCapabilities(ctx context.Context, item *transferHis
 			return
 		}
 		for _, file := range plan.Files {
-			if file.ID == item.ID {
+			if file.ID == item.executionFileID() {
 				current, e := snapshotPath(item.Source)
 				if e != nil || current != planSnapshot(file) {
 					item.CanRetry = false

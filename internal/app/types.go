@@ -209,20 +209,21 @@ type Asset struct {
 	MissingSeenAt       string        `json:"missing_seen_at"`
 }
 type PlanFile struct {
-	Part     string `json:"part,omitempty"`
-	Method   string `json:"method"`
-	ID       string `json:"id"`
-	Source   string `json:"source"`
-	Target   string `json:"target"`
-	Size     int64  `json:"size"`
-	ModNS    int64  `json:"mod_ns"`
-	Device   uint64 `json:"device"`
-	Inode    uint64 `json:"inode"`
-	Season   int    `json:"season"`
-	Episodes []int  `json:"episodes"`
-	Status   string `json:"status"`
-	Reason   string `json:"reason"`
-	AssetID  string `json:"asset_id"`
+	HistorySource string `json:"history_source,omitempty"`
+	Part          string `json:"part,omitempty"`
+	Method        string `json:"method"`
+	ID            string `json:"id"`
+	Source        string `json:"source"`
+	Target        string `json:"target"`
+	Size          int64  `json:"size"`
+	ModNS         int64  `json:"mod_ns"`
+	Device        uint64 `json:"device"`
+	Inode         uint64 `json:"inode"`
+	Season        int    `json:"season"`
+	Episodes      []int  `json:"episodes"`
+	Status        string `json:"status"`
+	Reason        string `json:"reason"`
+	AssetID       string `json:"asset_id"`
 }
 type ImportPlan struct {
 	Manual            bool          `json:"manual,omitempty"`

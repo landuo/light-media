@@ -27,6 +27,7 @@ type ImportFileRequest struct {
 }
 
 type ImportRequest struct {
+	HistorySource     string              `json:"-"`
 	Manual            bool                `json:"-"`
 	ReorganizeAssetID string              `json:"-"`
 	Renaming          *bool               `json:"renaming,omitempty"`
@@ -252,6 +253,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	seenSourceInodes := map[string]bool{}
 	for _, requested := range request.Files {
 		file := PlanFile{ID: id("file_"), Source: requested.Path, Season: requested.Season, Episodes: append([]int(nil), requested.Episodes...), Part: strings.TrimSpace(requested.Part), Status: "ready"}
+		if len(request.Files) == 1 {
+			file.HistorySource = request.HistorySource
+		}
 		block := func(reason string) { file.Status = "blocked"; file.Reason = reason }
 		if len([]rune(file.Part)) > 64 || importName(file.Part) != file.Part {
 			block("Part 必须是有效的文件名片段，不能包含路径或特殊控制字符")

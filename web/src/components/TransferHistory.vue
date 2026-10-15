@@ -171,7 +171,12 @@ async function remove(deleteSource: boolean, deleteTarget: boolean) {
     try {
       await api(
         '/history/transfers/' + encodeURIComponent(item.id),
-        { confirm: true, delete_source: deleteSource, delete_target: deleteTarget },
+        {
+          confirm: true,
+          file_id: item.file_id || item.id,
+          delete_source: deleteSource,
+          delete_target: deleteTarget,
+        },
         'DELETE',
       );
       selected.value = selected.value.filter((id) => id !== item.id);

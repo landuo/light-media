@@ -56,7 +56,7 @@ type Options struct {
 	Web     http.Handler
 }
 
-const appVersion = "0.3.3"
+const appVersion = "0.3.4"
 
 type APIError struct {
 	Code    string `json:"code"`
