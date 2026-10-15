@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { action, api, bytes, clone, date, friendly, refreshSettings, toast } from '../api';
+import {
+  action,
+  api,
+  bytes,
+  clone,
+  date,
+  errorText,
+  friendly,
+  refreshSettings,
+  toast,
+} from '../api';
+import {
+  confirmedSiteImport,
+  downloadSiteExport,
+  readSiteImport,
+  type SiteImportResult,
+} from '../features/site-transfer';
 
 const data = ref<any>({ sites: [], supported: [] });
 const filter = ref('all'),
@@ -11,6 +27,33 @@ const loading = ref(false),
   saving = ref(false),
   refreshing = ref<string[]>([]),
   history = ref<any>(null);
+const importing = ref(false),
+  exporting = ref(false),
+  transferError = ref('');
+const importFile = ref<HTMLInputElement>();
+const importResult = ref<SiteImportResult | null>(null);
+const mutations = ref(0);
+const transferBusy = computed(() => importing.value || exporting.value);
+const transferBlocked = computed(
+  () =>
+    transferBusy.value ||
+    loading.value ||
+    saving.value ||
+    refreshing.value.length > 0 ||
+    mutations.value > 0 ||
+    !!editing.value,
+);
+const importSummary = computed(() =>
+  importResult.value
+    ? `导入结果：新增 ${importResult.value.created}，更新 ${importResult.value.updated}，跳过 ${importResult.value.skipped}，失败 ${importResult.value.failed}`
+    : '',
+);
+const importStatus: Record<string, string> = {
+  created: '已新增',
+  updated: '已更新',
+  skipped: '已跳过',
+  failed: '失败',
+};
 const filtered = computed(() =>
   data.value.sites.filter((row: any) => {
     if (filter.value === 'enabled' && !row.config.enabled) return false;
@@ -50,6 +93,7 @@ function value(stats: any, key: string) {
   return n;
 }
 async function load() {
+  if (transferBusy.value) return;
   loading.value = true;
   try {
     const result = await action(() => api('/sites/manage'));
@@ -59,6 +103,7 @@ async function load() {
   }
 }
 function create() {
+  if (transferBusy.value) return;
   original.value = null;
   editing.value = {
     id: '',
@@ -72,6 +117,7 @@ function create() {
   };
 }
 function edit(row: any) {
+  if (transferBusy.value) return;
   original.value = row;
   editing.value = clone(row.config);
 }
@@ -85,6 +131,7 @@ function template() {
   }
 }
 async function save() {
+  if (transferBusy.value) return;
   saving.value = true;
   try {
     const result = await action(() => api('/sites/manage', editing.value), '站点已保存');
@@ -98,32 +145,45 @@ async function save() {
   }
 }
 async function toggle(row: any) {
-  const result = await action(
-    () => api('/sites/manage', { ...row.config, enabled: !row.config.enabled }),
-    row.config.enabled ? '站点已停用' : '站点已启用',
-  );
-  if (result) {
-    data.value = result;
-    await refreshSettings();
+  if (transferBusy.value) return;
+  mutations.value++;
+  try {
+    const result = await action(
+      () => api('/sites/manage', { ...row.config, enabled: !row.config.enabled }),
+      row.config.enabled ? '站点已停用' : '站点已启用',
+    );
+    if (result) {
+      data.value = result;
+      await refreshSettings();
+    }
+  } finally {
+    mutations.value--;
   }
 }
 async function remove(row: any) {
+  if (transferBusy.value) return;
   if (
     !window.confirm(
       `删除「${row.config.name}」的连接配置和本应用统计记录？站点账户及下载器中的任务不会被删除。`,
     )
   )
     return;
-  const result = await action(
-    () => api('/sites/manage/' + encodeURIComponent(row.config.id), undefined, 'DELETE'),
-    '站点已删除',
-  );
-  if (result) {
-    data.value = result;
-    await refreshSettings();
+  mutations.value++;
+  try {
+    const result = await action(
+      () => api('/sites/manage/' + encodeURIComponent(row.config.id), undefined, 'DELETE'),
+      '站点已删除',
+    );
+    if (result) {
+      data.value = result;
+      await refreshSettings();
+    }
+  } finally {
+    mutations.value--;
   }
 }
 async function refresh(row: any) {
+  if (transferBusy.value) return;
   const id = row.config.id;
   if (refreshing.value.includes(id)) return;
   refreshing.value.push(id);
@@ -142,6 +202,7 @@ async function refresh(row: any) {
   }
 }
 async function refreshAll() {
+  if (transferBusy.value) return;
   for (const row of data.value.sites.filter((s: any) => s.config.enabled)) await refresh(row);
 }
 async function openHistory(row: any) {
@@ -157,6 +218,44 @@ function homepage(row: any) {
       : 'https://kp.m-team.cc'
     : row.config.base_url;
 }
+async function importSites(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  input.value = '';
+  if (!file || transferBlocked.value) return;
+  importing.value = true;
+  transferError.value = '';
+  importResult.value = null;
+  try {
+    const payload = await readSiteImport(file);
+    importResult.value = confirmedSiteImport(await api('/sites/import', payload));
+    if (importResult.value.imported) {
+      try {
+        data.value = await api('/sites/manage');
+        await refreshSettings();
+      } catch (e) {
+        transferError.value = '站点已导入，但刷新配置失败：' + errorText(e);
+      }
+    }
+  } catch (e) {
+    transferError.value = errorText(e);
+  } finally {
+    importing.value = false;
+  }
+}
+async function exportSites() {
+  if (transferBlocked.value) return;
+  exporting.value = true;
+  transferError.value = '';
+  try {
+    await downloadSiteExport();
+    toast('站点配置已导出');
+  } catch (e) {
+    transferError.value = errorText(e);
+  } finally {
+    exporting.value = false;
+  }
+}
 onMounted(load);
 </script>
 
@@ -164,11 +263,62 @@ onMounted(load);
   <section class="site-manager">
     <header class="manager-heading">
       <div class="manager-actions">
-        <button :disabled="loading || refreshing.length > 0" @click="refreshAll">
+        <input
+          ref="importFile"
+          type="file"
+          accept=".json,application/json"
+          aria-label="选择站点配置文件"
+          hidden
+          @change="importSites"
+        />
+        <button
+          :disabled="transferBlocked"
+          title="导入 MoviePilot 或本应用导出的站点配置"
+          @click="importFile?.click()"
+        >
+          {{ importing ? '正在导入…' : '导入' }}
+        </button>
+        <button
+          :disabled="transferBlocked || !data.sites.length"
+          title="导出文件包含站点 Cookie / API Key，请妥善保管"
+          @click="exportSites"
+        >
+          {{ exporting ? '正在导出…' : '导出' }}
+        </button>
+        <button :disabled="loading || refreshing.length > 0 || transferBusy" @click="refreshAll">
           刷新全部数据</button
-        ><button class="primary" @click="create">＋ 添加站点</button>
+        ><button class="primary" :disabled="transferBusy" @click="create">＋ 添加站点</button>
       </div>
     </header>
+    <p v-if="transferError" class="site-transfer-error" role="alert">{{ transferError }}</p>
+    <section v-if="importResult" class="site-import-result" aria-label="站点导入结果">
+      <div class="import-result-heading">
+        <strong role="status">{{ importSummary }}</strong
+        ><button class="icon-button" aria-label="关闭导入结果" @click="importResult = null">
+          ×
+        </button>
+      </div>
+      <details
+        :open="
+          importResult.failed > 0 ||
+          importResult.skipped > 0 ||
+          importResult.results.some((row) => row.warnings.length)
+        "
+      >
+        <summary>查看逐站结果</summary>
+        <ul>
+          <li
+            v-for="row in importResult.results"
+            :key="row.index"
+            :class="{ 'site-warning': row.status === 'failed' || row.status === 'skipped' }"
+          >
+            <strong>{{ row.name }} · {{ importStatus[row.status] }}</strong
+            ><span>{{ row.message }}</span
+            ><small v-for="(warning, index) in row.warnings" :key="index">{{ warning }}</small>
+          </li>
+        </ul>
+      </details>
+    </section>
     <div class="site-totals">
       <div v-for="t in totals" :key="t.key">
         <span>{{ fieldNames[t.key] }}</span
@@ -187,7 +337,7 @@ onMounted(load);
         <option value="enabled">已启用</option>
         <option value="disabled">已停用</option>
         <option value="failed">连接异常</option></select
-      ><button @click="load" :disabled="loading">重新加载</button>
+      ><button @click="load" :disabled="loading || transferBusy">重新加载</button>
     </div>
     <p v-if="!data.sites.length && !loading" class="manager-empty">
       尚未添加站点。点击「添加站点」，选择原生适配并填写 Cookie 或 API Key。
@@ -252,15 +402,15 @@ onMounted(load);
         <footer class="manager-actions">
           <button
             class="small"
-            :disabled="!row.config.enabled || refreshing.includes(row.config.id)"
+            :disabled="!row.config.enabled || refreshing.includes(row.config.id) || transferBusy"
             @click="refresh(row)"
           >
             {{ refreshing.includes(row.config.id) ? '正在刷新…' : '检测 / 刷新' }}</button
           ><button class="small" @click="openHistory(row)">历史数据</button
-          ><button class="small" @click="edit(row)">编辑</button
-          ><button class="small" @click="toggle(row)">
+          ><button class="small" :disabled="transferBusy" @click="edit(row)">编辑</button
+          ><button class="small" :disabled="transferBusy" @click="toggle(row)">
             {{ row.config.enabled ? '停用' : '启用' }}</button
-          ><button class="small danger" @click="remove(row)">删除</button>
+          ><button class="small danger" :disabled="transferBusy" @click="remove(row)">删除</button>
         </footer>
       </article>
     </div>
@@ -398,6 +548,50 @@ onMounted(load);
 .manager-heading {
   justify-content: flex-end;
   margin-bottom: 24px;
+}
+.site-transfer-error {
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #fff0ed;
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}
+.site-import-result {
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.import-result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.import-result-heading strong {
+  font-size: 13px;
+  line-height: 1.7;
+}
+.site-import-result summary {
+  margin-top: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--muted);
+}
+.site-import-result ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+.site-import-result li {
+  padding: 5px 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.site-import-result li span,
+.site-import-result li small {
+  display: block;
+  margin-top: 3px;
 }
 .manager-note {
   color: var(--muted);

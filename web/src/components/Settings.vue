@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { api, apiURL, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
+import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
 import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
 const emit = defineEmits<{ organize: [paths: string[]] }>();
@@ -12,7 +12,6 @@ const form = ref<any>(null),
   tab = ref(routeTab()),
   visitedTabs = ref(new Set([routeTab()])),
   testResult = ref<any>(null),
-  backups = ref<string[]>([]),
   saving = ref(false),
   logging = ref<any>(null),
   debugScope = ref('module'),
@@ -30,11 +29,9 @@ async function load() {
   form.value = JSON.parse(JSON.stringify(await refreshSettings()));
   form.value.tmdb ||= { api_key: '', access_token: '' };
   form.value.fnos ||= { host: '', username: '', password: '', enabled: false };
-  form.value.auto_import_mode ||= 'hardlink';
-  backups.value = (await api('/backups')) || [];
   logging.value = await api('/settings/logging');
 }
-async function save(section: 'tmdb' | 'fnos' | 'organize') {
+async function save(section: 'tmdb' | 'fnos') {
   saving.value = true;
   try {
     // Downloaders and directories have their own save actions. Read current
@@ -51,7 +48,6 @@ async function save(section: 'tmdb' | 'fnos' | 'organize') {
         password: form.value.fnos.password,
         enabled: form.value.fnos.enabled,
       };
-    if (section === 'organize') c.auto_import_mode = form.value.auto_import_mode;
     const result = await action(() => api('/settings', c, 'PUT'), '设置已保存');
     if (result) {
       ui.settings = result;
@@ -100,15 +96,6 @@ async function debug(enable: boolean, scope = debugScope.value, id = debugID.val
     return;
   }
   await saveLogging({ scope, id: id.trim(), minutes: 30, enabled: enable });
-}
-async function backup() {
-  const result = await action(() => api('/backups', {}), '数据库备份已创建');
-  if (result) backups.value = (await api('/backups')) || [];
-}
-async function restore(name: string) {
-  if (!confirm('准备恢复 ' + name + '？服务端会检查是否满足停机恢复条件。')) return;
-  const result = await action(() => api('/restore', { filename: name, confirm: true }));
-  if (result) testResult.value = result;
 }
 onMounted(() => {
   window.addEventListener('hashchange', syncTab);
@@ -188,17 +175,6 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     </div>
     <div v-if="visitedTabs.has('directory')" v-show="tab === 'directory'">
       <DirectoryManager @organize="emit('organize', $event)" />
-      <section class="panel">
-        <header class="section-heading"><h2>整理 &amp; 刮削</h2></header>
-        <label
-          >整理方式<select v-model="form.auto_import_mode">
-            <option value="hardlink">硬链接</option>
-            <option value="copy">复制</option>
-            <option value="auto">自动</option>
-          </select></label
-        >
-        <button class="primary" :disabled="saving" @click="save('organize')">保存</button>
-      </section>
     </div>
     <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'">
       <section v-if="logging" class="panel">
@@ -282,34 +258,6 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
           / {{ logging.health?.dropped_info || 0 }} / {{ logging.health?.dropped_warn || 0 }} /
           {{ logging.health?.dropped_error || 0 }}
         </p>
-      </section>
-      <section class="panel">
-        <div class="section-heading">
-          <h2>数据库备份</h2>
-          <button class="primary small" @click="backup">立即创建备份</button>
-        </div>
-        <p class="hint">
-          备份数据库与加密设置；迁移时需同时保留服务端主密钥。恢复准备由服务端检查，按返回指引停机完成。
-        </p>
-        <div class="table-wrap">
-          <table>
-            <tbody>
-              <tr v-for="name in backups" :key="name">
-                <td class="mono">{{ name }}</td>
-                <td>
-                  <a
-                    class="button small"
-                    :href="apiURL('/backups/' + encodeURIComponent(name))"
-                    download
-                    >下载</a
-                  >
-                </td>
-                <td><button class="small" @click="restore(name)">准备恢复</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p v-if="!backups.length" class="hint">还没有备份。</p>
       </section>
     </div>
     <section v-if="testResult" class="panel">

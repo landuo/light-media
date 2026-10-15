@@ -52,7 +52,7 @@ test('all request types and download/image URLs retain the HTTPS mount', async (
   );
   assert.equal(apiURL('/logs/stream?module=http'), '/light-media/api/logs/stream?module=http');
   assert.equal(apiURL('/logs/export?level=ERROR'), '/light-media/api/logs/export?level=ERROR');
-  assert.equal(apiURL('/backups/fixture.db'), '/light-media/api/backups/fixture.db');
+  assert.equal(apiURL('/sites/export'), '/light-media/api/sites/export');
   globalThis.location.pathname = '/';
   assert.equal(apiURL('/auth/status'), '/api/auth/status');
 });

@@ -56,7 +56,7 @@ type Options struct {
 	Web     http.Handler
 }
 
-const appVersion = "0.3.9"
+const appVersion = "0.3.10"
 
 type APIError struct {
 	Code    string `json:"code"`
@@ -84,6 +84,8 @@ func New(opts Options) (*App, error) {
 		s.Close()
 		return nil, e
 	}
+	// The global default is fixed; explicit directory and manual choices remain independent.
+	a.config.AutoImportMode = "hardlink"
 	if e = mountedMediaRoots(&a.config, a.Dir, os.Getenv("LIGHT_MEDIA_MEDIA_ROOTS")); e != nil {
 		s.Close()
 		return nil, e
@@ -146,7 +148,8 @@ func (a *App) Settings() Settings {
 	return c
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
-	c.DebugUntil = "" // Use process-local, expiring module/site overrides.
+	c.DebugUntil = ""             // Use process-local, expiring module/site overrides.
+	c.AutoImportMode = "hardlink" // Ignore obsolete global overrides from older clients.
 	for i := range c.Sites {
 		if c.Sites[i].Enabled {
 			if err := normalizeManagedSite(&c.Sites[i]); err != nil {

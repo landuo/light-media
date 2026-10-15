@@ -2,13 +2,11 @@ package app
 
 import (
 	"bytes"
-	"context"
 	"image"
 	"image/jpeg"
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -201,15 +199,10 @@ func TestProxyMountAuthenticatedImagesDownloadsAndSSE(t *testing.T) {
 	assetImageClient = &http.Client{Transport: imageTransport(func(r *http.Request) (*http.Response, error) {
 		return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": []string{"image/jpeg"}}, Body: io.NopCloser(bytes.NewReader(jpegData.Bytes()))}, nil
 	})}
-	backup, err := a.Store.Backup(context.Background(), filepath.Join(a.Dir, "backups"))
-	if err != nil {
-		t.Fatal(err)
-	}
 	for _, tc := range []struct {
 		path, contentType, contains string
 	}{
 		{"/catalog/image?path=%2Ffixture.jpg&size=w342", "image/jpeg", string(jpegData.Bytes())},
-		{"/backups/" + backup, "application/octet-stream", "SQLite format 3"},
 		{"/logs/export", "application/x-ndjson", `"type":"export_meta"`},
 		{"/logs/stream?last_event_id=instance_other:12", "text/event-stream", "event: gap"},
 	} {

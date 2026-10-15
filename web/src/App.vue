@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { api, action, ui, refreshSettings, refreshStatus, go, toast, errorText, date } from './api';
+import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import Catalog from './components/Catalog.vue';
 import Resources from './components/Resources.vue';
 import DownloaderTasks from './components/DownloaderTasks.vue';
@@ -160,14 +160,6 @@ async function logout() {
   await action(() => api('/auth/logout', {}));
   expired();
 }
-async function control() {
-  const next = !paused.value;
-  const r = await action(
-    () => api('/control', { paused: next }),
-    next ? '自动流程已暂停' : '自动流程已恢复',
-  );
-  if (r) await refreshStatus();
-}
 let timer: number;
 onMounted(() => {
   window.addEventListener('hashchange', change);
@@ -318,18 +310,6 @@ onUnmounted(() => {
         <div class="topbar-actions">
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button
-            class="small ghost"
-            :aria-label="paused ? '恢复自动流程' : '暂停自动流程'"
-            :title="paused ? '恢复自动流程' : '暂停自动流程'"
-            @click="control"
-          >
-            <svg class="control-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path :d="paused ? 'M4 2l10 6-10 6V2Z' : 'M3 2h3v12H3zm7 0h3v12h-3z'" />
-            </svg>
-            <span class="control-label">{{
-              paused ? '恢复自动流程' : '暂停自动流程'
-            }}</span></button
-          ><button
             class="bell-button"
             aria-label="任务通知"
             :aria-expanded="notificationsOpen"
@@ -343,7 +323,19 @@ onUnmounted(() => {
             ><span v-if="notifications.unread">{{
               notifications.unread > 99 ? '99+' : notifications.unread
             }}</span></button
-          ><button class="avatar" title="退出登录" aria-label="退出登录" @click="logout">A</button>
+          ><button class="icon-button" title="退出登录" aria-label="退出登录" @click="logout">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+            </svg>
+          </button>
         </div>
       </header>
       <div

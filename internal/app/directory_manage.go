@@ -218,10 +218,7 @@ func (a *App) resolveDownloadDestinationContext(ctx context.Context, d Downloade
 			return out, e
 		}
 		out.Root = root.ID
-		out.Mode = c.AutoImportMode
-		if out.Mode == "" {
-			out.Mode = "hardlink"
-		}
+		out.Mode = "hardlink"
 		return out, nil
 	}
 	source, e := mapDownloaderPath(c, d, out.Path)

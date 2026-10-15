@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -162,6 +161,14 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out, e = a.fileManagerAPI(r, strings.TrimPrefix(p, "files/"))
 	case strings.HasPrefix(p, "history/"):
 		out, e = a.transferHistoryAPI(r, strings.TrimPrefix(p, "history/"))
+	case p == "sites/export" && method == "GET":
+		a.exportManagedSites(w, r)
+		return
+	case p == "sites/import" && method == "POST":
+		var in json.RawMessage
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.importManagedSites(ctx, in)
+		}
 	case p == "sites/manage" && method == "GET":
 		out, e = a.managedSites(ctx)
 	case p == "sites/manage" && method == "POST":
@@ -400,40 +407,6 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		client, e = fnos.NewService(fnos.Config{Host: c.Host, Username: c.Username, Password: c.Password})
 		if e == nil {
 			out, e = client.Libraries(ctx)
-		}
-	case p == "backups" && method == "POST":
-		var name string
-		name, e = a.Store.Backup(ctx, filepath.Join(a.Dir, "backups"))
-		out = map[string]string{"filename": name}
-	case p == "backups" && method == "GET":
-		entries, err := os.ReadDir(filepath.Join(a.Dir, "backups"))
-		if err != nil && !os.IsNotExist(err) {
-			e = err
-		}
-		names := []string{}
-		for _, entry := range entries {
-			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".db") {
-				names = append(names, entry.Name())
-			}
-		}
-		out = names
-	case strings.HasPrefix(p, "backups/") && method == "GET":
-		name := strings.TrimPrefix(p, "backups/")
-		if filepath.Base(name) != name || !strings.HasSuffix(name, ".db") {
-			e = bad("INVALID_PATH", "无效备份名称")
-		} else {
-			w.Header().Set("Content-Disposition", "attachment; filename="+strconv.Quote(name))
-			http.ServeFile(w, r, filepath.Join(a.Dir, "backups", name))
-			return
-		}
-	case p == "restore" && method == "POST":
-		var in struct {
-			Filename string `json:"filename"`
-			Confirm  bool   `json:"confirm"`
-		}
-		e = decodeBody(w, r, &in)
-		if e == nil {
-			out, e = a.prepareRestore(ctx, in.Filename, in.Confirm)
 		}
 	default:
 		e = &APIError{"NOT_FOUND", "接口不存在", 404}
