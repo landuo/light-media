@@ -34,6 +34,12 @@ const visibleResults = computed(() =>
     (m) => !query.value || searchKind.value === 'all' || m.media_type === searchKind.value,
   ),
 );
+const spotlight = computed(() => results.value.find((m) => m.backdrop_path) || results.value[0]);
+const listName = computed(
+  () =>
+    ({ popular: '热门推荐', top_rated: '高分榜单', trending_day: '今日趋势' })[list.value] ||
+    '热门推荐',
+);
 const filteredCredits = computed(() =>
   credits.value
     .filter((m) => creditsKind.value === 'all' || m.media_type === creditsKind.value)
@@ -144,8 +150,8 @@ onMounted(load);
   <template v-if="parts[0] === 'discover' || parts[0] === 'search'"
     ><div class="page-heading">
       <div>
-        <p class="eyebrow">DISCOVER</p>
-        <h1>{{ query ? '“' + query + '” 的搜索结果' : '发现' }}</h1>
+        <p class="eyebrow">{{ query ? 'SEARCH' : 'YOUR NEXT FAVORITE' }}</p>
+        <h1>{{ query ? '“' + query + '” 的搜索结果' : '发现好故事' }}</h1>
         <p class="muted">
           {{
             query
@@ -154,7 +160,7 @@ onMounted(load);
           }}
         </p>
       </div>
-      <form class="search-field" @submit.prevent="submitSearch">
+      <form v-if="parts[0] === 'search'" class="search-field" @submit.prevent="submitSearch">
         <span>⌕</span
         ><input v-model="query" placeholder="搜索电影、剧集…" aria-label="搜索影视" /><button
           class="small primary"
@@ -163,6 +169,41 @@ onMounted(load);
         </button>
       </form>
     </div>
+    <section
+      v-if="!query && !loading && spotlight"
+      class="discovery-spotlight"
+      :style="
+        image(spotlight.backdrop_path, 'w1280')
+          ? {
+              backgroundImage: `linear-gradient(90deg,rgba(18,25,43,.98) 0%,rgba(18,25,43,.86) 35%,rgba(18,25,43,.12) 100%),url(${image(spotlight.backdrop_path, 'w1280')})`,
+            }
+          : {}
+      "
+    >
+      <div class="spotlight-copy">
+        <span class="spotlight-kicker"
+          ><span></span>{{ listName }} · {{ label(spotlight.media_type) }}</span
+        >
+        <h2>{{ spotlight.title }}</h2>
+        <p class="spotlight-meta">
+          <span v-if="spotlight.vote_average > 0" class="spotlight-rating"
+            >★ {{ spotlight.vote_average.toFixed(1) }}</span
+          >{{ spotlight.year || '上映待定' }}
+        </p>
+        <p v-if="spotlight.overview" class="spotlight-overview">{{ spotlight.overview }}</p>
+        <div class="spotlight-actions">
+          <button @click="go('detail/' + spotlight.media_type + '/' + spotlight.id)">
+            查看详情 <span aria-hidden="true">↗</span>
+          </button>
+          <button
+            class="spotlight-secondary"
+            @click="go('resources/' + spotlight.media_type + '/' + spotlight.id)"
+          >
+            搜索资源
+          </button>
+        </div>
+      </div>
+    </section>
     <div class="toolbar">
       <div v-if="query" class="segmented">
         <button class="selected">影视</button>
@@ -386,3 +427,117 @@ onMounted(load);
   >
   <div v-else-if="loading" class="panel loading-state">正在加载影视资料…</div>
 </template>
+<style scoped>
+.discovery-spotlight {
+  position: relative;
+  min-height: 282px;
+  border-radius: 15px;
+  padding: 30px 34px;
+  margin: 0 0 28px;
+  color: #fff;
+  background: #182138;
+  background-size: cover;
+  background-position: center 35%;
+  overflow: hidden;
+}
+.spotlight-copy {
+  max-width: 510px;
+}
+.spotlight-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d4dbec;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+.spotlight-kicker > span {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background: #b8b0ff;
+}
+.spotlight-copy h2 {
+  color: #fff;
+  margin: 20px 0 9px;
+  font-size: 31px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+.spotlight-meta {
+  display: flex;
+  gap: 16px;
+  color: #bec9de;
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+.spotlight-rating {
+  color: #f9d98a;
+}
+.spotlight-overview {
+  color: #cbd4e5;
+  line-height: 1.8;
+  font-size: 13px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 440px;
+  margin-bottom: 23px;
+}
+.spotlight-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.spotlight-actions button {
+  background: #fff;
+  border-color: #fff;
+  color: #202b43;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 17px;
+}
+.spotlight-actions .spotlight-secondary {
+  background: #ffffff0b;
+  border-color: #ffffff38;
+  color: #fff;
+}
+.spotlight-actions button:hover {
+  background: #eeedff;
+  color: #3b359e;
+  border-color: #eeedff;
+}
+@media (max-width: 760px) {
+  .discovery-spotlight {
+    padding: 24px;
+    min-height: 260px;
+    background-position: 60% center;
+  }
+  .spotlight-copy {
+    max-width: 400px;
+  }
+  .spotlight-copy h2 {
+    font-size: 27px;
+  }
+  .spotlight-overview {
+    max-width: 330px;
+  }
+}
+@media (max-width: 520px) {
+  .discovery-spotlight {
+    padding: 23px;
+    min-height: 240px;
+    border-radius: 12px;
+  }
+  .spotlight-copy h2 {
+    font-size: 25px;
+    margin-top: 17px;
+  }
+  .spotlight-overview {
+    font-size: 12px;
+  }
+}
+</style>

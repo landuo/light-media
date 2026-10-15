@@ -630,10 +630,36 @@ onMounted(async () => {
               </td>
               <td>
                 <button v-if="item.type === 'dir'" class="fm-filename" @click="load(item.path)">
-                  📁 {{ item.name }}</button
-                ><span v-else
-                  >{{ item.video ? '🎞' : item.type === 'symlink' ? '↗' : '▤' }}
-                  {{ item.name }}</span
+                  <svg
+                    class="fm-file-icon folder"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 6h7l2 3h9v11H3V6Z" />
+                    <path d="M3 9h18" /></svg
+                  >{{ item.name }}</button
+                ><span v-else class="fm-file-label"
+                  ><svg
+                    class="fm-file-icon"
+                    :class="{ video: item.video }"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      v-if="item.video"
+                      d="M3 5h18v14H3V5Zm6 0v14m6-14v14M3 10h6m-6 4h6m6-4h6m-6 4h6"
+                    />
+                    <path v-else d="M5 3h9l5 5v13H5V3Zm9 0v6h5" /></svg
+                  >{{ item.name
+                  }}<span v-if="item.type === 'symlink'" aria-label="符号链接">↗</span></span
                 ><small v-if="item.protected" class="fm-protected">{{ item.protected }}</small>
               </td>
               <td>{{ item.type === 'dir' ? '—' : bytes(item.size) }}</td>
@@ -1227,10 +1253,14 @@ onMounted(async () => {
   padding: 10px 14px;
   margin: 10px 0;
   border-radius: 8px;
-  background: #21344d;
+  background: var(--accent-soft);
 }
 .fm-table-wrap {
   overflow: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-top: 14px;
 }
 .fm-table {
   width: 100%;
@@ -1262,9 +1292,29 @@ onMounted(async () => {
   background: none;
   text-align: left;
   padding: 0;
+  gap: 10px;
+}
+.fm-file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.fm-file-icon {
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+  color: #8894a8;
+}
+.fm-file-icon.folder {
+  color: #b98b3d;
+  fill: #fff3d9;
+}
+.fm-file-icon.video {
+  color: #7768bc;
+  fill: #f2eeff;
 }
 .fm-selected {
-  background: #25354a;
+  background: #f1f0ff;
 }
 .fm-protected {
   display: block;
@@ -1279,6 +1329,10 @@ onMounted(async () => {
 }
 .fm-menu {
   position: relative;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
 }
 .fm-menu summary {
   cursor: pointer;
@@ -1292,10 +1346,10 @@ onMounted(async () => {
   width: 170px;
   padding: 6px;
   z-index: 8;
-  border: 1px solid #46546a;
+  border: 1px solid var(--line);
   border-radius: 9px;
   background: var(--panel, #1c2635);
-  box-shadow: 0 8px 24px #0006;
+  box-shadow: 0 8px 24px #16244320;
 }
 .fm-menu button {
   display: block;
@@ -1305,26 +1359,26 @@ onMounted(async () => {
   background: none;
 }
 .fm-danger {
-  color: #ff9396 !important;
+  color: var(--danger) !important;
 }
 .fm-error {
-  color: #ff9698;
+  color: var(--danger);
   white-space: pre-wrap;
 }
 .fm-warning {
-  color: #e7bd7d;
+  color: #936320;
   font-size: 13px;
 }
 .fm-success {
   padding: 15px;
-  background: #163e35;
+  background: #eaf7ef;
   border-radius: 8px;
-  color: #9fe4bc;
+  color: #23754f;
 }
 .fm-overlay {
   position: fixed;
   inset: 0;
-  background: #000a;
+  background: #17223b77;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -1335,12 +1389,12 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   background: var(--panel, #182230);
-  border: 1px solid #3d4b60;
+  border: 1px solid var(--line);
   border-radius: 14px;
   width: 620px;
   max-width: 100%;
   max-height: 92dvh;
-  box-shadow: 0 20px 80px #0008;
+  box-shadow: 0 20px 80px #16244324;
 }
 .fm-wide {
   width: 1100px;
@@ -1348,7 +1402,7 @@ onMounted(async () => {
 .fm-dialog header {
   justify-content: space-between;
   padding: 16px 22px;
-  border-bottom: 1px solid var(--line, #354156);
+  border-bottom: 1px solid var(--line);
 }
 .fm-dialog header h2 {
   margin: 0;
@@ -1361,7 +1415,7 @@ onMounted(async () => {
 .fm-dialog footer {
   justify-content: flex-end;
   padding: 14px 22px;
-  border-top: 1px solid var(--line, #354156);
+  border-top: 1px solid var(--line);
 }
 .fm-dialog-body > label {
   display: grid;
@@ -1390,14 +1444,14 @@ onMounted(async () => {
   color: var(--muted, #9ba9ba);
 }
 .fm-identity {
-  background: #25344a;
+  background: #f3f4fb;
   padding: 14px;
   border-radius: 8px;
   margin: 10px 0;
 }
 .fm-identity span {
   flex: 1;
-  color: #b2bfd2;
+  color: #5c6880;
   font-size: 13px;
 }
 .fm-path {
@@ -1419,7 +1473,7 @@ onMounted(async () => {
   min-width: 0 !important;
 }
 .fm-preview {
-  border: 1px solid #3e526d;
+  border: 1px solid var(--line);
   border-radius: 9px;
   padding: 15px;
   margin-top: 15px;
@@ -1429,7 +1483,7 @@ onMounted(async () => {
   align-items: flex-start;
   gap: 10px;
   padding: 10px 0;
-  border-top: 1px solid #354156;
+  border-top: 1px solid var(--line);
 }
 .fm-note {
   font-size: 12px;

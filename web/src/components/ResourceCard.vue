@@ -133,9 +133,17 @@ function promotion(r: Record<string, any>) {
   flex-direction: column;
   border: 1px solid var(--border, #2a354a);
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
   background: var(--surface, #171f2e);
   min-width: 0;
+  box-shadow: 0 2px 6px #18233804;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.release-card:hover {
+  border-color: #c7cce0;
+  box-shadow: 0 5px 16px #18233808;
 }
 .release-top {
   display: flex;
@@ -147,28 +155,37 @@ function promotion(r: Record<string, any>) {
   font-size: 13px;
 }
 .promo {
-  background: #654729;
-  color: #ffcf88;
+  background: #fff3df;
+  color: #8c5c15;
   padding: 3px 8px;
   border-radius: 5px;
   font-size: 11px;
   white-space: nowrap;
 }
 .promo.free {
-  background: #174534;
-  color: #9be8bd;
+  background: #e7f7ee;
+  color: #24794e;
 }
 h3 {
   font-size: 14px;
   line-height: 1.65;
   overflow-wrap: anywhere;
   margin: 0;
+  color: #26344b;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .release-description {
   font-size: 12px;
   color: var(--muted, #9aa8be);
   line-height: 1.7;
   margin: 8px 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .release-facts {
   display: flex;
@@ -179,6 +196,8 @@ h3 {
 }
 .release-facts b {
   margin-right: auto;
+  font-size: 16px;
+  color: #26344b;
 }
 .release-actions {
   display: flex;
@@ -187,6 +206,7 @@ h3 {
   gap: 10px;
   margin-top: auto;
   padding-top: 12px;
+  border-top: 1px solid var(--line);
 }
 .release-link {
   font-size: 12px;
@@ -210,6 +230,39 @@ h3 {
 }
 .release-review {
   font-size: 12px;
+  margin: 4px 0 14px;
+  padding: 0;
+  border: 0;
+}
+.release-review summary {
+  font-size: 12px;
+  padding: 5px 0;
+  background: none;
+}
+.release-review p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+.more-sources {
+  margin-bottom: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: 12px 0 0;
+}
+.more-sources summary {
+  font-size: 12px;
+}
+.release-card .hint {
+  font-size: 11px;
+  margin: 10px 0;
+}
+.release-card .tags {
+  margin: 0;
+  gap: 5px;
+}
+.release-top label {
+  color: #536078;
 }
 .downloaded {
   color: #167448;

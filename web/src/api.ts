@@ -1,4 +1,6 @@
 import { reactive } from 'vue';
+import { apiURL } from './base-path.ts';
+export { apiURL } from './base-path.ts';
 export type Any = Record<string, any>;
 const messages: Record<string, string> = {
   media_identity_required: '下载前请选择影视身份并确认季集',
@@ -87,7 +89,7 @@ export function errorText(e: unknown) {
 export async function api<T = any>(path: string, body?: any, method?: string): Promise<T> {
   ui.busy++;
   try {
-    const r = await fetch('/api' + path, {
+    const r = await fetch(apiURL(path), {
       method: method || (body === undefined ? 'GET' : 'POST'),
       credentials: 'same-origin',
       headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
@@ -133,7 +135,7 @@ export async function searchStream(
 ): Promise<any> {
   ui.busy++;
   try {
-    const response = await fetch('/api/search', {
+    const response = await fetch(apiURL('/search'), {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
@@ -238,7 +240,7 @@ export function image(path: string, size = 'w342') {
   if (!path || !/^\/[A-Za-z0-9._/-]+$/.test(path) || path.startsWith('//') || path.includes('..'))
     return '';
   const safeSize = ['w92', 'w185', 'w342', 'w500', 'w780', 'w1280'].includes(size) ? size : 'w342';
-  return '/api/catalog/image?' + new URLSearchParams({ path, size: safeSize });
+  return apiURL('/catalog/image?' + new URLSearchParams({ path, size: safeSize }));
 }
 export function bytes(n: number) {
   if (!n) return '0 B';

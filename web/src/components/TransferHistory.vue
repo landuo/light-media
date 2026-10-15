@@ -272,16 +272,28 @@ onUnmounted(() => {
 }
 .th-filters {
   display: flex;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
   padding-bottom: 18px;
 }
 .th-filters input {
-  flex: 1;
+  flex: 1 1 280px;
+  width: auto;
   min-width: 230px;
+}
+.th-filters select {
+  width: auto;
+  flex: 0 0 145px;
+}
+.th-filters > button {
+  flex-shrink: 0;
 }
 .th-table-wrap {
   overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
 }
 table {
   border-collapse: collapse;
@@ -347,19 +359,19 @@ td small {
   font-size: 12px;
 }
 .th-status.success {
-  color: #86dcb3;
-  background: #163e35;
+  color: #23754f;
+  background: #eaf7ef;
 }
 .th-status.pending {
-  color: #92bff4;
-  background: #1f3c60;
+  color: #2b60aa;
+  background: #edf3fd;
 }
 .th-status.failed {
-  color: #ffa5aa;
-  background: #4a242e;
+  color: #b42336;
+  background: #fff0f1;
 }
 .th-error {
-  color: #ff9da5 !important;
+  color: #b42336 !important;
   white-space: pre-wrap;
 }
 .th-empty {
@@ -383,7 +395,7 @@ td small {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #000a;
+  background: #17223b77;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -391,7 +403,7 @@ td small {
 }
 .th-overlay > section {
   background: var(--panel, #192331);
-  border: 1px solid #3c4c63;
+  border: 1px solid var(--line);
   border-radius: 12px;
   width: 800px;
   max-width: 100%;
@@ -405,7 +417,7 @@ td small {
   align-items: center;
   justify-content: space-between;
   padding: 16px 22px;
-  border-bottom: 1px solid #354357;
+  border-bottom: 1px solid var(--line);
 }
 .th-overlay h2 {
   font-size: 19px;
@@ -413,7 +425,7 @@ td small {
 }
 .th-overlay footer {
   justify-content: flex-end;
-  border-top: 1px solid #354357;
+  border-top: 1px solid var(--line);
   border-bottom: 0;
   flex-wrap: wrap;
 }
@@ -449,6 +461,13 @@ td small {
   margin-bottom: 4px;
 }
 @media (max-width: 700px) {
+  .th-filters input,
+  .th-filters select,
+  .th-filters > button {
+    width: 100%;
+    flex-basis: 100%;
+    min-width: 0;
+  }
   .th-overlay {
     padding: 6px;
   }

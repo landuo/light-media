@@ -842,10 +842,10 @@ onUnmounted(() => {
   color: var(--muted);
 }
 .site-progress-item.ok > span {
-  color: #8fd6ad;
+  color: #24794e;
 }
 .site-progress-item.failed > span {
-  color: #e7a2a2;
+  color: #b42336;
 }
 .filter-row {
   display: flex;

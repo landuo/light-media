@@ -55,7 +55,7 @@ type Options struct {
 	Web     http.Handler
 }
 
-const appVersion = "0.2.0"
+const appVersion = "0.2.1"
 
 type APIError struct {
 	Code    string `json:"code"`
@@ -301,6 +301,8 @@ func (a *App) auth(w http.ResponseWriter, r *http.Request) (bool, error) {
 		a.authMu.Unlock()
 		return false, &APIError{"RATE_LIMITED", "登录尝试过多，请15分钟后重试", 429}
 	}
+	// Reserve an attempt before bcrypt so concurrent requests cannot bypass the
+	// limit. Only failed attempts remain after a successful authentication.
 	a.authAttempts[host] = append(valid, time.Now())
 	if len(a.authAttempts) > 1000 {
 		a.authAttempts = map[string][]time.Time{host: a.authAttempts[host]}
@@ -327,12 +329,15 @@ func (a *App) auth(w http.ResponseWriter, r *http.Request) (bool, error) {
 	if e != nil {
 		return false, e
 	}
-	http.SetCookie(w, &http.Cookie{Name: "lm_session", Value: token, Path: "/", HttpOnly: true, Secure: r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https", SameSite: http.SameSiteStrictMode, MaxAge: 604800})
+	a.authMu.Lock()
+	delete(a.authAttempts, host)
+	a.authMu.Unlock()
+	http.SetCookie(w, sessionCookie(r, token, 604800))
 	a.log("INFO", "auth", "login", "管理员已登录", "", "")
 	return true, nil
 }
 func (a *App) authenticated(r *http.Request) bool {
-	cookie, e := r.Cookie("lm_session")
+	cookie, e := r.Cookie(sessionCookie(r, "", 0).Name)
 	if e != nil || len(cookie.Value) > 128 {
 		return false
 	}

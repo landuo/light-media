@@ -1,3 +1,5 @@
+import { apiURL } from './base-path.ts';
+
 const pages = new Set([
   'discover',
   'detail',
@@ -45,7 +47,7 @@ export function reportFrontendError(
     UNHANDLED_REJECTION: '页面异步操作异常',
     SCRIPT_ERROR: '页面脚本执行异常',
   };
-  void fetch('/api/frontend-errors', {
+  void fetch(apiURL('/frontend-errors'), {
     method: 'POST',
     credentials: 'same-origin',
     headers: { 'Content-Type': 'application/json' },

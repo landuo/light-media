@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -62,7 +61,7 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 	w.WriteHeader(out.Status)
 	_ = json.NewEncoder(w).Encode(map[string]any{"error": out, "request_id": w.Header().Get("X-Request-ID")})
 }
-func (a *App) Handler() http.Handler { return a.requestLogged(a.handler()) }
+func (a *App) Handler() http.Handler { return mountEntrypoints(a.requestLogged(a.handler())) }
 func (a *App) handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
@@ -85,13 +84,9 @@ func (a *App) handler() http.Handler {
 		w.Header().Set("X-Frame-Options", "DENY")
 		if strings.HasPrefix(r.URL.Path, "/api/") {
 			if r.Method != "GET" && r.Method != "HEAD" {
-				origin := r.Header.Get("Origin")
-				if origin != "" {
-					u, e := url.Parse(origin)
-					if e != nil || !strings.EqualFold(u.Host, r.Host) {
-						a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "请求来源不匹配", 403})
-						return
-					}
+				if !sameRequestOrigin(r) {
+					a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "请求来源不匹配", 403})
+					return
 				}
 				if r.Header.Get("Sec-Fetch-Site") == "cross-site" {
 					a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "禁止跨站写入请求", 403})
@@ -119,10 +114,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		_, e = a.auth(w, r)
 		out = map[string]bool{"authenticated": e == nil}
 	case p == "auth/logout" && method == "POST":
-		if c, err := r.Cookie("lm_session"); err == nil {
+		if c, err := r.Cookie(sessionCookie(r, "", -1).Name); err == nil {
 			_, e = a.Store.DB.ExecContext(ctx, `DELETE FROM sessions WHERE token_hash=?`, tokenHash(c.Value))
 		}
-		http.SetCookie(w, &http.Cookie{Name: "lm_session", Value: "", Path: "/", MaxAge: -1, HttpOnly: true, SameSite: http.SameSiteStrictMode})
+		http.SetCookie(w, sessionCookie(r, "", -1))
 		out = map[string]bool{"authenticated": false}
 	case p == "status" && method == "GET":
 		out = a.status(ctx)

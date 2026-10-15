@@ -361,17 +361,8 @@ func (a *App) frontendErrorAPI(w http.ResponseWriter, r *http.Request) (any, err
 		return nil, bad("INVALID_FRONTEND_ERROR", "前端诊断字段不在允许范围")
 	}
 	session := ""
-	for _, c := range r.Cookies() {
-		if c.Name == "lm_session" {
-			session = c.Value
-			break
-		}
-	}
-	if session == "" {
-		for _, c := range r.Cookies() {
-			session = c.Value
-			break
-		}
+	if cookie, err := r.Cookie(sessionCookie(r, "", 0).Name); err == nil {
+		session = cookie.Value
 	}
 	session = tokenHash(session)
 	now := time.Now()

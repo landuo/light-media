@@ -1,8 +1,8 @@
-import { APIError, ui } from '../api.ts';
+import { APIError, apiURL, ui } from '../api.ts';
 export async function keywordResourceSearch(body: Record<string, any>, signal: AbortSignal) {
   ui.busy++;
   try {
-    const response = await fetch('/api/search/resources', {
+    const response = await fetch(apiURL('/search/resources'), {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },

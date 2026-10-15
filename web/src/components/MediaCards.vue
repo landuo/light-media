@@ -34,7 +34,16 @@ function detail(m: any) {
       </p>
       <div v-if="quickActions" class="media-actions">
         <button class="small" @click="go('resources/' + m.media_type + '/' + m.id)">
-          ⌕ 搜索资源
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
+            <circle cx="8.5" cy="8.5" r="5.5" />
+            <path d="m13 13 4 4" /></svg
+          >资源
         </button>
         <button
           class="small"
@@ -66,13 +75,16 @@ function detail(m: any) {
 }
 .media-name {
   display: block;
-  padding: 10px 0 0;
+  padding: 12px 0 0;
   border: 0;
   background: none;
   width: 100%;
   text-align: left;
 }
 .media-name strong {
+  font-size: 14px;
+  font-weight: 650;
+  color: #273247;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -80,13 +92,40 @@ function detail(m: any) {
 }
 .media-actions {
   display: flex;
-  gap: 5px;
-  margin-top: 8px;
+  gap: 7px;
+  margin-top: 11px;
 }
 .media-actions button {
   min-width: 0;
   flex: 1;
-  padding: 6px 4px;
-  font-size: 11px;
+  padding: 7px 5px;
+  font-size: 12px;
+  border-color: #e1e5ef;
+  background: #fff;
+  color: #5b6680;
+}
+.media-actions button:hover {
+  border-color: #c6c0fa;
+  color: var(--accent);
+  background: #f3f1ff;
+}
+.media-actions svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.poster-action:hover {
+  box-shadow: 0 10px 25px #17203320;
+}
+.media-name:hover {
+  color: var(--accent);
+}
+.media-name:hover strong {
+  color: inherit;
+}
+@media (max-width: 760px) {
+  .media-name strong {
+    font-size: 13px;
+  }
 }
 </style>

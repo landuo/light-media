@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { api, action, ui, refreshSettings, toast, date, bytes, go } from '../api';
+import { api, apiURL, action, ui, refreshSettings, toast, date, bytes, go } from '../api';
 const form = ref<any>(null),
   tab = ref('connect'),
   testResult = ref<any>(null),
@@ -574,7 +574,7 @@ onMounted(() => action(load));
                 <td>
                   <a
                     class="button small"
-                    :href="'/api/backups/' + encodeURIComponent(name)"
+                    :href="apiURL('/backups/' + encodeURIComponent(name))"
                     download
                     >下载</a
                   >

@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import {
   api,
+  apiURL,
   action,
   ui,
   bytes,
@@ -365,7 +366,7 @@ function stream() {
   sse?.close();
   sse = null;
   if (live.value) {
-    sse = new EventSource('/api/logs/stream?' + logParams(), { withCredentials: true });
+    sse = new EventSource(apiURL('/logs/stream?' + logParams()), { withCredentials: true });
     sse.onmessage = (e) => {
       try {
         const entry = JSON.parse(e.data);
@@ -889,7 +890,7 @@ onUnmounted(() => {
         ><label>结束时间<input v-model="logTo" type="datetime-local" /></label>
         <div class="button-row">
           <button class="primary">查询日志</button
-          ><a class="button" :href="'/api/logs/export?' + logParams()" download>导出当前筛选</a
+          ><a class="button" :href="apiURL('/logs/export?' + logParams())" download>导出当前筛选</a
           ><label class="check"
             ><input v-model="live" type="checkbox" @change="stream" />实时跟随</label
           >

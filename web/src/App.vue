@@ -11,6 +11,7 @@ import SiteManager from './components/SiteManager.vue';
 import DownloaderManager from './components/DownloaderManager.vue';
 import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
+import BrandMark from './components/BrandMark.vue';
 const route = ref(location.hash.slice(1) || 'discover'),
   auth = ref<any>(null),
   username = ref(''),
@@ -40,8 +41,13 @@ const icons: Record<string, string> = {
     'M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8M10 2h4l1 3 3 1 3-1 2 4-2 2v3l2 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 2-2v-3L1 9l2-4 3 1 3-1Z',
 };
 const nav = [
-  { label: '', items: [['search', 'search', '搜索结果']] },
-  { label: '发现', items: [['discover', 'star', '推荐']] },
+  {
+    label: '',
+    items: [
+      ['discover', 'star', '发现'],
+      ['search', 'search', '搜索结果'],
+    ],
+  },
   {
     label: '订阅',
     items: [
@@ -54,7 +60,7 @@ const nav = [
     label: '整理',
     items: [
       ['downloads', 'download', '下载管理'],
-      ['history', 'history', '媒体整理'],
+      ['history', 'history', '整理历史'],
       ['files', 'folder', '文件管理'],
       ['library', 'library', '媒体库'],
     ],
@@ -66,7 +72,7 @@ const nav = [
       ['downloaders', 'server', '下载器'],
       ['jobs', 'jobs', '任务队列'],
       ['logs', 'logs', '日志'],
-      ['settings', 'settings', '设定'],
+      ['settings', 'settings', '设置'],
     ],
   },
 ];
@@ -195,14 +201,14 @@ onUnmounted(() => {
 <template>
   <div v-if="starting" class="auth-shell">
     <div class="auth-card">
-      <div class="brand-symbol">◈</div>
+      <div class="brand-symbol"><BrandMark /></div>
       <h1>光影</h1>
       <p class="muted">正在连接你的媒体空间…</p>
     </div>
   </div>
   <div v-else-if="!auth?.authenticated" class="auth-shell">
     <form class="auth-card" @submit.prevent="login">
-      <div class="brand-symbol">◈</div>
+      <div class="brand-symbol"><BrandMark /></div>
       <p class="eyebrow">LIGHT MEDIA</p>
       <h1>{{ auth?.setup_required ? '创建你的媒体空间' : '欢迎回来' }}</h1>
       <p class="muted">
@@ -233,16 +239,17 @@ onUnmounted(() => {
     <div v-if="mobile" class="sidebar-shade" @click="mobile = false"></div>
     <aside :class="['sidebar', { open: mobile }]">
       <a class="brand" href="#discover"
-        ><span class="brand-mark">◈</span><span>光影<small>LIGHT MEDIA</small></span></a
+        ><span class="brand-mark"><BrandMark /></span><span>光影<small>LIGHT MEDIA</small></span></a
       >
       <nav>
         <template v-for="group in nav" :key="group.label">
           <div v-if="group.label" class="nav-caption">{{ group.label }}</div>
           <a
-            v-for="n in group.items"
+            v-for="n in group.items.filter((item) => item[0] !== 'settings')"
             :key="n[0]"
             :href="navHref(n[0]!)"
             :class="{ active: activeNav(n[0]!) }"
+            :aria-current="activeNav(n[0]!) ? 'page' : undefined"
             ><span class="nav-icon"
               ><svg
                 viewBox="0 0 24 24"
@@ -262,9 +269,24 @@ onUnmounted(() => {
         >
       </nav>
       <div class="sidebar-bottom">
+        <a
+          href="#settings"
+          class="sidebar-settings"
+          :class="{ active: pageKey === 'settings' }"
+          :aria-current="pageKey === 'settings' ? 'page' : undefined"
+          ><svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path :d="icons.settings" /></svg
+          >设置<span aria-hidden="true">›</span></a
+        >
         <span class="dot" :class="{ amber: paused }"></span
-        >{{ paused ? '自动流程已暂停' : ui.status ? '服务运行中' : '服务状态待确认'
-        }}<small>Light Media · P0 操作对齐版</small>
+        >{{ paused ? '自动流程已暂停' : ui.status ? '服务运行中' : '服务状态待确认' }}
       </div>
     </aside>
     <div class="main-shell">
@@ -275,7 +297,15 @@ onUnmounted(() => {
           :aria-expanded="mobile"
           @click="mobile = !mobile"
         >
-          ☰
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
         <form class="global-search" role="search" @submit.prevent="searchMedia">
           <svg
@@ -291,14 +321,24 @@ onUnmounted(() => {
             ref="searchInput"
             v-model="globalQuery"
             aria-label="搜索电影、剧集"
-            placeholder="搜索电影、剧集以及更多…"
+            placeholder="搜索电影、剧集…"
           />
           <button type="submit" aria-label="搜索影视">搜索</button><kbd>⌘K</kbd>
         </form>
         <div class="topbar-actions">
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
-          ><button class="small ghost" @click="control">
-            {{ paused ? '▶ 恢复自动流程' : 'Ⅱ 暂停自动流程' }}</button
+          ><button
+            class="small ghost"
+            :aria-label="paused ? '恢复自动流程' : '暂停自动流程'"
+            :title="paused ? '恢复自动流程' : '暂停自动流程'"
+            @click="control"
+          >
+            <svg class="control-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path :d="paused ? 'M4 2l10 6-10 6V2Z' : 'M3 2h3v12H3zm7 0h3v12h-3z'" />
+            </svg>
+            <span class="control-label">{{
+              paused ? '恢复自动流程' : '暂停自动流程'
+            }}</span></button
           ><button
             class="bell-button"
             aria-label="任务通知"
