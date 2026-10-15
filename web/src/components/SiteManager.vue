@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { api, bytes, clone, date, errorText, friendly, refreshSettings, toast, ui } from '../api';
 import { downloadSiteExport, type SiteImportResult } from '../features/site-transfer';
 import SiteImportDialog from './SiteImportDialog.vue';
@@ -28,26 +28,60 @@ const credentialTab = ref('cookie'),
   limitEnabled = ref(false),
   sortMode = ref(false),
   dragged = ref('');
+type SiteTestState = { status: 'queued' | 'testing' | 'ok' | 'failed'; message: string };
+type SiteTestJob = { id: string; name: string; quiet: boolean; resolve: (ok: boolean) => void };
+const siteTests = ref<Record<string, SiteTestState>>({});
+const batch = ref({ running: false, ids: [] as string[], done: 0, ok: 0, failed: 0 });
+const testQueue: SiteTestJob[] = [];
+const testRequests = new Map<string, Promise<boolean>>();
+let activeTests = 0,
+  testReloadNeeded = false,
+  disposed = false;
 const transferBusy = computed(() => importing.value || exporting.value);
+const testBlocked = computed(
+  () =>
+    transferBusy.value ||
+    loading.value ||
+    saving.value ||
+    mutations.value > 0 ||
+    importVisible.value ||
+    !!editing.value ||
+    !!deleting.value ||
+    sortMode.value,
+);
 const working = computed(
   () =>
     transferBusy.value ||
     loading.value ||
     saving.value ||
     mutations.value > 0 ||
-    refreshing.value.length > 0,
+    refreshing.value.length > 0 ||
+    batch.value.running,
 );
 const transferBlocked = computed(
   () => working.value || !!editing.value || !!deleting.value || importVisible.value,
 );
-const state = (row: any) =>
-  row.connection.status === 'failed'
+const savedState = (row: any) => {
+  return row.connection.status === 'failed'
     ? 'failed'
     : row.connection.status === 'ok'
       ? row.connection.duration_ms >= 5000
         ? 'slow'
         : 'connected'
       : 'unknown';
+};
+const state = (row: any) => {
+  const test = siteTests.value[row.config.id];
+  return test && test.status !== 'ok' ? test.status : savedState(row);
+};
+const connectionLabel = (row: any) => {
+  const current = state(row);
+  const message =
+    current === 'queued' ? '排队中' : current === 'testing' ? '测试中…' : statuses[current];
+  return row.config.enabled
+    ? message
+    : '已停用' + (siteTests.value[row.config.id] ? ' · ' + message : '');
+};
 const statuses: Record<string, string> = {
   all: '全部站点',
   enabled: '已启用',
@@ -61,9 +95,12 @@ const filtered = computed<any[]>(() =>
   data.value.sites.filter((row: any) => {
     if (filter.value === 'enabled' && !row.config.enabled) return false;
     if (filter.value === 'disabled' && row.config.enabled) return false;
+    const test = siteTests.value[row.config.id];
+    const current =
+      test?.status === 'queued' || test?.status === 'testing' ? savedState(row) : state(row);
     if (
       ['connected', 'slow', 'failed', 'unknown'].includes(filter.value) &&
-      state(row) !== filter.value
+      current !== filter.value
     )
       return false;
     return (row.config.name + row.config.base_url)
@@ -104,7 +141,7 @@ function value(stats: any, key: string) {
     : n;
 }
 async function load() {
-  if (transferBusy.value || loading.value || importVisible.value) return;
+  if (transferBusy.value || loading.value || importVisible.value || refreshing.value.length) return;
   loading.value = true;
   error.value = '';
   try {
@@ -216,21 +253,91 @@ async function remove() {
     mutations.value--;
   }
 }
-async function refresh(row: any) {
-  if (transferBusy.value || importVisible.value || refreshing.value.includes(row.config.id)) return;
+function refresh(row: any, quiet = false): Promise<boolean> {
   const id = row.config.id;
+  const pending = testRequests.get(id);
+  if (pending) return pending;
+  if (disposed || testBlocked.value) return Promise.resolve(false);
+  let finish!: (ok: boolean) => void;
+  const promise = new Promise<boolean>((resolve) => {
+    finish = resolve;
+  });
+  testRequests.set(id, promise);
   refreshing.value.push(id);
+  siteTests.value[id] = { status: 'queued', message: '' };
   error.value = '';
-  try {
-    data.value = await api('/sites/manage/' + encodeURIComponent(id) + '/refresh', {});
-    const updated = data.value.sites.find((site: any) => site.config.id === id);
-    if (updated?.connection.status === 'ok') toast(row.config.name + ' 连接正常');
-    else toast(row.config.name + '：' + friendly(updated?.connection.error || '检测失败'), true);
-  } catch (e) {
-    error.value = errorText(e);
-  } finally {
-    refreshing.value = refreshing.value.filter((key) => key !== id);
+  testReloadNeeded = true;
+  testQueue.push({ id, name: row.config.name, quiet, resolve: finish });
+  pumpTests();
+  return promise;
+}
+function pumpTests() {
+  while (!disposed && activeTests < 3 && testQueue.length) {
+    const job = testQueue.shift()!;
+    activeTests++;
+    void runTest(job);
   }
+  if (!disposed && activeTests === 0 && !testQueue.length && testReloadNeeded) {
+    testReloadNeeded = false;
+    void load();
+  }
+}
+async function runTest(job: SiteTestJob) {
+  let ok = false;
+  siteTests.value[job.id] = { status: 'testing', message: '' };
+  try {
+    const result = await api('/sites/manage/' + encodeURIComponent(job.id) + '/refresh', {});
+    if (disposed) return;
+    const updated = result.sites?.find((site: any) => site.config.id === job.id);
+    if (!updated || !data.value.sites.some((site: any) => site.config.id === job.id))
+      throw new Error('站点已变化，请刷新后重试');
+    // Concurrent endpoints return full snapshots. Only this request's row is
+    // authoritative; replacing the table can undo another completed test.
+    data.value.sites = data.value.sites.map((site: any) =>
+      site.config.id === job.id ? updated : site,
+    );
+    ok = updated.connection?.status === 'ok';
+    siteTests.value[job.id] = {
+      status: ok ? 'ok' : 'failed',
+      message: ok ? '连接正常' : friendly(updated.connection?.error || '检测失败'),
+    };
+    if (!job.quiet && !batch.value.running)
+      toast(job.name + '：' + siteTests.value[job.id]!.message, !ok);
+  } catch (e) {
+    if (!disposed) {
+      siteTests.value[job.id] = { status: 'failed', message: errorText(e) };
+      if (!job.quiet && !batch.value.running) toast(job.name + '：' + errorText(e), true);
+    }
+  } finally {
+    activeTests--;
+    testRequests.delete(job.id);
+    refreshing.value = refreshing.value.filter((key) => key !== job.id);
+    job.resolve(ok);
+    pumpTests();
+  }
+}
+async function refreshVisible() {
+  if (testBlocked.value || batch.value.running || !filtered.value.length) return;
+  const targets = [...filtered.value];
+  batch.value = {
+    running: true,
+    ids: targets.map((row) => row.config.id),
+    done: 0,
+    ok: 0,
+    failed: 0,
+  };
+  await Promise.all(
+    targets.map(async (row) => {
+      const ok = await refresh(row, true);
+      if (disposed) return;
+      batch.value.done++;
+      if (ok) batch.value.ok++;
+      else batch.value.failed++;
+    }),
+  );
+  if (disposed) return;
+  batch.value.running = false;
+  toast(`站点测试完成：成功 ${batch.value.ok}，失败 ${batch.value.failed}`, batch.value.failed > 0);
 }
 async function openHistory(row: any) {
   history.value = { name: row.config.name, row, items: [], loading: true, error: '' };
@@ -315,6 +422,14 @@ function browse(row: any) {
   if (!sortMode.value && !working.value && !importVisible.value) resources.value = row.config;
 }
 onMounted(load);
+onUnmounted(() => {
+  disposed = true;
+  testReloadNeeded = false;
+  for (const job of testQueue.splice(0)) {
+    testRequests.delete(job.id);
+    job.resolve(false);
+  }
+});
 </script>
 
 <template>
@@ -328,6 +443,15 @@ onMounted(load);
         <option v-for="(title, key) in statuses" :key="key" :value="key">{{ title }}</option>
       </select>
       <button
+        :disabled="testBlocked || batch.running || !filtered.length"
+        aria-label="测试连接"
+        title="测试当前列表中的站点"
+        @click="refreshVisible"
+      >
+        <AppIcon :name="batch.running ? 'refresh' : 'check'" :class="{ spinning: batch.running }" />
+        {{ batch.running ? '测试中…' : '测试连接' }}
+      </button>
+      <button
         :disabled="working"
         :aria-pressed="sortMode"
         :aria-label="sortMode ? '退出排序' : '排序'"
@@ -339,6 +463,25 @@ onMounted(load);
       <button :disabled="working" aria-label="刷新" @click="load">
         <AppIcon name="refresh" />刷新
       </button>
+    </div>
+    <div
+      v-if="batch.ids.length"
+      class="site-test-summary"
+      role="status"
+      aria-live="polite"
+      aria-label="站点连接测试进度"
+    >
+      <span
+        >{{ batch.running ? '正在测试' : '测试完成' }} · 已完成 {{ batch.done }} /
+        {{ batch.ids.length }}</span
+      >
+      <span class="test-success">成功 {{ batch.ok }}</span>
+      <span :class="{ 'test-failure': batch.failed }">失败 {{ batch.failed }}</span>
+      <progress
+        :value="batch.done"
+        :max="batch.ids.length"
+        aria-label="批量测试完成进度"
+      ></progress>
     </div>
     <p v-if="error" class="error-box" role="alert">{{ error }}</p>
     <p v-if="sortMode" class="sort-notice">
@@ -375,9 +518,11 @@ onMounted(load);
             <span class="site-monogram">{{ row.config.name.slice(0, 1) }}</span>
             <div class="site-card-identity">
               <h2>{{ row.config.name }}</h2>
-              <span class="site-status" :class="!row.config.enabled ? 'disabled' : state(row)">
-                <span aria-hidden="true"></span
-                >{{ !row.config.enabled ? '已停用' : statuses[state(row)] }}
+              <span
+                class="site-status"
+                :class="!row.config.enabled && !siteTests[row.config.id] ? 'disabled' : state(row)"
+              >
+                <span aria-hidden="true"></span>{{ connectionLabel(row) }}
               </span>
             </div>
           </div>
@@ -390,6 +535,14 @@ onMounted(load);
             ><span>{{ homepage(row) }}</span
             ><AppIcon name="external"
           /></a>
+          <p
+            v-if="siteTests[row.config.id]?.status === 'failed'"
+            class="site-test-error"
+            :aria-label="row.config.name + ' 测试结果'"
+            :title="siteTests[row.config.id]!.message"
+          >
+            {{ siteTests[row.config.id]!.message }}
+          </p>
           <div class="site-traffic">
             <div>
               <span class="traffic-label"><AppIcon name="arrow-up" />上传</span
@@ -414,13 +567,14 @@ onMounted(load);
             class="connection-dot"
             :class="state(row)"
             :aria-label="'测试 ' + row.config.name"
-            :title="statuses[state(row)] + ' · 测试连通性'"
-            :disabled="working"
+            :title="connectionLabel(row) + ' · 测试连通性'"
+            :disabled="testBlocked || refreshing.includes(row.config.id)"
+            :aria-busy="siteTests[row.config.id]?.status === 'testing'"
             @click="refresh(row)"
           >
             <AppIcon
               :name="
-                refreshing.includes(row.config.id)
+                siteTests[row.config.id]?.status === 'testing'
                   ? 'refresh'
                   : state(row) === 'connected'
                     ? 'check'
@@ -428,7 +582,7 @@ onMounted(load);
                       ? 'warning'
                       : 'clock'
               "
-              :class="{ spinning: refreshing.includes(row.config.id) }"
+              :class="{ spinning: siteTests[row.config.id]?.status === 'testing' }"
             />
           </button>
           <button
@@ -907,6 +1061,41 @@ onMounted(load);
   border-color: var(--accent);
   color: var(--accent);
 }
+.site-test-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 12px 16px;
+  margin: -8px 0 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+}
+.site-test-summary > span:first-child {
+  color: var(--text);
+  margin-right: auto;
+}
+.site-test-summary progress {
+  width: 100%;
+  height: 4px;
+  accent-color: var(--accent);
+}
+.test-success {
+  color: var(--accent);
+}
+.test-failure,
+.site-test-error {
+  color: var(--danger);
+}
+.site-test-error {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
 .empty {
   padding: 70px 20px;
   text-align: center;
@@ -996,7 +1185,9 @@ onMounted(load);
   background: currentColor;
   border-radius: 50%;
 }
-.site-status.connected {
+.site-status.connected,
+.site-status.testing,
+.site-status.queued {
   color: var(--accent);
 }
 .site-status.failed {
@@ -1542,10 +1733,12 @@ td {
 }
 @media (max-width: 650px) {
   .site-toolbar {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .site-search {
-    flex-basis: 100%;
+    grid-column: 1 / -1;
+    width: 100%;
     max-width: none;
   }
   .site-grid {
@@ -1592,7 +1785,7 @@ td {
     grid-template-columns: repeat(2, 1fr);
   }
   .site-toolbar select {
-    flex: 1;
+    width: 100%;
   }
   .site-card-body {
     padding: 18px;

@@ -78,7 +78,8 @@ function sourceFor(name) {
 }
 async function mount(t, name, options = {}) {
   const fixture = { requests: [], events: [], toasts: [], downloads: 0, data: fixtures() },
-    mounted = [];
+    mounted = [],
+    unmounted = [];
   const api = async (path, body, method) => {
     fixture.requests.push({
       path,
@@ -119,7 +120,7 @@ async function mount(t, name, options = {}) {
       return {
         ...vue,
         onMounted: (fn) => mounted.push(fn),
-        onUnmounted: () => {},
+        onUnmounted: (fn) => unmounted.push(fn),
         withDirectives: (node) => node,
       };
     if (dependency === '../api')
@@ -154,7 +155,14 @@ async function mount(t, name, options = {}) {
       emit: (event, ...values) => fixture.events.push([event, ...values]),
     }),
   );
-  t.after(() => scope.stop());
+  let disposed = false;
+  function unmount() {
+    if (disposed) return;
+    disposed = true;
+    for (const callback of unmounted) callback();
+    scope.stop();
+  }
+  t.after(unmount);
   for (const callback of mounted) await callback();
   await vue.nextTick();
   await vue.nextTick();
@@ -179,6 +187,7 @@ async function mount(t, name, options = {}) {
     );
   return {
     fixture,
+    unmount,
     nodes,
     label,
     button,
@@ -203,6 +212,189 @@ async function mount(t, name, options = {}) {
     },
   };
 }
+
+const copy = (value) => JSON.parse(JSON.stringify(value));
+async function settleConnectionTests() {
+  for (let i = 0; i < 12; i++) await Promise.resolve();
+  await vue.nextTick();
+}
+function nodeText(node) {
+  if (node == null) return '';
+  if (typeof node === 'string') return node;
+  if (Array.isArray(node)) return node.map(nodeText).join(' ');
+  return nodeText(node.children);
+}
+function connectionRun({ count = 5, reloadFails = false } = {}) {
+  const ids = ['one', 'two', 'three', 'four', 'five'].slice(0, count);
+  const names = ['示例一', '示例二', '示例三', '示例四', '示例五'];
+  const server = {
+    supported: [],
+    sites: ids.map((id, index) => ({
+      ...copy(fixtures().sites[0]),
+      config: {
+        ...copy(fixtures().sites[0].config),
+        id,
+        name: names[index],
+        base_url: `https://${id}.invalid`,
+        enabled: true,
+        pri: index + 1,
+      },
+      connection: { status: 'failed', error: 'old failure' },
+    })),
+  };
+  const stale = copy(server),
+    pending = new Map();
+  const run = { ids, started: [], active: 0, maximum: 0, loads: 0 };
+  run.api = async (path, body) => {
+    if (path === '/sites/manage' && !body) {
+      run.loads++;
+      if (run.loads > 1 && reloadFails) throw new Error('最终校准暂时不可用');
+      return copy(server);
+    }
+    const match = path.match(/^\/sites\/manage\/([^/]+)\/refresh$/);
+    if (!match) return;
+    const id = decodeURIComponent(match[1]);
+    run.started.push(id);
+    run.maximum = Math.max(run.maximum, ++run.active);
+    return new Promise((resolve, reject) => pending.set(id, { resolve, reject }));
+  };
+  run.complete = (id, { status = 'ok', uploaded = 2000, reject = false } = {}) => {
+    const request = pending.get(id);
+    assert.ok(request, `${id} must have a running connection test`);
+    const row = server.sites.find((item) => item.config.id === id);
+    row.connection = {
+      status,
+      duration_ms: 100,
+      error: status === 'failed' ? 'synthetic failure' : '',
+    };
+    row.stats = { ...row.stats, uploaded };
+    pending.delete(id);
+    run.active--;
+    if (reject) {
+      request.reject(new Error('synthetic network failure'));
+      return;
+    }
+    // Refresh responses contain whole lists; unrelated rows intentionally predate other results.
+    const result = copy(stale);
+    result.sites[result.sites.findIndex((item) => item.config.id === id)] = copy(row);
+    request.resolve(result);
+  };
+  return run;
+}
+
+test('batch connection tests keep a filtered target snapshot, cap concurrency at three, and continue after business and network failures', async (t) => {
+  const run = connectionRun();
+  const view = await mount(t, 'SiteManager', { api: run.api });
+  await view.update('站点状态', 'failed');
+  view.label('测试连接').props.onClick();
+  await settleConnectionTests();
+  assert.deepEqual(run.started, ['one', 'two', 'three']);
+  assert.equal(run.maximum, 3);
+  assert.match(nodeText(view.label('示例一 资源')), /测试中/);
+  assert.match(nodeText(view.label('示例四 资源')), /排队中/);
+  assert.match(nodeText(view.label('站点连接测试进度')), /已完成 0 \/ 5/);
+
+  run.complete('one');
+  await settleConnectionTests();
+  assert.equal(view.label('示例一 资源'), undefined, 'success exits the failed filter');
+  assert.deepEqual(run.started, ['one', 'two', 'three', 'four']);
+  run.complete('two', { status: 'failed' });
+  await settleConnectionTests();
+  assert.deepEqual(run.started, ['one', 'two', 'three', 'four', 'five']);
+  run.complete('three', { status: 'failed', reject: true });
+  run.complete('four');
+  run.complete('five');
+  await settleConnectionTests();
+
+  const progress = nodeText(view.label('站点连接测试进度'));
+  assert.match(progress, /已完成 5 \/ 5/);
+  assert.match(progress, /成功 3/);
+  assert.match(progress, /失败 2/);
+  assert.equal(run.maximum, 3);
+  assert.equal(run.loads, 2, 'one final list reload calibrates the finished batch');
+  assert.equal(new Set(run.started).size, 5);
+});
+
+test('individual and batch connection tests share slots and deduplicate already running or queued sites', async (t) => {
+  const run = connectionRun();
+  const view = await mount(t, 'SiteManager', { api: run.api });
+  const firstButton = view.label('测试 示例一');
+  firstButton.props.onClick();
+  await settleConnectionTests();
+  assert.equal(view.label('测试 示例二').props.disabled, false, 'another site remains testable');
+  view.label('测试 示例二').props.onClick();
+  await settleConnectionTests();
+  assert.deepEqual(run.started, ['one', 'two']);
+
+  view.label('测试连接').props.onClick();
+  firstButton.props.onClick();
+  await settleConnectionTests();
+  assert.deepEqual(run.started, ['one', 'two', 'three']);
+  view.label('测试 示例四').props.onClick();
+  await settleConnectionTests();
+  assert.equal(run.started.length, 3, 'queued site cannot bypass the concurrency cap');
+  run.complete('one');
+  await settleConnectionTests();
+  run.complete('two');
+  await settleConnectionTests();
+  assert.deepEqual(run.started, ['one', 'two', 'three', 'four', 'five']);
+  run.complete('three');
+  run.complete('four');
+  run.complete('five');
+  await settleConnectionTests();
+
+  assert.equal(run.maximum, 3);
+  assert.equal(run.active, 0);
+  assert.equal(run.started.length, 5, 'each site is tested once across both entry points');
+  assert.equal(new Set(run.started).size, 5);
+});
+
+test('out-of-order whole-list refresh responses preserve other site results when final calibration fails', async (t) => {
+  const run = connectionRun({ count: 2, reloadFails: true });
+  const view = await mount(t, 'SiteManager', { api: run.api });
+  view.label('测试连接').props.onClick();
+  await settleConnectionTests();
+  run.complete('two', { uploaded: 22222 });
+  await settleConnectionTests();
+  assert.match(nodeText(view.label('示例二 资源')), /22222/);
+  run.complete('one', { uploaded: 11111 });
+  await settleConnectionTests();
+
+  assert.match(nodeText(view.label('示例一 资源')), /11111/);
+  assert.match(
+    nodeText(view.label('示例二 资源')),
+    /22222/,
+    'later stale list must not undo another site result',
+  );
+  assert.match(nodeText(view.label('示例一 资源')), /连接正常/);
+  assert.match(nodeText(view.label('示例二 资源')), /连接正常/);
+  assert.equal(run.loads, 2);
+  const progress = nodeText(view.label('站点连接测试进度'));
+  assert.match(progress, /已完成 2 \/ 2/);
+  assert.match(progress, /成功 2/);
+  assert.match(progress, /失败 0/);
+});
+
+test('leaving site management cancels queued connection tests without sending new requests or reloading', async (t) => {
+  const run = connectionRun();
+  const view = await mount(t, 'SiteManager', { api: run.api });
+  view.label('测试连接').props.onClick();
+  await settleConnectionTests();
+  assert.deepEqual(run.started, ['one', 'two', 'three']);
+  view.unmount();
+  run.complete('one');
+  run.complete('two');
+  run.complete('three');
+  await settleConnectionTests();
+  assert.deepEqual(
+    run.started,
+    ['one', 'two', 'three'],
+    'unmounted queued sites are not contacted',
+  );
+  assert.equal(run.loads, 1, 'the detached page does not start a final reload');
+  assert.equal(run.active, 0);
+  assert.equal(view.fixture.toasts.length, 0);
+});
 
 test('site creation starts from a URL, with original credential tabs and effective UA/timeout/rate fields', async (t) => {
   const view = await mount(t, 'SiteManager');
