@@ -1,9 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { parse, compileScript } from '@vue/compiler-sfc';
-import ts from 'typescript';
-import * as vue from 'vue';
 import * as transfer from '../src/features/site-transfer.ts';
 
 const moviePilot = [
@@ -186,260 +182,177 @@ test('authentication and malformed export responses are errors, never downloaded
   assert.deepEqual(fixture.downloads, []);
 });
 
-const source = readFileSync(new URL('../src/components/SiteManager.vue', import.meta.url), 'utf8');
-const { descriptor } = parse(source);
-const script = compileScript(descriptor, { id: 'site-transfer-test', inlineTemplate: true });
-const compiled = ts.transpileModule(script.content, {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-}).outputText;
+test('MoviePilot-compatible exports download as a top-level array', async (t) => {
+  const fixture = exportEnvironment(t, new Response(JSON.stringify(moviePilot)));
+  await transfer.downloadSiteExport();
+  assert.deepEqual(JSON.parse(await fixture.blob.text()), moviePilot);
+});
 
-async function openSites(t, options = {}) {
-  const fixture = { requests: [], downloads: 0, confirms: 0, refreshes: 0, toasts: [] };
-  const mounted = [];
-  const api = async (path, body) => {
-    fixture.requests.push({ path, body });
-    await options.beforeRequest?.(path, body, fixture);
-    if (path === '/sites/manage') {
-      if (
-        body === undefined &&
-        options.refreshError &&
-        fixture.requests.some((request) => request.path === '/sites/import')
-      )
-        throw new Error('配置读取失败');
+test('preview accepts both document formats and omits URL credentials and query values', () => {
+  assert.deepEqual(transfer.siteImportDocument(moviePilot), {
+    format: 'moviepilot',
+    sites: moviePilot,
+  });
+  assert.equal(transfer.siteImportDocument(localExport).format, 'light-media');
+  assert.throws(() => transfer.siteImportDocument([]), /没有可导入/);
+  assert.throws(() => transfer.siteImportDocument({ sites: moviePilot }), /导出的站点 JSON/);
+  assert.deepEqual(
+    transfer.sitePreview(
+      { name: '示例', url: 'https://user:synthetic-credential@example.org/path?passkey=synthetic' },
+      0,
+    ),
+    { name: '示例', url: 'https://example.org/path', valid: true },
+  );
+});
+
+test('sequential imports preserve source format and actual progress across partial failures', async () => {
+  const body = {
+    format: 'light-media-sites',
+    version: 1,
+    sites: [{ name: 'one' }, { name: 'two' }, { name: 'three' }],
+  };
+  const requests = [],
+    progress = [];
+  let inFlight = 0;
+  const report = await transfer.importSiteDocument(
+    transfer.siteImportDocument(body),
+    async (request) => {
+      assert.equal(inFlight++, 0);
+      requests.push(request);
+      await Promise.resolve();
+      inFlight--;
+      if (requests.length === 2) throw new Error('连接中断，请重新加载核对');
       return {
-        supported: [],
-        sites: [
+        total: 1,
+        imported: 1,
+        created: requests.length === 1 ? 1 : 0,
+        updated: requests.length === 3 ? 1 : 0,
+        skipped: 0,
+        failed: 0,
+        results: [
           {
-            config: {
-              id: 'fixture-site',
-              name: '馒头',
-              kind: 'mteam',
-              base_url: 'https://api.m-team.cc',
-              enabled: false,
-            },
-            connection: {},
+            index: 1,
+            name: '示例',
+            status: requests.length === 1 ? 'created' : 'updated',
+            message: '配置已保存',
+            warnings: [],
           },
         ],
       };
-    }
-    if (path === '/sites/import') {
-      if (options.importError) throw new Error(options.importError);
-      return options.result || result();
-    }
-    throw new Error('Unexpected request: ' + path);
-  };
-  const module = { exports: {} };
-  new Function('require', 'exports', compiled)((name) => {
-    if (name === '../api')
-      return {
-        api,
-        action: (callback) => callback(),
-        bytes: String,
-        clone: (value) => value,
-        date: String,
-        friendly: String,
-        errorText: (error) => error.message,
-        refreshSettings: async () => {
-          fixture.refreshes++;
-        },
-        toast: (message) => fixture.toasts.push(message),
-      };
-    if (name === '../features/site-transfer')
-      return {
-        ...transfer,
-        downloadSiteExport: async () => {
-          fixture.downloads++;
-          if (options.exportError) throw new Error(options.exportError);
-        },
-      };
-    if (name === 'vue')
-      return {
-        ...vue,
-        onMounted: (callback) => mounted.push(callback),
-        withDirectives: (node) => node,
-      };
-    throw new Error('Unexpected dependency: ' + name);
-  }, module.exports);
-  const previousWindow = globalThis.window;
-  globalThis.window = {
-    confirm: () => {
-      fixture.confirms++;
-      return options.confirm !== false;
     },
-  };
-  t.after(() => {
-    globalThis.window = previousWindow;
-  });
-  const scope = vue.effectScope();
-  const render = scope.run(() =>
-    module.exports.default.setup({}, { expose: () => {}, emit: () => {} }),
+    (done, total) => progress.push([done, total]),
   );
-  t.after(() => scope.stop());
-  for (const callback of mounted) await callback();
-  function nodes() {
-    const output = [];
-    function visit(node) {
-      if (node == null) return;
-      if (Array.isArray(node)) return node.forEach(visit);
-      output.push(node);
-      if (typeof node === 'object') visit(node.children);
-    }
-    visit(render({}, []));
-    return output;
-  }
-  const text = () =>
-    nodes()
-      .filter((node) => typeof node === 'string')
-      .join(' ');
-  return {
-    fixture,
-    nodes,
-    text,
-    button(label) {
-      return nodes().find(
-        (node) =>
-          node.type === 'button' &&
-          typeof node.children === 'string' &&
-          node.children.trim() === label,
-      );
-    },
-    async import(value) {
-      const input = nodes().find((node) => node.props?.type === 'file');
-      const target = { files: value == null ? [] : [file(value)], value: 'chosen.json' };
-      await input.props.onChange({ target });
-      await vue.nextTick();
-      assert.equal(target.value, '', 'the same file remains selectable after import failure');
-    },
-    async export() {
-      const button = nodes().find((node) => node.type === 'button' && node.children === '导出');
-      await button.props.onClick();
-      await vue.nextTick();
-    },
-  };
-}
-
-test('the actual site manager imports a chosen MoviePilot file and reports partial outcomes without exposing credentials', async (t) => {
-  const sites = await openSites(t);
-  await sites.import(moviePilot);
   assert.deepEqual(
-    sites.fixture.requests.find((request) => request.path === '/sites/import').body,
-    moviePilot,
+    requests.map((request) => request.sites.length),
+    [1, 1, 1],
   );
-  assert.match(sites.text(), /新增 1，更新 1，跳过 1，失败 1/);
-  assert.match(sites.text(), /站点尚未适配/);
-  assert.match(sites.text(), /缺少登录凭据/);
-  assert.match(sites.text(), /代理配置未迁移/);
-  assert.ok(!sites.text().includes('synthetic-credential'));
-  assert.equal(sites.fixture.refreshes, 1);
-});
-
-test('cancelled or malformed file selection does not send an import and shows only a safe error', async (t) => {
-  const sites = await openSites(t);
-  await sites.import(null);
-  await sites.import('{"cookie":"synthetic-credential" invalid');
-  assert.equal(
-    sites.fixture.requests.filter((request) => request.path === '/sites/import').length,
-    0,
+  assert.ok(
+    requests.every((request) => request.format === 'light-media-sites' && request.version === 1),
   );
-  assert.match(sites.text(), /不是有效的 JSON/);
-  assert.ok(!sites.text().includes('synthetic-credential'));
-  assert.ok(sites.nodes().some((node) => node.props?.role === 'alert'));
+  assert.deepEqual(progress, [
+    [0, 3],
+    [1, 3],
+    [2, 3],
+    [3, 3],
+  ]);
+  assert.equal(report.imported, 2);
+  assert.equal(report.failed, 1);
+  assert.equal(report.results[1].status, 'failed');
+  assert.deepEqual(
+    report.results.map((row) => row.index),
+    [1, 2, 3],
+  );
 });
 
-test('server import errors remain visible and post-import refresh errors retain the saved result', async (t) => {
-  const failed = await openSites(t, { importError: '站点配置不可写' });
-  await failed.import(moviePilot);
-  assert.match(failed.text(), /站点配置不可写/);
-  assert.ok(!failed.text().includes('导入结果：'));
-  const refreshed = await openSites(t, { refreshError: true });
-  await refreshed.import(moviePilot);
-  assert.match(refreshed.text(), /站点已导入，但刷新配置失败/);
-  assert.match(refreshed.text(), /新增 1，更新 1，跳过 1，失败 1/);
-});
-
-test('export downloads directly on click and surfaces actual download failure', async (t) => {
-  const exported = await openSites(t, { confirm: false });
-  assert.match(exported.button('导出').props.title, /Cookie \/ API Key/);
-  await exported.export();
-  assert.equal(exported.fixture.confirms, 0);
-  assert.equal(exported.fixture.downloads, 1);
-  assert.deepEqual(exported.fixture.toasts, ['站点配置已导出']);
-  const failed = await openSites(t, { exportError: '凭据解密失败' });
-  await failed.export();
-  assert.equal(failed.fixture.confirms, 0);
-  assert.equal(failed.fixture.downloads, 1);
-  assert.match(failed.text(), /凭据解密失败/);
-  assert.equal(failed.fixture.toasts.length, 0);
-});
-
-test('an in-flight import blocks old row mutations and stale reloads until refreshed results arrive', async (t) => {
-  let release, entered;
-  const requested = new Promise((resolve) => {
-    entered = resolve;
-  });
-  const pending = new Promise((resolve) => {
-    release = resolve;
-  });
-  const sites = await openSites(t, {
-    beforeRequest: async (path) => {
-      if (path === '/sites/import') {
-        entered();
-        await pending;
-      }
+test('single-row backend fallback labels retain the original file position without leaking malformed values', async () => {
+  const sites = Array.from({ length: 8 }, (_, index) =>
+    index < 7
+      ? { name: `站点${index + 1}`, url: `https://site${index + 1}.invalid` }
+      : { name: 'synthetic-cookie', url: 'malformed-synthetic-cookie' },
+  );
+  let submitted = 0;
+  const report = await transfer.importSiteDocument(
+    transfer.siteImportDocument(sites),
+    async () => {
+      const failed = ++submitted === 8;
+      return {
+        total: 1,
+        imported: failed ? 0 : 1,
+        created: failed ? 0 : 1,
+        updated: 0,
+        skipped: 0,
+        failed: failed ? 1 : 0,
+        results: [
+          {
+            index: 1,
+            name: failed ? '第 1 项' : '第 1 项',
+            status: failed ? 'failed' : 'created',
+            message: failed ? '地址无效' : '已保存',
+            warnings: [],
+          },
+        ],
+      };
     },
-  });
-  const oldControls = ['启用', '删除', '编辑', '＋ 添加站点', '重新加载', '刷新全部数据'].map(
-    (label) => sites.button(label),
+    () => {},
   );
-  const importing = sites.import(moviePilot);
-  await requested;
-  for (const label of ['启用', '删除', '编辑', '＋ 添加站点', '重新加载', '刷新全部数据'])
-    assert.equal(sites.button(label).props.disabled, true, label);
-  const count = sites.fixture.requests.length;
-  for (const button of oldControls) await button.props.onClick();
-  assert.equal(
-    sites.fixture.requests.length,
-    count,
-    'even stale event handlers cannot post or replace imported settings',
+  assert.equal(report.results[7].name, '第 8 项');
+  assert.equal(report.results[0].name, '第 1 项', 'actual successful names are not rewritten');
+  assert.ok(!JSON.stringify(report).includes('synthetic-cookie'));
+  const origin = await transfer.importSiteDocument(
+    transfer.siteImportDocument([
+      { url: 'https://user:synthetic-cookie@site.invalid/?passkey=synthetic-cookie' },
+    ]),
+    async () => ({
+      total: 1,
+      imported: 0,
+      created: 0,
+      updated: 0,
+      skipped: 0,
+      failed: 1,
+      results: [{ index: 1, name: '第1项', status: 'failed', message: '地址无效', warnings: [] }],
+    }),
+    () => {},
   );
-  assert.ok(!sites.text().includes('显示名称'), 'editing cannot open during import');
-  release();
-  await importing;
-  assert.match(sites.text(), /新增 1，更新 1，跳过 1，失败 1/);
-  assert.equal(sites.button('启用').props.disabled, false);
+  assert.equal(origin.results[0].name, 'site.invalid');
+  assert.ok(!JSON.stringify(origin).includes('synthetic-cookie'));
 });
 
-test('import waits for existing site writes instead of racing their old configuration', async (t) => {
-  let release, entered;
-  const requested = new Promise((resolve) => {
-    entered = resolve;
-  });
-  const pending = new Promise((resolve) => {
-    release = resolve;
-  });
-  const sites = await openSites(t, {
-    beforeRequest: async (path, body) => {
-      if (path === '/sites/manage' && body) {
-        entered();
-        await pending;
-      }
-    },
-  });
-  const mutation = sites.button('启用').props.onClick();
-  await requested;
-  assert.equal(sites.button('导入').props.disabled, true);
-  assert.equal(sites.button('导出').props.disabled, true);
-  await sites.import(moviePilot);
-  assert.equal(
-    sites.fixture.requests.filter((request) => request.path === '/sites/import').length,
-    0,
-  );
-  release();
-  await mutation;
-  assert.equal(sites.button('导入').props.disabled, false);
-  await sites.import(moviePilot);
-  assert.equal(
-    sites.fixture.requests.filter((request) => request.path === '/sites/import').length,
-    1,
-  );
+test('file URLs are invalid previews and the eighth failed row keeps its file position even with an empty backend name', async () => {
+  const invalid = { url: 'file:///tmp/synthetic' };
+  assert.deepEqual(transfer.sitePreview(invalid, 7), { name: '第 8 项', url: '', valid: false });
+  for (const name of ['', '第 1 项']) {
+    const sites = [
+      ...Array.from({ length: 7 }, (_, index) => ({ url: `https://site${index}.invalid` })),
+      invalid,
+    ];
+    let count = 0;
+    const report = await transfer.importSiteDocument(
+      transfer.siteImportDocument(sites),
+      async () => {
+        const failed = ++count === 8;
+        return {
+          total: 1,
+          imported: failed ? 0 : 1,
+          created: failed ? 0 : 1,
+          updated: 0,
+          skipped: 0,
+          failed: failed ? 1 : 0,
+          results: [
+            {
+              index: 1,
+              name: failed ? name : '示例站点',
+              status: failed ? 'failed' : 'created',
+              message: failed ? '地址无效' : '已保存',
+              warnings: [],
+            },
+          ],
+        };
+      },
+      () => {},
+    );
+    assert.equal(report.results[7].name, '第 8 项');
+    assert.equal(report.failed, 1);
+    assert.equal(report.imported, 7);
+    assert.equal(report.results.length, 8);
+  }
 });

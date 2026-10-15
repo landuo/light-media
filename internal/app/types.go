@@ -12,6 +12,7 @@ import (
 
 type SiteConfig struct {
 	sites.Config
+	SiteOptions
 	Enabled     bool `json:"enabled"`
 	DailyBudget int  `json:"daily_budget"`
 }

@@ -1,22 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import {
-  action,
-  api,
-  bytes,
-  clone,
-  date,
-  errorText,
-  friendly,
-  refreshSettings,
-  toast,
-} from '../api';
-import {
-  confirmedSiteImport,
-  downloadSiteExport,
-  readSiteImport,
-  type SiteImportResult,
-} from '../features/site-transfer';
+import { computed, onMounted, ref, watch } from 'vue';
+import { api, bytes, clone, date, errorText, friendly, refreshSettings, toast, ui } from '../api';
+import { downloadSiteExport, type SiteImportResult } from '../features/site-transfer';
+import SiteImportDialog from './SiteImportDialog.vue';
+import SiteResourceDialog from './SiteResourceDialog.vue';
 
 const data = ref<any>({ sites: [], supported: [] });
 const filter = ref('all'),
@@ -25,54 +12,77 @@ const filter = ref('all'),
   original = ref<any>(null);
 const loading = ref(false),
   saving = ref(false),
-  refreshing = ref<string[]>([]),
-  history = ref<any>(null);
+  mutations = ref(0),
+  refreshing = ref<string[]>([]);
 const importing = ref(false),
   exporting = ref(false),
-  transferError = ref('');
-const importFile = ref<HTMLInputElement>();
-const importResult = ref<SiteImportResult | null>(null);
-const mutations = ref(0);
+  importVisible = ref(false),
+  error = ref('');
+const menu = ref(''),
+  deleting = ref<any>(null),
+  history = ref<any>(null),
+  statistics = ref(false),
+  resources = ref<any>(null);
+const credentialTab = ref('cookie'),
+  limitEnabled = ref(false),
+  sortMode = ref(false),
+  dragged = ref('');
 const transferBusy = computed(() => importing.value || exporting.value);
-const transferBlocked = computed(
+const working = computed(
   () =>
     transferBusy.value ||
     loading.value ||
     saving.value ||
-    refreshing.value.length > 0 ||
     mutations.value > 0 ||
-    !!editing.value,
+    refreshing.value.length > 0,
 );
-const importSummary = computed(() =>
-  importResult.value
-    ? `导入结果：新增 ${importResult.value.created}，更新 ${importResult.value.updated}，跳过 ${importResult.value.skipped}，失败 ${importResult.value.failed}`
-    : '',
+const transferBlocked = computed(
+  () => working.value || !!editing.value || !!deleting.value || importVisible.value,
 );
-const importStatus: Record<string, string> = {
-  created: '已新增',
-  updated: '已更新',
-  skipped: '已跳过',
-  failed: '失败',
+const state = (row: any) =>
+  row.connection.status === 'failed'
+    ? 'failed'
+    : row.connection.status === 'ok'
+      ? row.connection.duration_ms >= 5000
+        ? 'slow'
+        : 'connected'
+      : 'unknown';
+const statuses: Record<string, string> = {
+  all: '全部站点',
+  enabled: '已启用',
+  disabled: '已停用',
+  connected: '连接正常',
+  slow: '连接较慢',
+  failed: '连接失败',
+  unknown: '未检测',
 };
-const filtered = computed(() =>
+const filtered = computed<any[]>(() =>
   data.value.sites.filter((row: any) => {
     if (filter.value === 'enabled' && !row.config.enabled) return false;
     if (filter.value === 'disabled' && row.config.enabled) return false;
-    if (filter.value === 'failed' && row.connection.status !== 'failed') return false;
+    if (
+      ['connected', 'slow', 'failed', 'unknown'].includes(filter.value) &&
+      state(row) !== filter.value
+    )
+      return false;
     return (row.config.name + row.config.base_url)
       .toLowerCase()
       .includes(query.value.toLowerCase());
   }),
 );
-const totals = computed(() => {
-  const stats = data.value.sites.map((s: any) => s.stats).filter(Boolean);
-  return ['uploaded', 'downloaded', 'seeding_bytes', 'seeding'].map((key) => ({
-    key,
-    observed: stats.filter((s: any) => s[key] != null).length,
-    value: stats.reduce((n: number, s: any) => n + (s[key] ?? 0), 0),
-  }));
-});
-const fieldNames: Record<string, string> = {
+const totals = computed(() =>
+  ['uploaded', 'downloaded', 'seeding_bytes', 'seeding'].map((key) => {
+    const observed = data.value.sites
+      .map((row: any) => row.stats)
+      .filter((stats: any) => stats?.[key] != null);
+    return {
+      key,
+      observed: observed.length,
+      value: observed.reduce((sum: number, stats: any) => sum + stats[key], 0),
+    };
+  }),
+);
+const names: Record<string, string> = {
   uploaded: '累计上传',
   downloaded: '累计下载',
   seeding_bytes: '做种体积',
@@ -88,128 +98,179 @@ function value(stats: any, key: string) {
   const n = stats?.[key];
   if (n == null || n === '') return '未提供';
   if (['uploaded', 'downloaded', 'seeding_bytes'].includes(key)) return bytes(n);
-  if (typeof n === 'number')
-    return n.toLocaleString('zh-CN', { maximumFractionDigits: key === 'ratio' ? 3 : 2 });
-  return n;
+  return typeof n === 'number'
+    ? n.toLocaleString('zh-CN', { maximumFractionDigits: key === 'ratio' ? 3 : 2 })
+    : n;
 }
 async function load() {
-  if (transferBusy.value) return;
+  if (transferBusy.value || loading.value || importVisible.value) return;
   loading.value = true;
+  error.value = '';
   try {
-    const result = await action(() => api('/sites/manage'));
-    if (result) data.value = result;
+    data.value = await api('/sites/manage');
+    if (!ui.settings) await refreshSettings();
+  } catch (e) {
+    error.value = errorText(e);
   } finally {
     loading.value = false;
   }
 }
 function create() {
-  if (transferBusy.value) return;
+  if (working.value || importVisible.value) return;
   original.value = null;
+  error.value = '';
+  credentialTab.value = 'cookie';
+  limitEnabled.value = false;
   editing.value = {
     id: '',
-    kind: 'mteam',
-    name: '馒头',
-    base_url: 'https://api.m-team.cc',
+    name: '',
+    base_url: '',
     cookie: '',
     api_key: '',
+    token: '',
+    ua: '',
+    rss: '',
     enabled: true,
+    pri: data.value.sites.length + 1,
+    timeout: 25,
+    downloader: '',
     daily_budget: 600,
+    proxy: false,
+    render: false,
+    limit_interval: 0,
+    limit_count: 0,
+    limit_seconds: 0,
   };
 }
 function edit(row: any) {
-  if (transferBusy.value) return;
+  if (working.value || importVisible.value) return;
   original.value = row;
+  error.value = '';
   editing.value = clone(row.config);
-}
-function template() {
-  const t = data.value.supported.find((s: any) => s.kind === editing.value.kind);
-  if (t) {
-    editing.value.name = t.name;
-    editing.value.base_url = t.base_url;
-    editing.value.cookie = '';
-    editing.value.api_key = '';
-  }
+  editing.value.pri ??=
+    data.value.sites.findIndex((site: any) => site.config.id === row.config.id) + 1;
+  limitEnabled.value = !!(
+    row.config.limit_interval ||
+    row.config.limit_count ||
+    row.config.limit_seconds
+  );
+  menu.value = '';
+  credentialTab.value =
+    row.config.kind === 'mteam' || row.credential_state?.api_key ? 'api' : 'cookie';
 }
 async function save() {
-  if (transferBusy.value) return;
+  if (transferBusy.value || saving.value) return;
   saving.value = true;
+  error.value = '';
   try {
-    const result = await action(() => api('/sites/manage', editing.value), '站点已保存');
-    if (result) {
-      data.value = result;
-      editing.value = null;
-      await refreshSettings();
-    }
+    data.value = await api('/sites/manage', {
+      ...editing.value,
+      ...(!limitEnabled.value ? { limit_interval: 0, limit_count: 0, limit_seconds: 0 } : {}),
+    });
+    editing.value = null;
+    await refreshSettings();
+    toast('站点配置已保存');
+  } catch (e) {
+    error.value = errorText(e);
   } finally {
     saving.value = false;
   }
 }
 async function toggle(row: any) {
-  if (transferBusy.value) return;
+  if (working.value || importVisible.value) return;
   mutations.value++;
+  menu.value = '';
+  error.value = '';
   try {
-    const result = await action(
-      () => api('/sites/manage', { ...row.config, enabled: !row.config.enabled }),
-      row.config.enabled ? '站点已停用' : '站点已启用',
-    );
-    if (result) {
-      data.value = result;
-      await refreshSettings();
-    }
+    data.value = await api('/sites/manage', { ...row.config, enabled: !row.config.enabled });
+    await refreshSettings();
+  } catch (e) {
+    error.value = errorText(e);
   } finally {
     mutations.value--;
   }
 }
-async function remove(row: any) {
-  if (transferBusy.value) return;
-  if (
-    !window.confirm(
-      `删除「${row.config.name}」的连接配置和本应用统计记录？站点账户及下载器中的任务不会被删除。`,
-    )
-  )
-    return;
+function requestDelete(row: any) {
+  if (!working.value && !importVisible.value) {
+    deleting.value = row;
+    menu.value = '';
+  }
+}
+async function remove() {
+  if (!deleting.value || working.value) return;
   mutations.value++;
+  error.value = '';
   try {
-    const result = await action(
-      () => api('/sites/manage/' + encodeURIComponent(row.config.id), undefined, 'DELETE'),
-      '站点已删除',
+    data.value = await api(
+      '/sites/manage/' + encodeURIComponent(deleting.value.config.id),
+      undefined,
+      'DELETE',
     );
-    if (result) {
-      data.value = result;
-      await refreshSettings();
-    }
+    deleting.value = null;
+    await refreshSettings();
+    toast('站点已删除');
+  } catch (e) {
+    error.value = errorText(e);
   } finally {
     mutations.value--;
   }
 }
 async function refresh(row: any) {
-  if (transferBusy.value) return;
+  if (transferBusy.value || importVisible.value || refreshing.value.includes(row.config.id)) return;
   const id = row.config.id;
-  if (refreshing.value.includes(id)) return;
   refreshing.value.push(id);
+  error.value = '';
   try {
-    const result = await action(() =>
-      api('/sites/manage/' + encodeURIComponent(id) + '/refresh', {}),
-    );
-    if (result) {
-      data.value = result;
-      const updated = result.sites.find((s: any) => s.config.id === id);
-      if (updated?.connection.status === 'ok') toast(`${row.config.name} 数据已刷新`);
-      else toast(`${row.config.name}：${friendly(updated?.connection.error || '刷新失败')}`, true);
-    }
+    data.value = await api('/sites/manage/' + encodeURIComponent(id) + '/refresh', {});
+    const updated = data.value.sites.find((site: any) => site.config.id === id);
+    if (updated?.connection.status === 'ok') toast(row.config.name + ' 连接正常');
+    else toast(row.config.name + '：' + friendly(updated?.connection.error || '检测失败'), true);
+  } catch (e) {
+    error.value = errorText(e);
   } finally {
-    refreshing.value = refreshing.value.filter((v) => v !== id);
+    refreshing.value = refreshing.value.filter((key) => key !== id);
   }
 }
-async function refreshAll() {
-  if (transferBusy.value) return;
-  for (const row of data.value.sites.filter((s: any) => s.config.enabled)) await refresh(row);
-}
 async function openHistory(row: any) {
-  const result = await action(() =>
-    api('/sites/manage/' + encodeURIComponent(row.config.id) + '/history'),
-  );
-  if (result) history.value = { ...result, name: row.config.name };
+  history.value = { name: row.config.name, row, items: [], loading: true, error: '' };
+  try {
+    const result = await api('/sites/manage/' + encodeURIComponent(row.config.id) + '/history');
+    if (history.value?.row === row) history.value = { ...history.value, ...result, loading: false };
+  } catch (e) {
+    if (history.value?.row === row) {
+      history.value.error = errorText(e);
+      history.value.loading = false;
+    }
+  }
+}
+function openImport() {
+  if (!transferBlocked.value) importVisible.value = true;
+}
+async function imported(result: SiteImportResult) {
+  if (!result.imported) return;
+  loading.value = true;
+  try {
+    data.value = await api('/sites/manage');
+    await refreshSettings();
+    toast(`已导入 ${result.imported} 个站点配置`);
+  } catch (e) {
+    error.value = '站点已导入，但刷新配置失败：' + errorText(e);
+  } finally {
+    loading.value = false;
+  }
+}
+async function exportSites() {
+  if (transferBlocked.value) return;
+  exporting.value = true;
+  error.value = '';
+  try {
+    await downloadSiteExport();
+    toast('站点配置已导出');
+  } catch (e) {
+    error.value = errorText(e);
+  } finally {
+    exporting.value = false;
+  }
 }
 function homepage(row: any) {
   return row.config.kind === 'mteam'
@@ -218,537 +279,727 @@ function homepage(row: any) {
       : 'https://kp.m-team.cc'
     : row.config.base_url;
 }
-async function importSites(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  input.value = '';
-  if (!file || transferBlocked.value) return;
-  importing.value = true;
-  transferError.value = '';
-  importResult.value = null;
+function startSort() {
+  if (working.value || importVisible.value) return;
+  filter.value = 'all';
+  query.value = '';
+  sortMode.value = !sortMode.value;
+}
+watch([filter, query], () => {
+  if (filter.value !== 'all' || query.value) sortMode.value = false;
+});
+async function reorder(from: string, to: string) {
+  if (!sortMode.value || working.value || importVisible.value || from === to) return;
+  const rows = [...data.value.sites],
+    source = rows.findIndex((row) => row.config.id === from),
+    target = rows.findIndex((row) => row.config.id === to);
+  if (source < 0 || target < 0) return;
+  rows.splice(target, 0, rows.splice(source, 1)[0]);
+  mutations.value++;
+  error.value = '';
   try {
-    const payload = await readSiteImport(file);
-    importResult.value = confirmedSiteImport(await api('/sites/import', payload));
-    if (importResult.value.imported) {
-      try {
-        data.value = await api('/sites/manage');
-        await refreshSettings();
-      } catch (e) {
-        transferError.value = '站点已导入，但刷新配置失败：' + errorText(e);
-      }
-    }
+    data.value = await api(
+      '/sites/priorities',
+      rows.map((row, index) => ({ id: row.config.id, pri: index + 1 })),
+    );
+    await refreshSettings();
   } catch (e) {
-    transferError.value = errorText(e);
+    error.value = errorText(e);
   } finally {
-    importing.value = false;
+    mutations.value--;
+    dragged.value = '';
   }
 }
-async function exportSites() {
-  if (transferBlocked.value) return;
-  exporting.value = true;
-  transferError.value = '';
-  try {
-    await downloadSiteExport();
-    toast('站点配置已导出');
-  } catch (e) {
-    transferError.value = errorText(e);
-  } finally {
-    exporting.value = false;
-  }
+function browse(row: any) {
+  if (!sortMode.value && !working.value && !importVisible.value) resources.value = row.config;
 }
 onMounted(load);
 </script>
 
 <template>
-  <section class="site-manager">
-    <header class="manager-heading">
-      <div class="manager-actions">
-        <input
-          ref="importFile"
-          type="file"
-          accept=".json,application/json"
-          aria-label="选择站点配置文件"
-          hidden
-          @change="importSites"
-        />
-        <button
-          :disabled="transferBlocked"
-          title="导入 MoviePilot 或本应用导出的站点配置"
-          @click="importFile?.click()"
-        >
-          {{ importing ? '正在导入…' : '导入' }}
-        </button>
-        <button
-          :disabled="transferBlocked || !data.sites.length"
-          title="导出文件包含站点 Cookie / API Key，请妥善保管"
-          @click="exportSites"
-        >
-          {{ exporting ? '正在导出…' : '导出' }}
-        </button>
-        <button :disabled="loading || refreshing.length > 0 || transferBusy" @click="refreshAll">
-          刷新全部数据</button
-        ><button class="primary" :disabled="transferBusy" @click="create">＋ 添加站点</button>
-      </div>
-    </header>
-    <p v-if="transferError" class="site-transfer-error" role="alert">{{ transferError }}</p>
-    <section v-if="importResult" class="site-import-result" aria-label="站点导入结果">
-      <div class="import-result-heading">
-        <strong role="status">{{ importSummary }}</strong
-        ><button class="icon-button" aria-label="关闭导入结果" @click="importResult = null">
-          ×
-        </button>
-      </div>
-      <details
-        :open="
-          importResult.failed > 0 ||
-          importResult.skipped > 0 ||
-          importResult.results.some((row) => row.warnings.length)
-        "
-      >
-        <summary>查看逐站结果</summary>
-        <ul>
-          <li
-            v-for="row in importResult.results"
-            :key="row.index"
-            :class="{ 'site-warning': row.status === 'failed' || row.status === 'skipped' }"
-          >
-            <strong>{{ row.name }} · {{ importStatus[row.status] }}</strong
-            ><span>{{ row.message }}</span
-            ><small v-for="(warning, index) in row.warnings" :key="index">{{ warning }}</small>
-          </li>
-        </ul>
-      </details>
-    </section>
-    <div class="site-totals">
-      <div v-for="t in totals" :key="t.key">
-        <span>{{ fieldNames[t.key] }}</span
-        ><strong>{{
-          t.observed ? (t.key === 'seeding' ? t.value.toLocaleString() : bytes(t.value)) : '未获取'
-        }}</strong
-        ><small>{{ t.observed }} / {{ data.sites.length }} 个站点提供数据</small>
-      </div>
+  <section class="site-manager" @keydown.esc="menu = ''">
+    <div class="site-toolbar">
+      <input v-model="query" aria-label="查找站点" placeholder="搜索站点名称或地址" />
+      <select v-model="filter" aria-label="站点状态">
+        <option v-for="(title, key) in statuses" :key="key" :value="key">{{ title }}</option>
+      </select>
+      <button :disabled="working" :aria-pressed="sortMode" @click="startSort">
+        {{ sortMode ? '退出排序' : '排序' }}
+      </button>
+      <button :disabled="working" @click="load">刷新</button>
     </div>
-    <div class="manager-filter">
-      <input v-model="query" aria-label="查找站点" placeholder="搜索站点名称或地址" /><select
-        v-model="filter"
-        aria-label="站点状态"
-      >
-        <option value="all">全部站点</option>
-        <option value="enabled">已启用</option>
-        <option value="disabled">已停用</option>
-        <option value="failed">连接异常</option></select
-      ><button @click="load" :disabled="loading || transferBusy">重新加载</button>
-    </div>
-    <p v-if="!data.sites.length && !loading" class="manager-empty">
-      尚未添加站点。点击「添加站点」，选择原生适配并填写 Cookie 或 API Key。
+    <p v-if="error" class="error-box" role="alert">{{ error }}</p>
+    <p v-if="sortMode" class="sort-notice">
+      拖动站点卡片调整优先级，松开后自动保存。<button @click="sortMode = false">退出</button>
+    </p>
+    <p v-if="loading && !data.sites.length" class="empty">正在加载站点…</p>
+    <p v-else-if="!filtered.length" class="empty">
+      {{
+        data.sites.length
+          ? '没有匹配的站点'
+          : '暂无站点，点击右下角添加站点，或从 MoviePilot 导入。'
+      }}
     </p>
     <div class="site-grid">
       <article
-        v-for="row in filtered"
+        v-for="(row, index) in filtered"
         :key="row.config.id"
         class="site-card"
-        :class="{ inactive: !row.config.enabled }"
+        :class="[state(row), { inactive: !row.config.enabled, sortable: sortMode }]"
+        :draggable="sortMode && !working"
+        :tabindex="sortMode ? -1 : 0"
+        :aria-label="row.config.name + ' 资源'"
+        @click="browse(row)"
+        @keydown.enter.self="browse(row)"
+        @dragstart="
+          dragged = row.config.id;
+          $event.dataTransfer?.setData('text/plain', row.config.id);
+        "
+        @dragover.prevent
+        @drop.prevent="reorder(dragged, row.config.id)"
       >
-        <div class="site-card-title">
-          <span class="site-monogram">{{ row.config.name.slice(0, 1) }}</span>
-          <div>
-            <h2>
-              <a :href="homepage(row)" target="_blank" rel="noopener noreferrer"
-                >{{ row.config.name }} ↗</a
-              >
-            </h2>
-            <small>{{ row.config.base_url }}</small>
+        <div class="site-card-body">
+          <div class="site-card-title">
+            <span class="site-monogram">{{ row.config.name.slice(0, 1) }}</span>
+            <h2>{{ row.config.name }}</h2>
+            <small v-if="!row.config.enabled">已停用</small>
           </div>
-          <span class="site-badge" :class="row.config.enabled ? row.connection.status : ''">{{
-            !row.config.enabled
-              ? '已停用'
-              : row.connection.status === 'ok'
-                ? '连接正常'
-                : row.connection.status === 'failed'
-                  ? '连接失败'
-                  : '未检测'
-          }}</span>
-        </div>
-        <div v-if="row.stats" class="site-account">
-          <strong>{{ row.stats.username || '已认证账户' }}</strong
-          ><span>{{ row.stats.level || '等级未提供' }}</span
-          ><span v-if="row.stale" class="site-warning">显示上次成功数据</span>
-        </div>
-        <div class="site-traffic">
-          <div v-for="key in ['uploaded', 'downloaded']" :key="key">
-            <small>{{ fieldNames[key] }}</small
-            ><strong :title="row.stats?.sources?.[key]">{{ value(row.stats, key) }}</strong>
+          <a
+            class="site-url"
+            :href="homepage(row)"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click.stop
+            >{{ homepage(row) }}</a
+          >
+          <div class="site-traffic">
+            <div>
+              <span>↑ {{ value(row.stats, 'uploaded') }}</span
+              ><progress
+                :value="row.stats?.uploaded || 0"
+                :max="Math.max(row.stats?.uploaded || 0, row.stats?.downloaded || 0, 1)"
+              ></progress>
+            </div>
+            <div>
+              <span>↓ {{ value(row.stats, 'downloaded') }}</span
+              ><progress
+                :value="row.stats?.downloaded || 0"
+                :max="Math.max(row.stats?.uploaded || 0, row.stats?.downloaded || 0, 1)"
+              ></progress>
+            </div>
           </div>
         </div>
-        <dl class="site-metrics">
-          <div v-for="key in ['ratio', 'seeding', 'seeding_bytes', 'bonus', 'leeching']" :key="key">
-            <dt>{{ fieldNames[key] }}</dt>
-            <dd :title="row.stats?.sources?.[key]">{{ value(row.stats, key) }}</dd>
-          </div>
-        </dl>
-        <p v-if="row.connection.error" class="site-warning">{{ friendly(row.connection.error) }}</p>
-        <details v-if="row.stats?.warnings?.length" class="site-warning">
-          <summary>部分字段未完整获取</summary>
-          <p v-for="warning in row.stats.warnings" :key="warning">{{ friendly(warning) }}</p>
-        </details>
-        <small class="site-updated"
-          >数据：{{ date(row.stats?.captured_at) }} · 检测
-          {{
-            row.connection.duration_ms
-              ? (row.connection.duration_ms / 1000).toFixed(2) + ' 秒'
-              : '—'
-          }}<br />近 24 小时请求 {{ row.usage_24h }} / {{ row.config.daily_budget || 600 }}</small
-        >
-        <footer class="manager-actions">
+        <div v-if="!sortMode" class="site-card-actions" @click.stop>
           <button
-            class="small"
-            :disabled="!row.config.enabled || refreshing.includes(row.config.id) || transferBusy"
+            class="connection-dot"
+            :class="state(row)"
+            :aria-label="'测试 ' + row.config.name"
+            :title="statuses[state(row)] + ' · 测试连通性'"
+            :disabled="working"
             @click="refresh(row)"
           >
-            {{ refreshing.includes(row.config.id) ? '正在刷新…' : '检测 / 刷新' }}</button
-          ><button class="small" @click="openHistory(row)">历史数据</button
-          ><button class="small" :disabled="transferBusy" @click="edit(row)">编辑</button
-          ><button class="small" :disabled="transferBusy" @click="toggle(row)">
-            {{ row.config.enabled ? '停用' : '启用' }}</button
-          ><button class="small danger" :disabled="transferBusy" @click="remove(row)">删除</button>
-        </footer>
+            {{ refreshing.includes(row.config.id) ? '…' : '●' }}
+          </button>
+          <button
+            :aria-label="row.config.name + ' 用户数据'"
+            title="用户数据"
+            @click="openHistory(row)"
+          >
+            ▥
+          </button>
+          <button
+            :aria-label="'更新 ' + row.config.name + ' 凭据'"
+            title="更新 Cookie / UA"
+            :disabled="working"
+            @click="
+              edit(row);
+              credentialTab = 'cookie';
+            "
+          >
+            ↻
+          </button>
+          <div class="site-menu">
+            <button
+              :aria-label="row.config.name + ' 更多操作'"
+              :aria-expanded="menu === row.config.id"
+              @click="menu = menu === row.config.id ? '' : row.config.id"
+            >
+              ⋮
+            </button>
+            <div v-if="menu === row.config.id" class="site-menu-items">
+              <button :disabled="working" @click="edit(row)">编辑</button
+              ><button :disabled="working" @click="toggle(row)">
+                {{ row.config.enabled ? '停用' : '启用' }}</button
+              ><button class="danger" :disabled="working" @click="requestDelete(row)">删除</button>
+            </div>
+          </div>
+        </div>
+        <div v-else class="sort-controls" @click.stop>
+          <span>{{ index + 1 }}</span
+          ><button
+            :disabled="working || index === 0"
+            :aria-label="'上移 ' + row.config.name"
+            @click="reorder(row.config.id, filtered[index - 1].config.id)"
+          >
+            ↑</button
+          ><button
+            :disabled="working || index === filtered.length - 1"
+            :aria-label="'下移 ' + row.config.name"
+            @click="reorder(row.config.id, filtered[index + 1].config.id)"
+          >
+            ↓
+          </button>
+        </div>
       </article>
     </div>
-    <p class="manager-note">
-      数据只读获取，不执行签到、站内消息已读或账户修改。未提供的数值保持未知；历史按日保留最近 90
-      天的成功快照。
-    </p>
-    <div v-if="editing" class="manager-backdrop" @click.self="editing = null">
+    <div class="site-floating-actions">
+      <button aria-label="站点统计" title="站点统计" @click="statistics = true">▥</button
+      ><button
+        aria-label="导出站点"
+        title="导出站点（文件包含 Cookie / API Key）"
+        :disabled="transferBlocked || !data.sites.length"
+        @click="exportSites"
+      >
+        {{ exporting ? '…' : '⇧' }}</button
+      ><button
+        aria-label="导入站点"
+        title="导入站点"
+        :disabled="transferBlocked"
+        @click="openImport"
+      >
+        ⇩</button
+      ><button
+        class="primary"
+        aria-label="添加站点"
+        title="添加站点"
+        :disabled="working"
+        @click="create"
+      >
+        ＋
+      </button>
+    </div>
+    <SiteImportDialog
+      v-if="importVisible"
+      @close="importVisible = false"
+      @busy="importing = $event"
+      @imported="imported"
+    />
+    <SiteResourceDialog v-if="resources" :site="resources" @close="resources = null" />
+    <div v-if="editing" class="manager-backdrop" @click.self="!saving && (editing = null)">
       <form
         class="manager-dialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="site-form-title"
+        aria-label="编辑站点配置"
         @submit.prevent="save"
       >
         <header>
-          <h2 id="site-form-title">{{ original ? '编辑站点' : '添加站点' }}</h2>
-          <button type="button" class="icon-button" aria-label="关闭" @click="editing = null">
+          <div>
+            <h2>{{ original ? '编辑站点' : '添加站点' }}</h2>
+            <small>{{ original?.config.name || '' }}</small>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            aria-label="关闭站点编辑"
+            :disabled="saving"
+            @click="editing = null"
+          >
             ×
           </button>
         </header>
         <div class="manager-form-grid">
-          <label
-            >站点适配<select v-model="editing.kind" @change="template" :disabled="!!original">
-              <option v-for="t in data.supported" :key="t.kind" :value="t.kind">
-                {{ t.name }}
-              </option>
-            </select></label
-          ><label>显示名称<input v-model.trim="editing.name" required maxlength="64" /></label
-          ><label class="span-two"
-            >站点地址<input v-model.trim="editing.base_url" type="url" required /><small
-              >馒头可以填写前台或 API 地址；家园为 hdhome.org。</small
-            ></label
-          ><label v-if="editing.kind === 'mteam'" class="span-two"
-            >API Key<input
-              v-model="editing.api_key"
-              type="password"
-              autocomplete="new-password"
-              :placeholder="
-                original?.credential_configured ? '已保存，留空保留原凭据' : '填写站点 API Key'
-              " /></label
-          ><label v-else class="span-two"
-            >Cookie<textarea
-              v-model="editing.cookie"
-              rows="3"
-              autocomplete="off"
-              :placeholder="
-                original?.credential_configured
-                  ? '已保存，留空保留原凭据'
-                  : '填写浏览器登录后的 Cookie'
-              "
-            ></textarea></label
-          ><label
-            >近 24 小时请求预算<input
-              v-model.number="editing.daily_budget"
-              type="number"
-              min="1"
-              max="10000"
-              required /></label
-          ><label class="manager-checkbox"
-            ><input v-model="editing.enabled" type="checkbox" />启用站点</label
+          <label class="half"
+            >站点网址<input
+              v-model.trim="editing.base_url"
+              type="url"
+              required
+              aria-label="站点网址"
+              placeholder="https://example.org"
+            /><small>输入站点完整地址，自动识别站点类型</small></label
           >
+          <label
+            >优先级<input
+              v-model.number="editing.pri"
+              type="number"
+              min="0"
+              max="10000"
+              required
+              aria-label="优先级"
+            /><small>数字越小越优先</small></label
+          >
+          <label
+            >状态<select v-model="editing.enabled" aria-label="状态">
+              <option :value="true">启用</option>
+              <option :value="false">停用</option>
+            </select></label
+          >
+          <label class="half"
+            >RSS 地址<input
+              v-model="editing.rss"
+              type="password"
+              disabled
+              :placeholder="original?.credential_state?.rss ? '已保存，保留原配置' : '未配置'"
+            /><small>兼容保留，RSS 调度暂未接入</small></label
+          >
+          <label
+            >超时时间<input
+              v-model.number="editing.timeout"
+              type="number"
+              min="0"
+              max="120"
+              aria-label="超时时间"
+            /><small>秒；0 使用默认值</small></label
+          >
+          <label
+            >下载器<select v-model="editing.downloader" disabled>
+              <option value="">默认</option>
+              <option v-if="editing.downloader" :value="editing.downloader">
+                {{ editing.downloader }}
+              </option></select
+            ><small>兼容保留，站点指定下载器暂未接入</small></label
+          >
+          <div class="credential-tabs span-all" role="tablist">
+            <button
+              type="button"
+              role="tab"
+              :aria-selected="credentialTab === 'cookie'"
+              @click="credentialTab = 'cookie'"
+            >
+              Cookie</button
+            ><button
+              type="button"
+              role="tab"
+              :aria-selected="credentialTab === 'api'"
+              @click="credentialTab = 'api'"
+            >
+              API
+            </button>
+          </div>
+          <template v-if="credentialTab === 'cookie'"
+            ><label class="span-all"
+              >Cookie<textarea
+                v-model="editing.cookie"
+                rows="4"
+                autocomplete="off"
+                aria-label="Cookie"
+                :placeholder="
+                  original?.credential_state?.cookie || original?.credential_configured
+                    ? '已保存，留空保留原凭据'
+                    : '填写浏览器登录后的 Cookie'
+                "
+              /></label
+            ><label class="span-all"
+              >User-Agent<input
+                v-model="editing.ua"
+                aria-label="User-Agent"
+                placeholder="使用浏览器对应的 User-Agent" /></label
+          ></template>
+          <template v-else
+            ><label class="half"
+              >Authorization<input
+                v-model="editing.token"
+                type="password"
+                disabled
+                :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
+              /><small>兼容保留，通用 Token 认证暂未接入</small></label
+            ><label class="half"
+              >API Key<input
+                v-model="editing.api_key"
+                type="password"
+                autocomplete="new-password"
+                aria-label="API Key"
+                :placeholder="
+                  original?.credential_state?.api_key || original?.credential_configured
+                    ? '已保存，留空保留原凭据'
+                    : '填写站点 API Key'
+                " /></label
+          ></template>
+          <div class="span-all preserved-options">
+            <label
+              ><input
+                type="checkbox"
+                v-model="limitEnabled"
+                aria-label="限制访问频率"
+              />限制访问频率</label
+            >
+            <div v-if="limitEnabled" class="limit-fields">
+              <label
+                >单位周期（秒）<input
+                  v-model.number="editing.limit_interval"
+                  type="number"
+                  min="0"
+                  aria-label="单位周期（秒）" /></label
+              ><label
+                >周期内访问次数<input
+                  v-model.number="editing.limit_count"
+                  type="number"
+                  min="0"
+                  aria-label="周期内访问次数" /></label
+              ><label
+                >访问间隔（秒）<input
+                  v-model.number="editing.limit_seconds"
+                  type="number"
+                  min="0"
+                  aria-label="访问间隔（秒）"
+              /></label>
+            </div>
+          </div>
+          <div class="half preserved-options">
+            <label><input type="checkbox" :checked="editing.proxy" disabled />使用代理</label
+            ><small>兼容保留，站点独立代理暂未接入</small>
+          </div>
+          <div class="half preserved-options">
+            <label><input type="checkbox" :checked="editing.render" disabled />浏览器模拟</label
+            ><small>尚未配置浏览器引擎，暂不可用</small>
+          </div>
         </div>
-        <p class="manager-note">
-          当前支持上方五个原生站点；未知站点不会冒充适配。凭据加密保存，编辑时不会回显；更换域名需重新填写凭据。
-        </p>
-        <footer class="manager-actions">
-          <button type="button" @click="editing = null">取消</button
+        <p class="manager-note">Cookie / UA 可手动维护；账号密码登录自动获取 Cookie 暂未接入。</p>
+        <p v-if="error" class="error-box" role="alert">{{ error }}</p>
+        <footer>
+          <button type="button" :disabled="saving" @click="editing = null">取消</button
           ><button type="submit" class="primary" :disabled="saving">
-            {{ saving ? '保存中…' : '保存站点' }}
+            {{ saving ? '保存中…' : original ? '保存' : '添加站点' }}
           </button>
         </footer>
       </form>
     </div>
-    <div v-if="history" class="manager-backdrop" @click.self="history = null">
+    <div v-if="deleting" class="manager-backdrop" @click.self="!working && (deleting = null)">
+      <section
+        class="manager-dialog delete-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="删除站点确认"
+      >
+        <h2>删除站点</h2>
+        <p>确定删除「{{ deleting.config.name }}」的连接配置和本应用统计记录？</p>
+        <p class="manager-note">站点账户及下载器中的任务不会被删除。</p>
+        <p v-if="error" class="error-box">{{ error }}</p>
+        <footer>
+          <button :disabled="working" @click="deleting = null">取消</button
+          ><button class="danger" :disabled="working" @click="remove">删除</button>
+        </footer>
+      </section>
+    </div>
+    <div
+      v-if="history || statistics"
+      class="manager-backdrop"
+      @click.self="
+        history = null;
+        statistics = false;
+      "
+    >
       <section
         class="manager-dialog manager-wide"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="site-history-title"
+        aria-label="站点数据"
       >
         <header>
-          <h2 id="site-history-title">{{ history.name }} · 历史数据</h2>
-          <button class="icon-button" aria-label="关闭" @click="history = null">×</button>
+          <h2>{{ history ? history.name + ' · 用户数据' : '站点统计' }}</h2>
+          <button
+            class="icon-button"
+            aria-label="关闭站点数据"
+            @click="
+              history = null;
+              statistics = false;
+            "
+          >
+            ×
+          </button>
         </header>
-        <p v-if="!history.items.length">尚无成功快照，先刷新站点数据。</p>
-        <div class="manager-table">
-          <table v-if="history.items.length">
-            <thead>
-              <tr>
-                <th>日期</th>
-                <th>累计上传</th>
-                <th>累计下载</th>
-                <th>分享率</th>
-                <th>做种数量</th>
-                <th>做种体积</th>
-                <th>积分 / 魔力</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in history.items" :key="item.stats.captured_at">
-                <td>{{ date(item.stats.captured_at) }}</td>
-                <td
-                  v-for="key in [
-                    'uploaded',
-                    'downloaded',
-                    'ratio',
-                    'seeding',
-                    'seeding_bytes',
-                    'bonus',
-                  ]"
-                  :key="key"
-                >
-                  {{ value(item.stats, key) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <template v-if="statistics"
+          ><div class="site-totals">
+            <div v-for="total in totals" :key="total.key">
+              <small>{{ names[total.key] }}</small
+              ><strong>{{
+                total.observed
+                  ? total.key === 'seeding'
+                    ? total.value
+                    : bytes(total.value)
+                  : '未获取'
+              }}</strong
+              ><small>{{ total.observed }} / {{ data.sites.length }} 个站点提供数据</small>
+            </div>
+          </div></template
+        >
+        <template v-else-if="history"
+          ><p>
+            {{ history.row.stats?.username || '账户信息未获取' }} ·
+            {{ history.row.stats?.level || '等级未提供' }}
+          </p>
+          <dl class="site-metrics">
+            <div
+              v-for="key in [
+                'uploaded',
+                'downloaded',
+                'ratio',
+                'seeding',
+                'seeding_bytes',
+                'bonus',
+                'leeching',
+              ]"
+              :key="key"
+            >
+              <dt>{{ names[key] }}</dt>
+              <dd>{{ value(history.row.stats, key) }}</dd>
+            </div>
+          </dl>
+          <p v-if="history.row.connection.error" class="error-box">
+            {{ friendly(history.row.connection.error) }}
+          </p>
+          <p class="manager-note">
+            数据：{{ date(history.row.stats?.captured_at) }} · 近 24 小时请求
+            {{ history.row.usage_24h || 0 }} / {{ history.row.config.daily_budget || 600 }}
+          </p>
+          <h3>历史数据</h3>
+          <p v-if="history.loading">正在加载…</p>
+          <p v-else-if="history.error" class="error-box">{{ history.error }}</p>
+          <p v-else-if="!history.items.length">尚无成功快照，先测试 / 刷新站点数据。</p>
+          <div v-else class="manager-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th
+                    v-for="key in ['uploaded', 'downloaded', 'ratio', 'seeding', 'bonus']"
+                    :key="key"
+                  >
+                    {{ names[key] }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in history.items" :key="item.stats.captured_at">
+                  <td>{{ date(item.stats.captured_at) }}</td>
+                  <td
+                    v-for="key in ['uploaded', 'downloaded', 'ratio', 'seeding', 'bonus']"
+                    :key="key"
+                  >
+                    {{ value(item.stats, key) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div></template
+        >
       </section>
     </div>
   </section>
 </template>
-
 <style scoped>
-.manager-heading,
-.manager-actions,
-.site-card-title,
-.site-account,
-.manager-filter {
+.site-manager {
+  padding-bottom: 90px;
+}
+.site-toolbar {
   display: flex;
+  gap: 10px;
   align-items: center;
-  gap: 12px;
+  margin-bottom: 22px;
 }
-.manager-heading {
-  justify-content: flex-end;
-  margin-bottom: 24px;
+.site-toolbar input {
+  max-width: 320px;
+  margin-right: auto;
 }
-.site-transfer-error {
-  padding: 12px 15px;
-  border-radius: 8px;
-  background: #fff0ed;
-  color: var(--danger);
-  overflow-wrap: anywhere;
-}
-.site-import-result {
-  padding: 14px 16px;
-  margin-bottom: 20px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-}
-.import-result-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.import-result-heading strong {
-  font-size: 13px;
-  line-height: 1.7;
-}
-.site-import-result summary {
-  margin-top: 8px;
-  font-size: 12px;
-  cursor: pointer;
-  color: var(--muted);
-}
-.site-import-result ul {
-  padding-left: 20px;
-  margin-bottom: 0;
-}
-.site-import-result li {
-  padding: 5px 0;
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-.site-import-result li span,
-.site-import-result li small {
-  display: block;
-  margin-top: 3px;
-}
-.manager-note {
-  color: var(--muted);
-  margin: 0;
-}
-.manager-actions {
-  flex-wrap: wrap;
-}
-.site-totals {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.site-totals > div {
-  display: grid;
-  gap: 9px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px;
-}
-.site-totals strong {
-  font-size: 24px;
-}
-.site-totals span,
-.site-totals small,
-.site-updated {
-  color: var(--muted);
-}
-.manager-filter {
-  margin: 0 0 22px;
-}
-.manager-filter input {
-  max-width: 360px;
-}
-.manager-filter select {
+.site-toolbar select {
   max-width: 160px;
+}
+.empty {
+  padding: 70px 20px;
+  text-align: center;
+  color: var(--muted);
 }
 .site-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  gap: 16px;
 }
 .site-card {
-  padding: 20px;
-  border: 1px solid var(--line);
-  background: #fff;
-  border-radius: 13px;
+  display: flex;
   min-width: 0;
+  border: 1px solid var(--line);
+  border-top: 3px solid #c4cbd5;
+  border-radius: 11px;
+  background: var(--surface);
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+.site-card:hover {
+  box-shadow: 0 5px 20px #172b4d0e;
+}
+.site-card.connected {
+  border-top-color: #58a879;
+}
+.site-card.failed {
+  border-top-color: var(--danger);
+}
+.site-card.slow {
+  border-top-color: #dba24c;
 }
 .site-card.inactive {
   opacity: 0.7;
 }
-.site-card-title h2 {
-  font-size: 18px;
-  margin: 0 0 5px;
+.site-card.sortable {
+  cursor: grab;
 }
-.site-card-title small {
-  font-size: 11px;
-  color: var(--muted);
-  word-break: break-all;
+.site-card-body {
+  padding: 14px;
+  min-width: 0;
+  flex: 1;
+}
+.site-card-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 .site-monogram {
   display: grid;
   place-items: center;
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 23px;
-  font-weight: 700;
+  font-size: 19px;
 }
-.site-badge {
-  margin-left: auto;
-  font-size: 11px;
+.site-card h2 {
+  font-size: 16px;
+  margin: 0;
   white-space: nowrap;
-  padding: 5px 8px;
-  background: #f0f2f4;
-  border-radius: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-.site-badge.ok {
-  background: #e5f4e9;
-  color: #367749;
+.site-card-title small {
+  color: var(--muted);
+  white-space: nowrap;
+  margin-left: auto;
+  font-size: 10px;
 }
-.site-badge.failed {
-  background: #fff0ed;
-  color: var(--danger);
-}
-.site-account {
-  margin-top: 19px;
-  flex-wrap: wrap;
+.site-url {
+  display: block;
+  margin: 14px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 12px;
-}
-.site-account > span {
   color: var(--muted);
 }
 .site-traffic {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 20px 0;
-  padding: 17px 0;
   border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  padding-top: 10px;
 }
 .site-traffic > div {
-  display: grid;
-  gap: 8px;
-}
-.site-traffic small {
-  color: var(--muted);
-}
-.site-traffic strong {
-  font-size: 21px;
-}
-.site-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px 10px;
-  margin: 0 0 20px;
-}
-.site-metrics dt {
-  color: var(--muted);
-  font-size: 11px;
-  margin-bottom: 7px;
-}
-.site-metrics dd {
-  margin: 0;
-  font-weight: 600;
-  font-size: 14px;
-}
-.site-updated {
-  display: block;
-  line-height: 1.8;
-  font-size: 11px;
-  margin-bottom: 16px;
-}
-.site-warning {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
   font-size: 12px;
+}
+.site-traffic span {
+  min-width: 90px;
+}
+.site-traffic progress {
+  height: 4px;
+  width: 100%;
+  accent-color: var(--accent);
+}
+.site-traffic > div:last-child progress {
+  accent-color: #47a885;
+}
+.site-card-actions {
+  display: flex;
+  flex-direction: column;
+  width: 40px;
+  padding: 5px 3px;
+  background: #f7f9fc;
+  border-radius: 0 8px 8px 0;
+}
+.site-card-actions button {
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  box-shadow: none;
+  font-size: 19px;
+}
+.connection-dot {
+  color: #9aa7b7;
+}
+.connection-dot.connected {
+  color: #4d9b6f;
+}
+.connection-dot.failed {
   color: var(--danger);
 }
-.site-warning p {
-  word-break: break-word;
+.connection-dot.slow {
+  color: #c28c2c;
 }
-.manager-note {
-  font-size: 12px;
-  line-height: 1.8;
-  margin-top: 22px;
+.site-menu {
+  margin-top: auto;
+  position: relative;
 }
-.manager-empty {
-  padding: 50px 20px;
+.site-menu > button {
+  width: 100%;
+}
+.site-menu-items {
+  position: absolute;
+  right: 34px;
+  bottom: 0;
+  z-index: 5;
+  min-width: 110px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px #172b4d1a;
+}
+.site-menu-items button {
+  width: 100%;
+  justify-content: flex-start;
+  font-size: 13px;
+  padding: 9px 12px;
+}
+.site-floating-actions {
+  position: fixed;
+  right: 28px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  z-index: 50;
+}
+.site-floating-actions button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 23px;
+  box-shadow: 0 4px 14px #172b4d1f;
+}
+.sort-notice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  background: #fff5df;
+  border-radius: 9px;
+  font-size: 13px;
+}
+.sort-controls {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  justify-content: center;
+  gap: 6px;
+}
+.sort-controls button {
+  padding: 3px 7px;
+}
+.sort-controls span {
   text-align: center;
-  background: #fff;
-  border-radius: 12px;
+  font-size: 12px;
   color: var(--muted);
 }
 .manager-backdrop {
@@ -762,96 +1013,182 @@ onMounted(load);
   padding: 20px;
 }
 .manager-dialog {
-  width: 640px;
+  width: 720px;
   max-width: 100%;
-  max-height: 90vh;
+  max-height: calc(100dvh - 40px);
   overflow: auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 30px 90px #0003;
+  background: var(--surface);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 24px 80px #0003;
 }
-.manager-wide {
-  width: 1000px;
-}
-.manager-dialog > header {
+.manager-dialog header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 22px;
 }
 .manager-dialog h2 {
   margin: 0;
+  font-size: 19px;
 }
-.manager-dialog > footer {
+.manager-dialog header small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+}
+.manager-dialog footer {
+  display: flex;
   justify-content: flex-end;
-  margin-top: 25px;
+  gap: 10px;
+  margin-top: 22px;
 }
 .manager-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px 14px;
 }
-.manager-form-grid label {
+.manager-form-grid > label {
   display: grid;
-  gap: 9px;
+  align-content: start;
+  gap: 8px;
+  font-size: 12px;
 }
-.manager-form-grid small {
-  color: var(--muted);
-  line-height: 1.6;
+.half {
+  grid-column: span 2;
 }
-.span-two {
+.span-all {
   grid-column: 1/-1;
 }
-.manager-checkbox {
-  display: flex !important;
+.manager-form-grid small,
+.manager-note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+.credential-tabs {
+  display: flex;
+  gap: 7px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+.credential-tabs button {
+  border: 0;
+  background: transparent;
+}
+.credential-tabs button[aria-selected='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.preserved-options > label {
+  display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.preserved-options input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+}
+.preserved-options > small {
+  display: block;
+  margin-top: 5px;
+}
+.limit-fields {
+  display: flex;
   gap: 10px;
-  align-self: center;
+  margin-top: 8px;
+  font-size: 12px;
+}
+.limit-fields label {
+  min-width: 0;
+}
+.delete-dialog {
+  width: 460px;
+}
+.manager-wide {
+  width: 900px;
+}
+.site-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 22px 0;
+}
+.site-metrics dt {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+.site-metrics dd {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+.site-totals {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+.site-totals > div {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.site-totals strong {
+  font-size: 23px;
+}
+.site-totals small {
+  color: var(--muted);
 }
 .manager-table {
   overflow: auto;
 }
-.manager-table table {
+table {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
 }
-.manager-table th,
-.manager-table td {
-  padding: 13px;
-  text-align: left;
+th,
+td {
+  padding: 12px;
   border-bottom: 1px solid var(--line);
+  text-align: left;
   white-space: nowrap;
 }
-@media (max-width: 750px) {
-  .manager-heading {
-    align-items: flex-start;
-    flex-direction: column;
+@media (max-width: 650px) {
+  .site-toolbar {
+    flex-wrap: wrap;
   }
-  .site-totals {
-    grid-template-columns: repeat(2, 1fr);
+  .site-toolbar input {
+    flex-basis: 100%;
+    max-width: none;
   }
   .site-grid {
     grid-template-columns: 1fr;
   }
-  .manager-filter {
-    flex-wrap: wrap;
-  }
-  .manager-form-grid {
-    grid-template-columns: 1fr;
-  }
-  .span-two {
-    grid-column: auto;
-  }
-  .manager-dialog {
-    padding: 20px;
-  }
   .manager-backdrop {
     padding: 10px;
   }
-  .site-card-title {
-    gap: 8px;
+  .manager-dialog {
+    padding: 18px;
+    max-height: calc(100dvh - 20px);
+  }
+  .manager-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .half {
+    grid-column: span 2;
+  }
+  .site-floating-actions {
+    right: 18px;
+    bottom: 22px;
+  }
+  .site-metrics {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

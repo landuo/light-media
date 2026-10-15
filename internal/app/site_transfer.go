@@ -4,13 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/net/publicsuffix"
+	"light-media/internal/sites"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 	"unicode"
-
-	"light-media/internal/sites"
 )
 
 const siteExportFormat = "light-media-sites"
@@ -41,37 +41,13 @@ type siteImportReport struct {
 	Results  []siteImportResult `json:"results"`
 }
 
-// MoviePilot's SiteCardListView exports an unwrapped array using these names.
-// Fields the application cannot honor are reported, never interpreted as auth.
-type moviePilotSiteImport struct {
-	Name       string `json:"name"`
-	Domain     string `json:"domain"`
-	URL        string `json:"url"`
-	Cookie     string `json:"cookie"`
-	APIKey     string `json:"apikey"`
-	Token      string `json:"token"`
-	UA         string `json:"ua"`
-	RSS        string `json:"rss"`
-	Downloader string `json:"downloader"`
-	Filter     string `json:"filter"`
-	Proxy      int    `json:"proxy"`
-	Render     int    `json:"render"`
-	Public     int    `json:"public"`
-	Timeout    int    `json:"timeout"`
-	Interval   int    `json:"limit_interval"`
-	Count      int    `json:"limit_count"`
-	Seconds    int    `json:"limit_seconds"`
-	Priority   int    `json:"pri"`
-	Active     *bool  `json:"is_active"`
-}
-
 // Imported origins have a stricter boundary than the local fixture seam in
 // normalizeManagedSite: a file cannot introduce localhost or arbitrary ports.
 // The adapter is derived from an exact host match, never from its display name.
 func siteImportOrigin(value string) (kind, canonical, domain string, err error) {
 	u, e := url.Parse(strings.TrimSpace(value))
 	if e != nil || u.Scheme != "https" || u.User != nil || u.Opaque != "" || u.RawQuery != "" || u.ForceQuery || u.Fragment != "" || (u.Path != "" && u.Path != "/") || (u.Port() != "" && u.Port() != "443") {
-		return "", "", "", bad("INVALID_SITE_URL", "站点地址必须是已适配站点的 HTTPS 根地址，不支持自定义端口、路径或参数")
+		return "", "", "", bad("INVALID_SITE_URL", "站点地址必须是 HTTPS 根地址，不支持自定义端口、路径或参数")
 	}
 	host := strings.ToLower(u.Hostname())
 	switch host {
@@ -91,7 +67,15 @@ func siteImportOrigin(value string) (kind, canonical, domain string, err error) 
 	case "1ptba.com", "www.1ptba.com":
 		kind, domain = "1ptba", "1ptba.com"
 	default:
-		return "", "", "", bad("SITE_NOT_ADAPTED", "该域名尚未适配，已跳过；目前仅支持馒头、憨憨、UBits、家园和 1PTBA")
+		canonical, err = sites.NormalizeNexusPHPOrigin(value)
+		if err != nil {
+			return "", "", "", bad("INVALID_SITE_URL", "站点地址须为公网域名的 HTTPS 根地址")
+		}
+		domain, err = publicsuffix.EffectiveTLDPlusOne(host)
+		if err != nil {
+			domain = host
+		}
+		return "nexusphp", strings.TrimRight(canonical, "/"), domain, nil
 	}
 	return kind, "https://" + host, domain, nil
 }
@@ -110,52 +94,68 @@ func invalidSiteImportText(value string, limit int) bool {
 }
 
 func decodeSiteImportEntry(raw json.RawMessage, native bool) (SiteConfig, []string, error) {
-	var in SiteConfig
+	in := SiteConfig{Enabled: true, DailyBudget: 600}
 	warnings := []string{}
-	var domain string
-	if native {
-		if json.Unmarshal(raw, &in) != nil {
-			return in, warnings, bad("INVALID_SITE_ENTRY", "站点字段格式无效")
-		}
-	} else {
-		var legacy moviePilotSiteImport
-		if json.Unmarshal(raw, &legacy) != nil {
-			return in, warnings, bad("INVALID_SITE_ENTRY", "MoviePilot 站点字段格式无效")
-		}
-		in = SiteConfig{Config: sites.Config{Name: legacy.Name, BaseURL: legacy.URL, Cookie: legacy.Cookie, APIKey: legacy.APIKey}, Enabled: legacy.Active == nil || *legacy.Active, DailyBudget: 600}
-		domain = legacy.Domain
-		if legacy.UA != "" || legacy.Proxy != 0 || legacy.Render != 0 || legacy.Timeout != 0 && legacy.Timeout != 25 {
-			warnings = append(warnings, "原文件的 User-Agent、代理、浏览器渲染及超时选项未迁移，使用本应用连接方式")
-		}
-		if legacy.RSS != "" || legacy.Downloader != "" || legacy.Filter != "" || legacy.Public != 0 || legacy.Token != "" {
-			warnings = append(warnings, "原文件的 RSS、下载器绑定、过滤规则、公开站点及 Token 选项未迁移；认证使用 API Key 或 Cookie")
-		}
-		if legacy.Interval != 0 || legacy.Count != 0 || legacy.Seconds != 0 || legacy.Priority != 0 {
-			warnings = append(warnings, "原文件的优先级及流控选项未迁移；新站使用每日 600 次请求预算，已有站保留原预算")
-		}
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil || fields == nil {
+		return in, warnings, bad("INVALID_SITE_ENTRY", "站点字段格式无效，请核对地址、数值及开关字段")
+	}
+	// MoviePilot uses numeric database IDs. Imported IDs never identify local
+	// records; the normalized origin below is the sole migration identity.
+	delete(fields, "id")
+	config, _ := json.Marshal(fields)
+	if json.Unmarshal(config, &in) != nil {
+		return in, warnings, bad("INVALID_SITE_ENTRY", "站点字段格式无效，请核对地址、数值及开关字段")
+	}
+	if own, budget := siteImportExtension(raw); own {
+		in.DailyBudget = budget
+	}
+	if in.Proxy || in.Render {
+		warnings = append(warnings, "代理与浏览器仿真选项已保留；当前连接不启用这两项能力")
+	}
+	if in.RSS != "" || in.Downloader != "" || in.Filter != "" || in.Token != "" {
+		warnings = append(warnings, "RSS、下载器绑定、过滤规则及 Token 已保留供导出；当前请求使用 Cookie 或站点专用 API Key")
 	}
 	kind, canonical, actualDomain, err := siteImportOrigin(in.BaseURL)
 	if err != nil {
 		return in, warnings, err
 	}
-	if native && in.Kind != kind {
+	if native && in.Kind != "" && in.Kind != kind {
 		return in, warnings, bad("SITE_ORIGIN_MISMATCH", "站点类型与地址不匹配，未导入")
 	}
-	if domain != "" && !strings.EqualFold(strings.TrimSpace(domain), actualDomain) {
+	u, _ := url.Parse(canonical)
+	domain := strings.ToLower(strings.TrimSpace(in.Domain))
+	if domain != "" && domain != actualDomain && domain != u.Hostname() && !(kind == "nexusphp" && strings.HasSuffix(u.Hostname(), "."+domain)) {
 		return in, warnings, bad("SITE_ORIGIN_MISMATCH", "MoviePilot 站点域名与地址不匹配，未导入")
 	}
 	in.Kind, in.BaseURL, in.ID = kind, canonical, ""
+	if in.Domain == "" {
+		in.Domain = actualDomain
+	}
 	in.Name = strings.TrimSpace(in.Name)
 	if in.Name == "" || len([]rune(in.Name)) > 64 || invalidSiteImportText(in.Name, 256) {
 		return in, warnings, bad("INVALID_SITE_NAME", "站点名称不能为空且最长 64 字，不能包含控制字符")
 	}
-	if invalidSiteImportText(in.Cookie, 64<<10) || invalidSiteImportText(in.APIKey, 8192) {
+	if invalidSiteImportText(in.Cookie, 64<<10) || invalidSiteImportText(in.APIKey, 8192) || invalidSiteImportText(in.Token, 8192) || invalidSiteImportText(in.UserAgent, 8192) {
 		return in, warnings, bad("INVALID_SITE_CREDENTIAL", "站点登录信息格式无效或过长")
 	}
 	if in.DailyBudget < 0 || in.DailyBudget > 10000 {
 		return in, warnings, bad("INVALID_SITE_BUDGET", "每日请求预算须在 0 至 10000 之间")
 	}
 	return in, warnings, nil
+}
+
+func siteImportExtension(raw json.RawMessage) (bool, int) {
+	var entry struct {
+		Extension *struct {
+			Version     int `json:"version"`
+			DailyBudget int `json:"daily_budget"`
+		} `json:"_light_media"`
+	}
+	if json.Unmarshal(raw, &entry) == nil && entry.Extension != nil && entry.Extension.Version == 1 {
+		return true, entry.Extension.DailyBudget
+	}
+	return false, 0
 }
 
 func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (siteImportReport, error) {
@@ -188,15 +188,19 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 	config := a.Settings()
 	// Settings returns a struct snapshot; detach the site slice before staging.
 	config.Sites = append([]SiteConfig(nil), config.Sites...)
-	existingCount := len(config.Sites)
 	seen := map[string]bool{}
 	touched := map[string]bool{}
 	for index, entry := range entries {
+		own, _ := siteImportExtension(entry)
 		result := siteImportResult{Index: index + 1, Name: fmt.Sprintf("第 %d 项", index+1), Status: "failed", Warnings: []string{}}
 		in, warnings, err := decodeSiteImportEntry(entry, native)
 		result.Warnings = warnings
 		if err == nil {
 			result.Name = siteImportName(in.Kind)
+			if result.Name == "" || in.Kind == "nexusphp" {
+				origin, _ := url.Parse(in.BaseURL)
+				result.Name = origin.Hostname()
+			}
 			identity := in.Kind + "|" + in.BaseURL
 			if seen[identity] {
 				err = bad("DUPLICATE_SITE_IMPORT", "文件中同一站点地址重复，后续条目未导入")
@@ -206,14 +210,7 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 		}
 		found := -1
 		if err == nil {
-			var sameKind []int
 			for i, old := range config.Sites {
-				if old.Kind != in.Kind {
-					continue
-				}
-				if i < existingCount {
-					sameKind = append(sameKind, i)
-				}
 				_, origin, _, originErr := siteImportOrigin(old.BaseURL)
 				if originErr == nil && origin == in.BaseURL {
 					if found >= 0 {
@@ -223,14 +220,6 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 					found = i
 				}
 			}
-			// Native exports can legitimately contain multiple origins using the
-			// same adapter. Only MoviePilot migration may update a unique old
-			// site's origin, and never an entry created earlier in this import.
-			if !native && found < 0 && len(sameKind) == 1 {
-				found = sameKind[0]
-			} else if !native && found < 0 && len(sameKind) > 1 {
-				err = bad("AMBIGUOUS_SITE", "已有多个该站点地址，无法确定更新对象，请先在站点管理中核对")
-			}
 		}
 		if err == nil {
 			if found >= 0 {
@@ -239,30 +228,20 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				if touched[old.ID] {
 					err = bad("DUPLICATE_SITE_IMPORT", "文件中多个条目对应同一已有站点，后续条目未导入")
 				}
-				if !native {
+				if !native && !own {
 					in.DailyBudget = old.DailyBudget
 				}
 				// A changed origin must supply its own credential; do not move the
 				// saved cookie/API key based only on a site name or adapter kind.
 				_, origin, _, originErr := siteImportOrigin(old.BaseURL)
 				if originErr == nil && origin == in.BaseURL {
-					if in.Cookie == "" {
-						in.Cookie = old.Cookie
-					}
-					if in.APIKey == "" {
-						in.APIKey = old.APIKey
-					}
+					preserveSiteSecrets(&in, old)
 				}
 			} else {
 				in.ID = id("site")
-				if len(config.Sites) >= 32 {
-					err = bad("SITE_LIMIT", "已达到 32 个站点的配置上限")
+				if len(config.Sites) >= 128 {
+					err = bad("SITE_LIMIT", "已达到 128 个站点的配置上限")
 				}
-			}
-			if err == nil && in.Kind == "mteam" && in.APIKey == "" {
-				err = bad("SITE_CREDENTIAL_REQUIRED", "馒头需要 API Key，Cookie 或 Token 不能替代")
-			} else if err == nil && in.Kind != "mteam" && in.Cookie == "" {
-				err = bad("SITE_CREDENTIAL_REQUIRED", "该站点需要 Cookie，请补充后再导入")
 			}
 			if err == nil && normalizeManagedSite(&in) != nil {
 				err = bad("INVALID_SITE_ENTRY", "站点配置未通过校验")
@@ -281,6 +260,9 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				report.Failed++
 			}
 		} else {
+			if (in.Kind == "mteam" && in.APIKey == "") || (in.Kind != "mteam" && in.Cookie == "") {
+				result.Warnings = append(result.Warnings, "登录凭据尚未配置；已保存站点，补充凭据后再测试连接")
+			}
 			touched[in.ID] = true
 			result.SiteID = in.ID
 			if found >= 0 {
@@ -306,12 +288,21 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 
 func (a *App) exportManagedSites(w http.ResponseWriter, r *http.Request) {
 	configured := a.Settings().Sites
-	if configured == nil {
-		configured = []SiteConfig{}
+	document := make([]map[string]any, 0, len(configured))
+	for _, s := range configured {
+		document = append(document, map[string]any{
+			"name": s.Name, "domain": s.Domain, "url": s.BaseURL,
+			"cookie": s.Cookie, "apikey": s.APIKey, "token": s.Token, "ua": s.UserAgent,
+			"rss": s.RSS, "downloader": s.Downloader, "filter": s.Filter,
+			"proxy": s.Proxy, "render": s.Render, "public": s.Public, "note": s.Note,
+			"timeout": s.Timeout, "pri": s.Priority, "is_active": s.Enabled,
+			"limit_interval": s.LimitInterval, "limit_count": s.LimitCount, "limit_seconds": s.LimitSeconds,
+			"_light_media": map[string]any{"version": 1, "daily_budget": s.DailyBudget},
+		})
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Pragma", "no-cache")
 	w.Header().Set("Content-Disposition", `attachment; filename="light-media-sites-`+time.Now().In(shanghai()).Format("20060102")+`.json"`)
-	_ = json.NewEncoder(w).Encode(siteExportDocument{Format: siteExportFormat, Version: 1, Sites: configured})
+	_ = json.NewEncoder(w).Encode(document)
 }

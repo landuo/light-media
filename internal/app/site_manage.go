@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -39,6 +40,7 @@ var nativeSiteTemplates = []SiteTemplate{
 	{"ubits", "UBits", "https://ubits.club", "https://ubits.club"},
 	{"jiayuan", "家园", "https://hdhome.org", "https://hdhome.org"},
 	{"1ptba", "1PTBA", "https://1ptba.com", "https://1ptba.com"},
+	{"nexusphp", "NexusPHP", "", ""},
 }
 
 func (a *App) managedConnectionKey(namespace string, fields ...string) string {
@@ -55,51 +57,70 @@ func (a *App) managedConnectionKey(namespace string, fields ...string) string {
 }
 
 func (a *App) managedSiteKey(s SiteConfig) string {
-	return a.managedConnectionKey("site", s.Kind, s.BaseURL, s.Cookie, s.APIKey)
+	return a.managedConnectionKey("site", s.Kind, s.BaseURL, s.Cookie, s.APIKey, s.UserAgent)
 }
 
 func normalizeManagedSite(s *SiteConfig) error {
 	s.Name = strings.TrimSpace(s.Name)
 	s.BaseURL = strings.TrimRight(strings.TrimSpace(s.BaseURL), "/")
-	if s.Name == "" || len([]rune(s.Name)) > 64 {
-		return bad("INVALID_SITE_NAME", "站点名称不能为空且最长64字")
-	}
 	u, e := url.Parse(s.BaseURL)
 	if e != nil || u.User != nil || u.RawQuery != "" || u.Fragment != "" {
 		return bad("INVALID_SITE", "站点地址无效")
 	}
 	host := strings.ToLower(u.Hostname())
-	if s.Kind == "mteam" {
-		switch host {
-		case "kp.m-team.cc", "www.m-team.cc", "m-team.cc":
-			s.BaseURL = "https://api.m-team.cc"
-			host = "api.m-team.cc"
-		case "kp.m-team.io", "www.m-team.io", "m-team.io":
-			s.BaseURL = "https://api.m-team.io"
-			host = "api.m-team.io"
-		}
-	}
-	allowed := map[string][]string{"mteam": {"api.m-team.cc", "api.m-team.io", "test2.m-team.cc"}, "hhanclub": {"hhanclub.net", "www.hhanclub.net"}, "ubits": {"ubits.club", "www.ubits.club"}, "jiayuan": {"hdhome.org", "www.hdhome.org"}, "1ptba": {"1ptba.com", "www.1ptba.com"}}
-	valid := false
-	for _, h := range allowed[s.Kind] {
-		if host == h {
-			valid = true
-		}
-	}
 	if host == "127.0.0.1" || host == "localhost" || host == "::1" {
-		valid = len(allowed[s.Kind]) > 0
+		// Existing protocol fixtures use explicit legacy adapters on loopback.
+		if s.Kind != "mteam" && s.Kind != "hhanclub" && s.Kind != "ubits" && s.Kind != "jiayuan" && s.Kind != "1ptba" {
+			return bad("INVALID_SITE_URL", "站点地址须为公网域名的 HTTPS 根地址")
+		}
+	} else {
+		kind, origin, domain, err := siteImportOrigin(s.BaseURL)
+		if err != nil {
+			return err
+		}
+		s.Kind, s.BaseURL = kind, origin
+		configuredDomain := strings.ToLower(strings.TrimSpace(s.Domain))
+		if configuredDomain == "" || (configuredDomain != domain && configuredDomain != host && !(kind == "nexusphp" && strings.HasSuffix(host, "."+configuredDomain))) {
+			s.Domain = domain
+		}
 	}
-	if !valid {
-		return bad("SITE_NOT_ADAPTED", "该地址不属于所选原生站点，请选择已适配站点；家园地址为 hdhome.org")
+	if s.Name == "" {
+		s.Name = siteImportName(s.Kind)
+		if s.Kind == "nexusphp" || s.Name == "" {
+			s.Name = host
+		}
 	}
-	if _, e = sites.New(s.Config); e != nil {
+	if len([]rune(s.Name)) > 64 || invalidSiteImportText(s.Name, 256) {
+		return bad("INVALID_SITE_NAME", "站点名称最长64字且不能包含控制字符")
+	}
+	if invalidSiteImportText(s.Cookie, 64<<10) || invalidSiteImportText(s.APIKey, 8192) || invalidSiteImportText(s.Token, 8192) || invalidSiteImportText(s.UserAgent, 8192) || invalidSiteImportText(s.RSS, 64<<10) {
+		return bad("INVALID_SITE_CREDENTIAL", "站点登录信息格式无效或过长")
+	}
+	if s.Priority < 0 || s.Priority > 10000 || s.LimitInterval < 0 || s.LimitInterval > 86400 || s.LimitCount < 0 || s.LimitCount > 10000 || s.LimitSeconds < 0 || s.LimitSeconds > 86400 || s.Timeout < 0 || s.Timeout > 120 {
+		return bad("INVALID_SITE_OPTIONS", "站点优先级、超时或访问频率超出支持范围")
+	}
+	if e = validateManagedSiteConfig(s.Config); e != nil {
 		return bad("INVALID_SITE", e.Error())
 	}
 	return nil
 }
 
+func validateManagedSiteConfig(config sites.Config) error {
+	// Saving a connection is separate from authenticating it. Placeholders are
+	// used only for structural validation and are never stored or requested.
+	if config.Cookie == "" {
+		config.Cookie = "configuration-validation-only"
+	}
+	if config.APIKey == "" {
+		config.APIKey = "configuration-validation-only"
+	}
+	_, err := sites.New(config)
+	return err
+}
+
 func (a *App) managedSites(ctx context.Context) (any, error) {
 	c := a.Settings()
+	sort.SliceStable(c.Sites, func(i, j int) bool { return c.Sites[i].Priority < c.Sites[j].Priority })
 	rows := []map[string]any{}
 	for _, s := range c.Sites {
 		key := a.managedSiteKey(s)
@@ -113,15 +134,15 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 			last = siteSnapshot{}
 		}
 		configured := s.Cookie != "" || s.APIKey != ""
-		s.Cookie = ""
-		s.APIKey = ""
+		credentials := siteSecretState(s)
+		hideSiteSecrets(&s)
 		var used int
 		if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM site_usage WHERE site_id=? AND ts>?`, s.ID, time.Now().Add(-24*time.Hour).Unix()).Scan(&used); e != nil {
 			return nil, e
 		}
-		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "connection": latest.Connection, "stats": last.Stats, "stale": last.Stats != nil && latest.Connection.Status != "ok", "usage_24h": used})
+		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": last.Stats, "stale": last.Stats != nil && latest.Connection.Status != "ok", "usage_24h": used})
 	}
-	return map[string]any{"sites": rows, "supported": nativeSiteTemplates}, nil
+	return map[string]any{"sites": rows, "supported": nativeSiteTemplates, "capabilities": map[string]bool{"rss": false, "token": false, "proxy": false, "render": false, "downloader": false, "filter": false, "limit": true, "timeout": true, "user_agent": true}}, nil
 }
 
 func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
@@ -131,20 +152,25 @@ func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
 	if in.ID == "" {
 		in.ID = id("site")
 	}
+	if e := normalizeManagedSite(&in); e != nil {
+		return nil, e
+	}
 	found := -1
 	for i, old := range c.Sites {
+		oldOrigin := strings.TrimRight(old.BaseURL, "/")
+		if _, canonical, _, err := siteImportOrigin(old.BaseURL); err == nil {
+			oldOrigin = canonical
+		}
+		if old.ID != in.ID && in.BaseURL == oldOrigin {
+			return nil, bad("DUPLICATE_SITE", "该站点地址已存在，请编辑已有站点")
+		}
 		if old.ID == in.ID {
 			found = i
-			// Reusing a credential for another origin or adapter is forbidden.
-			if strings.TrimRight(in.BaseURL, "/") == strings.TrimRight(old.BaseURL, "/") && in.Kind == old.Kind {
-				if in.Cookie == "" {
-					in.Cookie = old.Cookie
-				}
-				if in.APIKey == "" {
-					in.APIKey = old.APIKey
-				}
+			// Adapter selection follows the URL, including legacy configurations.
+			// Preserve redacted fields only when that normalized origin is equal.
+			if in.BaseURL == oldOrigin {
+				preserveSiteSecrets(&in, old)
 			}
-			break
 		}
 	}
 	if e := normalizeManagedSite(&in); e != nil {
@@ -157,6 +183,39 @@ func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
 	}
 	if e := a.saveSettings(ctx, c); e != nil {
 		return nil, e
+	}
+	return a.managedSites(ctx)
+}
+
+type sitePriority struct {
+	ID       string `json:"id"`
+	Priority int    `json:"pri"`
+}
+
+func (a *App) saveSitePriorities(ctx context.Context, priorities []sitePriority) (any, error) {
+	a.settingsMu.Lock()
+	defer a.settingsMu.Unlock()
+	config := a.Settings()
+	seen := map[string]bool{}
+	for _, entry := range priorities {
+		if entry.Priority < 0 || entry.Priority > 10000 || seen[entry.ID] {
+			return nil, bad("INVALID_SITE_PRIORITY", "站点排序值无效或站点重复")
+		}
+		seen[entry.ID] = true
+		found := false
+		for i := range config.Sites {
+			if config.Sites[i].ID == entry.ID {
+				config.Sites[i].Priority = entry.Priority
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, &APIError{"SITE_NOT_FOUND", "排序站点不存在，请刷新后重试", 404}
+		}
+	}
+	if err := a.saveSettings(ctx, config); err != nil {
+		return nil, err
 	}
 	return a.managedSites(ctx)
 }
@@ -190,7 +249,8 @@ func (a *App) deleteManagedSite(ctx context.Context, key string) (any, error) {
 }
 
 func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
-	s, e := a.site(key)
+	ctx = allowDisabledSiteRequests(ctx)
+	s, e := a.siteForRequest(ctx, key)
 	if e != nil {
 		return nil, e
 	}
@@ -205,7 +265,7 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 	} else {
 		snapshot.Stats = &observed
 	}
-	current, err := a.site(key)
+	current, err := a.siteForRequest(ctx, key)
 	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey {
 		return nil, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
 	}

@@ -150,8 +150,15 @@ func (c *Client) parseHTML(b []byte, pageURL *url.URL, page int) (SearchResult, 
 	}
 	seen := map[string]bool{}
 	var rowError error
+	var columns *nexusColumns
+	if c.config.Kind == "nexusphp" {
+		columns, err = nexusSearchColumns(rows)
+		if err != nil {
+			return out, err
+		}
+	}
 	for _, row := range rows {
-		r, isResult, err := c.parseRow(row, pageURL)
+		r, isResult, err := c.parseRow(row, pageURL, columns)
 		if err != nil {
 			if rowError == nil {
 				rowError = err
@@ -223,7 +230,12 @@ func (c *Client) confirmedNexusEmpty(doc *html.Node, pageURL *url.URL) bool {
 		return false
 	}
 	for _, cell := range find(doc, func(n *html.Node) bool { return n.Data == "td" && hasClass(n, "text") }) {
-		if text(cell) != "没有种子。请用准确的关键字重试。" {
+		message := text(cell)
+		empty := message == "没有种子。请用准确的关键字重试。"
+		if c.config.Kind == "nexusphp" {
+			empty = empty || message == "沒有種子。請用準確的關鍵字重試。" || message == "No torrents found. Try again with a refined search string." || message == "Nothing found!" || message == "No torrents found."
+		}
+		if !empty {
 			continue
 		}
 		p := cell.Parent
@@ -241,7 +253,7 @@ func (c *Client) confirmedNexusEmpty(doc *html.Node, pageURL *url.URL) bool {
 	return false
 }
 
-func (c *Client) parseRow(row *html.Node, pageURL *url.URL) (Resource, bool, error) {
+func (c *Client) parseRow(row *html.Node, pageURL *url.URL, columns *nexusColumns) (Resource, bool, error) {
 	r := Resource{SiteID: c.config.ID, DownloadFactor: 1, UploadFactor: 1}
 	var titleNode *html.Node
 	for _, a := range find(row, func(n *html.Node) bool { return n.Data == "a" }) {
@@ -251,6 +263,9 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL) (Resource, bool, err
 		}
 		u = pageURL.ResolveReference(u)
 		if path.Base(u.Path) != "details.php" {
+			continue
+		}
+		if c.config.Kind == "nexusphp" && (u.Fragment == "seeders" || u.Fragment == "leechers") {
 			continue
 		}
 		// Peer-count links point at the same item with #seeders/#leechers.
@@ -269,7 +284,7 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL) (Resource, bool, err
 		}
 	}
 	if r.ID == "" {
-		if c.config.Kind == "hhanclub" || len(find(row, func(n *html.Node) bool { return n.Data == "table" && hasClass(n, "torrentname") })) > 0 {
+		if c.config.Kind == "hhanclub" || c.config.Kind == "nexusphp" && unrecognizedNexusRow(row) || len(find(row, func(n *html.Node) bool { return n.Data == "table" && hasClass(n, "torrentname") })) > 0 {
 			return r, false, errors.New("site_protocol_changed")
 		}
 		return r, false, nil
@@ -301,13 +316,26 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL) (Resource, bool, err
 				cols = append(cols, n)
 			}
 		}
-		if len(cols) < 7 {
+		if c.config.Kind == "nexusphp" {
+			var e error
+			dateNode, sizeNode, seedNode, leechNode, e = nexusRowColumns(cols, columns)
+			if e != nil {
+				return r, false, e
+			}
+			for p := titleNode; p != nil && p != row; p = p.Parent {
+				if p.Parent == row {
+					r.Subtitle = description(p)
+					break
+				}
+			}
+		} else if len(cols) < 7 {
 			return r, false, errors.New("site_protocol_changed")
+		} else {
+			dateNode, sizeNode, seedNode, leechNode = cols[3], cols[4], cols[5], cols[6]
+			// The second cell contains a nested torrent-name table. Preserve its
+			// plain descriptive text without title, icon, promotion or tag labels.
+			r.Subtitle = description(cols[1])
 		}
-		dateNode, sizeNode, seedNode, leechNode = cols[3], cols[4], cols[5], cols[6]
-		// The second cell contains a nested torrent-name table. Preserve its
-		// plain descriptive text without title, icon, promotion or tag labels.
-		r.Subtitle = description(cols[1])
 	}
 	if sizeNode == nil || seedNode == nil || leechNode == nil {
 		return r, false, errors.New("site_protocol_changed")

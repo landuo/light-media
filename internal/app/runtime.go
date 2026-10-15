@@ -56,7 +56,7 @@ type Options struct {
 	Web     http.Handler
 }
 
-const appVersion = "0.3.10"
+const appVersion = "0.3.11"
 
 type APIError struct {
 	Code    string `json:"code"`
@@ -187,7 +187,7 @@ func (a *App) saveSettings(ctx context.Context, c Settings) error {
 	a.cfgMu.Unlock()
 	for _, site := range c.Sites {
 		for _, old := range previous.Sites {
-			if old.ID == site.ID && (old.BaseURL != site.BaseURL || old.Cookie != site.Cookie || old.APIKey != site.APIKey) {
+			if old.ID == site.ID && a.managedSiteKey(old) != a.managedSiteKey(site) {
 				_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='site_cooldown' AND id=?`, site.ID)
 			}
 		}
@@ -247,7 +247,7 @@ var urlPattern = regexp.MustCompile(`(?i)https?://[^\s"<>]+`)
 func cleanWithSettings(s string, c Settings) string {
 	secrets := []string{c.TMDB.APIKey, c.TMDB.AccessToken, c.FNOS.Password}
 	for _, x := range c.Sites {
-		secrets = append(secrets, x.Cookie, x.APIKey)
+		secrets = append(secrets, x.Cookie, x.APIKey, x.Token, x.RSS, string(x.Note))
 	}
 	for _, x := range c.Downloaders {
 		secrets = append(secrets, x.Password)

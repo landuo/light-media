@@ -546,6 +546,18 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 		if err != nil {
 			return errors.New("site_seeding_protocol_changed")
 		}
+		if c.config.Kind == "nexusphp" {
+			if len(find(doc, func(n *html.Node) bool {
+				return n.Data == "input" && strings.EqualFold(attribute(n, "type"), "password")
+			})) > 0 {
+				return errors.New("site_authentication_failed")
+			}
+			for _, marker := range []string{"cf-chl-", "challenge-platform", "just a moment...", "g-recaptcha", "h-captcha", "turnstile"} {
+				if strings.Contains(strings.ToLower(string(b)), marker) {
+					return errors.New("site_login_challenge")
+				}
+			}
+		}
 		// The AJAX response has no navigation/auth marker. A recognized size
 		// header and valid detail rows are required before accepting its table.
 		found := false
@@ -583,9 +595,15 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 					return e == nil && path.Base(link.Path) == "details.php" && numericID.MatchString(link.Query().Get("id"))
 				})
 				if len(details) == 0 {
+					if c.config.Kind == "nexusphp" && text(row) != "" {
+						return errors.New("site_seeding_protocol_changed")
+					}
 					continue
 				}
 				link, _ := url.Parse(attribute(details[0], "href"))
+				if c.config.Kind == "nexusphp" && !sameOrigin(u.ResolveReference(link), c.base) {
+					return errors.New("site_seeding_protocol_changed")
+				}
 				id := link.Query().Get("id")
 				if seenIDs[id] {
 					return errors.New("site_seeding_duplicate_row")

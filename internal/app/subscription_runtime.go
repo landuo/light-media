@@ -142,7 +142,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if in.TotalEpisodes < 0 || in.TotalEpisodes > 9999 || in.TotalEpisodes > 0 && in.TotalEpisodes < in.StartEpisode {
 		return Subscription{}, bad("INVALID_TOTAL_EPISODES", "总集数须大于等于开始集数，且不超过9999")
 	}
-	if len(in.SiteIDs) > 32 {
+	if len(in.SiteIDs) > 128 {
 		return Subscription{}, bad("INVALID_SITES", "订阅站点数量超限")
 	}
 	in.Keyword = strings.TrimSpace(in.Keyword)

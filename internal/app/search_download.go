@@ -48,8 +48,19 @@ type PreviewRequest struct {
 }
 
 func (a *App) site(key string) (SiteConfig, error) {
+	return a.siteForRequest(context.Background(), key)
+}
+
+type manualSiteRequestKey struct{}
+
+func allowDisabledSiteRequests(ctx context.Context) context.Context {
+	return context.WithValue(ctx, manualSiteRequestKey{}, true)
+}
+
+func (a *App) siteForRequest(ctx context.Context, key string) (SiteConfig, error) {
+	manual, _ := ctx.Value(manualSiteRequestKey{}).(bool)
 	for _, s := range a.Settings().Sites {
-		if s.ID == key && s.Enabled {
+		if s.ID == key && (s.Enabled || manual) {
 			return s, nil
 		}
 	}
@@ -137,11 +148,27 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 		if auto && a.paused() {
 			return &APIError{"AUTOMATION_PAUSED", "自动化已暂停", 409}
 		}
-		current, e := a.site(s.ID)
+		current, e := a.siteForRequest(requestCtx, s.ID)
 		if e != nil {
 			return e
 		}
-		if current.BaseURL != s.BaseURL || current.Cookie != s.Cookie || current.APIKey != s.APIKey {
+		if a.managedSiteKey(current) != a.managedSiteKey(s) {
+			return bad("SITE_CHANGED", "站点设置已变化，请重新发起请求")
+		}
+		if e := a.waitSiteRequestLimits(requestCtx, current); e != nil {
+			return e
+		}
+		if e := a.guardSubscriptionContext(requestCtx); e != nil {
+			return e
+		}
+		if auto && a.paused() {
+			return &APIError{"AUTOMATION_PAUSED", "自动化已暂停", 409}
+		}
+		current, e = a.siteForRequest(requestCtx, s.ID)
+		if e != nil {
+			return e
+		}
+		if a.managedSiteKey(current) != a.managedSiteKey(s) {
 			return bad("SITE_CHANGED", "站点设置已变化，请重新发起请求")
 		}
 		budget := current.DailyBudget

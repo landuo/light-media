@@ -38,18 +38,18 @@ func TestSiteImportMoviePilotNativeArrayAndPartialResults(t *testing.T) {
 		{"name": "UBits", "domain": "ubits.club", "url": "https://ubits.club", "cookie": "synthetic-ubits-cookie", "is_active": true},
 		{"name": "家园新名称", "domain": "hdhome.org", "url": "https://hdhome.org/", "cookie": "synthetic-replaced-cookie", "is_active": false},
 		{"name": "1PTBA", "domain": "1ptba.com", "url": "https://1ptba.com", "cookie": "synthetic-1ptba-cookie", "is_active": true},
-		{"name": "synthetic-secret-in-name", "domain": "unsupported.invalid", "url": "https://unsupported.invalid", "cookie": "synthetic-unsupported-cookie"},
+		{"name": "synthetic-secret-in-name", "domain": "example.com", "url": "https://tracker.example.com", "cookie": "synthetic-generic-cookie"},
 		{"name": "wrong domain", "domain": "ubits.club", "url": "https://hdhome.org", "cookie": "synthetic-mismatch-cookie"},
 	}
 	report, err := a.importManagedSites(ctx, siteImportJSON(t, entries))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if report.Total != 7 || report.Imported != 5 || report.Created != 4 || report.Updated != 1 || report.Skipped != 1 || report.Failed != 1 {
+	if report.Total != 7 || report.Imported != 6 || report.Created != 5 || report.Updated != 1 || report.Skipped != 0 || report.Failed != 1 {
 		t.Fatalf("unexpected import counts: %+v", report)
 	}
-	if len(a.Settings().Sites) != 5 || report.Results[5].Code != "SITE_NOT_ADAPTED" || report.Results[6].Code != "SITE_ORIGIN_MISMATCH" || len(report.Results[0].Warnings) != 2 {
-		t.Fatal("unsupported sites or legacy options were not reported")
+	if len(a.Settings().Sites) != 6 || a.Settings().Sites[5].Kind != "nexusphp" || report.Results[6].Code != "SITE_ORIGIN_MISMATCH" || len(report.Results[0].Warnings) != 0 || a.Settings().Sites[1].UserAgent != "fixture-browser" {
+		t.Fatal("generic site or working MoviePilot options were not imported")
 	}
 	home := a.Settings().Sites[0]
 	if home.ID != old.ID || home.Cookie != "synthetic-replaced-cookie" || home.Enabled || home.DailyBudget != 900 || home.Name != "家园新名称" {
@@ -65,7 +65,7 @@ func TestSiteImportMoviePilotNativeArrayAndPartialResults(t *testing.T) {
 		t.Fatal("import changed subscription references")
 	}
 	raw := string(siteImportJSON(t, report))
-	for _, secret := range []string{"synthetic-mteam-key", "synthetic-replaced-cookie", "synthetic-secret-in-name", "synthetic-unsupported-cookie", "synthetic-mismatch-cookie"} {
+	for _, secret := range []string{"synthetic-mteam-key", "synthetic-replaced-cookie", "synthetic-secret-in-name", "synthetic-generic-cookie", "synthetic-mismatch-cookie"} {
 		if strings.Contains(raw, secret) {
 			t.Fatal("import report exposed an untrusted or secret value")
 		}
@@ -103,9 +103,17 @@ func TestSiteExportImportRoundTripAuthenticationAndPrivateResponses(t *testing.T
 	if exported.Code != 200 || exported.Header().Get("Cache-Control") != "no-store" || !strings.HasPrefix(exported.Header().Get("Content-Disposition"), `attachment; filename="light-media-sites-`) {
 		t.Fatal("export lacks private attachment response")
 	}
-	var document siteExportDocument
-	if err := json.Unmarshal(exported.Body.Bytes(), &document); err != nil || document.Format != siteExportFormat || document.Version != 1 || !reflect.DeepEqual(document.Sites, a.Settings().Sites) {
+	var document []json.RawMessage
+	if err := json.Unmarshal(exported.Body.Bytes(), &document); err != nil || len(document) != len(a.Settings().Sites) {
 		t.Fatal("export is not a complete standalone migration document")
+	}
+	for i, raw := range document {
+		decoded, _, err := decodeSiteImportEntry(raw, false)
+		wanted := a.Settings().Sites[i]
+		wanted.ID = ""
+		if err != nil || decoded != wanted {
+			t.Fatal("MoviePilot-compatible export lost connection fields")
+		}
 	}
 	before := a.Settings().Sites
 	imported := callTest(t, handler, "POST", "/api/sites/import", exported.Body.String(), cookie, "")
@@ -140,6 +148,7 @@ func TestSiteImportOriginAndCredentialBinding(t *testing.T) {
 	if _, err := a.saveManagedSite(ctx, old); err != nil {
 		t.Fatal(err)
 	}
+	old = a.Settings().Sites[0]
 	for _, value := range []string{
 		"https://not-adapted.invalid", "https://hhanclub.net.attacker.invalid", "https://127.0.0.1", "https://localhost",
 		"http://hhanclub.net", "https://hhanclub.net:9443", "https://hhanclub.net/path", "https://hhanclub.net/?passkey=synthetic-url-secret", "https://user:synthetic-password@hhanclub.net",
@@ -154,17 +163,18 @@ func TestSiteImportOriginAndCredentialBinding(t *testing.T) {
 	}
 	changed := []map[string]any{{"name": "憨憨", "domain": "hhanclub.net", "url": "https://www.hhanclub.net"}}
 	report, err := a.importManagedSites(ctx, siteImportJSON(t, changed))
-	if err != nil || report.Imported != 0 || report.Results[0].Code != "SITE_CREDENTIAL_REQUIRED" || a.Settings().Sites[0].BaseURL != old.BaseURL {
+	if err != nil || report.Created != 1 || len(a.Settings().Sites) != 2 || a.Settings().Sites[0] != old || a.Settings().Sites[1].Cookie != "" || len(report.Results[0].Warnings) == 0 {
 		t.Fatal("saved cookie was reused at another origin")
 	}
+	newID := a.Settings().Sites[1].ID
 	changed[0]["cookie"] = "synthetic-new-origin-cookie"
 	report, err = a.importManagedSites(ctx, siteImportJSON(t, changed))
-	if err != nil || report.Updated != 1 || a.Settings().Sites[0].ID != old.ID || a.Settings().Sites[0].Cookie != "synthetic-new-origin-cookie" {
-		t.Fatal("explicit credential change did not retain same-site ID")
+	if err != nil || report.Updated != 1 || a.Settings().Sites[0] != old || a.Settings().Sites[1].ID != newID || a.Settings().Sites[1].Cookie != "synthetic-new-origin-cookie" {
+		t.Fatal("explicit credential update changed another origin")
 	}
 	delete(changed[0], "cookie")
 	report, err = a.importManagedSites(ctx, siteImportJSON(t, changed))
-	if err != nil || report.Updated != 1 || a.Settings().Sites[0].Cookie != "synthetic-new-origin-cookie" {
+	if err != nil || report.Updated != 1 || a.Settings().Sites[1].Cookie != "synthetic-new-origin-cookie" {
 		t.Fatal("same-origin import erased saved credentials")
 	}
 	forged := siteExportDocument{Format: siteExportFormat, Version: 1, Sites: []SiteConfig{{Config: sites.Config{ID: old.ID, Kind: "mteam", Name: "馒头", BaseURL: "https://hdhome.org", APIKey: "synthetic-key"}, Enabled: true}}}
@@ -181,6 +191,7 @@ func TestSiteImportRejectsDuplicatesWithoutOverwritingOtherSites(t *testing.T) {
 	if _, err := a.saveManagedSite(ctx, other); err != nil {
 		t.Fatal(err)
 	}
+	other = a.Settings().Sites[0]
 	entries := []map[string]any{
 		{"name": "家园", "url": "https://hdhome.org", "cookie": "synthetic-first-cookie"},
 		{"name": "duplicate", "url": "https://hdhome.org/", "cookie": "synthetic-second-cookie"},
@@ -193,8 +204,8 @@ func TestSiteImportRejectsDuplicatesWithoutOverwritingOtherSites(t *testing.T) {
 
 func TestSiteImportNativeMultipleOriginsRoundTrip(t *testing.T) {
 	original := []SiteConfig{
-		{Config: sites.Config{ID: "from-cc", Kind: "mteam", Name: "馒头 CC", BaseURL: "https://api.m-team.cc", APIKey: "synthetic-cc-key"}, Enabled: true, DailyBudget: 821},
-		{Config: sites.Config{ID: "from-io", Kind: "mteam", Name: "馒头 IO", BaseURL: "https://api.m-team.io", APIKey: "synthetic-io-key"}, Enabled: false, DailyBudget: 532},
+		{Config: sites.Config{ID: "from-cc", Kind: "mteam", Name: "馒头 CC", BaseURL: "https://api.m-team.cc", APIKey: "synthetic-cc-key"}, SiteOptions: SiteOptions{Domain: "m-team.cc"}, Enabled: true, DailyBudget: 821},
+		{Config: sites.Config{ID: "from-io", Kind: "mteam", Name: "馒头 IO", BaseURL: "https://api.m-team.io", APIKey: "synthetic-io-key"}, SiteOptions: SiteOptions{Domain: "m-team.io"}, Enabled: false, DailyBudget: 532},
 	}
 	raw := siteImportJSON(t, siteExportDocument{Format: siteExportFormat, Version: 1, Sites: original})
 	a := newTestApp(t)
@@ -254,7 +265,7 @@ func TestSiteImportMalformedAndLimitedBodiesDoNotMutate(t *testing.T) {
 			t.Fatal("invalid import accepted, mutated settings, or echoed file content")
 		}
 	}
-	for _, entry := range []any{nil, "synthetic-value", map[string]any{"name": "safe", "url": "https://hdhome.org", "cookie": "synthetic-header\r\ninjection"}, map[string]any{"name": "safe", "url": "https://kp.m-team.cc", "token": "synthetic-token"}} {
+	for _, entry := range []any{nil, "synthetic-value", map[string]any{"name": "safe", "url": "https://hdhome.org", "cookie": "synthetic-header\r\ninjection"}} {
 		report, err := a.importManagedSites(context.Background(), siteImportJSON(t, []any{entry}))
 		if err != nil || report.Imported != 0 || report.Failed != 1 || len(a.Settings().Sites) != 0 {
 			t.Fatal("invalid entry or wrong credential type imported")
@@ -275,8 +286,8 @@ func TestSiteExportEmptyDocumentHasExplicitImportResult(t *testing.T) {
 	a := newTestApp(t)
 	cookie := setupTestAdmin(t, a)
 	exported := callTest(t, a.Handler(), "GET", "/api/sites/export", "", cookie, "")
-	var document siteExportDocument
-	if exported.Code != 200 || json.Unmarshal(exported.Body.Bytes(), &document) != nil || document.Sites == nil || len(document.Sites) != 0 {
+	var document []json.RawMessage
+	if exported.Code != 200 || json.Unmarshal(exported.Body.Bytes(), &document) != nil || document == nil || len(document) != 0 {
 		t.Fatal("empty export must be a valid standalone document with an empty array")
 	}
 	_, err := a.importManagedSites(context.Background(), exported.Body.Bytes())

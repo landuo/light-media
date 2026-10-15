@@ -21,6 +21,7 @@ type NativeDownloadRequest struct {
 	ResourceID   string `json:"resource_id"`
 	Query        string `json:"query"`
 	Page         int    `json:"page"`
+	Browse       bool   `json:"browse,omitempty"`
 	DownloaderID string `json:"downloader_id"`
 	DownloadPath string `json:"download_path"`
 	MediaType    string `json:"media_type"`
@@ -48,7 +49,10 @@ type NativeDownload struct {
 
 func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (NativeDownload, error) {
 	var out NativeDownload
-	site, err := a.site(in.SiteID)
+	if in.Browse {
+		ctx = allowDisabledSiteRequests(ctx)
+	}
+	site, err := a.siteForRequest(ctx, in.SiteID)
 	if err != nil {
 		return out, err
 	}
@@ -81,8 +85,10 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	if in.TMDBID != 0 && !validMedia(in.MediaType, in.TMDBID) {
 		return out, bad("INVALID_MEDIA", "高级选项中的影视类型或TMDB ID无效")
 	}
-	// Use the frozen search identity rather than accepting arbitrary download URLs.
-	if in.Query == "" {
+	// Site browsing preserves its explicit query (including an empty recent
+	// listing) and page. Other search flows may still need their stored query.
+	// In both cases the resource must be found again before fetching material.
+	if !in.Browse && in.Query == "" {
 		var hint struct {
 			Query string `json:"query"`
 			Page  int    `json:"page"`
@@ -92,7 +98,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 			in.Page = hint.Page
 		}
 	}
-	if strings.TrimSpace(in.Query) == "" || len([]rune(in.Query)) > 200 || in.Page < 0 || in.Page > 500 {
+	if !in.Browse && strings.TrimSpace(in.Query) == "" || len([]rune(in.Query)) > 200 || strings.ContainsAny(in.Query, "\x00\r\n") || in.Page < 0 || in.Page > 500 {
 		return out, bad("INVALID_QUERY", "请重新搜索后选择资源")
 	}
 	if in.Page == 0 {

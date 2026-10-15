@@ -21,7 +21,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 	if in.Page == 0 {
 		in.Page = 1
 	}
-	if in.Page < 1 || in.Page > 500 || len(in.SiteIDs) > 32 {
+	if in.Page < 1 || in.Page > 500 || len(in.SiteIDs) > 128 {
 		return SearchOutput{}, bad("INVALID_SEARCH", "搜索页码或站点范围无效")
 	}
 	if err := validateSubscriptionPolicy(in.Policy); err != nil {
@@ -50,6 +50,48 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		return out, err
 	}
 	a.log("INFO", "sites", "keyword_search_completed", "关键词搜索完成，资源筛选规则已应用；影视身份由整理流程单独识别", out.WorkflowID, "")
+	return out, nil
+}
+
+// The site card opens that site's recent torrents. Empty queries are allowed
+// only here, with one explicit site, rather than as an unbounded global search.
+func (a *App) browseManagedSiteResources(ctx context.Context, key, query string, page int) (any, error) {
+	query = strings.TrimSpace(query)
+	if len([]rune(query)) > 200 || strings.ContainsAny(query, "\x00\r\n") {
+		return nil, bad("INVALID_QUERY", "资源关键词不能超过200字或包含控制字符")
+	}
+	if page == 0 {
+		page = 1
+	}
+	if page < 1 || page > 500 {
+		return nil, bad("INVALID_SEARCH", "搜索页码无效")
+	}
+	ctx = allowDisabledSiteRequests(ctx)
+	config, err := a.siteForRequest(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+	out := struct {
+		SearchOutput
+		Page    int  `json:"page"`
+		HasMore bool `json:"has_more"`
+	}{SearchOutput: SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, "", catalog.Media{}), CachedAt: now()}, Page: page}
+	var result sites.SearchResult
+	err = a.withSite(ctx, config, false, func(client *sites.Client) error {
+		var err error
+		result, err = client.Search(ctx, query, page)
+		return err
+	})
+	out.HasMore = result.HasMore
+	out.Sites = append(out.Sites, a.searchStatus(ctx, key, len(result.Resources), err, 0))
+	for _, resource := range result.Resources {
+		season, episodes := resourceNumberingSuggestion(resource.Title)
+		choice := decision.EvaluateResource(resource, decision.Policy{})
+		if choice.Accepted {
+			choice.Reasons = append(choice.Reasons, "media_identity_required")
+		}
+		out.Candidates = append(out.Candidates, Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes})
+	}
 	return out, nil
 }
 

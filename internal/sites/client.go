@@ -1,4 +1,4 @@
-// Package sites implements the five explicitly configured native PT adapters.
+// Package sites implements native PT adapters and the standard NexusPHP protocol.
 // Secret-bearing torrent URLs are resolved only inside Torrent and never appear
 // in Resource or errors.
 package sites
@@ -20,12 +20,14 @@ import (
 )
 
 type Config struct {
-	ID      string `json:"id"`
-	Kind    string `json:"kind"`
-	Name    string `json:"name"`
-	BaseURL string `json:"base_url"`
-	Cookie  string `json:"cookie,omitempty"`
-	APIKey  string `json:"api_key,omitempty"`
+	ID        string `json:"id"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+	BaseURL   string `json:"base_url"`
+	Cookie    string `json:"cookie,omitempty"`
+	APIKey    string `json:"api_key,omitempty"`
+	UserAgent string `json:"ua,omitempty"`
+	Timeout   int    `json:"timeout,omitempty"`
 }
 
 type Resource struct {
@@ -70,12 +72,19 @@ const torrentLimit = 32 << 20
 
 func New(c Config) (*Client, error) {
 	switch c.Kind {
-	case "mteam", "hhanclub", "ubits", "jiayuan", "1ptba":
+	case "mteam", "hhanclub", "ubits", "jiayuan", "1ptba", "nexusphp":
 	default:
 		return nil, errors.New("site_unsupported_kind")
 	}
-	if !configID.MatchString(c.ID) || strings.ContainsAny(c.Cookie+c.APIKey, "\r\n") {
+	if !configID.MatchString(c.ID) || strings.ContainsAny(c.Cookie+c.APIKey, "\r\n") || !validUserAgent(c.UserAgent) || c.Timeout < 0 || c.Timeout > 120 {
 		return nil, errors.New("site_invalid_config")
+	}
+	if c.Kind == "nexusphp" {
+		origin, err := NormalizeNexusPHPOrigin(c.BaseURL)
+		if err != nil {
+			return nil, err
+		}
+		c.BaseURL = origin
 	}
 	u, err := url.Parse(c.BaseURL)
 	if err != nil || u.Hostname() == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || u.Opaque != "" || (u.Scheme != "https" && u.Scheme != "http") {
@@ -97,9 +106,17 @@ func New(c Config) (*Client, error) {
 		return nil, errors.New("site_cookie_required")
 	}
 	u.Path = strings.TrimRight(u.Path, "/") + "/"
+	timeout := 25 * time.Second
+	if c.Timeout > 0 {
+		timeout = time.Duration(c.Timeout) * time.Second
+	}
+	var transport http.RoundTripper
+	if c.Kind == "nexusphp" {
+		transport = publicSiteTransport()
+	}
 	return &Client{config: c, base: u, http: &http.Client{
-		Timeout:       25 * time.Second,
-		Transport:     logging.Transport(nil),
+		Timeout:       timeout,
+		Transport:     logging.Transport(transport),
 		CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse },
 	}}, nil
 }
@@ -190,11 +207,18 @@ func (c *Client) auth() map[string]string {
 }
 
 func (c *Client) request(ctx context.Context, method string, u *url.URL, body []byte, headers map[string]string, limit int64) ([]byte, string, error) {
+	if (len(headers) > 0 || c.config.Kind == "nexusphp") && !sameOrigin(u, c.base) {
+		return nil, "", errors.New("site_credential_origin_mismatch")
+	}
 	req, err := http.NewRequestWithContext(logging.EndpointContext(ctx, "material", u.String()), method, u.String(), bytes.NewReader(body))
 	if err != nil {
 		return nil, "", errors.New("site_invalid_request")
 	}
-	req.Header.Set("User-Agent", "light-media/0.1")
+	userAgent := c.config.UserAgent
+	if userAgent == "" {
+		userAgent = "light-media/0.1"
+	}
+	req.Header.Set("User-Agent", userAgent)
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
@@ -243,7 +267,17 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 }
 
 func sameOrigin(a, b *url.URL) bool {
-	return a != nil && b != nil && a.User == nil && a.Scheme == b.Scheme && strings.EqualFold(a.Host, b.Host) && a.Fragment == ""
+	return a != nil && b != nil && a.User == nil && b.User == nil && a.Scheme == b.Scheme && strings.EqualFold(a.Hostname(), b.Hostname()) && originPort(a) == originPort(b) && a.Fragment == ""
+}
+
+func originPort(u *url.URL) string {
+	if p := u.Port(); p != "" {
+		return p
+	}
+	if u.Scheme == "https" {
+		return "443"
+	}
+	return "80"
 }
 
 func mteamAPI(u *url.URL) bool {

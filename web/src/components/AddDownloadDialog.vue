@@ -34,6 +34,7 @@ async function start() {
       resource_id: props.candidate.resource.id,
       query: props.request?.query || '',
       page: props.request?.page || 1,
+      browse: props.request?.browse === true,
       downloader_id: downloader.value,
       download_path: downloadPath.value,
       ...(tmdbID.value ? { media_type: mediaType.value, tmdb_id: tmdbID.value } : {}),

@@ -31,8 +31,11 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 	for _, config := range a.Settings().Sites {
 		if config.Enabled && (len(selected) == 0 || selected[config.ID]) {
 			configs = append(configs, config)
-			out.Sites = append(out.Sites, SiteStatus{ID: config.ID, Status: "queued"})
 		}
+	}
+	sort.SliceStable(configs, func(i, j int) bool { return configs[i].Priority < configs[j].Priority })
+	for _, config := range configs {
+		out.Sites = append(out.Sites, SiteStatus{ID: config.ID, Status: "queued"})
 	}
 	if len(configs) == 0 {
 		return out, bad("NO_SITES", "请先添加并启用资源站点")

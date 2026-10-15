@@ -17,7 +17,6 @@ import (
 	"light-media/internal/download"
 	"light-media/internal/fnos"
 	"light-media/internal/integrations"
-	"light-media/internal/sites"
 )
 
 func decodeBody(w http.ResponseWriter, r *http.Request, v any) error {
@@ -169,6 +168,11 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e = decodeBody(w, r, &in); e == nil {
 			out, e = a.importManagedSites(ctx, in)
 		}
+	case p == "sites/priorities" && method == "POST":
+		var in []sitePriority
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.saveSitePriorities(ctx, in)
+		}
 	case p == "sites/manage" && method == "GET":
 		out, e = a.managedSites(ctx)
 	case p == "sites/manage" && method == "POST":
@@ -184,6 +188,14 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			out, e = a.refreshManagedSite(ctx, parts[0])
 		} else if len(parts) == 2 && parts[1] == "history" && method == "GET" {
 			out, e = a.managedSiteHistory(ctx, parts[0])
+		} else if len(parts) == 2 && parts[1] == "resources" && method == "POST" {
+			var in struct {
+				Query string `json:"query"`
+				Page  int    `json:"page"`
+			}
+			if e = decodeBody(w, r, &in); e == nil {
+				out, e = a.browseManagedSiteResources(ctx, parts[0], in.Query, in.Page)
+			}
 		} else {
 			e = &APIError{"NOT_FOUND", "接口不存在", 404}
 		}
@@ -448,8 +460,7 @@ func (a *App) publicSettings() map[string]any {
 	siteState := map[string]bool{}
 	for i := range c.Sites {
 		siteState[c.Sites[i].ID] = c.Sites[i].Cookie != "" || c.Sites[i].APIKey != ""
-		c.Sites[i].Cookie = ""
-		c.Sites[i].APIKey = ""
+		hideSiteSecrets(&c.Sites[i])
 	}
 	downState := map[string]bool{}
 	for i := range c.Downloaders {
@@ -535,12 +546,7 @@ func (a *App) preserveSecrets(c *Settings) {
 	for i := range c.Sites {
 		for _, v := range old.Sites {
 			if c.Sites[i].ID == v.ID && c.Sites[i].BaseURL == v.BaseURL && c.Sites[i].Kind == v.Kind {
-				if c.Sites[i].Cookie == "" {
-					c.Sites[i].Cookie = v.Cookie
-				}
-				if c.Sites[i].APIKey == "" {
-					c.Sites[i].APIKey = v.APIKey
-				}
+				preserveSiteSecrets(&c.Sites[i], v)
 			}
 		}
 	}
@@ -583,7 +589,7 @@ func validateSettings(c Settings) error {
 			return bad("INVALID_DEBUG_EXPIRY", "临时DEBUG期限最长2小时")
 		}
 	}
-	if len(c.Sites) > 32 || len(c.Downloaders) > 8 || len(c.Roots) > 128 || len(c.AllowedRoots) > 128 {
+	if len(c.Sites) > 128 || len(c.Downloaders) > 8 || len(c.Roots) > 128 || len(c.AllowedRoots) > 128 {
 		return bad("CONFIG_LIMIT", "配置数量超出上限")
 	}
 	if c.TMDB.APIKey != "" && c.TMDB.AccessToken != "" {
@@ -596,7 +602,7 @@ func validateSettings(c Settings) error {
 		}
 		seen["s"+s.ID] = true
 		if s.Enabled {
-			if _, e := sites.New(s.Config); e != nil {
+			if e := validateManagedSiteConfig(s.Config); e != nil {
 				return bad("INVALID_SITE", e.Error())
 			}
 		}
