@@ -151,6 +151,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e == nil {
 			out, e = a.testConnection(ctx, in.Target, in.ID)
 		}
+	case strings.HasPrefix(p, "directories/"):
+		out, e = a.directoryAPI(r, strings.TrimPrefix(p, "directories/"))
 	case strings.HasPrefix(p, "files/"):
 		out, e = a.fileManagerAPI(r, strings.TrimPrefix(p, "files/"))
 	case strings.HasPrefix(p, "history/"):
@@ -198,6 +200,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		}
 		out, e = a.catalogAPI(r, strings.TrimPrefix(p, "catalog/"))
 	case p == "search/resources" && method == "POST":
+		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
+			a.streamSearch(w, r)
+			return
+		}
 		var in SearchRequest
 		if e = decodeBody(w, r, &in); e == nil {
 			out, e = a.searchResources(ctx, in)
@@ -492,6 +498,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 }
 func validateSettings(c Settings) error {
+	if e := validateDirectoryRules(c); e != nil {
+		return e
+	}
 	if c.MaterialMaxMiB != 0 && (c.MaterialMaxMiB < 32 || c.MaterialMaxMiB > 2048) {
 		return bad("INVALID_MATERIAL_BUDGET", "种子材料归档上限必须为32至2048MiB")
 	}

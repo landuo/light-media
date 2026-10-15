@@ -29,6 +29,13 @@ import {
 import Policy from './Policy.vue';
 import MappingRules from './MappingRules.vue';
 import ResourceCard from './ResourceCard.vue';
+import DownloadTarget from './DownloadTarget.vue';
+import {
+  interruptedSearch,
+  siteSearchLabel,
+  searchPending,
+  siteElapsed,
+} from '../features/search-progress';
 const props = defineProps<{ route: string }>();
 const [path, qs] = props.route.split('?'),
   parts = path!.split('/'),
@@ -46,7 +53,8 @@ const season = ref(kind === 'movie' ? 0 : Number(q.get('season') || 1)),
   initialized = ref(false),
   error = ref('');
 const downloader = ref(''),
-  root = ref(''),
+  downloadPath = ref(''),
+  directoryId = ref(''),
   mappings = ref<any[]>([]),
   mappingsLoading = ref(kind === 'tv'),
   mappingsError = ref('');
@@ -69,9 +77,6 @@ const activeCandidate = ref<Candidate | null>(null),
   queue = ref<Candidate[]>([]);
 const names = computed<Record<string, string>>(() =>
   Object.fromEntries((ui.settings?.sites || []).map((s: any) => [s.id, s.name || s.id])),
-);
-const roots = computed(() =>
-  (ui.settings?.roots || []).filter((r: any) => !r.kind || r.kind === kind || r.kind === 'mixed'),
 );
 const candidates = computed<Candidate[]>(() => output.value?.candidates || []);
 const filtered = computed(() =>
@@ -121,20 +126,6 @@ function selectVisible() {
   selected.value = keys.every((k) => selected.value.includes(k))
     ? selected.value.filter((k) => !keys.includes(k))
     : [...new Set([...selected.value, ...keys])];
-}
-function siteStatus(s: any) {
-  return (
-    (
-      {
-        ok: '完成',
-        partial: '部分结果',
-        empty: '无结果',
-        failed: '失败',
-        loading: '搜索中',
-        pending: '待搜索',
-      } as any
-    )[s.status] || s.status
-  );
 }
 function promotion(r: any) {
   const p = promotionKind(r);
@@ -214,8 +205,15 @@ async function search() {
       controller.signal,
     );
   } catch (e) {
-    if (controller.signal.aborted) toast('已停止搜索，完成的站点结果已保留');
-    else error.value = errorText(e);
+    if (searchController === controller && !disposed) {
+      output.value = interruptedSearch(
+        output.value,
+        searchedRequest.value?.site_ids || [],
+        controller.signal.aborted ? 'cancelled' : 'interrupted',
+      );
+      if (controller.signal.aborted) toast('已停止搜索，完成的站点结果已保留');
+      else error.value = errorText(e);
+    }
   } finally {
     if (searchController === controller) {
       loading.value = false;
@@ -279,7 +277,7 @@ function closeDownload() {
 }
 async function inspect() {
   const c = activeCandidate.value;
-  if (!c || !downloader.value || !root.value) return;
+  if (!c || !downloader.value || !downloadPath.value) return;
   const seq = ++previewSequence;
   preview.value = null;
   previewError.value = '';
@@ -292,7 +290,8 @@ async function inspect() {
       site_id: c.resource.site_id,
       resource_id: c.resource.id,
       downloader_id: downloader.value,
-      root_id: root.value,
+      directory_id: directoryId.value,
+      download_path: downloadPath.value,
       workflow_id: output.value?.workflow_id || '',
     });
     if (seq === previewSequence) preview.value = result;
@@ -339,8 +338,6 @@ onMounted(async () => {
   if (disposed) return;
   if (kind === 'tv' && !q.has('season'))
     season.value = media.value?.seasons?.find((s: any) => s.season_number > 0)?.season_number || 1;
-  const configured = roots.value.find((r: any) => r.id === ui.settings?.default_root);
-  root.value = configured?.id || roots.value[0]?.id || '';
   initialized.value = true;
   if (selectedSites.value.length && !mappingsError.value) await search();
 });
@@ -451,11 +448,14 @@ onUnmounted(() => {
       :class="['site-progress-item', s.status]"
       :title="s.message ? friendly(s.message) : ''"
     >
-      <span :class="{ spin: s.status === 'loading' }">{{
-        s.status === 'loading' ? '◌' : s.status === 'ok' ? '✓' : s.status === 'failed' ? '!' : '•'
+      <span :class="{ spin: searchPending(s.status) }">{{
+        searchPending(s.status) ? '◌' : s.status === 'ok' ? '✓' : s.status === 'failed' ? '!' : '•'
       }}</span
       ><b>{{ names[s.id] || s.id }}</b
-      ><small>{{ siteStatus(s) }}{{ s.status === 'loading' ? '' : ' · ' + s.count }}</small>
+      ><small
+        >{{ siteSearchLabel(s.status) }}{{ searchPending(s.status) ? '' : ' · ' + s.count
+        }}{{ siteElapsed(s) }}</small
+      >
     </div>
   </div>
   <template v-if="output">
@@ -673,7 +673,7 @@ onUnmounted(() => {
     <button @click="go('sites')">配置站点</button>
   </div>
   <div v-if="activeCandidate" class="modal-backdrop" @click.self="closeDownload">
-    <section class="modal wide">
+    <section class="modal wide" role="dialog" aria-modal="true" aria-label="添加下载">
       <div class="section-heading">
         <h2>
           添加下载 <small v-if="queue.length">另有 {{ queue.length }} 项待确认</small>
@@ -696,31 +696,26 @@ onUnmounted(() => {
             @input="clearPreview"
           /><small class="hint">已填写搜索指定或此资源明确识别的集数，可修改核对。</small></label
         >
-        <label
-          >下载器<select v-model="downloader" @change="clearPreview">
-            <option v-for="d in ui.settings?.downloaders || []" :key="d.id" :value="d.id">
-              {{ d.name || d.id }}
-            </option>
-          </select></label
-        ><label
-          >入库目录<select v-model="root" @change="clearPreview">
-            <option v-for="r in roots" :key="r.id" :value="r.id">{{ r.name || r.path }}</option>
-          </select></label
-        >
       </div>
+      <DownloadTarget
+        v-model:downloader="downloader"
+        v-model:download-path="downloadPath"
+        v-model:directory-id="directoryId"
+        :media-type="kind"
+        @change="clearPreview"
+      />
       <div v-if="kind === 'tv'" class="button-row">
         <button class="small" :disabled="seasonInfoLoading" @click="chooseWholeSeason">
           {{ seasonInfoLoading ? '读取本季集数…' : '选择本季全部已知集数' }}</button
         ><span v-if="!downloadEpisodes" class="warning">未能确定目标集数，请先明确选择。</span>
       </div>
-      <p v-if="!downloader || !root" class="warning">请先配置下载器和对应类型的入库目录。</p>
+      <p v-if="!downloader || !downloadPath" class="warning">请选择下载器和下载目录。</p>
       <div v-if="previewLoading" class="notice">正在读取种子文件并核对下载内容…</div>
       <div v-if="previewError" class="error-box">{{ previewError }}</div>
       <template v-if="preview"
         ><div class="notice">
-          {{ preview.files?.length }} 个文件 · {{ bytes(preview.total_bytes) }} · 下载后{{
-            label(preview.import_mode)
-          }}整理
+          {{ preview.files?.length }} 个文件 · {{ bytes(preview.total_bytes) }}<br />保存到
+          {{ preview.download_path || downloadPath }}
         </div>
         <details class="preview-files" open>
           <summary>实际文件列表</summary>
@@ -746,7 +741,7 @@ onUnmounted(() => {
           :disabled="
             previewLoading ||
             seasonInfoLoading ||
-            !root ||
+            !downloadPath ||
             !downloader ||
             (kind === 'tv' && !downloadEpisodes.trim())
           "

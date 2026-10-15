@@ -18,6 +18,8 @@ import Policy from './Policy.vue';
 import Schedule from './Schedule.vue';
 import MappingRules from './MappingRules.vue';
 import MultiSeasonSubscribe from './MultiSeasonSubscribe.vue';
+import DownloadTarget from './DownloadTarget.vue';
+import { downloadDestination } from '../features/download-directories';
 const props = defineProps<{ view: string }>(),
   subs = ref<any[]>([]),
   entries = ref<any[]>([]),
@@ -133,12 +135,15 @@ function begin(s?: any) {
         schedule: emptySchedule(),
         mappings: [],
         downloader_id: ui.settings?.default_downloader || ui.settings?.downloaders?.[0]?.id || '',
-        root_id: ui.settings?.default_root || ui.settings?.roots?.[0]?.id || '',
+        directory_id: '',
+        download_path: '',
         state: 'active',
       };
   multiSeason.value = false;
   convertLegacy.value = false;
   editing.value.start_episode ||= 1;
+  editing.value.download_path ||= '';
+  editing.value.directory_id ||= '';
   excluded.value = (editing.value.excluded || []).join(',');
   allowEarly.value = (editing.value.allow_early || []).join(',');
   dates.value = Object.entries(editing.value.episode_dates || {})
@@ -152,11 +157,6 @@ async function find() {
     (await action(() => api('/catalog/search?q=' + encodeURIComponent(lookup.value) + '&page=1')))
       ?.results || [];
 }
-function availableRoots(kind: string) {
-  return (ui.settings?.roots || []).filter(
-    (r: any) => !r.kind || r.kind === kind || r.kind === 'mixed',
-  );
-}
 async function pick(m: any) {
   editing.value.media = await action(() =>
     api('/catalog/detail?kind=' + m.media_type + '&id=' + m.id),
@@ -166,14 +166,13 @@ async function pick(m: any) {
       ? 0
       : editing.value.media?.seasons?.find((s: any) => s.season_number > 0)?.season_number || 1;
   editing.value.target_scope = editing.value.media?.media_type === 'movie' ? 'movie' : 'season';
-  const roots = availableRoots(editing.value.media?.media_type);
-  if (!roots.some((r: any) => r.id === editing.value.root_id))
-    editing.value.root_id = roots[0]?.id || '';
   lookupResults.value = [];
 }
 function formInput() {
   const s = clone(editing.value);
   if (!s.media) throw new Error('请先选择影视作品');
+  Object.assign(s, downloadDestination(s));
+  delete s.root_id;
   s.excluded = episodeNumbers(excluded.value);
   s.allow_early = episodeNumbers(allowEarly.value);
   s.episode_dates = {};
@@ -399,6 +398,7 @@ onMounted(async () => {
                 : '整部订阅'
             }}
           </p>
+          <p v-if="s.download_path" class="hint path-cell">下载目录：{{ s.download_path }}</p>
           <div class="subscription-progress">
             <progress :value="percent(s)" max="100"></progress
             ><span
@@ -494,28 +494,18 @@ onMounted(async () => {
               step="1"
             /><small class="hint">包含这一集，自动追踪本季后续更新。</small></label
           ><label
-            >下载器<select v-model="editing.downloader_id">
-              <option v-for="d in ui.settings?.downloaders || []" :key="d.id" :value="d.id">
-                {{ d.name || d.id }}
-              </option>
-            </select></label
-          ><label
-            >入库目录<select v-model="editing.root_id">
-              <option
-                v-for="r in availableRoots(editing.media.media_type)"
-                :key="r.id"
-                :value="r.id"
-              >
-                {{ r.name || r.path }}
-              </option>
-            </select></label
-          ><label
             >状态<select v-model="editing.state">
               <option value="active">启用</option>
               <option value="paused">暂停</option>
             </select></label
           >
         </div>
+        <DownloadTarget
+          v-model:downloader="editing.downloader_id"
+          v-model:download-path="editing.download_path"
+          v-model:directory-id="editing.directory_id"
+          :media-type="editing.media.media_type"
+        />
         <div
           v-if="editing.id && editing.target_scope !== 'season' && editing.episodes?.length"
           class="notice"
@@ -574,7 +564,7 @@ onMounted(async () => {
           <button @click="editing = null">取消</button
           ><button
             class="primary"
-            :disabled="ui.busy > 0 || !editing.downloader_id || !editing.root_id"
+            :disabled="ui.busy > 0 || !editing.downloader_id || !editing.download_path"
             @click="save"
           >
             保存订阅

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { api, action, clone, bytes, date, friendly, refreshSettings, toast } from '../api';
+import { api, action, clone, bytes, date, friendly, refreshSettings, toast, go } from '../api';
 const data = ref<any>({ downloaders: [], default_downloader: '' }),
   editing = ref<any>(null),
   original = ref<any>(null);
@@ -97,6 +97,7 @@ onMounted(load);
         <p>自行配置 qBittorrent 和 Transmission，支持多个实例及默认下载器。</p>
       </div>
       <div class="dm-actions">
+        <button @click="go('directories')">目录管理</button>
         <button @click="create('transmission')">＋ Transmission</button
         ><button class="primary" @click="create()">＋ qBittorrent</button>
       </div>
@@ -127,7 +128,7 @@ onMounted(load);
           ><small>{{ live[row.config.id].task_count }} 个任务</small>
         </div>
         <dl>
-          <dt>保存目录（下载器视角）</dt>
+          <dt>默认下载目录（下载器视角）</dt>
           <dd>{{ row.config.download_path }}</dd>
           <dt>路径映射（下载器 → 本应用）</dt>
           <dd v-if="!row.config.mappings?.length">相同路径，无额外映射</dd>
@@ -194,7 +195,7 @@ onMounted(load);
                 original?.credential_configured ? '已保存，留空保留' : '下载器登录密码'
               " /></label
           ><label class="dm-span"
-            >默认保存目录（下载器视角）<input
+            >默认下载目录（下载器视角）<input
               v-model.trim="editing.download_path"
               required
               placeholder="/downloads" /></label

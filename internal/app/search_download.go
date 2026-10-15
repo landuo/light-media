@@ -35,6 +35,8 @@ type SearchRequest struct {
 	EpisodeDates       map[int]string      `json:"episode_dates"`
 }
 type PreviewRequest struct {
+	DirectoryID  string `json:"directory_id"`
+	DownloadPath string `json:"download_path"`
 	SearchRequest
 	automaticSeasonPack bool
 	SiteID              string `json:"site_id"`
@@ -214,26 +216,15 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 		return SearchOutput{}, e
 	}
 	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), CachedAt: now()}
-	selected := map[string]bool{}
-	for _, v := range in.SiteIDs {
-		selected[v] = true
-	}
-	for _, s := range a.Settings().Sites {
-		if ctx.Err() != nil {
-			return out, ctx.Err()
-		}
-		if !s.Enabled || (len(selected) > 0 && !selected[s.ID]) {
-			continue
-		}
-		status := SiteStatus{ID: s.ID, Status: "ok"}
+	out, e = a.searchSites(ctx, in, out, func(siteCtx context.Context, s SiteConfig) siteSearchOutput {
 		var result sites.SearchResult
 		queries := map[string]string{}
 		successfulQueries := 0
 		start := time.Now()
-		e = a.withSite(ctx, s, auto, func(client *sites.Client) error {
+		err := a.withSite(siteCtx, s, auto, func(client *sites.Client) error {
 			seen := map[string]bool{}
 			for _, query := range fallbackSearchQueries(t.Media, in.Query) {
-				page, err := client.Search(ctx, query, in.Page)
+				page, err := client.Search(siteCtx, query, in.Page)
 				accepted := false
 				for _, resource := range page.Resources {
 					if !seen[resource.ID] {
@@ -255,32 +246,25 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 			}
 			return nil
 		})
-		if e != nil {
-			status.Status = "failed"
-			if successfulQueries > 0 || len(result.Resources) > 0 {
-				status.Status = "partial"
-			}
-			status.Message = a.clean(e.Error())
+		status := a.searchStatus(siteCtx, s.ID, len(result.Resources), err, successfulQueries)
+		found := siteSearchOutput{status: status, candidates: []Candidate{}}
+		if err != nil {
 			a.log("WARN", "sites", "search_failed", status.Message, out.WorkflowID, "")
 		}
 		if successfulQueries > 0 || len(result.Resources) > 0 {
-			status.Count = len(result.Resources)
-			if len(result.Resources) == 0 && e == nil {
-				status.Status = "empty"
-			}
 			for _, r := range result.Resources {
 				d := decision.Evaluate(r, t, decisionPolicy(in.Policy))
-				out.Candidates = append(out.Candidates, Candidate{Resource: r, Accepted: d.Accepted, Reasons: d.Reasons, Season: d.Season, Episodes: d.Episodes, NeedsConfirmation: d.NeedsConfirmation})
-				_ = a.Store.Put(ctx, "resource", r.SiteID+":"+r.ID, map[string]any{"resource": r, "query": queries[r.ID], "page": in.Page, "fetched_at": now(), "media_key": mediaKey(t.Media)})
+				found.candidates = append(found.candidates, Candidate{Resource: r, Accepted: d.Accepted, Reasons: d.Reasons, Season: d.Season, Episodes: d.Episodes, NeedsConfirmation: d.NeedsConfirmation})
+			}
+			if err := a.cacheSearchResources(ctx, result.Resources, queries, in.Page, mediaKey(t.Media)); err != nil && ctx.Err() == nil {
+				a.log("WARN", "sites", "search_cache_failed", "搜索结果已返回，但预览检索记录保存失败", out.WorkflowID, "")
 			}
 			a.log("INFO", "sites", "search_completed", fmt.Sprintf("站点 %s 返回 %d 个资源，耗时 %dms", s.Name, len(result.Resources), time.Since(start).Milliseconds()), out.WorkflowID, "")
 		}
-		out.Sites = append(out.Sites, status)
-		a.logSite(status, out.WorkflowID)
-		emitSearchProgress(ctx, out)
-	}
-	if len(out.Sites) == 0 {
-		return out, bad("NO_SITES", "请在设置中启用至少一个站点")
+		return found
+	})
+	if e != nil {
+		return out, e
 	}
 	sort.SliceStable(out.Candidates, func(i, j int) bool {
 		if out.Candidates[i].Accepted != out.Candidates[j].Accepted {
@@ -316,7 +300,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
-	root, e := a.root(in.RootID, t.Media.MediaType)
+	destination, e := a.resolveDownloadDestination(d, in.DirectoryID, in.DownloadPath, in.RootID, t.Media.MediaType)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
@@ -378,10 +362,10 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if t.Media.MediaType == "movie" && t.Media.ReleaseDate != "" && t.Media.ReleaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return DownloadPreview{}, bad("REVIEW_UNRELEASED", "该电影尚未到元数据上映日期，请核实后再获取")
 	}
-	p := DownloadPreview{WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), Request: in.SearchRequest, ID: id("preview_"), Media: t.Media, Season: in.Season, Episodes: in.Episodes, SiteID: site.ID, ResourceID: in.ResourceID, ResourceTitle: fresh.Title, DownloaderID: d.ID, RootID: root.ID, Hash: material.Hash, Files: []string{}, TotalBytes: material.TotalBytes, CreatedAt: now(), ExpiresAt: time.Now().Add(10 * time.Minute).UTC().Format(time.RFC3339Nano), Policy: in.Policy, SubscriptionID: in.SubscriptionID, Revision: in.Revision, Auto: auto, Warnings: choice.Reasons, NeedsConfirmation: choice.NeedsConfirmation}
+	p := DownloadPreview{WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), Request: in.SearchRequest, ID: id("preview_"), Media: t.Media, Season: in.Season, Episodes: in.Episodes, SiteID: site.ID, ResourceID: in.ResourceID, ResourceTitle: fresh.Title, DownloaderID: d.ID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, DirectorySnapshot: destination.Snapshot, Hash: material.Hash, Files: []string{}, TotalBytes: material.TotalBytes, CreatedAt: now(), ExpiresAt: time.Now().Add(10 * time.Minute).UTC().Format(time.RFC3339Nano), Policy: in.Policy, SubscriptionID: in.SubscriptionID, Revision: in.Revision, Auto: auto, Warnings: choice.Reasons, NeedsConfirmation: choice.NeedsConfirmation}
 	p.DownloaderSnapshot = downloaderSnapshot(d)
 	coverage := map[int]bool{}
-	p.ImportMode = a.Settings().AutoImportMode
+	p.ImportMode = destination.Mode
 	if p.ImportMode == "" {
 		p.ImportMode = "hardlink"
 	}
@@ -533,6 +517,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	}
 	intent := Intent{Request: p.Request, ID: id("dl_"), WorkflowID: p.WorkflowID, Media: p.Media, Season: p.Season, Episodes: p.Episodes, SiteID: p.SiteID, ResourceID: p.ResourceID, ResourceTitle: p.ResourceTitle, DownloaderID: p.DownloaderID, RootID: p.RootID, Hash: p.Hash, State: "planned", SubscriptionID: p.SubscriptionID, SubscriptionRevision: p.Revision, Auto: p.Auto, CreatedAt: now(), UpdatedAt: now(), PreviewID: p.ID}
 	intent.ImportMode = p.ImportMode
+	intent.DirectoryID, intent.DownloadPath, intent.DirectorySnapshot = p.DirectoryID, p.DownloadPath, p.DirectorySnapshot
 	intent.DownloaderSnapshot = p.DownloaderSnapshot
 	intent.MaterialRef, intent.MaterialState, intent.Purpose = p.MaterialRef, p.MaterialState, materialPurpose
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
@@ -594,6 +579,9 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	}
 	if in.DownloaderSnapshot != downloaderSnapshot(d) {
 		return bad("REVIEW_DOWNLOADER_CHANGED", "下载器配置已变化，请重新核对预览")
+	}
+	if e = a.guardIntentDirectory(ctx, in, false); e != nil {
+		return e
 	}
 	client, e := download.New(d.Config)
 	if e != nil {
@@ -755,7 +743,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e = a.Store.Put(ctx, "intent", in.ID, in); e != nil {
 		return e
 	}
-	result, e := client.Add(ctx, download.AddRequest{Torrent: torrent, SavePath: d.DownloadPath, Tags: []string{"light-media"}})
+	result, e := client.Add(ctx, download.AddRequest{Torrent: torrent, SavePath: effectiveIntentDownloadPath(in, d), Tags: []string{"light-media"}})
 	if e != nil {
 		in.State = "reconcile_pending"
 		in.Error = a.clean(e.Error())
@@ -888,6 +876,13 @@ func (a *App) pollDownloads(ctx context.Context) error {
 			byInstance[in.DownloaderID] = append(byInstance[in.DownloaderID], in)
 		}
 	}
+	for _, rule := range a.Settings().Directories {
+		if rule.Enabled && rule.MonitorType == "downloader" {
+			if _, ok := byInstance[rule.DownloaderID]; !ok {
+				byInstance[rule.DownloaderID] = nil
+			}
+		}
+	}
 	for instance, intents := range byInstance {
 		d, e := a.downloader(instance)
 		if e != nil {
@@ -898,7 +893,11 @@ func (a *App) pollDownloads(ctx context.Context) error {
 			continue
 		}
 		tasks, e := client.List(ctx)
+		a.recordDirectoryDownloaderStatus(ctx, instance, e)
 		if e != nil {
+			for _, in := range intents {
+				_ = a.saveIntentError(ctx, in.ID, a.clean(e.Error()))
+			}
 			continue
 		}
 		for _, in := range intents {
@@ -917,12 +916,20 @@ func (a *App) pollDownloads(ctx context.Context) error {
 				if in.State == "downloaded" && in.DownloaderID != "" {
 					if err = a.guardDownloaderSnapshot(ctx, in); err != nil {
 						_ = a.saveIntentError(ctx, in.ID, a.clean(err.Error()))
+						a.recordDirectoryIntentError(ctx, in, err)
 						continue
 					}
 				}
 				stepCtx := ctx
 				if parent, err := scanJob(a.Store.DB.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='download' AND json_extract(payload,'$.id')=? ORDER BY created_at DESC LIMIT 1`, in.ID)); err == nil {
 					stepCtx = a.traceContext(ctx, in.WorkflowID, parent.ID, parent.RequestID)
+				}
+				if in.State == "downloaded" {
+					if err = a.bindCompletedDirectory(stepCtx, &in, t, d); err != nil {
+						a.recordDirectoryIntentError(ctx, in, err)
+						_ = a.saveIntentError(ctx, in.ID, a.clean(err.Error()))
+						continue
+					}
 				}
 				if in.State == "downloaded" && in.ImportPlanID != "" && !a.paused() {
 					if e = a.resumeCompletedPlan(stepCtx, &in); e != nil {
@@ -933,6 +940,7 @@ func (a *App) pollDownloads(ctx context.Context) error {
 					if e = a.planCompletedDownload(stepCtx, client, d, &in, t); e != nil {
 						in.Error = a.clean(e.Error())
 						_ = a.saveIntentError(ctx, in.ID, in.Error)
+						a.recordDirectoryIntentError(ctx, in, e)
 						a.log("WARN", "imports", "download_needs_review", in.Error, in.WorkflowID, "")
 					}
 				}
@@ -949,6 +957,9 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	if in.DownloaderSnapshot != downloaderSnapshot(d) {
 		return bad("REVIEW_DOWNLOADER_CHANGED", "下载器配置已变化，请重新核对预览")
 	}
+	if e := a.bindCompletedDirectory(ctx, in, task, d); e != nil {
+		return e
+	}
 	files, e := c.Files(ctx, in.Hash)
 	if e != nil {
 		return e
@@ -961,12 +972,25 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 	rules := in.Request.Mappings
 	request.Mappings = rules
 	for _, f := range files {
-		if !isVideo(f.Path) || f.Progress < 1 {
+		if !isVideo(f.Path) {
 			continue
 		}
-		full, e := mapPath(filepath.Join(task.DownloadDir, filepath.FromSlash(f.Path)), d.Mappings)
+		if f.Progress < 1 {
+			return bad("DOWNLOAD_NOT_COMPLETE", "视频文件尚未下载完成，等待下一轮")
+		}
+		if filepath.IsAbs(f.Path) || strings.ContainsAny(f.Path, "\x00\r\n") || filepath.Clean(f.Path) == ".." || strings.HasPrefix(filepath.Clean(f.Path), ".."+string(filepath.Separator)) {
+			return bad("INVALID_DOWNLOAD_PATH", "下载器返回的视频文件路径越界")
+		}
+		full, e := mapDownloaderPath(a.Settings(), d, filepath.Join(task.DownloadDir, filepath.FromSlash(f.Path)))
 		if e != nil {
 			return e
+		}
+		stamp, e := snapshotPath(full)
+		if e != nil {
+			return e
+		}
+		if f.Size <= 0 || stamp.Size != f.Size {
+			return bad("DOWNLOAD_FILE_NOT_READY", "下载文件大小与下载器记录不一致，等待重新检查")
 		}
 		parsed := media.Parse(filepath.Base(f.Path))
 		entry := ImportFileRequest{Path: full}

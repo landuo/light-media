@@ -434,7 +434,7 @@ onMounted(() => action(load));
         <h2>默认位置</h2>
         <div class="form-grid">
           <label
-            >下载后整理方式<select v-model="form.auto_import_mode">
+            >手动整理默认方式<select v-model="form.auto_import_mode">
               <option value="hardlink">硬链接（默认）</option>
               <option value="copy">复制</option>
               <option value="auto">自动（允许跨卷复制）</option>
@@ -448,7 +448,7 @@ onMounted(() => action(load));
               </option>
             </select></label
           ><label
-            >默认入库目录<select v-model="form.default_root">
+            >手动整理默认媒体库<select v-model="form.default_root">
               <option value="">未指定</option>
               <option v-for="r in form.roots" :key="r.id" :value="r.id">
                 {{ r.name || r.path }}
@@ -457,7 +457,7 @@ onMounted(() => action(load));
           >
         </div>
         <p class="hint">
-          下载预览会冻结本次整理方式。硬链接必须同卷；选择复制或自动时，跨卷发布会额外占用目标空间，下载源仍保留。
+          自动整理请到「目录管理」配置下载目录、监听方式与目标媒体库。此处默认值用于手动整理；硬链接需同卷，跨卷复制会额外占用目标空间。
         </p>
       </section>
       <section class="panel">

@@ -17,6 +17,8 @@ import (
 )
 
 type SubscriptionRequest struct {
+	DirectoryID  string              `json:"directory_id"`
+	DownloadPath string              `json:"download_path"`
 	TargetScope  string              `json:"target_scope"`
 	StartEpisode int                 `json:"start_episode"`
 	MediaType    string              `json:"media_type"`
@@ -217,7 +219,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if e != nil {
 		return Subscription{}, e
 	}
-	root, e := a.root(in.RootID, m.MediaType)
+	destination, e := a.resolveDownloadDestination(d, in.DirectoryID, in.DownloadPath, in.RootID, m.MediaType)
 	if e != nil {
 		return Subscription{}, e
 	}
@@ -279,7 +281,10 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if old.ID == "" && count >= 500 {
 		return old, bad("SUBSCRIPTION_LIMIT", "订阅数量已达500个上限")
 	}
-	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: d.ID, RootID: root.ID, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
+	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: d.ID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
+	if in.DownloadPath == "" && in.DirectoryID == "" && destination.Rule.ID == "" && destination.Root != "" {
+		s.DownloadPath = ""
+	}
 	if s.CreatedAt == "" {
 		s.CreatedAt = now()
 	}
@@ -733,7 +738,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				if e := a.jobCancelled(ctx, j); e != nil {
 					return e
 				}
-				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: previewRequest, automaticSeasonPack: pack, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: s.RootID, SubscriptionID: s.ID, Revision: s.Revision}, true)
+				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: previewRequest, automaticSeasonPack: pack, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: subscriptionLegacyRoot(s), DirectoryID: s.DirectoryID, DownloadPath: s.DownloadPath, SubscriptionID: s.ID, Revision: s.Revision}, true)
 				if e != nil {
 					var api *APIError
 					if errors.As(e, &api) && api.Code == "SITE_QUOTA" {

@@ -26,10 +26,10 @@ func (a *App) workflow(ctx context.Context, provided string, m catalog.Media) st
 }
 func (a *App) logSite(s SiteStatus, wf string) {
 	level := "INFO"
-	if s.Status == "failed" || s.Status == "partial" {
+	if s.Status == "failed" || s.Status == "partial" || s.Status == "timeout" {
 		level = "WARN"
 	}
-	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "sites", "event": "search_result", "message": a.clean(fmt.Sprintf("站点结果：%s，%d个候选，%s", s.Status, s.Count, s.Message)), "site_id": s.ID, "workflow_id": wf})
+	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "sites", "event": "search_result", "message": a.clean(fmt.Sprintf("站点结果：%s，%d个候选，耗时%dms，%s", s.Status, s.Count, s.ElapsedMS, s.Message)), "site_id": s.ID, "workflow_id": wf})
 }
 func (a *App) saveDecision(ctx context.Context, out SearchOutput, m catalog.Media) {
 	candidates := out.Candidates

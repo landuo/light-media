@@ -22,6 +22,7 @@ import (
 )
 
 type App struct {
+	directoryFileMu  sync.Mutex
 	RestartRequested chan struct{}
 	logs             *runtimeLogger
 	logError         string
@@ -55,7 +56,7 @@ type Options struct {
 	Web     http.Handler
 }
 
-const appVersion = "0.2.1"
+const appVersion = "0.2.2"
 
 type APIError struct {
 	Code    string `json:"code"`

@@ -140,8 +140,9 @@ onMounted(load);
         {{ intent.resource_title }}<br />{{ intent.id }} ·
         {{ label(data?.task?.state || intent.state) }}
       </p>
+      <p v-if="intent.download_path" class="hint">下载目录：{{ intent.download_path }}</p>
       <p class="hint">
-        读取下载器当前文件列表。只有下载完成且路径映射明确的视频可以整理；下载器任务和源文件始终保留。
+        此处用于已下载文件的人工纠错，可重新指定媒体库目标。读取下载器当前文件列表。只有下载完成且路径映射明确的视频可以整理；下载器任务和源文件始终保留。
       </p>
       <button @click="load" :disabled="loading || ui.busy > 0">重新读取实际文件</button>
       <p v-if="error" class="error-box">{{ error }}</p>

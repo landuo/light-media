@@ -26,7 +26,42 @@ test('keyword resource search sends an abortable authenticated request without i
   assert.equal(captured.path, '/api/search/resources');
   assert.equal(captured.options.signal, control.signal);
   assert.equal(captured.options.credentials, 'same-origin');
+  assert.equal(captured.options.headers.Accept, 'text/event-stream');
   assert.equal(JSON.parse(captured.options.body).tmdb_id, undefined);
+});
+test('keyword resources publish each completed site before the final snapshot', async (t) => {
+  const old = globalThis.fetch;
+  const progress = [];
+  const first = {
+    candidates: [{ resource: { id: 'fast' } }],
+    sites: [
+      { id: 'fast', status: 'ok' },
+      { id: 'slow', status: 'searching' },
+    ],
+  };
+  const final = {
+    candidates: [...first.candidates, { resource: { id: 'slow' } }],
+    sites: [
+      { id: 'fast', status: 'ok' },
+      { id: 'slow', status: 'ok' },
+    ],
+  };
+  globalThis.fetch = async () =>
+    new Response(
+      `event: progress\ndata: ${JSON.stringify(first)}\n\nevent: complete\ndata: ${JSON.stringify(final)}\n\n`,
+      { headers: { 'Content-Type': 'text/event-stream' } },
+    );
+  t.after(() => {
+    globalThis.fetch = old;
+    assert.equal(ui.busy, 0);
+  });
+  assert.deepEqual(
+    await keywordResourceSearch({ query: 'synthetic' }, new AbortController().signal, (value) =>
+      progress.push(value),
+    ),
+    final,
+  );
+  assert.deepEqual(progress, [first, final]);
 });
 test('keyword search surfaces actual API failure and releases request state', async (t) => {
   const old = globalThis.fetch;

@@ -25,6 +25,22 @@ type DownloaderConfig struct {
 	DownloadPath string        `json:"download_path"`
 	Mappings     []PathMapping `json:"mappings"`
 }
+
+// DirectoryRule separates downloader save paths from library destinations.
+// A rule only authorizes automatic organization when explicitly enabled.
+type DirectoryRule struct {
+	IncludeExisting bool   `json:"include_existing"`
+	ID              string `json:"id"`
+	Name            string `json:"name"`
+	DownloaderID    string `json:"downloader_id"`
+	DownloadPath    string `json:"download_path"`
+	SourcePath      string `json:"source_path"`
+	RootID          string `json:"root_id"`
+	MediaType       string `json:"media_type"`
+	Mode            string `json:"mode"`
+	MonitorType     string `json:"monitor_type"`
+	Enabled         bool   `json:"enabled"`
+}
 type Root struct {
 	FNOSLibraryGUID string `json:"fnos_library_guid"`
 	ID              string `json:"id"`
@@ -45,6 +61,7 @@ type TMDBConfig struct {
 	AccessToken string `json:"access_token"`
 }
 type Settings struct {
+	Directories       []DirectoryRule    `json:"directories"`
 	MaterialMaxMiB    int                `json:"material_max_mib"`
 	AutoImportMode    string             `json:"auto_import_mode"`
 	LogLevel          string             `json:"log_level"`
@@ -101,6 +118,8 @@ type ScheduleException struct {
 	Episode    int    `json:"episode"`
 }
 type Subscription struct {
+	DirectoryID  string              `json:"directory_id"`
+	DownloadPath string              `json:"download_path"`
 	TargetScope  string              `json:"target_scope"`
 	StartEpisode int                 `json:"start_episode"`
 	ID           string              `json:"id"`
@@ -123,6 +142,9 @@ type Subscription struct {
 	CreatedAt    string              `json:"created_at"`
 }
 type Intent struct {
+	DirectoryID          string        `json:"directory_id"`
+	DownloadPath         string        `json:"download_path"`
+	DirectorySnapshot    string        `json:"directory_snapshot,omitempty"`
 	MaterialRef          string        `json:"material_ref,omitempty"`
 	MaterialState        string        `json:"material_state"`
 	Purpose              string        `json:"purpose"`
@@ -244,12 +266,16 @@ type SearchOutput struct {
 	CachedAt   string       `json:"cached_at"`
 }
 type SiteStatus struct {
-	ID      string `json:"id"`
-	Status  string `json:"status"`
-	Message string `json:"message"`
-	Count   int    `json:"count"`
+	ID        string `json:"id"`
+	Status    string `json:"status"`
+	Message   string `json:"message"`
+	Count     int    `json:"count"`
+	ElapsedMS int64  `json:"elapsed_ms"`
 }
 type DownloadPreview struct {
+	DirectoryID        string        `json:"directory_id"`
+	DownloadPath       string        `json:"download_path"`
+	DirectorySnapshot  string        `json:"directory_snapshot,omitempty"`
 	MaterialRef        string        `json:"material_ref,omitempty"`
 	MaterialState      string        `json:"material_state"`
 	DownloaderSnapshot string        `json:"downloader_snapshot"`

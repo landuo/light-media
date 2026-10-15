@@ -132,10 +132,11 @@ export async function searchStream(
   body: Any,
   progress: (value: any) => void,
   signal: AbortSignal,
+  path: '/search' | '/search/resources' = '/search',
 ): Promise<any> {
   ui.busy++;
   try {
-    const response = await fetch(apiURL('/search'), {
+    const response = await fetch(apiURL(path), {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },

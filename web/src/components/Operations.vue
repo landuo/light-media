@@ -463,6 +463,7 @@ onUnmounted(() => {
               <strong>{{ d.media?.title }}</strong
               ><small>{{ d.resource_title }}</small
               ><small>{{ d.downloader_id }} · {{ d.id }}</small
+              ><small v-if="d.download_path">下载目录：{{ d.download_path }}</small
               ><small v-if="d.error" class="error-text">{{ d.error }}</small>
             </td>
             <td>

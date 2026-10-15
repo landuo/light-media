@@ -89,7 +89,7 @@ async function submit() {
       <h3>{{ template.media.title }}</h3>
       <p class="muted">选择要追更的季，每季独立建立订阅。可分别设置开始集数。</p>
       <p class="hint">
-        下载器、入库目录、筛选与更新规则沿用当前订阅表单。特别篇（第 0 季）暂不支持自动订阅。
+        下载器、下载目录、筛选与更新规则沿用当前订阅表单。特别篇（第 0 季）暂不支持自动订阅。
       </p>
       <div class="button-row">
         <button class="small" :disabled="running" @click="all">选择 / 取消全部可订阅季</button

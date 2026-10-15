@@ -332,6 +332,11 @@ func (a *App) scheduler(ctx context.Context) {
 			if e := a.pollDownloads(ctx); e != nil {
 				a.log("WARN", "downloads", "poll_failed", e.Error(), "", "")
 			}
+			if !a.paused() {
+				if e := a.pollDirectoryFiles(ctx); e != nil {
+					a.log("WARN", "directories", "poll_failed", e.Error(), "", "")
+				}
+			}
 			lastPoll = time.Now()
 		}
 		if a.paused() {

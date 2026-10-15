@@ -45,6 +45,9 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	if err := a.Store.Get(ctx, "import_plan", planID, &plan); err != nil {
 		return Job{}, err
 	}
+	if err := a.guardImportDirectory(ctx, plan); err != nil {
+		return Job{}, err
+	}
 	selected, err := selectImportFiles(plan, fileIDs)
 	if err != nil {
 		return Job{}, err
@@ -224,6 +227,9 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	if err := a.Store.Get(ctx, "import_plan", planID, &plan); err != nil {
 		return err
 	}
+	if err := a.guardImportDirectory(ctx, plan); err != nil {
+		return err
+	}
 	if err := a.importIntentActive(ctx, plan); err != nil {
 		return err
 	}
@@ -279,7 +285,13 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 				return err
 			}
-			check := a.importCheck(ctx, job)
+			baseCheck := a.importCheck(ctx, job)
+			check := func() error {
+				if e := baseCheck(); e != nil {
+					return e
+				}
+				return a.guardImportDirectory(ctx, plan)
+			}
 			receipt, err := a.publishImport(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, planSnapshot(*file), meta.Methods[file.ID], check)
 			var linkErr *APIError
 			if err != nil && plan.Mode == "auto" && errors.As(err, &linkErr) && linkErr.Code == "IMPORT_LINK_CROSS_DEVICE" {

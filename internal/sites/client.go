@@ -205,6 +205,12 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 	}
 	res, err := c.http.Do(req)
 	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, "", context.DeadlineExceeded
+		}
+		if errors.Is(err, context.Canceled) {
+			return nil, "", context.Canceled
+		}
 		return nil, "", errors.New("site_transport_error")
 	}
 	defer res.Body.Close()
@@ -222,6 +228,12 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 	}
 	b, err := io.ReadAll(io.LimitReader(res.Body, limit+1))
 	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, "", context.DeadlineExceeded
+		}
+		if errors.Is(err, context.Canceled) {
+			return nil, "", context.Canceled
+		}
 		return nil, "", errors.New("site_read_error")
 	}
 	if int64(len(b)) > limit {

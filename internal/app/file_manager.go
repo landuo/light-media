@@ -637,7 +637,7 @@ func (a *App) guardBrowserDownloaderSources(ctx context.Context, paths []string)
 			return bad("FILE_DOWNLOADER_UNVERIFIED", "无法读取相关下载器的现有任务，不能确认做种源，已阻止重命名或删除")
 		}
 		for _, task := range tasks {
-			mapped, e := mapPath(task.DownloadDir, configured.Mappings)
+			mapped, e := mapDownloaderPath(a.Settings(), configured, task.DownloadDir)
 			if e != nil || !importPath(mapped) {
 				return bad("FILE_DOWNLOADER_MAPPING_UNVERIFIED", "下载器有尚未映射的任务保存目录，不能确认做种源，请先补齐目录映射")
 			}

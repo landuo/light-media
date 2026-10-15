@@ -9,6 +9,7 @@ import Operations from './components/Operations.vue';
 import Settings from './components/Settings.vue';
 import SiteManager from './components/SiteManager.vue';
 import DownloaderManager from './components/DownloaderManager.vue';
+import DirectoryManager from './components/DirectoryManager.vue';
 import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
@@ -70,6 +71,7 @@ const nav = [
     items: [
       ['sites', 'globe', '站点管理'],
       ['downloaders', 'server', '下载器'],
+      ['directories', 'folder', '目录管理'],
       ['jobs', 'jobs', '任务队列'],
       ['logs', 'logs', '日志'],
       ['settings', 'settings', '设置'],
@@ -418,6 +420,7 @@ onUnmounted(() => {
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
         <DownloaderManager v-else-if="pageKey === 'downloaders'" />
+        <DirectoryManager v-else-if="pageKey === 'directories'" @organize="organizePaths" />
         <FileManager
           v-else-if="pageKey === 'files' || pageKey === 'organize'"
           :key="route"

@@ -27,44 +27,22 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		return SearchOutput{}, err
 	}
 	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, catalog.Media{}), CachedAt: now()}
-	selected := map[string]bool{}
-	for _, key := range in.SiteIDs {
-		selected[key] = true
-	}
-	for _, config := range a.Settings().Sites {
-		if !config.Enabled || len(selected) > 0 && !selected[config.ID] {
-			continue
-		}
-		if err := ctx.Err(); err != nil {
-			return out, err
-		}
-		state := SiteStatus{ID: config.ID, Status: "ok"}
+	out, err := a.searchSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
 		var result sites.SearchResult
-		err := a.withSite(ctx, config, false, func(client *sites.Client) error {
+		err := a.withSite(siteCtx, config, false, func(client *sites.Client) error {
 			var err error
-			result, err = client.Search(ctx, in.Query, in.Page)
+			result, err = client.Search(siteCtx, in.Query, in.Page)
 			return err
 		})
-		if err != nil {
-			state.Status, state.Message = "failed", a.clean(err.Error())
-			if len(result.Resources) > 0 {
-				state.Status = "partial"
-			}
-		}
-		if err == nil && len(result.Resources) == 0 {
-			state.Status = "empty"
-		}
+		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
 			season, episodes := resourceNumberingSuggestion(resource.Title)
-			out.Candidates = append(out.Candidates, Candidate{Resource: resource, Accepted: true, NeedsConfirmation: true, Reasons: []string{"media_identity_required"}, Season: season, Episodes: episodes})
+			found.candidates = append(found.candidates, Candidate{Resource: resource, Accepted: true, NeedsConfirmation: true, Reasons: []string{"media_identity_required"}, Season: season, Episodes: episodes})
 		}
-		state.Count = len(result.Resources)
-		out.Sites = append(out.Sites, state)
-		a.logSite(state, out.WorkflowID)
-		emitSearchProgress(ctx, out)
-	}
-	if len(out.Sites) == 0 {
-		return out, bad("NO_SITES", "请先添加并启用资源站点")
+		return found
+	})
+	if err != nil {
+		return out, err
 	}
 	a.log("INFO", "sites", "keyword_search_completed", "关键词搜索完成；下载前仍须确认影视身份与实际种子文件", out.WorkflowID, "")
 	return out, nil
