@@ -1,19 +1,26 @@
-.PHONY: check build linux-amd64 experiments offline
+.PHONY: check build linux-amd64 experiments offline web-build run
 
-check:
+web-build:
+	npm --prefix web ci --no-audit --no-fund
+	npm --prefix web run build
+
+check: web-build
 	go test ./...
 	go test -race ./...
 	CGO_ENABLED=0 go test -tags modernconly ./...
 	go vet ./...
 	go mod verify
 
-build:
+build: web-build
 	mkdir -p bin
 	CGO_ENABLED=0 go build -tags modernconly -o bin/ ./cmd/...
 
-linux-amd64:
+linux-amd64: web-build
 	mkdir -p bin/linux-amd64
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags modernconly -o bin/linux-amd64/ ./cmd/...
+
+run: build
+	./bin/server --data-dir data --listen 127.0.0.1:3120
 
 experiments:
 	mkdir -p bin/experiments

@@ -1,0 +1,640 @@
+package app
+
+import (
+	"context"
+	"database/sql"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
+	"light-media/internal/catalog"
+	"light-media/internal/download"
+	"light-media/internal/fnos"
+	"light-media/internal/integrations"
+	"light-media/internal/sites"
+)
+
+func decodeBody(w http.ResponseWriter, r *http.Request, v any) error {
+	r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
+	d := json.NewDecoder(r.Body)
+	if e := d.Decode(v); e != nil {
+		return bad("INVALID_JSON", "请求内容无效或过大")
+	}
+	if d.Decode(new(any)) != io.EOF {
+		return bad("INVALID_JSON", "请求只能包含一个JSON对象")
+	}
+	return nil
+}
+func writeJSON(w http.ResponseWriter, r *http.Request, data any) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-store")
+	_ = json.NewEncoder(w).Encode(map[string]any{"data": data, "request_id": w.Header().Get("X-Request-ID")})
+}
+func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
+	out := &APIError{Code: "INTERNAL_ERROR", Message: "操作失败，请查看关联日志", Status: 500}
+	var api *APIError
+	var cat *catalog.Error
+	var fn *fnos.ServiceError
+	var dl *download.Error
+	if errors.As(e, &api) {
+		out = api
+	} else if errors.As(e, &cat) {
+		out = &APIError{Code: strings.ToUpper(cat.Code), Message: cat.Error(), Status: 502}
+	} else if errors.As(e, &fn) {
+		out = &APIError{Code: "FNOS_" + strings.ToUpper(fn.Code), Message: fn.Error(), Status: 502}
+	} else if errors.As(e, &dl) {
+		out = &APIError{Code: "DOWNLOADER_" + strings.ToUpper(dl.Code), Message: dl.Error(), Status: 502}
+	} else if errors.Is(e, sql.ErrNoRows) {
+		out = &APIError{"NOT_FOUND", "记录不存在", 404}
+	}
+	if out.Status >= 500 {
+		a.writeLog(map[string]any{"time": now(), "id": id("log_"), "level": "ERROR", "module": "api", "event": "request_failed", "message": e.Error(), "error_code": out.Code, "http_status": out.Status, "request_id": w.Header().Get("X-Request-ID"), "app_version": "0.1.0"})
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(out.Status)
+	_ = json.NewEncoder(w).Encode(map[string]any{"error": out, "request_id": w.Header().Get("X-Request-ID")})
+}
+func (a *App) Handler() http.Handler { return a.requestLogged(a.handler()) }
+func (a *App) handler() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		if e := a.Store.DB.PingContext(r.Context()); e != nil {
+			http.Error(w, "database unavailable", 503)
+			return
+		}
+		writeJSON(w, r, map[string]string{"status": "ok", "version": "0.1.0"})
+	})
+	mux.HandleFunc("/api/", a.api)
+	if a.web != nil {
+		mux.Handle("/", a.web)
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if w.Header().Get("X-Request-ID") == "" {
+			w.Header().Set("X-Request-ID", id("req_"))
+		}
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Referrer-Policy", "same-origin")
+		w.Header().Set("X-Frame-Options", "DENY")
+		if strings.HasPrefix(r.URL.Path, "/api/") {
+			if r.Method != "GET" && r.Method != "HEAD" {
+				origin := r.Header.Get("Origin")
+				if origin != "" {
+					u, e := url.Parse(origin)
+					if e != nil || !strings.EqualFold(u.Host, r.Host) {
+						a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "请求来源不匹配", 403})
+						return
+					}
+				}
+				if r.Header.Get("Sec-Fetch-Site") == "cross-site" {
+					a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "禁止跨站写入请求", 403})
+					return
+				}
+			}
+			if r.URL.Path != "/api/auth/status" && r.URL.Path != "/api/auth/login" && r.URL.Path != "/api/auth/setup" && !a.authenticated(r) {
+				a.writeError(w, r, &APIError{"UNAUTHORIZED", "请先登录", 401})
+				return
+			}
+		}
+		mux.ServeHTTP(w, r)
+	})
+}
+func (a *App) api(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	p := strings.TrimPrefix(r.URL.Path, "/api/")
+	method := r.Method
+	var out any
+	var e error
+	switch {
+	case p == "auth/status" && method == "GET":
+		out = map[string]any{"setup_required": !a.hasAdmin(), "authenticated": a.authenticated(r)}
+	case (p == "auth/login" || p == "auth/setup") && method == "POST":
+		_, e = a.auth(w, r)
+		out = map[string]bool{"authenticated": e == nil}
+	case p == "auth/logout" && method == "POST":
+		if c, err := r.Cookie("lm_session"); err == nil {
+			_, e = a.Store.DB.ExecContext(ctx, `DELETE FROM sessions WHERE token_hash=?`, tokenHash(c.Value))
+		}
+		http.SetCookie(w, &http.Cookie{Name: "lm_session", Value: "", Path: "/", MaxAge: -1, HttpOnly: true, SameSite: http.SameSiteStrictMode})
+		out = map[string]bool{"authenticated": false}
+	case p == "status" && method == "GET":
+		out = a.status(ctx)
+	case p == "control" && method == "POST":
+		var in struct {
+			Paused bool `json:"paused"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			e = a.setControl(ctx, in.Paused)
+		}
+		out = a.status(ctx)
+	case p == "settings" && method == "GET":
+		out = a.publicSettings()
+	case p == "settings" && method == "PUT":
+		var c Settings
+		e = decodeBody(w, r, &c)
+		if e == nil {
+			a.preserveSecrets(&c)
+			e = a.saveSettings(ctx, c)
+		}
+		out = a.publicSettings()
+	case p == "settings/test" && method == "POST":
+		var in struct {
+			Target string `json:"target"`
+			ID     string `json:"id"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.testConnection(ctx, in.Target, in.ID)
+		}
+	case strings.HasPrefix(p, "catalog/") && method == "GET":
+		if p == "catalog/image" {
+			if err := a.catalogImage(w, r); err != nil {
+				a.writeError(w, r, err)
+			}
+			return
+		}
+		out, e = a.catalogAPI(r, strings.TrimPrefix(p, "catalog/"))
+	case p == "search" && method == "POST":
+		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
+			a.streamSearch(w, r)
+			return
+		}
+		var in SearchRequest
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.search(ctx, in, false)
+		}
+	case p == "downloads/preview" && method == "POST":
+		var in PreviewRequest
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.previewDownload(ctx, in, false)
+		}
+	case p == "downloads/confirm" && method == "POST":
+		var in struct {
+			PreviewID   string `json:"preview_id"`
+			AcceptExtra bool   `json:"accept_extra_files"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.confirmDownload(ctx, in.PreviewID, in.AcceptExtra)
+		}
+	case p == "downloads" && method == "GET":
+		out, e = a.downloadList(ctx)
+	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/files") && method == "GET":
+		out, e = a.downloadFiles(ctx, strings.TrimSuffix(strings.TrimPrefix(p, "downloads/"), "/files"))
+	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/import-preview") && method == "POST":
+		var in DownloadReviewRequest
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.previewDownloadReview(ctx, strings.TrimSuffix(strings.TrimPrefix(p, "downloads/"), "/import-preview"), in)
+		}
+	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/import-confirm") && method == "POST":
+		var in struct {
+			PlanID              string `json:"plan_id"`
+			ConfirmTargetChange bool   `json:"confirm_target_change"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.confirmDownloadReview(ctx, strings.TrimSuffix(strings.TrimPrefix(p, "downloads/"), "/import-confirm"), in.PlanID, in.ConfirmTargetChange)
+		}
+	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/action") && method == "POST":
+		var in struct {
+			Action string `json:"action"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			e = a.downloadAction(ctx, strings.TrimSuffix(strings.TrimPrefix(p, "downloads/"), "/action"), in.Action)
+		}
+		out = map[string]bool{"accepted": e == nil}
+	case p == "subscriptions" && method == "GET":
+		out, e = a.subscriptionList(ctx)
+	case p == "subscriptions" && method == "POST":
+		var in SubscriptionRequest
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.saveSubscription(ctx, "", in)
+		}
+	case strings.HasPrefix(p, "subscriptions/"):
+		key := strings.TrimPrefix(p, "subscriptions/")
+		if strings.HasSuffix(key, "/check") && method == "POST" {
+			key = strings.TrimSuffix(key, "/check")
+			var s Subscription
+			e = a.Store.Get(ctx, "subscription", key, &s)
+			if e == nil {
+				out, e = a.enqueue(ctx, "subscription", map[string]any{"id": key, "revision": s.Revision}, id("wf_"))
+			}
+		} else if method == "PUT" {
+			var in SubscriptionRequest
+			e = decodeBody(w, r, &in)
+			if e == nil {
+				out, e = a.saveSubscription(ctx, key, in)
+			}
+		} else if method == "DELETE" {
+			e = a.cancelSubscription(ctx, key)
+			out = map[string]bool{"cancelled": e == nil}
+		} else {
+			e = &APIError{"NOT_FOUND", "接口不存在", 404}
+		}
+	case p == "calendar" && method == "GET":
+		out, e = a.calendar(ctx, r.URL.Query().Get("from"), r.URL.Query().Get("to"))
+	case p == "schedule/preview" && method == "POST":
+		var in struct {
+			Schedule Schedule `json:"schedule"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = previewSchedule(in.Schedule)
+		}
+	case p == "import/scan" && method == "POST":
+		var in struct {
+			Path      string `json:"path"`
+			Recursive bool   `json:"recursive"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.scanFiles(ctx, in.Path, in.Recursive)
+		}
+	case p == "import/preview" && method == "POST":
+		var in ImportRequest
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.previewImport(ctx, in)
+		}
+	case p == "import/execute" && method == "POST":
+		var in struct {
+			PlanID  string   `json:"plan_id"`
+			FileIDs []string `json:"file_ids"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.executeImport(ctx, in.PlanID, in.FileIDs)
+		}
+	case p == "import/plans" && method == "GET":
+		out, e = a.Store.List(ctx, "import_plan", 100, 0)
+	case p == "assets" && method == "GET":
+		out, e = a.Store.List(ctx, "asset", 500, atoi(r.URL.Query().Get("offset")))
+	case p == "assets/candidates" && method == "GET":
+		out, e = a.libraryCandidates(ctx, r.URL.Query().Get("root_id"), atoi(r.URL.Query().Get("limit")), r.URL.Query().Get("cursor"))
+	case p == "assets/register" && method == "POST":
+		var in LibraryRegisterRequest
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.registerLibraryAsset(ctx, in)
+		}
+	case p == "assets/scan" && method == "POST":
+		var in struct {
+			RootID string `json:"root_id"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.enqueue(ctx, "library_scan", map[string]string{"root_id": in.RootID}, id("wf_"))
+		}
+	case strings.HasPrefix(p, "assets/"):
+		out, e = a.assetAPI(w, r, strings.TrimPrefix(p, "assets/"))
+	case p == "jobs" && method == "GET":
+		out, e = a.jobs(ctx, 100)
+	case strings.HasPrefix(p, "jobs/"):
+		out, e = a.jobAPI(w, r, strings.TrimPrefix(p, "jobs/"))
+	case p == "notifications" && method == "GET":
+		out, e = a.notifications(ctx)
+	case strings.HasPrefix(p, "notifications/"):
+		out, e = a.notificationAPI(r, strings.TrimPrefix(p, "notifications/"))
+	case p == "audit" && method == "GET":
+		out, e = a.Store.List(ctx, "audit", 100, 0)
+	case p == "logs" && method == "GET":
+		out, e = a.queryLogs(ctx, logQuery(r))
+	case p == "logs/health" && method == "GET":
+		out = a.logs.health()
+	case p == "settings/logging" && (method == "GET" || method == "PATCH"):
+		out, e = a.loggingAPI(w, r)
+	case p == "frontend-errors" && method == "POST":
+		out, e = a.frontendErrorAPI(w, r)
+	case p == "logs/stream" && method == "GET":
+		a.streamLogs(w, r)
+		return
+	case p == "logs/export" && method == "GET":
+		a.exportLogs(w, r)
+		return
+	case p == "fnos/libraries" && method == "GET":
+		c := a.Settings().FNOS
+		var client *fnos.Service
+		client, e = fnos.NewService(fnos.Config{Host: c.Host, Username: c.Username, Password: c.Password})
+		if e == nil {
+			out, e = client.Libraries(ctx)
+		}
+	case p == "backups" && method == "POST":
+		var name string
+		name, e = a.Store.Backup(ctx, filepath.Join(a.Dir, "backups"))
+		out = map[string]string{"filename": name}
+	case p == "backups" && method == "GET":
+		entries, err := os.ReadDir(filepath.Join(a.Dir, "backups"))
+		if err != nil && !os.IsNotExist(err) {
+			e = err
+		}
+		names := []string{}
+		for _, entry := range entries {
+			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".db") {
+				names = append(names, entry.Name())
+			}
+		}
+		out = names
+	case strings.HasPrefix(p, "backups/") && method == "GET":
+		name := strings.TrimPrefix(p, "backups/")
+		if filepath.Base(name) != name || !strings.HasSuffix(name, ".db") {
+			e = bad("INVALID_PATH", "无效备份名称")
+		} else {
+			w.Header().Set("Content-Disposition", "attachment; filename="+strconv.Quote(name))
+			http.ServeFile(w, r, filepath.Join(a.Dir, "backups", name))
+			return
+		}
+	case p == "restore" && method == "POST":
+		var in struct {
+			Filename string `json:"filename"`
+			Confirm  bool   `json:"confirm"`
+		}
+		e = decodeBody(w, r, &in)
+		if e == nil {
+			out, e = a.prepareRestore(ctx, in.Filename, in.Confirm)
+		}
+	default:
+		e = &APIError{"NOT_FOUND", "接口不存在", 404}
+	}
+	if e != nil {
+		a.writeError(w, r, e)
+		return
+	}
+	writeJSON(w, r, out)
+}
+func atoi(s string) int { v, _ := strconv.Atoi(s); return v }
+func (a *App) status(ctx context.Context) map[string]any {
+	counts := map[string]int{}
+	for _, k := range []string{"subscription", "intent", "asset", "import_plan"} {
+		var n int
+		_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind=?`, k).Scan(&n)
+		counts[k] = n
+	}
+	var active, failed int
+	_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running','retry_wait','waiting_paused')`).Scan(&active)
+	_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state='failed'`).Scan(&failed)
+	counts["active_jobs"] = active
+	counts["failed_jobs"] = failed
+	a.controlMu.Lock()
+	state, n := a.control, a.activeWrites
+	a.controlMu.Unlock()
+	a.logMu.Lock()
+	logErr := a.logError
+	a.logMu.Unlock()
+	logStatus := "ok"
+	if logErr != "" {
+		logStatus = "failed"
+	}
+	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": "0.1.0", "time": now()}
+}
+func (a *App) publicSettings() map[string]any {
+	c := a.Settings()
+	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != ""}
+	siteState := map[string]bool{}
+	for i := range c.Sites {
+		siteState[c.Sites[i].ID] = c.Sites[i].Cookie != "" || c.Sites[i].APIKey != ""
+		c.Sites[i].Cookie = ""
+		c.Sites[i].APIKey = ""
+	}
+	downState := map[string]bool{}
+	for i := range c.Downloaders {
+		downState[c.Downloaders[i].ID] = c.Downloaders[i].Password != ""
+		c.Downloaders[i].Password = ""
+	}
+	c.TMDB.APIKey = ""
+	c.TMDB.AccessToken = ""
+	c.FNOS.Password = ""
+	secretState["sites"], secretState["downloaders"] = siteState, downState
+	b, _ := json.Marshal(c)
+	m := map[string]any{}
+	_ = json.Unmarshal(b, &m)
+	m["secret_state"] = secretState
+	return m
+}
+func (a *App) preserveSecrets(c *Settings) {
+	old := a.Settings()
+	if c.TMDB.APIKey == "" && c.TMDB.AccessToken == "" {
+		c.TMDB = old.TMDB
+	}
+	if c.FNOS.Password == "" && c.FNOS.Host == old.FNOS.Host && c.FNOS.Username == old.FNOS.Username {
+		c.FNOS.Password = old.FNOS.Password
+	}
+	for i := range c.Sites {
+		for _, v := range old.Sites {
+			if c.Sites[i].ID == v.ID && c.Sites[i].BaseURL == v.BaseURL {
+				if c.Sites[i].Cookie == "" {
+					c.Sites[i].Cookie = v.Cookie
+				}
+				if c.Sites[i].APIKey == "" {
+					c.Sites[i].APIKey = v.APIKey
+				}
+			}
+		}
+	}
+	for i := range c.Downloaders {
+		for _, v := range old.Downloaders {
+			if c.Downloaders[i].ID == v.ID && c.Downloaders[i].BaseURL == v.BaseURL && c.Downloaders[i].Username == v.Username && c.Downloaders[i].Password == "" {
+				c.Downloaders[i].Password = v.Password
+			}
+		}
+	}
+}
+func validateSettings(c Settings) error {
+	if c.MaterialMaxMiB != 0 && (c.MaterialMaxMiB < 32 || c.MaterialMaxMiB > 2048) {
+		return bad("INVALID_MATERIAL_BUDGET", "种子材料归档上限必须为32至2048MiB")
+	}
+	if c.AutoImportMode != "" && c.AutoImportMode != "hardlink" && c.AutoImportMode != "copy" && c.AutoImportMode != "auto" {
+		return bad("INVALID_IMPORT_MODE", "自动整理方式无效")
+	}
+	if c.LogLevel != "" && c.LogLevel != "DEBUG" && c.LogLevel != "INFO" && c.LogLevel != "WARN" && c.LogLevel != "ERROR" {
+		return bad("INVALID_LOG_LEVEL", "日志级别无效")
+	}
+	if c.LogMaxMiB < 0 || c.LogMaxMiB > 20 || c.LogRetainFiles < 0 || c.LogRetainFiles > 20 || c.LogRetainDays < 0 || c.LogRetainDays > 90 || c.LogTotalMiB < 0 || c.LogTotalMiB > 1024 || (c.LogTotalMiB > 0 && c.LogMaxMiB > c.LogTotalMiB) {
+		return bad("INVALID_LOG_BUDGET", "日志文件上限无效")
+	}
+	if c.DebugUntil != "" {
+		t, e := time.Parse(time.RFC3339, c.DebugUntil)
+		if e != nil || t.After(time.Now().Add(2*time.Hour+time.Minute)) {
+			return bad("INVALID_DEBUG_EXPIRY", "临时DEBUG期限最长2小时")
+		}
+	}
+	if len(c.Sites) > 5 || len(c.Downloaders) > 8 || len(c.Roots) > 16 || len(c.AllowedRoots) > 32 {
+		return bad("CONFIG_LIMIT", "配置数量超出上限")
+	}
+	if c.TMDB.APIKey != "" && c.TMDB.AccessToken != "" {
+		return bad("INVALID_TMDB", "API Key与Access Token只需填写一种")
+	}
+	seen := map[string]bool{}
+	for _, s := range c.Sites {
+		if seen["s"+s.ID] || s.ID == "" {
+			return bad("DUPLICATE_ID", "站点ID重复或为空")
+		}
+		seen["s"+s.ID] = true
+		if s.Enabled {
+			if _, e := sites.New(s.Config); e != nil {
+				return bad("INVALID_SITE", e.Error())
+			}
+		}
+		if s.DailyBudget < 0 || s.DailyBudget > 10000 {
+			return bad("INVALID_BUDGET", "站点每日预算无效")
+		}
+	}
+	for _, d := range c.Downloaders {
+		if seen["d"+d.ID] || d.ID == "" {
+			return bad("DUPLICATE_ID", "下载器ID重复或为空")
+		}
+		seen["d"+d.ID] = true
+		if _, e := download.New(d.Config); e != nil {
+			return bad("INVALID_DOWNLOADER", e.Error())
+		}
+		if d.DownloadPath == "" || !filepath.IsAbs(d.DownloadPath) {
+			return bad("INVALID_DOWNLOAD_PATH", "下载器保存目录必须是绝对路径")
+		}
+		for _, m := range d.Mappings {
+			if !filepath.IsAbs(m.From) || !filepath.IsAbs(m.To) {
+				return bad("INVALID_MAPPING", "路径映射必须是绝对路径")
+			}
+		}
+	}
+	for _, root := range c.Roots {
+		if root.ID == "" || seen["r"+root.ID] {
+			return bad("DUPLICATE_ID", "媒体库ID重复或为空")
+		}
+		seen["r"+root.ID] = true
+		if root.Kind != "movie" && root.Kind != "tv" && root.Kind != "mixed" {
+			return bad("INVALID_ROOT", "媒体目录类型无效")
+		}
+		if e := safeRoot(root.Path); e != nil {
+			return e
+		}
+	}
+	for _, p := range c.AllowedRoots {
+		if e := safeRoot(p); e != nil {
+			return e
+		}
+	}
+	return nil
+}
+func safeRoot(p string) error {
+	if !filepath.IsAbs(p) || filepath.Clean(p) != p || p == "/" || strings.ContainsAny(p, "\x00\r\n") {
+		return bad("INVALID_ROOT", "请选择具体的绝对媒体目录")
+	}
+	for _, blocked := range []string{"/etc", "/proc", "/sys", "/dev", "/var/run"} {
+		if within(blocked, p) {
+			return bad("INVALID_ROOT", "系统目录不能作为媒体目录")
+		}
+	}
+	return nil
+}
+func (a *App) testConnection(ctx context.Context, target, key string) (any, error) {
+	c := a.Settings()
+	switch target {
+	case "tmdb":
+		v, e := a.catalog().Browse(ctx, "movie", "popular", 1)
+		if e != nil {
+			return nil, e
+		}
+		return map[string]any{"status": "ok", "samples": len(v.Results)}, nil
+	case "site":
+		s, e := a.site(key)
+		if e != nil {
+			return nil, e
+		}
+		result := integrations.ProbeSite(ctx, integrations.Site{ID: s.ID, Kind: s.Kind, BaseURL: s.BaseURL, Cookie: s.Cookie, APIKey: s.APIKey, Query: ""})
+		return result, nil
+	case "downloader":
+		d, e := a.downloader(key)
+		if e != nil {
+			return nil, e
+		}
+		return integrations.ProbeDownloader(ctx, integrations.Downloader{ID: d.ID, Kind: d.Kind, BaseURL: d.BaseURL, Username: d.Username, Password: d.Password}), nil
+	case "fnos":
+		return fnos.Probe(ctx, fnos.Config{Host: c.FNOS.Host, Username: c.FNOS.Username, Password: c.FNOS.Password}), nil
+	}
+	return nil, bad("INVALID_TARGET", "未知的检测目标")
+}
+func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
+	q := r.URL.Query()
+	ctx := r.Context()
+	page := atoi(q.Get("page"))
+	if page < 1 {
+		page = 1
+	}
+	kind := q.Get("kind")
+	var result any
+	var cachedAt time.Time
+	var e error
+	switch action {
+	case "browse", "search":
+		var p catalog.Page
+		key := action + ":" + kind + ":" + q.Get("list") + ":" + q.Get("q") + ":" + strconv.Itoa(page)
+		ttl := time.Hour
+		if q.Get("list") == "top_rated" {
+			ttl = 6 * time.Hour
+		}
+		cachedAt, e = a.cached(ctx, key, ttl, &p, func() (any, error) {
+			if action == "search" {
+				return a.catalog().Search(ctx, q.Get("q"), kind, page)
+			}
+			return a.catalog().Browse(ctx, kind, q.Get("list"), page)
+		})
+		if e == nil {
+			e = a.decorateMedia(ctx, p.Results)
+		}
+		result = map[string]any{"results": p.Results, "page": p.Page, "total_pages": p.TotalPages, "total_results": p.TotalResults, "cached_at": cachedAt}
+	case "detail":
+		var m catalog.Media
+		m, e = a.media(ctx, kind, int64(atoi(q.Get("id"))))
+		if e == nil {
+			items := []catalog.Media{m}
+			e = a.decorateMedia(ctx, items)
+			m = items[0]
+		}
+		result = m
+	case "season":
+		var s catalog.Season
+		s, e = a.season(ctx, int64(atoi(q.Get("id"))), atoi(q.Get("season")))
+		result = s
+	case "person":
+		var p catalog.Person
+		_, e = a.cached(ctx, "person:"+q.Get("id"), 7*24*time.Hour, &p, func() (any, error) { return a.catalog().Person(ctx, int64(atoi(q.Get("id")))) })
+		result = p
+	case "person/credits":
+		var p catalog.Page
+		_, e = a.cached(ctx, "credits:"+q.Get("id"), 24*time.Hour, &p, func() (any, error) { return a.catalog().PersonCredits(ctx, int64(atoi(q.Get("id")))) })
+		result = p
+	default:
+		e = &APIError{"NOT_FOUND", "接口不存在", 404}
+	}
+	if action == "person/credits" && e == nil {
+		p := result.(catalog.Page)
+		e = a.decorateMedia(ctx, p.Results)
+		result = p
+	}
+	return result, e
+}
+func (a *App) media(ctx context.Context, kind string, tmdb int64) (catalog.Media, error) {
+	var m catalog.Media
+	if !validMedia(kind, tmdb) {
+		return m, bad("INVALID_MEDIA", "请选择明确的电影或剧集身份")
+	}
+	_, e := a.cached(ctx, "media:"+kind+":"+strconv.FormatInt(tmdb, 10), 24*time.Hour, &m, func() (any, error) { return a.catalog().Detail(ctx, kind, tmdb) })
+	return m, e
+}
+func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
+	var s catalog.Season
+	_, e := a.cached(ctx, fmt.Sprintf("season:%d:%d", tmdb, n), 12*time.Hour, &s, func() (any, error) { return a.catalog().Season(ctx, tmdb, n) })
+	return s, e
+}

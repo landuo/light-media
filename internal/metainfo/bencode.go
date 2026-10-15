@@ -56,6 +56,7 @@ func (n *node) get(key string) *node {
 type scanner struct {
 	data       []byte
 	pos, items int
+	maxBody    int
 }
 
 func invalid(code string) error { return fmt.Errorf("%s", code) }
@@ -144,7 +145,11 @@ func (s *scanner) value(depth int) (*node, error) {
 			return nil, invalid("invalid_string_length")
 		}
 		length, err := strconv.ParseUint(string(s.data[start:s.pos]), 10, 32)
-		if err != nil || length > MaxBody {
+		maxBody := s.maxBody
+		if maxBody == 0 {
+			maxBody = MaxBody
+		}
+		if err != nil || uint64(length) > uint64(maxBody) {
 			return nil, invalid("string_length_limit")
 		}
 		s.pos++
@@ -171,11 +176,21 @@ func length(n *node) (int64, bool) {
 // Inspect validates the exact bencoded info bytes and structural piece metadata.
 // It cannot authenticate the tracker or verify file payload without file data.
 func Inspect(data []byte) (Summary, error) {
+	return inspectLimit(data, MaxBody)
+}
+
+// ProductInspect keeps M0's frozen 4 MiB probe unchanged while admitting bounded
+// larger private metainfo in the application. It does not verify payload bytes.
+func ProductInspect(data []byte) (Summary, error) {
+	return inspectLimit(data, 32<<20)
+}
+
+func inspectLimit(data []byte, maxBody int) (Summary, error) {
 	out := Summary{}
-	if len(data) == 0 || len(data) > MaxBody {
+	if len(data) == 0 || len(data) > maxBody {
 		return out, invalid("body_limit")
 	}
-	s := scanner{data: data}
+	s := scanner{data: data, maxBody: maxBody}
 	root, err := s.value(0)
 	if err != nil {
 		return out, err

@@ -21,8 +21,21 @@ const RunByteBudget = 256 << 10
 
 type runKey struct{}
 type targetKey struct{}
+type siteKey struct{}
 type operationKey struct{}
 type target struct{ id, kind string }
+
+func SiteContext(ctx context.Context, id string) context.Context {
+	if len(id) > 64 {
+		return ctx
+	}
+	for _, r := range id {
+		if !(r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9' || r == '_' || r == '-') {
+			return ctx
+		}
+	}
+	return context.WithValue(ctx, siteKey{}, id)
+}
 
 // EndpointContext converts only recognized endpoint categories to fixed labels.
 // The original endpoint/URL is never attached to a record or context value.
@@ -126,6 +139,9 @@ func (r *Run) record(ctx context.Context, level slog.Level, event string, attrs 
 	record.AddAttrs(slog.String("module", "m0_trace"), slog.String("event", event), slog.String("run_id", r.ID))
 	if t, ok := ctx.Value(targetKey{}).(target); ok {
 		record.AddAttrs(slog.String("target_id", t.id), slog.String("target_kind", t.kind))
+	}
+	if site, ok := ctx.Value(siteKey{}).(string); ok && site != "" {
+		record.AddAttrs(slog.String("site_id", site))
 	}
 	record.AddAttrs(attrs...)
 	_ = r.handler.Handle(ctx, record) // Stats below makes sink failure visible in stdout.
