@@ -540,7 +540,7 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 	request := ImportRequest{RootID: rule.RootID, Mode: rule.Mode, Renaming: rule.Renaming, Scraping: rule.Scraping, LibraryTypeFolder: rule.LibraryTypeFolder, WorkflowID: id("wf_"), Files: []ImportFileRequest{{Path: file.Path}}}
 	var numbering *media.Numbering
 	if file.IdentityReason != "" {
-		return request, bad("DIRECTORY_IDENTITY_REVIEW", "NFO身份存在疑问，请在文件管理中手动识别")
+		return request, bad("DIRECTORY_IDENTITY_REVIEW", "NFO身份存在疑问，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
 	}
 	if hint := file.InferredMedia; hint != nil {
 		request.MediaType = hint.Type
@@ -549,34 +549,51 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 	} else {
 		p := file.Parsed
 		if p.Status != media.Parsed || p.Title == "" {
-			return request, bad("DIRECTORY_IDENTITY_REVIEW", "文件名缺少明确影视身份，请在文件管理中手动识别")
+			return request, bad("DIRECTORY_IDENTITY_REVIEW", "文件名缺少明确影视身份，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
 		}
 		kind := "movie"
 		if p.Type == "episode" {
 			kind = "tv"
 		}
 		if kind == "movie" && p.Year == 0 {
-			return request, bad("DIRECTORY_IDENTITY_REVIEW", "电影文件名缺少年份，请手动识别")
+			return request, bad("DIRECTORY_IDENTITY_REVIEW", "电影文件名缺少年份，请在“手动整理”中选择电影类型，并查询或填写TheMovieDb编号")
 		}
-		var page catalog.Page
-		_, e := a.cached(ctx, "directory-identify:"+kind+":"+p.Title, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, p.Title, kind, 1) })
-		if e != nil {
-			return request, e
-		}
-		matches := []catalog.Media{}
-		for _, m := range page.Results {
-			if m.MediaType != kind || p.Year > 0 && p.Year != m.Year {
-				continue
+		matches := map[int64]catalog.Media{}
+		totalPages, totalResults := 1, 0
+		for number := 1; number <= totalPages; number++ {
+			key := "directory-identify:" + kind + ":" + p.Title
+			if number > 1 {
+				key += fmt.Sprintf(":page:%d", number)
 			}
-			if directoryTitle(m.Title) == directoryTitle(p.Title) || directoryTitle(m.OriginalTitle) == directoryTitle(p.Title) {
-				matches = append(matches, m)
+			var page catalog.Page
+			at, e := a.cached(ctx, key, 24*time.Hour, &page, func() (any, error) { return a.catalog().Search(ctx, p.Title, kind, number) })
+			if e != nil {
+				return request, e
+			}
+			// Stale search fallback is useful for browsing, but cannot prove
+			// uniqueness when recognition requires the complete result set.
+			if time.Since(at) >= 24*time.Hour || page.Page != number || page.TotalPages < 1 || page.TotalPages > 5 || number > 1 && (page.TotalPages != totalPages || page.TotalResults != totalResults) || page.TotalPages > 1 && len(page.Results) == 0 {
+				return request, bad("DIRECTORY_IDENTITY_REVIEW", "影视搜索分页不完整或结果过多，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
+			}
+			if number == 1 {
+				totalPages, totalResults = page.TotalPages, page.TotalResults
+			}
+			for _, m := range page.Results {
+				if m.MediaType != kind || p.Year > 0 && p.Year != m.Year {
+					continue
+				}
+				if directoryTitle(m.Title) == directoryTitle(p.Title) || directoryTitle(m.OriginalTitle) == directoryTitle(p.Title) {
+					matches[m.ID] = m
+				}
 			}
 		}
-		if len(matches) != 1 || page.TotalPages > 1 {
-			return request, bad("DIRECTORY_IDENTITY_REVIEW", "影视身份不唯一或不完整，请在文件管理中手动识别")
+		if len(matches) != 1 {
+			return request, bad("DIRECTORY_IDENTITY_REVIEW", "影视身份不唯一或不完整，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")
 		}
 		request.MediaType = kind
-		request.TMDBID = matches[0].ID
+		for matchedID := range matches {
+			request.TMDBID = matchedID
+		}
 		numbering = p.Original
 	}
 	if rule.MediaType != "" && rule.MediaType != "mixed" && rule.MediaType != request.MediaType {
@@ -584,7 +601,7 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 	}
 	if request.MediaType == "tv" {
 		if numbering == nil || numbering.Season == nil || *numbering.Season < 0 || len(numbering.Episodes) != 1 || *numbering.Season == 0 && (file.InferredMedia == nil || file.IdentitySource != "nfo" && numbering.Form != "nfo_episode") {
-			return request, bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请手动识别")
+			return request, bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请在“手动整理”中选择电视剧类型并设置季、集，必要时查询或填写TheMovieDb编号")
 		}
 		request.Files[0].Season = *numbering.Season
 		request.Files[0].SeasonExplicit = numbering.Form == "nfo_episode"

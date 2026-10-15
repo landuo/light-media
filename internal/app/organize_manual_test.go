@@ -15,7 +15,7 @@ func TestManualOrganizeJokerReleaseActuallyImportsWithoutNFO(t *testing.T) {
 	a, source, target := importTestApp(t)
 	ctx := context.Background()
 	m := catalog.Media{ID: 889737, MediaType: "movie", Title: "小丑2：双重妄想", OriginalTitle: "Joker: Folie à Deux", Year: 2024}
-	importCache(t, a, "directory-identify:movie:Joker Folie a Deux", catalog.Page{Results: []catalog.Media{m}, TotalPages: 1})
+	importCache(t, a, "directory-identify:movie:Joker Folie a Deux", catalog.Page{Results: []catalog.Media{m}, Page: 1, TotalPages: 1})
 	importCache(t, a, "media:movie:889737", m)
 	name := filepath.Join(source, "Joker.Folie.a.Deux.2024.2160p.AMZN.WEB-DL.H265.HDR.DDP5.1-ADWeb.mkv")
 	importWrite(t, name, []byte("synthetic-joker-video"))
@@ -102,7 +102,7 @@ func TestManualOrganizeAbsoluteEpisodeUsesExplicitSeason(t *testing.T) {
 	a, source, target := importTestApp(t)
 	identity := importFixture(t, a, "tv")
 	identity.OriginalTitle = "Original Show"
-	importCache(t, a, "directory-identify:tv:Original Show", catalog.Page{Results: []catalog.Media{identity}, TotalPages: 1})
+	importCache(t, a, "directory-identify:tv:Original Show", catalog.Page{Results: []catalog.Media{identity}, Page: 1, TotalPages: 1})
 	importCache(t, a, "season:123:1", catalog.Season{ID: 901, SeriesID: identity.ID, SeasonNumber: 1, Episodes: []catalog.Episode{{ID: 7103, SeasonNumber: 1, EpisodeNumber: 3, Name: "第三集"}}})
 	input := filepath.Join(source, "Original.Show.EP03.WEB-DL.mkv")
 	importWrite(t, input, []byte("synthetic absolute-numbered episode"))
@@ -135,5 +135,34 @@ func TestManualOrganizeManagedLibraryFileCanMoveWithoutHistoryID(t *testing.T) {
 	}
 	if _, e = os.Stat(out.Items[0].Target); e != nil {
 		t.Fatal("replacement missing", e)
+	}
+}
+
+func TestManualOrganizeMoanaITunesReleaseUsesYearAcrossCompleteSearch(t *testing.T) {
+	a, source, target := importTestApp(t)
+	ctx := context.Background()
+	identity := catalog.Media{ID: 1108427, MediaType: "movie", Title: "海洋奇缘：启航", OriginalTitle: "Moana", Year: 2026}
+	importCache(t, a, "directory-identify:movie:Moana", catalog.Page{Page: 1, TotalPages: 2, Results: []catalog.Media{identity, {ID: 277834, MediaType: "movie", Title: "海洋奇缘", OriginalTitle: "Moana", Year: 2016}}})
+	importCache(t, a, "directory-identify:movie:Moana:page:2", catalog.Page{Page: 2, TotalPages: 2, Results: []catalog.Media{{ID: 94727, MediaType: "movie", OriginalTitle: "Moana", Year: 1926}}})
+	importCache(t, a, "media:movie:1108427", identity)
+	input := filepath.Join(source, "Moana.2026.2160p.iT.WEB-DL.DDP5.1.Atmos.H.265-DepWeb.mkv")
+	importWrite(t, input, []byte("isolated synthetic Moana iTunes release"))
+	scrape := false
+	out, err := a.manualOrganize(ctx, manualOrganizeRequest{Paths: []string{input}, TargetPath: target, Mode: "hardlink", Scraping: &scrape})
+	if err != nil || out.Failed != 0 || out.Submitted != 1 || len(out.Items) != 1 || out.Items[0].Media.ID != identity.ID {
+		t.Fatalf("real release name did not identify the 2026 film: %+v %v", out, err)
+	}
+	reorgRunJob(t, a, reorgJob(t, a, "import", out.Items[0].PlanID))
+	src, err := os.Stat(input)
+	if err != nil {
+		t.Fatal("source removed", err)
+	}
+	dst, err := os.Stat(out.Items[0].Target)
+	if err != nil || !os.SameFile(src, dst) {
+		t.Fatal("expected hardlink not published", err)
+	}
+	var asset Asset
+	if err = a.assetAtPath(ctx, out.Items[0].Target, &asset); err != nil || asset.Media.ID != identity.ID || asset.Media.Year != 2026 {
+		t.Fatalf("wrong Moana version imported: %+v %v", asset, err)
 	}
 }

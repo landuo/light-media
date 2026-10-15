@@ -41,7 +41,7 @@ var (
 	displayMarker  = regexp.MustCompile(`(?i)(?:第\s*[0-9一二三四五六七八九十百零〇两]+|(?:^|[ ._\-])EP\s*\d+)`)
 	yearPattern    = regexp.MustCompile(`(?:^|[ ._(\-])((?:19|20)\d{2})(?:$|[ ._)\-])`)
 	absoluteEP     = regexp.MustCompile(`(?i)(?:^|[ ._\-])(?:EP|第)(\d{1,4})(?:集|话)?`)
-	releaseSuffix  = regexp.MustCompile(`(?i)^(?:[ ._()\-+]*(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux|x26[45]|h[ .]?26[45]|hevc|avc|av1|aac[0-9.]*|dts|hd|ma[0-9.]*|truehd[0-9.]*|ddp?[0-9.]*|e?ac3|flac[0-9.]*|atmos|hdr(?:10)?|dovi|dv|10bit|8bit|proper|repack|multi|imax|extended|uncut|amzn|nf|netflix|dsnp|dsny|hmax|max|atvp|hulu|hbo|pcok|pmtp|itunes|[ ._\-]))*$`)
+	releaseSuffix  = regexp.MustCompile(`(?i)^(?:[ ._()\-+]*(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux|x26[45]|h[ .]?26[45]|hevc|avc|av1|aac[0-9.]*|dts|hd|ma[0-9.]*|truehd[0-9.]*|ddp?[0-9.]*|e?ac3|flac[0-9.]*|atmos|hdr(?:10)?|dovi|dv|10bit|8bit|proper|repack|multi|imax|extended|uncut|amzn|nf|netflix|dsnp|dsny|hmax|max|atvp|hulu|hbo|pcok|pmtp|itunes|it|[ ._\-]))*$`)
 	releaseQuality = regexp.MustCompile(`(?i)(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux)`)
 )
 

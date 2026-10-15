@@ -20,3 +20,24 @@ func TestMovieReleaseNamesKeepTechnicalSuffixOutOfIdentity(t *testing.T) {
 		t.Fatal("release accent variant rejected")
 	}
 }
+
+func TestMovieITunesReleaseNames(t *testing.T) {
+	for _, platform := range []string{"iT", "IT", "it", "iTunes"} {
+		name := "Moana.2026.2160p." + platform + ".WEB-DL.DDP5.1.Atmos.H.265-DepWeb.mkv"
+		p := Parse(name)
+		if p.Status != Parsed || p.Title != "Moana" || p.Year != 2026 || p.Type != "movie" {
+			t.Fatalf("%s: %+v", name, p)
+		}
+	}
+	for _, name := range []string{
+		"Moana.2026.2160p.It.Is.Another.Film.WEB-DL.DDP5.1.Atmos.H.265-DepWeb.mkv",
+		"Moana.2026.2160p.iT.UNKNOWN.WEB-DL.DDP5.1.Atmos.H.265-DepWeb.mkv",
+	} {
+		if p := Parse(name); p.Status == Parsed {
+			t.Fatalf("unrecognized title or suffix accepted: %s: %+v", name, p)
+		}
+	}
+	if p := Parse("It.2017.2160p.iT.WEB-DL.H.265-DepWeb.mkv"); p.Status != Parsed || p.Title != "It" || p.Year != 2017 {
+		t.Fatalf("platform marker changed film title: %+v", p)
+	}
+}
