@@ -12,20 +12,39 @@ export function subscriptionTarget(input: Record<string, any>, convertLegacy = f
     episodes: legacy ? [...input.episodes] : ([] as number[]),
   };
 }
+export function validateSubscriptionCounts(input: Record<string, any>) {
+  if (input.media?.media_type !== 'tv') return;
+  const start = Number(input.start_episode ?? 1),
+    total = Number(input.total_episodes || 0);
+  if (!Number.isInteger(start) || start < 1 || start > 9999)
+    throw new Error('开始集数必须是 1 到 9999 的整数');
+  if (!Number.isInteger(total) || total < 0 || total > 9999)
+    throw new Error('总集数必须是 0 到 9999 的整数');
+  if (total > 0 && start > total) throw new Error('开始集数不能大于总集数');
+}
 export function subscriptionTotal(input: Record<string, any>) {
   if (input.media?.media_type === 'movie') return 1;
+  const start = input.start_episode || 1,
+    cap = input.total_episodes || 0;
   const excluded = new Set(input.excluded_episodes || input.excluded || []);
   const known = input.known_episodes || input.target_episodes || input.episodes;
-  if (known?.length) return known.filter((ep: number) => !excluded.has(ep)).length;
+  if (known?.length)
+    return known.filter((ep: number) => ep >= start && (!cap || ep <= cap) && !excluded.has(ep))
+      .length;
   const total =
-    input.media?.seasons?.find((v: any) => v.season_number === input.season)?.episode_count || 0;
-  return Math.max(0, total - Math.max(0, (input.start_episode || 1) - 1) - excluded.size);
+    cap ||
+    input.media?.seasons?.find((value: any) => value.season_number === input.season)
+      ?.episode_count ||
+    0;
+  const excludedCount = [...excluded].filter((ep: any) => ep >= start && ep <= total).length;
+  return Math.max(0, total - Math.max(0, start - 1) - excludedCount);
 }
 
 export type SeasonSubscriptionRow = {
   season: number;
   title: string;
   episode_count?: number;
+  total_episodes?: number;
   poster_path?: string;
   selected: boolean;
   start_episode: number;
@@ -46,7 +65,14 @@ export async function submitSeasonBatch(
     row.message = '';
     try {
       const target = subscriptionTarget({ ...template, id: '', start_episode: row.start_episode });
-      const result = await submit({ ...template, ...target, season: row.season });
+      const request = {
+        ...template,
+        ...target,
+        season: row.season,
+        total_episodes: Number(row.total_episodes ?? row.episode_count ?? 0),
+      };
+      validateSubscriptionCounts(request);
+      const result = await submit(request);
       row.state = 'success';
       row.id = result?.id || '';
       row.message = '';

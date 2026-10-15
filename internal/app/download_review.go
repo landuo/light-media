@@ -16,12 +16,13 @@ import (
 )
 
 type DownloadReviewRequest struct {
-	MediaType string              `json:"media_type"`
-	TMDBID    int64               `json:"tmdb_id"`
-	RootID    string              `json:"root_id"`
-	Mode      string              `json:"mode"`
-	Files     []ImportFileRequest `json:"files"`
-	Mappings  []media.MappingRule `json:"mappings"`
+	MediaType  string              `json:"media_type"`
+	TMDBID     int64               `json:"tmdb_id"`
+	RootID     string              `json:"root_id"`
+	TargetPath string              `json:"target_path,omitempty"`
+	Mode       string              `json:"mode"`
+	Files      []ImportFileRequest `json:"files"`
+	Mappings   []media.MappingRule `json:"mappings"`
 }
 type DownloadReviewPreview struct {
 	Plan                  ImportPlan    `json:"plan"`
@@ -145,6 +146,21 @@ func (a *App) downloadFiles(ctx context.Context, key string) (downloadReviewFile
 	return out, nil
 }
 func (a *App) previewDownloadReview(ctx context.Context, key string, request DownloadReviewRequest) (DownloadReviewPreview, error) {
+	if request.TargetPath != "" {
+		kind := request.MediaType
+		if kind == "" {
+			var existing Intent
+			if err := a.Store.Get(ctx, "intent", key, &existing); err != nil {
+				return DownloadReviewPreview{}, err
+			}
+			kind = existing.Media.MediaType
+		}
+		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, kind, request.Files)
+		if err != nil {
+			return DownloadReviewPreview{}, err
+		}
+		request.RootID = rootID
+	}
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
 	a.importMu.Lock()
@@ -186,7 +202,7 @@ func (a *App) previewDownloadReview(ctx context.Context, key string, request Dow
 	episodes := []int{}
 	for _, file := range request.Files {
 		if !allowed[file.Path] {
-			return out, bad("INVALID_REVIEW_SOURCE", "只能选择原下载器已完成且路径已映射的视频文件")
+			return out, bad("INVALID_REVIEW_SOURCE", "只能选择原下载器已完成且容器可见的视频文件")
 		}
 		if request.MediaType == "tv" {
 			if file.Season < 1 || len(file.Episodes) != 1 || file.Episodes[0] < 1 {

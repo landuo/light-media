@@ -10,8 +10,10 @@ services:
     volumes:
       - ./data:/config
       - /vol2/1000/media:/media
+      - /vol2/1000/media:/vol2/1000/media
     environment:
       TZ: Asia/Shanghai
+      LIGHT_MEDIA_MEDIA_ROOTS: /media:/vol2/1000/media
       GOMEMLIMIT: 256MiB
     mem_limit: 512m
     cpus: 1.0

@@ -218,6 +218,21 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e == nil {
 			out, e = a.search(ctx, in, false)
 		}
+	case p == "downloads/add" && method == "POST":
+		var in NativeDownloadRequest
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.addNativeDownload(ctx, in)
+		}
+	case p == "downloads/task-action" && method == "POST":
+		var in struct {
+			DownloaderID string `json:"downloader_id"`
+			Hash         string `json:"hash"`
+			Action       string `json:"action"`
+		}
+		if e = decodeBody(w, r, &in); e == nil {
+			e = a.downloaderTaskAction(ctx, in.DownloaderID, in.Hash, in.Action)
+			out = map[string]bool{"ok": e == nil}
+		}
 	case p == "downloads/preview" && method == "POST":
 		var in PreviewRequest
 		e = decodeBody(w, r, &in)
@@ -234,7 +249,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			out, e = a.confirmDownload(ctx, in.PreviewID, in.AcceptExtra)
 		}
 	case p == "downloads" && method == "GET":
-		out, e = a.downloadList(ctx)
+		out, e = a.downloadList(ctx, r.URL.Query().Get("downloader_id"))
 	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/files") && method == "GET":
 		out, e = a.downloadFiles(ctx, strings.TrimSuffix(strings.TrimPrefix(p, "downloads/"), "/files"))
 	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/import-preview") && method == "POST":
@@ -466,16 +481,74 @@ func (a *App) publicSettings() map[string]any {
 	b, _ := json.Marshal(c)
 	m := map[string]any{}
 	_ = json.Unmarshal(b, &m)
+	publicDirectories := []map[string]any{}
+	for _, rule := range c.Directories {
+		publicDirectories = append(publicDirectories, publicDirectory(c, rule))
+	}
+	m["directories"] = publicDirectories
+	if downloaders, ok := m["downloaders"].([]any); ok {
+		for _, entry := range downloaders {
+			if d, ok := entry.(map[string]any); ok {
+				for _, configured := range c.Downloaders {
+					if configured.ID == d["id"] {
+						d["enabled"] = downloaderEnabled(configured)
+						break
+					}
+				}
+				delete(d, "mappings")
+				delete(d, "download_path")
+				delete(d, "shared_paths")
+			}
+		}
+	}
+	if fn, ok := m["fnos"].(map[string]any); ok {
+		delete(fn, "mappings")
+		delete(fn, "library_guid")
+	}
 	m["secret_state"] = secretState
 	return m
 }
 func (a *App) preserveSecrets(c *Settings) {
 	old := a.Settings()
+	if c.Roots == nil {
+		c.Roots = old.Roots
+	}
+	if c.AllowedRoots == nil {
+		c.AllowedRoots = old.AllowedRoots
+	}
+	unchangedDirectories := len(c.Directories) == len(old.Directories)
+	if unchangedDirectories {
+		for i, rule := range c.Directories {
+			incoming, _ := json.Marshal(publicDirectory(*c, rule))
+			previous, _ := json.Marshal(publicDirectory(old, old.Directories[i]))
+			if string(incoming) != string(previous) {
+				unchangedDirectories = false
+				break
+			}
+		}
+	}
+	if c.Directories == nil || unchangedDirectories {
+		// Editing another settings section must not reinterpret legacy directory
+		// records from their clean public projection or invalidate pending plans.
+		c.Directories = old.Directories
+	} else {
+		for i := range c.Directories {
+			if c.Directories[i].SourcePath != "" {
+				_ = preparePhysicalDirectory(c, &c.Directories[i])
+			}
+		}
+	}
 	if c.TMDB.APIKey == "" && c.TMDB.AccessToken == "" {
 		c.TMDB = old.TMDB
 	}
 	if c.FNOS.Password == "" && c.FNOS.Host == old.FNOS.Host && c.FNOS.Username == old.FNOS.Username {
 		c.FNOS.Password = old.FNOS.Password
+		if c.FNOS.Mappings == nil {
+			c.FNOS.Mappings = old.FNOS.Mappings
+		}
+		if c.FNOS.LibraryGUID == "" {
+			c.FNOS.LibraryGUID = old.FNOS.LibraryGUID
+		}
 	}
 	for i := range c.Sites {
 		for _, v := range old.Sites {
@@ -490,7 +563,16 @@ func (a *App) preserveSecrets(c *Settings) {
 		}
 	}
 	for i := range c.Downloaders {
+		c.Downloaders[i].SharedPaths = true
 		for _, v := range old.Downloaders {
+			if c.Downloaders[i].ID == v.ID && c.Downloaders[i].BaseURL == v.BaseURL && c.Downloaders[i].Kind == v.Kind {
+				if c.Downloaders[i].Mappings == nil {
+					c.Downloaders[i].Mappings = v.Mappings
+				}
+				if c.Downloaders[i].DownloadPath == "" {
+					c.Downloaders[i].DownloadPath = v.DownloadPath
+				}
+			}
 			if c.Downloaders[i].ID == v.ID && c.Downloaders[i].BaseURL == v.BaseURL && c.Downloaders[i].Username == v.Username && c.Downloaders[i].Password == "" {
 				c.Downloaders[i].Password = v.Password
 			}
@@ -519,7 +601,7 @@ func validateSettings(c Settings) error {
 			return bad("INVALID_DEBUG_EXPIRY", "临时DEBUG期限最长2小时")
 		}
 	}
-	if len(c.Sites) > 32 || len(c.Downloaders) > 8 || len(c.Roots) > 16 || len(c.AllowedRoots) > 32 {
+	if len(c.Sites) > 32 || len(c.Downloaders) > 8 || len(c.Roots) > 128 || len(c.AllowedRoots) > 128 {
 		return bad("CONFIG_LIMIT", "配置数量超出上限")
 	}
 	if c.TMDB.APIKey != "" && c.TMDB.AccessToken != "" {
@@ -545,10 +627,10 @@ func validateSettings(c Settings) error {
 			return bad("DUPLICATE_ID", "下载器ID重复或为空")
 		}
 		seen["d"+d.ID] = true
-		if _, e := download.New(d.Config); e != nil {
+		if _, e := download.New(d.Config); downloaderEnabled(d) && e != nil {
 			return bad("INVALID_DOWNLOADER", e.Error())
 		}
-		if d.DownloadPath == "" || !filepath.IsAbs(d.DownloadPath) {
+		if d.DownloadPath != "" && !filepath.IsAbs(d.DownloadPath) {
 			return bad("INVALID_DOWNLOAD_PATH", "下载器保存目录必须是绝对路径")
 		}
 		for _, m := range d.Mappings {
@@ -604,7 +686,7 @@ func (a *App) testConnection(ctx context.Context, target, key string) (any, erro
 		result := integrations.ProbeSite(ctx, integrations.Site{ID: s.ID, Kind: s.Kind, BaseURL: s.BaseURL, Cookie: s.Cookie, APIKey: s.APIKey, Query: ""})
 		return result, nil
 	case "downloader":
-		d, e := a.downloader(key)
+		d, e := a.configuredDownloader(key)
 		if e != nil {
 			return nil, e
 		}

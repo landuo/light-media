@@ -6,6 +6,12 @@ export type OrganizeEntry = {
   numbering?: { episodes?: number[] };
   identity?: { id: number; media_type: string; title?: string } | null;
   rootID?: string;
+  targetPath?: string;
+  automatic?: boolean;
+  mediaType?: string;
+  renaming?: boolean | null;
+  scraping?: boolean | null;
+  libraryTypeFolder?: boolean | null;
   mappings?: any[];
   plan?: any;
   selectedIDs?: string[];
@@ -71,10 +77,9 @@ export function fillBatchNumbering<T extends OrganizeEntry>(
 
 export function importEntryRequest(entry: OrganizeEntry, mode: string) {
   const identity = entry.identity;
-  if (!identity?.id || !['movie', 'tv'].includes(identity.media_type))
+  if (!entry.automatic && (!identity?.id || !['movie', 'tv'].includes(identity.media_type)))
     throw new Error('请先明确选择此文件的影视身份');
-  if (!entry.rootID) throw new Error('请选择此文件的目标媒体库');
-  const tv = identity.media_type === 'tv';
+  const tv = identity?.media_type === 'tv';
   const episode = Number(entry.episodes.trim());
   const mapped =
     tv && !entry.episodes.trim() && entry.mappings?.some((mapping) => mapping.confirmed === true);
@@ -91,10 +96,15 @@ export function importEntryRequest(entry: OrganizeEntry, mode: string) {
   )
     throw new Error('请为此文件填写一个标准季和单集编号');
   return {
-    media_type: identity.media_type,
-    tmdb_id: identity.id,
-    root_id: entry.rootID,
+    media_type: identity?.media_type || entry.mediaType || '',
+    tmdb_id: identity?.id || 0,
+    ...(entry.targetPath !== undefined
+      ? { target_path: entry.targetPath }
+      : { root_id: entry.rootID }),
     mode,
+    ...(entry.renaming == null ? {} : { renaming: entry.renaming }),
+    ...(entry.scraping == null ? {} : { scraping: entry.scraping }),
+    ...(entry.libraryTypeFolder == null ? {} : { library_type_folder: entry.libraryTypeFolder }),
     files: [
       {
         path: entry.path,

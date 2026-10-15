@@ -91,11 +91,11 @@ func importSpaceEstimate(plan ImportPlan, meta importMetadata) int64 {
 		for _, sidecar := range meta.Sidecars[file.ID] {
 			add(sidecar.Snapshot.Size + 4096)
 		}
-		if !shared {
+		if !shared && importBool(plan.Scraping, true) {
 			add(40 << 20)
 			shared = true
 		} // two bounded poster/fanart files
-		if plan.Media.MediaType == "tv" {
+		if plan.Media.MediaType == "tv" && importBool(plan.Scraping, true) {
 			add(40 << 20)
 		} // bounded season poster + still
 	}

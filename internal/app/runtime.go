@@ -56,7 +56,7 @@ type Options struct {
 	Web     http.Handler
 }
 
-const appVersion = "0.2.2"
+const appVersion = "0.3.0"
 
 type APIError struct {
 	Code    string `json:"code"`
@@ -84,6 +84,10 @@ func New(opts Options) (*App, error) {
 		s.Close()
 		return nil, e
 	}
+	if e = mountedMediaRoots(&a.config, a.Dir, os.Getenv("LIGHT_MEDIA_MEDIA_ROOTS")); e != nil {
+		s.Close()
+		return nil, e
+	}
 	var control struct {
 		State string `json:"state"`
 	}
@@ -95,6 +99,9 @@ func New(opts Options) (*App, error) {
 		return nil, e
 	}
 	// Temporary diagnostics are intentionally never restored from persisted settings.
+	for i := range a.config.Downloaders {
+		a.config.Downloaders[i].SharedPaths = true
+	}
 	a.config.DebugUntil = ""
 	if a.config.LogLevel == "DEBUG" {
 		a.config.LogLevel = "INFO"

@@ -173,7 +173,10 @@ func (a *App) worker(ctx context.Context) {
 			if errors.As(e, &api) {
 				code = api.Code
 			}
-			if code == "AUTOMATION_PAUSED" {
+			if code == "DOWNLOADER_DISABLED" {
+				state = "retry_wait"
+				runAt = time.Now().Add(time.Minute).Unix()
+			} else if code == "AUTOMATION_PAUSED" {
 				state = "waiting_paused"
 			} else if j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
 				state = "retry_wait"
@@ -215,6 +218,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return bad("INVALID_JOB", "任务参数无效")
 	}
 	switch j.Kind {
+	case "native_download":
+		return a.runNativeDownload(ctx, j, p.ID)
 	case "download":
 		return a.runDownload(ctx, j, p.ID)
 	case "import":

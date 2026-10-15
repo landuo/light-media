@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -17,25 +18,28 @@ import (
 )
 
 type SubscriptionRequest struct {
-	DirectoryID  string              `json:"directory_id"`
-	DownloadPath string              `json:"download_path"`
-	TargetScope  string              `json:"target_scope"`
-	StartEpisode int                 `json:"start_episode"`
-	MediaType    string              `json:"media_type"`
-	TMDBID       int64               `json:"tmdb_id"`
-	Media        catalog.Media       `json:"media"`
-	Season       int                 `json:"season"`
-	Episodes     []int               `json:"episodes"`
-	Excluded     []int               `json:"excluded"`
-	Policy       Policy              `json:"policy"`
-	Schedule     Schedule            `json:"schedule"`
-	Mappings     []media.MappingRule `json:"mappings"`
-	DownloaderID string              `json:"downloader_id"`
-	RootID       string              `json:"root_id"`
-	State        string              `json:"state"`
-	EpisodeDates map[int]string      `json:"episode_dates"`
-	AllowEarly   []int               `json:"allow_early"`
-	Revision     int                 `json:"revision"`
+	Keyword       string              `json:"keyword"`
+	SiteIDs       []string            `json:"site_ids"`
+	TotalEpisodes int                 `json:"total_episodes"`
+	DirectoryID   string              `json:"directory_id"`
+	DownloadPath  string              `json:"download_path"`
+	TargetScope   string              `json:"target_scope"`
+	StartEpisode  int                 `json:"start_episode"`
+	MediaType     string              `json:"media_type"`
+	TMDBID        int64               `json:"tmdb_id"`
+	Media         catalog.Media       `json:"media"`
+	Season        int                 `json:"season"`
+	Episodes      []int               `json:"episodes"`
+	Excluded      []int               `json:"excluded"`
+	Policy        Policy              `json:"policy"`
+	Schedule      Schedule            `json:"schedule"`
+	Mappings      []media.MappingRule `json:"mappings"`
+	DownloaderID  string              `json:"downloader_id"`
+	RootID        string              `json:"root_id"`
+	State         string              `json:"state"`
+	EpisodeDates  map[int]string      `json:"episode_dates"`
+	AllowEarly    []int               `json:"allow_early"`
+	Revision      int                 `json:"revision"`
 }
 type subscriptionGuardKey struct{}
 type subscriptionIdentity struct {
@@ -135,6 +139,33 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if e = normalizeSubscriptionScope(&in, snapshot, m.MediaType); e != nil {
 		return Subscription{}, e
 	}
+	if in.TotalEpisodes < 0 || in.TotalEpisodes > 9999 || in.TotalEpisodes > 0 && in.TotalEpisodes < in.StartEpisode {
+		return Subscription{}, bad("INVALID_TOTAL_EPISODES", "总集数须大于等于开始集数，且不超过9999")
+	}
+	if len(in.SiteIDs) > 32 {
+		return Subscription{}, bad("INVALID_SITES", "订阅站点数量超限")
+	}
+	in.Keyword = strings.TrimSpace(in.Keyword)
+	if len([]rune(in.Keyword)) > 200 || strings.ContainsAny(in.Keyword, "\x00\r\n") {
+		return Subscription{}, bad("INVALID_KEYWORD", "搜索关键词须在200字以内")
+	}
+	seenSites := map[string]bool{}
+	for _, key := range in.SiteIDs {
+		if seenSites[key] {
+			return Subscription{}, bad("INVALID_SITES", "订阅站点不能重复")
+		}
+		seenSites[key] = true
+		found := false
+		for _, site := range a.Settings().Sites {
+			if site.ID == key {
+				found = true
+				break
+			}
+		}
+		if !found && !(snapshot.ID != "" && in.State == "paused" && slices.Contains(snapshot.SiteIDs, key)) {
+			return Subscription{}, bad("INVALID_SITES", "订阅选择的站点不存在")
+		}
+	}
 	schedule, e := normalizeSchedule(in.Schedule)
 	if e != nil {
 		return Subscription{}, e
@@ -215,13 +246,26 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 			return Subscription{}, bad("INVALID_MAPPING", "映射规则须匹配此作品及标准季")
 		}
 	}
-	d, e := a.downloader(in.DownloaderID)
-	if e != nil {
-		return Subscription{}, e
-	}
-	destination, e := a.resolveDownloadDestination(d, in.DirectoryID, in.DownloadPath, in.RootID, m.MediaType)
-	if e != nil {
-		return Subscription{}, e
+	destination := directoryDestination{}
+	preservePausedDestination := snapshot.ID != "" && in.State == "paused" && in.DownloaderID == snapshot.DownloaderID && in.DownloadPath == snapshot.DownloadPath && in.DirectoryID == snapshot.DirectoryID && in.RootID == snapshot.RootID
+	if preservePausedDestination {
+		// Pausing an existing subscription is local even after a referenced
+		// connection/rule has been disabled or removed. Activation revalidates it.
+		destination = directoryDestination{Path: snapshot.DownloadPath, Root: snapshot.RootID, Rule: DirectoryRule{ID: snapshot.DirectoryID}}
+	} else {
+		d, connectionErr := a.downloader(in.DownloaderID)
+		if connectionErr != nil && (in.DownloaderID != "" || len(a.Settings().Downloaders) > 0) {
+			return Subscription{}, connectionErr
+		}
+		if in.DownloadPath != "" || in.DirectoryID != "" || in.RootID != "" {
+			// Subscription defaults are preferences, not a current daemon snapshot.
+			// Resolve/freeze the actual default only when a download is submitted.
+			d.SharedPaths = true
+			destination, e = a.resolveDownloadDestinationContext(ctx, d, in.DirectoryID, in.DownloadPath, in.RootID, m.MediaType)
+			if e != nil {
+				return Subscription{}, e
+			}
+		}
 	}
 	state := in.State
 	if state == "" {
@@ -281,7 +325,9 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if old.ID == "" && count >= 500 {
 		return old, bad("SUBSCRIPTION_LIMIT", "订阅数量已达500个上限")
 	}
-	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: d.ID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
+	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: in.DownloaderID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
+	s.SiteIDs, s.TotalEpisodes = append([]string{}, in.SiteIDs...), in.TotalEpisodes
+	s.Keyword = in.Keyword
 	if in.DownloadPath == "" && in.DirectoryID == "" && destination.Rule.ID == "" && destination.Root != "" {
 		s.DownloadPath = ""
 	}
@@ -612,7 +658,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		today := time.Now().In(shanghai()).Format("2006-01-02")
 		for _, ep := range season.Episodes {
 			known = append(known, ep.EpisodeNumber)
-			if ep.EpisodeNumber < subscriptionStartEpisode(s) {
+			if ep.EpisodeNumber < subscriptionStartEpisode(s) || s.TotalEpisodes > 0 && ep.EpisodeNumber > s.TotalEpisodes {
 				continue
 			}
 			date, skip := effectiveEpisodeDate(s, ep.EpisodeNumber, ep.AirDate)
@@ -654,14 +700,17 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if s.Media.MediaType == "movie" && s.Media.ReleaseDate != "" && s.Media.ReleaseDate > time.Now().In(shanghai()).Format("2006-01-02") {
 		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持订阅", metadataDates, time.Time{})
 	}
+	if _, e := a.downloader(s.DownloaderID); e != nil {
+		return e
+	}
 	enabledSites := 0
 	for _, site := range a.Settings().Sites {
-		if site.Enabled {
+		if site.Enabled && (len(s.SiteIDs) == 0 || slices.Contains(s.SiteIDs, site.ID)) {
 			enabledSites++
 		}
 	}
 	if enabledSites == 0 {
-		return a.recordSubscriptionCheck(ctx, s, "尚未启用站点，无法自动搜索；请在设置中启用站点", metadataDates, time.Time{})
+		return a.recordSubscriptionCheck(ctx, s, "订阅选择的站点尚未启用，请在站点管理中启用站点", metadataDates, time.Time{})
 	}
 	quotaSites := []string{}
 	created := 0
@@ -684,7 +733,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			if created >= 4 {
 				break
 			}
-			if !site.Enabled {
+			if !site.Enabled || len(s.SiteIDs) > 0 && !slices.Contains(s.SiteIDs, site.ID) {
 				continue
 			}
 			if e := a.guardSubscriptionContext(ctx); e != nil {
@@ -693,7 +742,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			if e := a.jobCancelled(ctx, j); e != nil {
 				return e
 			}
-			request := SearchRequest{MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: episodes, Policy: s.Policy, SiteIDs: []string{site.ID}, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
+			request := SearchRequest{Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: episodes, Policy: s.Policy, SiteIDs: []string{site.ID}, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
 			result, e := a.search(ctx, request, true)
 			if e != nil {
 				reason = "站点检查失败，详见任务日志"

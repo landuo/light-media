@@ -284,7 +284,11 @@ func (a *App) managedDownloaders(ctx context.Context) (any, error) {
 		}
 		configured := d.Password != ""
 		d.Password = ""
-		rows = append(rows, map[string]any{"config": d, "credential_configured": configured, "default": d.ID == c.DefaultDownloader, "connection": observed.managedConnection})
+		if !downloaderEnabled(d) {
+			observed.Status = "disabled"
+			observed.Error = ""
+		}
+		rows = append(rows, map[string]any{"config": map[string]any{"id": d.ID, "name": d.Name, "kind": d.Kind, "base_url": d.BaseURL, "username": d.Username, "enabled": downloaderEnabled(d)}, "credential_configured": configured, "default": d.ID == c.DefaultDownloader, "connection": observed.managedConnection})
 	}
 	return map[string]any{"downloaders": rows, "default_downloader": c.DefaultDownloader}, nil
 }
@@ -293,6 +297,7 @@ func (a *App) saveManagedDownloader(ctx context.Context, in ManagedDownloaderReq
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
 	c := a.Settings()
+	in.SharedPaths = true
 	if in.ID == "" {
 		in.ID = id("downloader")
 	}
@@ -304,6 +309,19 @@ func (a *App) saveManagedDownloader(ctx context.Context, in ManagedDownloaderReq
 	for i, old := range c.Downloaders {
 		if old.ID == in.ID {
 			found = i
+			if in.Enabled == nil {
+				in.Enabled = old.Enabled
+			}
+			// Legacy transport paths remain encrypted for already reviewed tasks.
+			// They are never exposed as fields required by the new UI.
+			if old.BaseURL == in.BaseURL && old.Kind == in.Kind {
+				if in.Mappings == nil {
+					in.Mappings = old.Mappings
+				}
+				if in.DownloadPath == "" {
+					in.DownloadPath = old.DownloadPath
+				}
+			}
 			if old.BaseURL == in.BaseURL && old.Username == in.Username && old.Kind == in.Kind && in.Password == "" {
 				in.Password = old.Password
 			}
@@ -364,7 +382,7 @@ func (a *App) deleteManagedDownloader(ctx context.Context, key string) (any, err
 }
 
 func (a *App) testManagedDownloader(ctx context.Context, key string) (any, error) {
-	d, e := a.downloader(key)
+	d, e := a.configuredDownloader(key)
 	if e != nil {
 		return nil, e
 	}
@@ -380,7 +398,7 @@ func (a *App) testManagedDownloader(ctx context.Context, key string) (any, error
 		status.Status = "failed"
 		status.Error = a.clean(e.Error())
 	}
-	current, err := a.downloader(key)
+	current, err := a.configuredDownloader(key)
 	if err != nil || a.managedDownloaderKey(current) != a.managedDownloaderKey(d) {
 		return nil, bad("DOWNLOADER_CHANGED", "下载器设置已变化，请重新检测")
 	}

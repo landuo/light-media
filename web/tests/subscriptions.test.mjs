@@ -100,3 +100,63 @@ test('multi-season creation retains individual success, conflict and failure wit
     ['success', 'conflict', 'success'],
   );
 });
+
+test('explicit season totals constrain progress without counting unrelated exclusions', async () => {
+  const { validateSubscriptionCounts } = await import('../src/features/subscriptions.ts');
+  const series = { media: { media_type: 'tv' }, start_episode: 17, total_episodes: 20 };
+  validateSubscriptionCounts(series);
+  assert.throws(() => validateSubscriptionCounts({ ...series, total_episodes: 16 }));
+  assert.throws(() => validateSubscriptionCounts({ ...series, total_episodes: 20.5 }));
+  assert.equal(
+    subscriptionTotal({ ...series, known_episodes: [1, 17, 18, 19, 20, 21], excluded: [18, 99] }),
+    3,
+  );
+  assert.equal(subscriptionTotal({ ...series, excluded: [18, 99] }), 3);
+});
+test('multi-season requests preserve common site and download choices while using each seasons total', async () => {
+  const { submitSeasonBatch } = await import('../src/features/subscriptions.ts');
+  const rows = [
+    {
+      season: 1,
+      title: 'S1',
+      total_episodes: 7,
+      start_episode: 3,
+      selected: true,
+      state: 'ready',
+      message: '',
+    },
+    {
+      season: 2,
+      title: 'S2',
+      episode_count: 13,
+      start_episode: 1,
+      selected: true,
+      state: 'ready',
+      message: '',
+    },
+  ];
+  const calls = [];
+  await submitSeasonBatch(
+    rows,
+    {
+      media: { media_type: 'tv' },
+      total_episodes: 7,
+      site_ids: ['chosen'],
+      downloader_id: '',
+      download_path: '',
+    },
+    async (body) => {
+      calls.push(body);
+      return { id: String(body.season) };
+    },
+  );
+  assert.deepEqual(
+    calls.map((body) => body.total_episodes),
+    [7, 13],
+  );
+  assert.deepEqual(
+    calls.map((body) => body.site_ids),
+    [['chosen'], ['chosen']],
+  );
+  assert.ok(calls.every((body) => body.downloader_id === '' && body.download_path === ''));
+});

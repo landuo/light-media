@@ -105,14 +105,20 @@ const recursive = ref(true),
   lookup = ref(''),
   results = ref<any[]>([]),
   identity = ref<any>(null),
-  targetRoot = ref(''),
-  mode = ref('hardlink');
+  targetPath = ref(''),
+  mode = ref(''),
+  mediaType = ref(''),
+  mediaID = ref(''),
+  mediaPicker = ref(false);
+const renaming = ref<boolean | null>(null),
+  scraping = ref<boolean | null>(null),
+  libraryTypeFolder = ref<boolean | null>(null);
 const organizeError = ref(''),
   organizeBusy = ref(false),
   plan = ref<any>(null),
   planSelection = ref<string[]>([]),
   submitted = ref<any>(null);
-const recognitionMode = ref<'same' | 'individual'>('same'),
+const recognitionMode = ref<'auto' | 'same' | 'individual'>('auto'),
   identifyingPath = ref(''),
   mappings = ref<any[]>([]);
 const lookupInput = ref<HTMLInputElement | null>(null);
@@ -127,7 +133,7 @@ const editingEntry = computed(() =>
   scanFiles.value.find((file) => file.path === identifyingPath.value),
 );
 const activeIdentity = computed(() =>
-  recognitionMode.value === 'same' ? identity.value : editingEntry.value?.identity,
+  recognitionMode.value !== 'individual' ? identity.value : editingEntry.value?.identity,
 );
 const activeMappings = computed(() =>
   recognitionMode.value === 'same' ? mappings.value : editingEntry.value?.mappings || [],
@@ -142,15 +148,72 @@ const executableIndividual = computed(() =>
   ),
 );
 const submittedIndividual = computed(() => individualEntries.value.filter((entry) => !!entry.job));
-const configuredRoots = computed(() =>
-  (ui.settings?.roots || []).filter(
-    (root: any) =>
-      recognitionMode.value === 'individual' ||
-      !identity.value ||
-      root.kind === 'mixed' ||
-      root.kind === identity.value.media_type,
+const targetPaths = computed(() => [
+  ...new Set(
+    (ui.settings?.directories || [])
+      .map(
+        (row: any) =>
+          row.library_path ||
+          row.target_path ||
+          ui.settings?.roots?.find((root: any) => root.id === row.root_id)?.path,
+      )
+      .filter(Boolean),
   ),
+]);
+const organizeRule = computed(() =>
+  (ui.settings?.directories || []).find((rule: any) => {
+    if (targetPath.value)
+      return (
+        (rule.library_path ||
+          ui.settings?.roots?.find((root: any) => root.id === rule.root_id)?.path) ===
+        targetPath.value
+      );
+    const source = rule.source_path || rule.download_path;
+    return (
+      source &&
+      chosenPaths.value.length &&
+      chosenPaths.value.every(
+        (path) => path === source || path.startsWith(source.replace(/\/$/, '') + '/'),
+      ) &&
+      (!mediaType.value || rule.media_type === 'mixed' || rule.media_type === mediaType.value)
+    );
+  }),
 );
+const directoryPicker = ref(false),
+  pickerRoot = ref(''),
+  pickerListing = ref<any>(null),
+  pickerLoading = ref(false),
+  pickerError = ref('');
+async function browseTarget(path?: string) {
+  pickerLoading.value = true;
+  pickerError.value = '';
+  try {
+    const root = roots.value.find((row) => row.id === pickerRoot.value);
+    if (!root) return;
+    pickerListing.value = await api(
+      '/files/list?' +
+        new URLSearchParams({
+          root_id: root.id,
+          path: path || root.path,
+          sort: 'name',
+          order: 'asc',
+        }),
+    );
+  } catch (error) {
+    pickerError.value = errorText(error);
+  } finally {
+    pickerLoading.value = false;
+  }
+}
+async function openTargetPicker() {
+  const root =
+    [...roots.value]
+      .filter((row) => targetPath.value === row.path || targetPath.value.startsWith(row.path + '/'))
+      .sort((a, b) => b.path.length - a.path.length)[0] || roots.value[0];
+  pickerRoot.value = root?.id || '';
+  directoryPicker.value = true;
+  await browseTarget(root && targetPath.value ? targetPath.value : undefined);
+}
 async function openOrganize(paths = selected.value) {
   if (!paths.length) return;
   chosenPaths.value = [...paths];
@@ -161,7 +224,13 @@ async function openOrganize(paths = selected.value) {
   results.value = [];
   scanFiles.value = [];
   organizeError.value = '';
-  recognitionMode.value = 'same';
+  recognitionMode.value = 'auto';
+  mediaType.value = '';
+  mediaID.value = '';
+  mediaPicker.value = false;
+  targetPath.value = '';
+  mode.value = '';
+  renaming.value = scraping.value = libraryTypeFolder.value = null;
   identifyingPath.value = '';
   mappings.value = [];
   await scan();
@@ -183,7 +252,7 @@ async function scan() {
       season: file.numbering?.season ?? file.parsed?.original?.season ?? 1,
       episodes: (file.numbering?.episodes || file.parsed?.original?.episodes || []).join(','),
       identity: null,
-      rootID: ui.settings?.default_root || '',
+      targetPath: targetPath.value,
       mappings: [],
       selectedIDs: [],
       state: 'unidentified',
@@ -200,7 +269,6 @@ async function scan() {
         .split('/')
         .pop()
         .replace(/\.[^.]+$/, '');
-    targetRoot.value = ui.settings?.default_root || '';
     const inferred = scanFiles.value[0].inferred_media;
     if (recognitionMode.value === 'same') {
       if (inferred?.id) await pick(inferred);
@@ -211,11 +279,6 @@ async function scan() {
   } finally {
     scanning.value = false;
   }
-}
-function rootsFor(media: any) {
-  return (ui.settings?.roots || []).filter(
-    (root: any) => !media || root.kind === 'mixed' || root.kind === media.media_type,
-  );
 }
 function invalidateEntry(file: any) {
   if (file.job) return;
@@ -310,13 +373,13 @@ async function pick(media: any) {
       if (!entry || entry.job) return;
       entry.identity = result;
       invalidateEntry(entry);
-      if (!rootsFor(result).some((root: any) => root.id === entry.rootID))
-        entry.rootID = rootsFor(result)[0]?.id || '';
       return;
     }
     identity.value = result;
-    if (!configuredRoots.value.some((root: any) => root.id === targetRoot.value))
-      targetRoot.value = configuredRoots.value[0]?.id || '';
+    mediaType.value = result.media_type;
+    mediaID.value = String(result.id);
+    recognitionMode.value = 'same';
+    mediaPicker.value = false;
   } catch (e) {
     organizeError.value = errorText(e);
   } finally {
@@ -324,10 +387,30 @@ async function pick(media: any) {
   }
 }
 async function preview() {
-  if (recognitionMode.value === 'individual') {
+  if (mediaID.value && !identity.value && recognitionMode.value !== 'individual') {
+    if (!mediaType.value) {
+      organizeError.value = '指定 TMDB ID 时请选择电影或电视剧';
+      return;
+    }
+    await pick({ media_type: mediaType.value, id: Number(mediaID.value) });
+    if (!identity.value) return;
+  }
+  if (recognitionMode.value === 'same' && !identity.value) {
+    organizeError.value = '请填写 TMDB ID 或搜索选择影视，也可切换为自动识别';
+    return;
+  }
+  if (recognitionMode.value === 'individual' || recognitionMode.value === 'auto') {
     organizeBusy.value = true;
     organizeError.value = '';
     try {
+      for (const entry of individualEntries.value) {
+        entry.targetPath = targetPath.value;
+        entry.automatic = recognitionMode.value === 'auto';
+        entry.mediaType = mediaType.value;
+        entry.renaming = renaming.value;
+        entry.scraping = scraping.value;
+        entry.libraryTypeFolder = libraryTypeFolder.value;
+      }
       await previewOrganizeEntries(individualEntries.value, mode.value, (path, body) =>
         api(path, body),
       );
@@ -351,8 +434,11 @@ async function preview() {
     plan.value = await api('/import/preview', {
       media_type: identity.value.media_type,
       tmdb_id: identity.value.id,
-      root_id: targetRoot.value,
+      target_path: targetPath.value,
       mode: mode.value,
+      renaming: renaming.value,
+      scraping: scraping.value,
+      library_type_folder: libraryTypeFolder.value,
       files,
       mappings: mappings.value,
     });
@@ -366,7 +452,7 @@ async function preview() {
   }
 }
 async function execute() {
-  if (recognitionMode.value === 'individual') {
+  if (recognitionMode.value !== 'same') {
     organizeBusy.value = true;
     organizeError.value = '';
     try {
@@ -391,6 +477,21 @@ async function execute() {
   } finally {
     organizeBusy.value = false;
   }
+}
+async function startOrganize(background = false) {
+  if (organizeBusy.value || scanning.value) return;
+  if (
+    (recognitionMode.value === 'same' && !plan.value) ||
+    (recognitionMode.value !== 'same' && !executableIndividual.value.length)
+  )
+    await preview();
+  if (organizeError.value) return;
+  if (
+    (recognitionMode.value === 'same' && planSelection.value.length) ||
+    (recognitionMode.value !== 'same' && executableIndividual.value.length)
+  )
+    await execute();
+  if (background && (submitted.value || submittedIndividual.value.length)) organize.value = false;
 }
 
 const operation = ref(''),
@@ -578,8 +679,7 @@ onMounted(async () => {
         ><span>{{ items.length }} 项 · 已选 {{ selected.length }} 项</span>
       </div>
       <div class="fm-toolbar fm-selection" v-if="selected.length">
-        <strong>已选择 {{ selected.length }} 项</strong
-        ><button @click="openOrganize()">识别 / 手动整理</button
+        <strong>已选择 {{ selected.length }} 项</strong><button @click="openOrganize()">整理</button
         ><button @click="openScrape()">刮削</button
         ><button v-if="selected.length === 1" @click="openOperation('rename')">重命名</button
         ><button class="fm-danger" @click="openOperation('delete')">删除</button
@@ -668,7 +768,7 @@ onMounted(async () => {
                 <details v-if="['dir', 'file'].includes(item.type)" class="fm-menu">
                   <summary aria-label="文件操作">•••</summary>
                   <div>
-                    <button @click="openOrganize([item.path])">识别 / 手动整理</button
+                    <button @click="openOrganize([item.path])">整理</button
                     ><button @click="openScrape([item.path])">刮削</button
                     ><button
                       :disabled="!!item.protected"
@@ -700,15 +800,21 @@ onMounted(async () => {
     </template>
 
     <div v-if="organize" class="fm-overlay" @click.self="organize = false">
-      <section class="fm-dialog fm-wide" role="dialog" aria-modal="true" aria-label="手动识别整理">
+      <section
+        class="fm-dialog fm-manual"
+        :class="{
+          'fm-wide': !!plan || individualEntries.some((entry) => entry.plan || entry.error),
+        }"
+        role="dialog"
+        aria-modal="true"
+        aria-label="手动整理"
+      >
         <header>
-          <h2>手动识别与整理</h2>
+          <h2>手动整理</h2>
           <button @click="organize = false" aria-label="关闭手动整理">✕</button>
         </header>
         <div class="fm-dialog-body">
-          <p class="fm-note">
-            从文件管理所选项目进入。确认影视身份和季集，再预览目标路径；整理保留下载源。
-          </p>
+          <p class="fm-note fm-path">{{ chosenPaths.join('、') }}</p>
           <p v-if="organizeError" class="fm-error" role="alert">{{ organizeError }}</p>
           <div v-if="submitted" class="fm-success">
             整理任务已提交。<button @click="emit('job', submitted.id)">查看任务</button
@@ -722,242 +828,353 @@ onMounted(async () => {
             </button>
           </div>
           <template v-else>
-            <div class="fm-toolbar">
-              <label><input type="checkbox" v-model="recursive" />包含子目录</label
-              ><button
-                :disabled="scanning || organizeBusy || submittedIndividual.length > 0"
-                @click="scan"
-              >
-                重新扫描选中项目</button
-              ><span>{{ scanning ? '正在识别…' : `找到 ${scanFiles.length} 个视频` }}</span>
-            </div>
-            <p v-if="scanTruncated" class="fm-warning">
-              扫描达到范围上限，请缩小选择后重试，避免遗漏文件。
-            </p>
-            <div class="fm-toolbar">
+            <div class="form-grid fm-manual-fields">
+              <label>目的存储<input value="本地" readonly /></label>
               <label
-                >识别模式
-                <select
-                  v-model="recognitionMode"
-                  :disabled="organizeBusy || submittedIndividual.length > 0"
-                  @change="changeRecognitionMode"
-                >
-                  <option value="same">同一影视：同剧批量 / 单部电影</option>
-                  <option value="individual">逐项识别：多部电影 / 不同影视</option>
+                >整理方式<select v-model="mode" :disabled="organizeBusy" @change="invalidatePlans">
+                  <option value="">自动</option>
+                  <option value="hardlink">硬链接</option>
+                  <option value="copy">复制</option>
+                  <option value="auto">硬链接，跨卷时复制</option>
                 </select></label
-              ><span class="fm-note">逐项模式按文件名或 NFO 提供线索，每项身份均需明确选择。</span>
+              >
+              <label class="fm-span"
+                >目的目录
+                <div class="fm-path-input">
+                  <input
+                    v-model.trim="targetPath"
+                    list="manual-target-paths"
+                    placeholder="自动匹配目录设置"
+                    :disabled="organizeBusy"
+                    @input="invalidatePlans"
+                  />
+                  <button type="button" @click="openTargetPicker" :disabled="organizeBusy">
+                    浏览
+                  </button>
+                </div>
+                <datalist id="manual-target-paths">
+                  <option value="">自动</option>
+                  <option
+                    v-for="path in targetPaths"
+                    :key="String(path)"
+                    :value="String(path)"
+                  /></datalist
+              ></label>
+              <label
+                >媒体类型<select
+                  v-model="mediaType"
+                  :disabled="organizeBusy"
+                  @change="
+                    mediaID = '';
+                    identity = null;
+                    recognitionMode = 'auto';
+                    invalidatePlans();
+                  "
+                >
+                  <option value="">自动</option>
+                  <option value="movie">电影</option>
+                  <option value="tv">电视剧</option>
+                </select></label
+              >
+              <label
+                >TMDB ID
+                <div class="fm-path-input">
+                  <input
+                    v-model.trim="mediaID"
+                    inputmode="numeric"
+                    :disabled="organizeBusy || !mediaType"
+                    placeholder="留空自动识别"
+                    @input="
+                      identity = null;
+                      recognitionMode = mediaID ? 'same' : 'auto';
+                      invalidatePlans();
+                    "
+                  />
+                  <button
+                    type="button"
+                    :disabled="organizeBusy"
+                    @click="mediaPicker = !mediaPicker"
+                  >
+                    搜索
+                  </button>
+                </div></label
+              >
             </div>
-            <p v-if="recognitionMode === 'individual' && identifyingPath" class="fm-note fm-path">
-              正在选择身份：{{ identifyingPath }}
-            </p>
-            <form
-              v-if="recognitionMode === 'same' || identifyingPath"
-              class="fm-toolbar"
-              @submit.prevent="searchIdentity"
-            >
+            <form v-if="mediaPicker" class="fm-toolbar" @submit.prevent="searchIdentity">
               <input
                 ref="lookupInput"
                 v-model="lookup"
-                placeholder="影视名称，或 movie:278 / tv:1418"
+                placeholder="搜索影视名称"
                 aria-label="整理影视名称"
-              /><button :disabled="organizeBusy || !lookup.trim()">搜索影视</button>
+              />
+              <button :disabled="organizeBusy || !lookup.trim()">搜索影视</button>
             </form>
-            <div v-if="results.length" class="fm-results">
+            <div v-if="results.length && mediaPicker" class="fm-results">
               <button
                 v-for="media in results"
                 :key="media.media_type + media.id"
                 :disabled="organizeBusy"
                 @click="pick(media)"
               >
-                <img v-if="media.poster_path" :src="image(media.poster_path, 'w92')" alt="" /><span
-                  >{{ media.title }}
-                  <small>{{ media.year || '' }} · {{ label(media.media_type) }}</small></span
+                <img v-if="media.poster_path" :src="image(media.poster_path, 'w92')" alt="" />
+                <span
+                  >{{ media.title
+                  }}<small>{{ media.year || '' }} · {{ label(media.media_type) }}</small></span
                 >
               </button>
             </div>
-            <div v-if="identity && recognitionMode === 'same'" class="fm-identity">
-              <strong>{{ identity.title }}（{{ identity.year || '—' }}）</strong
-              ><span>{{ label(identity.media_type) }} · TMDB {{ identity.id }}</span
-              ><button
-                :disabled="organizeBusy"
-                @click="
-                  identity = null;
-                  plan = null;
-                "
+            <p v-if="identity" class="fm-identity">
+              <strong>{{ identity.title }}（{{ identity.year || '—' }}）</strong>
+              <span>{{ label(identity.media_type) }} · TMDB {{ identity.id }}</span>
+            </p>
+            <div class="fm-toolbar fm-organize-switches">
+              <label
+                ><input
+                  type="checkbox"
+                  :checked="renaming ?? organizeRule?.renaming ?? true"
+                  :disabled="organizeBusy"
+                  @change="
+                    renaming = ($event.target as HTMLInputElement).checked;
+                    invalidatePlans();
+                  "
+                />智能重命名</label
               >
-                重新选择
-              </button>
-            </div>
-            <div class="fm-toolbar">
-              <label v-if="recognitionMode === 'same'"
-                >目标库
-                <select v-model="targetRoot" :disabled="organizeBusy" @change="plan = null">
-                  <option value="">请选择目标媒体库</option>
-                  <option v-for="root in configuredRoots" :key="root.id" :value="root.id">
-                    {{ root.name }} · {{ root.path }}
-                  </option>
-                </select></label
-              ><label
-                >整理方式
-                <select v-model="mode" :disabled="organizeBusy" @change="invalidatePlans">
-                  <option value="hardlink">硬链接</option>
-                  <option value="copy">复制</option>
-                  <option value="auto">优先硬链接，跨文件系统复制</option>
-                </select></label
+              <label
+                ><input
+                  type="checkbox"
+                  :checked="scraping ?? organizeRule?.scraping ?? true"
+                  :disabled="organizeBusy"
+                  @change="
+                    scraping = ($event.target as HTMLInputElement).checked;
+                    invalidatePlans();
+                  "
+                />刮削元数据</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  :checked="libraryTypeFolder ?? organizeRule?.library_type_folder ?? false"
+                  :disabled="organizeBusy"
+                  @change="
+                    libraryTypeFolder = ($event.target as HTMLInputElement).checked;
+                    invalidatePlans();
+                  "
+                />按媒体类型建立子目录</label
               >
             </div>
-            <details
-              v-if="
-                (recognitionMode === 'same' && identity?.media_type === 'tv') ||
-                (recognitionMode === 'individual' &&
-                  scanFiles.some((file) => file.identity?.media_type === 'tv'))
-              "
-              class="fm-preview"
-            >
-              <summary>批量季集设置</summary>
+            <details class="fm-preview">
+              <summary>
+                文件与识别选项 · {{ scanning ? '正在读取…' : scanFiles.length + ' 个视频' }}
+              </summary>
+              <div class="fm-toolbar">
+                <label><input type="checkbox" v-model="recursive" />包含子目录</label
+                ><button
+                  :disabled="scanning || organizeBusy || submittedIndividual.length > 0"
+                  @click="scan"
+                >
+                  重新扫描选中项目</button
+                ><span>{{ scanning ? '正在识别…' : `找到 ${scanFiles.length} 个视频` }}</span>
+              </div>
+              <p v-if="scanTruncated" class="fm-warning">
+                扫描达到范围上限，请缩小选择后重试，避免遗漏文件。
+              </p>
               <div class="fm-toolbar">
                 <label
-                  >统一季号
-                  <input
-                    class="fm-number"
-                    type="number"
-                    v-model.number="batchSeason"
-                    min="1"
-                    max="1000" /></label
-                ><label
-                  >集号方式
-                  <select v-model="batchNumberMode">
-                    <option value="keep">保留现有集号</option>
-                    <option value="offset">原始解析集号 + 偏移</option>
-                    <option value="sequential">按文件名自然排序连续编号</option>
+                  >识别模式
+                  <select
+                    v-model="recognitionMode"
+                    :disabled="organizeBusy || submittedIndividual.length > 0"
+                    @change="changeRecognitionMode"
+                  >
+                    <option value="auto">自动识别</option>
+                    <option value="same">指定同一影视</option>
+                    <option value="individual">逐项识别：多部电影 / 不同影视</option>
                   </select></label
-                ><label v-if="batchNumberMode === 'offset'"
-                  >偏移量
-                  <input class="fm-number" type="number" v-model.number="batchOffset" /></label
-                ><label v-if="batchNumberMode === 'sequential'"
-                  >起始集
-                  <input
-                    class="fm-number"
-                    type="number"
-                    v-model.number="batchStart"
-                    min="1" /></label
-                ><button :disabled="organizeBusy" @click="fillNumbering">应用到已选剧集文件</button>
+                >
               </div>
-              <p class="fm-note">
-                原始偏移始终使用文件解析出的集号，不会重复叠加。连续编号按自然名称排序，例如 2 在 10
-                之前。填入后仍可逐文件修改，预览时逐集核对官方元数据。
+              <p v-if="recognitionMode === 'individual' && identifyingPath" class="fm-note fm-path">
+                正在选择身份：{{ identifyingPath }}
               </p>
-            </details>
-            <details v-if="activeIdentity?.media_type === 'tv'" class="fm-preview">
-              <summary>高级：原始集号到标准季集映射</summary>
-              <fieldset :disabled="organizeBusy" class="fm-fields">
-                <MappingRules
-                  :model="activeMappings"
-                  :media-id="'tv:' + activeIdentity.id"
-                  :season="batchSeason"
-                />
-              </fieldset>
-              <p class="fm-note">
-                可直接逐文件填标准集号；留空时，只使用已明确确认的映射。不会执行自定义脚本。
-              </p>
-            </details>
-            <div class="fm-table-wrap">
-              <table class="fm-table">
-                <thead>
-                  <tr>
-                    <th>选择</th>
-                    <th>源文件</th>
-                    <th v-if="recognitionMode === 'individual'">明确影视身份 / 目标库</th>
-                    <th v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'">
-                      季号
-                    </th>
-                    <th v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'">
-                      集号
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="file in scanFiles" :key="file.path">
-                    <td>
-                      <input
-                        type="checkbox"
-                        v-model="fileSelection"
-                        :value="file.path"
-                        :disabled="organizeBusy || !!file.job"
-                        @change="plan = null"
-                      />
-                    </td>
-                    <td class="fm-path">
-                      {{ file.path
-                      }}<small v-if="file.inferred_media"
-                        >NFO：{{ file.inferred_media.title }} · TMDB
-                        {{ file.inferred_media.id }}</small
+              <form
+                v-if="recognitionMode === 'individual' && identifyingPath"
+                class="fm-toolbar"
+                @submit.prevent="searchIdentity"
+              >
+                <input
+                  ref="lookupInput"
+                  v-model="lookup"
+                  placeholder="影视名称，或 movie:278 / tv:1418"
+                  aria-label="整理影视名称"
+                /><button :disabled="organizeBusy || !lookup.trim()">搜索影视</button>
+              </form>
+              <div v-if="results.length && recognitionMode === 'individual'" class="fm-results">
+                <button
+                  v-for="media in results"
+                  :key="media.media_type + media.id"
+                  :disabled="organizeBusy"
+                  @click="pick(media)"
+                >
+                  <img
+                    v-if="media.poster_path"
+                    :src="image(media.poster_path, 'w92')"
+                    alt=""
+                  /><span
+                    >{{ media.title }}
+                    <small>{{ media.year || '' }} · {{ label(media.media_type) }}</small></span
+                  >
+                </button>
+              </div>
+              <details
+                v-if="
+                  (recognitionMode === 'same' && identity?.media_type === 'tv') ||
+                  (recognitionMode === 'individual' &&
+                    scanFiles.some((file) => file.identity?.media_type === 'tv'))
+                "
+                class="fm-preview"
+              >
+                <summary>批量季集设置</summary>
+                <div class="fm-toolbar">
+                  <label
+                    >统一季号
+                    <input
+                      class="fm-number"
+                      type="number"
+                      v-model.number="batchSeason"
+                      min="1"
+                      max="1000" /></label
+                  ><label
+                    >集号方式
+                    <select v-model="batchNumberMode">
+                      <option value="keep">保留现有集号</option>
+                      <option value="offset">原始解析集号 + 偏移</option>
+                      <option value="sequential">按文件名自然排序连续编号</option>
+                    </select></label
+                  ><label v-if="batchNumberMode === 'offset'"
+                    >偏移量
+                    <input class="fm-number" type="number" v-model.number="batchOffset" /></label
+                  ><label v-if="batchNumberMode === 'sequential'"
+                    >起始集
+                    <input
+                      class="fm-number"
+                      type="number"
+                      v-model.number="batchStart"
+                      min="1" /></label
+                  ><button :disabled="organizeBusy" @click="fillNumbering">
+                    应用到已选剧集文件
+                  </button>
+                </div>
+                <p class="fm-note">
+                  原始偏移始终使用文件解析出的集号，不会重复叠加。连续编号按自然名称排序，例如 2 在
+                  10 之前。填入后仍可逐文件修改，预览时逐集核对官方元数据。
+                </p>
+              </details>
+              <details v-if="activeIdentity?.media_type === 'tv'" class="fm-preview">
+                <summary>高级：原始集号到标准季集映射</summary>
+                <fieldset :disabled="organizeBusy" class="fm-fields">
+                  <MappingRules
+                    :model="activeMappings"
+                    :media-id="'tv:' + activeIdentity.id"
+                    :season="batchSeason"
+                  />
+                </fieldset>
+                <p class="fm-note">
+                  可直接逐文件填标准集号；留空时，只使用已明确确认的映射。不会执行自定义脚本。
+                </p>
+              </details>
+              <div class="fm-table-wrap">
+                <table class="fm-table">
+                  <thead>
+                    <tr>
+                      <th>选择</th>
+                      <th>源文件</th>
+                      <th v-if="recognitionMode === 'individual'">影视身份</th>
+                      <th
+                        v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'"
                       >
-                    </td>
-                    <td v-if="recognitionMode === 'individual'">
-                      <strong v-if="file.identity"
-                        >{{ file.identity.title }} · {{ label(file.identity.media_type) }}</strong
-                      ><small v-else>未确认身份</small>
-                      <div class="fm-toolbar">
-                        <button :disabled="organizeBusy || !!file.job" @click="identifyEntry(file)">
-                          {{ file.identity ? '重新选择' : '识别影视' }}</button
-                        ><button
-                          v-if="file.inferred_media && !file.job"
-                          :disabled="organizeBusy"
-                          @click="
-                            identifyingPath = file.path;
-                            pick(file.inferred_media);
-                          "
-                        >
-                          采用 NFO 身份
-                        </button>
-                      </div>
-                      <select
-                        v-model="file.rootID"
-                        :disabled="organizeBusy || !!file.job"
-                        @change="invalidateEntry(file)"
-                        :aria-label="file.path + ' 目标库'"
+                        季号
+                      </th>
+                      <th
+                        v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'"
                       >
-                        <option value="">请选择目标库</option>
-                        <option
-                          v-for="root in rootsFor(file.identity)"
-                          :key="root.id"
-                          :value="root.id"
+                        集号
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="file in scanFiles" :key="file.path">
+                      <td>
+                        <input
+                          type="checkbox"
+                          v-model="fileSelection"
+                          :value="file.path"
+                          :disabled="organizeBusy || !!file.job"
+                          @change="plan = null"
+                        />
+                      </td>
+                      <td class="fm-path">
+                        {{ file.path
+                        }}<small v-if="file.inferred_media"
+                          >NFO：{{ file.inferred_media.title }} · TMDB
+                          {{ file.inferred_media.id }}</small
                         >
-                          {{ root.name }} · {{ root.path }}
-                        </option>
-                      </select>
-                      <p v-if="file.error" class="fm-error">{{ file.error }}</p>
-                      <small v-if="file.job" class="fm-success">已提交 · {{ file.job.id }}</small>
-                    </td>
-                    <td v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'">
-                      <input
-                        v-if="recognitionMode === 'same' || file.identity?.media_type !== 'movie'"
-                        class="fm-number"
-                        type="number"
-                        v-model="file.season"
-                        min="1"
-                        max="1000"
-                        :disabled="organizeBusy || !!file.job"
-                        @input="invalidateEntry(file)"
-                        :aria-label="file.path + ' 季号'"
-                      />
-                    </td>
-                    <td v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'">
-                      <input
-                        v-if="recognitionMode === 'same' || file.identity?.media_type !== 'movie'"
-                        class="fm-episodes"
-                        v-model="file.episodes"
-                        placeholder="例如 12"
-                        :disabled="organizeBusy || !!file.job"
-                        @input="invalidateEntry(file)"
-                        :aria-label="file.path + ' 集号'"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                      </td>
+                      <td v-if="recognitionMode === 'individual'">
+                        <strong v-if="file.identity"
+                          >{{ file.identity.title }} · {{ label(file.identity.media_type) }}</strong
+                        ><small v-else>未确认身份</small>
+                        <div class="fm-toolbar">
+                          <button
+                            :disabled="organizeBusy || !!file.job"
+                            @click="identifyEntry(file)"
+                          >
+                            {{ file.identity ? '重新选择' : '识别影视' }}</button
+                          ><button
+                            v-if="file.inferred_media && !file.job"
+                            :disabled="organizeBusy"
+                            @click="
+                              identifyingPath = file.path;
+                              pick(file.inferred_media);
+                            "
+                          >
+                            采用 NFO 身份
+                          </button>
+                        </div>
+                        <p v-if="file.error" class="fm-error">{{ file.error }}</p>
+                        <small v-if="file.job" class="fm-success">已提交 · {{ file.job.id }}</small>
+                      </td>
+                      <td
+                        v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'"
+                      >
+                        <input
+                          v-if="recognitionMode === 'same' || file.identity?.media_type !== 'movie'"
+                          class="fm-number"
+                          type="number"
+                          v-model="file.season"
+                          min="1"
+                          max="1000"
+                          :disabled="organizeBusy || !!file.job"
+                          @input="invalidateEntry(file)"
+                          :aria-label="file.path + ' 季号'"
+                        />
+                      </td>
+                      <td
+                        v-if="recognitionMode === 'individual' || identity?.media_type !== 'movie'"
+                      >
+                        <input
+                          v-if="recognitionMode === 'same' || file.identity?.media_type !== 'movie'"
+                          class="fm-episodes"
+                          v-model="file.episodes"
+                          placeholder="例如 12"
+                          :disabled="organizeBusy || !!file.job"
+                          @input="invalidateEntry(file)"
+                          :aria-label="file.path + ' 集号'"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
             <div v-if="plan && recognitionMode === 'same'" class="fm-preview">
               <h3>整理预览</h3>
               <p>
@@ -984,12 +1201,12 @@ onMounted(async () => {
             </div>
             <div
               v-if="
-                recognitionMode === 'individual' &&
-                individualEntries.some((entry) => entry.plan || entry.job)
+                recognitionMode !== 'same' &&
+                individualEntries.some((entry) => entry.plan || entry.job || entry.error)
               "
               class="fm-preview"
             >
-              <h3>逐项整理预览</h3>
+              <h3>整理预览</h3>
               <p class="fm-note">
                 已提交 {{ submittedIndividual.length }} 项 · 可确认
                 {{ executableIndividual.length }}
@@ -997,7 +1214,9 @@ onMounted(async () => {
               </p>
               <article v-for="entry in individualEntries" :key="entry.path" class="fm-preview-file">
                 <div>
-                  <strong>{{ entry.identity?.title || '未确认身份' }}</strong>
+                  <strong>{{
+                    entry.plan?.media?.title || entry.identity?.title || '自动识别'
+                  }}</strong>
                   <p class="fm-path">{{ entry.path }}</p>
                   <p v-for="file in entry.plan?.files || []" :key="file.id" class="fm-path">
                     → {{ file.target || '未生成目标路径' }} ·
@@ -1038,7 +1257,6 @@ onMounted(async () => {
             :disabled="
               organizeBusy ||
               scanning ||
-              (recognitionMode === 'same' && (!identity || !targetRoot)) ||
               (recognitionMode === 'individual' &&
                 !individualEntries.some((entry) => entry.identity && !entry.job)) ||
               !fileSelection.length ||
@@ -1046,19 +1264,19 @@ onMounted(async () => {
             "
             @click="preview"
           >
-            {{ organizeBusy ? '处理中…' : '预览整理' }}</button
+            {{ organizeBusy ? '处理中…' : '预览结果' }}</button
           ><button
-            v-if="
-              (recognitionMode === 'same' && plan) ||
-              (recognitionMode === 'individual' && executableIndividual.length > 0)
-            "
             class="primary"
-            :disabled="organizeBusy || (recognitionMode === 'same' && !planSelection.length)"
-            @click="execute"
+            :disabled="organizeBusy || scanning || !fileSelection.length || scanTruncated"
+            @click="startOrganize(false)"
           >
-            确认整理
-            {{ recognitionMode === 'same' ? planSelection.length : executableIndividual.length }}
-            个文件
+            {{ organizeBusy ? '处理中…' : '开始整理' }}
+          </button>
+          <button
+            :disabled="organizeBusy || scanning || !fileSelection.length || scanTruncated"
+            @click="startOrganize(true)"
+          >
+            加入整理队列
           </button>
           <button
             v-if="submittedIndividual.length"
@@ -1068,6 +1286,49 @@ onMounted(async () => {
             "
           >
             查看整理历史
+          </button>
+        </footer>
+      </section>
+    </div>
+
+    <div v-if="directoryPicker" class="fm-overlay" @click.self="directoryPicker = false">
+      <section class="fm-dialog" role="dialog" aria-modal="true" aria-label="选择目的目录">
+        <header>
+          <h2>选择目的目录</h2>
+          <button @click="directoryPicker = false">✕</button>
+        </header>
+        <div class="fm-dialog-body">
+          <select v-model="pickerRoot" @change="browseTarget()" aria-label="浏览目录">
+            <option v-for="root in roots" :key="root.id" :value="root.id">{{ root.path }}</option>
+          </select>
+          <p class="fm-path">{{ pickerListing?.path }}</p>
+          <p v-if="pickerError" class="fm-error">{{ pickerError }}</p>
+          <div class="fm-target-browser">
+            <button v-if="pickerListing?.parent" @click="browseTarget(pickerListing.parent)">
+              ↑ 上级目录
+            </button>
+            <button
+              v-for="item in (pickerListing?.items || []).filter((row: any) => row.type === 'dir')"
+              :key="item.path"
+              @click="browseTarget(item.path)"
+            >
+              ▸ {{ item.name }}
+            </button>
+          </div>
+          <p v-if="pickerLoading" class="fm-note">正在读取目录…</p>
+        </div>
+        <footer>
+          <button @click="directoryPicker = false">取消</button
+          ><button
+            class="primary"
+            :disabled="pickerLoading || !pickerListing?.path"
+            @click="
+              targetPath = pickerListing.path;
+              invalidatePlans();
+              directoryPicker = false;
+            "
+          >
+            选择此目录
           </button>
         </footer>
       </section>
@@ -1188,6 +1449,35 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.fm-manual-fields {
+  margin-bottom: 18px;
+}
+.fm-manual {
+  width: 720px;
+}
+.fm-manual.fm-wide {
+  width: 1100px;
+}
+.fm-span {
+  grid-column: 1 / -1;
+}
+.fm-path-input {
+  display: flex;
+  gap: 8px;
+}
+.fm-path-input input {
+  min-width: 0;
+  flex: 1;
+}
+.fm-target-browser {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0;
+}
+.fm-target-browser button {
+  text-align: left;
+}
 .file-manager {
   max-width: 1500px;
   margin: auto;

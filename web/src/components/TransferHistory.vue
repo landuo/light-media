@@ -12,8 +12,65 @@ const query = ref(''),
   selected = ref<string[]>([]),
   detail = ref<any>(null),
   jobDetail = ref<any>(null);
+const deleteItems = ref<any[]>([]),
+  deleteSource = ref(false),
+  deleteTarget = ref(false),
+  deleting = ref(false);
 const pages = computed(() => Math.max(1, Math.ceil((result.value?.total || 0) / pageSize.value)));
 const items = computed(() => result.value?.items || []);
+const selectedItems = computed(() =>
+  items.value.filter((item: any) => selected.value.includes(item.id)),
+);
+const allSelected = computed(
+  () => items.value.length > 0 && selected.value.length === items.value.length,
+);
+function selectAll(checked: boolean) {
+  selected.value = checked ? items.value.map((item: any) => item.id) : [];
+}
+function reorganize(rows: any[]) {
+  const paths = [
+    ...new Set<string>(rows.filter((row) => row.can_recognize).map((row) => row.source)),
+  ];
+  if (paths.length) emit('organize', paths);
+}
+function openDelete(rows: any[]) {
+  deleteItems.value = rows;
+  deleteSource.value = false;
+  deleteTarget.value = false;
+}
+async function remove() {
+  deleting.value = true;
+  error.value = '';
+  let count = 0;
+  let failure = '';
+  try {
+    for (const item of [...deleteItems.value]) {
+      await api(
+        '/history/transfers/' + encodeURIComponent(item.id),
+        {
+          confirm: true,
+          delete_source: deleteSource.value,
+          delete_target: deleteTarget.value,
+        },
+        'DELETE',
+      );
+      deleteItems.value = deleteItems.value.filter((row) => row.id !== item.id);
+      selected.value = selected.value.filter((id) => id !== item.id);
+      count++;
+    }
+    detail.value = null;
+  } catch (e) {
+    failure = errorText(e);
+    error.value = failure;
+  } finally {
+    deleting.value = false;
+    if (count) {
+      toast('已删除 ' + count + ' 条整理历史');
+      await load();
+    }
+    if (failure) error.value = failure;
+  }
+}
 let generation = 0,
   timer: number;
 async function load(reset = false, silent = false) {
@@ -75,7 +132,7 @@ async function showJob(id: string) {
   }
 }
 function recognize(item: any) {
-  emit('organize', [item.source]);
+  reorganize([item]);
 }
 onMounted(() => {
   void load();
@@ -118,10 +175,28 @@ onUnmounted(() => {
         <option :value="200">200 条 / 页</option></select
       ><button>搜索</button>
     </form>
+    <div v-if="selected.length" class="th-actions th-batch">
+      <span>已选 {{ selected.length }} 条</span>
+      <button
+        :disabled="!selectedItems.some((item: any) => item.can_recognize)"
+        @click="reorganize(selectedItems)"
+      >
+        重新整理
+      </button>
+      <button class="danger" @click="openDelete(selectedItems)">删除</button>
+    </div>
     <div class="th-table-wrap" :aria-busy="loading">
       <table>
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                aria-label="选择本页全部整理历史"
+                :checked="allSelected"
+                @change="selectAll(($event.target as HTMLInputElement).checked)"
+              />
+            </th>
             <th>影视 / 季集</th>
             <th>源文件 → 目标文件</th>
             <th>方式 / 大小</th>
@@ -132,6 +207,14 @@ onUnmounted(() => {
         </thead>
         <tbody>
           <tr v-for="item in items" :key="item.id">
+            <td>
+              <input
+                type="checkbox"
+                v-model="selected"
+                :value="item.id"
+                :aria-label="'选择 ' + item.media.title"
+              />
+            </td>
             <td>
               <button class="th-title" @click="detail = item">
                 {{ item.media.title }} <small>{{ item.media.year || '' }}</small></button
@@ -153,13 +236,14 @@ onUnmounted(() => {
               <div class="th-actions">
                 <button @click="detail = item">详情</button
                 ><button v-if="item.can_retry" @click="retry(item)">重试</button
-                ><button v-if="item.can_recognize" @click="recognize(item)">重新识别</button
+                ><button v-if="item.can_recognize" @click="recognize(item)">重新整理</button
+                ><button class="danger" @click="openDelete([item])">删除</button
                 ><button v-if="item.job_id" @click="showJob(item.job_id)">任务</button>
               </div>
             </td>
           </tr>
           <tr v-if="!items.length">
-            <td colspan="6" class="th-empty">
+            <td colspan="7" class="th-empty">
               {{
                 loading
                   ? '正在加载整理记录…'
@@ -215,7 +299,8 @@ onUnmounted(() => {
         <footer>
           <button v-if="detail.job_id" @click="showJob(detail.job_id)">查看任务日志</button
           ><button v-if="detail.can_retry" @click="retry(detail)">重试整理</button
-          ><button v-if="detail.can_recognize" @click="recognize(detail)">从文件管理重新识别</button
+          ><button v-if="detail.can_recognize" @click="recognize(detail)">重新整理</button
+          ><button class="danger" @click="openDelete([detail])">删除</button
           ><button @click="detail = null">关闭</button>
         </footer>
       </section>
@@ -244,10 +329,56 @@ onUnmounted(() => {
         </footer>
       </section>
     </div>
+    <div v-if="deleteItems.length" class="th-overlay" @click.self="!deleting && (deleteItems = [])">
+      <section role="dialog" aria-modal="true" aria-label="删除整理历史">
+        <header>
+          <h2>删除整理历史</h2>
+          <button :disabled="deleting" @click="deleteItems = []">✕</button>
+        </header>
+        <p>删除所选 {{ deleteItems.length }} 条记录？默认只删除历史记录。</p>
+        <label class="th-delete-option"
+          ><input
+            v-model="deleteSource"
+            type="checkbox"
+            :disabled="deleting"
+          />同时删除源文件</label
+        >
+        <label class="th-delete-option"
+          ><input
+            v-model="deleteTarget"
+            type="checkbox"
+            :disabled="deleting"
+          />同时删除目标文件及本程序刮削的关联文件</label
+        >
+        <p v-if="deleteSource || deleteTarget" class="th-error">
+          勾选的文件会实际删除。正在下载或做种的源文件受到保护。
+        </p>
+        <p v-for="item in deleteItems" :key="item.id" class="th-path">
+          {{ item.media.title }} · {{ item.source }}
+        </p>
+        <p v-if="error" class="th-error" role="alert">{{ error }}</p>
+        <footer>
+          <button :disabled="deleting" @click="deleteItems = []">取消</button>
+          <button class="danger" :disabled="deleting" @click="remove">
+            {{ deleting ? '删除中…' : '删除' }}
+          </button>
+        </footer>
+      </section>
+    </div>
   </section>
 </template>
 
 <style scoped>
+.th-batch {
+  margin: 12px 0;
+  align-items: center;
+}
+.th-delete-option {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 14px 0;
+}
 .transfer-history {
   max-width: 1500px;
   margin: auto;

@@ -326,6 +326,14 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: "subtitle", Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256})
 			}
 			asset := Asset{ID: assetID, Media: plan.Media, Season: file.Season, Episodes: append([]int(nil), file.Episodes...), RootID: root.ID, Path: file.Target, SourcePath: file.Source, Size: file.Size, State: "present", ScrapeState: "pending", FNOSState: "pending", IntentID: plan.IntentID, CreatedAt: now()}
+			asset.Renaming = plan.Renaming
+			if !importBool(plan.Scraping, true) {
+				asset.ScrapeState = "skipped"
+				asset.FNOSState = "unverified"
+				if !a.Settings().FNOS.Enabled {
+					asset.FNOSState = "disabled"
+				}
+			}
 			tx, err := a.Store.DB.BeginTx(ctx, nil)
 			if err != nil {
 				return err
@@ -364,8 +372,10 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 				return err
 			}
-			if _, err = enqueueTx(ctx, tx, "scrape", map[string]string{"id": assetID}, job.WorkflowID); err != nil {
-				return err
+			if importBool(plan.Scraping, true) {
+				if _, err = enqueueTx(ctx, tx, "scrape", map[string]string{"id": assetID}, job.WorkflowID); err != nil {
+					return err
+				}
 			}
 			if err = recordDomainEventTx(ctx, tx, assetDomainEvent("import.completed", job, asset)); err != nil {
 				return err

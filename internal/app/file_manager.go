@@ -410,7 +410,7 @@ func (a *App) browserStaticProtection(path string) string {
 		return "应用数据目录受保护"
 	}
 	for _, root := range a.Settings().Roots {
-		if within(root.Path, path) || within(path, root.Path) {
+		if _, overlap := sharedDirectoryPath(root.Path, path); overlap {
 			return "媒体库文件请通过资产管理维护"
 		}
 	}
@@ -610,6 +610,12 @@ func (a *App) previewBrowserOperation(ctx context.Context, in browserOperationRe
 func (a *App) guardBrowserDownloaderSources(ctx context.Context, paths []string) error {
 	for _, configured := range a.Settings().Downloaders {
 		potential := []string{configured.DownloadPath}
+		if configured.SharedPaths || configured.DownloadPath == "" {
+			// A daemon-managed default need not be entered in application settings.
+			// Without a frozen default, verify mounted browser roots before a
+			// destructive operation so existing seeding files remain protected.
+			potential = append(potential, a.Settings().AllowedRoots...)
+		}
 		for _, mapping := range configured.Mappings {
 			potential = append(potential, mapping.To)
 		}
@@ -639,10 +645,10 @@ func (a *App) guardBrowserDownloaderSources(ctx context.Context, paths []string)
 		for _, task := range tasks {
 			mapped, e := mapDownloaderPath(a.Settings(), configured, task.DownloadDir)
 			if e != nil || !importPath(mapped) {
-				return bad("FILE_DOWNLOADER_MAPPING_UNVERIFIED", "下载器有尚未映射的任务保存目录，不能确认做种源，请先补齐目录映射")
+				return bad("FILE_DOWNLOADER_MAPPING_UNVERIFIED", "下载器返回的保存路径在当前容器中不可见，无法核对做种源，请检查容器挂载")
 			}
 			for _, path := range paths {
-				if within(mapped, path) || within(path, mapped) {
+				if _, overlap := sharedDirectoryPath(mapped, path); overlap {
 					return bad("FILE_DOWNLOADER_SOURCE_PROTECTED", "所选项目位于下载器现有任务的保存目录内，为保护下载和做种，禁止重命名或删除")
 				}
 			}

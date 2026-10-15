@@ -190,7 +190,9 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	showDir := filepath.Dir(asset.Path)
 	sharedOwner := asset.ID
 	if episode != nil {
-		showDir = filepath.Dir(showDir)
+		if importBool(asset.Renaming, true) {
+			showDir = filepath.Dir(showDir)
+		}
 		sharedOwner = ""
 		showNFO, err := assetNFO(identity, nil)
 		if err != nil {
@@ -202,7 +204,7 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	}
 	images := []struct{ source, target, owner string }{{identity.PosterPath, filepath.Join(showDir, "poster.jpg"), sharedOwner}, {identity.BackdropPath, filepath.Join(showDir, "fanart.jpg"), sharedOwner}}
 	if episode != nil {
-		if season.PosterPath != "" {
+		if season.PosterPath != "" && importBool(asset.Renaming, true) {
 			images = append(images, struct{ source, target, owner string }{season.PosterPath, filepath.Join(filepath.Dir(asset.Path), "poster.jpg"), ""})
 		}
 		if episode.StillPath != "" {
@@ -520,16 +522,25 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	if libraryGUID == "" {
 		libraryGUID = configuration.LibraryGUID
 	}
-	if libraryGUID == "" {
-		return bad("INVALID_FNOS_LIBRARY", "请配置此媒体库对应的飞牛媒体库")
-	}
-	actual, err := mapPath(asset.Path, configuration.Mappings)
-	if err != nil {
-		return bad("INVALID_FNOS_MAPPING", "请配置应用目录到飞牛主机目录的准确映射")
+	actual := asset.Path
+	if len(configuration.Mappings) > 0 {
+		if mapped, e := mapPath(asset.Path, configuration.Mappings); e == nil {
+			actual = mapped
+		}
 	}
 	service, err := fnos.NewService(fnos.Config{Host: configuration.Host, Username: configuration.Username, Password: configuration.Password})
 	if err != nil {
 		return err
+	}
+	if libraryGUID == "" {
+		libraries, e := service.Libraries(ctx)
+		if e != nil {
+			return e
+		}
+		libraryGUID, actual, err = matchFNOSDirectory(asset.Path, actual, libraries)
+		if err != nil {
+			return err
+		}
 	}
 	if err = a.jobCancelled(ctx, job); err != nil {
 		return err
@@ -554,7 +565,7 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 		}
 	}()
 	scanDirectory := filepath.Dir(actual)
-	if asset.Media.MediaType == "tv" {
+	if asset.Media.MediaType == "tv" && importBool(asset.Renaming, true) {
 		scanDirectory = filepath.Dir(scanDirectory)
 	}
 	scope := libraryGUID + ":" + filepath.ToSlash(scanDirectory)

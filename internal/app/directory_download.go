@@ -51,7 +51,7 @@ func (a *App) guardIntentDirectory(ctx context.Context, in Intent, forImport boo
 	}
 	ruleSource, e := a.directorySource(rule)
 	if e != nil || !within(ruleSource, source) {
-		return bad("REVIEW_DIRECTORY_CHANGED", "下载目录映射已离开已确认监听范围")
+		return bad("REVIEW_DIRECTORY_CHANGED", "下载目录已离开已确认监听范围")
 	}
 	if forImport && (!rule.Enabled || rule.MonitorType == "none") {
 		return bad("DIRECTORY_MONITOR_DISABLED", "下载已完成；目录监听未启用，源文件保留")
@@ -60,7 +60,7 @@ func (a *App) guardIntentDirectory(ctx context.Context, in Intent, forImport boo
 }
 func (a *App) bindCompletedDirectory(ctx context.Context, in *Intent, task download.Task, d DownloaderConfig) error {
 	if in.DirectoryID == "" && in.RootID == "" {
-		destination, e := a.resolveDownloadDestination(d, "", effectiveIntentDownloadPath(*in, d), "", in.Media.MediaType)
+		destination, e := a.resolveDownloadDestinationContext(ctx, d, "", effectiveIntentDownloadPath(*in, d), "", in.Media.MediaType)
 		if e != nil {
 			return e
 		}

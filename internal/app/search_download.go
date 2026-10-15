@@ -56,6 +56,29 @@ func (a *App) site(key string) (SiteConfig, error) {
 	return SiteConfig{}, bad("SITE_NOT_CONFIGURED", "站点尚未配置或未启用")
 }
 func (a *App) downloader(key string) (DownloaderConfig, error) {
+	if key == "" {
+		c := a.Settings()
+		for _, d := range c.Downloaders {
+			if d.ID == c.DefaultDownloader && downloaderEnabled(d) {
+				return d, nil
+			}
+		}
+		for _, d := range c.Downloaders {
+			if downloaderEnabled(d) {
+				return d, nil
+			}
+		}
+	}
+	d, err := a.configuredDownloader(key)
+	if err != nil {
+		return d, err
+	}
+	if !downloaderEnabled(d) {
+		return d, bad("DOWNLOADER_DISABLED", "此下载器已停用，启用后继续处理")
+	}
+	return d, nil
+}
+func (a *App) configuredDownloader(key string) (DownloaderConfig, error) {
 	c := a.Settings()
 	if key == "" {
 		key = c.DefaultDownloader
@@ -300,7 +323,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
-	destination, e := a.resolveDownloadDestination(d, in.DirectoryID, in.DownloadPath, in.RootID, t.Media.MediaType)
+	destination, e := a.resolveDownloadDestinationContext(ctx, d, in.DirectoryID, in.DownloadPath, in.RootID, t.Media.MediaType)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
@@ -772,13 +795,19 @@ func actualSizePolicy(size int64, p Policy) error {
 	}
 	return nil
 }
-func (a *App) downloadList(ctx context.Context) (any, error) {
+func (a *App) downloadList(ctx context.Context, selected ...string) (any, error) {
 	intents, e := a.Store.List(ctx, "intent", 200, 0)
 	if e != nil {
 		return nil, e
 	}
 	instances := []map[string]any{}
 	for _, d := range a.Settings().Downloaders {
+		if len(selected) > 0 && selected[0] != "" && d.ID != selected[0] {
+			continue
+		}
+		if !downloaderEnabled(d) {
+			continue
+		}
 		c, e := download.New(d.Config)
 		entry := map[string]any{"id": d.ID, "name": d.Name, "tasks": []download.Task{}}
 		if e == nil {
@@ -791,7 +820,11 @@ func (a *App) downloadList(ctx context.Context) (any, error) {
 		}
 		instances = append(instances, entry)
 	}
-	return map[string]any{"intents": intents, "instances": instances}, nil
+	native, e := a.Store.List(ctx, "native_download", 200, 0)
+	if e != nil {
+		return nil, e
+	}
+	return map[string]any{"intents": intents, "instances": instances, "native_downloads": native}, nil
 }
 func (a *App) downloadAction(ctx context.Context, key, action string) error {
 	a.downloadMu.Lock()
@@ -877,7 +910,7 @@ func (a *App) pollDownloads(ctx context.Context) error {
 		}
 	}
 	for _, rule := range a.Settings().Directories {
-		if rule.Enabled && rule.MonitorType == "downloader" {
+		if rule.Enabled && rule.MonitorType == "downloader" && rule.DownloaderID != "" {
 			if _, ok := byInstance[rule.DownloaderID]; !ok {
 				byInstance[rule.DownloaderID] = nil
 			}
@@ -969,6 +1002,13 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 		mode = "hardlink"
 	}
 	request := ImportRequest{MediaType: in.Media.MediaType, TMDBID: in.Media.ID, RootID: in.RootID, Mode: mode, IntentID: in.ID, WorkflowID: in.WorkflowID}
+	if in.DirectoryID != "" {
+		rule, ruleErr := a.getDirectory(in.DirectoryID)
+		if ruleErr != nil {
+			return ruleErr
+		}
+		request.Renaming, request.Scraping, request.LibraryTypeFolder = rule.Renaming, rule.Scraping, rule.LibraryTypeFolder
+	}
 	rules := in.Request.Mappings
 	request.Mappings = rules
 	for _, f := range files {

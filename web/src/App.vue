@@ -3,17 +3,21 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, toast, errorText, date } from './api';
 import Catalog from './components/Catalog.vue';
 import Resources from './components/Resources.vue';
+import DownloaderTasks from './components/DownloaderTasks.vue';
 import KeywordResources from './components/KeywordResources.vue';
 import Subscriptions from './components/Subscriptions.vue';
 import Operations from './components/Operations.vue';
 import Settings from './components/Settings.vue';
 import SiteManager from './components/SiteManager.vue';
-import DownloaderManager from './components/DownloaderManager.vue';
-import DirectoryManager from './components/DirectoryManager.vue';
 import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
-const route = ref(location.hash.slice(1) || 'discover'),
+function normalizeRoute(value: string) {
+  if (value.split('?')[0] === 'downloaders') return 'settings?tab=system';
+  if (value.split('?')[0] === 'directories') return 'settings?tab=directory';
+  return value || 'discover';
+}
+const route = ref(normalizeRoute(location.hash.slice(1))),
   auth = ref<any>(null),
   username = ref(''),
   password = ref(''),
@@ -70,8 +74,6 @@ const nav = [
     label: '系统',
     items: [
       ['sites', 'globe', '站点管理'],
-      ['downloaders', 'server', '下载器'],
-      ['directories', 'folder', '目录管理'],
       ['jobs', 'jobs', '任务队列'],
       ['logs', 'logs', '日志'],
       ['settings', 'settings', '设置'],
@@ -119,7 +121,7 @@ async function readNotification(n: any, jump = false) {
   }
 }
 function change() {
-  route.value = location.hash.slice(1) || 'discover';
+  route.value = normalizeRoute(location.hash.slice(1));
   mobile.value = false;
   window.scrollTo(0, 0);
   if (pageKey.value !== 'files') initialFilePaths.value = [];
@@ -419,8 +421,6 @@ onUnmounted(() => {
           :key="route"
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
-        <DownloaderManager v-else-if="pageKey === 'downloaders'" />
-        <DirectoryManager v-else-if="pageKey === 'directories'" @organize="organizePaths" />
         <FileManager
           v-else-if="pageKey === 'files' || pageKey === 'organize'"
           :key="route"
@@ -433,7 +433,7 @@ onUnmounted(() => {
           @organize="organizePaths"
           @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
         />
-        <Settings v-else-if="route === 'settings'" /><Operations
+        <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks v-else-if="pageKey === 'downloads'" /><Operations
           v-else
           :key="route"
           :view="route.split('/')[0]!"

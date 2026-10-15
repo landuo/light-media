@@ -48,7 +48,7 @@ func subscriptionTargetEpisodes(s Subscription, episodes []int) []int {
 	start := subscriptionStartEpisode(s)
 	out := make([]int, 0, len(episodes))
 	for _, n := range episodes {
-		if n >= start {
+		if n >= start && (s.TotalEpisodes == 0 || n <= s.TotalEpisodes) {
 			out = append(out, n)
 		}
 	}

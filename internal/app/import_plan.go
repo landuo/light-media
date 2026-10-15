@@ -24,14 +24,18 @@ type ImportFileRequest struct {
 }
 
 type ImportRequest struct {
-	MediaType  string              `json:"media_type"`
-	TMDBID     int64               `json:"tmdb_id"`
-	RootID     string              `json:"root_id"`
-	Mode       string              `json:"mode"`
-	IntentID   string              `json:"intent_id"`
-	WorkflowID string              `json:"workflow_id"`
-	Files      []ImportFileRequest `json:"files"`
-	Mappings   []media.MappingRule `json:"mappings"`
+	Renaming          *bool               `json:"renaming,omitempty"`
+	Scraping          *bool               `json:"scraping,omitempty"`
+	LibraryTypeFolder *bool               `json:"library_type_folder,omitempty"`
+	MediaType         string              `json:"media_type"`
+	TMDBID            int64               `json:"tmdb_id"`
+	RootID            string              `json:"root_id"`
+	TargetPath        string              `json:"target_path,omitempty"`
+	Mode              string              `json:"mode"`
+	IntentID          string              `json:"intent_id"`
+	WorkflowID        string              `json:"workflow_id"`
+	Files             []ImportFileRequest `json:"files"`
+	Mappings          []media.MappingRule `json:"mappings"`
 }
 
 type importSidecar struct {
@@ -137,8 +141,20 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 }
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
+	var prepareErr error
+	request, prepareErr = a.prepareManualImport(ctx, request)
+	if prepareErr != nil {
+		return ImportPlan{}, prepareErr
+	}
 	if !validMedia(request.MediaType, request.TMDBID) || len(request.Files) == 0 || len(request.Files) > 2000 || (request.Mode != "hardlink" && request.Mode != "copy" && request.Mode != "auto") || len(request.Mappings) > 100 {
 		return ImportPlan{}, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
+	}
+	if request.TargetPath != "" {
+		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files)
+		if err != nil {
+			return ImportPlan{}, err
+		}
+		request.RootID = rootID
 	}
 	root, err := a.importRoot(request.RootID)
 	if err != nil {
@@ -183,7 +199,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if identity.ID != request.TMDBID || identity.MediaType != request.MediaType || importName(identity.Title) == "" {
 		return ImportPlan{}, bad("INVALID_METADATA", "未取得可靠影视身份")
 	}
-	plan := ImportPlan{ID: id("plan_"), WorkflowID: request.WorkflowID, Media: identity, RootID: root.ID, Mode: request.Mode, Files: []PlanFile{}, State: "preview", IntentID: request.IntentID, CreatedAt: now()}
+	plan := ImportPlan{ID: id("plan_"), WorkflowID: request.WorkflowID, Media: identity, RootID: root.ID, Mode: request.Mode, Renaming: request.Renaming, Scraping: request.Scraping, LibraryTypeFolder: request.LibraryTypeFolder, Files: []PlanFile{}, State: "preview", IntentID: request.IntentID, CreatedAt: now()}
 	if plan.WorkflowID == "" {
 		plan.WorkflowID = id("wf_")
 	}
@@ -305,12 +321,25 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				folder = fmt.Sprintf("%s (tmdb-%d)", title, identity.ID)
 			}
 			base := folder
-			targetDir := filepath.Join(root.Path, folder)
+			baseDir := root.Path
+			if importBool(request.LibraryTypeFolder, false) {
+				typeName := "电影"
+				if request.MediaType == "tv" {
+					typeName = "电视剧"
+				}
+				baseDir = filepath.Join(baseDir, typeName)
+			}
+			targetDir := filepath.Join(baseDir, folder)
 			if request.MediaType == "tv" {
 				base = fmt.Sprintf("%s S%02dE%02d", title, file.Season, file.Episodes[0])
 				targetDir = filepath.Join(targetDir, fmt.Sprintf("Season %d", file.Season))
 			}
 			file.Target = filepath.Join(targetDir, base+strings.ToLower(filepath.Ext(file.Source)))
+			if !importBool(request.Renaming, true) {
+				// MoviePilot keeps the original basename directly in the destination
+				// when smart naming is off, without title or Season subdirectories.
+				file.Target = filepath.Join(baseDir, filepath.Base(file.Source))
+			}
 			if !within(root.Path, file.Target) || file.Source == file.Target || seenTargets[file.Target] {
 				block("目标路径重复、重叠或逃逸")
 			} else {

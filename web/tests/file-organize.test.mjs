@@ -173,3 +173,67 @@ test('individual preview blocks duplicate destinations before any confirmation r
   });
   assert.equal(requests, 2);
 });
+
+test('manual organize can leave identity and target automatic or submit a literal target path', async () => {
+  const automatic = {
+    path: '/downloads/Movie (2024).mkv',
+    season: 0,
+    episodes: '',
+    automatic: true,
+    targetPath: '',
+  };
+  assert.deepEqual(importEntryRequest(automatic, ''), {
+    media_type: '',
+    tmdb_id: 0,
+    target_path: '',
+    mode: '',
+    files: [{ path: automatic.path, season: 0, episodes: [] }],
+    mappings: [],
+  });
+  const chosen = {
+    ...automatic,
+    automatic: false,
+    identity: { id: 101, media_type: 'movie' },
+    targetPath: '/media/电影',
+  };
+  const request = importEntryRequest(chosen, 'copy');
+  assert.equal(request.target_path, '/media/电影');
+  assert.equal(Object.hasOwn(request, 'root_id'), false);
+  assert.equal(importEntryRequest({ ...automatic, mediaType: 'tv' }, '').media_type, 'tv');
+  let executions = 0;
+  const entries = [{ ...automatic }];
+  await previewOrganizeEntries(entries, '', async (path) => {
+    if (path === '/import/execute') executions++;
+    throw new Error('未找到唯一匹配的影片');
+  });
+  assert.equal(entries[0].state, 'failed');
+  assert.match(entries[0].error, /唯一匹配/);
+  await confirmOrganizeEntries(entries, async () => {
+    executions++;
+    return { id: 'unexpected' };
+  });
+  assert.equal(executions, 0);
+});
+
+test('manual organize preserves explicit false switches and leaves automatic switches unset', () => {
+  const entry = {
+    path: '/downloads/Test.mkv',
+    season: 0,
+    episodes: '',
+    automatic: true,
+    targetPath: '',
+  };
+  const automatic = importEntryRequest(
+    { ...entry, renaming: null, scraping: null, libraryTypeFolder: null },
+    '',
+  );
+  assert.equal(Object.hasOwn(automatic, 'renaming'), false);
+  assert.equal(Object.hasOwn(automatic, 'scraping'), false);
+  const explicit = importEntryRequest(
+    { ...entry, renaming: false, scraping: false, libraryTypeFolder: true },
+    'copy',
+  );
+  assert.equal(explicit.renaming, false);
+  assert.equal(explicit.scraping, false);
+  assert.equal(explicit.library_type_folder, true);
+});

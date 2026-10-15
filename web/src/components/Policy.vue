@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ model: any }>();
+const props = defineProps<{ model: any; advanced?: boolean }>();
 function csv(field: string, e: Event) {
   props.model[field] = (e.target as HTMLInputElement).value
     .split(/[,，]+/)
@@ -12,9 +12,13 @@ function size(field: string, e: Event) {
 }
 </script>
 <template>
+  <div v-if="advanced" class="form-grid">
+    <label>包含<input v-model="model.include" placeholder="留空不限制" /></label>
+    <label>排除<input v-model="model.exclude" placeholder="留空不限制" /></label>
+  </div>
   <div class="form-grid">
     <label>最低做种数<input v-model.number="model.min_seeders" type="number" min="0" /></label
-    ><label
+    ><label v-if="!advanced"
       >分辨率（硬性要求）<select v-model="model.resolution">
         <option value="">不限</option>
         <option>2160p</option>
@@ -28,7 +32,7 @@ function size(field: string, e: Event) {
         <option>AVC</option>
         <option>AV1</option>
       </select></label
-    ><label
+    ><label v-if="!advanced"
       >资源来源<select v-model="model.source">
         <option value="">不限</option>
         <option value="WEB-DL">WEB-DL</option>
@@ -39,7 +43,7 @@ function size(field: string, e: Event) {
         <option value="REMUX">REMUX</option>
         <option value="DVD">DVD</option>
       </select></label
-    ><label
+    ><label v-if="!advanced"
       >动态范围<select v-model="model.hdr">
         <option value="">不限</option>
         <option value="sdr">SDR</option>
@@ -88,8 +92,11 @@ function size(field: string, e: Event) {
         :value="(model.preferred_resolutions || []).join(', ')"
         @input="csv('preferred_resolutions', $event)"
         placeholder="如 2160p, 1080p" /></label
-    ><label>必须匹配的标题正则<input v-model="model.include" placeholder="留空不限制" /></label
-    ><label>排除的标题正则<input v-model="model.exclude" placeholder="留空不限制" /></label>
+    ><label v-if="!advanced"
+      >必须匹配的标题正则<input v-model="model.include" placeholder="留空不限制" /></label
+    ><label v-if="!advanced"
+      >排除的标题正则<input v-model="model.exclude" placeholder="留空不限制"
+    /></label>
   </div>
   <p class="hint">偏好影响合格资源的排序，不会触发已入库作品自动升级。</p>
 </template>

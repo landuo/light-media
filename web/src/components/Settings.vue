@@ -1,115 +1,75 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { api, apiURL, action, ui, refreshSettings, toast, date, bytes, go } from '../api';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { api, apiURL, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
+import DownloaderManager from './DownloaderManager.vue';
+import DirectoryManager from './DirectoryManager.vue';
+const emit = defineEmits<{ organize: [paths: string[]] }>();
+function routeTab() {
+  const value = new URLSearchParams(location.hash.split('?')[1] || '').get('tab');
+  return ['system', 'directory', 'maintenance'].includes(value || '') ? value! : 'system';
+}
 const form = ref<any>(null),
-  tab = ref('connect'),
+  tab = ref(routeTab()),
+  visitedTabs = ref(new Set([routeTab()])),
   testResult = ref<any>(null),
-  libraries = ref<any[]>([]),
   backups = ref<string[]>([]),
-  allowed = ref(''),
-  siteKind = ref('mteam'),
   saving = ref(false),
   logging = ref<any>(null),
   debugScope = ref('module'),
   debugID = ref('download');
-const siteTemplates: any = {
-  mteam: ['馒头', 'https://api.m-team.cc'],
-  hhanclub: ['憨憨', 'https://hhanclub.net'],
-  ubits: ['UBits', 'https://ubits.club'],
-  jiayuan: ['家园', 'https://hdhome.org'],
-  '1ptba': ['1PTBA', 'https://1ptba.com'],
-};
-const ready = computed(() => [
-  { name: 'TMDB 元数据', ok: !!form.value?.secret_state?.tmdb },
-  {
-    name: '资源站点',
-    ok: form.value?.sites?.some((s: any) => s.enabled && form.value?.secret_state?.sites?.[s.id]),
-  },
-  { name: '下载器', ok: !!form.value?.downloaders?.length },
-  { name: '入库目录', ok: !!form.value?.roots?.length },
-  { name: '飞牛影视', ok: form.value?.fnos?.enabled && !!form.value?.secret_state?.fnos },
-]);
+function syncTab() {
+  tab.value = routeTab();
+  visitedTabs.value.add(tab.value);
+}
+function selectTab(value: string) {
+  tab.value = value;
+  visitedTabs.value.add(value);
+  location.hash = 'settings?tab=' + value;
+}
 async function load() {
-  const s = await refreshSettings();
-  form.value = JSON.parse(JSON.stringify(s));
+  form.value = JSON.parse(JSON.stringify(await refreshSettings()));
   form.value.tmdb ||= { api_key: '', access_token: '' };
-  form.value.fnos ||= {
-    host: '',
-    username: '',
-    password: '',
-    library_guid: '',
-    mappings: [],
-    enabled: false,
-  };
-  form.value.log_level ||= 'INFO';
-  form.value.log_max_mib ||= 5;
-  form.value.log_retain_files ||= 5;
+  form.value.fnos ||= { host: '', username: '', password: '', enabled: false };
   form.value.auto_import_mode ||= 'hardlink';
-  form.value.material_max_mib ||= 256;
-  form.value.sites ||= [];
-  form.value.downloaders ||= [];
-  form.value.roots ||= [];
-  form.value.allowed_roots ||= [];
-  form.value.fnos.mappings ||= [];
-  for (const d of form.value.downloaders) d.mappings ||= [];
-  allowed.value = form.value.allowed_roots.join('\n');
   backups.value = (await api('/backups')) || [];
   logging.value = await api('/settings/logging');
 }
-async function save() {
+async function save(section: 'tmdb' | 'fnos' | 'organize') {
   saving.value = true;
   try {
-    const c = JSON.parse(JSON.stringify(form.value));
+    // Downloaders and directories have their own save actions. Read current
+    // values so saving this section cannot overwrite changes in those sections.
+    const current = await refreshSettings();
+    const c = JSON.parse(JSON.stringify(current));
     delete c.secret_state;
-    c.allowed_roots = allowed.value
-      .split('\n')
-      .map((p) => p.trim())
-      .filter(Boolean);
+    if (section === 'tmdb') c.tmdb = form.value.tmdb;
+    if (section === 'fnos')
+      c.fnos = {
+        ...c.fnos,
+        host: form.value.fnos.host,
+        username: form.value.fnos.username,
+        password: form.value.fnos.password,
+        enabled: form.value.fnos.enabled,
+      };
+    if (section === 'organize') c.auto_import_mode = form.value.auto_import_mode;
     const result = await action(() => api('/settings', c, 'PUT'), '设置已保存');
     if (result) {
       ui.settings = result;
-      form.value = JSON.parse(JSON.stringify(result));
-      form.value.fnos.mappings ||= [];
-      for (const d of form.value.downloaders) d.mappings ||= [];
-      allowed.value = (result.allowed_roots || []).join('\n');
+      form.value.secret_state = result.secret_state;
+      if (section === 'tmdb') form.value.tmdb = result.tmdb;
+      if (section === 'fnos') form.value.fnos = result.fnos;
       return true;
     }
+    return false;
+  } catch (e) {
+    toast(errorText(e), true);
     return false;
   } finally {
     saving.value = false;
   }
 }
-function addSite() {
-  const k = siteKind.value,
-    t = siteTemplates[k];
-  form.value.sites.push({
-    id: k,
-    kind: k,
-    name: t[0],
-    base_url: t[1],
-    cookie: '',
-    api_key: '',
-    enabled: true,
-    daily_budget: 500,
-  });
-}
-function addDownloader() {
-  form.value.downloaders.push({
-    id: 'downloader-' + Date.now(),
-    name: '新下载器',
-    kind: 'qbittorrent',
-    base_url: 'http://127.0.0.1:8080',
-    username: '',
-    password: '',
-    download_path: '/media/download',
-    mappings: [],
-  });
-}
-async function test(target: string, id = '') {
-  if (await save()) testResult.value = await action(() => api('/settings/test', { target, id }));
-}
-async function listLibraries() {
-  if (await save()) libraries.value = (await action(() => api('/fnos/libraries'))) || [];
+async function test(target: 'tmdb' | 'fnos') {
+  if (await save(target)) testResult.value = await action(() => api('/settings/test', { target }));
 }
 async function saveLogging(debug?: {
   scope: string;
@@ -132,13 +92,7 @@ async function saveLogging(debug?: {
       ),
     debug ? '临时调试范围已更新' : '日志策略已保存',
   );
-  if (!result) return;
-  logging.value = result;
-  // Keep a later full settings save from reverting this dedicated update.
-  form.value.log_level = result.level;
-  form.value.log_retain_days = result.retain_days;
-  form.value.log_total_mib = result.total_mib;
-  form.value.log_max_mib = result.rotate_mib;
+  if (result) logging.value = result;
 }
 async function debug(enable: boolean, scope = debugScope.value, id = debugID.value) {
   if (!id.trim()) {
@@ -148,77 +102,52 @@ async function debug(enable: boolean, scope = debugScope.value, id = debugID.val
   await saveLogging({ scope, id: id.trim(), minutes: 30, enabled: enable });
 }
 async function backup() {
-  const r = await action(() => api('/backups', {}), '数据库备份已创建');
-  if (r) backups.value = (await api('/backups')) || [];
+  const result = await action(() => api('/backups', {}), '数据库备份已创建');
+  if (result) backups.value = (await api('/backups')) || [];
 }
 async function restore(name: string) {
   if (!confirm('准备恢复 ' + name + '？服务端会检查是否满足停机恢复条件。')) return;
-  const r = await action(() => api('/restore', { filename: name, confirm: true }));
-  if (r) testResult.value = r;
+  const result = await action(() => api('/restore', { filename: name, confirm: true }));
+  if (result) testResult.value = result;
 }
-onMounted(() => action(load));
+onMounted(() => {
+  window.addEventListener('hashchange', syncTab);
+  action(load);
+});
+onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
 </script>
 <template>
-  <div class="page-heading">
-    <div>
-      <p class="eyebrow">SETTINGS</p>
-      <h1>设定</h1>
-      <p class="muted">配置元数据、服务、媒体目录及系统维护。</p>
-    </div>
-    <button class="primary" :disabled="saving || !form" @click="save">
-      {{ saving ? '正在保存…' : '保存设置' }}
+  <div class="page-heading"><h1>设置</h1></div>
+  <div class="tabs">
+    <button
+      v-for="item in [
+        ['system', '系统'],
+        ['directory', '目录'],
+        ['maintenance', '维护'],
+      ]"
+      :key="item[0]"
+      :class="{ selected: tab === item[0] }"
+      @click="selectTab(item[0]!)"
+    >
+      {{ item[1] }}
     </button>
   </div>
-  <template v-if="form"
-    ><div class="button-row" style="margin-bottom: 20px">
-      <button @click="go('sites')">站点管理与数据</button
-      ><button @click="go('downloaders')">下载器配置</button
-      ><button @click="go('files')">文件管理</button
-      ><button @click="go('history')">整理历史</button>
-    </div>
-    <div class="setup-checklist">
-      <div v-for="r in ready" :key="r.name" :class="{ done: r.ok }">
-        <span>{{ r.ok ? '✓' : '○' }}</span
-        >{{ r.name }}
-      </div>
-    </div>
-    <p class="hint">
-      秘密字段不会从服务端回显。显示“已保存”时，留空会保留原值；更换地址或账号后请重新填写凭据。连接测试会先保存当前设置。
-    </p>
-    <datalist id="fnos-libs">
-      <option v-for="l in libraries" :key="l.guid" :value="l.guid">{{ l.name }}</option>
-    </datalist>
-    <div class="tabs">
-      <button
-        v-for="t in [
-          ['connect', '连接与凭据'],
-          ['paths', '目录与映射'],
-          ['system', '维护与备份'],
-        ]"
-        :key="t[0]"
-        :class="{ selected: tab === t[0] }"
-        @click="tab = t[0]!"
-      >
-        {{ t[1] }}
-      </button>
-    </div>
-    <template v-if="tab === 'connect'"
-      ><section class="panel">
-        <div class="section-heading">
+  <template v-if="form">
+    <div v-if="visitedTabs.has('system')" v-show="tab === 'system'">
+      <section class="panel">
+        <header class="section-heading">
           <h2>TMDB 元数据</h2>
           <span class="badge">{{ form.secret_state?.tmdb ? '凭据已保存' : '尚未配置' }}</span>
-        </div>
-        <p class="hint">
-          API Key 与 Access Token 只需填写一种，用于影视、榜单、演员资料及相关推荐。
-        </p>
+        </header>
         <div class="form-grid">
           <label
             >API Key<input
               v-model="form.tmdb.api_key"
               type="password"
               autocomplete="off"
-              placeholder="留空保留已保存值" /></label
-          ><label
+              placeholder="留空保留已保存值"
+          /></label>
+          <label
             >Access Token<input
               v-model="form.tmdb.access_token"
               type="password"
@@ -226,257 +155,54 @@ onMounted(() => action(load));
               placeholder="与 API Key 二选一"
           /></label>
         </div>
-        <button class="small" @click="test('tmdb')">保存并测试 TMDB</button>
-      </section>
-      <section class="panel">
-        <div class="section-heading">
-          <h2>资源站点</h2>
-          <div class="inline-form">
-            <select v-model="siteKind">
-              <option v-for="(s, k) in siteTemplates" :key="k" :value="k">
-                {{ s[0] }}
-              </option></select
-            ><button class="small" :disabled="form.sites.length >= 5" @click="addSite">
-              ＋ 添加站点
-            </button>
-          </div>
+        <div class="button-row">
+          <button class="primary" :disabled="saving" @click="save('tmdb')">保存</button
+          ><button @click="test('tmdb')">测试</button>
         </div>
-        <article v-for="(s, i) in form.sites" :key="i" class="config-item">
-          <div class="section-heading">
-            <h3>{{ s.name || s.kind }}</h3>
-            <div class="button-row">
-              <label class="check"><input v-model="s.enabled" type="checkbox" />启用</label
-              ><span class="badge">{{
-                form.secret_state?.sites?.[s.id] ? '凭据已保存' : '待填写'
-              }}</span
-              ><button class="small danger" @click="form.sites.splice(i, 1)">移除</button>
-            </div>
-          </div>
-          <div class="form-grid">
-            <label>标识 ID<input v-model="s.id" placeholder="唯一英文标识" /></label
-            ><label>名称<input v-model="s.name" /></label
-            ><label>协议<input :value="s.kind" readonly /></label
-            ><label>站点 / API 地址<input v-model="s.base_url" type="url" required /></label
-            ><label v-if="s.kind === 'mteam'"
-              >API Key<input
-                v-model="s.api_key"
-                type="password"
-                autocomplete="off"
-                placeholder="留空保留" /></label
-            ><label v-else
-              >Cookie<input
-                v-model="s.cookie"
-                type="password"
-                autocomplete="off"
-                placeholder="留空保留" /></label
-            ><label
-              >每日请求预算<input v-model.number="s.daily_budget" type="number" min="0" max="10000"
-            /></label>
-          </div>
-          <button class="small" @click="test('site', s.id)">保存并测试站点</button>
-        </article>
-        <p v-if="!form.sites.length" class="hint">添加你使用的站点，再配置 Cookie 或 API Key。</p>
       </section>
+      <section class="panel"><DownloaderManager /></section>
       <section class="panel">
-        <div class="section-heading">
-          <h2>下载器</h2>
-          <button class="small" @click="addDownloader">＋ 添加下载器</button>
-        </div>
-        <article v-for="(d, i) in form.downloaders" :key="i" class="config-item">
-          <div class="section-heading">
-            <h3>{{ d.name }}</h3>
-            <button class="small danger" @click="form.downloaders.splice(i, 1)">移除</button>
-          </div>
-          <div class="form-grid">
-            <label>标识 ID<input v-model="d.id" /></label
-            ><label>名称<input v-model="d.name" /></label
-            ><label
-              >类型<select v-model="d.kind">
-                <option value="qbittorrent">qBittorrent</option>
-                <option value="transmission">Transmission</option>
-              </select></label
-            ><label>Web / RPC 地址<input v-model="d.base_url" type="url" /></label
-            ><label>用户名<input v-model="d.username" autocomplete="off" /></label
-            ><label
-              >密码 {{ form.secret_state?.downloaders?.[d.id] ? '（已保存）' : ''
-              }}<input
-                v-model="d.password"
-                type="password"
-                autocomplete="off"
-                placeholder="留空保留" /></label
-            ><label
-              >下载器保存路径<input v-model="d.download_path" placeholder="下载器视角的路径"
-            /></label>
-          </div>
-          <h4>下载器路径 → 程序路径</h4>
-          <div v-for="(m, j) in d.mappings" :key="j" class="mapping-row">
-            <input v-model="m.from" placeholder="例如 /downloads" /><span>→</span
-            ><input v-model="m.to" placeholder="例如 /media/download" /><button
-              class="small danger"
-              @click="d.mappings.splice(j, 1)"
-            >
-              移除
-            </button>
-          </div>
-          <div class="button-row">
-            <button class="small" @click="d.mappings.push({ from: '', to: '' })">＋ 添加映射</button
-            ><button class="small" @click="test('downloader', d.id)">保存并测试下载器</button>
-          </div>
-        </article>
-        <p v-if="!form.downloaders.length" class="hint">
-          支持 qBittorrent 与 Transmission，按实例独立管理。
-        </p>
-      </section>
-      <section class="panel">
-        <div class="section-heading">
-          <h2>飞牛影视</h2>
-          <label class="check"
-            ><input v-model="form.fnos.enabled" type="checkbox" />启用飞牛入库同步</label
-          >
-        </div>
+        <header class="section-heading"><h2>媒体服务器</h2></header>
         <div class="form-grid">
-          <label
-            >影视服务地址<input
+          <label>类型<input value="飞牛影视" readonly /></label>
+          <label class="check"><input v-model="form.fnos.enabled" type="checkbox" />启用</label>
+          <label class="span-two"
+            >地址<input
               v-model="form.fnos.host"
               type="url"
-              placeholder="https://nas.example.com:8080/v" /></label
-          ><label>用户名<input v-model="form.fnos.username" autocomplete="off" /></label
-          ><label
-            >密码 {{ form.secret_state?.fnos ? '（已保存）' : ''
-            }}<input
+              placeholder="https://nas.example.com:8080/v"
+          /></label>
+          <label>用户名<input v-model="form.fnos.username" autocomplete="off" /></label>
+          <label
+            >密码<input
               v-model="form.fnos.password"
               type="password"
-              autocomplete="off"
-              placeholder="留空保留" /></label
-          ><label>默认媒体库 GUID<input v-model="form.fnos.library_guid" /></label>
-        </div>
-        <h4>程序路径 → 飞牛宿主路径</h4>
-        <div v-for="(m, j) in form.fnos.mappings" :key="j" class="mapping-row">
-          <input v-model="m.from" placeholder="例如 /media" /><span>→</span
-          ><input v-model="m.to" placeholder="例如 /vol2/1000/media" /><button
-            class="small danger"
-            @click="form.fnos.mappings.splice(j, 1)"
-          >
-            移除
-          </button>
+              autocomplete="new-password"
+              :placeholder="form.secret_state?.fnos ? '已保存，留空保留' : '登录密码'"
+          /></label>
         </div>
         <div class="button-row">
-          <button class="small" @click="form.fnos.mappings.push({ from: '', to: '' })">
-            ＋ 添加映射</button
-          ><button class="small" @click="test('fnos')">保存并测试连接</button
-          ><button class="small" @click="listLibraries">保存并读取媒体库</button>
+          <button class="primary" :disabled="saving" @click="save('fnos')">保存</button
+          ><button @click="test('fnos')">测试</button>
         </div>
-        <div v-if="libraries.length" class="lookup-list">
-          <button
-            v-for="l in libraries"
-            :key="l.guid || l.id"
-            @click="form.fnos.library_guid = l.guid || l.id"
-          >
-            {{ l.name || l.title }} <span>{{ l.guid || l.id }}</span>
-          </button>
-        </div>
-      </section></template
-    >
-    <template v-else-if="tab === 'paths'"
-      ><section class="panel">
-        <div class="section-heading">
-          <h2>媒体库目录</h2>
-          <button class="small" @click="listLibraries">读取飞牛媒体库 GUID</button
-          ><button
-            class="small"
-            @click="
-              form.roots.push({
-                id: 'root-' + Date.now(),
-                name: '新媒体库',
-                path: '',
-                kind: 'mixed',
-                fnos_library_guid: '',
-              })
-            "
-          >
-            ＋ 添加目录
-          </button>
-        </div>
-        <article v-for="(r, i) in form.roots" :key="i" class="config-item">
-          <div class="form-grid">
-            <label>标识 ID<input v-model="r.id" /></label
-            ><label>名称<input v-model="r.name" /></label
-            ><label>绝对路径<input v-model="r.path" placeholder="/media/电影" /></label
-            ><label
-              >飞牛媒体库 GUID（留空用全局）<input
-                v-model="r.fnos_library_guid"
-                list="fnos-libs"
-                placeholder="对应此目录的飞牛库" /></label
-            ><label
-              >类型<select v-model="r.kind">
-                <option value="mixed">混合</option>
-                <option value="movie">电影</option>
-                <option value="tv">剧集</option>
-              </select></label
-            >
-          </div>
-          <button class="small danger" @click="form.roots.splice(i, 1)">移除此目录配置</button>
-        </article>
-        <p class="hint">目录配置的移除不会删除已有文件。硬链接要求源与目标处于同一文件系统。</p>
       </section>
+    </div>
+    <div v-if="visitedTabs.has('directory')" v-show="tab === 'directory'">
+      <DirectoryManager @organize="emit('organize', $event)" />
       <section class="panel">
-        <h2>允许扫描的源目录</h2>
+        <header class="section-heading"><h2>整理 &amp; 刮削</h2></header>
         <label
-          >每行一个绝对路径<textarea
-            v-model="allowed"
-            rows="5"
-            placeholder="/media/download"
-          ></textarea>
-        </label>
-        <p class="hint">手动扫描和下载整理仅允许访问这些源目录，目标目录由上方媒体库配置限定。</p>
+          >整理方式<select v-model="form.auto_import_mode">
+            <option value="hardlink">硬链接</option>
+            <option value="copy">复制</option>
+            <option value="auto">自动</option>
+          </select></label
+        >
+        <button class="primary" :disabled="saving" @click="save('organize')">保存</button>
       </section>
-      <section class="panel">
-        <h2>默认位置</h2>
-        <div class="form-grid">
-          <label
-            >手动整理默认方式<select v-model="form.auto_import_mode">
-              <option value="hardlink">硬链接（默认）</option>
-              <option value="copy">复制</option>
-              <option value="auto">自动（允许跨卷复制）</option>
-            </select></label
-          >
-          <label
-            >默认下载器<select v-model="form.default_downloader">
-              <option value="">未指定</option>
-              <option v-for="d in form.downloaders" :key="d.id" :value="d.id">
-                {{ d.name || d.id }}
-              </option>
-            </select></label
-          ><label
-            >手动整理默认媒体库<select v-model="form.default_root">
-              <option value="">未指定</option>
-              <option v-for="r in form.roots" :key="r.id" :value="r.id">
-                {{ r.name || r.path }}
-              </option>
-            </select></label
-          >
-        </div>
-        <p class="hint">
-          自动整理请到「目录管理」配置下载目录、监听方式与目标媒体库。此处默认值用于手动整理；硬链接需同卷，跨卷复制会额外占用目标空间。
-        </p>
-      </section>
-      <section class="panel">
-        <h2>加密种子归档</h2>
-        <label
-          >加密种子归档上限（MiB）<input
-            v-model.number="form.material_max_mib"
-            type="number"
-            min="32"
-            max="2048"
-        /></label>
-        <p class="hint">
-          默认 256 MiB，可设 32–2048 MiB。已确认下载的材料不会自动过期；未确认预览的孤立材料保留 24
-          小时。总量满后会拒绝新预览，不会删除在用材料。
-        </p>
-      </section></template
-    >
-    <template v-else
-      ><section v-if="logging" class="panel">
+    </div>
+    <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'">
+      <section v-if="logging" class="panel">
         <h2>日志与保留策略</h2>
         <div class="form-grid">
           <label
@@ -585,18 +311,22 @@ onMounted(() => action(load));
           </table>
         </div>
         <p v-if="!backups.length" class="hint">还没有备份。</p>
-      </section></template
-    >
+      </section>
+    </div>
     <section v-if="testResult" class="panel">
-      <div class="section-heading">
-        <h2>服务端返回结果</h2>
+      <header class="section-heading">
+        <h2>测试结果</h2>
         <button class="small" @click="testResult = null">收起</button>
-      </div>
+      </header>
       <pre class="code-box">{{ JSON.stringify(testResult, null, 2) }}</pre>
     </section>
-    <div class="sticky-save">
-      <span>修改后保存设置，空白秘密字段保留原值。</span
-      ><button class="primary" :disabled="saving" @click="save">保存设置</button>
-    </div></template
-  >
+  </template>
 </template>
+<style scoped>
+.span-two {
+  grid-column: 1 / -1;
+}
+.panel > .button-row {
+  margin-top: 20px;
+}
+</style>

@@ -49,6 +49,7 @@ const transferHistoryCTE = `WITH history AS (
  ELSE 'failed' END AS status
  FROM records r,json_each(r.payload,'$.files') f
  WHERE r.kind='import_plan' AND json_extract(r.payload,'$.state') NOT IN ('preview','superseded')
+ AND NOT EXISTS(SELECT 1 FROM records hidden WHERE hidden.kind='transfer_history_hidden' AND hidden.id=json_extract(f.value,'$.id'))
  AND EXISTS(SELECT 1 FROM jobs j WHERE ` + transferHistoryJobMatch + `)
 ) `
 
@@ -64,6 +65,13 @@ func (a *App) transferHistoryAPI(r *http.Request, p string) (any, error) {
 		}
 		if len(parts) == 2 && r.Method == "GET" {
 			return item, nil
+		}
+		if len(parts) == 2 && r.Method == "DELETE" {
+			var in historyDeleteRequest
+			if e = decodeBody(nil, r, &in); e != nil {
+				return nil, e
+			}
+			return a.deleteTransferHistory(r.Context(), item, in)
 		}
 		if len(parts) == 3 && parts[2] == "retry" && r.Method == "POST" {
 			var in struct {

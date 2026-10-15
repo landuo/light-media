@@ -24,22 +24,30 @@ type DownloaderConfig struct {
 	Name         string        `json:"name"`
 	DownloadPath string        `json:"download_path"`
 	Mappings     []PathMapping `json:"mappings"`
+	SharedPaths  bool          `json:"shared_paths,omitempty"`
+	Enabled      *bool         `json:"enabled,omitempty"`
 }
+
+func downloaderEnabled(d DownloaderConfig) bool { return d.Enabled == nil || *d.Enabled }
 
 // DirectoryRule separates downloader save paths from library destinations.
 // A rule only authorizes automatic organization when explicitly enabled.
 type DirectoryRule struct {
-	IncludeExisting bool   `json:"include_existing"`
-	ID              string `json:"id"`
-	Name            string `json:"name"`
-	DownloaderID    string `json:"downloader_id"`
-	DownloadPath    string `json:"download_path"`
-	SourcePath      string `json:"source_path"`
-	RootID          string `json:"root_id"`
-	MediaType       string `json:"media_type"`
-	Mode            string `json:"mode"`
-	MonitorType     string `json:"monitor_type"`
-	Enabled         bool   `json:"enabled"`
+	IncludeExisting   bool   `json:"include_existing"`
+	ID                string `json:"id"`
+	Name              string `json:"name"`
+	DownloaderID      string `json:"downloader_id"`
+	DownloadPath      string `json:"download_path"`
+	SourcePath        string `json:"source_path"`
+	LibraryPath       string `json:"library_path,omitempty"`
+	RootID            string `json:"root_id"`
+	MediaType         string `json:"media_type"`
+	Mode              string `json:"mode"`
+	MonitorType       string `json:"monitor_type"`
+	Enabled           bool   `json:"enabled"`
+	Renaming          *bool  `json:"renaming,omitempty"`
+	Scraping          *bool  `json:"scraping,omitempty"`
+	LibraryTypeFolder *bool  `json:"library_type_folder,omitempty"`
 }
 type Root struct {
 	FNOSLibraryGUID string `json:"fnos_library_guid"`
@@ -118,28 +126,31 @@ type ScheduleException struct {
 	Episode    int    `json:"episode"`
 }
 type Subscription struct {
-	DirectoryID  string              `json:"directory_id"`
-	DownloadPath string              `json:"download_path"`
-	TargetScope  string              `json:"target_scope"`
-	StartEpisode int                 `json:"start_episode"`
-	ID           string              `json:"id"`
-	Media        catalog.Media       `json:"media"`
-	Season       int                 `json:"season"`
-	Episodes     []int               `json:"episodes"`
-	Excluded     []int               `json:"excluded"`
-	EpisodeDates map[int]string      `json:"episode_dates"`
-	AllowEarly   []int               `json:"allow_early"`
-	Policy       Policy              `json:"policy"`
-	Schedule     Schedule            `json:"schedule"`
-	Mappings     []media.MappingRule `json:"mappings"`
-	DownloaderID string              `json:"downloader_id"`
-	RootID       string              `json:"root_id"`
-	State        string              `json:"state"`
-	Revision     int                 `json:"revision"`
-	LastCheck    string              `json:"last_check"`
-	NextCheck    string              `json:"next_check"`
-	LastReason   string              `json:"last_reason"`
-	CreatedAt    string              `json:"created_at"`
+	Keyword       string              `json:"keyword"`
+	SiteIDs       []string            `json:"site_ids"`
+	TotalEpisodes int                 `json:"total_episodes"`
+	DirectoryID   string              `json:"directory_id"`
+	DownloadPath  string              `json:"download_path"`
+	TargetScope   string              `json:"target_scope"`
+	StartEpisode  int                 `json:"start_episode"`
+	ID            string              `json:"id"`
+	Media         catalog.Media       `json:"media"`
+	Season        int                 `json:"season"`
+	Episodes      []int               `json:"episodes"`
+	Excluded      []int               `json:"excluded"`
+	EpisodeDates  map[int]string      `json:"episode_dates"`
+	AllowEarly    []int               `json:"allow_early"`
+	Policy        Policy              `json:"policy"`
+	Schedule      Schedule            `json:"schedule"`
+	Mappings      []media.MappingRule `json:"mappings"`
+	DownloaderID  string              `json:"downloader_id"`
+	RootID        string              `json:"root_id"`
+	State         string              `json:"state"`
+	Revision      int                 `json:"revision"`
+	LastCheck     string              `json:"last_check"`
+	NextCheck     string              `json:"next_check"`
+	LastReason    string              `json:"last_reason"`
+	CreatedAt     string              `json:"created_at"`
 }
 type Intent struct {
 	DirectoryID          string        `json:"directory_id"`
@@ -186,6 +197,7 @@ type Asset struct {
 	Size                int64         `json:"size"`
 	State               string        `json:"state"`
 	ScrapeState         string        `json:"scrape_state"`
+	Renaming            *bool         `json:"renaming,omitempty"`
 	FNOSState           string        `json:"fnos_state"`
 	FNOSGUID            string        `json:"fnos_guid"`
 	FNOSScanAt          string        `json:"fnos_scan_at,omitempty"`
@@ -211,18 +223,21 @@ type PlanFile struct {
 	AssetID  string `json:"asset_id"`
 }
 type ImportPlan struct {
-	Warnings       []string      `json:"warnings"`
-	SpaceNeeded    int64         `json:"space_needed"`
-	SpaceAvailable int64         `json:"space_available"`
-	ID             string        `json:"id"`
-	WorkflowID     string        `json:"workflow_id"`
-	Media          catalog.Media `json:"media"`
-	RootID         string        `json:"root_id"`
-	Mode           string        `json:"mode"`
-	Files          []PlanFile    `json:"files"`
-	State          string        `json:"state"`
-	IntentID       string        `json:"intent_id"`
-	CreatedAt      string        `json:"created_at"`
+	Renaming          *bool         `json:"renaming,omitempty"`
+	Scraping          *bool         `json:"scraping,omitempty"`
+	LibraryTypeFolder *bool         `json:"library_type_folder,omitempty"`
+	Warnings          []string      `json:"warnings"`
+	SpaceNeeded       int64         `json:"space_needed"`
+	SpaceAvailable    int64         `json:"space_available"`
+	ID                string        `json:"id"`
+	WorkflowID        string        `json:"workflow_id"`
+	Media             catalog.Media `json:"media"`
+	RootID            string        `json:"root_id"`
+	Mode              string        `json:"mode"`
+	Files             []PlanFile    `json:"files"`
+	State             string        `json:"state"`
+	IntentID          string        `json:"intent_id"`
+	CreatedAt         string        `json:"created_at"`
 }
 type Job struct {
 	ParentJobID  string          `json:"parent_job_id,omitempty"`

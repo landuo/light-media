@@ -155,6 +155,43 @@ func (c *Client) Files(ctx context.Context, hash string) ([]File, error) {
 	return c.trFiles(ctx, hash)
 }
 
+// DefaultSavePath reads the daemon's own setting. The application never changes
+// daemon preferences; an empty directory choice is resolved before submission.
+func (c *Client) DefaultSavePath(ctx context.Context) (string, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	var destination string
+	if c.config.Kind == "qbittorrent" {
+		body, err := c.qb(ctx, http.MethodGet, "app/preferences", "", "")
+		if err != nil {
+			return "", err
+		}
+		var settings struct {
+			SavePath string `json:"save_path"`
+		}
+		if err := decode(body, &settings); err != nil {
+			return "", err
+		}
+		destination = settings.SavePath
+	} else {
+		if err := c.trConnect(ctx); err != nil {
+			return "", err
+		}
+		settings, err := c.trRPC(ctx, "session_get", map[string]any{}, c.trDialect)
+		if err != nil {
+			return "", err
+		}
+		if json.Unmarshal(settings["download_dir"], &destination) != nil {
+			_ = json.Unmarshal(settings["download-dir"], &destination)
+		}
+	}
+	destination = strings.TrimRight(destination, "/")
+	if !absolutePath(destination) {
+		return "", failure("preferences", "invalid_default_save_path")
+	}
+	return destination, nil
+}
+
 // Add validates exact metainfo bytes and checks for an existing hash first.
 // A duplicate never changes its download directory, tags or running state.
 // Uncertain transport failures are not automatically retried.

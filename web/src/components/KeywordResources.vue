@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {
   api,
   action,
   ui,
   emptyPolicy,
-  episodeNumbers,
   bytes,
   label,
   date,
@@ -13,9 +12,8 @@ import {
   friendly,
   toast,
   errorText,
-  image,
 } from '../api';
-import { keywordResourceSearch, resourceTitleQuery } from '../features/keyword-search';
+import { keywordResourceSearch } from '../features/keyword-search';
 import {
   candidateKey,
   emptyResourceFilters,
@@ -27,9 +25,8 @@ import {
   type Candidate,
 } from '../features/resources';
 import Policy from './Policy.vue';
-import MappingRules from './MappingRules.vue';
 import ResourceCard from './ResourceCard.vue';
-import DownloadTarget from './DownloadTarget.vue';
+import AddDownloadDialog from './AddDownloadDialog.vue';
 import {
   interruptedSearch,
   siteSearchLabel,
@@ -51,27 +48,8 @@ const query = ref(params.get('query') || ''),
   descending = ref(true),
   selected = ref<string[]>([]),
   downloaded = ref<Record<string, string>>({});
-const request = ref<any>(null),
-  active = ref<Candidate | null>(null),
-  identityQuery = ref(''),
-  identities = ref<any[]>([]),
-  chosen = ref<any>(null),
-  season = ref(1),
-  episodes = ref(''),
-  downloader = ref(''),
-  downloadPath = ref(''),
-  directoryId = ref(''),
-  mappings = ref<any[]>([]),
-  preview = ref<any>(null),
-  dialogError = ref(''),
-  previewLoading = ref(false),
-  seasonInfoLoading = ref(false),
-  identityLoading = ref(false),
-  confirmLoading = ref(false),
-  acceptExtra = ref(false),
-  queue = ref<Candidate[]>([]);
+const request = ref<any>(null), active = ref<Candidate | null>(null), queue = ref<Candidate[]>([]);
 let controller: AbortController | null = null,
-  dialogGeneration = 0,
   disposed = false;
 const names = computed<Record<string, string>>(() =>
     Object.fromEntries((ui.settings?.sites || []).map((s: any) => [s.id, s.name || s.id])),
@@ -128,7 +106,7 @@ async function loadDownloads() {
   try {
     const r = await api('/downloads');
     downloaded.value = Object.fromEntries(
-      (Array.isArray(r) ? r : r.intents || r.items || [])
+      (Array.isArray(r) ? r : [...(r.intents || r.items || []), ...(r.native_downloads || [])])
         .filter((i: any) => !['failed', 'cancelled'].includes(i.state))
         .map((i: any) => [i.site_id + ':' + i.resource_id, i.state]),
     );
@@ -183,170 +161,23 @@ function submitSearch() {
     void search();
   } else go(target);
 }
-function invalidatePreview() {
-  ++dialogGeneration;
-  preview.value = null;
-  previewLoading.value = false;
-  acceptExtra.value = false;
-  dialogError.value = '';
-  seasonInfoLoading.value = false;
-}
-function changeSeason() {
-  invalidatePreview();
-  episodes.value = active.value
-    ? suggestedDownloadEpisodes([], active.value, season.value).join(',')
-    : '';
-}
-async function chooseWholeSeason() {
-  if (!chosen.value) return;
-  invalidatePreview();
-  const generation = dialogGeneration;
-  seasonInfoLoading.value = true;
-  try {
-    const result = await api('/catalog/season?id=' + chosen.value.id + '&season=' + season.value);
-    const values = (result.episodes || []).map((e: any) => e.episode_number);
-    if (!values.length || values.some((e: number) => !Number.isInteger(e) || e < 1 || e > 9999))
-      throw new Error('本季集数尚未确认，请明确选择目标集数');
-    if (generation === dialogGeneration) episodes.value = [...new Set(values)].join(',');
-  } catch (e) {
-    if (generation === dialogGeneration) dialogError.value = errorText(e);
-  } finally {
-    if (generation === dialogGeneration) seasonInfoLoading.value = false;
-  }
-}
-function close() {
-  invalidatePreview();
-  active.value = null;
-  queue.value = [];
-}
-async function findIdentity() {
-  const generation = ++dialogGeneration;
-  identities.value = [];
-  identityLoading.value = true;
-  dialogError.value = '';
-  try {
-    const r = await api(
-      '/catalog/search?query=' + encodeURIComponent(identityQuery.value) + '&page=1',
-    );
-    if (generation === dialogGeneration) identities.value = r.results || [];
-  } catch (e) {
-    if (generation === dialogGeneration) dialogError.value = errorText(e);
-  } finally {
-    if (generation === dialogGeneration) identityLoading.value = false;
-  }
-}
-function open(c: Candidate, batch = false) {
-  if (!batch) queue.value = [];
-  invalidatePreview();
-  active.value = c;
-  chosen.value = null;
-  mappings.value = [];
-  identities.value = [];
-  identityQuery.value = resourceTitleQuery(c.resource.title, request.value?.query || '');
-  season.value = c.season || 1;
-  episodes.value = suggestedDownloadEpisodes([], c, season.value).join(',');
-  void findIdentity();
-}
-function openSelected() {
-  queue.value = candidates.value.filter(
-    (c) => selected.value.includes(candidateKey(c)) && (c.accepted || c.needs_confirmation),
-  );
-  const c = queue.value.shift();
-  if (c) open(c, true);
-}
-async function choose(m: any) {
-  invalidatePreview();
-  const generation = dialogGeneration;
-  identityLoading.value = true;
-  try {
-    const [detail, response] = await Promise.all([
-      api('/catalog/detail?kind=' + m.media_type + '&id=' + m.id),
-      api('/subscriptions'),
-    ]);
-    if (generation !== dialogGeneration) return;
-    chosen.value = detail;
-    const subscriptions = Array.isArray(response) ? response : response.items || [];
-    const rules = subscriptions
-      .filter((s: any) => s.media?.media_type === m.media_type && s.media?.id === m.id)
-      .flatMap((s: any) => s.mappings || [])
-      .filter((r: any) => r.confirmed && r.media_id === m.media_type + ':' + m.id);
-    mappings.value = [...new Map(rules.map((r: any) => [JSON.stringify(r), r])).values()];
-    if (
-      m.media_type === 'tv' &&
-      !detail.seasons?.some((s: any) => s.season_number === season.value)
-    )
-      season.value = detail.seasons?.find((s: any) => s.season_number > 0)?.season_number || 1;
-    if (active.value)
-      episodes.value = suggestedDownloadEpisodes([], active.value, season.value).join(',');
-    identities.value = [];
-  } catch (e) {
-    if (generation === dialogGeneration) dialogError.value = errorText(e);
-  } finally {
-    if (generation === dialogGeneration) identityLoading.value = false;
-  }
-}
-async function inspect() {
-  if (!active.value || !chosen.value || !downloadPath.value || !downloader.value) return;
-  invalidatePreview();
-  const generation = dialogGeneration;
-  previewLoading.value = true;
-  try {
-    const r = await api('/downloads/preview', {
-      ...request.value,
-      media_type: chosen.value.media_type,
-      tmdb_id: chosen.value.id,
-      season: chosen.value.media_type === 'movie' ? 0 : season.value,
-      episodes: chosen.value.media_type === 'movie' ? [] : episodeNumbers(episodes.value),
-      site_id: active.value.resource.site_id,
-      resource_id: active.value.resource.id,
-      directory_id: directoryId.value,
-      download_path: downloadPath.value,
-      downloader_id: downloader.value,
-      mappings: mappings.value.filter((r) => r.confirmed),
-      workflow_id: output.value?.workflow_id || '',
-    });
-    if (generation === dialogGeneration) preview.value = r;
-  } catch (e) {
-    if (generation === dialogGeneration) dialogError.value = errorText(e);
-  } finally {
-    if (generation === dialogGeneration) previewLoading.value = false;
-  }
-}
-async function confirmDownload() {
-  const p = preview.value;
-  if (!p || confirmLoading.value) return;
-  confirmLoading.value = true;
-  const r = await action(
-    () => api('/downloads/confirm', { preview_id: p.id, accept_extra_files: acceptExtra.value }),
-    '下载任务已提交',
-  );
-  confirmLoading.value = false;
-  if (r) {
-    if (active.value) {
-      downloaded.value[candidateKey(active.value)] = 'planned';
-      selected.value = selected.value.filter((k) => k !== candidateKey(active.value!));
-    }
-    const next = queue.value.shift();
-    if (next) open(next, true);
-    else close();
-  }
+function close() { active.value = null; queue.value = []; }
+function open(c: Candidate, batch = false) { if (!batch) queue.value = []; active.value = c; }
+function openSelected() { queue.value = candidates.value.filter((c) => selected.value.includes(candidateKey(c))); const c = queue.value.shift(); if (c) open(c, true); }
+function downloadAdded() {
+  if (active.value) { downloaded.value[candidateKey(active.value)] = 'planned'; selected.value = selected.value.filter((k) => k !== candidateKey(active.value!)); }
+  toast('下载任务已添加'); const next = queue.value.shift(); if (next) open(next, true); else close();
 }
 onMounted(() => {
-  downloader.value = ui.settings?.default_downloader || ui.settings?.downloaders?.[0]?.id || '';
   selectedSites.value = (ui.settings?.sites || [])
     .filter((s: any) => s.enabled)
     .map((s: any) => s.id);
   void loadDownloads();
   if (query.value.trim() && selectedSites.value.length) void search();
 });
-watch(
-  () => JSON.stringify(mappings.value),
-  () => invalidatePreview(),
-);
 onUnmounted(() => {
   disposed = true;
   controller?.abort();
-  ++dialogGeneration;
 });
 </script>
 <template>
@@ -367,7 +198,7 @@ onUnmounted(() => {
       <button @click="go('search?query=' + encodeURIComponent(query))">影视</button
       ><button class="selected">资源</button>
     </div>
-    <span class="hint">下载前选择影视身份，并核对实际文件。</span>
+    <span class="hint"></span>
   </div>
   <section class="panel">
     <div class="site-selector">
@@ -592,152 +423,7 @@ onUnmounted(() => {
       </button>
     </div></template
   >
-  <div v-if="active" class="modal-backdrop" @click.self="close">
-    <section class="modal wide" role="dialog" aria-modal="true" aria-label="添加资源下载">
-      <div class="section-heading">
-        <h2>添加下载</h2>
-        <button class="icon-button" @click="close" aria-label="关闭">×</button>
-      </div>
-      <h3>{{ active.resource.title }}</h3>
-      <p class="hint">{{ names[active.resource.site_id] }} · {{ bytes(active.resource.size) }}</p>
-      <template v-if="!chosen"
-        ><p class="notice">请选择这份资源对应的电影或剧集。资源关键词不会被当成影视身份。</p>
-        <form class="inline-form" @submit.prevent="findIdentity">
-          <input v-model="identityQuery" placeholder="搜索片名" required /><button
-            class="primary"
-            :disabled="identityLoading"
-          >
-            {{ identityLoading ? '搜索中…' : '搜索影视' }}
-          </button>
-        </form>
-        <div class="identity-list">
-          <button v-for="m in identities" :key="m.media_type + ':' + m.id" @click="choose(m)">
-            <img
-              v-if="image(m.poster_path, 'w92')"
-              :src="image(m.poster_path, 'w92')"
-              :alt="m.title"
-            /><span
-              ><b>{{ m.title }}</b
-              ><small
-                >{{ label(m.media_type) }} · {{ m.year || '日期待定' }} ·
-                {{ m.original_title }}</small
-              ></span
-            >
-          </button>
-        </div>
-        <p v-if="!identityLoading && !identities.length" class="hint">
-          没有找到时可修改片名重新搜索。
-        </p></template
-      ><template v-else
-        ><div class="notice">
-          <strong>{{ chosen.title }}</strong> · {{ chosen.year }} · {{ label(chosen.media_type)
-          }}<button
-            class="small"
-            @click="
-              chosen = null;
-              invalidatePreview();
-              findIdentity();
-            "
-          >
-            更换影视
-          </button>
-        </div>
-        <div class="form-grid">
-          <label v-if="chosen.media_type === 'tv'"
-            >季度<select v-model.number="season" @change="changeSeason">
-              <option
-                v-for="s in chosen.seasons || []"
-                :key="s.season_number"
-                :value="s.season_number"
-              >
-                {{ s.name }} · {{ s.episode_count }} 集
-              </option>
-              <option v-if="!chosen.seasons?.length" :value="season">第 {{ season }} 季</option>
-            </select></label
-          ><label v-if="chosen.media_type === 'tv'"
-            >目标集数<input
-              v-model="episodes"
-              placeholder="例如 17 或 17-20，不会默认整季"
-              @input="invalidatePreview"
-          /></label>
-        </div>
-        <DownloadTarget
-          v-model:downloader="downloader"
-          v-model:download-path="downloadPath"
-          v-model:directory-id="directoryId"
-          :media-type="chosen.media_type"
-          @change="invalidatePreview"
-        />
-        <div v-if="chosen.media_type === 'tv'" class="button-row">
-          <button class="small" :disabled="seasonInfoLoading" @click="chooseWholeSeason">
-            {{ seasonInfoLoading ? '读取本季集数…' : '选择本季全部已知集数' }}</button
-          ><span v-if="!episodes" class="warning">请先确认目标集数。</span>
-        </div>
-        <details v-if="chosen.media_type === 'tv'">
-          <summary>季集映射（高级）</summary>
-          <MappingRules
-            :model="mappings"
-            :media-id="chosen.media_type + ':' + chosen.id"
-            :season="season"
-          />
-        </details>
-        <div v-if="previewLoading" class="notice">正在读取真实文件并核对影视、季集和目录…</div>
-        <template v-if="preview"
-          ><div class="notice">
-            {{ preview.files?.length }} 个文件 · {{ bytes(preview.total_bytes) }}<br />保存到
-            {{ preview.download_path || downloadPath }}
-          </div>
-          <details open>
-            <summary>实际文件列表</summary>
-            <div class="file-list">
-              <div v-for="f in preview.files" :key="f">{{ f }}</div>
-            </div>
-          </details>
-          <div v-if="preview.warnings?.length" class="warning">
-            <p v-for="(w, i) in preview.warnings" :key="i">{{ friendly(w) }}</p>
-          </div>
-          <label v-if="preview.needs_confirmation || preview.extra_files" class="check warning"
-            ><input
-              v-model="acceptExtra"
-              type="checkbox"
-            />我已核对文件，接受复核提示及额外内容。</label
-          ></template
-        ></template
-      >
-      <div v-if="dialogError" class="error-box">{{ dialogError }}</div>
-      <div class="button-row">
-        <button @click="close">取消</button
-        ><button
-          v-if="chosen && !preview"
-          class="primary"
-          :disabled="
-            previewLoading ||
-            seasonInfoLoading ||
-            !downloader ||
-            !downloadPath ||
-            (chosen.media_type === 'tv' && !episodes.trim())
-          "
-          @click="inspect"
-        >
-          核对下载文件</button
-        ><button
-          v-else-if="preview"
-          class="primary"
-          :disabled="
-            confirmLoading || ((preview.needs_confirmation || preview.extra_files) && !acceptExtra)
-          "
-          @click="confirmDownload"
-        >
-          确认下载
-        </button>
-      </div>
-      <p class="hint">
-        确认后才发送到下载器。{{
-          queue.length ? '还有 ' + queue.length + ' 项待选择身份和核对。' : ''
-        }}
-      </p>
-    </section>
-  </div>
+  <AddDownloadDialog v-if="active" :candidate="active" :request="request" @close="close" @done="downloadAdded" />
 </template>
 <style scoped>
 .filter-row {

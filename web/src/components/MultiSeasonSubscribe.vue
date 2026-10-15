@@ -11,9 +11,22 @@ const rows = ref<SeasonSubscriptionRow[]>(
       season: s.season_number,
       title: s.name || '第 ' + s.season_number + ' 季',
       episode_count: s.episode_count,
+      total_episodes:
+        s.season_number === props.template.season
+          ? props.template.total_episodes || s.episode_count || 0
+          : s.episode_count || 0,
       poster_path: s.poster_path,
-      selected: s.season_number === props.template.season,
-      start_episode: 1,
+      selected:
+        s.season_number === props.template.season &&
+        !props.existing.some(
+          (value) =>
+            value.media?.id === props.template.media.id &&
+            value.media?.media_type === 'tv' &&
+            value.season === s.season_number &&
+            value.state !== 'cancelled',
+        ),
+      start_episode:
+        s.season_number === props.template.season ? props.template.start_episode || 1 : 1,
       state: props.existing.some(
         (v) =>
           v.media?.id === props.template.media.id &&
@@ -87,10 +100,7 @@ async function submit() {
         </button>
       </div>
       <h3>{{ template.media.title }}</h3>
-      <p class="muted">选择要追更的季，每季独立建立订阅。可分别设置开始集数。</p>
-      <p class="hint">
-        下载器、下载目录、筛选与更新规则沿用当前订阅表单。特别篇（第 0 季）暂不支持自动订阅。
-      </p>
+
       <div class="button-row">
         <button class="small" :disabled="running" @click="all">选择 / 取消全部可订阅季</button
         ><span class="hint">已选 {{ checked.length }} 季 · 已成功 {{ completed }} 季</span>
@@ -125,7 +135,15 @@ async function submit() {
             >
           </div>
           <label class="start"
-            >从第几集开始<input
+            >总集数<input
+              v-model.number="s.total_episodes"
+              type="number"
+              min="0"
+              max="9999"
+              :disabled="running || s.state === 'success' || s.state === 'conflict'"
+          /></label>
+          <label class="start"
+            >开始集数<input
               v-model.number="s.start_episode"
               type="number"
               min="1"
@@ -146,7 +164,6 @@ async function submit() {
           {{ running ? '正在逐季添加…' : completed ? '重试未成功的季' : '确认订阅所选季度' }}
         </button>
       </div>
-      <p class="hint">每季结果单独保留。失败或冲突不会撤销已经创建成功的订阅。</p>
     </section>
   </div>
 </template>
