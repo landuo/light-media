@@ -14,8 +14,9 @@ import (
 )
 
 // NormalizeHost accepts the fnOS Media root or /v entry point. Plain HTTP is
-// limited to literal private/loopback addresses and localhost; HTTPS always
-// retains the HTTP transport's normal certificate verification.
+// limited to literal private/loopback addresses and localhost. Certificate
+// compatibility is scoped separately to this same explicitly configured LAN
+// target; public HTTPS endpoints retain normal certificate verification.
 func NormalizeHost(value string) (string, error) {
 	value = strings.TrimSpace(value)
 	u, err := url.Parse(value)
@@ -28,19 +29,28 @@ func NormalizeHost(value string) (string, error) {
 			return "", &ServiceError{Code: "invalid_config"}
 		}
 	}
-	if u.Scheme == "http" && !strings.EqualFold(u.Hostname(), "localhost") {
-		address, err := netip.ParseAddr(u.Hostname())
-		if err != nil || address.Zone() != "" || (!address.Unmap().IsPrivate() && !address.Unmap().IsLoopback()) {
-			return "", &ServiceError{Code: "invalid_config"}
-		}
+	if u.Scheme == "http" && !privateFNOSHostname(u.Hostname()) {
+		return "", &ServiceError{Code: "invalid_config"}
 	}
 	u.Path = "/v"
 	return u.String(), nil
 }
 
+func privateFNOSHostname(hostname string) bool {
+	if strings.EqualFold(hostname, "localhost") {
+		return true
+	}
+	address, err := netip.ParseAddr(hostname)
+	return err == nil && address.Zone() == "" && (address.Unmap().IsPrivate() || address.Unmap().IsLoopback())
+}
+
 // Return only local fixed codes: wrapped network errors contain the target URL
 // and must never be returned through the application API.
 func transportErrorCode(err error) string {
+	var service *ServiceError
+	if errors.As(err, &service) && service.Code == "redirect_blocked" {
+		return service.Code
+	}
 	var verification *tls.CertificateVerificationError
 	var unknown x509.UnknownAuthorityError
 	var hostname x509.HostnameError

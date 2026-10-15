@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/netip"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -511,7 +513,30 @@ func sameFNOSCredentialEndpoint(incoming, previous string) bool {
 	}
 	next, nextErr := fnos.NormalizeHost(incoming)
 	old, oldErr := fnos.NormalizeHost(previous)
-	return nextErr == nil && oldErr == nil && next == old
+	if nextErr != nil || oldErr != nil {
+		return false
+	}
+	if next == old {
+		return true
+	}
+	nextURL, _ := url.Parse(next)
+	oldURL, _ := url.Parse(old)
+	nextIP, nextIPErr := netip.ParseAddr(nextURL.Hostname())
+	oldIP, oldIPErr := netip.ParseAddr(oldURL.Hostname())
+	if nextIPErr != nil || oldIPErr != nil || nextIP.Zone() != "" || oldIP.Zone() != "" || !nextIP.Unmap().IsPrivate() || nextIP.Unmap() != oldIP.Unmap() {
+		return false
+	}
+	// fnOS exposes the same NAS account through these default local entries.
+	// Keep arbitrary ports and public/hostname destinations behind the existing
+	// explicit-password requirement rather than treating every same-host URL alike.
+	defaultEntry := func(endpoint *url.URL) bool {
+		switch endpoint.Scheme + ":" + endpoint.Port() {
+		case "http:8005", "http:5666", "https:5667":
+			return true
+		}
+		return false
+	}
+	return defaultEntry(nextURL) && defaultEntry(oldURL)
 }
 
 func validateFNOSCredentialChange(incoming, previous FNConfig) error {

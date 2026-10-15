@@ -84,14 +84,12 @@ func newService(config Config, transport http.RoundTripper) (*Service, error) {
 	if !serviceText(config.Username, 256) || !serviceText(config.Password, 8192) {
 		return nil, &ServiceError{Code: "invalid_config"}
 	}
-	return &Service{config: Config{Username: config.Username, Password: config.Password}, host: host, http: &http.Client{
-		Timeout: 12 * time.Second, Transport: logging.Transport(transport),
-		CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse },
-	}}, nil
+	return &Service{config: Config{Username: config.Username, Password: config.Password}, host: host, http: newFNOSHTTPClient(host, transport)}, nil
 }
 
 type serviceSession struct {
 	service  *Service
+	host     string
 	token    string
 	admin    bool
 	requests int
@@ -120,7 +118,11 @@ func (s *serviceSession) call(ctx context.Context, endpoint string, body any, qu
 		}
 		method, signingPayload = http.MethodPost, string(payload)
 	}
-	endpointURL := s.service.host + "/api/v1" + endpoint
+	host := s.host
+	if host == "" {
+		host = s.service.host
+	}
+	endpointURL := host + "/api/v1" + endpoint
 	if query != "" {
 		endpointURL += "?" + url.Values{"q": {query}}.Encode()
 		signingPayload = "q=" + query
@@ -135,7 +137,7 @@ func (s *serviceSession) call(ctx context.Context, endpoint string, body any, qu
 	}
 	request.Header.Set("Accept", "application/json")
 	request.Header.Set("User-Agent", "light-media/0.1")
-	request.Header.Set("Referer", s.service.host)
+	request.Header.Set("Referer", host)
 	request.Header.Set("authx", Signature("/v/api/v1"+endpoint, signingPayload, strconv.FormatInt(nonce.Int64()+100000, 10), strconv.FormatInt(time.Now().UnixMilli(), 10)))
 	if body != nil {
 		request.Header.Set("Content-Type", "application/json")
@@ -185,7 +187,14 @@ func (s *Service) session(ctx context.Context) (*serviceSession, error) {
 	if s == nil {
 		return nil, &ServiceError{Code: "not_configured"}
 	}
-	current := &serviceSession{service: s}
+	if ctx == nil {
+		return nil, &ServiceError{Code: "invalid_input"}
+	}
+	host, requests, err := s.resolveSessionEntry(ctx)
+	if err != nil {
+		return nil, err
+	}
+	current := &serviceSession{service: s, host: host, requests: requests}
 	var auth struct {
 		Token string `json:"token"`
 	}

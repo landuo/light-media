@@ -123,17 +123,27 @@ func TestProbeExplainsLoginBusinessFailureOnlyAtLogin(t *testing.T) {
 	}
 }
 
-func TestUntrustedTLSRemainsRejectedWithUsefulMessage(t *testing.T) {
+func TestPublicUntrustedTLSRemainsRejectedWithUsefulMessage(t *testing.T) {
 	server := httptest.NewUnstartedServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) { t.Error("untrusted TLS reached application handler") }))
 	server.Config.ErrorLog = log.New(io.Discard, "", 0)
 	server.StartTLS()
 	defer server.Close()
-	config := Config{Host: server.URL, Username: "synthetic-user", Password: "synthetic-password"}
-	result := Probe(context.Background(), config)
+	// Dial the local synthetic TLS listener while retaining a public configured
+	// hostname. LAN certificate compatibility must not apply to this target.
+	dialer := &net.Dialer{}
+	transport := &http.Transport{DialContext: func(ctx context.Context, network, address string) (net.Conn, error) {
+		if address != "public.example:443" {
+			t.Error("public certificate test left its configured target")
+		}
+		return dialer.DialContext(ctx, network, server.Listener.Addr().String())
+	}}
+	t.Cleanup(transport.CloseIdleConnections)
+	config := Config{Host: "https://public.example", Username: "synthetic-user", Password: "synthetic-password"}
+	result := probeWithTransport(context.Background(), config, transport)
 	if result.Status != "failed" || result.Code != "TLS_CERTIFICATE_FAILED" || !strings.Contains(result.Message, "证书校验失败") || result.Authenticated {
 		t.Fatalf("untrusted TLS not explained: %+v", result)
 	}
-	service, err := NewService(config)
+	service, err := newService(config, transport)
 	if err != nil {
 		t.Fatal(err)
 	}

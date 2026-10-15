@@ -96,6 +96,11 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 	if c.requests >= 20 {
 		return nil, fmt.Errorf("REQUEST_LIMIT")
 	}
+	if ctx == nil {
+		return nil, fmt.Errorf("INVALID_REQUEST")
+	}
+	ctx, cancel := context.WithTimeout(ctx, 12*time.Second)
+	defer cancel()
 	method := http.MethodGet
 	var payload []byte
 	var err error
@@ -106,71 +111,101 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 			return nil, fmt.Errorf("INVALID_BODY")
 		}
 	}
-	n, err := rand.Int(rand.Reader, big.NewInt(900000))
-	if err != nil {
-		return nil, fmt.Errorf("NONCE_FAILED")
-	}
 	apiPath := "/v/api/v1" + path
-	wireURL := c.host + "/api/v1" + path
 	signingPayload := string(payload)
 	if query != "" {
 		if body != nil {
 			return nil, fmt.Errorf("INVALID_BODY")
 		}
-		wireURL += "?" + url.Values{"q": {query}}.Encode()
 		signingPayload = "q=" + query
 	}
-	r, err := http.NewRequestWithContext(logging.EndpointContext(ctx, "fnos", path), method, wireURL, bytes.NewReader(payload))
-	if err != nil {
-		return nil, fmt.Errorf("INVALID_REQUEST")
-	}
-	r.Header.Set("Accept", "application/json")
-	r.Header.Set("User-Agent", "light-media-m0/0.1")
-	r.Header.Set("Referer", c.host)
-	r.Header.Set("authx", Signature(apiPath, signingPayload, fmt.Sprint(n.Int64()+100000), fmt.Sprint(time.Now().UnixMilli())))
-	if c.token != "" {
-		r.Header.Set("Authorization", c.token)
-	}
-	if body != nil {
-		r.Header.Set("Content-Type", "application/json")
-	}
-	c.requests++
-	resp, err := c.http.Do(r)
-	if err != nil {
-		code := transportErrorCode(err)
-		if code == "unavailable" {
-			return nil, fmt.Errorf("TRANSPORT_FAILED")
+	resolved := c.host
+	versionRequest := path == "/sys/version" && body == nil && query == "" && c.token == ""
+	for redirects := 0; ; redirects++ {
+		if c.requests >= 20 {
+			return nil, fmt.Errorf("REQUEST_LIMIT")
 		}
-		return nil, fmt.Errorf("%s", strings.ToUpper(code))
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("HTTP_%d", resp.StatusCode)
-	}
-	data, err := io.ReadAll(io.LimitReader(resp.Body, 2*1024*1024+1))
-	if err != nil {
-		if code := transportErrorCode(err); code != "unavailable" {
+		n, err := rand.Int(rand.Reader, big.NewInt(900000))
+		if err != nil {
+			return nil, fmt.Errorf("NONCE_FAILED")
+		}
+		wireURL := resolved + "/api/v1" + path
+		if query != "" {
+			wireURL += "?" + url.Values{"q": {query}}.Encode()
+		}
+		r, err := http.NewRequestWithContext(logging.EndpointContext(ctx, "fnos", path), method, wireURL, bytes.NewReader(payload))
+		if err != nil {
+			return nil, fmt.Errorf("INVALID_REQUEST")
+		}
+		r.Header.Set("Accept", "application/json")
+		r.Header.Set("User-Agent", "light-media-m0/0.1")
+		r.Header.Set("Referer", resolved)
+		r.Header.Set("authx", Signature(apiPath, signingPayload, fmt.Sprint(n.Int64()+100000), fmt.Sprint(time.Now().UnixMilli())))
+		if c.token != "" {
+			r.Header.Set("Authorization", c.token)
+		}
+		if body != nil {
+			r.Header.Set("Content-Type", "application/json")
+		}
+		c.requests++
+		resp, err := c.http.Do(r)
+		if err != nil {
+			code := transportErrorCode(err)
+			if code == "unavailable" {
+				return nil, fmt.Errorf("TRANSPORT_FAILED")
+			}
 			return nil, fmt.Errorf("%s", strings.ToUpper(code))
 		}
-		return nil, fmt.Errorf("BODY_FAILED")
+		if versionRequest && (resp.StatusCode == 301 || resp.StatusCode == 302 || resp.StatusCode == 303 || resp.StatusCode == 307 || resp.StatusCode == 308) {
+			next, allowed := redirectedVersionEntry(c.host, r.URL, resp.Header.Get("Location"))
+			resp.Body.Close()
+			if !allowed {
+				return nil, fmt.Errorf("HTTP_%d", resp.StatusCode)
+			}
+			if redirects >= maxEntryRedirects {
+				return nil, fmt.Errorf("REDIRECT_LIMIT")
+			}
+			resolved = next
+			continue
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("HTTP_%d", resp.StatusCode)
+		}
+		data, err := io.ReadAll(io.LimitReader(resp.Body, 2*1024*1024+1))
+		if err != nil {
+			if code := transportErrorCode(err); code != "unavailable" {
+				return nil, fmt.Errorf("%s", strings.ToUpper(code))
+			}
+			return nil, fmt.Errorf("BODY_FAILED")
+		}
+		if len(data) > 2*1024*1024 {
+			return nil, fmt.Errorf("BODY_LIMIT")
+		}
+		var env envelope
+		if json.Unmarshal(data, &env) != nil || env.Code == nil {
+			return nil, fmt.Errorf("INVALID_ENVELOPE")
+		}
+		if *env.Code != 0 {
+			return nil, fmt.Errorf("BUSINESS_%d", *env.Code)
+		}
+		if len(env.Data) == 0 || bytes.Equal(bytes.TrimSpace(env.Data), []byte("null")) {
+			return nil, fmt.Errorf("INVALID_DATA")
+		}
+		if versionRequest {
+			c.host = resolved
+		}
+		return env.Data, nil
 	}
-	if len(data) > 2*1024*1024 {
-		return nil, fmt.Errorf("BODY_LIMIT")
-	}
-	var env envelope
-	if json.Unmarshal(data, &env) != nil || env.Code == nil {
-		return nil, fmt.Errorf("INVALID_ENVELOPE")
-	}
-	if *env.Code != 0 {
-		return nil, fmt.Errorf("BUSINESS_%d", *env.Code)
-	}
-	if len(env.Data) == 0 || bytes.Equal(bytes.TrimSpace(env.Data), []byte("null")) {
-		return nil, fmt.Errorf("INVALID_DATA")
-	}
-	return env.Data, nil
 }
 
 func Probe(ctx context.Context, cfg Config) (out Result) {
+	return probeWithTransport(ctx, cfg, nil)
+}
+
+// Private seam keeps protocol tests local without exposing alternate transports
+// or certificate settings through the application's configuration.
+func probeWithTransport(ctx context.Context, cfg Config, transport http.RoundTripper) (out Result) {
 	out.Status = "failed"
 	defer func() {
 		if out.Code != "" {
@@ -204,7 +239,7 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 		out.Code = "ACCESS_CODE_SESSION_REQUIRED"
 		return
 	}
-	c := client{host: host, http: &http.Client{Timeout: 12 * time.Second, Transport: logging.Transport(nil), CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}}
+	c := client{host: host, http: newFNOSHTTPClient(host, transport)}
 	defer func() { out.Requests = c.requests; sanitizeResult(&out, []string{cfg.Username, cfg.Password, c.token}) }()
 	step := func(path string, body any, dst any) bool {
 		data, e := c.request(ctx, path, body)

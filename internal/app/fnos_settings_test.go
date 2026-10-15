@@ -54,9 +54,12 @@ func TestFNOSSettingsRejectChangedDestinationWithoutPassword(t *testing.T) {
 		name, host, username string
 	}{
 		{"host", "https://other.invalid/v", "synthetic-user"},
+		{"other-private-host", "http://192.168.8.130:5666", "synthetic-user"},
 		{"port", "https://192.168.8.129:5668/v", "synthetic-user"},
+		{"arbitrary-port", "http://192.168.8.129:9999/v", "synthetic-user"},
 		{"scheme", "http://192.168.8.129:5667/v", "synthetic-user"},
 		{"account", "https://192.168.8.129:5667/v", "different-user"},
+		{"account-and-default-entry", "http://192.168.8.129:5666", "different-user"},
 		{"query", "https://192.168.8.129:5667/v?target=other", "synthetic-user"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -106,6 +109,73 @@ func TestFNOSSettingsEquivalentAddressPreservesCredentialsAndLegacyFields(t *tes
 				t.Fatal("saved credential leaked in the public response")
 			}
 		})
+	}
+}
+
+func TestFNOSSettingsDefaultPrivateEntrySwitchPreservesCredentials(t *testing.T) {
+	for _, tc := range []struct{ from, to string }{
+		{"https://192.168.8.129:5667/v", "http://192.168.8.129:8005"},
+		{"https://192.168.8.129:5667/v", "http://192.168.8.129:5666"},
+		{"http://192.168.8.129:5666/v", "https://192.168.8.129:5667"},
+	} {
+		t.Run(tc.from+"->"+tc.to, func(t *testing.T) {
+			a, cookie, previous := fnosSettingsFixture(t)
+			previous.FNOS.Host = tc.from
+			if err := a.saveSettings(context.Background(), previous); err != nil {
+				t.Fatal(err)
+			}
+			incoming := redactedFNOSSettings(t, a)
+			incoming.FNOS.Host = tc.to
+			raw, err := json.Marshal(incoming)
+			if err != nil {
+				t.Fatal(err)
+			}
+			w := callTest(t, a.Handler(), http.MethodPut, "/api/settings", string(raw), cookie, "")
+			if w.Code != http.StatusOK {
+				t.Fatalf("same NAS default entry rejected: status=%d body=%s", w.Code, w.Body)
+			}
+			saved := a.Settings()
+			if saved.FNOS.Host != tc.to || saved.FNOS.Password != previous.FNOS.Password || saved.FNOS.LibraryGUID != previous.FNOS.LibraryGUID || !reflect.DeepEqual(saved.FNOS.Mappings, previous.FNOS.Mappings) {
+				t.Fatal("default entry switch lost stored credentials or legacy configuration")
+			}
+			if strings.Contains(w.Body.String(), previous.FNOS.Password) {
+				t.Fatal("retained credential leaked in the public response")
+			}
+		})
+	}
+}
+
+func TestFNOSCredentialEndpointDefaultPrivateEntries(t *testing.T) {
+	entries := []string{"http://192.168.8.129:8005", "http://192.168.8.129:5666/v", "https://192.168.8.129:5667/v/"}
+	for _, incoming := range entries {
+		for _, previous := range entries {
+			if !sameFNOSCredentialEndpoint(incoming, previous) {
+				t.Fatalf("same private NAS default entries were not equivalent: %s -> %s", previous, incoming)
+			}
+		}
+	}
+	for _, tc := range []struct {
+		incoming, previous string
+		want               bool
+	}{
+		{"http://10.2.3.4:5666", "https://10.2.3.4:5667", true},
+		{"http://172.31.1.2:8005", "https://172.31.1.2:5667", true},
+		{"http://[fd00::1]:5666", "https://[fd00::1]:5667", true},
+		{"http://[::ffff:192.168.8.129]:5666", "https://192.168.8.129:5667", true},
+		{"http://192.168.8.130:5666", "https://192.168.8.129:5667", false},
+		{"http://192.168.8.129:9999", "https://192.168.8.129:5667", false},
+		{"http://192.168.8.129:5667", "https://192.168.8.129:5667", false},
+		{"https://192.168.8.129:5666", "https://192.168.8.129:5667", false},
+		{"https://198.51.100.1:5666", "https://198.51.100.1:5667", false},
+		{"https://nas.example:5666", "https://nas.example:5667", false},
+		{"http://localhost:5666", "https://localhost:5667", false},
+		{"http://127.0.0.1:5666", "https://127.0.0.1:5667", false},
+		{"http://192.168.8.129:5666/v?target=other", "https://192.168.8.129:5667", false},
+		{"http://192.168.8.129:5666/other", "https://192.168.8.129:5667", false},
+	} {
+		if got := sameFNOSCredentialEndpoint(tc.incoming, tc.previous); got != tc.want {
+			t.Errorf("sameFNOSCredentialEndpoint(%q, %q)=%t want %t", tc.incoming, tc.previous, got, tc.want)
+		}
 	}
 }
 

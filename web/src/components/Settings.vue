@@ -166,10 +166,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
           <label>类型<input value="飞牛影视" readonly /></label>
           <label class="check"><input v-model="form.fnos.enabled" type="checkbox" />启用</label>
           <label class="span-two"
-            >地址<input
-              v-model="form.fnos.host"
-              type="url"
-              placeholder="http://192.168.1.10:8005/v"
+            >地址<input v-model="form.fnos.host" type="url" placeholder="http://192.168.1.10:5666"
           /></label>
           <label>用户名<input v-model="form.fnos.username" autocomplete="off" /></label>
           <label
