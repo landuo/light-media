@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import AppIcon from './AppIcon.vue';
 import { bytes, date, friendly, label } from '../api';
 import {
   candidateKey,
@@ -36,21 +37,37 @@ function promotion(r: Record<string, any>) {
   <article
     class="release-card"
     :class="{ 'is-selected': selected.includes(candidateKey(candidates[0]!)) }"
+    :tabindex="candidates[0]!.accepted || candidates[0]!.needs_confirmation ? 0 : -1"
+    :aria-label="'下载资源 ' + candidates[0]!.resource.title"
+    @click="
+      (candidates[0]!.accepted || candidates[0]!.needs_confirmation) &&
+      $emit('download', candidates[0]!)
+    "
+    @keydown.enter.self="
+      (candidates[0]!.accepted || candidates[0]!.needs_confirmation) &&
+      $emit('download', candidates[0]!)
+    "
+    @keydown.space.self.prevent="
+      (candidates[0]!.accepted || candidates[0]!.needs_confirmation) &&
+      $emit('download', candidates[0]!)
+    "
   >
     <div class="release-top">
-      <label class="check"
+      <label class="check" @click.stop
         ><input
           type="checkbox"
           :checked="selected.includes(candidateKey(candidates[0]!))"
           :disabled="!candidates[0]!.accepted && !candidates[0]!.needs_confirmation"
           @change="$emit('select', candidates[0]!)"
         />{{ names[candidates[0]!.resource.site_id] || candidates[0]!.resource.site_id }}</label
-      ><span :class="['promo', { free: promotionKind(candidates[0]!.resource) === 'free' }]">{{
+      ><span :class="['promo', promotionKind(candidates[0]!.resource)]">{{
         promotion(candidates[0]!.resource)
       }}</span>
     </div>
     <h3 :title="candidates[0]!.resource.title">{{ candidates[0]!.resource.title }}</h3>
-    <p class="release-description">{{ candidates[0]!.resource.subtitle || '暂无副标题' }}</p>
+    <p v-if="candidates[0]!.resource.subtitle" class="release-description">
+      {{ candidates[0]!.resource.subtitle }}
+    </p>
     <div class="tags">
       <span v-if="candidates[0]!.season"
         >S{{ String(candidates[0]!.season).padStart(2, '0')
@@ -59,14 +76,15 @@ function promotion(r: Record<string, any>) {
             ? ' · E' + candidates[0]!.episodes!.join(', E')
             : ' · 季包'
         }}</span
-      ><span
-        v-for="v in [
-          candidates[0]!.resource.resolution,
-          candidates[0]!.resource.codec,
-          candidates[0]!.resource.source,
-        ].filter(Boolean)"
-        :key="v"
-        >{{ v }}</span
+      ><span v-if="candidates[0]!.resource.resolution" class="quality-resolution">{{
+        candidates[0]!.resource.resolution
+      }}</span
+      ><span v-if="candidates[0]!.resource.codec" class="quality-codec">{{
+        candidates[0]!.resource.codec
+      }}</span
+      ><span v-if="candidates[0]!.resource.source" class="quality-source">{{
+        candidates[0]!.resource.source
+      }}</span
       ><span v-if="downloads[candidateKey(candidates[0]!)]" class="downloaded">{{
         label(downloads[candidateKey(candidates[0]!)])
       }}</span>
@@ -78,7 +96,7 @@ function promotion(r: Record<string, any>) {
       ><span class="green"
         >↑
         {{ candidates[0]!.resource.seeders >= 0 ? candidates[0]!.resource.seeders : '未知' }}</span
-      ><span
+      ><span class="peers"
         >↓
         {{
           candidates[0]!.resource.leechers >= 0 ? candidates[0]!.resource.leechers : '未知'
@@ -86,12 +104,12 @@ function promotion(r: Record<string, any>) {
       >
     </div>
     <p class="hint">
-      {{ date(candidates[0]!.resource.published_at)
+      <AppIcon name="clock" />{{ date(candidates[0]!.resource.published_at)
       }}<span v-if="candidates[0]!.resource.promotion_end">
         · {{ promotionRemaining(candidates[0]!.resource.promotion_end) }}</span
       >
     </p>
-    <details v-if="reviewReasons.length" class="release-review">
+    <details v-if="reviewReasons.length" class="release-review" @click.stop @keydown.stop>
       <summary
         :class="
           showIdentityReview !== false && candidates[0]!.needs_confirmation ? 'warning' : 'hint'
@@ -111,23 +129,25 @@ function promotion(r: Record<string, any>) {
       </summary>
       <p>{{ reviewReasons.map(friendly).join('；') }}</p>
     </details>
-    <div class="release-actions">
+    <div class="release-actions" @click.stop @keydown.stop>
       <a
         v-if="candidates[0]!.resource.details_url?.startsWith('https://')"
         :href="candidates[0]!.resource.details_url"
         target="_blank"
         rel="noopener noreferrer"
         class="release-link"
-        >站点详情 ↗</a
+        title="站点详情"
+        aria-label="站点详情"
+        ><AppIcon name="info" /></a
       ><button
         class="small primary"
         :disabled="!candidates[0]!.accepted && !candidates[0]!.needs_confirmation"
         @click="$emit('download', candidates[0]!)"
       >
-        ↓ 下载
+        <AppIcon name="download" />下载
       </button>
     </div>
-    <details v-if="candidates.length > 1" class="more-sources">
+    <details v-if="candidates.length > 1" class="more-sources" @click.stop @keydown.stop>
       <summary>其他来源 · {{ candidates.length - 1 }}</summary>
       <div v-for="c in candidates.slice(1)" :key="candidateKey(c)" class="source-row">
         <span
@@ -146,21 +166,23 @@ function promotion(r: Record<string, any>) {
 </template>
 <style scoped>
 .release-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
   background: var(--surface);
   box-shadow: var(--shadow);
   transition:
-    border-color 0.18s,
-    box-shadow 0.18s;
+    border-color 0.3s,
+    transform 0.3s;
+  cursor: pointer;
 }
 .release-card:hover {
-  border-color: #b9cecf;
-  box-shadow: 0 5px 16px #172b3a08;
+  border-color: var(--accent-line);
+  transform: translateY(-4px);
 }
 .release-card.is-selected {
   border-color: var(--accent);
@@ -171,41 +193,56 @@ function promotion(r: Record<string, any>) {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 13px;
+  margin-bottom: 8px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
+  padding-right: 66px;
 }
 .release-top .check {
   min-width: 0;
   min-height: 28px;
   padding: 2px 0;
-  color: #566b78;
+  color: var(--text);
 }
 .promo {
+  position: absolute;
+  top: 0;
+  right: 0;
   flex: none;
   padding: 4px 8px;
-  border-radius: 6px;
-  background: #fff5e6;
-  color: #956119;
-  font-size: 10px;
+  border-radius: 0 5px 0 6px;
+  background: var(--surface-subtle);
+  color: var(--muted);
+  font-size: 12px;
   font-weight: 650;
   line-height: 1.4;
   white-space: nowrap;
 }
 .promo.free {
-  background: #e8f5ee;
-  color: #267b50;
+  background: #4caf50;
+  color: white;
+}
+.promo.discount {
+  background: #ff5722;
+  color: white;
+}
+.promo.upload {
+  background: #9c27b0;
+  color: white;
+}
+.promo.normal {
+  display: none;
 }
 h3 {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin: 0;
-  color: #172b3a;
-  font-size: 14px;
-  font-weight: 650;
-  line-height: 1.7;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .release-description {
@@ -213,23 +250,32 @@ h3 {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin: 7px 0 13px;
+  margin: 6px 0 8px;
   color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.5;
 }
 .release-card .tags {
-  gap: 5px;
+  gap: 4px;
   margin: 0;
 }
 .release-card .tags span {
-  padding: 3px 7px;
+  padding: 2px 6px;
   border: 0;
-  border-radius: 5px;
-  background: #f1f5f7;
-  color: #607480;
-  font-size: 10px;
+  border-radius: 3px;
+  background: #3f51b5;
+  color: white;
+  font-size: 11px;
   font-weight: 500;
+}
+.release-card .tags .quality-resolution {
+  background: #7b1fa2;
+}
+.release-card .tags .quality-codec {
+  background: #ff9800;
+}
+.release-card .tags .quality-source {
+  background: #8000ff;
 }
 .release-card .tags .downloaded {
   background: var(--accent-soft);
@@ -239,27 +285,39 @@ h3 {
   display: flex;
   align-items: baseline;
   gap: 14px;
-  margin-top: 20px;
+  margin-top: 12px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 .release-facts b {
   margin-right: auto;
-  color: #263d4c;
-  font-size: 18px;
-  font-weight: 650;
-  letter-spacing: -0.4px;
+  color: white;
+  background: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 3px;
+  padding: 3px 6px;
 }
 .release-facts .green {
-  color: #27815d;
+  color: var(--success);
+}
+.release-facts .peers {
+  color: var(--warning);
 }
 .release-card .hint {
-  margin: 8px 0 13px;
-  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+.release-card .hint svg {
+  width: 16px;
+  height: 16px;
 }
 .release-review {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   padding: 0;
   border: 0;
   font-size: 12px;
@@ -280,13 +338,19 @@ h3 {
   justify-content: space-between;
   gap: 10px;
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 8px;
   border-top: 1px solid var(--line);
 }
 .release-link {
-  color: #718491;
+  color: var(--accent);
   font-size: 12px;
   text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }
 .release-link:hover {
   color: var(--accent);
@@ -294,7 +358,7 @@ h3 {
 .release-actions .primary {
   min-width: 78px;
   min-height: 33px;
-  border-radius: 7px;
+  border-radius: 4px;
 }
 .more-sources {
   margin: 13px 0 0;
@@ -305,7 +369,7 @@ h3 {
   font-size: 12px;
 }
 .more-sources summary {
-  color: #566b78;
+  color: var(--accent);
   font-size: 12px;
 }
 .source-row {
@@ -320,7 +384,7 @@ h3 {
 }
 @media (max-width: 520px) {
   .release-card {
-    padding: 17px;
+    padding: 12px;
   }
 }
 </style>

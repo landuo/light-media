@@ -1200,7 +1200,7 @@ onUnmounted(() => {
 
 <style scoped>
 .job-queue-table {
-  border-radius: 14px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 .job-queue-table th {
@@ -1292,7 +1292,7 @@ onUnmounted(() => {
 }
 .logs-filter {
   padding: 22px 24px;
-  border-radius: 14px;
+  border-radius: var(--radius);
 }
 .logs-filter .form-grid {
   gap: 18px 20px;
@@ -1307,11 +1307,11 @@ onUnmounted(() => {
   line-height: 1.7;
 }
 .log-view {
-  border: 1px solid #263d4c;
-  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
   padding: 10px 0;
-  background: #132532;
-  color: #dce7ed;
+  background: var(--surface);
+  color: var(--text);
   box-shadow: var(--shadow);
 }
 .log-line {
@@ -1319,58 +1319,58 @@ onUnmounted(() => {
   grid-template-columns: 158px 52px 118px minmax(0, 1fr);
   gap: 12px;
   padding: 13px 20px;
-  border-bottom: 1px solid #ffffff0a;
+  border-bottom: 1px solid var(--line);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'PingFang SC', monospace;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.85;
 }
 .log-line:last-child {
   border-bottom: 0;
 }
 .log-line:hover {
-  background: #ffffff03;
+  background: var(--surface-subtle);
 }
 .log-line time {
-  color: #859eac;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .log-line > b {
-  color: #81c9b6;
-  font-size: 10px;
+  color: var(--success);
+  font-size: 12px;
   letter-spacing: 0.04em;
   font-weight: 650;
   line-height: 2.2;
 }
 .log-line .log-module {
-  color: #a3bac8;
+  color: var(--accent);
   overflow-wrap: anywhere;
 }
 .log-line > span:last-child {
-  color: #dce7ed;
+  color: var(--text);
   overflow-wrap: anywhere;
 }
 .log-line small {
   display: block;
-  color: #8ca5b3;
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 12px;
   margin-top: 3px;
   line-height: 1.8;
 }
 .log-line.warn > b {
-  color: #e3b96f;
+  color: var(--warning);
 }
 .log-line.error {
-  background: #e3858509;
+  background: rgba(255, 76, 81, 0.04);
 }
 .log-line.error > b {
-  color: #ed9f9f;
+  color: var(--danger);
 }
 .log-view .empty-state h3 {
-  color: #dce7ed;
+  color: var(--text);
 }
 .log-view .empty-state p {
-  color: #8ca5b3;
+  color: var(--muted);
 }
 @media (max-width: 760px) {
   .job-queue-table table,

@@ -572,17 +572,16 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #111b3659;
+  background: color-mix(in srgb, var(--text) 50%, transparent);
   padding: 20px;
-  backdrop-filter: blur(3px);
 }
 .reorganize-dialog {
   position: relative;
   background: var(--surface);
-  border-radius: 12px;
+  border-radius: 6px;
   width: min(720px, 100%);
-  max-height: calc(100dvh - 40px);
-  box-shadow: 0 24px 90px #111b3633;
+  max-height: min(92dvh, 1024px);
+  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -594,22 +593,23 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 20px;
+  padding: 12px 24px;
   border-bottom: 1px solid var(--line);
 }
 .organize-header > svg {
-  color: var(--accent);
+  color: var(--muted);
 }
 .organize-header > div {
   min-width: 0;
   flex: 1;
 }
 .organize-header h2 {
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 500;
   margin: 0 0 4px;
 }
 .organize-header p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   margin: 0;
   white-space: nowrap;
@@ -640,11 +640,11 @@ onUnmounted(() => {
 .organize-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 18px;
+  gap: 24px;
 }
 .organize-grid label {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
 }
 .organize-grid label > select,
 .organize-grid label > input,
@@ -655,7 +655,7 @@ onUnmounted(() => {
 .organize-grid small {
   display: block;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
   margin-top: 5px;
 }
@@ -664,8 +664,8 @@ onUnmounted(() => {
 }
 .target-combobox {
   display: flex;
-  border: 1px solid #dce1e9;
-  border-radius: 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 .target-combobox select {
   width: 94px;
@@ -681,8 +681,8 @@ onUnmounted(() => {
 }
 .id-input {
   display: flex;
-  border: 1px solid #dce1e9;
-  border-radius: 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 .id-input input {
   min-width: 0;
@@ -696,12 +696,12 @@ onUnmounted(() => {
   gap: 10px;
 }
 .organize-switch input {
-  width: 32px;
-  height: 18px;
+  width: 34px;
+  height: 20px;
   appearance: none;
   border-radius: 12px;
   padding: 0;
-  background: #c6c9d1;
+  background: color-mix(in srgb, var(--text) 25%, transparent);
   border: 0;
   position: relative;
   cursor: pointer;
@@ -710,8 +710,8 @@ onUnmounted(() => {
 .organize-switch input::after {
   content: '';
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   top: 2px;
   left: 2px;
@@ -728,20 +728,20 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 20px;
+  padding: 16px 24px;
   border-top: 1px solid var(--line);
 }
 .organize-actions > span {
   flex: 1;
 }
 .preview-action {
-  background: #edf4ff;
-  color: #3261af;
+  background: #16b1ff1f;
+  color: var(--info, #16b1ff);
   border-color: transparent;
 }
 .queue-action {
-  background: #eaf7ef;
-  color: #23734a;
+  background: #56ca001f;
+  color: var(--success, #56ca00);
   border-color: transparent;
 }
 .organize-preview {
@@ -749,7 +749,7 @@ onUnmounted(() => {
   border-left: 1px solid var(--line);
   padding: 20px;
   overflow-y: auto;
-  background: #f8f9fc;
+  background: var(--surface-subtle, #f9fafc);
 }
 .organize-preview header {
   display: flex;
@@ -783,7 +783,7 @@ onUnmounted(() => {
 .preview-file span {
   display: block;
   font-size: 12px;
-  color: #344359;
+  color: var(--text);
   margin-top: 4px;
   overflow-wrap: anywhere;
 }
@@ -793,7 +793,7 @@ onUnmounted(() => {
 .organize-progress {
   position: absolute;
   inset: 76px 0 0;
-  background: #fffffff2;
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -826,8 +826,8 @@ onUnmounted(() => {
 }
 .media-selector-dialog {
   padding: 22px;
-  background: #fff;
-  border-radius: 12px;
+  background: var(--surface);
+  border-radius: 6px;
   width: min(600px, 100%);
   max-height: 80dvh;
   overflow: auto;
@@ -839,7 +839,8 @@ onUnmounted(() => {
 }
 .media-selector-dialog h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 500;
 }
 .media-selector-dialog form {
   display: flex;
@@ -874,12 +875,15 @@ onUnmounted(() => {
     transform: rotate(360deg);
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 959px) {
   .organize-backdrop {
-    padding: 10px;
+    padding: 0;
   }
   .reorganize-dialog {
-    max-height: calc(100dvh - 20px);
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
   }
   .organize-layout {
     flex-direction: column;
@@ -892,7 +896,10 @@ onUnmounted(() => {
   }
   .organize-form {
     overflow: visible;
-    padding: 18px;
+    padding: 24px;
+  }
+  .organize-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
   .organize-preview {
     width: 100%;
@@ -901,6 +908,10 @@ onUnmounted(() => {
     overflow: visible;
   }
   .organize-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    z-index: 1;
     padding: 14px 12px;
     gap: 7px;
   }

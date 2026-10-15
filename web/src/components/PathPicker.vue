@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, useId } from 'vue';
 import { api, errorText } from '../api';
+import FileManagerIcon from './FileManagerIcon.vue';
 const props = defineProps<{
   modelValue: string;
   label: string;
@@ -106,7 +107,7 @@ function choose() {
         title="浏览目录"
         @click="open"
       >
-        ▱
+        <FileManagerIcon name="folder" />
       </button>
     </div>
     <Teleport to="body"
@@ -115,7 +116,7 @@ function choose() {
           <header class="section-heading">
             <h2>选择目录</h2>
             <button type="button" class="icon-button" aria-label="关闭目录选择" @click="close">
-              ×
+              <FileManagerIcon name="close" />
             </button>
           </header>
           <nav class="path-crumbs" aria-label="目录路径">
@@ -137,7 +138,7 @@ function choose() {
                 type="button"
                 @click="load(root, root.path)"
               >
-                <span aria-hidden="true">▱</span>{{ root.path }}
+                <FileManagerIcon name="folder" />{{ root.path }}
               </button></template
             >
             <template v-else
@@ -147,7 +148,7 @@ function choose() {
                 type="button"
                 @click="load(activeRoot, folder.path)"
               >
-                <span aria-hidden="true">▱</span>{{ folder.name }}
+                <FileManagerIcon name="folder" />{{ folder.name }}
               </button>
               <p v-if="!error && !folders.length" class="notice">此目录没有子目录。</p></template
             >
@@ -173,19 +174,29 @@ function choose() {
 .path-input {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.path-input:focus-within {
+  border-color: var(--accent);
 }
 .path-input input {
   min-width: 0;
   flex: 1;
+  border: 0;
+  box-shadow: none;
 }
 .path-input button {
   flex: none;
-  font-size: 22px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
 }
 .path-picker > label {
   display: block;
   margin-bottom: 7px;
+  font-size: 14px;
 }
 .path-crumbs {
   display: flex;
@@ -213,18 +224,19 @@ function choose() {
   gap: 10px;
   width: 100%;
   border: 0;
-  border-radius: 5px;
+  border-radius: 0;
   background: transparent;
-  padding: 12px;
+  padding: 10px 12px;
   text-align: left;
   overflow-wrap: anywhere;
 }
 .folder-list > button:hover {
-  background: var(--accent-soft);
+  background: color-mix(in srgb, var(--text) 4%, var(--surface));
 }
-.folder-list > button > span {
-  color: var(--accent);
-  font-size: 22px;
+.folder-list > button > svg {
+  color: var(--muted);
+  width: 24px;
+  height: 24px;
 }
 .path-actions {
   display: flex;

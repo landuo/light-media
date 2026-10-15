@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { api, errorText, friendly, toast } from '../api';
-import { candidateKey, type Candidate } from '../features/resources';
+import { api, bytes, date, errorText, friendly, label, toast } from '../api';
+import { candidateKey, resourceReviewReasons, type Candidate } from '../features/resources';
 import ResourceCard from './ResourceCard.vue';
 import AddDownloadDialog from './AddDownloadDialog.vue';
 import AppIcon from './AppIcon.vue';
@@ -79,8 +79,7 @@ onUnmounted(() => {
     >
       <header>
         <div class="site-resource-heading">
-          <span><AppIcon name="globe" /></span>
-          <h2>{{ site.name }} · 资源</h2>
+          <h2>{{ site.name }} 资源浏览</h2>
         </div>
         <button class="icon-button" aria-label="关闭站点资源" @click="emit('close')">
           <AppIcon name="close" />
@@ -114,6 +113,99 @@ onUnmounted(() => {
         <p v-if="output && !candidates.length" class="site-resource-empty">
           <AppIcon name="search" />本页未返回资源。
         </p>
+        <div v-if="candidates.length" class="site-resource-table">
+          <table>
+            <thead>
+              <tr>
+                <th class="resource-select"></th>
+                <th>标题</th>
+                <th>时间</th>
+                <th>大小</th>
+                <th>做种</th>
+                <th>下载</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="candidate in candidates" :key="candidateKey(candidate)">
+                <td class="resource-select">
+                  <input
+                    type="checkbox"
+                    :aria-label="'选择 ' + candidate.resource.title"
+                    :checked="selected.includes(candidateKey(candidate))"
+                    :disabled="!candidate.accepted && !candidate.needs_confirmation"
+                    @change="select(candidate)"
+                  />
+                </td>
+                <td class="resource-title-cell">
+                  <button
+                    class="resource-title"
+                    :disabled="!candidate.accepted && !candidate.needs_confirmation"
+                    @click="open(candidate)"
+                  >
+                    {{ candidate.resource.title }}
+                  </button>
+                  <p v-if="candidate.resource.subtitle">{{ candidate.resource.subtitle }}</p>
+                  <div class="resource-tags">
+                    <span
+                      v-if="candidate.resource.free || candidate.resource.download_factor === 0"
+                      class="free"
+                      >FREE</span
+                    >
+                    <span v-else-if="candidate.resource.download_factor < 1"
+                      >{{ candidate.resource.download_factor }}×下载</span
+                    >
+                    <span v-if="candidate.resource.upload_factor > 1"
+                      >{{ candidate.resource.upload_factor }}×上传</span
+                    >
+                    <span
+                      v-for="tag in [
+                        candidate.resource.resolution,
+                        candidate.resource.codec,
+                        candidate.resource.source,
+                      ].filter(Boolean)"
+                      :key="tag"
+                      >{{ tag }}</span
+                    >
+                    <span v-if="downloaded[candidateKey(candidate)]">{{
+                      label(downloaded[candidateKey(candidate)])
+                    }}</span>
+                  </div>
+                  <details v-if="resourceReviewReasons(candidate, false).length">
+                    <summary>{{ candidate.accepted ? '资源信息' : '不符合搜索规则' }}</summary>
+                    <p>{{ resourceReviewReasons(candidate, false).map(friendly).join('；') }}</p>
+                  </details>
+                </td>
+                <td>{{ date(candidate.resource.published_at) }}</td>
+                <td>{{ candidate.resource.size > 0 ? bytes(candidate.resource.size) : '未知' }}</td>
+                <td>{{ candidate.resource.seeders >= 0 ? candidate.resource.seeders : '未知' }}</td>
+                <td>
+                  {{ candidate.resource.leechers >= 0 ? candidate.resource.leechers : '未知' }}
+                </td>
+                <td class="resource-row-actions">
+                  <a
+                    v-if="candidate.resource.details_url?.startsWith('https://')"
+                    :href="candidate.resource.details_url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :aria-label="candidate.resource.title + ' 站点详情'"
+                    title="站点详情"
+                    ><AppIcon name="external"
+                  /></a>
+                  <button
+                    class="icon-button"
+                    :aria-label="'下载 ' + candidate.resource.title"
+                    title="下载"
+                    :disabled="!candidate.accepted && !candidate.needs_confirmation"
+                    @click="open(candidate)"
+                  >
+                    <AppIcon name="download" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="site-resource-grid">
           <ResourceCard
             v-for="candidate in candidates"
@@ -166,8 +258,7 @@ onUnmounted(() => {
 .site-resource-backdrop {
   position: fixed;
   inset: 0;
-  background: #12233273;
-  backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--text) 50%, transparent);
   z-index: 200;
   display: grid;
   place-items: center;
@@ -176,24 +267,31 @@ onUnmounted(() => {
 .site-resource-dialog {
   display: flex;
   flex-direction: column;
-  width: min(1180px, 100%);
+  width: min(1472px, 100%);
   height: min(860px, calc(100dvh - 40px));
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: 0 24px 80px #172b3a29;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
   overflow: hidden;
 }
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--line);
+  min-height: 64px;
+  padding: 12px 24px;
+  color: white;
+  background: var(--accent);
+}
+header .icon-button {
+  color: inherit;
+  border: 0;
+  background: transparent;
 }
 h2 {
-  font-size: 17px;
-  font-weight: 650;
+  font-size: 20px;
+  font-weight: 500;
   margin: 0;
 }
 .site-resource-heading {
@@ -201,20 +299,13 @@ h2 {
   align-items: center;
   gap: 12px;
 }
-.site-resource-heading > span {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  color: var(--accent);
-  background: var(--accent-soft);
-}
 form {
   display: flex;
   gap: 10px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--line);
+  margin: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 .site-resource-search {
   position: relative;
@@ -233,18 +324,128 @@ form {
 }
 .site-resource-search input {
   padding-left: 41px;
+  background: color-mix(in srgb, var(--text) 4%, var(--surface));
+  border-color: transparent;
 }
 .site-resource-body {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 20px 24px;
-  background: color-mix(in srgb, var(--line) 12%, var(--surface));
+  padding: 0;
+  background: var(--surface);
+}
+.site-resource-body > .error-box,
+.site-resource-body > p:not(.site-resource-loading):not(.site-resource-empty) {
+  margin: 12px;
 }
 .site-resource-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 16px;
+  display: none;
+}
+.site-resource-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.site-resource-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  text-align: left;
+  font-weight: 500;
+  color: var(--muted);
+}
+.site-resource-table th,
+.site-resource-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 12px;
+}
+.site-resource-table tbody tr:hover {
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+}
+.site-resource-table td:not(.resource-title-cell) {
+  white-space: nowrap;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.resource-title-cell {
+  width: 100%;
+  min-width: 260px;
+  overflow-wrap: anywhere;
+}
+.resource-title-cell > p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.resource-title {
+  display: block;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  box-shadow: none;
+}
+.resource-title:hover {
+  color: var(--accent);
+  background: transparent;
+}
+.resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+.resource-tags span {
+  display: inline-flex;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.resource-tags span.free {
+  color: var(--success, var(--accent));
+  background: color-mix(in srgb, var(--success, var(--accent)) 12%, var(--surface));
+}
+.resource-select {
+  width: 40px;
+}
+.resource-select input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.resource-row-actions .icon-button,
+.resource-row-actions a {
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  vertical-align: middle;
+}
+.resource-title-cell details {
+  padding: 0;
+  margin: 8px 0 0;
+  border: 0;
+  font-size: 12px;
+  background: transparent;
+}
+.resource-title-cell details p {
+  margin: 6px 0;
+  color: var(--muted);
+}
+.resource-title-cell summary {
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
 }
 .site-resource-loading,
 .site-resource-empty {
@@ -294,12 +495,21 @@ footer span {
   inset: 0;
   z-index: 1;
 }
-@media (max-width: 600px) {
+@media (max-width: 959px) {
   .site-resource-backdrop {
-    padding: 8px;
+    padding: 0;
   }
   .site-resource-dialog {
-    height: calc(100dvh - 16px);
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .site-resource-table {
+    display: none;
+  }
+  .site-resource-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
   form {
     padding: 12px;

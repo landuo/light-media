@@ -271,7 +271,6 @@ onUnmounted(() => generation++);
             <p v-if="!rows.length && !errors['/']" class="directory-status">没有可浏览的目录</p>
           </template>
         </div>
-        <footer>点击目录即可填入路径</footer>
       </section>
     </div>
   </Teleport>
@@ -300,8 +299,8 @@ onUnmounted(() => generation++);
   flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  box-shadow: 0 14px 48px #111b3633;
+  border-radius: 6px;
+  box-shadow: var(--shadow);
   overflow: hidden;
   outline: none;
 }
@@ -312,6 +311,8 @@ onUnmounted(() => generation++);
   justify-content: space-between;
   padding: 10px 12px;
   border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 500;
 }
 .directory-picker button {
   box-shadow: none;
@@ -351,10 +352,13 @@ onUnmounted(() => generation++);
   text-overflow: ellipsis;
   display: block;
   flex: none;
+  border-radius: 4px;
+  border-color: var(--line);
+  background: transparent;
 }
 .directory-scroll {
   flex: 1;
-  min-height: 140px;
+  min-height: 160px;
   overflow: auto;
   padding: 4px 0;
   border-top: 1px solid var(--line);
@@ -362,6 +366,11 @@ onUnmounted(() => generation++);
 .directory-row {
   display: flex;
   align-items: center;
+  min-height: 36px;
+  font-size: 14px;
+}
+.directory-row:hover {
+  background: color-mix(in srgb, var(--text) 4%, var(--surface));
 }
 .directory-row button,
 .directory-local {
@@ -372,7 +381,7 @@ onUnmounted(() => generation++);
 .directory-expand {
   flex: none;
   width: 28px;
-  padding: 9px 4px;
+  padding: 7px 4px;
   font-size: 18px;
 }
 .directory-name {
@@ -381,7 +390,7 @@ onUnmounted(() => generation++);
   gap: 9px;
   text-align: left;
   justify-content: flex-start;
-  padding: 9px 8px;
+  padding: 7px 8px;
   flex: 1;
   min-width: 0;
 }
@@ -392,17 +401,23 @@ onUnmounted(() => generation++);
 }
 .directory-name svg,
 .directory-local svg {
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
 }
 .directory-local {
   justify-content: flex-start;
   gap: 8px;
   width: 100%;
   padding: 9px 14px;
+  font-size: 14px;
 }
 .active {
   background: var(--accent-soft) !important;
+  color: var(--accent);
+}
+.active .directory-name svg,
+.directory-local.active svg {
   color: var(--accent);
 }
 .selected-mark {
@@ -425,12 +440,5 @@ onUnmounted(() => generation++);
   font-size: 12px;
   margin: 5px 0;
   padding: 4px 14px;
-}
-.directory-picker footer {
-  flex: none;
-  font-size: 11px;
-  color: var(--muted);
-  border-top: 1px solid var(--line);
-  padding: 8px 14px;
 }
 </style>

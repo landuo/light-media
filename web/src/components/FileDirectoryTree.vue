@@ -99,7 +99,7 @@ watch(
 </template>
 <style scoped>
 .file-tree {
-  width: 250px;
+  width: 240px;
   flex: none;
   border-right: 1px solid var(--line);
   padding: 8px 0;
@@ -108,17 +108,25 @@ watch(
 .file-tree button {
   border: 0;
   background: transparent;
-  padding: 8px;
+  padding: 4px 8px;
   box-shadow: none;
 }
 .tree-local {
   width: 100%;
   justify-content: flex-start;
   gap: 9px;
+  color: var(--accent);
+  min-height: 36px;
+  font-size: 14px;
 }
 .tree-row {
   display: flex;
   align-items: center;
+  min-height: 32px;
+  font-size: 14px;
+}
+.tree-row:hover {
+  background: color-mix(in srgb, var(--text) 4%, var(--surface));
 }
 .tree-row.active {
   background: var(--accent-soft);
@@ -127,7 +135,7 @@ watch(
 .tree-expand {
   width: 24px;
   flex: none;
-  padding: 7px 3px !important;
+  padding: 4px 3px !important;
 }
 .tree-name {
   min-width: 0;
@@ -139,8 +147,12 @@ watch(
   white-space: nowrap;
 }
 .tree-name svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
+  color: #ffb300;
+}
+.tree-row.active .tree-name svg {
+  color: var(--accent);
 }
 .tree-error {
   color: var(--danger);

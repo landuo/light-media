@@ -33,10 +33,11 @@ const pageKey = computed(() => route.value.split('?')[0]!.split('/')[0]!);
 const nav = [
   {
     label: '',
-    items: [
-      ['discover', 'star', '发现'],
-      ['search', 'search', '搜索结果'],
-    ],
+    items: [['search', 'search', '搜索结果']],
+  },
+  {
+    label: '发现',
+    items: [['discover', 'star', '推荐']],
   },
   {
     label: '订阅',
@@ -73,11 +74,6 @@ const navHref = (target: string) =>
   (target === 'search' && globalQuery.value.trim()
     ? 'search?query=' + encodeURIComponent(globalQuery.value.trim())
     : target);
-const paused = computed(() =>
-  typeof ui.status?.control === 'string'
-    ? ui.status.control !== 'running'
-    : !!ui.status?.control?.paused,
-);
 const notifications = ref<any>({ items: [], unread: 0 }),
   notificationsOpen = ref(false);
 async function loadNotifications() {
@@ -212,7 +208,7 @@ onUnmounted(() => {
         <template v-for="group in nav" :key="group.label">
           <div v-if="group.label" class="nav-caption">{{ group.label }}</div>
           <a
-            v-for="n in group.items.filter((item) => item[0] !== 'settings')"
+            v-for="n in group.items"
             :key="n[0]"
             :href="navHref(n[0]!)"
             :class="{ active: activeNav(n[0]!) }"
@@ -224,19 +220,6 @@ onUnmounted(() => {
           ></template
         >
       </nav>
-      <div class="sidebar-bottom">
-        <a
-          href="#settings"
-          class="sidebar-settings"
-          :class="{ active: pageKey === 'settings' }"
-          :aria-current="pageKey === 'settings' ? 'page' : undefined"
-          ><AppIcon name="settings" />设置<AppIcon
-            name="chevron-right"
-            class="sidebar-settings-arrow"
-        /></a>
-        <span class="dot" :class="{ amber: paused }"></span
-        >{{ paused ? '自动流程已暂停' : ui.status ? '服务运行中' : '服务状态待确认' }}
-      </div>
     </aside>
     <div class="main-shell">
       <header class="topbar">
@@ -249,14 +232,16 @@ onUnmounted(() => {
           <AppIcon name="menu" />
         </button>
         <form class="global-search" role="search" @submit.prevent="searchMedia">
-          <AppIcon name="search" />
+          <button type="submit" class="global-search-submit" aria-label="搜索影视">
+            <AppIcon name="search" />
+          </button>
           <input
             ref="searchInput"
             v-model="globalQuery"
             aria-label="搜索电影、剧集"
             placeholder="搜索电影、剧集…"
           />
-          <button type="submit" aria-label="搜索影视">搜索</button><kbd>⌘K</kbd>
+          <kbd>⌘K</kbd>
         </form>
         <div class="topbar-actions">
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span

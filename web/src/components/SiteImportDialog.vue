@@ -104,9 +104,12 @@ async function start() {
       @keydown.esc.stop="close"
     >
       <header>
-        <div>
-          <h2>导入站点</h2>
-          <small>从 MoviePilot 或本应用导出的 JSON 文件导入</small>
+        <div class="site-import-heading">
+          <AppIcon name="upload" />
+          <div>
+            <h2>导入站点</h2>
+            <small>从 MoviePilot 或本应用导出的 JSON 文件导入</small>
+          </div>
         </div>
         <button
           class="icon-button"
@@ -127,9 +130,6 @@ async function start() {
           @dragleave="dragging = false"
           @drop.prevent="drop"
         >
-          <span class="import-upload-icon"><AppIcon name="upload" /></span>
-          <p>将文件拖放到此处，或选择文件</p>
-          <small>{{ reading ? '正在读取…' : '支持 JSON 文件，最大 2 MiB' }}</small>
           <input
             ref="fileInput"
             type="file"
@@ -138,6 +138,9 @@ async function start() {
             :disabled="reading"
             @change="select"
           />
+          <span class="import-upload-icon"><AppIcon name="upload" /></span>
+          <p>将文件拖放到此处，或选择文件</p>
+          <small>{{ reading ? '正在读取…' : '支持 JSON 文件，最大 2 MiB' }}</small>
         </div>
         <template v-else-if="importing">
           <p role="status">正在导入 {{ completed }} / {{ document.sites.length }}</p>
@@ -198,31 +201,41 @@ async function start() {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: #12233273;
-  backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--text) 50%, transparent);
 }
 .site-import-dialog {
-  width: min(760px, 100%);
+  width: min(800px, 100%);
   max-height: calc(100dvh - 40px);
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
+  border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--surface);
-  box-shadow: 0 24px 80px #172b3a29;
+  box-shadow: var(--shadow);
 }
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 22px 26px;
+  padding: 12px 24px;
   border-bottom: 1px solid var(--line);
 }
 h2 {
-  margin: 0 0 7px;
-  font-size: 18px;
-  font-weight: 650;
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.site-import-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.site-import-heading > .app-icon {
+  width: 24px;
+  height: 24px;
+  flex: none;
 }
 small {
   color: var(--muted);
@@ -238,15 +251,15 @@ h3 small {
   font-weight: 400;
 }
 .site-import-body {
-  padding: 24px 26px;
+  padding: 24px;
   overflow: auto;
 }
 .site-import-drop {
-  border: 1px dashed color-mix(in srgb, var(--muted) 45%, var(--line));
-  border-radius: 12px;
-  padding: 36px 20px;
+  border: 2px dashed var(--line);
+  border-radius: 8px;
+  padding: 32px;
   text-align: center;
-  background: color-mix(in srgb, var(--line) 12%, var(--surface));
+  background: var(--surface);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -254,8 +267,8 @@ h3 small {
 }
 .site-import-drop p {
   margin: 3px 0 0;
-  font-size: 14px;
-  font-weight: 550;
+  font-size: 16px;
+  font-weight: 400;
 }
 .site-import-drop > small {
   font-size: 12px;
@@ -263,21 +276,19 @@ h3 small {
 .import-upload-icon {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 17px;
+  width: 48px;
+  height: 48px;
   color: var(--accent);
-  background: var(--accent-soft);
 }
 .import-upload-icon .app-icon {
-  width: 27px;
-  height: 27px;
+  width: 48px;
+  height: 48px;
 }
 .site-import-drop input {
-  width: min(310px, 100%);
-  font-size: 12px;
+  width: 100%;
+  font-size: 14px;
   color: var(--muted);
-  margin-top: 9px;
+  margin: 0 0 12px;
   padding: 0;
   background: var(--surface);
 }
@@ -287,8 +298,8 @@ h3 small {
   border-right: 1px solid var(--line);
   padding: 10px 14px;
   margin-right: 12px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--surface);
+  color: var(--text);
   font: inherit;
   font-weight: 550;
 }
@@ -300,7 +311,7 @@ h3 small {
   list-style: none;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 11px;
+  border-radius: 8px;
   overflow: hidden;
 }
 .site-import-list li {
@@ -321,13 +332,13 @@ h3 small {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 13px;
-  font-weight: 550;
+  font-size: 16px;
+  font-weight: 500;
 }
 .site-import-list strong .app-icon {
   width: 17px;
   height: 17px;
-  color: var(--accent);
+  color: var(--success, var(--accent));
 }
 .site-import-list .failed strong .app-icon {
   color: var(--danger);
@@ -357,12 +368,11 @@ footer {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
+  padding-top: 8px;
 }
 progress {
   width: 100%;
-  height: 6px;
+  height: 8px;
   accent-color: var(--accent);
   border-radius: 5px;
 }
@@ -371,12 +381,23 @@ progress {
   padding: 13px 15px;
   border: 1px solid var(--line);
   background: color-mix(in srgb, var(--accent-soft) 50%, var(--surface));
-  border-radius: 9px;
+  border-radius: 8px;
   font-size: 13px;
 }
-@media (max-width: 600px) {
+@media (max-width: 959px) {
   .site-import-backdrop {
-    padding: 10px;
+    padding: 0;
+  }
+  .site-import-dialog {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+}
+@media (max-width: 600px) {
+  .site-import-drop {
+    padding: 24px 16px;
   }
   .site-import-body {
     padding: 16px;

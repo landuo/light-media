@@ -271,38 +271,62 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
 </template>
 <style scoped>
 .settings-tabs {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 .settings-page {
   display: grid;
-  gap: 20px;
-  max-width: 1400px;
+  gap: 24px;
+  width: 100%;
 }
 .settings-page .panel {
   margin: 0;
   padding: 24px;
-  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  box-shadow: none;
 }
 .settings-page .section-heading {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 .settings-page .section-heading h2,
 .settings-page .panel > h2 {
-  color: var(--text, #172b3a);
-  font-size: 16px;
-  font-weight: 650;
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 .settings-page .panel > h2 {
-  margin: 0 0 22px;
+  margin: 0 0 24px;
 }
 .settings-page .panel > h3 {
   padding-top: 24px;
   margin-top: 26px;
   border-top: 1px solid var(--line);
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: 500;
 }
 .settings-page .form-grid {
-  gap: 20px 24px;
+  gap: 24px;
+}
+.settings-page .form-grid label:not(.check) {
+  font-size: 12px;
+  color: var(--muted);
+}
+.settings-page .form-grid input:not([type='checkbox']),
+.settings-page .form-grid select {
+  min-height: 48px;
+  font-size: 16px;
+  color: var(--text);
+}
+.settings-page .form-grid .check {
+  align-self: center;
+  min-height: 48px;
+  font-size: 16px;
+  gap: 12px;
+}
+.settings-page .form-grid input[readonly] {
+  background: var(--surface);
+  color: var(--muted);
 }
 .settings-page .notice {
   display: flex;
@@ -324,10 +348,10 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
 }
 @media (max-width: 760px) {
   .settings-page .panel {
-    padding: 20px;
+    padding: 24px 16px;
   }
   .settings-page .form-grid {
-    gap: 18px;
+    gap: 24px;
   }
   .settings-page .button-row > button {
     min-height: 42px;

@@ -26,6 +26,7 @@ import {
   calendarEpisodes,
   type CalendarView,
 } from '../features/subscription-calendar';
+import AppIcon from './AppIcon.vue';
 import Policy from './Policy.vue';
 import Schedule from './Schedule.vue';
 import MappingRules from './MappingRules.vue';
@@ -336,8 +337,15 @@ onMounted(applyView);
 watch(() => props.view, applyView);
 </script>
 <template>
-  <div v-if="!isCalendar" class="page-actions">
-    <button class="primary" @click="begin()">＋ 新建订阅</button>
+  <div v-if="!isCalendar" class="subscription-actions">
+    <button
+      class="primary subscription-add"
+      aria-label="新建订阅"
+      title="新建订阅"
+      @click="begin()"
+    >
+      <AppIcon name="plus" />
+    </button>
   </div>
   <template v-if="isCalendar">
     <div class="calendar-toolbar">
@@ -384,6 +392,8 @@ watch(() => props.view, applyView);
           :key="entry.key"
           class="calendar-entry event-card"
           :class="{ complete: eventComplete(entry) }"
+          :aria-label="entry.title + ' · ' + calendarEpisodes(entry.entries)"
+          :title="entry.title + ' · ' + calendarEpisodes(entry.entries)"
           @click="selectedEvent = entry"
         >
           <img
@@ -391,6 +401,10 @@ watch(() => props.view, applyView);
             :src="image(entry.poster_path, 'w92')"
             alt=""
           />
+          <span class="calendar-episode-overlay">{{ calendarEpisodes(entry.entries) }}</span>
+          <span v-if="eventComplete(entry)" class="calendar-library-check"
+            ><AppIcon name="check"
+          /></span>
           <span class="event-info"
             ><b>{{ entry.title }}</b
             ><small
@@ -426,18 +440,7 @@ watch(() => props.view, applyView);
       <p v-if="!agendaDays.length && !loading" class="notice">没有更新安排。</p>
     </div>
   </template>
-  <template v-else
-    ><div class="stat-row">
-      <div class="stat">
-        <span>全部订阅</span><strong>{{ subs.length }}</strong>
-      </div>
-      <div class="stat">
-        <span>正在追更</span><strong>{{ subs.filter((s) => s.state === 'active').length }}</strong>
-      </div>
-      <div class="stat">
-        <span>已暂停</span><strong>{{ subs.filter((s) => s.state === 'paused').length }}</strong>
-      </div>
-    </div>
+  <template v-else>
     <div class="toolbar">
       <input v-model="filterText" placeholder="搜索订阅" aria-label="搜索订阅" />
       <select v-model="filterKind">
@@ -460,70 +463,127 @@ watch(() => props.view, applyView);
       ><span class="hint push-right">{{ filteredSubs.length }} 个订阅</span>
     </div>
     <div class="subscription-grid">
-      <article v-for="s in filteredSubs" :key="s.id" class="subscription-card">
+      <article
+        v-for="s in filteredSubs"
+        :key="s.id"
+        class="subscription-card"
+        :class="{ paused: s.state === 'paused' }"
+      >
         <img
-          v-if="image(s.media?.poster_path, 'w185')"
-          :src="image(s.media.poster_path, 'w185')"
-          :alt="s.media.title"
+          v-if="image(s.media?.backdrop_path || s.media?.poster_path, 'w780')"
+          class="subscription-backdrop"
+          :src="image(s.media.backdrop_path || s.media.poster_path, 'w780')"
+          alt=""
         />
-        <div>
-          <div class="section-heading">
-            <h3>{{ s.media.title }}</h3>
-            <span :class="['badge', 'subscription-state', s.state]">{{ label(s.state) }}</span>
+        <button
+          class="subscription-card-content"
+          :aria-label="'编辑订阅 ' + s.media.title"
+          @click="begin(s)"
+        >
+          <div class="subscription-heading">
+            <img
+              v-if="image(s.media?.poster_path, 'w185')"
+              class="subscription-poster"
+              :src="image(s.media.poster_path, 'w185')"
+              :alt="s.media.title"
+            />
+            <div class="subscription-name">
+              <span>{{ s.media.year }}</span>
+              <h3>
+                {{ s.media.title
+                }}{{ s.media.media_type === 'tv' ? ' 第 ' + s.season + ' 季' : '' }}
+              </h3>
+            </div>
           </div>
-          <p class="muted">
-            {{ s.media.media_type === 'tv' ? '第 ' + s.season + ' 季' : '电影' }} ·
-            {{
-              s.media.media_type === 'tv'
-                ? s.target_scope === 'season' || !s.episodes?.length
-                  ? '从第 ' + (s.start_episode || 1) + ' 集开始 · 整季追更'
-                  : s.episodes.length + ' 集（历史范围）'
-                : '整部订阅'
-            }}
-          </p>
-          <p v-if="s.download_path" class="hint path-cell">下载目录：{{ s.download_path }}</p>
-          <div class="subscription-progress">
-            <progress :value="percent(s)" max="100"></progress
-            ><span
-              >已入库 {{ s.in_library_episodes?.length || 0 }} / {{ totalEpisodes(s) || '待定'
-              }}<b v-if="totalEpisodes(s)"> · {{ percent(s) }}%</b></span
+          <div class="subscription-progress-text">
+            <AppIcon name="download" />
+            <span
+              >已入库 {{ s.in_library_episodes?.length || 0 }} /
+              {{ totalEpisodes(s) || '待定' }}</span
             >
           </div>
-          <div class="tags">
-            <span>已入库 {{ s.in_library_episodes?.length || 0 }}</span
-            ><span
-              >下载中
-              {{
-                (s.reserved_episodes || []).filter(
-                  (e: number) => !(s.pending_import_episodes || []).includes(e),
-                ).length
-              }}</span
-            ><span>下载完成待整理 {{ s.pending_import_episodes?.length || 0 }}</span
-            ><span
-              >已播缺集
-              {{
-                (s.missing_episodes || []).filter(
-                  (e: number) =>
-                    !(s.unreleased_episodes || []).includes(e) &&
-                    !(s.unknown_airdate_episodes || []).includes(e),
-                ).length
-              }}</span
-            ><span>未播 {{ s.unreleased_episodes?.length || 0 }}</span
-            ><span>播出日期待确认 {{ s.unknown_airdate_episodes?.length || 0 }}</span>
+          <span :class="['subscription-state', s.state]">{{ label(s.state) }}</span>
+        </button>
+        <details class="subscription-menu">
+          <summary :aria-label="s.media.title + ' 更多操作'" title="更多操作">
+            <AppIcon name="more" />
+          </summary>
+          <div class="subscription-menu-panel">
+            <div class="subscription-menu-actions">
+              <button @click="check(s)"><AppIcon name="refresh" />立即检查</button>
+              <button @click="begin(s)"><AppIcon name="edit" />编辑</button>
+              <button @click="state(s)">
+                <AppIcon :name="s.state === 'paused' ? 'play' : 'pause'" />{{
+                  s.state === 'paused' ? '恢复' : '暂停'
+                }}
+              </button>
+              <button class="danger" @click="remove(s)"><AppIcon name="trash" />删除</button>
+            </div>
+            <div class="subscription-metadata">
+              <p>
+                {{
+                  s.media.media_type === 'tv'
+                    ? s.target_scope === 'season' || !s.episodes?.length
+                      ? '从第 ' + (s.start_episode || 1) + ' 集开始 · 整季追更'
+                      : s.episodes.length + ' 集（历史范围）'
+                    : '整部订阅'
+                }}
+              </p>
+              <p v-if="s.download_path" class="path-cell">下载目录：{{ s.download_path }}</p>
+              <dl>
+                <div>
+                  <dt>已入库</dt>
+                  <dd>{{ s.in_library_episodes?.length || 0 }}</dd>
+                </div>
+                <div>
+                  <dt>下载中</dt>
+                  <dd>
+                    {{
+                      (s.reserved_episodes || []).filter(
+                        (e: number) => !(s.pending_import_episodes || []).includes(e),
+                      ).length
+                    }}
+                  </dd>
+                </div>
+                <div>
+                  <dt>下载完成待整理</dt>
+                  <dd>{{ s.pending_import_episodes?.length || 0 }}</dd>
+                </div>
+                <div>
+                  <dt>已播缺集</dt>
+                  <dd>
+                    {{
+                      (s.missing_episodes || []).filter(
+                        (e: number) =>
+                          !(s.unreleased_episodes || []).includes(e) &&
+                          !(s.unknown_airdate_episodes || []).includes(e),
+                      ).length
+                    }}
+                  </dd>
+                </div>
+                <div>
+                  <dt>未播</dt>
+                  <dd>{{ s.unreleased_episodes?.length || 0 }}</dd>
+                </div>
+                <div>
+                  <dt>播出日期待确认</dt>
+                  <dd>{{ s.unknown_airdate_episodes?.length || 0 }}</dd>
+                </div>
+              </dl>
+              <p>
+                下次检查：{{ date(s.next_check) }}<br />上次检查：{{ date(s.last_check) }}<br />{{
+                  s.last_reason
+                }}
+              </p>
+            </div>
           </div>
-          <p class="hint">
-            下次检查：{{ date(s.next_check) }}<br />上次检查：{{ date(s.last_check) }}<br />{{
-              s.last_reason
-            }}
-          </p>
-          <div class="button-row">
-            <button class="small primary" @click="check(s)">立即检查</button
-            ><button class="small" @click="begin(s)">编辑</button
-            ><button class="small" @click="state(s)">
-              {{ s.state === 'paused' ? '恢复' : '暂停' }}</button
-            ><button class="small danger" @click="remove(s)">删除</button>
-          </div>
-        </div>
+        </details>
+        <progress
+          class="subscription-progress"
+          :value="percent(s)"
+          max="100"
+          :aria-label="s.media.title + ' 入库进度'"
+        ></progress>
       </article>
     </div>
     <div v-if="!subs.length && !loading" class="empty-state">
@@ -533,198 +593,218 @@ watch(() => props.view, applyView);
     </div></template
   >
   <div v-if="editing && !multiSeason" class="modal-backdrop">
-    <section class="modal wide" role="dialog" aria-modal="true" aria-label="订阅设置">
-      <div class="section-heading">
-        <h2>{{ editing.id ? '编辑订阅' : '新建订阅' }}</h2>
-        <button class="icon-button" @click="editing = null" aria-label="关闭">×</button>
-      </div>
-      <div v-if="!editing.media">
-        <form class="inline-form" @submit.prevent="find">
-          <input v-model="lookup" placeholder="搜索要订阅的作品" required /><button class="primary">
-            搜索
-          </button>
-        </form>
-        <div class="lookup-list">
-          <button v-for="m in lookupResults" :key="m.media_type + m.id" @click="pick(m)">
-            {{ m.title }} <span>{{ m.year }} · {{ label(m.media_type) }}</span>
-          </button>
+    <section
+      class="modal subscription-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="订阅设置"
+    >
+      <header class="subscription-dialog-header">
+        <div class="subscription-dialog-title">
+          <AppIcon name="jobs" />
+          <div>
+            <h2>{{ editing.id ? '编辑订阅' : '新建订阅' }}</h2>
+            <p v-if="editing.media">
+              {{ editing.media.title
+              }}{{ editing.media.media_type === 'tv' ? ' 第 ' + editing.season + ' 季' : '' }}
+            </p>
+          </div>
         </div>
-      </div>
-      <template v-else>
-        <p class="subscription-title">
-          <strong>{{ editing.media.title }}</strong
-          ><span>{{ editing.media.year }}</span>
-        </p>
-        <div class="tabs">
-          <button :class="{ selected: editingTab === 'basic' }" @click="editingTab = 'basic'">
-            基础</button
-          ><button
-            :class="{ selected: editingTab === 'advanced' }"
-            @click="editingTab = 'advanced'"
-          >
-            进阶
-          </button>
+        <button class="icon-button" @click="editing = null" aria-label="关闭">
+          <AppIcon name="close" />
+        </button>
+      </header>
+      <div class="subscription-dialog-body">
+        <div v-if="!editing.media">
+          <form class="inline-form" @submit.prevent="find">
+            <input v-model="lookup" placeholder="搜索要订阅的作品" required /><button
+              class="primary"
+            >
+              搜索
+            </button>
+          </form>
+          <div class="lookup-list">
+            <button v-for="m in lookupResults" :key="m.media_type + m.id" @click="pick(m)">
+              {{ m.title }} <span>{{ m.year }} · {{ label(m.media_type) }}</span>
+            </button>
+          </div>
         </div>
-        <div v-show="editingTab === 'basic'">
-          <div v-if="editing.media.media_type === 'tv'" class="form-grid three-columns">
-            <label
-              >季号<select
-                :value="editing.season"
-                @change="setSeason(Number(($event.target as HTMLSelectElement).value))"
-              >
-                <option
-                  v-for="season in (editing.media.seasons || []).filter(
-                    (value: any) => value.season_number > 0,
-                  )"
-                  :key="season.season_number"
-                  :value="season.season_number"
+        <template v-else>
+          <div class="tabs">
+            <button :class="{ selected: editingTab === 'basic' }" @click="editingTab = 'basic'">
+              基础</button
+            ><button
+              :class="{ selected: editingTab === 'advanced' }"
+              @click="editingTab = 'advanced'"
+            >
+              进阶
+            </button>
+          </div>
+          <div v-show="editingTab === 'basic'">
+            <div v-if="editing.media.media_type === 'tv'" class="form-grid three-columns">
+              <label
+                >季号<select
+                  :value="editing.season"
+                  @change="setSeason(Number(($event.target as HTMLSelectElement).value))"
                 >
-                  {{ season.name || '第 ' + season.season_number + ' 季' }}
-                </option>
-                <option v-if="!editing.media.seasons?.length" :value="editing.season">
-                  第 {{ editing.season }} 季
-                </option>
-              </select></label
-            >
-          </div>
-          <div class="form-grid three-columns">
-            <label>搜索关键词<input v-model.trim="editing.keyword" /></label>
-            <label v-if="editing.media.media_type === 'tv'"
-              >总集数<input
-                v-model.number="editing.total_episodes"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="自动"
-            /></label>
-            <label v-if="editing.media.media_type === 'tv'"
-              >开始集数<input v-model.number="editing.start_episode" type="number" min="1" step="1"
-            /></label>
-          </div>
-          <div class="form-grid three-columns">
-            <label
-              >质量<select v-model="editing.policy.source">
-                <option value="">默认</option>
-                <option value="WEB-DL">WEB-DL</option>
-                <option value="WEBRip">WEBRip</option>
-                <option value="BluRay">BluRay</option>
-                <option value="BDRip">BDRip</option>
-                <option value="HDTV">HDTV</option>
-                <option value="REMUX">REMUX</option>
-                <option value="DVD">DVD</option>
-              </select></label
-            >
-            <label
-              >分辨率<select v-model="editing.policy.resolution">
-                <option value="">默认</option>
-                <option>2160p</option>
-                <option>1080p</option>
-                <option>720p</option>
-              </select></label
-            >
-            <label
-              >特效<select v-model="editing.policy.hdr">
-                <option value="">默认</option>
-                <option value="sdr">SDR</option>
-                <option value="hdr10">HDR10</option>
-                <option value="hdr10plus">HDR10+</option>
-                <option value="dolby_vision">Dolby Vision</option>
-              </select></label
-            >
-          </div>
-          <div class="subscription-sites">
-            <label>订阅站点</label>
-            <div class="site-selection">
-              <span v-for="site in selectedSites" :key="site.id" class="site-chip"
-                >{{ site.name
-                }}<button
+                  <option
+                    v-for="season in (editing.media.seasons || []).filter(
+                      (value: any) => value.season_number > 0,
+                    )"
+                    :key="season.season_number"
+                    :value="season.season_number"
+                  >
+                    {{ season.name || '第 ' + season.season_number + ' 季' }}
+                  </option>
+                  <option v-if="!editing.media.seasons?.length" :value="editing.season">
+                    第 {{ editing.season }} 季
+                  </option>
+                </select></label
+              >
+            </div>
+            <div class="form-grid three-columns">
+              <label>搜索关键词<input v-model.trim="editing.keyword" /></label>
+              <label v-if="editing.media.media_type === 'tv'"
+                >总集数<input
+                  v-model.number="editing.total_episodes"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="自动"
+              /></label>
+              <label v-if="editing.media.media_type === 'tv'"
+                >开始集数<input
+                  v-model.number="editing.start_episode"
+                  type="number"
+                  min="1"
+                  step="1"
+              /></label>
+            </div>
+            <div class="form-grid three-columns">
+              <label
+                >质量<select v-model="editing.policy.source">
+                  <option value="">默认</option>
+                  <option value="WEB-DL">WEB-DL</option>
+                  <option value="WEBRip">WEBRip</option>
+                  <option value="BluRay">BluRay</option>
+                  <option value="BDRip">BDRip</option>
+                  <option value="HDTV">HDTV</option>
+                  <option value="REMUX">REMUX</option>
+                  <option value="DVD">DVD</option>
+                </select></label
+              >
+              <label
+                >分辨率<select v-model="editing.policy.resolution">
+                  <option value="">默认</option>
+                  <option>2160p</option>
+                  <option>1080p</option>
+                  <option>720p</option>
+                </select></label
+              >
+              <label
+                >特效<select v-model="editing.policy.hdr">
+                  <option value="">默认</option>
+                  <option value="sdr">SDR</option>
+                  <option value="hdr10">HDR10</option>
+                  <option value="hdr10plus">HDR10+</option>
+                  <option value="dolby_vision">Dolby Vision</option>
+                </select></label
+              >
+            </div>
+            <div class="subscription-sites">
+              <label>订阅站点</label>
+              <div class="site-selection">
+                <span v-for="site in selectedSites" :key="site.id" class="site-chip"
+                  >{{ site.name
+                  }}<button
+                    class="icon-button"
+                    :aria-label="'取消 ' + site.name"
+                    @click="toggleSite(site.id)"
+                  >
+                    ×
+                  </button></span
+                ><button
+                  class="site-dropdown"
+                  :aria-expanded="sitesOpen"
+                  @click="sitesOpen = !sitesOpen"
+                >
+                  {{ selectedSites.length ? '⌄' : '默认　⌄' }}</button
+                ><button
+                  v-if="selectedSites.length"
                   class="icon-button"
-                  :aria-label="'取消 ' + site.name"
-                  @click="toggleSite(site.id)"
+                  aria-label="清除站点"
+                  @click="editing.site_ids = []"
                 >
                   ×
-                </button></span
-              ><button
-                class="site-dropdown"
-                :aria-expanded="sitesOpen"
-                @click="sitesOpen = !sitesOpen"
-              >
-                {{ selectedSites.length ? '⌄' : '默认　⌄' }}</button
-              ><button
-                v-if="selectedSites.length"
-                class="icon-button"
-                aria-label="清除站点"
-                @click="editing.site_ids = []"
-              >
-                ×
-              </button>
+                </button>
+              </div>
+              <div v-if="sitesOpen" class="site-options">
+                <label v-for="site in siteOptions" :key="site.id" class="check"
+                  ><input
+                    type="checkbox"
+                    :checked="editing.site_ids.includes(site.id)"
+                    @change="toggleSite(site.id)"
+                  />{{ site.name }}</label
+                >
+                <p v-if="!siteOptions.length" class="hint">没有启用的站点。</p>
+              </div>
             </div>
-            <div v-if="sitesOpen" class="site-options">
-              <label v-for="site in siteOptions" :key="site.id" class="check"
-                ><input
-                  type="checkbox"
-                  :checked="editing.site_ids.includes(site.id)"
-                  @change="toggleSite(site.id)"
-                />{{ site.name }}</label
-              >
-              <p v-if="!siteOptions.length" class="hint">没有启用的站点。</p>
-            </div>
-          </div>
-          <DownloadTarget
-            v-model:downloader="editing.downloader_id"
-            v-model:download-path="editing.download_path"
-          />
-        </div>
-        <div v-show="editingTab === 'advanced'" class="subscription-advanced">
-          <Policy :model="editing.policy" advanced />
-          <label
-            >状态<select v-model="editing.state">
-              <option value="active">启用</option>
-              <option value="paused">暂停</option>
-            </select></label
-          >
-          <h3>更新时间与检查周期</h3>
-          <Schedule :model="editing.schedule" />
-          <template v-if="editing.media.media_type === 'tv'">
-            <h3>单集设置</h3>
-            <div class="form-grid">
-              <label>排除集数<input v-model="excluded" /></label
-              ><label>允许提前下载的集数<input v-model="allowEarly" /></label>
-            </div>
-            <label
-              >单集日期覆盖<textarea
-                v-model="dates"
-                rows="3"
-                placeholder="17=2026-10-16"
-              ></textarea>
-            </label>
-            <MappingRules
-              :model="editing.mappings"
-              :media-id="editing.media.media_type + ':' + editing.media.id"
-              :season="editing.season"
+            <DownloadTarget
+              v-model:downloader="editing.downloader_id"
+              v-model:download-path="editing.download_path"
             />
+          </div>
+          <div v-show="editingTab === 'advanced'" class="subscription-advanced">
+            <Policy :model="editing.policy" advanced />
             <label
-              v-if="editing.id && editing.target_scope !== 'season' && editing.episodes?.length"
-              class="check"
-              ><input v-model="convertLegacy" type="checkbox" />从开始集数起整季订阅（原范围：{{
-                editing.episodes.join('、')
-              }}）</label
+              >状态<select v-model="editing.state">
+                <option value="active">启用</option>
+                <option value="paused">暂停</option>
+              </select></label
             >
-          </template>
-        </div>
-        <div class="button-row">
-          <button
-            v-if="
-              !editing.id && editing.media.media_type === 'tv' && editing.media.seasons?.length > 1
-            "
-            @click="openMulti"
-          >
-            选择多个季度订阅
-          </button>
-          <button @click="editing = null">取消</button
-          ><button class="primary" :disabled="ui.busy > 0" @click="save">保存</button>
-        </div></template
-      >
+            <h3>更新时间与检查周期</h3>
+            <Schedule :model="editing.schedule" />
+            <template v-if="editing.media.media_type === 'tv'">
+              <h3>单集设置</h3>
+              <div class="form-grid">
+                <label>排除集数<input v-model="excluded" /></label
+                ><label>允许提前下载的集数<input v-model="allowEarly" /></label>
+              </div>
+              <label
+                >单集日期覆盖<textarea
+                  v-model="dates"
+                  rows="3"
+                  placeholder="17=2026-10-16"
+                ></textarea>
+              </label>
+              <MappingRules
+                :model="editing.mappings"
+                :media-id="editing.media.media_type + ':' + editing.media.id"
+                :season="editing.season"
+              />
+              <label
+                v-if="editing.id && editing.target_scope !== 'season' && editing.episodes?.length"
+                class="check"
+                ><input v-model="convertLegacy" type="checkbox" />从开始集数起整季订阅（原范围：{{
+                  editing.episodes.join('、')
+                }}）</label
+              >
+            </template>
+          </div>
+        </template>
+      </div>
+      <footer v-if="editing.media" class="subscription-dialog-footer button-row">
+        <button
+          v-if="
+            !editing.id && editing.media.media_type === 'tv' && editing.media.seasons?.length > 1
+          "
+          @click="openMulti"
+        >
+          选择多个季度订阅
+        </button>
+        <button @click="editing = null">取消</button
+        ><button class="primary" :disabled="ui.busy > 0" @click="save">保存</button>
+      </footer>
     </section>
   </div>
   <div v-if="selectedEvent" class="modal-backdrop" @click.self="selectedEvent = null">
@@ -795,181 +875,659 @@ watch(() => props.view, applyView);
 </template>
 
 <style scoped>
-.subscription-progress {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--muted);
-  margin: 12px 0;
+.subscription-actions {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
 }
-.subscription-progress progress {
-  width: 40%;
-  height: 7px;
-  accent-color: var(--accent, #7c83fd);
+.subscription-add {
+  width: 56px;
+  min-width: 56px;
+  height: 56px;
+  min-height: 56px;
+  padding: 0;
+  border-radius: 50%;
+}
+.subscription-add :deep(.app-icon) {
+  width: 28px;
+  height: 28px;
+}
+.toolbar {
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 .toolbar input {
   max-width: 230px;
 }
-
+.toolbar > select {
+  min-width: 115px;
+}
+.subscription-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.subscription-card {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  min-width: 0;
+  min-height: 160px;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #1f2937;
+  box-shadow: none;
+  transition: transform 0.3s ease;
+}
+.subscription-card:has(.subscription-card-content:hover) {
+  transform: translateY(-4px);
+}
+.subscription-card.paused {
+  opacity: 0.65;
+}
+.subscription-card > .subscription-backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  border-radius: inherit;
+  box-shadow: none;
+}
+.subscription-card::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(31, 41, 55, 0.47), #1f2937);
+}
+.subscription-card-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  padding: 12px 20px 28px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: white;
+  text-align: left;
+  box-shadow: none;
+}
+.subscription-card-content:hover {
+  background: transparent;
+  box-shadow: none;
+}
+.subscription-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding-right: 16px;
+}
+.subscription-poster {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 72px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.subscription-name {
+  min-width: 0;
+}
+.subscription-name > span {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+.subscription-card h3 {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 4px 0 0;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.subscription-progress-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 16px;
+  color: white;
+  font-size: 14px;
+  line-height: 22px;
+}
+.subscription-progress-text :deep(.app-icon) {
+  width: 20px;
+  height: 20px;
+}
+.subscription-state {
+  position: absolute;
+  right: 8px;
+  bottom: 10px;
+  color: #d1d5db;
+  font-size: 12px;
+  font-weight: 400;
+}
+.subscription-progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  margin: 0;
+  border: 0;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  accent-color: var(--success, #56ca00);
+}
+.subscription-progress::-webkit-progress-bar {
+  background: rgba(86, 202, 0, 0.25);
+}
+.subscription-progress::-webkit-progress-value {
+  background: var(--success, #56ca00);
+}
+.subscription-progress::-moz-progress-bar {
+  background: var(--success, #56ca00);
+}
+.subscription-menu {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  left: 4px;
+  z-index: 2;
+  pointer-events: none;
+}
+.subscription-card:has(.subscription-menu[open]) {
+  z-index: 10;
+}
+.subscription-menu > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  list-style: none;
+  margin-left: auto;
+  pointer-events: auto;
+}
+.subscription-menu[open] > summary {
+  margin-bottom: 0;
+}
+.subscription-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.subscription-menu > summary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.subscription-menu-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: min(288px, 100%);
+  max-width: calc(100vw - 32px);
+  max-height: min(560px, calc(100dvh - 140px));
+  overflow: auto;
+  pointer-events: auto;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+}
+.subscription-menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.subscription-menu-actions > button {
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+  box-shadow: none;
+}
+.subscription-menu-actions > button:hover {
+  background: var(--accent-soft);
+}
+.subscription-menu-actions > button.danger {
+  color: var(--danger);
+}
+.subscription-metadata {
+  margin-top: 8px;
+  padding: 8px 12px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.subscription-metadata p {
+  margin: 0 0 8px;
+}
+.subscription-metadata dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 12px;
+  margin: 8px 0;
+}
+.subscription-metadata dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+.subscription-metadata dd {
+  margin: 0;
+  color: var(--text);
+}
 .calendar-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  margin: 20px;
 }
 .calendar-toolbar h2 {
   margin: 0;
-  font-size: 19px;
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 500;
+  white-space: nowrap;
 }
-.calendar-day.outside {
-  background: #fafbfc;
+.calendar-toolbar .button-row {
+  gap: 0;
+}
+.calendar-toolbar .button-row > button {
+  min-width: 38px;
+  padding: 4px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  box-shadow: none;
+}
+.calendar-toolbar .button-row > button:first-child,
+.calendar-toolbar .button-row > button:last-child {
+  font-size: 24px;
+}
+.calendar-toolbar .button-row > button:hover {
+  color: var(--accent);
+}
+.calendar-toolbar .segmented {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 50%);
+  border-radius: 6px;
+  overflow: hidden;
+  background: transparent;
+}
+.calendar-toolbar .segmented > button {
+  min-height: 36px;
+  padding: 4px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.calendar-toolbar .segmented > button + button {
+  border-left: 1px solid color-mix(in srgb, var(--accent), transparent 50%);
+}
+.calendar-toolbar .segmented > button.selected {
+  background: var(--accent-soft);
+}
+.calendar-grid {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.calendar-weekday {
+  padding: 8px;
+  border-color: var(--line);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+}
+.calendar-day,
+.calendar-grid.week-view .calendar-day {
+  min-height: 130px;
+  padding: 5px;
+  border-color: var(--line);
+  background: transparent;
+  overflow: hidden;
+}
+.calendar-day > strong,
+.calendar-day.today > strong {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0 0 5px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: right;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.calendar-day.today {
+  background-image: linear-gradient(to bottom, #af85fd, rgba(58, 53, 65, 0.04));
 }
 .calendar-day.outside > strong {
-  opacity: 0.45;
+  opacity: 0.3;
 }
 .event-card {
-  justify-content: flex-start;
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8.8px;
+  width: 100%;
+  margin-bottom: 4.8px;
+  padding: 6.4px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  text-align: left;
+  box-shadow: none;
+}
+.event-card:hover,
+.event-card.complete {
+  background: rgba(255, 255, 255, 0.85);
+  border: 0;
+  box-shadow: none;
 }
 .event-card > img {
-  width: 36px;
-  height: 54px;
-  flex: none;
-  border-radius: 3px;
+  width: 56px;
+  height: 84px;
+  flex: 0 0 56px;
+  border-radius: 6px;
   object-fit: cover;
 }
 .event-card > .event-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3.2px;
   min-width: 0;
 }
-.event-card.complete {
-  background: #eff9f1;
-  border-left-color: #68a979;
+.event-card .event-info > b {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.28;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow-wrap: anywhere;
 }
-.event-card.complete small {
-  color: #3d7951;
+.event-card .event-info > small {
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.event-card.complete .event-info > small:last-child {
+  color: var(--success, #56ca00);
+}
+.calendar-episode-overlay {
+  display: none;
+}
+.calendar-library-check {
+  position: absolute;
+  top: 9px;
+  left: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid white;
+  border-radius: 50%;
+  background: var(--success, #56ca00);
+  color: white;
+}
+.calendar-library-check :deep(.app-icon) {
+  width: 11px;
+  height: 11px;
+}
+.calendar-agenda {
+  padding: 0 20px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .calendar-agenda section {
+  padding: 16px 0;
   border-bottom: 1px solid var(--line);
-  padding: 8px 0 16px;
 }
 .calendar-agenda h3 {
-  margin: 5px 0 8px;
+  margin: 0 0 10px;
+  color: var(--text);
   font-size: 14px;
+  font-weight: 500;
 }
 .agenda-entry {
   display: flex;
   align-items: center;
   gap: 16px;
   width: 100%;
-  background: transparent;
+  padding: 10px;
   border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
   text-align: left;
-  padding: 10px 4px;
+  box-shadow: none;
+}
+.agenda-entry + .agenda-entry {
+  margin-top: 8px;
 }
 .agenda-entry:hover {
   background: var(--accent-soft);
 }
 .agenda-entry > img {
-  width: 30px;
-  height: 44px;
-  border-radius: 3px;
+  width: 36px;
+  height: 54px;
+  border-radius: 6px;
   object-fit: cover;
 }
 .agenda-entry > strong {
   flex: 1;
+  font-size: 14px;
+  color: var(--text);
 }
 .agenda-entry > span {
-  color: var(--muted);
   font-size: 12px;
-}
-.subscription-title {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  margin: 0 0 20px;
-}
-.subscription-title > span {
   color: var(--muted);
-  font-size: 13px;
+}
+.subscription-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, calc(100vw - 48px));
+  max-width: 720px;
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.subscription-dialog-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.subscription-dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.subscription-dialog-title > :deep(.app-icon) {
+  width: 24px;
+  height: 24px;
+}
+.subscription-dialog-title h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+.subscription-dialog-title p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.subscription-dialog-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 20px 20px;
+}
+.subscription-dialog-body > .tabs {
+  margin-bottom: 20px;
+}
+.subscription-dialog-footer {
+  display: flex;
+  flex: none;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 20px;
 }
 .three-columns {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+.subscription-dialog-body :deep(.form-grid) {
+  gap: 24px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 .subscription-sites {
   position: relative;
-  margin: 16px 0;
-  font-size: 12px;
+  margin: 20px 0;
+  font-size: 14px;
 }
 .site-selection {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
+  min-height: 48px;
   margin-top: 7px;
-  min-height: 42px;
+  padding: 5px 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 5px 8px;
 }
 .site-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  border-radius: 6px;
   padding: 2px 5px 2px 9px;
+  border-radius: 6px;
   background: var(--accent-soft);
   color: var(--accent);
 }
 .site-chip .icon-button {
-  padding: 2px 5px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 2px;
   font-size: 17px;
 }
 .site-dropdown {
-  justify-content: flex-start;
   flex: 1;
-  text-align: left;
+  justify-content: flex-start;
+  min-height: 32px;
   padding: 4px;
-  background: none;
   border: 0;
+  background: none;
   color: var(--muted);
+  text-align: left;
+  box-shadow: none;
 }
 .site-options {
   position: absolute;
+  z-index: 10;
   top: 100%;
   left: 0;
   width: 100%;
   max-height: 210px;
   overflow: auto;
-  z-index: 10;
-  background: var(--surface);
+  padding: 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 8px 20px #0002;
-  padding: 10px;
+  background: var(--surface);
+  box-shadow: none;
 }
 .site-options > label {
-  padding: 7px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.site-options > label:hover {
+  background: var(--accent-soft);
 }
 .subscription-advanced > h3 {
-  border-top: 1px solid var(--line);
+  margin-top: 24px;
   padding-top: 20px;
-  margin-top: 25px;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
 }
 .event-detail {
   display: flex;
   align-items: flex-start;
   gap: 20px;
-  margin: 15px 0;
+  margin: 16px 0;
 }
 .event-detail > img {
   width: 100px;
-  border-radius: 7px;
+  border-radius: 8px;
+  box-shadow: none;
 }
 .event-detail h3 {
   margin-top: 0;
@@ -978,365 +1536,142 @@ watch(() => props.view, applyView);
   margin-top: 20px;
   justify-content: flex-end;
 }
-@media (max-width: 700px) {
+.subscription-dialog > .subscription-dialog-footer {
+  margin-top: 0;
+}
+@media (max-width: 1279px) {
+  .event-card,
+  .event-card:hover,
+  .event-card.complete {
+    display: block;
+    width: clamp(40px, 5.8vw, 64px);
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .event-card > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+  .event-card > .event-info {
+    display: none;
+  }
+  .calendar-entry .calendar-episode-overlay {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    padding: 2px;
+    background: rgba(0, 0, 0, 0.58);
+    color: white;
+    font-size: 10px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .calendar-library-check {
+    top: 2px;
+    right: 2px;
+    left: auto;
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 959px) {
+  .subscription-dialog {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
   .three-columns {
     grid-template-columns: 1fr;
   }
-  .event-card {
-    flex-direction: column;
-    align-items: flex-start;
+}
+@media (max-width: 600px) {
+  .subscription-actions {
+    right: 16px;
+    bottom: 16px;
   }
-  .event-card > img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2/3;
+  .subscription-grid {
+    gap: 12px;
+  }
+  .subscription-card {
+    min-height: 150px;
+    aspect-ratio: auto;
+  }
+  .subscription-card-content {
+    padding: 12px 10px 28px;
+  }
+  .subscription-heading {
+    gap: 8px;
+    padding-right: 0;
+  }
+
+  .subscription-name > span {
+    font-size: 12px;
+  }
+  .subscription-card h3 {
+    margin-top: 8px;
+    font-size: 16px;
+  }
+  .subscription-progress-text {
+    gap: 4px;
+    font-size: 12px;
+  }
+  .subscription-menu-panel {
+    width: min(288px, 100%);
+  }
+  .calendar-toolbar {
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
   }
   .calendar-toolbar h2 {
     order: -1;
     width: 100%;
     text-align: center;
   }
-  .agenda-entry {
-    gap: 9px;
-    flex-wrap: wrap;
+  .calendar-toolbar .segmented > button {
+    padding-inline: 12px;
   }
-}
-
-.stat-row {
-  gap: 16px;
-  margin-bottom: 22px;
-}
-.stat {
-  padding: 19px 23px;
-  border-color: var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-.stat > span {
-  font-size: 12px;
-  font-weight: 500;
-  color: #657c89;
-}
-.stat > strong {
-  font-size: 28px;
-  font-weight: 650;
-  letter-spacing: -0.7px;
-  color: #213e4b;
-  font-variant-numeric: tabular-nums;
-}
-.stat:nth-child(2) > strong {
-  color: var(--accent);
-}
-.toolbar {
-  gap: 11px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
-}
-.toolbar > select {
-  min-width: 115px;
-}
-.subscription-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-.subscription-card {
-  align-items: flex-start;
-  gap: 19px;
-  padding: 22px;
-  border-color: var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-.subscription-card > img {
-  display: block;
-  width: 86px;
-  height: 129px;
-  border-radius: 8px;
-  box-shadow: 0 3px 8px #172b3a0d;
-}
-.subscription-card .section-heading {
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.subscription-card h3 {
-  margin: 0;
-  color: #172b3a;
-  font-size: 16px;
-  line-height: 1.5;
-  font-weight: 650;
-}
-.subscription-state {
-  flex: none;
-  padding: 4px 7px;
-  border: 0;
-  border-radius: 5px;
-  background: #f0f4f6;
-  color: #70808d;
-  font-size: 10px;
-  font-weight: 500;
-}
-.subscription-state.active {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-.subscription-state.completed {
-  background: #edf6ef;
-  color: #387d54;
-}
-.subscription-state.paused {
-  background: #fff5e6;
-  color: #9a7429;
-}
-.subscription-card .muted {
-  margin: 0 0 10px;
-  color: #6c818e;
-  font-size: 12px;
-  line-height: 1.7;
-}
-.subscription-progress {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-  margin: 15px 0 12px;
-}
-.subscription-progress progress {
-  width: 100%;
-  height: 5px;
-  border: 0;
-  border-radius: 4px;
-  accent-color: var(--accent);
-  overflow: hidden;
-}
-.subscription-progress progress::-webkit-progress-bar {
-  background: #eaf0f2;
-  border-radius: 4px;
-}
-.subscription-progress progress::-webkit-progress-value {
-  background: var(--accent);
-  border-radius: 4px;
-}
-.subscription-progress progress::-moz-progress-bar {
-  background: var(--accent);
-  border-radius: 4px;
-}
-.subscription-progress > span {
-  font-size: 11px;
-  color: #7b8b96;
-}
-.subscription-progress b {
-  color: var(--accent);
-  font-weight: 600;
-}
-.subscription-card .tags {
-  gap: 5px;
-  margin: 11px 0;
-}
-.subscription-card .tags > span {
-  padding: 3px 6px;
-  border: 0;
-  border-radius: 5px;
-  background: #f2f6f7;
-  color: #637986;
-  font-size: 10px;
-}
-.subscription-card .hint {
-  margin: 10px 0 14px;
-  color: #7a8d99;
-  font-size: 11px;
-  line-height: 1.8;
-}
-.subscription-card .button-row {
-  gap: 6px;
-  margin-top: 15px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-}
-.subscription-card .small {
-  min-height: 30px;
-  padding: 6px 9px;
-  border-radius: 6px;
-  font-size: 11px;
-}
-.calendar-toolbar {
-  margin-bottom: 20px;
-}
-.calendar-toolbar h2 {
-  color: #263e4c;
-  font-size: 20px;
-  font-weight: 650;
-  letter-spacing: -0.3px;
-}
-.calendar-grid {
-  border-color: var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-.calendar-weekday {
-  padding: 13px;
-  border-color: var(--line);
-  background: #f4f7f9;
-  color: #748793;
-  font-size: 11px;
-  font-weight: 550;
-}
-.calendar-day {
-  min-height: 150px;
-  padding: 12px 10px;
-  border-color: var(--line);
-}
-.calendar-day > strong {
-  color: #738692;
-  font-size: 11px;
-}
-.calendar-day.today {
-  background: #f2faf8;
-}
-.calendar-day.today > strong {
-  width: 25px;
-  height: 25px;
-  background: var(--accent);
-  font-size: 11px;
-  font-weight: 600;
-}
-.calendar-day.outside {
-  background: #fafcfc;
-}
-.event-card {
-  gap: 8px;
-  padding: 7px;
-  border-left: 3px solid #71b7ab;
-  border-radius: 6px;
-  background: #edf7f4;
-  color: #2b5b58;
-}
-.event-card:hover {
-  background: #e1f2eb;
-}
-.event-card > img {
-  width: 32px;
-  height: 48px;
-  border-radius: 4px;
-}
-.event-card strong {
-  color: #2e5c59;
-  font-size: 11px;
-  line-height: 1.5;
-}
-.event-card small {
-  color: #71918a;
-  font-size: 10px;
-  line-height: 1.6;
-}
-.event-card.complete {
-  background: #f1f5f3;
-  border-left-color: #9cbbb0;
-}
-.calendar-agenda {
-  padding: 8px 22px;
-  border-radius: 12px;
-}
-.calendar-agenda section {
-  padding: 16px 0;
-}
-.calendar-agenda section:last-child {
-  border-bottom: 0;
-}
-.calendar-agenda h3 {
-  margin: 0 0 10px;
-  color: #657c89;
-  font-size: 12px;
-  font-weight: 600;
-}
-.agenda-entry {
-  padding: 10px;
-  border-radius: 8px;
-}
-.agenda-entry > img {
-  width: 36px;
-  height: 54px;
-  border-radius: 5px;
-}
-.agenda-entry > strong {
-  color: #28414f;
-  font-size: 13px;
-}
-.site-options {
-  border-radius: 10px;
-  box-shadow: 0 10px 25px #172b3a16;
-}
-.site-options > label {
-  min-height: 34px;
-  border-radius: 6px;
-}
-.site-options > label:hover {
-  background: var(--accent-soft);
-}
-.event-detail > img {
-  border-radius: 9px;
-  box-shadow: 0 3px 10px #172b3a12;
-}
-@media (max-width: 1200px) {
-  .subscription-grid {
-    grid-template-columns: 1fr;
+  .calendar-weekday {
+    padding-inline: 2px;
+    font-size: 12px;
   }
-  .subscription-card > img {
-    width: 94px;
-    height: 141px;
+  .calendar-day,
+  .calendar-grid.week-view .calendar-day {
+    min-height: 100px;
+    padding: 3px;
   }
-}
-@media (max-width: 700px) {
-  .stat-row {
-    gap: 10px;
-  }
-  .stat {
-    padding: 15px;
-  }
-  .stat > strong {
-    font-size: 24px;
-  }
-  .calendar-day {
-    padding: 8px 5px;
+  .calendar-day > strong {
+    font-size: 12px;
   }
   .event-card {
-    padding: 5px;
-    gap: 6px;
+    max-width: 100%;
   }
-  .event-card > img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2 / 3;
+  .agenda-entry {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .subscription-dialog-header {
+    padding: 12px 16px;
+  }
+  .subscription-dialog-body {
+    padding-inline: 16px;
+  }
+  .subscription-dialog-footer {
+    padding-inline: 16px;
   }
 }
-@media (max-width: 520px) {
+@media (prefers-reduced-motion: reduce) {
   .subscription-card {
-    gap: 14px;
-    padding: 17px;
-  }
-  .subscription-card > img {
-    width: 67px;
-    height: 100px;
-  }
-  .subscription-card h3 {
-    font-size: 15px;
-  }
-  .subscription-card .small {
-    padding: 6px 8px;
-  }
-  .stat {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 9px;
-    padding: 14px;
-  }
-  .stat > span {
-    font-size: 11px;
-  }
-  .calendar-agenda {
-    padding: 4px 13px;
+    transition: none;
   }
 }
 </style>

@@ -683,9 +683,8 @@ onUnmounted(() => {
 .file-manager {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--line);
   background: var(--surface);
-  border-radius: 14px;
+  border-radius: 6px;
   overflow: hidden;
   height: calc(
     100dvh - var(--topbar-height, 72px) - var(--content-top, 28px) - var(--content-bottom, 36px)
@@ -694,11 +693,11 @@ onUnmounted(() => {
 }
 .file-toolbar {
   flex: none;
-  min-height: 64px;
+  min-height: 56px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 8px;
+  padding: 4px 12px;
   border-bottom: 1px solid var(--line);
 }
 .file-toolbar nav {
@@ -717,12 +716,12 @@ onUnmounted(() => {
   border: 0;
   background: transparent;
   padding: 8px 6px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .file-toolbar nav .storage-home {
   padding-right: 10px;
   gap: 8px;
-  color: var(--text, #172b3a);
+  color: var(--text);
 }
 .file-current {
   font-size: 13px;
@@ -740,7 +739,7 @@ onUnmounted(() => {
   border: 0;
   padding: 7px;
   background: transparent;
-  border-radius: 9px;
+  border-radius: 50%;
   color: var(--muted);
   display: inline-flex;
   align-items: center;
@@ -748,7 +747,7 @@ onUnmounted(() => {
   flex: none;
 }
 .file-icon-button:hover {
-  background: var(--accent-soft);
+  background: color-mix(in srgb, var(--text) 4%, transparent);
   border: 0;
 }
 .file-icon-button.active {
@@ -774,11 +773,10 @@ onUnmounted(() => {
   flex: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  min-height: 58px;
-  background: var(--surface-subtle, #f4f7f8);
-  border-bottom: 1px solid var(--line);
+  gap: 4px;
+  padding: 4px 8px;
+  min-height: 48px;
+  background: var(--surface);
 }
 .file-filterbar > svg {
   width: 18px;
@@ -793,7 +791,7 @@ onUnmounted(() => {
   box-shadow: none;
   padding: 9px 2px;
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
 }
 .case-button {
   font-size: 18px;
@@ -818,22 +816,23 @@ onUnmounted(() => {
 .file-row {
   display: flex;
   align-items: center;
-  padding: 8px 18px;
+  padding: 8px 12px;
   gap: 16px;
   min-height: 64px;
   cursor: pointer;
-  border-bottom: 1px solid var(--surface-subtle, #f4f7f8);
   transition: background 0.15s;
 }
 .file-row:hover {
-  background: var(--surface-subtle, #f4f7f8);
+  background: color-mix(in srgb, var(--text) 4%, transparent);
 }
 .file-row.selected {
   background: var(--accent-soft);
 }
 .file-row > svg {
   color: var(--muted);
-  margin-left: 5px;
+  width: 24px;
+  height: 24px;
+  margin-left: 4px;
 }
 .file-selection-control {
   width: 40px;
@@ -876,15 +875,15 @@ onUnmounted(() => {
 }
 .file-row-name strong {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 400;
   overflow-wrap: anywhere;
-  color: var(--text, #172b3a);
+  color: var(--text);
 }
 .file-row-name small {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   margin-top: 2px;
 }
@@ -900,9 +899,9 @@ onUnmounted(() => {
 }
 .file-row-actions .file-icon-button {
   color: var(--muted);
-  width: 32px;
-  height: 32px;
-  padding: 6px;
+  width: 38px;
+  height: 38px;
+  padding: 8px;
 }
 .file-mobile-menu {
   display: none;
@@ -935,7 +934,7 @@ onUnmounted(() => {
   border: 1px solid var(--line);
   background: var(--surface);
   padding: 6px;
-  border-radius: 10px;
+  border-radius: 6px;
   box-shadow: var(--shadow);
 }
 .file-mobile-menu button {
@@ -996,8 +995,7 @@ onUnmounted(() => {
 .file-dialog-backdrop {
   position: fixed;
   inset: 0;
-  background: #102b3b66;
-  backdrop-filter: blur(3px);
+  background: color-mix(in srgb, var(--text) 50%, transparent);
   z-index: 120;
   display: flex;
   align-items: center;
@@ -1009,9 +1007,9 @@ onUnmounted(() => {
   max-height: 85dvh;
   overflow: auto;
   padding: 24px;
-  border-radius: 14px;
+  border-radius: 6px;
   background: var(--surface);
-  box-shadow: 0 24px 80px #102b3b2b;
+  box-shadow: var(--shadow);
 }
 .file-action-dialog header {
   display: flex;
@@ -1022,7 +1020,8 @@ onUnmounted(() => {
 }
 .file-action-dialog h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 500;
 }
 .file-action-dialog label {
   display: block;

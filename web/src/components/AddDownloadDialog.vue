@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { api, bytes, errorText, ui } from '../api';
+import AppIcon from './AppIcon.vue';
 import DownloadTarget from './DownloadTarget.vue';
 import type { Candidate } from '../features/resources';
 
@@ -57,6 +58,7 @@ async function start() {
       @submit.prevent="start"
     >
       <div class="section-heading">
+        <AppIcon name="download" />
         <div>
           <h2>确认下载</h2>
           <p class="hint">{{ siteName }}{{ media?.title ? ' - ' + media.title : '' }}</p>
@@ -68,46 +70,51 @@ async function start() {
           :disabled="busy"
           @click="emit('close')"
         >
-          ×
+          <AppIcon name="close" />
         </button>
       </div>
-      <div class="download-resource">
-        <h3>{{ candidate.resource.title }}</h3>
-        <span class="seeders">↑ {{ candidate.resource.seeders ?? '—' }}</span
-        ><span class="peers">↓ {{ candidate.resource.leechers ?? '—' }}</span>
-      </div>
-      <p v-if="candidate.resource.subtitle" class="muted">{{ candidate.resource.subtitle }}</p>
-      <p>
-        <span class="badge">{{ bytes(candidate.resource.size) }}</span>
-      </p>
-      <DownloadTarget v-model:downloader="downloader" v-model:download-path="downloadPath" />
-      <button
-        type="button"
-        class="small ghost"
-        :aria-expanded="advanced"
-        @click="advanced = !advanced"
-      >
-        {{ advanced ? '收起高级选项' : '高级选项' }}
-      </button>
-      <div v-if="advanced" class="form-grid advanced-download">
-        <label
-          >媒体类型<select v-model="mediaType">
-            <option value="movie">电影</option>
-            <option value="tv">电视剧</option>
-          </select></label
+      <div class="download-dialog-body">
+        <div class="download-resource">
+          <AppIcon name="globe" />
+          <h3>{{ candidate.resource.title }}</h3>
+          <span class="seeders">↑ {{ candidate.resource.seeders ?? '—' }}</span
+          ><span class="peers">↓ {{ candidate.resource.leechers ?? '—' }}</span>
+        </div>
+        <p v-if="candidate.resource.subtitle" class="muted">{{ candidate.resource.subtitle }}</p>
+        <p>
+          <span class="badge">{{ bytes(candidate.resource.size) }}</span>
+        </p>
+        <DownloadTarget v-model:downloader="downloader" v-model:download-path="downloadPath" />
+        <button
+          type="button"
+          class="advanced-toggle"
+          :aria-expanded="advanced"
+          @click="advanced = !advanced"
         >
-        <label
-          >TMDB ID<input
-            v-model.number="tmdbID"
-            type="number"
-            min="1"
-            placeholder="辅助识别，可不填"
-        /></label>
+          <AppIcon :name="advanced ? 'chevron-up' : 'chevron-down'" />
+          {{ advanced ? '收起高级选项' : '高级选项' }}
+        </button>
+        <div v-if="advanced" class="form-grid advanced-download">
+          <label
+            >媒体类型<select v-model="mediaType">
+              <option value="movie">电影</option>
+              <option value="tv">电视剧</option>
+            </select></label
+          >
+          <label
+            >TMDB ID<input
+              v-model.number="tmdbID"
+              type="number"
+              min="1"
+              placeholder="辅助识别，可不填"
+          /></label>
+        </div>
+        <p v-if="error" class="error-box" role="alert">{{ error }}</p>
       </div>
-      <p v-if="error" class="error-box" role="alert">{{ error }}</p>
-      <div class="button-row">
-        <button type="button" :disabled="busy" @click="emit('close')">取消</button
-        ><button class="primary" :disabled="busy">{{ busy ? '正在添加下载…' : '开始下载' }}</button>
+      <div class="download-submit">
+        <button class="primary" :disabled="busy">
+          <AppIcon name="download" />{{ busy ? '正在添加下载…' : '开始下载' }}
+        </button>
       </div>
     </form>
   </div>
@@ -115,27 +122,76 @@ async function start() {
 <style scoped>
 .download-dialog {
   max-width: 560px;
+  padding: 0;
+}
+.download-dialog .section-heading {
+  display: flex;
+  gap: 12px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--line);
+  margin: 0;
+}
+.section-heading > svg {
+  color: var(--muted);
+  width: 24px;
+  height: 24px;
+}
+.section-heading > div {
+  flex: 1;
+  min-width: 0;
+}
+.section-heading h2 {
+  font-size: 20px;
+  font-weight: 500;
+}
+.section-heading .hint {
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+.download-dialog-body {
+  padding: 24px;
 }
 .download-resource {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 8px 12px;
 }
 .download-resource h3 {
   margin: 0;
-  flex: 1 1 100%;
+  flex: 1;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .seeders {
   color: var(--success);
-  font-size: 12px;
+  font-size: 14px;
 }
 .peers {
   color: var(--warning);
-  font-size: 12px;
+  font-size: 14px;
 }
 .advanced-download {
   margin-top: 16px;
+}
+.advanced-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  padding: 8px 0;
+}
+.download-submit {
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 24px;
+}
+.advanced-download input,
+.advanced-download select {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
 }
 </style>

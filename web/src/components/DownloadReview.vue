@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { api, action, ui, bytes, date, label, errorText, go } from '../api';
+import AppIcon from './AppIcon.vue';
 const props = defineProps<{ intent: any }>();
 const emit = defineEmits<{ close: []; completed: [] }>();
 const data = ref<any>(null),
@@ -131,10 +132,17 @@ onMounted(load);
 </script>
 <template>
   <div class="modal-backdrop">
-    <section class="modal wide">
+    <section
+      class="modal wide review-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="实际文件与人工纠错"
+    >
       <div class="section-heading">
         <h2>实际文件与人工纠错</h2>
-        <button class="icon-button" @click="emit('close')">×</button>
+        <button class="icon-button" aria-label="关闭" @click="emit('close')">
+          <AppIcon name="close" />
+        </button>
       </div>
       <p class="notice">
         {{ intent.resource_title }}<br />{{ intent.id }} ·
@@ -299,3 +307,28 @@ onMounted(load);
     </section>
   </div>
 </template>
+<style scoped>
+.review-dialog {
+  border-radius: 6px;
+}
+.review-dialog .section-heading h2 {
+  font-size: 20px;
+  font-weight: 500;
+}
+.review-dialog td {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+.review-dialog th {
+  padding: 10px 16px;
+  font-size: 12px;
+}
+.review-dialog .table-wrap {
+  margin: 16px 0;
+  border-radius: 6px;
+}
+.review-dialog .lookup-list button {
+  justify-content: flex-start;
+  text-align: left;
+}
+</style>

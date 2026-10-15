@@ -34,12 +34,6 @@ const visibleResults = computed(() =>
     (m) => !query.value || searchKind.value === 'all' || m.media_type === searchKind.value,
   ),
 );
-const spotlight = computed(() => results.value.find((m) => m.backdrop_path) || results.value[0]);
-const listName = computed(
-  () =>
-    ({ popular: '热门推荐', top_rated: '高分榜单', trending_day: '今日趋势' })[list.value] ||
-    '热门推荐',
-);
 const filteredCredits = computed(() =>
   credits.value
     .filter((m) => creditsKind.value === 'all' || m.media_type === creditsKind.value)
@@ -158,41 +152,6 @@ onMounted(load);
         </button>
       </form>
     </div>
-    <section
-      v-if="!query && !loading && spotlight"
-      class="discovery-spotlight"
-      :style="
-        image(spotlight.backdrop_path, 'w1280')
-          ? {
-              backgroundImage: `linear-gradient(90deg,rgba(13,31,39,.97) 0%,rgba(13,31,39,.81) 38%,rgba(13,31,39,.12) 100%),url(${image(spotlight.backdrop_path, 'w1280')})`,
-            }
-          : {}
-      "
-    >
-      <div class="spotlight-copy">
-        <span class="spotlight-kicker"
-          ><span></span>{{ listName }} · {{ label(spotlight.media_type) }}</span
-        >
-        <h2>{{ spotlight.title }}</h2>
-        <p class="spotlight-meta">
-          <span v-if="spotlight.vote_average > 0" class="spotlight-rating"
-            >★ {{ spotlight.vote_average.toFixed(1) }}</span
-          >{{ spotlight.year || '上映待定' }}
-        </p>
-        <p v-if="spotlight.overview" class="spotlight-overview">{{ spotlight.overview }}</p>
-        <div class="spotlight-actions">
-          <button @click="go('detail/' + spotlight.media_type + '/' + spotlight.id)">
-            查看详情 <span aria-hidden="true">↗</span>
-          </button>
-          <button
-            class="spotlight-secondary"
-            @click="go('resources/' + spotlight.media_type + '/' + spotlight.id)"
-          >
-            搜索资源
-          </button>
-        </div>
-      </div>
-    </section>
     <div class="toolbar">
       <div v-if="query" class="segmented">
         <button class="selected">影视</button>
@@ -283,7 +242,7 @@ onMounted(load);
       :style="
         image(detail.backdrop_path, 'w1280')
           ? {
-              backgroundImage: `linear-gradient(90deg,rgba(15,20,30,.98),rgba(15,20,30,.72)),url(${image(detail.backdrop_path, 'w1280')})`,
+              backgroundImage: `linear-gradient(180deg,rgba(244,245,250,.72),rgba(244,245,250,.98)),url(${image(detail.backdrop_path, 'w1280')})`,
             }
           : {}
       "
@@ -307,12 +266,16 @@ onMounted(load);
         <p class="overview">{{ detail.overview || '暂无剧情简介。' }}</p>
         <div class="button-row">
           <button
-            class="primary"
+            class="detail-search"
             @click="resource"
             :disabled="kind === 'tv' && (!seasonData || seasonLoading)"
           >
             ⌕ 搜索资源</button
-          ><button @click="subscribe" :disabled="kind === 'tv' && (!seasonData || seasonLoading)">
+          ><button
+            class="detail-subscribe"
+            @click="subscribe"
+            :disabled="kind === 'tv' && (!seasonData || seasonLoading)"
+          >
             ＋ 添加订阅
           </button>
         </div>
@@ -417,99 +380,6 @@ onMounted(load);
   <div v-else-if="loading" class="panel loading-state">正在加载影视资料…</div>
 </template>
 <style scoped>
-.discovery-spotlight {
-  position: relative;
-  min-height: 290px;
-  padding: 31px 36px;
-  margin: 0 0 25px;
-  border: 1px solid #ffffff18;
-  border-radius: 14px;
-  background: #152f39;
-  background-size: cover;
-  background-position: center 35%;
-  overflow: hidden;
-  color: #fff;
-  box-shadow: 0 8px 24px #172b3a10;
-}
-.spotlight-copy {
-  max-width: 520px;
-}
-.spotlight-kicker {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #cfdfdf;
-  font-size: 11px;
-  font-weight: 550;
-  letter-spacing: 1px;
-}
-.spotlight-kicker > span {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #73c9b7;
-  box-shadow: 0 0 0 4px #73c9b715;
-}
-.spotlight-copy h2 {
-  margin: 18px 0 10px;
-  color: #fff;
-  font-size: clamp(27px, 2.6vw, 36px);
-  line-height: 1.3;
-  font-weight: 700;
-  letter-spacing: -0.8px;
-}
-.spotlight-meta {
-  display: flex;
-  gap: 16px;
-  margin: 0 0 12px;
-  color: #bbd0d3;
-  font-size: 12px;
-}
-.spotlight-rating {
-  color: #f3cf7b;
-  font-weight: 600;
-}
-.spotlight-overview {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  max-width: 440px;
-  margin-bottom: 23px;
-  color: #c9d8db;
-  font-size: 13px;
-  line-height: 1.85;
-}
-.spotlight-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 22px;
-}
-.spotlight-actions button {
-  min-height: 36px;
-  padding: 9px 16px;
-  border-color: #fff;
-  border-radius: 8px;
-  background: #fff;
-  color: #1c3e45;
-  font-size: 12px;
-  font-weight: 600;
-}
-.spotlight-actions button:hover {
-  border-color: #dbf1eb;
-  background: #dbf1eb;
-  color: #126a61;
-}
-.spotlight-actions .spotlight-secondary {
-  border-color: #ffffff38;
-  background: #ffffff0a;
-  color: #fff;
-}
-.spotlight-actions .spotlight-secondary:hover {
-  border-color: #ffffff70;
-  background: #ffffff16;
-  color: #fff;
-}
 .toolbar {
   gap: 12px;
   margin-bottom: 22px;
@@ -534,29 +404,30 @@ onMounted(load);
 .detail-hero {
   gap: 32px;
   padding: 32px;
-  border-radius: 14px;
-  background-color: #17323b;
+  border-radius: var(--radius);
+  background-color: var(--bg);
+  color: var(--text);
 }
 .detail-poster {
   width: 184px;
   height: 276px;
-  border: 1px solid #ffffff20;
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 .detail-copy h1 {
   margin: 5px 0 8px;
-  color: #fff;
+  color: var(--text);
   font-size: clamp(26px, 2.7vw, 36px);
   line-height: 1.3;
   letter-spacing: -0.6px;
 }
 .detail-copy .eyebrow {
-  color: #a2cdca;
+  color: var(--muted);
   font-size: 11px;
 }
 .detail-copy .overview {
   margin: 17px 0 21px;
-  color: #cfdbdf;
+  color: var(--text);
   font-size: 13px;
   line-height: 1.9;
 }
@@ -564,27 +435,40 @@ onMounted(load);
   padding: 4px 8px;
   border: 1px solid #ffffff20;
   border-radius: 6px;
-  background: #ffffff08;
-  color: #d3e0e3;
+  background: var(--surface);
+  color: var(--muted);
 }
 .detail-copy .tags .gold {
   color: #efce87;
 }
 .detail-copy .hint {
-  color: #adc3cb;
+  color: var(--muted);
+}
+.detail-copy .original-title {
+  color: var(--muted);
+}
+.detail-copy .button-row .detail-search {
+  color: var(--info);
+  background: rgba(22, 177, 255, 0.12);
+  border-color: transparent;
+}
+.detail-copy .button-row .detail-subscribe {
+  color: var(--danger);
+  background: rgba(255, 76, 81, 0.12);
+  border-color: transparent;
 }
 .episode-option {
   padding: 13px;
   border-color: var(--line);
-  border-radius: 9px;
+  border-radius: var(--radius);
   background: #f8fafb;
 }
 .episode-option.selected {
-  border-color: #9acbc4;
+  border-color: var(--accent);
   background: var(--accent-soft);
 }
 .episode-option strong {
-  color: #344d5b;
+  color: var(--text);
   font-size: 12px;
 }
 .episode-option small {
@@ -599,11 +483,11 @@ onMounted(load);
 }
 .cast-card > img,
 .cast-placeholder {
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 .cast-card strong {
   margin-top: 10px;
-  color: #243d4c;
+  color: var(--text);
   font-size: 12px;
 }
 .cast-card small {
@@ -615,34 +499,26 @@ onMounted(load);
   align-items: flex-start;
   gap: 28px;
   padding: 28px;
-  border-radius: 14px;
+  border-radius: var(--radius);
 }
 .person-header > img {
   width: 155px;
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 .person-header h1 {
   margin: 6px 0 12px;
-  color: #172b3a;
+  color: var(--text);
   font-size: 28px;
 }
 .person-header .eyebrow {
   color: var(--accent);
 }
 .biography {
-  color: #5b707e;
+  color: var(--muted);
   font-size: 13px;
   line-height: 1.9;
 }
 @media (max-width: 760px) {
-  .discovery-spotlight {
-    min-height: 270px;
-    padding: 27px;
-    background-position: 60% center;
-  }
-  .spotlight-copy {
-    max-width: 420px;
-  }
   .toolbar {
     flex-wrap: wrap;
   }
@@ -666,22 +542,6 @@ onMounted(load);
   }
 }
 @media (max-width: 520px) {
-  .discovery-spotlight {
-    min-height: 255px;
-    padding: 23px;
-    border-radius: 12px;
-  }
-  .spotlight-copy h2 {
-    margin-top: 18px;
-    font-size: 27px;
-  }
-  .spotlight-overview {
-    max-width: 330px;
-    font-size: 12px;
-  }
-  .spotlight-actions button {
-    padding: 8px 13px;
-  }
   .detail-hero {
     flex-direction: column;
     align-items: flex-start;

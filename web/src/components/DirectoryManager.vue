@@ -241,35 +241,70 @@ onMounted(load);
 .directory-settings > header p {
   margin-bottom: 0;
 }
+.directory-settings {
+  padding: 24px;
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  box-shadow: none;
+}
+.directory-settings > .section-heading {
+  margin-bottom: 24px;
+}
+.directory-settings > .section-heading h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
 .directory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
-  gap: 18px;
-  margin: 20px 0 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 12px;
+  margin: 24px 0;
   align-items: start;
 }
 .directory-card {
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--warning) 8%, transparent);
+  border-radius: 8px;
   overflow: hidden;
-  background: var(--surface);
-  box-shadow: 0 2px 8px #172b3a03;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--warning) 2.5%, transparent),
+      color-mix(in srgb, var(--warning) 1.2%, transparent) 46%,
+      transparent 76%
+    ),
+    var(--surface);
+  box-shadow: none;
+}
+.directory-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--warning);
+  opacity: 0.22;
+  pointer-events: none;
+}
+.directory-card:hover {
+  border-color: color-mix(in srgb, var(--warning) 16%, transparent);
 }
 .directory-card > header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 16px 20px;
-  background: var(--surface-subtle, #f4f7f8);
+  gap: 8px;
+  padding: 16px 24px;
+  background: transparent;
 }
 .directory-card > header .icon-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  border-radius: 50%;
   padding: 7px;
   flex-shrink: 0;
 }
@@ -278,20 +313,77 @@ onMounted(load);
 }
 .directory-card > header label {
   flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+.directory-card > header .hint {
+  margin: 0;
+  font-size: 12px;
 }
 .directory-card > header input {
-  font-weight: 600;
-  background: var(--surface);
+  height: 36px;
+  padding: 0 0 4px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 20px;
+  font-weight: 500;
+  background: transparent;
+  box-shadow: none;
 }
 .directory-fields {
-  padding: 22px 20px;
+  padding: 8px 24px 24px;
+  gap: 24px;
+}
+.directory-fields label:not(.check),
+.directory-fields :deep(.path-picker > label) {
+  font-size: 12px;
+  color: var(--muted);
+  gap: 4px;
+}
+.directory-fields input:not([type='checkbox']),
+.directory-fields select,
+.directory-fields :deep(.path-input input) {
+  min-height: 36px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 16px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text);
+}
+.directory-fields input:focus,
+.directory-fields select:focus,
+.directory-card > header input:focus {
+  border-bottom-color: var(--accent);
+  box-shadow: none;
+}
+.directory-fields :deep(.path-input) {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+.directory-fields :deep(.path-input input) {
+  border: 0;
+}
+.directory-fields :deep(.path-input:focus-within) {
+  border-bottom-color: var(--accent);
+}
+.directory-fields .check {
+  min-height: 40px;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
 }
 .span-two {
   grid-column: 1 / -1;
 }
 .directory-summary {
   margin: 0;
-  padding: 18px 20px;
+  padding: 0 24px 12px;
   font-size: 12px;
   color: var(--muted);
   overflow-wrap: anywhere;
@@ -300,13 +392,13 @@ onMounted(load);
   display: block;
   width: 100%;
   border: 0;
-  border-top: 1px solid var(--line);
   border-radius: 0;
   background: transparent;
   font-size: 22px;
   line-height: 1;
   min-height: 40px;
-  color: var(--muted);
+  padding: 8px;
+  color: var(--accent);
 }
 .directory-expand:hover {
   color: var(--accent);
@@ -319,19 +411,28 @@ onMounted(load);
   transform: rotate(180deg);
 }
 .directory-settings form > footer {
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  gap: 16px;
+}
+.directory-settings form > footer > button:not(.primary) {
+  min-width: 48px;
+  border-color: transparent;
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 12%, var(--surface));
 }
 @media (max-width: 760px) {
+  .directory-settings {
+    padding: 24px 16px;
+  }
   .directory-card > header {
     padding: 14px 16px;
   }
   .directory-card > header .icon-button {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
   .directory-fields {
-    padding: 20px 16px;
+    padding: 8px 16px 24px;
   }
   .directory-expand {
     min-height: 44px;
