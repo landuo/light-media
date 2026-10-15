@@ -6,6 +6,13 @@ export type Candidate = {
   episodes?: number[];
   reasons?: string[];
 };
+// A raw keyword search does not need a media identity before downloading. Keep
+// unrelated parsing and user-rule explanations visible in that context.
+export function resourceReviewReasons(candidate: Candidate | undefined, showIdentityReview = true) {
+  return (candidate?.reasons || []).filter(
+    (reason) => showIdentityReview || reason !== 'media_identity_required',
+  );
+}
 export type ResourceFilters = {
   text: string;
   site: string;

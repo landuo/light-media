@@ -3,9 +3,11 @@ package app
 import (
 	"context"
 	"errors"
+	"sort"
 	"sync"
 	"time"
 
+	"light-media/internal/decision"
 	"light-media/internal/sites"
 )
 
@@ -88,12 +90,29 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 				completed++
 				out.Sites[update.index] = update.result.status
 				out.Candidates = append(out.Candidates, update.result.candidates...)
+				sortSearchCandidates(out.Candidates, in.Policy)
 				a.logSite(update.result.status, out.WorkflowID)
 			}
 			emitSearchProgress(ctx, out)
 		}
 	}
 	return out, ctx.Err()
+}
+
+func sortSearchCandidates(candidates []Candidate, policy Policy) {
+	sort.SliceStable(candidates, func(i, j int) bool {
+		if candidates[i].Accepted != candidates[j].Accepted {
+			return candidates[i].Accepted
+		}
+		left, right := decision.Rank(candidates[i].Resource, decisionPolicy(policy)), decision.Rank(candidates[j].Resource, decisionPolicy(policy))
+		if left != right {
+			return left > right
+		}
+		if candidates[i].Resource.Free != candidates[j].Resource.Free {
+			return candidates[i].Resource.Free
+		}
+		return candidates[i].Resource.Seeders > candidates[j].Resource.Seeders
+	})
 }
 
 func (a *App) searchStatus(ctx context.Context, key string, count int, err error, successfulQueries int) SiteStatus {

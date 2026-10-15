@@ -21,6 +21,7 @@ import {
   groupResources,
   promotionKind,
   promotionRemaining,
+  resourceReviewReasons,
   suggestedDownloadEpisodes,
   type Candidate,
 } from '../features/resources';
@@ -48,7 +49,9 @@ const query = ref(params.get('query') || ''),
   descending = ref(true),
   selected = ref<string[]>([]),
   downloaded = ref<Record<string, string>>({});
-const request = ref<any>(null), active = ref<Candidate | null>(null), queue = ref<Candidate[]>([]);
+const request = ref<any>(null),
+  active = ref<Candidate | null>(null),
+  queue = ref<Candidate[]>([]);
 let controller: AbortController | null = null,
   disposed = false;
 const names = computed<Record<string, string>>(() =>
@@ -161,12 +164,28 @@ function submitSearch() {
     void search();
   } else go(target);
 }
-function close() { active.value = null; queue.value = []; }
-function open(c: Candidate, batch = false) { if (!batch) queue.value = []; active.value = c; }
-function openSelected() { queue.value = candidates.value.filter((c) => selected.value.includes(candidateKey(c))); const c = queue.value.shift(); if (c) open(c, true); }
+function close() {
+  active.value = null;
+  queue.value = [];
+}
+function open(c: Candidate, batch = false) {
+  if (!batch) queue.value = [];
+  active.value = c;
+}
+function openSelected() {
+  queue.value = candidates.value.filter((c) => selected.value.includes(candidateKey(c)));
+  const c = queue.value.shift();
+  if (c) open(c, true);
+}
 function downloadAdded() {
-  if (active.value) { downloaded.value[candidateKey(active.value)] = 'planned'; selected.value = selected.value.filter((k) => k !== candidateKey(active.value!)); }
-  toast('下载任务已添加'); const next = queue.value.shift(); if (next) open(next, true); else close();
+  if (active.value) {
+    downloaded.value[candidateKey(active.value)] = 'planned';
+    selected.value = selected.value.filter((k) => k !== candidateKey(active.value!));
+  }
+  toast('下载任务已添加');
+  const next = queue.value.shift();
+  if (next) open(next, true);
+  else close();
 }
 onMounted(() => {
   selectedSites.value = (ui.settings?.sites || [])
@@ -317,6 +336,7 @@ onUnmounted(() => {
         :names="names"
         :downloads="downloaded"
         :selected="selected"
+        :show-identity-review="false"
         @download="open"
         @select="select"
       />
@@ -356,13 +376,11 @@ onUnmounted(() => {
               ><span v-if="downloaded[candidateKey(c)]" class="badge green">{{
                 label(downloaded[candidateKey(c)]!)
               }}</span>
-              <details v-if="c.reasons?.length">
+              <details v-if="resourceReviewReasons(c, false).length">
                 <summary class="hint">
-                  {{
-                    c.accepted ? '匹配信息' : c.needs_confirmation ? '需要核对' : '不符合搜索规则'
-                  }}
+                  {{ c.accepted ? '资源信息' : '不符合搜索规则' }}
                 </summary>
-                {{ c.reasons.map(friendly).join('；') }}
+                {{ resourceReviewReasons(c, false).map(friendly).join('；') }}
               </details>
             </td>
             <td>{{ names[c.resource.site_id] || c.resource.site_id }}</td>
@@ -423,7 +441,13 @@ onUnmounted(() => {
       </button>
     </div></template
   >
-  <AddDownloadDialog v-if="active" :candidate="active" :request="request" @close="close" @done="downloadAdded" />
+  <AddDownloadDialog
+    v-if="active"
+    :candidate="active"
+    :request="request"
+    @close="close"
+    @done="downloadAdded"
+  />
 </template>
 <style scoped>
 .filter-row {

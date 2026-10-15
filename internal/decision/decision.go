@@ -83,72 +83,9 @@ func Evaluate(resource sites.Resource, target Target, policy Policy) Decision {
 		reject("invalid_media_identity")
 		return finish()
 	}
-	if len(resource.Title) == 0 || len(resource.Title) > 4096 || len(resource.Subtitle) > 4096 || strings.ContainsAny(resource.Title+resource.Subtitle, "\x00\r\n") {
-		reject("invalid_resource_title")
+	if !checkResourcePolicy(resource, policy, reject) {
 		return finish()
 	}
-	if policy.MinSeeders < 0 || policy.MinBytes < 0 || policy.MaxBytes < 0 || (policy.MaxBytes > 0 && policy.MinBytes > policy.MaxBytes) {
-		reject("invalid_policy")
-	}
-	if len(policy.Resolution) > 32 || len(policy.Codec) > 32 {
-		reject("invalid_policy_quality")
-		return finish()
-	}
-	// Zero is an explicit useful minimum. Unknown counts use the adapter's -1.
-	if resource.Seeders < 0 {
-		reject("seeders_unknown")
-	} else if resource.Seeders < policy.MinSeeders {
-		reject("insufficient_seeders")
-	}
-	if resource.Size <= 0 {
-		reject("resource_size_unknown")
-	} else {
-		if policy.MinBytes > 0 && resource.Size < policy.MinBytes {
-			reject("below_minimum_size")
-		}
-		if policy.MaxBytes > 0 && resource.Size > policy.MaxBytes {
-			reject("above_maximum_size")
-		}
-	}
-	if policy.FreeOnly {
-		if !resource.Free || resource.DownloadFactor != 0 {
-			reject("free_promotion_not_confirmed")
-		}
-		if resource.PromotionEnd != "" {
-			expires, err := time.Parse(time.RFC3339, resource.PromotionEnd)
-			if err != nil {
-				reject("promotion_expiry_unknown")
-			} else if !expires.After(time.Now()) {
-				reject("free_promotion_expired")
-			}
-		}
-	}
-	text := resource.Title + " " + resource.Subtitle
-	for _, filter := range []struct {
-		name, expression string
-		include          bool
-	}{{"include", policy.Include, true}, {"exclude", policy.Exclude, false}} {
-		if filter.expression == "" {
-			continue
-		}
-		if len(filter.expression) > 512 {
-			reject("invalid_" + filter.name + "_regex")
-			continue
-		}
-		r, err := regexp.Compile(filter.expression)
-		if err != nil {
-			reject("invalid_" + filter.name + "_regex")
-			continue
-		}
-		if filter.include && !r.MatchString(text) {
-			reject("include_not_matched")
-		}
-		if !filter.include && r.MatchString(text) {
-			reject("excluded_by_pattern")
-		}
-	}
-	checkQuality(resource, policy, text, reject)
-	checkTags(resource, policy, reject)
 	matched, year := titleIdentity(resource.Title, target.Media)
 	if !matched {
 		reject("title_mismatch")
@@ -254,6 +191,95 @@ func Evaluate(resource sites.Resource, target Target, policy Policy) Decision {
 	}
 	sort.Ints(out.Episodes)
 	return finish()
+}
+
+// EvaluateResource applies release filters without inventing a media identity.
+// Acceptance here only describes resource policy; it never authorizes automatic
+// media matching or file organization.
+func EvaluateResource(resource sites.Resource, policy Policy) Decision {
+	out := Decision{Accepted: true, Reasons: []string{}, Episodes: []int{}}
+	reject := func(reason string) {
+		out.Accepted = false
+		for _, old := range out.Reasons {
+			if old == reason {
+				return
+			}
+		}
+		out.Reasons = append(out.Reasons, reason)
+	}
+	checkResourcePolicy(resource, policy, reject)
+	return out
+}
+
+// False preserves the two early returns used by identity-aware Evaluate.
+func checkResourcePolicy(resource sites.Resource, policy Policy, reject func(string)) bool {
+	if len(resource.Title) == 0 || len(resource.Title) > 4096 || len(resource.Subtitle) > 4096 || strings.ContainsAny(resource.Title+resource.Subtitle, "\x00\r\n") {
+		reject("invalid_resource_title")
+		return false
+	}
+	if policy.MinSeeders < 0 || policy.MinBytes < 0 || policy.MaxBytes < 0 || (policy.MaxBytes > 0 && policy.MinBytes > policy.MaxBytes) {
+		reject("invalid_policy")
+	}
+	if len(policy.Resolution) > 32 || len(policy.Codec) > 32 {
+		reject("invalid_policy_quality")
+		return false
+	}
+	// Zero is an explicit useful minimum. Unknown counts use the adapter's -1.
+	if resource.Seeders < 0 {
+		reject("seeders_unknown")
+	} else if resource.Seeders < policy.MinSeeders {
+		reject("insufficient_seeders")
+	}
+	if resource.Size <= 0 {
+		reject("resource_size_unknown")
+	} else {
+		if policy.MinBytes > 0 && resource.Size < policy.MinBytes {
+			reject("below_minimum_size")
+		}
+		if policy.MaxBytes > 0 && resource.Size > policy.MaxBytes {
+			reject("above_maximum_size")
+		}
+	}
+	if policy.FreeOnly {
+		if !resource.Free || resource.DownloadFactor != 0 {
+			reject("free_promotion_not_confirmed")
+		}
+		if resource.PromotionEnd != "" {
+			expires, err := time.Parse(time.RFC3339, resource.PromotionEnd)
+			if err != nil {
+				reject("promotion_expiry_unknown")
+			} else if !expires.After(time.Now()) {
+				reject("free_promotion_expired")
+			}
+		}
+	}
+	text := resource.Title + " " + resource.Subtitle
+	for _, filter := range []struct {
+		name, expression string
+		include          bool
+	}{{"include", policy.Include, true}, {"exclude", policy.Exclude, false}} {
+		if filter.expression == "" {
+			continue
+		}
+		if len(filter.expression) > 512 {
+			reject("invalid_" + filter.name + "_regex")
+			continue
+		}
+		r, err := regexp.Compile(filter.expression)
+		if err != nil {
+			reject("invalid_" + filter.name + "_regex")
+			continue
+		}
+		if filter.include && !r.MatchString(text) {
+			reject("include_not_matched")
+		}
+		if !filter.include && r.MatchString(text) {
+			reject("excluded_by_pattern")
+		}
+	}
+	checkQuality(resource, policy, text, reject)
+	checkTags(resource, policy, reject)
+	return true
 }
 
 func episodeSet(values []int) (map[int]bool, bool) {

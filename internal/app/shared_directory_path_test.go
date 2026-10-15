@@ -45,3 +45,24 @@ func TestDirectoryIdentityResolverDoesNotFollowSymlinks(t *testing.T) {
 		t.Fatal("symbolic link accepted as mount identity")
 	}
 }
+
+func TestSharedBindContainmentMatchesDownloadAndManualFileButRejectsParentAndSibling(t *testing.T) {
+	ids := map[string]mountedDirectoryID{}
+	for path, inode := range map[string]uint64{"/media": 1, "/media/download": 2, "/media/download/anime": 3, "/vol2/1000/media": 1, "/vol2/1000/media/download": 2, "/vol2/1000/media/download/anime": 3, "/vol2/1000/media/download/anime/release": 4, "/vol2/1000/media/download/music": 5} {
+		ids[path] = mountedDirectoryID{Device: 7, Inode: inode}
+	}
+	identity := func(path string) (mountedDirectoryID, error) {
+		if id, ok := ids[path]; ok {
+			return id, nil
+		}
+		return mountedDirectoryID{}, os.ErrNotExist
+	}
+	for _, test := range []struct {
+		path      string
+		contained bool
+	}{{"/vol2/1000/media/download/anime", true}, {"/vol2/1000/media/download/anime/release", true}, {"/vol2/1000/media/download/anime/release/Episode.S01E01.mkv", true}, {"/vol2/1000/media/download", false}, {"/vol2/1000/media/download/music", false}, {"/media/download/anime-other", false}} {
+		if got := sharedDirectoryContainsWithIdentity("/media/download/anime", test.path, identity); got != test.contained {
+			t.Fatalf("physical rule containment for %s: got %v, want %v", test.path, got, test.contained)
+		}
+	}
+}

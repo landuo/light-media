@@ -518,10 +518,6 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	if _, err = snapshotPath(asset.Path); err != nil {
 		return bad("REVIEW_ASSET_MISSING", "视频不可访问")
 	}
-	libraryGUID := root.FNOSLibraryGUID
-	if libraryGUID == "" {
-		libraryGUID = configuration.LibraryGUID
-	}
 	actual := asset.Path
 	if len(configuration.Mappings) > 0 {
 		if mapped, e := mapPath(asset.Path, configuration.Mappings); e == nil {
@@ -532,15 +528,13 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	if err != nil {
 		return err
 	}
-	if libraryGUID == "" {
-		libraries, e := service.Libraries(ctx)
-		if e != nil {
-			return e
-		}
-		libraryGUID, actual, err = matchFNOSDirectory(asset.Path, actual, libraries)
-		if err != nil {
-			return err
-		}
+	libraries, err := service.Libraries(ctx)
+	if err != nil {
+		return err
+	}
+	libraryGUID, actual, err := matchFNOSDirectory(asset.Path, actual, libraries)
+	if err != nil {
+		return err
 	}
 	if err = a.jobCancelled(ctx, job); err != nil {
 		return err

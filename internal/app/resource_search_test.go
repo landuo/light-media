@@ -3,14 +3,110 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"light-media/internal/catalog"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"slices"
+	"strings"
 	"sync/atomic"
 	"testing"
 )
+
+func keywordFixtureListing(fragments ...string) string {
+	header := ""
+	rows := ""
+	for _, fragment := range fragments {
+		start := strings.Index(fragment, "</tr>") + len("</tr>")
+		if header == "" {
+			header = fragment[:start]
+		}
+		rows += fragment[start:strings.LastIndex(fragment, "</table>")]
+	}
+	return header + rows + "</table>"
+}
+
+func TestKeywordResourceHTTPListingAppliesPolicyWithoutIdentity(t *testing.T) {
+	a := newTestApp(t)
+	fragments := []string{}
+	for i, row := range []struct {
+		title string
+		free  bool
+	}{
+		{"Any.Title.2024.2160p.WEB-DL.HEVC-Good", true},
+		{"Any.Title.2024.1080p.WEB-DL.AVC-Other", true},
+		{"Any.Title.2024.2160p.BluRay.HEVC-Other", true},
+		{"Any.Title.2024.2160p.WEB-DL.HEVC-CAM", true},
+		{"Any.Title.2024.2160p.WEB-DL.HEVC-Paid", false},
+	} {
+		fragments = append(fragments, strings.ReplaceAll(workflowHTML(row.title, "", row.free), "id=101", "id="+fmt.Sprint(i+1)))
+	}
+	listing := keywordFixtureListing(fragments...)
+	var requests atomic.Int32
+	site := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests.Add(1)
+		if r.URL.Path != "/torrents.php" {
+			t.Errorf("policy search fetched private material: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		_, _ = io.WriteString(w, listing)
+	}))
+	defer site.Close()
+	workflowConfigure(t, a, site.URL, "http://127.0.0.1:1")
+	out, e := a.searchResources(context.Background(), SearchRequest{Query: "arbitrary keyword", Policy: Policy{Include: "WEB-DL", Resolution: "2160p", FreeOnly: true, Exclude: "CAM"}})
+	if e != nil || len(out.Candidates) != 5 {
+		t.Fatalf("raw policy search: %+v %v", out, e)
+	}
+	reasons := map[string]string{"1": "", "2": "resolution_mismatch", "3": "include_not_matched", "4": "excluded_by_pattern", "5": "free_promotion_not_confirmed"}
+	for _, candidate := range out.Candidates {
+		reason, ok := reasons[candidate.Resource.ID]
+		if !ok {
+			t.Fatal("unexpected resource", candidate.Resource.ID)
+		}
+		if reason == "" {
+			if !candidate.Accepted || !candidate.NeedsConfirmation {
+				t.Fatal("matching resource not accepted", candidate)
+			}
+			continue
+		}
+		if candidate.Accepted || candidate.NeedsConfirmation || !slices.Contains(candidate.Reasons, reason) {
+			t.Fatalf("policy failure became downloadable: %+v want=%s", candidate, reason)
+		}
+	}
+	if out.Candidates[0].Resource.ID != "1" || requests.Load() != 1 {
+		t.Fatal("accepted-first sorting/private material", out.Candidates, requests.Load())
+	}
+	var count int
+	_ = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('intent','native_download','material_blob')`).Scan(&count)
+	if count != 0 {
+		t.Fatal("search created identity/download/material", count)
+	}
+}
+
+func TestKeywordResourcePreferencesRankProgressAndFinalResults(t *testing.T) {
+	a := newTestApp(t)
+	listing := keywordFixtureListing(strings.ReplaceAll(workflowHTML("Any.Title.2024.1080p.WEB-DL.AVC-Ordinary", "", true), "id=101", "id=1"),
+		strings.ReplaceAll(workflowHTML("Any.Title.2024.2160p.WEB-DL.HEVC-Preferred", "", true), "id=101", "id=2"))
+	site := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { _, _ = io.WriteString(w, listing) }))
+	defer site.Close()
+	workflowConfigure(t, a, site.URL, "http://127.0.0.1:1")
+	var progress []Candidate
+	ctx := context.WithValue(context.Background(), searchProgressKey{}, func(out SearchOutput) {
+		if len(out.Candidates) > 0 {
+			progress = out.Candidates
+		}
+	})
+	out, e := a.searchResources(ctx, SearchRequest{Query: "arbitrary keyword", Policy: Policy{PreferredGroups: []string{"Preferred"}, PreferredResolutions: []string{"2160p"}}})
+	if e != nil || len(out.Candidates) != 2 || len(progress) != 2 {
+		t.Fatal("preference search", out, e)
+	}
+	if out.Candidates[0].Resource.ID != "2" || progress[0].Resource.ID != "2" {
+		t.Fatal("resource preference ranking not applied to progress/final", progress, out.Candidates)
+	}
+}
 
 func TestKeywordResourceSearchDoesNotInventIdentityOrFetchPrivateMaterial(t *testing.T) {
 	a := newTestApp(t)

@@ -50,7 +50,7 @@ func (a *App) guardIntentDirectory(ctx context.Context, in Intent, forImport boo
 		return e
 	}
 	ruleSource, e := a.directorySource(rule)
-	if e != nil || !within(ruleSource, source) {
+	if e != nil || !sharedDirectoryContains(ruleSource, source) {
 		return bad("REVIEW_DIRECTORY_CHANGED", "下载目录已离开已确认监听范围")
 	}
 	if forImport && (!rule.Enabled || rule.MonitorType == "none") {

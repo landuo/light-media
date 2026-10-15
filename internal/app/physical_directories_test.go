@@ -102,7 +102,7 @@ func TestManualImportDefaultTargetUsesSourceRuleAndAmbiguityDoesNotWrite(t *test
 	}
 }
 
-func TestSharedDownloaderUsesContainerPathAndReadsDaemonDefault(t *testing.T) {
+func TestSharedDownloaderUsesContainerPathAndReadsDaemonDefaultOverLegacyPath(t *testing.T) {
 	a, source, _ := importTestApp(t)
 	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" || r.URL.Path != "/api/v2/app/preferences" {
@@ -113,7 +113,7 @@ func TestSharedDownloaderUsesContainerPathAndReadsDaemonDefault(t *testing.T) {
 		workflowJSON(w, map[string]any{"save_path": source + "/"})
 	}))
 	defer qb.Close()
-	d := DownloaderConfig{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, SharedPaths: true, Mappings: []PathMapping{{From: source, To: "/legacy-do-not-use"}}}
+	d := DownloaderConfig{Config: download.Config{ID: "qb", Kind: "qb", BaseURL: qb.URL}, DownloadPath: filepath.Join(source, "legacy-hidden-default"), SharedPaths: true, Mappings: []PathMapping{{From: source, To: "/legacy-do-not-use"}}}
 	a.config.Downloaders = []DownloaderConfig{d}
 	a.config.DefaultRoot = "root"
 	choice, err := a.resolveDownloadDestinationContext(context.Background(), d, "", "", "", "movie")

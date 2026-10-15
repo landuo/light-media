@@ -260,7 +260,9 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		if in.DownloadPath != "" || in.DirectoryID != "" || in.RootID != "" {
 			// Subscription defaults are preferences, not a current daemon snapshot.
 			// Resolve/freeze the actual default only when a download is submitted.
-			d.SharedPaths = true
+			if in.RootID == "" {
+				d.SharedPaths = true
+			}
 			destination, e = a.resolveDownloadDestinationContext(ctx, d, in.DirectoryID, in.DownloadPath, in.RootID, m.MediaType)
 			if e != nil {
 				return Subscription{}, e

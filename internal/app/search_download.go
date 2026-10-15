@@ -289,19 +289,7 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	if e != nil {
 		return out, e
 	}
-	sort.SliceStable(out.Candidates, func(i, j int) bool {
-		if out.Candidates[i].Accepted != out.Candidates[j].Accepted {
-			return out.Candidates[i].Accepted
-		}
-		leftRank, rightRank := decision.Rank(out.Candidates[i].Resource, decisionPolicy(in.Policy)), decision.Rank(out.Candidates[j].Resource, decisionPolicy(in.Policy))
-		if leftRank != rightRank {
-			return leftRank > rightRank
-		}
-		if out.Candidates[i].Resource.Free != out.Candidates[j].Resource.Free {
-			return out.Candidates[i].Resource.Free
-		}
-		return out.Candidates[i].Resource.Seeders > out.Candidates[j].Resource.Seeders
-	})
+	sortSearchCandidates(out.Candidates, in.Policy)
 	a.saveDecision(ctx, out, t.Media)
 	return out, nil
 }

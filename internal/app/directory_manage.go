@@ -195,7 +195,9 @@ func (a *App) resolveDownloadDestinationContext(ctx context.Context, d Downloade
 		}
 	}
 	if out.Path == "" {
-		out.Path = d.DownloadPath
+		if !d.SharedPaths {
+			out.Path = d.DownloadPath
+		}
 		if out.Path == "" {
 			client, err := download.New(d.Config)
 			if err != nil {
@@ -234,7 +236,7 @@ func (a *App) resolveDownloadDestinationContext(ctx context.Context, d Downloade
 			return out, bad("DIRECTORY_OVERLAP", "请使用独立下载目录，由整理规则写入媒体库")
 		}
 	}
-	if out.Rule.ID != "" && out.Rule.DownloaderID == "" && !within(out.Rule.SourcePath, source) {
+	if out.Rule.ID != "" && out.Rule.DownloaderID == "" && !sharedDirectoryContains(out.Rule.SourcePath, source) {
 		return out, bad("DIRECTORY_MISMATCH", "下载路径不在所选目录监听范围内")
 	}
 	if out.Rule.ID == "" {
@@ -243,7 +245,7 @@ func (a *App) resolveDownloadDestinationContext(ctx context.Context, d Downloade
 				continue
 			}
 			ruleSource, err := directorySourceWithSettings(c, r)
-			if err != nil || !within(ruleSource, source) {
+			if err != nil || !sharedDirectoryContains(ruleSource, source) {
 				continue
 			}
 			out.Rule = r

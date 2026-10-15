@@ -169,7 +169,7 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 			}
 			matched := true
 			for _, file := range request.Files {
-				if !within(source, file.Path) {
+				if !sharedDirectoryContains(source, file.Path) {
 					matched = false
 					break
 				}

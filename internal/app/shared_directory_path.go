@@ -35,6 +35,17 @@ func sharedDirectoryPath(source, candidate string) (string, bool) {
 	return sharedDirectoryPathWithIdentity(source, candidate, mountedDirectoryIdentity)
 }
 
+// Containment is directional: a daemon's parent directory overlapping a more
+// specific rule does not make that rule own the whole parent directory.
+func sharedDirectoryContains(source, candidate string) bool {
+	return sharedDirectoryContainsWithIdentity(source, candidate, mountedDirectoryIdentity)
+}
+
+func sharedDirectoryContainsWithIdentity(source, candidate string, identity func(string) (mountedDirectoryID, error)) bool {
+	mapped, relevant := sharedDirectoryPathWithIdentity(source, candidate, identity)
+	return relevant && within(source, mapped)
+}
+
 func sharedDirectoryPathWithIdentity(source, candidate string, identity func(string) (mountedDirectoryID, error)) (string, bool) {
 	if within(source, candidate) || within(candidate, source) {
 		return candidate, true

@@ -94,3 +94,34 @@ test('single-resource download takes the explicit range or only a same-season pa
   assert.deepEqual(suggestedDownloadEpisodes([], { ...c, season: 0, episodes: [260] }, 2), []);
   assert.deepEqual(suggestedDownloadEpisodes([], { ...c, episodes: [0] }, 2), []);
 });
+
+test('raw keyword results suppress only the optional identity prerequisite, keeping real resource and rule reasons', async () => {
+  const { resourceReviewReasons } = await import('../src/features/resources.ts');
+  const candidate = {
+    resource: {},
+    accepted: true,
+    needs_confirmation: true,
+    reasons: ['media_identity_required'],
+  };
+  assert.deepEqual(resourceReviewReasons(candidate, false), []);
+  assert.deepEqual(resourceReviewReasons(candidate), ['media_identity_required']);
+  const mixed = {
+    ...candidate,
+    accepted: false,
+    reasons: [
+      'media_identity_required',
+      'resource_size_unknown',
+      'excluded_by_pattern',
+      'site_protocol_changed',
+    ],
+  };
+  assert.deepEqual(resourceReviewReasons(mixed, false), [
+    'resource_size_unknown',
+    'excluded_by_pattern',
+    'site_protocol_changed',
+  ]);
+  assert.deepEqual(
+    resourceReviewReasons({ ...candidate, reasons: ['media_identity_required_extra'] }, false),
+    ['media_identity_required_extra'],
+  );
+});

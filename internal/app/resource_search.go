@@ -6,12 +6,13 @@ import (
 	"strings"
 
 	"light-media/internal/catalog"
+	"light-media/internal/decision"
 	"light-media/internal/media"
 	"light-media/internal/sites"
 )
 
-// Keyword search does not invent a TMDB identity. The user chooses that identity
-// before the existing material preview and download confirmation can run.
+// Keyword search applies resource filters without inventing a TMDB identity.
+// Directory organization performs the separate media recognition step.
 func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutput, error) {
 	in.Query = strings.TrimSpace(in.Query)
 	if in.Query == "" || len([]rune(in.Query)) > 200 || strings.ContainsAny(in.Query, "\x00\r\n") {
@@ -37,14 +38,18 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
 			season, episodes := resourceNumberingSuggestion(resource.Title)
-			found.candidates = append(found.candidates, Candidate{Resource: resource, Accepted: true, NeedsConfirmation: true, Reasons: []string{"media_identity_required"}, Season: season, Episodes: episodes})
+			choice := decision.EvaluateResource(resource, decisionPolicy(in.Policy))
+			if choice.Accepted {
+				choice.Reasons = append(choice.Reasons, "media_identity_required")
+			}
+			found.candidates = append(found.candidates, Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes})
 		}
 		return found
 	})
 	if err != nil {
 		return out, err
 	}
-	a.log("INFO", "sites", "keyword_search_completed", "关键词搜索完成；下载前仍须确认影视身份与实际种子文件", out.WorkflowID, "")
+	a.log("INFO", "sites", "keyword_search_completed", "关键词搜索完成，资源筛选规则已应用；影视身份由整理流程单独识别", out.WorkflowID, "")
 	return out, nil
 }
 

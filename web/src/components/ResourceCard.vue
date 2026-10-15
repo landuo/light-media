@@ -1,17 +1,23 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { bytes, date, friendly, label } from '../api';
 import {
   candidateKey,
   promotionKind,
   promotionRemaining,
+  resourceReviewReasons,
   type Candidate,
 } from '../features/resources';
-defineProps<{
+const props = defineProps<{
+  showIdentityReview?: boolean;
   candidates: Candidate[];
   names: Record<string, string>;
   downloads: Record<string, string>;
   selected: string[];
 }>();
+const reviewReasons = computed(() =>
+  resourceReviewReasons(props.candidates[0], props.showIdentityReview !== false),
+);
 defineEmits<{ download: [candidate: Candidate]; select: [candidate: Candidate] }>();
 function promotion(r: Record<string, any>) {
   const kind = promotionKind(r);
@@ -82,17 +88,25 @@ function promotion(r: Record<string, any>) {
         · {{ promotionRemaining(candidates[0]!.resource.promotion_end) }}</span
       >
     </p>
-    <details v-if="candidates[0]!.reasons?.length" class="release-review">
-      <summary :class="candidates[0]!.needs_confirmation ? 'warning' : 'hint'">
+    <details v-if="reviewReasons.length" class="release-review">
+      <summary
+        :class="
+          showIdentityReview !== false && candidates[0]!.needs_confirmation ? 'warning' : 'hint'
+        "
+      >
         {{
-          candidates[0]!.needs_confirmation
-            ? '需要核对'
-            : candidates[0]!.accepted
-              ? '匹配详情'
-              : '不符合当前规则'
+          showIdentityReview === false
+            ? candidates[0]!.accepted
+              ? '资源信息'
+              : '不符合搜索规则'
+            : candidates[0]!.needs_confirmation
+              ? '需要核对'
+              : candidates[0]!.accepted
+                ? '匹配详情'
+                : '不符合当前规则'
         }}
       </summary>
-      <p>{{ candidates[0]!.reasons!.map(friendly).join('；') }}</p>
+      <p>{{ reviewReasons.map(friendly).join('；') }}</p>
     </details>
     <div class="release-actions">
       <a
