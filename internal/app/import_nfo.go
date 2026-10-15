@@ -52,7 +52,7 @@ func (a *App) importSeriesNFO(video string) (assetLocalNFO, int64, bool) {
 	parent := filepath.Dir(video)
 	for depth := 0; depth < 4; depth++ {
 		candidate := filepath.Join(parent, "tvshow.nfo")
-		if !a.sourceAllowed(candidate) {
+		if !a.importSourceAllowed(candidate, true) {
 			break
 		}
 		nfo, identifier, err := readAssetNFO(candidate)

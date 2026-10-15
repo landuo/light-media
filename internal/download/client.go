@@ -139,6 +139,22 @@ func (c *Client) List(ctx context.Context) ([]Task, error) {
 	return c.trList(ctx, "")
 }
 
+// ListDownloading follows MoviePilot's download page scope. qBittorrent owns
+// its downloading filter; Transmission uses the download queue / downloading
+// states (3 / 4), excluding finished, seeding, stopped and checking torrents.
+// The caller separately limits these results to application-owned torrents.
+func (c *Client) ListDownloading(ctx context.Context) ([]Task, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.config.Kind == "qbittorrent" {
+		return c.qbListQuery(ctx, "", "downloading")
+	}
+	if err := c.trConnect(ctx); err != nil {
+		return nil, err
+	}
+	return c.trListQuery(ctx, "", true)
+}
+
 func (c *Client) Files(ctx context.Context, hash string) ([]File, error) {
 	hash, err := c.validHash(hash)
 	if err != nil {
@@ -224,14 +240,14 @@ func (c *Client) Add(ctx context.Context, in AddRequest) (AddResult, error) {
 }
 
 // Control accepts exactly one hash, never wildcard selectors or numeric daemon IDs.
-// remove_keep_data removes only the torrent registration, preserving its files.
+// remove_keep_data preserves files; remove_with_data explicitly deletes them.
 func (c *Client) Control(ctx context.Context, hash, action string) error {
 	hash, err := c.validHash(hash)
 	if err != nil {
 		return err
 	}
 	switch action {
-	case "start", "pause", "verify", "remove_keep_data":
+	case "start", "pause", "verify", "remove_keep_data", "remove_with_data":
 	default:
 		return failure("control", "unsupported_action")
 	}

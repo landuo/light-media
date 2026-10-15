@@ -153,6 +153,11 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		}
 	case strings.HasPrefix(p, "directories/"):
 		out, e = a.directoryAPI(r, strings.TrimPrefix(p, "directories/"))
+	case p == "files/content" && method == "GET":
+		e = a.serveBrowserContent(w, r)
+		if e == nil {
+			return
+		}
 	case strings.HasPrefix(p, "files/"):
 		out, e = a.fileManagerAPI(r, strings.TrimPrefix(p, "files/"))
 	case strings.HasPrefix(p, "history/"):

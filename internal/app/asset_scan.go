@@ -247,7 +247,7 @@ func (a *App) scanLibrary(ctx context.Context, job Job, rootID string) (returnEr
 			}
 			asset.Media = localMedia(nfo, sourceID, "movie")
 		case "episodedetails":
-			if root.Kind == "movie" || nfo.Season == nil || nfo.Episode == nil || *nfo.Season < 1 || *nfo.Episode < 1 {
+			if root.Kind == "movie" || nfo.Season == nil || nfo.Episode == nil || *nfo.Season < 0 || *nfo.Episode < 1 {
 				unrecognized++
 				if e = a.observeLibraryCandidate(ctx, root, name, "LIBRARY_EPISODE_UNCONFIRMED", "NFO 季集缺失或与媒体库类型矛盾，请人工选择标准单集"); e != nil {
 					scan["status"] = "incomplete"

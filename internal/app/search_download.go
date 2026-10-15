@@ -799,9 +799,21 @@ func (a *App) downloadList(ctx context.Context, selected ...string) (any, error)
 		c, e := download.New(d.Config)
 		entry := map[string]any{"id": d.ID, "name": d.Name, "tasks": []download.Task{}}
 		if e == nil {
-			var tasks []download.Task
-			tasks, e = c.List(ctx)
-			entry["tasks"] = tasks
+			var owned downloaderTaskOwnership
+			owned, e = a.downloaderTaskOwnership(ctx, d.ID)
+			if e == nil {
+				var tasks []download.Task
+				tasks, e = c.ListDownloading(ctx)
+				if e == nil {
+					visible := []download.Task{}
+					for _, task := range tasks {
+						if owned.contains(task) {
+							visible = append(visible, task)
+						}
+					}
+					entry["tasks"] = visible
+				}
+			}
 		}
 		if e != nil {
 			entry["error"] = a.clean(e.Error())

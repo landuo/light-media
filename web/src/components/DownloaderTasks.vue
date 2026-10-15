@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { api, action, bytes, errorText, image, label, ui, go } from '../api';
+import { api, action, bytes, errorText, image, ui, go } from '../api';
+import {
+  downloadTaskInfo,
+  downloadTimeLeft,
+  downloadingTaskIsRunning,
+} from '../features/downloader-tasks';
 const clients = computed(() =>
   (ui.settings?.downloaders || []).filter((d: any) => d.enabled !== false),
 );
@@ -10,13 +15,6 @@ const selected = ref(clients.value[0]?.id || ''),
   error = ref(''),
   busy = ref<string[]>([]);
 const instance = computed(() => data.value?.instances?.find((d: any) => d.id === selected.value));
-const pending = computed(() =>
-  (data.value?.native_downloads || []).filter(
-    (d: any) =>
-      d.downloader_id === selected.value &&
-      ['planned', 'submitting', 'waiting', 'failed'].includes(d.state),
-  ),
-);
 let generation = 0,
   timer: number;
 async function load(silent = false) {
@@ -39,10 +37,7 @@ function pick(id: string) {
   void load();
 }
 function identity(task: any) {
-  return data.value?.intents?.find(
-    (i: any) =>
-      i.downloader_id === selected.value && i.hash?.toLowerCase() === task.hash?.toLowerCase(),
-  )?.media;
+  return downloadTaskInfo(data.value, selected.value, task);
 }
 async function control(task: any, operation: string) {
   if (busy.value.includes(task.hash)) return;
@@ -92,33 +87,20 @@ onUnmounted(() => {
     {{ error || instance.error }}
   </p>
   <p v-if="loading && !instance" class="loading-state">正在读取下载任务…</p>
-  <section v-if="pending.length" class="pending-downloads">
-    <p v-for="item in pending" :key="item.id">
-      <span class="badge">{{
-        item.state === 'failed'
-          ? '添加失败'
-          : item.state === 'waiting'
-            ? '等待下载器启用'
-            : '正在添加'
-      }}</span>
-      {{ item.resource_title }}<small v-if="item.error" class="error-text">{{ item.error }}</small>
-    </p>
-  </section>
   <div v-if="instance?.tasks?.length" class="download-grid">
     <article v-for="task in instance.tasks" :key="task.hash" class="download-card">
       <img
-        v-if="identity(task)?.backdrop_path || identity(task)?.poster_path"
+        v-if="identity(task).media?.poster_path || identity(task).media?.backdrop_path"
         class="download-backdrop"
-        :src="image(identity(task).backdrop_path || identity(task).poster_path)"
+        :src="image(identity(task).media.poster_path || identity(task).media.backdrop_path)"
         alt=""
       />
       <div class="download-info">
-        <h3>{{ identity(task)?.title || task.name }}</h3>
-        <p v-if="identity(task)" class="download-filename">{{ task.name }}</p>
-        <p class="download-state">{{ label(task.status) }}</p>
+        <h3>{{ identity(task).title }} {{ identity(task).seasonEpisode }}</h3>
+        <p class="download-filename">{{ identity(task).subtitle }}</p>
         <p class="download-speed">
           {{ bytes(task.total_size) }}　↑ {{ bytes(task.upload_speed) }}/s　↓
-          {{ bytes(task.download_speed) }}/s
+          {{ bytes(task.download_speed) }}/s {{ downloadTimeLeft(task) }}
         </p>
         <div class="progress">
           <span :style="{ width: Math.min(100, task.progress * 100) + '%' }"></span>
@@ -129,22 +111,18 @@ onUnmounted(() => {
             <button
               class="icon-button"
               :aria-label="
-                task.status === 'downloading' || task.status === 'seeding'
-                  ? '暂停 ' + task.name
-                  : '开始 ' + task.name
+                downloadingTaskIsRunning(task) ? '暂停 ' + task.name : '开始 ' + task.name
               "
               :disabled="busy.includes(task.hash)"
-              @click="
-                control(task, ['downloading', 'seeding'].includes(task.status) ? 'pause' : 'start')
-              "
+              @click="control(task, downloadingTaskIsRunning(task) ? 'pause' : 'start')"
             >
-              {{ ['downloading', 'seeding'].includes(task.status) ? 'Ⅱ' : '▶' }}</button
+              {{ downloadingTaskIsRunning(task) ? 'Ⅱ' : '▶' }}</button
             ><button
               class="icon-button danger"
-              :aria-label="'删除下载任务 ' + task.name"
-              title="删除下载任务，保留文件"
+              :aria-label="'删除下载任务和文件 ' + task.name"
+              title="删除下载任务和文件"
               :disabled="busy.includes(task.hash)"
-              @click="control(task, 'remove_keep_data')"
+              @click="control(task, 'remove_with_data')"
             >
               ×
             </button>
@@ -154,7 +132,7 @@ onUnmounted(() => {
     </article>
   </div>
   <div v-else-if="!loading && !error && !instance?.error" class="empty-state">
-    <h3>{{ clients.length ? '暂无下载任务' : '未配置下载器' }}</h3>
+    <h3>{{ clients.length ? '暂无正在下载的任务' : '未配置下载器' }}</h3>
     <button v-if="!clients.length" @click="go('settings?tab=system')">配置下载器</button>
   </div>
 </template>
@@ -194,8 +172,7 @@ onUnmounted(() => {
   line-height: 1.5;
 }
 .download-filename,
-.download-speed,
-.download-state {
+.download-speed {
   font-size: 12px;
   opacity: 0.85;
   overflow-wrap: anywhere;
@@ -219,9 +196,5 @@ onUnmounted(() => {
   color: #fff;
   background: transparent;
   border: 0;
-}
-.pending-downloads small {
-  display: block;
-  margin: 4px 0;
 }
 </style>

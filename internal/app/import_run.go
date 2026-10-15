@@ -167,13 +167,16 @@ func selectImportFiles(plan ImportPlan, requested []string) ([]int, error) {
 }
 
 func importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFile) error {
+	if err := reorganizeReserveTx(ctx, tx, plan); err != nil {
+		return err
+	}
 	owner := plan.ID
 	if plan.IntentID != "" {
 		owner = plan.IntentID
 	}
 	for _, episode := range importEpisodes(file.Episodes) {
 		var count int
-		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=?`, mediaKey(plan.Media), file.Season, episode).Scan(&count); err != nil {
+		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(plan.Media), file.Season, episode, plan.ReorganizeAssetID).Scan(&count); err != nil {
 			return err
 		}
 		if count > 0 {
@@ -268,10 +271,13 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 		if err = a.jobCancelled(ctx, job); err != nil {
 			return err
 		}
-		if !a.sourceAllowed(file.Source) || !within(root.Path, file.Target) {
+		if !a.importSourceAllowed(file.Source, plan.Manual) || !within(root.Path, file.Target) {
 			return bad("REVIEW_PATH_CHANGED", "允许路径发生变化，请重新预览")
 		}
 		if err = a.ensureNotExcluded(ctx, plan.Media, file.Season, file.Episodes); err != nil {
+			return err
+		}
+		if err = a.guardImportReorganize(ctx, meta.Reorganize); err != nil {
 			return err
 		}
 		release, err := a.beginWrite()
@@ -292,7 +298,18 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				}
 				return a.guardImportDirectory(ctx, plan)
 			}
-			receipt, err := a.publishImport(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, planSnapshot(*file), meta.Methods[file.ID], check)
+			inPlace := meta.Reorganize != nil && file.Target == meta.Reorganize.Asset.Path
+			var receipt importReceipt
+			var err error
+			if inPlace {
+				actualSource, inspectErr := snapshotPath(file.Source)
+				if inspectErr != nil || actualSource != planSnapshot(*file) {
+					return bad("REVIEW_SOURCE_CHANGED", "重新整理的源文件在预览后发生变化")
+				}
+				receipt = importReceipt{Target: file.Target, Source: file.Source, SourceSnapshot: planSnapshot(*file), StageSnapshot: meta.Reorganize.Video.Snapshot, SHA256: meta.Reorganize.Video.SHA256, State: "published"}
+			} else {
+				receipt, err = a.publishImport(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, planSnapshot(*file), meta.Methods[file.ID], check)
+			}
 			var linkErr *APIError
 			if err != nil && plan.Mode == "auto" && errors.As(err, &linkErr) && linkErr.Code == "IMPORT_LINK_CROSS_DEVICE" {
 				meta.Methods[file.ID] = "copy"
@@ -315,6 +332,16 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				}
 			}
 			owned := []managedFile{{Path: file.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: "video", Snapshot: receipt.StageSnapshot, SourceSnapshot: planSnapshot(*file), SHA256: receipt.SHA256}}
+			if inPlace {
+				for _, prior := range meta.Reorganize.Owned {
+					if prior.Kind == "subtitle" {
+						if actual, e := snapshotPath(prior.Path); e == nil && actual == prior.Snapshot {
+							prior.AssetID, prior.RootID, prior.MediaKey = assetID, root.ID, mediaKey(plan.Media)
+							owned = append(owned, prior)
+						}
+					}
+				}
+			}
 			for sideIndex, sidecar := range meta.Sidecars[file.ID] {
 				if err = check(); err != nil {
 					return err
@@ -326,6 +353,13 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: "subtitle", Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256})
 			}
 			asset := Asset{ID: assetID, Media: plan.Media, Season: file.Season, Episodes: append([]int(nil), file.Episodes...), RootID: root.ID, Path: file.Target, SourcePath: file.Source, Size: file.Size, State: "present", ScrapeState: "pending", FNOSState: "pending", IntentID: plan.IntentID, CreatedAt: now()}
+			asset.Part = file.Part
+			if meta.Reorganize != nil {
+				asset.IntentID = meta.Reorganize.Asset.IntentID
+				if file.Source == meta.Reorganize.Asset.Path {
+					asset.SourcePath = meta.Reorganize.Asset.SourcePath
+				}
+			}
 			asset.Renaming = plan.Renaming
 			if !importBool(plan.Scraping, true) {
 				asset.ScrapeState = "skipped"
@@ -339,6 +373,9 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				return err
 			}
 			defer tx.Rollback()
+			if err = commitImportReorganizeTx(ctx, tx, plan, meta, asset, owned); err != nil {
+				return err
+			}
 			for _, episode := range importEpisodes(file.Episodes) {
 				var other string
 				err = tx.QueryRowContext(ctx, `SELECT asset_id FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=? LIMIT 1`, mediaKey(plan.Media), file.Season, episode, assetID).Scan(&other)
@@ -372,7 +409,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 				return err
 			}
-			if importBool(plan.Scraping, true) {
+			if importBool(plan.Scraping, true) && meta.Reorganize == nil {
 				if _, err = enqueueTx(ctx, tx, "scrape", map[string]string{"id": assetID}, job.WorkflowID); err != nil {
 					return err
 				}

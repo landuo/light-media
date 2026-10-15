@@ -32,16 +32,17 @@ type ParseResult struct {
 }
 
 var (
-	seasonEpisode = regexp.MustCompile(`(?i)(?:^|[ ._\-])S(\d{1,2})E(\d{1,3})((?:E\d{1,3})+|-E?\d{1,3})?(?:$|[ ._\-])`)
-	markerCount   = regexp.MustCompile(`(?i)S\d{1,2}E\d{1,3}`)
-	explicitRange = regexp.MustCompile(`(?i)^-E?(\d{1,3})$`)
-	extraEpisode  = regexp.MustCompile(`(?i)E(\d{1,3})`)
-	incompleteEP  = regexp.MustCompile(`(?i)^(?:E(?:$|\d)|S\d{1,2}E)`)
-	displayNumber = regexp.MustCompile(`(?i)(?:第\s*(\d{1,4})\s*[集话]|(?:^|[ ._\-])EP\s*(\d{1,4})(?:$|[ ._\-]))`)
-	displayMarker = regexp.MustCompile(`(?i)(?:第\s*[0-9一二三四五六七八九十百零〇两]+|(?:^|[ ._\-])EP\s*\d+)`)
-	yearPattern   = regexp.MustCompile(`(?:^|[ ._(\-])((?:19|20)\d{2})(?:$|[ ._)\-])`)
-	absoluteEP    = regexp.MustCompile(`(?i)(?:^|[ ._\-])(?:EP|第)(\d{1,4})(?:集|话)?`)
-	releaseSuffix = regexp.MustCompile(`(?i)^(?:[ ._()\-]*(?:\d{3,4}p|2160p|4k|web[- .]?dl|webrip|bluray|bdrip|hdtv|remux|x26[45]|h26[45]|hevc|avc|aac|dts|truehd|ddp|hdr|dv|10bit|8bit|proper|repack|multi|[ ._\-]))*$`)
+	seasonEpisode  = regexp.MustCompile(`(?i)(?:^|[ ._\-])S(\d{1,2})E(\d{1,3})((?:E\d{1,3})+|-E?\d{1,3})?(?:$|[ ._\-])`)
+	markerCount    = regexp.MustCompile(`(?i)S\d{1,2}E\d{1,3}`)
+	explicitRange  = regexp.MustCompile(`(?i)^-E?(\d{1,3})$`)
+	extraEpisode   = regexp.MustCompile(`(?i)E(\d{1,3})`)
+	incompleteEP   = regexp.MustCompile(`(?i)^(?:E(?:$|\d)|S\d{1,2}E)`)
+	displayNumber  = regexp.MustCompile(`(?i)(?:第\s*(\d{1,4})\s*[集话]|(?:^|[ ._\-])EP\s*(\d{1,4})(?:$|[ ._\-]))`)
+	displayMarker  = regexp.MustCompile(`(?i)(?:第\s*[0-9一二三四五六七八九十百零〇两]+|(?:^|[ ._\-])EP\s*\d+)`)
+	yearPattern    = regexp.MustCompile(`(?:^|[ ._(\-])((?:19|20)\d{2})(?:$|[ ._)\-])`)
+	absoluteEP     = regexp.MustCompile(`(?i)(?:^|[ ._\-])(?:EP|第)(\d{1,4})(?:集|话)?`)
+	releaseSuffix  = regexp.MustCompile(`(?i)^(?:[ ._()\-+]*(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux|x26[45]|h[ .]?26[45]|hevc|avc|av1|aac[0-9.]*|dts|hd|ma[0-9.]*|truehd[0-9.]*|ddp?[0-9.]*|e?ac3|flac[0-9.]*|atmos|hdr(?:10)?|dovi|dv|10bit|8bit|proper|repack|multi|imax|extended|uncut|amzn|nf|netflix|dsnp|dsny|hmax|max|atvp|hulu|hbo|pcok|pmtp|itunes|[ ._\-]))*$`)
+	releaseQuality = regexp.MustCompile(`(?i)(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux)`)
 )
 
 // Parse accepts explicit SxxExx and EPxxx forms, and conservative Title (year)
@@ -148,7 +149,18 @@ func Parse(filename string) ParseResult {
 	year, _ := strconv.Atoi(stem[m[2]:m[3]])
 	title := cleanTitle(stem[:m[0]])
 	suffix := strings.Trim(stem[m[3]:], " ()-._")
-	if title == "" || !releaseSuffix.MatchString(suffix) {
+	validSuffix := releaseSuffix.MatchString(suffix)
+	if !validSuffix && releaseQuality.MatchString(suffix) {
+		// Release groups are arbitrary names, not film titles. Only remove a
+		// final group after an otherwise fully recognized technical suffix.
+		if split := strings.LastIndexByte(suffix, '-'); split > 0 {
+			group := suffix[split+1:]
+			if len(group) <= 64 && regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._]*$`).MatchString(group) {
+				validSuffix = releaseSuffix.MatchString(suffix[:split])
+			}
+		}
+	}
+	if title == "" || !validSuffix {
 		return review("ambiguous_movie_suffix_or_title")
 	}
 	return ParseResult{Status: Parsed, Type: "movie", Title: title, Year: year}

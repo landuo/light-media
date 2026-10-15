@@ -9,9 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
-	"strings"
 	"time"
-	"unicode"
 
 	"light-media/internal/catalog"
 	"light-media/internal/download"
@@ -536,12 +534,7 @@ func (a *App) directoryFilesForDownloader(ctx context.Context, d DownloaderConfi
 	return out, nil
 }
 func directoryTitle(s string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsLetter(r) || unicode.IsDigit(r) {
-			return unicode.ToLower(r)
-		}
-		return -1
-	}, s)
+	return media.NormalizeTitle(s)
 }
 func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, file importScanFile) (ImportRequest, error) {
 	request := ImportRequest{RootID: rule.RootID, Mode: rule.Mode, Renaming: rule.Renaming, Scraping: rule.Scraping, LibraryTypeFolder: rule.LibraryTypeFolder, WorkflowID: id("wf_"), Files: []ImportFileRequest{{Path: file.Path}}}
@@ -590,10 +583,14 @@ func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, fil
 		return request, bad("DIRECTORY_MEDIA_TYPE", "影视类型与目录规则不符")
 	}
 	if request.MediaType == "tv" {
-		if numbering == nil || numbering.Season == nil || *numbering.Season < 1 || len(numbering.Episodes) != 1 {
+		if numbering == nil || numbering.Season == nil || *numbering.Season < 0 || len(numbering.Episodes) != 1 || *numbering.Season == 0 && (file.InferredMedia == nil || file.IdentitySource != "nfo" && numbering.Form != "nfo_episode") {
 			return request, bad("DIRECTORY_NUMBERING_REVIEW", "剧集需要明确季号和单集编号，请手动识别")
 		}
 		request.Files[0].Season = *numbering.Season
+		request.Files[0].SeasonExplicit = numbering.Form == "nfo_episode"
+		if file.InferredMedia != nil && numbering.Form == "nfo_episode" {
+			request.Files[0].SourceEpisodeID = file.InferredMedia.EpisodeID
+		}
 		request.Files[0].Episodes = numbering.Episodes
 	}
 	if !validMedia(request.MediaType, request.TMDBID) {

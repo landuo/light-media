@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"light-media/internal/media"
 	"path/filepath"
 	"strings"
 )
@@ -27,12 +26,15 @@ func physicalTarget(c *Settings, path, kind string) (string, error) {
 	return key, nil
 }
 
-func (a *App) ensureImportTarget(ctx context.Context, path, kind string, files []ImportFileRequest) (string, error) {
+func (a *App) ensureImportTarget(ctx context.Context, path, kind string, files []ImportFileRequest, manual ...bool) (string, error) {
 	path = cleanDirectoryInput(path)
 	if err := safeRoot(path); err != nil {
 		return "", err
 	}
 	for _, file := range files {
+		if len(manual) > 0 && manual[0] {
+			continue // Explicit manual operations check the final file target.
+		}
 		_, physicalOverlap := sharedDirectoryPath(filepath.Dir(file.Path), path)
 		if within(path, file.Path) || physicalOverlap {
 			return "", bad("DIRECTORY_OVERLAP", "源目录与整理目标目录不能相同或互相包含")
@@ -132,11 +134,11 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 	}
 	if !validMedia(request.MediaType, request.TMDBID) {
 		for i, file := range request.Files {
-			if !a.sourceAllowed(file.Path) || !isVideo(file.Path) {
+			if !a.importSourceAllowed(file.Path, request.Manual) || !isVideo(file.Path) {
 				return request, bad("INVALID_SOURCE", "请选择容器媒体目录内的视频文件")
 			}
 			hint, numbering, reason := a.importNFOEvidence(file.Path)
-			scanned := importScanFile{Path: file.Path, Parsed: media.Parse(filepath.Base(file.Path)), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
+			scanned := importScanFile{Path: file.Path, Parsed: parseManualImportFile(file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
 			inferred, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
 			if err != nil {
 				return request, err
@@ -148,11 +150,15 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 				return request, bad("IMPORT_IDENTITY_MISMATCH", "自动识别结果与指定TMDB ID不符")
 			}
 			request.MediaType, request.TMDBID = inferred.MediaType, inferred.TMDBID
-			if file.Season == 0 {
+			if file.Season == 0 && !file.SeasonExplicit {
 				request.Files[i].Season = inferred.Files[0].Season
+				request.Files[i].SeasonExplicit = inferred.Files[0].SeasonExplicit
 			}
 			if len(file.Episodes) == 0 {
 				request.Files[i].Episodes = inferred.Files[0].Episodes
+				if !file.SeasonExplicit || file.Season == inferred.Files[0].Season {
+					request.Files[i].SourceEpisodeID = inferred.Files[0].SourceEpisodeID
+				}
 			}
 		}
 	}

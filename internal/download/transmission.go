@@ -192,6 +192,10 @@ type trTask struct {
 }
 
 func (c *Client) trList(ctx context.Context, hash string) ([]Task, error) {
+	return c.trListQuery(ctx, hash, false)
+}
+
+func (c *Client) trListQuery(ctx context.Context, hash string, downloadingOnly bool) ([]Task, error) {
 	args := map[string]any{"fields": []string{"hash_string", "name", "status", "download_dir", "total_size", "percent_done", "left_until_done", "upload_ratio", "added_date", "eta", "rate_download", "rate_upload", "error", "labels"}}
 	if hash != "" {
 		args["ids"] = []string{hash}
@@ -207,6 +211,9 @@ func (c *Client) trList(ctx context.Context, hash string) ([]Task, error) {
 	out := make([]Task, 0, len(raw))
 	seen := map[string]bool{}
 	for _, v := range raw {
+		if downloadingOnly && v.Status != 3 && v.Status != 4 {
+			continue
+		}
 		h, err := c.validHash(v.Hash)
 		if err != nil || seen[h] || (hash != "" && h != hash) || !fraction(v.Progress) || v.TotalSize < 0 || v.Left < 0 || v.Left > v.TotalSize || v.Status < 0 || v.Status > 6 {
 			return nil, failure("list", "invalid_task")
@@ -307,10 +314,10 @@ func (c *Client) trControl(ctx context.Context, hash, action string) error {
 	if err := c.trExists(ctx, hash); err != nil {
 		return err
 	}
-	method := map[string]string{"start": "torrent_start", "pause": "torrent_stop", "verify": "torrent_verify", "remove_keep_data": "torrent_remove"}[action]
+	method := map[string]string{"start": "torrent_start", "pause": "torrent_stop", "verify": "torrent_verify", "remove_keep_data": "torrent_remove", "remove_with_data": "torrent_remove"}[action]
 	args := map[string]any{"ids": []string{hash}}
-	if action == "remove_keep_data" {
-		args["delete_local_data"] = false
+	if action == "remove_keep_data" || action == "remove_with_data" {
+		args["delete_local_data"] = action == "remove_with_data"
 	}
 	_, err := c.trRPC(ctx, method, args, c.trDialect)
 	return err

@@ -19,6 +19,7 @@ type transferHistoryItem struct {
 	Media        catalog.Media `json:"media"`
 	Season       int           `json:"season"`
 	Episodes     []int         `json:"episodes"`
+	Part         string        `json:"part,omitempty"`
 	Source       string        `json:"source"`
 	Target       string        `json:"target"`
 	Mode         string        `json:"mode"`
@@ -55,6 +56,12 @@ const transferHistoryCTE = `WITH history AS (
 
 func (a *App) transferHistoryAPI(r *http.Request, p string) (any, error) {
 	parts := strings.Split(p, "/")
+	if p == "transfers/queue" && r.Method == "GET" {
+		return a.organizeQueue(r.Context())
+	}
+	if len(parts) == 4 && parts[0] == "transfers" && parts[1] == "queue" && parts[3] == "cancel" && r.Method == "POST" {
+		return a.cancelOrganizeQueueFile(r.Context(), parts[2])
+	}
 	if len(parts) == 1 && p == "transfers" && r.Method == "GET" {
 		return a.transferHistory(r.Context(), r)
 	}
@@ -101,7 +108,7 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 	if page > 100000 {
 		page = 100000
 	}
-	if size < 1 || size > 200 {
+	if size < 1 || size > 1000 {
 		size = 50
 	}
 	status := q.Get("status")
@@ -109,11 +116,20 @@ func (a *App) transferHistory(ctx context.Context, r *http.Request) (any, error)
 		return nil, bad("INVALID_HISTORY_STATUS", "整理状态筛选无效")
 	}
 	query := q.Get("q")
+	if query == "成功" {
+		status = "success"
+		query = ""
+	}
+	if query == "失败" {
+		status = "failed"
+		query = ""
+	}
 	if len(query) > 256 {
 		return nil, bad("INVALID_QUERY", "搜索内容过长")
 	}
-	where := ` WHERE (?='' OR status=?) AND (?='' OR instr(lower(COALESCE(json_extract(plan,'$.media.title'),'')||' '||COALESCE(json_extract(file,'$.source'),'')||' '||COALESCE(json_extract(file,'$.target'),'')),lower(?))>0)`
-	args := []any{status, status, query, query}
+	pattern := historySearchPattern(query)
+	where := ` WHERE (?='' OR status=?) AND (?='' OR lower(COALESCE(json_extract(plan,'$.media.title'),'')||' '||COALESCE(json_extract(file,'$.source'),'')||' '||COALESCE(json_extract(file,'$.target'),'')) LIKE lower(?) ESCAPE '\')`
+	args := []any{status, status, query, pattern}
 	var total int
 	if e := a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT COUNT(*) FROM history`+where, args...).Scan(&total); e != nil {
 		return nil, e
@@ -167,7 +183,7 @@ func scanTransferHistory(row interface{ Scan(...any) error }) (transferHistoryIt
 	if message == "" && status == "failed" {
 		message = "整理未完成，请查看关联任务"
 	}
-	return transferHistoryItem{ID: file.ID, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: plan.CreatedAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
+	return transferHistoryItem{ID: file.ID, PlanID: plan.ID, WorkflowID: plan.WorkflowID, JobID: jobID, JobState: jobState, Media: plan.Media, Season: file.Season, Episodes: file.Episodes, Part: file.Part, Source: file.Source, Target: file.Target, Mode: mode, Size: file.Size, Status: status, FileStatus: file.Status, Error: message, CreatedAt: plan.CreatedAt, UpdatedAt: updated, CanRetry: status == "failed" && jobState != "running" && jobState != "queued" && jobState != "retry_wait" && jobState != "waiting_paused" && file.Status != "blocked"}, nil
 }
 func (a *App) transferHistoryItem(ctx context.Context, id string) (transferHistoryItem, error) {
 	item, e := scanTransferHistory(a.Store.DB.QueryRowContext(ctx, transferHistoryCTE+`SELECT plan,file,job_id,job_state,job_error,updated_at,status FROM history WHERE json_extract(file,'$.id')=? LIMIT 1`, id))

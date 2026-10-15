@@ -5,8 +5,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"strconv"
 	"strings"
 
+	"light-media/internal/catalog"
 	"light-media/internal/download"
 	"light-media/internal/metainfo"
 	"light-media/internal/sites"
@@ -25,22 +27,23 @@ type NativeDownloadRequest struct {
 	TMDBID       int64  `json:"tmdb_id"`
 }
 type NativeDownload struct {
-	ID                 string `json:"id"`
-	SiteID             string `json:"site_id"`
-	ResourceID         string `json:"resource_id"`
-	ResourceTitle      string `json:"resource_title"`
-	DownloaderID       string `json:"downloader_id"`
-	DownloadPath       string `json:"download_path"`
-	DownloaderSnapshot string `json:"downloader_snapshot"`
-	Hash               string `json:"hash"`
-	MaterialRef        string `json:"material_ref"`
-	MediaType          string `json:"media_type,omitempty"`
-	TMDBID             int64  `json:"tmdb_id,omitempty"`
-	State              string `json:"state"`
-	Error              string `json:"error,omitempty"`
-	WorkflowID         string `json:"workflow_id"`
-	CreatedAt          string `json:"created_at"`
-	UpdatedAt          string `json:"updated_at"`
+	ID                 string         `json:"id"`
+	SiteID             string         `json:"site_id"`
+	ResourceID         string         `json:"resource_id"`
+	ResourceTitle      string         `json:"resource_title"`
+	DownloaderID       string         `json:"downloader_id"`
+	DownloadPath       string         `json:"download_path"`
+	DownloaderSnapshot string         `json:"downloader_snapshot"`
+	Hash               string         `json:"hash"`
+	MaterialRef        string         `json:"material_ref"`
+	MediaType          string         `json:"media_type,omitempty"`
+	TMDBID             int64          `json:"tmdb_id,omitempty"`
+	Media              *catalog.Media `json:"media,omitempty"`
+	State              string         `json:"state"`
+	Error              string         `json:"error,omitempty"`
+	WorkflowID         string         `json:"workflow_id"`
+	CreatedAt          string         `json:"created_at"`
+	UpdatedAt          string         `json:"updated_at"`
 }
 
 func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (NativeDownload, error) {
@@ -150,6 +153,17 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 		return out, err
 	}
 	out = NativeDownload{ID: id("native_"), SiteID: site.ID, ResourceID: resource.ID, ResourceTitle: resource.Title, DownloaderID: d.ID, DownloadPath: path, DownloaderSnapshot: downloaderSnapshot(d), Hash: material.Hash, MaterialRef: ref, MediaType: in.MediaType, TMDBID: in.TMDBID, State: "planned", WorkflowID: id("wf_"), CreatedAt: now(), UpdatedAt: now()}
+	if in.TMDBID > 0 {
+		// Downloads selected from a known title retain its card presentation.
+		// Reuse the catalog cache instead of adding another metadata request to
+		// an optional ID or to the three-second download refresh.
+		var cached struct {
+			Data catalog.Media `json:"data"`
+		}
+		if a.Store.Get(ctx, "cache", "media:"+in.MediaType+":"+strconv.FormatInt(in.TMDBID, 10), &cached) == nil && cached.Data.ID == in.TMDBID && cached.Data.MediaType == in.MediaType {
+			out.Media = &catalog.Media{ID: cached.Data.ID, MediaType: cached.Data.MediaType, Title: cached.Data.Title, Year: cached.Data.Year, PosterPath: cached.Data.PosterPath, BackdropPath: cached.Data.BackdropPath}
+		}
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return out, err
@@ -258,7 +272,7 @@ func (a *App) runNativeDownload(ctx context.Context, job Job, key string) (resul
 
 func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, action string) error {
 	switch action {
-	case "start", "pause", "verify", "remove_keep_data":
+	case "start", "pause", "verify", "remove_keep_data", "remove_with_data":
 	default:
 		return bad("INVALID_ACTION", "未知下载操作")
 	}
@@ -276,9 +290,16 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 	if err != nil {
 		return err
 	}
+	owned, err := a.downloaderTaskOwnership(ctx, d.ID)
+	if err != nil {
+		return err
+	}
 	actual := ""
 	for _, task := range tasks {
 		if sameHash(task.Hash, hash) {
+			if !owned.contains(task) {
+				return bad("DOWNLOAD_NOT_MANAGED", "此任务不属于本程序，请在下载器中管理")
+			}
 			actual = task.Hash
 			break
 		}
@@ -286,10 +307,29 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 	if actual == "" {
 		return bad("DOWNLOAD_NOT_FOUND", "下载任务不存在，请刷新列表")
 	}
+	if action == "remove_with_data" {
+		// The download page's original delete action includes local data. Only
+		// its current in-progress scope can use this destructive variant;
+		// completed/seeding tasks are deliberately not exposed or removed.
+		downloading, e := client.ListDownloading(ctx)
+		if e != nil {
+			return e
+		}
+		visible := false
+		for _, task := range downloading {
+			if sameHash(task.Hash, actual) {
+				visible = true
+				break
+			}
+		}
+		if !visible {
+			return bad("DOWNLOAD_NOT_DOWNLOADING", "任务已离开正在下载列表，请刷新后重试")
+		}
+	}
 	if err = client.Control(ctx, actual, action); err != nil {
 		return err
 	}
-	if action == "remove_keep_data" {
+	if action == "remove_keep_data" || action == "remove_with_data" {
 		// Cancel own bookkeeping too, so a queued retry cannot re-add the torrent.
 		tx, e := a.Store.DB.BeginTx(ctx, nil)
 		if e != nil {
@@ -297,7 +337,7 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 		}
 		defer tx.Rollback()
 		for _, kind := range []string{"intent", "native_download"} {
-			if _, e = tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE kind=? AND json_extract(payload,'$.downloader_id')=? AND lower(json_extract(payload,'$.hash'))=lower(?)`, now(), now(), kind, d.ID, hash); e != nil {
+			if _, e = tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.state','cancelled','$.updated_at',?),updated_at=? WHERE kind=? AND json_extract(payload,'$.downloader_id')=? AND length(json_extract(payload,'$.hash')) IN (40,64) AND (lower(json_extract(payload,'$.hash'))=lower(?) OR (length(json_extract(payload,'$.hash'))!=length(?) AND substr(lower(json_extract(payload,'$.hash')),1,40)=lower(?)))`, now(), now(), kind, d.ID, actual, actual, actual[:40]); e != nil {
 				return e
 			}
 		}
@@ -309,6 +349,6 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 		}
 		return tx.Commit()
 	}
-	a.log("INFO", "downloads", action, "管理员操作下载器中的任务", "", "")
+	a.log("INFO", "downloads", action, "操作本程序的下载任务", "", "")
 	return nil
 }

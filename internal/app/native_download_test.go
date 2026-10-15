@@ -155,13 +155,15 @@ func TestNativeDownloadRecoversFromUncertainAddWithoutAddingTwice(t *testing.T) 
 	}
 }
 
-func TestDownloaderTaskActionsApplyToExistingExternalTasksAndKeepFiles(t *testing.T) {
+func TestDownloaderTaskActionsApplyToApplicationTaggedTasksAndKeepFiles(t *testing.T) {
 	a, _, _ := importTestApp(t)
 	hash := strings.Repeat("a", 40)
 	actions := []string{}
 	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/v2/torrents/info" {
-			workflowJSON(w, []any{workflowTask(hash, 1)})
+			task := workflowTask(hash, 1)
+			task["tags"] = "light-media"
+			workflowJSON(w, []any{task})
 			return
 		}
 		if strings.HasPrefix(r.URL.Path, "/api/v2/torrents/") {
@@ -185,7 +187,7 @@ func TestDownloaderTaskActionsApplyToExistingExternalTasksAndKeepFiles(t *testin
 		}
 	}
 	if len(actions) != 4 {
-		t.Fatalf("external task controls not forwarded: %v", actions)
+		t.Fatalf("owned task controls not forwarded: %v", actions)
 	}
 	if e := a.downloaderTaskAction(context.Background(), "external", strings.Repeat("b", 40), "pause"); e == nil {
 		t.Fatal("unverified external task modified")

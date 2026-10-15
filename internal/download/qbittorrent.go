@@ -91,9 +91,20 @@ type qbTask struct {
 }
 
 func (c *Client) qbList(ctx context.Context, hash string) ([]Task, error) {
+	return c.qbListQuery(ctx, hash, "")
+}
+
+func (c *Client) qbListQuery(ctx context.Context, hash, filter string) ([]Task, error) {
 	endpoint := "torrents/info"
+	query := url.Values{}
 	if hash != "" {
-		endpoint += "?" + url.Values{"hashes": {hash}}.Encode()
+		query.Set("hashes", hash)
+	}
+	if filter != "" {
+		query.Set("filter", filter)
+	}
+	if len(query) > 0 {
+		endpoint += "?" + query.Encode()
 	}
 	body, err := c.qb(ctx, http.MethodGet, endpoint, "", "")
 	if err != nil {
@@ -109,6 +120,11 @@ func (c *Client) qbList(ctx context.Context, hash string) ([]Task, error) {
 	out := make([]Task, 0, len(raw))
 	seen := map[string]bool{}
 	for _, v := range raw {
+		// A finished task must never appear in the downloading page, even if
+		// a compatible daemon incorrectly returns it for filter=downloading.
+		if filter == "downloading" && (v.Progress >= 1 || qbStatus(v.State) == "seeding") {
+			continue
+		}
 		h, err := c.validHash(v.Hash)
 		if err != nil || seen[h] || (hash != "" && h != hash) || !fraction(v.Progress) || v.TotalSize < 0 || v.Size < 0 || v.Completed < 0 || v.Ratio < 0 {
 			return nil, failure("list", "invalid_task")
@@ -262,10 +278,10 @@ func (c *Client) qbControl(ctx context.Context, hash, action string) error {
 	if err := c.qbExists(ctx, hash); err != nil {
 		return err
 	}
-	endpoint := map[string]string{"start": "start", "pause": "stop", "verify": "recheck", "remove_keep_data": "delete"}[action]
+	endpoint := map[string]string{"start": "start", "pause": "stop", "verify": "recheck", "remove_keep_data": "delete", "remove_with_data": "delete"}[action]
 	args := url.Values{"hashes": {hash}}
-	if action == "remove_keep_data" {
-		args.Set("deleteFiles", "false")
+	if action == "remove_keep_data" || action == "remove_with_data" {
+		args.Set("deleteFiles", strconv.FormatBool(action == "remove_with_data"))
 	}
 	body, err := c.qb(ctx, http.MethodPost, "torrents/"+endpoint, args.Encode(), "application/x-www-form-urlencoded")
 	if err != nil {

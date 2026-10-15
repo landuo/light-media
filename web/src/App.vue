@@ -13,6 +13,7 @@ import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
 function normalizeRoute(value: string) {
+  if (['library', 'assets'].includes(value.split('?')[0]!.split('/')[0]!)) return 'files';
   if (value.split('?')[0] === 'downloaders') return 'settings?tab=system';
   if (value.split('?')[0] === 'directories') return 'settings?tab=directory';
   return value || 'discover';
@@ -37,7 +38,6 @@ const icons: Record<string, string> = {
   download: 'M12 2v13m-5-5 5 5 5-5M3 16v5h18v-5',
   history: 'M3 12a9 9 0 1 1 3 6M3 3v9h9m0-6v6l4 3',
   folder: 'M2 5h8l2 3h10v13H2Z',
-  library: 'M3 3h4v18H3Zm7 0h4v18h-4Zm7 1 4-1 3 17-4 1Z',
   globe: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18',
   server: 'M3 3h18v7H3Zm0 11h18v7H3ZM7 6h1m-1 11h1',
   jobs: 'M9 5h12M9 12h12M9 19h12M2 5l2 2 3-4M2 12l2 2 3-4M2 19l2 2 3-4',
@@ -67,7 +67,6 @@ const nav = [
       ['downloads', 'download', '下载管理'],
       ['history', 'history', '整理历史'],
       ['files', 'folder', '文件管理'],
-      ['library', 'library', '媒体库'],
     ],
   },
   {
@@ -433,7 +432,9 @@ onUnmounted(() => {
           @organize="organizePaths"
           @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
         />
-        <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks v-else-if="pageKey === 'downloads'" /><Operations
+        <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
+          v-else-if="pageKey === 'downloads'"
+        /><Operations
           v-else
           :key="route"
           :view="route.split('/')[0]!"

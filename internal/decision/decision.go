@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unicode"
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
@@ -296,12 +295,7 @@ func episodeSet(values []int) (map[int]bool, bool) {
 	return out, true
 }
 func normalizeTitle(value string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsLetter(r) || unicode.IsNumber(r) {
-			return unicode.ToLower(r)
-		}
-		return -1
-	}, value)
+	return media.NormalizeTitle(value)
 }
 func matchesTitle(value string, m catalog.Media) bool {
 	aliases := []string{normalizeTitle(m.Title), normalizeTitle(m.OriginalTitle)}

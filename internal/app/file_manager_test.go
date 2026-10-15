@@ -168,8 +168,11 @@ func TestFileOperationsRejectStaleSymlinksAndProtectedPaths(t *testing.T) {
 		t.Fatal("stale operation changed source", e)
 	}
 	importWrite(t, filepath.Join(target, "existing.mkv"), []byte("old library data"))
+	if e = a.Store.Put(ctx, "asset", "existing", Asset{ID: "existing", Path: filepath.Join(target, "existing.mkv"), State: "present"}); e != nil {
+		t.Fatal(e)
+	}
 	libraryRoot := fileBrowserRoot(t, a, target)
-	if _, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: libraryRoot.ID, Path: target, Paths: []string{filepath.Join(target, "existing.mkv")}, Name: "bad.mkv"}); fileCode(e) != "FILE_PROTECTED" {
+	if _, e = a.previewBrowserOperation(ctx, browserOperationRequest{Action: "rename", RootID: libraryRoot.ID, Path: target, Paths: []string{filepath.Join(target, "existing.mkv")}, Name: "bad.mkv"}); fileCode(e) != "FILE_IN_USE" {
 		t.Fatal("library mutation permitted", e)
 	}
 	if e = os.Link(file, filepath.Join(source, "hardlink.mkv")); e != nil {

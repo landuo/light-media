@@ -153,6 +153,20 @@ func sameBrowserIdentity(a, b browserStamp) bool {
 func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 	ctx := r.Context()
 	switch {
+	case p == "organize" && r.Method == "POST":
+		var in manualOrganizeRequest
+		if e := decodeBody(nil, r, &in); e != nil {
+			return nil, e
+		}
+		return a.manualOrganize(ctx, in)
+	case p == "recognize" && r.Method == "POST":
+		var in struct {
+			Path string `json:"path"`
+		}
+		if e := decodeBody(nil, r, &in); e != nil {
+			return nil, e
+		}
+		return a.recognizeBrowserFile(ctx, in.Path)
 	case p == "roots" && r.Method == "GET":
 		return a.browserRoots(), nil
 	case p == "list" && r.Method == "GET":
@@ -410,8 +424,8 @@ func (a *App) browserStaticProtection(path string) string {
 		return "应用数据目录受保护"
 	}
 	for _, root := range a.Settings().Roots {
-		if _, overlap := sharedDirectoryPath(root.Path, path); overlap {
-			return "媒体库文件请通过资产管理维护"
+		if mapped, overlap := sharedDirectoryPath(root.Path, path); overlap && within(mapped, root.Path) {
+			return "媒体库根目录不能改名或删除"
 		}
 	}
 	for _, root := range a.browserRoots() {
@@ -439,32 +453,88 @@ func (a *App) browserMutationAllowed(ctx context.Context, path string) error {
 	if reason := a.browserStaticProtection(path); reason != "" {
 		return bad("FILE_PROTECTED", reason)
 	}
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind IN ('asset','import_plan')`)
+	identities := map[string]mountedDirectoryID{}
+	identityErrors := map[string]error{}
+	identity := func(dir string) (mountedDirectoryID, error) {
+		if value, ok := identities[dir]; ok {
+			return value, identityErrors[dir]
+		}
+		value, err := mountedDirectoryIdentity(dir)
+		identities[dir], identityErrors[dir] = value, err
+		return value, err
+	}
+	contains := func(referenced string) bool {
+		return referenced != "" && sharedDirectoryContainsWithIdentity(path, referenced, identity)
+	}
+	rows, e := a.Store.DB.QueryContext(ctx, `SELECT kind,payload FROM records WHERE kind IN ('asset','import_plan','managed_file')`)
 	if e != nil {
 		return e
 	}
 	defer rows.Close()
+	assets := []Asset{}
+	states := map[string]string{}
+	managed := []managedFile{}
 	for rows.Next() {
+		var kind string
 		var raw []byte
-		if e = rows.Scan(&raw); e != nil {
+		if e = rows.Scan(&kind, &raw); e != nil {
 			return e
 		}
-		var asset Asset
-		var plan ImportPlan
-		_ = json.Unmarshal(raw, &asset)
-		_ = json.Unmarshal(raw, &plan)
-		if asset.Path != "" && (within(path, asset.Path) || within(path, asset.SourcePath)) {
-			return bad("FILE_IN_USE", "文件被媒体资产引用，不能在文件管理中变更")
-		}
-		if plan.State == "queued" || plan.State == "running" {
-			for _, f := range plan.Files {
-				if within(path, f.Source) || within(path, f.Target) {
-					return bad("FILE_IN_USE", "文件正在整理任务中使用")
+		switch kind {
+		case "asset":
+			var asset Asset
+			if e = json.Unmarshal(raw, &asset); e != nil {
+				return e
+			}
+			states[asset.ID] = asset.State
+			if asset.State == "removed" || asset.State == "superseded" {
+				continue
+			}
+			assets = append(assets, asset)
+			if asset.Path != "" && (contains(asset.Path) || contains(asset.SourcePath)) {
+				return bad("FILE_IN_USE", "文件被有效整理记录引用，请通过整理历史操作")
+			}
+		case "managed_file":
+			var file managedFile
+			if e = json.Unmarshal(raw, &file); e != nil {
+				return e
+			}
+			if file.Path != "" && contains(file.Path) {
+				managed = append(managed, file)
+			}
+		case "import_plan":
+			var plan ImportPlan
+			if e = json.Unmarshal(raw, &plan); e != nil {
+				return e
+			}
+			if plan.State == "queued" || plan.State == "running" {
+				for _, f := range plan.Files {
+					if contains(f.Source) || contains(f.Target) {
+						return bad("FILE_IN_USE", "文件正在整理任务中使用")
+					}
 				}
 			}
 		}
 	}
-	return rows.Err()
+	if e = rows.Err(); e != nil {
+		return e
+	}
+	for _, file := range managed {
+		if file.AssetID != "" {
+			if states[file.AssetID] != "removed" && states[file.AssetID] != "superseded" {
+				return bad("FILE_IN_USE", "文件属于自管视频或旁车，请通过整理历史操作")
+			}
+			continue
+		}
+		// Show NFOs and season/show images are shared by episodes rather than
+		// owned by one asset. Keep them protected while their show is in use.
+		for _, asset := range assets {
+			if asset.RootID == file.RootID && mediaKey(asset.Media) == file.MediaKey && within(filepath.Dir(file.Path), asset.Path) {
+				return bad("FILE_IN_USE", "文件属于仍在使用的影视元数据，请通过整理历史操作")
+			}
+		}
+	}
+	return nil
 }
 func browserManifest(ctx context.Context, path string) ([]browserStamp, error) {
 	result := []browserStamp{}

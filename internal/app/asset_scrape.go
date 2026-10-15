@@ -117,7 +117,7 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	if err := a.Store.Get(ctx, "asset", assetID, &asset); err != nil {
 		return err
 	}
-	if asset.State == "removed" || asset.State == "missing_confirmed" {
+	if asset.State == "removed" || asset.State == "missing_confirmed" || asset.State == "superseded" {
 		return bad("REVIEW_ASSET", "资产已移除或确认缺失，不能刮削")
 	}
 	root, err := a.importRoot(asset.RootID)
@@ -160,12 +160,15 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	var episode *catalog.Episode
 	var season catalog.Season
 	if identity.MediaType == "tv" {
-		if len(asset.Episodes) != 1 || asset.Season < 1 {
-			return bad("REVIEW_NFO", "多集视频或特别篇需要人工处理")
+		if len(asset.Episodes) != 1 || asset.Season < 0 {
+			return bad("REVIEW_NFO", "需要已确认的单个标准季集")
 		}
 		season, err = a.season(ctx, identity.ID, asset.Season)
 		if err != nil {
 			return err
+		}
+		if asset.Season == 0 && (season.ID <= 0 || season.SeriesID != identity.ID || season.SeasonNumber != 0) {
+			return bad("REVIEW_NFO", "未取得当前剧集的 TMDB 第0季信息")
 		}
 		for _, candidate := range season.Episodes {
 			if candidate.EpisodeNumber == asset.Episodes[0] && candidate.SeasonNumber == asset.Season {

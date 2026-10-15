@@ -1,430 +1,786 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { api, bytes, date, errorText, label, toast } from '../api';
-const emit = defineEmits<{ organize: [paths: string[]]; job: [id: string] }>();
-const query = ref(''),
-  status = ref(''),
-  page = ref(1),
-  pageSize = ref(50),
-  result = ref<any>(null),
+import ReorganizeDialog from './ReorganizeDialog.vue';
+import {
+  historyGroups,
+  historyTitle,
+  historyMediaType,
+  historyPageButtons,
+  historyPageSizes,
+  historyQuery,
+  historyViewHash,
+  historyViewState,
+  sortHistory,
+  transferQueueState,
+  groupTransferQueue,
+  type HistoryRow,
+  type HistorySort,
+} from '../features/transfer-history';
+
+// Legacy page events remain compatible; reorganization now opens in place.
+defineEmits<{ organize: [paths: string[]]; job: [id: string] }>();
+const initialState = historyViewState(location.hash);
+const query = ref(initialState.search),
+  page = ref(initialState.page),
+  pageSize = ref(initialState.pageSize),
+  grouped = ref(initialState.grouped),
+  result = ref<{ items: HistoryRow[]; total: number } | null>(null),
   loading = ref(false),
   error = ref(''),
   selected = ref<string[]>([]),
-  detail = ref<any>(null),
-  jobDetail = ref<any>(null);
-const deleteItems = ref<any[]>([]),
-  deleteSource = ref(false),
-  deleteTarget = ref(false),
-  deleting = ref(false);
-const pages = computed(() => Math.max(1, Math.ceil((result.value?.total || 0) / pageSize.value)));
-const items = computed(() => result.value?.items || []);
-const selectedItems = computed(() =>
-  items.value.filter((item: any) => selected.value.includes(item.id)),
-);
-const allSelected = computed(
-  () => items.value.length > 0 && selected.value.length === items.value.length,
-);
+  knownRows = ref(new Map<string, HistoryRow>()),
+  expandedGroups = ref<Set<string>>(new Set()),
+  sortKey = ref<HistorySort | ''>(''),
+  sortDescending = ref(false),
+  openMenu = ref(''),
+  menuPosition = ref({ top: '0px', left: '0px' }),
+  composing = ref(false),
+  reorganizeItems = ref<HistoryRow[]>([]),
+  deleteItems = ref<HistoryRow[]>([]),
+  deleting = ref(false),
+  deleteProgress = ref({ done: 0, total: 0, title: '' }),
+  queueOpen = ref(false),
+  queueLoading = ref(false),
+  queueError = ref(''),
+  queueCancelling = ref(''),
+  queueGroups = ref<any[]>([]),
+  activeQueue = ref('');
+const items = computed(() => result.value?.items || []),
+  total = computed(() => result.value?.total || 0),
+  pages = computed(() => Math.max(1, Math.ceil(total.value / pageSize.value))),
+  pageButtons = computed(() => historyPageButtons(page.value, pages.value)),
+  sortedItems = computed(() =>
+    sortKey.value ? sortHistory(items.value, sortKey.value, sortDescending.value) : items.value,
+  ),
+  groups = computed(() =>
+    grouped.value ? historyGroups(sortedItems.value) : [{ title: '', items: sortedItems.value }],
+  ),
+  selectedItems = computed(() =>
+    selected.value
+      .map((id) => knownRows.value.get(id))
+      .filter((item): item is HistoryRow => !!item),
+  ),
+  allSelected = computed(
+    () => items.value.length > 0 && items.value.every((item) => selected.value.includes(item.id)),
+  ),
+  hints = computed(() => [
+    '失败',
+    '成功',
+    ...new Set(items.value.map(historyTitle).filter(Boolean)),
+  ]),
+  first = computed(() => (page.value - 1) * pageSize.value + 1),
+  last = computed(() => Math.min(page.value * pageSize.value, total.value));
+const queueFiles = computed(() => queueGroups.value.flatMap((group) => group.files || [])),
+  completedQueue = computed(
+    () => queueFiles.value.filter((file) => isQueueComplete(file.status)).length,
+  ),
+  activeQueueGroup = computed(() =>
+    queueGroups.value.find((group) => group.id === activeQueue.value),
+  );
+let generation = 0,
+  timer: number,
+  searchTimer: number;
+function isQueueComplete(status: string) {
+  return ['success', 'imported', 'already_imported', 'completed', 'succeeded'].includes(status);
+}
+function queueStatusLabel(file: any) {
+  const labels: Record<string, string> = {
+    waiting: '等待中',
+    running: '正在整理',
+    completed: '完成',
+    failed: '失败',
+    cancelled: '已取消',
+    unknown: '未知',
+  };
+  return labels[transferQueueState(file)];
+}
+function viewState() {
+  return {
+    search: query.value,
+    page: page.value,
+    pageSize: pageSize.value,
+    grouped: grouped.value,
+  };
+}
+function syncURL() {
+  const hash = historyViewHash(viewState());
+  if (location.hash !== hash) history.pushState(null, '', hash);
+}
 function selectAll(checked: boolean) {
-  selected.value = checked ? items.value.map((item: any) => item.id) : [];
+  selectGroup(items.value, checked);
 }
-function reorganize(rows: any[]) {
-  const paths = [
-    ...new Set<string>(rows.filter((row) => row.can_recognize).map((row) => row.source)),
-  ];
-  if (paths.length) emit('organize', paths);
+function selectedInGroup(rows: HistoryRow[]) {
+  return rows.filter((row) => selected.value.includes(row.id)).length;
 }
-function openDelete(rows: any[]) {
-  deleteItems.value = rows;
-  deleteSource.value = false;
-  deleteTarget.value = false;
+function selectGroup(rows: HistoryRow[], checked: boolean) {
+  const ids = new Set(rows.map((row) => row.id));
+  selected.value = checked
+    ? [...new Set([...selected.value, ...ids])]
+    : selected.value.filter((id) => !ids.has(id));
 }
-async function remove() {
-  deleting.value = true;
-  error.value = '';
-  let count = 0;
-  let failure = '';
-  try {
-    for (const item of [...deleteItems.value]) {
-      await api(
-        '/history/transfers/' + encodeURIComponent(item.id),
-        {
-          confirm: true,
-          delete_source: deleteSource.value,
-          delete_target: deleteTarget.value,
-        },
-        'DELETE',
-      );
-      deleteItems.value = deleteItems.value.filter((row) => row.id !== item.id);
-      selected.value = selected.value.filter((id) => id !== item.id);
-      count++;
-    }
-    detail.value = null;
-  } catch (e) {
-    failure = errorText(e);
-    error.value = failure;
-  } finally {
-    deleting.value = false;
-    if (count) {
-      toast('已删除 ' + count + ' 条整理历史');
-      await load();
-    }
-    if (failure) error.value = failure;
+function toggleGroup(title: string) {
+  const next = new Set(expandedGroups.value);
+  next.has(title) ? next.delete(title) : next.add(title);
+  expandedGroups.value = next;
+}
+function toggleMenu(item: HistoryRow, event: MouseEvent) {
+  if (openMenu.value === item.id) {
+    openMenu.value = '';
+    return;
+  }
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+  menuPosition.value = {
+    top: Math.min(rect.bottom + 3, window.innerHeight - 105) + 'px',
+    left: Math.max(8, rect.right - 155) + 'px',
+  };
+  openMenu.value = item.id;
+}
+function sort(key: HistorySort) {
+  if (sortKey.value === key) sortDescending.value = !sortDescending.value;
+  else {
+    sortKey.value = key;
+    sortDescending.value = false;
   }
 }
-let generation = 0,
-  timer: number;
-async function load(reset = false, silent = false) {
-  if (reset) page.value = 1;
+function sortIndicator(key: HistorySort) {
+  return sortKey.value === key ? (sortDescending.value ? ' ↓' : ' ↑') : '';
+}
+function reorganize(rows: HistoryRow[]) {
+  openMenu.value = '';
+  reorganizeItems.value = rows;
+}
+async function reorganized() {
+  reorganizeItems.value = [];
+  selected.value = [];
+  await load();
+}
+function openDelete(rows: HistoryRow[]) {
+  openMenu.value = '';
+  deleteItems.value = [...rows];
+}
+async function remove(deleteSource: boolean, deleteTarget: boolean) {
+  const deletingItems = [...deleteItems.value];
+  deleteItems.value = [];
+  deleting.value = true;
+  deleteProgress.value = { done: 0, total: deletingItems.length, title: '' };
+  error.value = '';
+  const failures: string[] = [];
+  for (const item of deletingItems) {
+    deleteProgress.value.title = historyTitle(item);
+    try {
+      await api(
+        '/history/transfers/' + encodeURIComponent(item.id),
+        { confirm: true, delete_source: deleteSource, delete_target: deleteTarget },
+        'DELETE',
+      );
+      selected.value = selected.value.filter((id) => id !== item.id);
+    } catch (e) {
+      failures.push(historyTitle(item) + '：' + errorText(e));
+    } finally {
+      deleteProgress.value.done++;
+    }
+  }
+  deleting.value = false;
+  await load();
+  if (failures.length) error.value = failures.join('\n');
+  else toast('删除完成');
+}
+async function load(silent = false) {
   const run = ++generation;
   if (!silent) loading.value = true;
   error.value = '';
   try {
-    const next = await api(
-      '/history/transfers?' +
-        new URLSearchParams({
-          q: query.value,
-          status: status.value,
-          page: String(page.value),
-          page_size: String(pageSize.value),
-        }),
+    const next = await api<{ items: HistoryRow[]; total: number }>(
+      '/history/transfers?' + historyQuery(viewState()),
     );
     if (run !== generation) return;
     result.value = next;
-    selected.value = selected.value.filter((id) => next.items.some((item: any) => item.id === id));
+    for (const item of next.items) knownRows.value.set(item.id, item);
+    const lastPage = Math.max(1, Math.ceil(next.total / pageSize.value));
+    if (page.value > lastPage) {
+      page.value = lastPage;
+      syncURL();
+      await load(silent);
+    }
   } catch (e) {
     if (run === generation) error.value = errorText(e);
   } finally {
     if (run === generation) loading.value = false;
   }
 }
-function statusLabel(item: any) {
-  return item.status === 'success'
-    ? '成功'
-    : item.status === 'pending'
-      ? label(item.job_state)
-      : '失败';
+function search() {
+  clearTimeout(searchTimer);
+  if (composing.value) return;
+  searchTimer = window.setTimeout(() => {
+    page.value = 1;
+    syncURL();
+    void load();
+  }, 1000);
 }
-function numbers(item: any) {
+function searchNow() {
+  clearTimeout(searchTimer);
+  page.value = 1;
+  syncURL();
+  void load();
+}
+function changePage(next: number) {
+  page.value = Math.min(Math.max(1, next), pages.value);
+  syncURL();
+  void load();
+}
+function changePageSize() {
+  page.value = 1;
+  syncURL();
+  void load();
+}
+function toggleGrouped() {
+  grouped.value = !grouped.value;
+  syncURL();
+}
+function restoreURL() {
+  if (!location.hash.replace(/^#\/?/, '').startsWith('history')) return;
+  const state = historyViewState(location.hash);
+  query.value = state.search;
+  page.value = state.page;
+  pageSize.value = state.pageSize;
+  grouped.value = state.grouped;
+  void load();
+}
+function statusLabel(item: HistoryRow) {
+  return item.status === 'success' ? '成功' : item.status === 'pending' ? '整理中' : '失败';
+}
+function numbers(item: HistoryRow) {
   return item.media?.media_type === 'tv'
-    ? `S${String(item.season).padStart(2, '0')} ${item.episodes?.length ? item.episodes.map((ep: number) => 'E' + String(ep).padStart(2, '0')).join(' ') : ''}`
-    : '电影';
+    ? `S${String(item.season).padStart(2, '0')}${item.episodes?.map((ep) => 'E' + String(ep).padStart(2, '0')).join('') || ''}`
+    : '';
 }
-async function retry(item: any) {
-  if (
-    !window.confirm(`重试整理「${item.media.title}」的所选文件？系统会再次检查源文件和目标冲突。`)
-  )
-    return;
+async function loadQueue() {
+  queueLoading.value = true;
+  queueError.value = '';
   try {
-    const job = await api('/history/transfers/' + item.id + '/retry', { confirm: true });
-    toast('整理重试已加入队列');
-    detail.value = null;
-    await load();
-    await showJob(job.id);
+    const next = await api('/history/transfers/queue');
+    queueGroups.value = groupTransferQueue(next.groups || []);
+    if (!queueGroups.value.some((group) => group.id === activeQueue.value))
+      activeQueue.value = queueGroups.value[0]?.id || '';
   } catch (e) {
-    error.value = errorText(e);
+    queueError.value = errorText(e);
+  } finally {
+    queueLoading.value = false;
   }
 }
-async function showJob(id: string) {
+async function showQueue() {
+  queueOpen.value = true;
+  await loadQueue();
+}
+async function cancelQueueFile(file: any) {
+  queueCancelling.value = file.id;
+  queueError.value = '';
   try {
-    jobDetail.value = await api('/jobs/' + id);
+    await api('/history/transfers/queue/' + encodeURIComponent(file.id) + '/cancel', {});
+    await loadQueue();
+    await load(true);
   } catch (e) {
-    error.value = errorText(e);
+    queueError.value = errorText(e);
+  } finally {
+    queueCancelling.value = '';
   }
 }
-function recognize(item: any) {
-  reorganize([item]);
+function dismissMenu(event: MouseEvent) {
+  if (!(event.target as Element).closest('.th-row-menu')) openMenu.value = '';
+}
+function escape(event: KeyboardEvent) {
+  if (event.key !== 'Escape') return;
+  openMenu.value = '';
+  if (!deleting.value) deleteItems.value = [];
+  queueOpen.value = false;
 }
 onMounted(() => {
   void load();
+  window.addEventListener('hashchange', restoreURL);
+  document.addEventListener('click', dismissMenu);
+  document.addEventListener('keydown', escape);
   timer = window.setInterval(() => {
-    if (items.value.some((item: any) => item.status === 'pending') && !document.hidden)
-      void load(false, true);
-  }, 10000);
+    if (document.hidden) return;
+    if (queueOpen.value) void loadQueue();
+    if (items.value.some((item) => item.status === 'pending')) void load(true);
+  }, 3000);
 });
 onUnmounted(() => {
   generation++;
   clearInterval(timer);
+  clearTimeout(searchTimer);
+  window.removeEventListener('hashchange', restoreURL);
+  document.removeEventListener('click', dismissMenu);
+  document.removeEventListener('keydown', escape);
 });
 </script>
 
 <template>
-  <section class="transfer-history">
-    <div class="th-heading">
-      <div>
-        <span class="eyebrow">TRANSFER HISTORY</span>
-        <h1>整理历史</h1>
-        <p>按文件查看整理进度、结果和失败原因。</p>
+  <section class="transfer-history" aria-label="整理历史">
+    <p v-if="error" class="th-error th-notice" role="alert">{{ error }}</p>
+    <div class="th-card">
+      <div class="th-toolbar">
+        <form class="th-search" @submit.prevent="searchNow">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5" />
+            <path d="m16 16 5 5" />
+          </svg>
+          <input
+            v-model="query"
+            list="history-search-hints"
+            placeholder="搜索（支持 * ? 通配符）"
+            aria-label="搜索（支持 * ? 通配符）"
+            @input="search"
+            @compositionstart="composing = true"
+            @compositionend="
+              composing = false;
+              search();
+            "
+          />
+          <button
+            v-if="query"
+            type="button"
+            class="th-clear"
+            aria-label="清除搜索"
+            @click="
+              query = '';
+              searchNow();
+            "
+          >
+            ×
+          </button>
+          <datalist id="history-search-hints">
+            <option v-for="hint in hints" :key="hint" :value="hint" />
+          </datalist>
+        </form>
+        <button
+          class="th-group-toggle"
+          :aria-label="grouped ? '列表模式' : '分组模式'"
+          :title="grouped ? '列表模式' : '分组模式'"
+          :aria-pressed="grouped"
+          @click="toggleGrouped"
+        >
+          <svg v-if="grouped" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" />
+          </svg>
+          <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="7" rx="1" />
+            <path d="M7 14h14M7 19h14M3 14h1M3 19h1" />
+          </svg>
+        </button>
       </div>
-      <button :disabled="loading" @click="load()">刷新</button>
+      <div class="th-table-wrap" :aria-busy="loading">
+        <table>
+          <thead>
+            <tr>
+              <th class="th-selection">
+                <input
+                  type="checkbox"
+                  aria-label="选择本页全部整理历史"
+                  :checked="allSelected"
+                  :indeterminate="selectedInGroup(items) > 0 && !allSelected"
+                  @change="selectAll(($event.target as HTMLInputElement).checked)"
+                />
+              </th>
+              <th>
+                <button @click="sort('title')">
+                  {{ grouped ? '季集/类别' : '标题' }}{{ sortIndicator('title') }}
+                </button>
+              </th>
+              <th>
+                <button @click="sort('source')">路径{{ sortIndicator('source') }}</button>
+              </th>
+              <th>
+                <button @click="sort('mode')">转移方式{{ sortIndicator('mode') }}</button>
+              </th>
+              <th>
+                <button @click="sort('size')">大小{{ sortIndicator('size') }}</button>
+              </th>
+              <th>
+                <button @click="sort('updated_at')">时间{{ sortIndicator('updated_at') }}</button>
+              </th>
+              <th>
+                <button @click="sort('status')">状态{{ sortIndicator('status') }}</button>
+              </th>
+              <th class="th-menu-cell"><span class="sr-only">操作</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="group in groups" :key="group.title">
+              <tr v-if="grouped" class="th-group-row">
+                <td colspan="8">
+                  <div class="th-group-heading">
+                    <button
+                      class="th-expand"
+                      :aria-label="
+                        (expandedGroups.has(group.title) ? '收起 ' : '展开 ') + group.title
+                      "
+                      :aria-expanded="expandedGroups.has(group.title)"
+                      @click="toggleGroup(group.title)"
+                    >
+                      {{ expandedGroups.has(group.title) ? '⌄' : '›' }}
+                    </button>
+                    <input
+                      type="checkbox"
+                      :aria-label="'选择 ' + group.title + ' 全部记录'"
+                      :checked="selectedInGroup(group.items) === group.items.length"
+                      :indeterminate="
+                        selectedInGroup(group.items) > 0 &&
+                        selectedInGroup(group.items) < group.items.length
+                      "
+                      @change="
+                        selectGroup(group.items, ($event.target as HTMLInputElement).checked)
+                      "
+                    />
+                    <span>{{ group.title }}</span>
+                  </div>
+                </td>
+              </tr>
+              <template v-if="!grouped || expandedGroups.has(group.title)">
+                <tr
+                  v-for="item in group.items"
+                  :key="item.id"
+                  :class="{ 'th-selected': selected.includes(item.id) }"
+                >
+                  <td class="th-selection">
+                    <input
+                      v-model="selected"
+                      type="checkbox"
+                      :value="item.id"
+                      :aria-label="'选择 ' + historyTitle(item) + ' ' + numbers(item)"
+                    />
+                  </td>
+                  <td class="th-title-cell">
+                    <div class="th-title">
+                      <svg
+                        v-if="item.media.media_type === 'tv'"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="6" width="18" height="14" rx="2" />
+                        <path d="m8 2 4 4 4-4M7 23h10" />
+                      </svg>
+                      <svg
+                        v-else-if="item.media.media_type === 'movie'"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="1" />
+                        <path d="M7 3v18M17 3v18M3 8h4M3 16h4M17 8h4M17 16h4" />
+                      </svg>
+                      <svg v-else viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4M12 17h.01" />
+                      </svg>
+                      <span
+                        ><span v-if="!grouped">{{ historyTitle(item) }} </span>{{ numbers(item)
+                        }}<small>{{ historyMediaType(item) }}</small></span
+                      >
+                    </div>
+                  </td>
+                  <td class="th-path">
+                    <span><span class="th-storage">本地</span>{{ item.source }}</span
+                    ><span class="th-arrow"> ⇒ </span
+                    ><span v-if="item.target"
+                      ><span class="th-storage">本地</span>{{ item.target }}</span
+                    >
+                  </td>
+                  <td>
+                    <span class="th-mode">{{ label(item.mode) }}</span>
+                  </td>
+                  <td class="th-nowrap">{{ bytes(item.size) }}</td>
+                  <td class="th-date">{{ date(item.updated_at) }}</td>
+                  <td>
+                    <span
+                      class="th-status"
+                      :class="item.status"
+                      :title="item.error || statusLabel(item)"
+                      tabindex="0"
+                      >{{ statusLabel(item) }}</span
+                    >
+                  </td>
+                  <td class="th-menu-cell">
+                    <div class="th-row-menu">
+                      <button
+                        class="th-more"
+                        :aria-label="historyTitle(item) + ' 更多操作'"
+                        :aria-expanded="openMenu === item.id"
+                        aria-haspopup="menu"
+                        @click.stop="toggleMenu(item, $event)"
+                      >
+                        ⋮
+                      </button>
+                      <Teleport to="body"
+                        ><div
+                          v-if="openMenu === item.id"
+                          class="th-menu th-row-menu"
+                          role="menu"
+                          :style="menuPosition"
+                        >
+                          <button role="menuitem" @click="reorganize([item])">
+                            <span aria-hidden="true">↻</span>重新整理</button
+                          ><button class="danger" role="menuitem" @click="openDelete([item])">
+                            <span aria-hidden="true">⌫</span>删除
+                          </button>
+                        </div></Teleport
+                      >
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </template>
+            <tr v-if="!items.length">
+              <td colspan="8" class="th-empty">{{ loading ? '加载中…' : '没有数据' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="th-pagination">
+        <select v-model="pageSize" aria-label="每页条数" @change="changePageSize">
+          <option v-for="size in historyPageSizes" :key="size" :value="size">{{ size }}</option>
+        </select>
+        <span>{{ first }} - {{ last }} / {{ total }}</span>
+        <nav aria-label="整理历史分页">
+          <button aria-label="首页" :disabled="page <= 1 || loading" @click="changePage(1)">
+            «</button
+          ><button
+            aria-label="上一页"
+            :disabled="page <= 1 || loading"
+            @click="changePage(page - 1)"
+          >
+            ‹</button
+          ><button
+            v-for="number in pageButtons"
+            :key="number"
+            :aria-label="'第 ' + number + ' 页'"
+            :aria-current="number === page ? 'page' : undefined"
+            :disabled="loading"
+            :class="{ active: number === page }"
+            @click="changePage(number)"
+          >
+            {{ number }}</button
+          ><button
+            aria-label="下一页"
+            :disabled="page >= pages || loading"
+            @click="changePage(page + 1)"
+          >
+            ›</button
+          ><button
+            aria-label="末页"
+            :disabled="page >= pages || loading"
+            @click="changePage(pages)"
+          >
+            »
+          </button>
+        </nav>
+      </div>
     </div>
-    <p v-if="error" class="th-error" role="alert">{{ error }}</p>
-    <form class="th-filters" @submit.prevent="load(true)">
-      <input
-        v-model="query"
-        placeholder="搜索影视名称、源路径、目标路径"
-        aria-label="搜索整理历史"
-      /><select v-model="status" @change="load(true)" aria-label="整理状态">
-        <option value="">所有状态</option>
-        <option value="success">成功</option>
-        <option value="pending">进行中</option>
-        <option value="failed">失败</option></select
-      ><select v-model="pageSize" @change="load(true)" aria-label="每页记录数">
-        <option :value="25">25 条 / 页</option>
-        <option :value="50">50 条 / 页</option>
-        <option :value="100">100 条 / 页</option>
-        <option :value="200">200 条 / 页</option></select
-      ><button>搜索</button>
-    </form>
-    <div v-if="selected.length" class="th-actions th-batch">
-      <span>已选 {{ selected.length }} 条</span>
+    <div class="th-fab-stack">
       <button
-        :disabled="!selectedItems.some((item: any) => item.can_recognize)"
+        v-if="selected.length"
+        class="th-fab th-fab-delete"
+        aria-label="批量删除"
+        :title="'批量删除（已选 ' + selected.length + ' 条）'"
+        @click="openDelete(selectedItems)"
+      >
+        ⌫</button
+      ><button
+        v-if="selected.length"
+        class="th-fab th-fab-redo"
+        aria-label="批量重新整理"
+        :title="'批量重新整理（已选 ' + selected.length + ' 条）'"
         @click="reorganize(selectedItems)"
       >
-        重新整理
-      </button>
-      <button class="danger" @click="openDelete(selectedItems)">删除</button>
-    </div>
-    <div class="th-table-wrap" :aria-busy="loading">
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <input
-                type="checkbox"
-                aria-label="选择本页全部整理历史"
-                :checked="allSelected"
-                @change="selectAll(($event.target as HTMLInputElement).checked)"
-              />
-            </th>
-            <th>影视 / 季集</th>
-            <th>源文件 → 目标文件</th>
-            <th>方式 / 大小</th>
-            <th>时间</th>
-            <th>状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <td>
-              <input
-                type="checkbox"
-                v-model="selected"
-                :value="item.id"
-                :aria-label="'选择 ' + item.media.title"
-              />
-            </td>
-            <td>
-              <button class="th-title" @click="detail = item">
-                {{ item.media.title }} <small>{{ item.media.year || '' }}</small></button
-              ><small>{{ numbers(item) }}</small>
-            </td>
-            <td class="th-path">
-              <span>{{ item.source }}</span
-              ><span class="th-target">→ {{ item.target }}</span>
-            </td>
-            <td>
-              {{ label(item.mode) }}<small>{{ bytes(item.size) }}</small>
-            </td>
-            <td>{{ date(item.updated_at) }}</td>
-            <td>
-              <span class="th-status" :class="item.status">{{ statusLabel(item) }}</span
-              ><small v-if="item.error" class="th-error">{{ item.error }}</small>
-            </td>
-            <td>
-              <div class="th-actions">
-                <button @click="detail = item">详情</button
-                ><button v-if="item.can_retry" @click="retry(item)">重试</button
-                ><button v-if="item.can_recognize" @click="recognize(item)">重新整理</button
-                ><button class="danger" @click="openDelete([item])">删除</button
-                ><button v-if="item.job_id" @click="showJob(item.job_id)">任务</button>
-              </div>
-            </td>
-          </tr>
-          <tr v-if="!items.length">
-            <td colspan="7" class="th-empty">
-              {{
-                loading
-                  ? '正在加载整理记录…'
-                  : '没有匹配的整理历史。先在文件管理选择文件进行整理，提交后的记录会显示在这里。'
-              }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="th-pagination">
-      <span>共 {{ result?.total || 0 }} 条 · 第 {{ page }} / {{ pages }} 页</span
+        ↻</button
       ><button
-        :disabled="page <= 1 || loading"
-        @click="
-          page--;
-          load();
-        "
+        class="th-fab th-fab-queue"
+        aria-label="整理队列"
+        title="整理队列"
+        @click="showQueue"
       >
-        上一页</button
-      ><button
-        :disabled="page >= pages || loading"
-        @click="
-          page++;
-          load();
-        "
-      >
-        下一页
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 3h10M7 21h10M8 3v5l8 8v5M16 3v5l-8 8v5M5 12H2" />
+        </svg>
       </button>
     </div>
-    <div v-if="detail" class="th-overlay" @click.self="detail = null">
-      <section role="dialog" aria-modal="true" aria-label="整理记录详情">
-        <header>
-          <h2>{{ detail.media.title }} · {{ numbers(detail) }}</h2>
-          <button @click="detail = null">✕</button>
-        </header>
-        <dl>
-          <dt>状态</dt>
-          <dd>{{ statusLabel(detail) }} · {{ label(detail.file_status) }}</dd>
-          <dt>源文件</dt>
-          <dd>{{ detail.source }}</dd>
-          <dt>目标文件</dt>
-          <dd>{{ detail.target }}</dd>
-          <dt>整理方式 / 大小</dt>
-          <dd>{{ label(detail.mode) }} / {{ bytes(detail.size) }}</dd>
-          <dt>开始 / 最近更新</dt>
-          <dd>{{ date(detail.created_at) }} / {{ date(detail.updated_at) }}</dd>
-          <dt v-if="detail.error">失败原因</dt>
-          <dd v-if="detail.error" class="th-error">{{ detail.error }}</dd>
-          <dt>任务链</dt>
-          <dd>{{ detail.workflow_id }}</dd>
-        </dl>
-        <footer>
-          <button v-if="detail.job_id" @click="showJob(detail.job_id)">查看任务日志</button
-          ><button v-if="detail.can_retry" @click="retry(detail)">重试整理</button
-          ><button v-if="detail.can_recognize" @click="recognize(detail)">重新整理</button
-          ><button class="danger" @click="openDelete([detail])">删除</button
-          ><button @click="detail = null">关闭</button>
-        </footer>
-      </section>
-    </div>
-    <div v-if="jobDetail" class="th-overlay th-job" @click.self="jobDetail = null">
-      <section role="dialog" aria-modal="true" aria-label="整理任务日志">
-        <header>
-          <h2>整理任务</h2>
-          <button @click="jobDetail = null">✕</button>
-        </header>
-        <div class="th-job-body">
-          <p>{{ label(jobDetail.job.state) }} · {{ jobDetail.job.id }}</p>
-          <p v-if="jobDetail.job.error_message" class="th-error">
-            {{ jobDetail.job.error_message }}
-          </p>
-          <ol>
-            <li v-for="event in jobDetail.events" :key="event.seq">
-              <small>{{ date(event.time) }} · {{ event.module }} · {{ event.level }}</small
-              >{{ event.message }}
-            </li>
-          </ol>
-        </div>
-        <footer>
-          <button @click="emit('job', jobDetail.job.id)">前往任务中心</button
-          ><button @click="jobDetail = null">关闭</button>
-        </footer>
-      </section>
-    </div>
-    <div v-if="deleteItems.length" class="th-overlay" @click.self="!deleting && (deleteItems = [])">
-      <section role="dialog" aria-modal="true" aria-label="删除整理历史">
-        <header>
-          <h2>删除整理历史</h2>
-          <button :disabled="deleting" @click="deleteItems = []">✕</button>
-        </header>
-        <p>删除所选 {{ deleteItems.length }} 条记录？默认只删除历史记录。</p>
-        <label class="th-delete-option"
-          ><input
-            v-model="deleteSource"
-            type="checkbox"
-            :disabled="deleting"
-          />同时删除源文件</label
-        >
-        <label class="th-delete-option"
-          ><input
-            v-model="deleteTarget"
-            type="checkbox"
-            :disabled="deleting"
-          />同时删除目标文件及本程序刮削的关联文件</label
-        >
-        <p v-if="deleteSource || deleteTarget" class="th-error">
-          勾选的文件会实际删除。正在下载或做种的源文件受到保护。
-        </p>
-        <p v-for="item in deleteItems" :key="item.id" class="th-path">
-          {{ item.media.title }} · {{ item.source }}
-        </p>
-        <p v-if="error" class="th-error" role="alert">{{ error }}</p>
-        <footer>
-          <button :disabled="deleting" @click="deleteItems = []">取消</button>
-          <button class="danger" :disabled="deleting" @click="remove">
-            {{ deleting ? '删除中…' : '删除' }}
+    <ReorganizeDialog
+      v-if="reorganizeItems.length"
+      :paths="reorganizeItems.map((item) => item.source)"
+      :history-ids="reorganizeItems.map((item) => item.id)"
+      @close="reorganizeItems = []"
+      @done="reorganized"
+    />
+    <div
+      v-if="deleteItems.length"
+      class="th-overlay th-delete-overlay"
+      @click.self="deleteItems = []"
+    >
+      <section class="th-delete-sheet" role="dialog" aria-modal="true" aria-label="删除整理记录">
+        <button class="th-close" aria-label="关闭删除窗口" @click="deleteItems = []">×</button>
+        <h2>
+          {{
+            deleteItems.length === 1
+              ? '确认删除 ' + historyTitle(deleteItems[0]!) + ' ' + numbers(deleteItems[0]!) + ' ?'
+              : '确认删除 ' + deleteItems.length + ' 条记录 ?'
+          }}
+        </h2>
+        <div class="th-delete-actions">
+          <button class="th-delete-record" @click="remove(false, false)">仅删除转移记录</button
+          ><button class="th-delete-source" @click="remove(true, false)">
+            删除转移记录和源文件</button
+          ><button class="th-delete-dest" @click="remove(false, true)">
+            删除转移记录和媒体库文件</button
+          ><button class="th-delete-all" @click="remove(true, true)">
+            删除转移记录、源文件和媒体库文件
           </button>
-        </footer>
+        </div>
+      </section>
+    </div>
+    <div v-if="deleting" class="th-overlay">
+      <section class="th-progress" role="dialog" aria-modal="true" aria-label="正在删除整理记录">
+        <h2>正在删除 {{ deleteProgress.title }} …</h2>
+        <progress :value="deleteProgress.done" :max="deleteProgress.total" />
+        <p>{{ deleteProgress.done }} / {{ deleteProgress.total }}</p>
+      </section>
+    </div>
+    <div v-if="queueOpen" class="th-overlay" @click.self="queueOpen = false">
+      <section class="th-queue-dialog" role="dialog" aria-modal="true" aria-label="整理队列">
+        <header>
+          <h2>整理队列</h2>
+          <button class="th-close" aria-label="关闭整理队列" @click="queueOpen = false">×</button>
+        </header>
+        <p v-if="queueError" class="th-error th-notice" role="alert">{{ queueError }}</p>
+        <div v-if="queueGroups.length" class="th-queue-body">
+          <progress :value="completedQueue" :max="queueFiles.length || 1" />
+          <p class="th-queue-count">{{ completedQueue }} / {{ queueFiles.length }}</p>
+          <div class="th-queue-tabs" role="tablist" aria-label="整理影视">
+            <button
+              v-for="group in queueGroups"
+              :key="group.id"
+              :class="{ active: activeQueue === group.id }"
+              role="tab"
+              :aria-selected="activeQueue === group.id"
+              @click="activeQueue = group.id"
+            >
+              {{ group.title || group.media?.title }}
+              <small
+                >{{
+                  (group.files || []).filter((file: any) => isQueueComplete(file.status)).length
+                }}
+                / {{ group.files?.length || 0 }}</small
+              >
+            </button>
+          </div>
+          <div v-for="file in activeQueueGroup?.files || []" :key="file.id" class="th-queue-file">
+            <div class="th-queue-file-name" :title="file.source">
+              {{ file.source?.split('/').pop() || file.target?.split('/').pop() }}
+              <small
+                >文件大小：{{ bytes(file.size || 0) }}
+                <span
+                  class="th-status"
+                  :class="transferQueueState(file)"
+                  :title="file.error || activeQueueGroup?.error || ''"
+                  >{{ queueStatusLabel(file) }}</span
+                ></small
+              >
+            </div>
+            <button
+              class="th-queue-cancel"
+              :aria-label="'取消整理 ' + (file.source?.split('/').pop() || '')"
+              title="取消整理"
+              :disabled="!file.can_cancel || !!queueCancelling || isQueueComplete(file.status)"
+              @click="cancelQueueFile(file)"
+            >
+              ⊘
+            </button>
+            <div
+              v-if="typeof file.progress === 'number' && file.progress >= 0 && file.progress <= 100"
+              class="th-file-progress"
+            >
+              <progress :value="file.progress" max="100" /><small
+                >{{ file.progress.toFixed(1) }}%</small
+              >
+            </div>
+            <small
+              v-if="
+                file.error || (transferQueueState(file) === 'failed' && activeQueueGroup?.error)
+              "
+              class="th-error"
+              >{{ file.error || activeQueueGroup?.error }}</small
+            >
+          </div>
+        </div>
+        <p v-else class="th-empty">{{ queueLoading ? '加载中…' : '没有正在整理的任务' }}</p>
       </section>
     </div>
   </section>
 </template>
 
 <style scoped>
-.th-batch {
-  margin: 12px 0;
-  align-items: center;
-}
-.th-delete-option {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin: 14px 0;
-}
 .transfer-history {
-  max-width: 1500px;
+  width: 100%;
+  max-width: 1600px;
   margin: auto;
 }
-.th-heading {
+.th-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel, #fff);
+  box-shadow: 0 2px 10px #1b264b05;
+}
+.th-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  gap: 20px;
+  padding: 20px;
 }
-.th-heading h1 {
-  font-size: 28px;
-  margin: 5px 0;
-}
-.th-heading p {
-  color: var(--muted, #9ba8ba);
-}
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--muted, #9ba8ba);
-}
-.th-filters {
+.th-search {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding-bottom: 18px;
+  width: 400px;
+  max-width: calc(100% - 65px);
+  border-radius: 24px;
+  padding: 0 12px;
+  background: var(--bg, #f5f6f8);
 }
-.th-filters input {
-  flex: 1 1 280px;
-  width: auto;
-  min-width: 230px;
+.th-search input {
+  border: 0;
+  background: none;
+  box-shadow: none;
+  min-width: 0;
+  padding: 10px 8px;
 }
-.th-filters select {
-  width: auto;
-  flex: 0 0 145px;
-}
-.th-filters > button {
+.th-search svg,
+.th-group-toggle svg,
+.th-title svg,
+.th-fab svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
   flex-shrink: 0;
+}
+.th-search svg {
+  color: var(--muted);
+}
+.th-clear {
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  padding: 0 4px;
+}
+.th-group-toggle {
+  display: flex;
+  padding: 9px 13px;
+  border-radius: 8px;
 }
 .th-table-wrap {
   overflow: auto;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #fff;
+  height: calc(100dvh - 285px);
+  min-height: 300px;
 }
 table {
   border-collapse: collapse;
@@ -432,95 +788,267 @@ table {
 }
 th,
 td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
   text-align: left;
-  padding: 14px 10px;
-  border-bottom: 1px solid var(--line, #334154);
-  vertical-align: top;
+  vertical-align: middle;
 }
 th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel, #fff);
+  color: var(--muted);
   font-size: 12px;
-  color: var(--muted, #9ba8ba);
   white-space: nowrap;
+}
+th button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
 }
 td {
-  font-size: 13px;
+  font-size: 12px;
 }
-td small {
-  display: block;
-  color: var(--muted, #9ba8ba);
-  margin-top: 5px;
+tbody tr:hover {
+  background: #6d63e806;
+}
+.th-selected {
+  background: #6d63e80c;
+}
+.th-selection {
+  width: 34px;
+  padding-left: 16px;
+}
+input[type='checkbox'] {
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+}
+.th-title-cell {
+  min-width: 155px;
 }
 .th-title {
-  text-align: left;
-  border: 0;
-  padding: 0;
-  background: none;
-  font-weight: 600;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  line-height: 1.6;
+}
+.th-title svg {
+  color: var(--muted);
+  width: 25px;
+  height: 25px;
 }
 .th-title small {
-  display: inline;
+  display: block;
+  color: var(--muted);
 }
 .th-path {
-  max-width: 460px;
+  min-width: 240px;
+  max-width: 480px;
   overflow-wrap: anywhere;
-  font-size: 12px;
+  line-height: 1.8;
 }
-.th-path span {
+.th-path > span {
   display: block;
 }
-.th-target {
-  margin-top: 5px;
-  color: var(--muted, #9ba8ba);
+.th-storage {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 0 6px;
+  background: #787d8b13;
+  color: var(--muted);
+  margin-right: 6px;
+  font-size: 10px;
 }
-.th-actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  min-width: 125px;
+.th-arrow {
+  color: var(--muted);
+  line-height: 1;
 }
-.th-actions button {
-  font-size: 12px;
-  padding: 5px 8px;
+.th-mode {
+  border: 1px solid #7367f0;
+  border-radius: 6px;
+  color: #7367f0;
+  padding: 3px 7px;
+  white-space: nowrap;
+}
+.th-nowrap {
+  white-space: nowrap;
+}
+.th-date {
+  min-width: 90px;
+  max-width: 140px;
+  line-height: 1.6;
+  color: var(--muted);
 }
 .th-status {
-  display: inline-flex;
-  white-space: nowrap;
+  display: inline-block;
   padding: 3px 8px;
   border-radius: 20px;
-  font-size: 12px;
+  white-space: nowrap;
+  color: #48515f;
+  background: #79839117;
+  font-size: 11px;
 }
-.th-status.success {
-  color: #23754f;
-  background: #eaf7ef;
+.th-status.success,
+.th-status.imported,
+.th-status.already_imported,
+.th-status.completed,
+.th-status.succeeded {
+  color: #1f9254;
+  background: #28c76f19;
 }
-.th-status.pending {
-  color: #2b60aa;
-  background: #edf3fd;
+.th-status.pending,
+.th-status.queued,
+.th-status.running {
+  color: #6554d5;
+  background: #7367f01a;
 }
 .th-status.failed {
-  color: #b42336;
-  background: #fff0f1;
+  color: #d9444f;
+  background: #ea54551a;
 }
-.th-error {
-  color: #b42336 !important;
-  white-space: pre-wrap;
+.th-menu-cell {
+  width: 35px;
+  padding: 7px;
+}
+.th-row-menu {
+  position: relative;
+}
+.th-more {
+  border: 0;
+  background: transparent;
+  padding: 2px 10px;
+  font-size: 25px;
+  color: var(--muted);
+}
+.th-menu {
+  position: fixed;
+  z-index: 60;
+  width: 155px;
+  border-radius: 7px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  background: var(--panel, #fff);
+  box-shadow: 0 5px 18px #26324822;
+}
+.th-menu button {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 9px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  border-radius: 4px;
+}
+.th-menu button:hover {
+  background: #7367f00b;
+}
+.th-menu button span {
+  font-size: 17px;
+  width: 18px;
+  line-height: 1;
+}
+.th-group-row td {
+  padding: 6px 10px;
+  background: #787d8b08;
+}
+.th-group-heading {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.th-expand {
+  border: 0;
+  background: none;
+  font-size: 24px;
+  padding: 0 4px;
+  width: 26px;
 }
 .th-empty {
   text-align: center;
-  padding: 60px;
-  color: var(--muted, #9ba8ba);
+  padding: 60px 20px;
+  color: var(--muted);
 }
 .th-pagination {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 16px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
 }
-.th-pagination span {
+.th-pagination select {
+  width: 83px;
+  flex: 0 0 83px;
+  padding: 7px 9px;
+}
+.th-pagination > span {
   margin-right: auto;
-  color: var(--muted, #9ba8ba);
-  font-size: 13px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+.th-pagination nav {
+  display: flex;
+  gap: 4px;
+}
+.th-pagination nav button {
+  min-width: 32px;
+  padding: 5px 8px;
+  border: 0;
+  background: transparent;
+}
+.th-pagination nav .active {
+  background: #7367f01a;
+  color: #7367f0;
+}
+.th-error {
+  color: #d9444f;
+  white-space: pre-wrap;
+}
+.th-notice {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+}
+.th-fab-stack {
+  position: fixed;
+  right: 28px;
+  bottom: 70px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.th-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 14px;
+  width: 43px;
+  height: 43px;
+  box-shadow: 0 4px 10px #171b3a1c;
+  font-size: 26px;
+}
+.th-fab-delete {
+  background: #fff0db;
+  color: #c47b14;
+}
+.th-fab-redo {
+  background: #e4f6ec;
+  color: #21935a;
+}
+.th-fab-queue {
+  background: #7367f0;
+  color: white;
+  width: 50px;
+  height: 50px;
 }
 .th-overlay {
   position: fixed;
@@ -533,85 +1061,186 @@ td small {
   padding: 20px;
 }
 .th-overlay > section {
-  background: var(--panel, #192331);
-  border: 1px solid var(--line);
+  position: relative;
+  background: var(--panel, #fff);
   border-radius: 12px;
+  border: 1px solid var(--line);
   width: 800px;
   max-width: 100%;
   max-height: 90dvh;
   overflow: auto;
 }
-.th-overlay header,
-.th-overlay footer {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 22px;
-  border-bottom: 1px solid var(--line);
-}
 .th-overlay h2 {
   font-size: 19px;
+  font-weight: 500;
   margin: 0;
 }
-.th-overlay footer {
-  justify-content: flex-end;
-  border-top: 1px solid var(--line);
-  border-bottom: 0;
+.th-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  border: 0;
+  background: #787d8b0f;
+  padding: 0 8px;
+  font-size: 24px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.th-delete-overlay {
+  align-items: flex-end;
+  padding-bottom: 0;
+}
+.th-overlay .th-delete-sheet {
+  width: 1300px;
+  padding: 25px 25px 20px;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+}
+.th-delete-sheet h2 {
+  padding: 5px 25px 15px;
+}
+.th-delete-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.th-delete-actions button {
+  border: 0;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 13px;
+}
+.th-delete-record {
+  background: #7367f0;
+}
+.th-delete-source {
+  background: #d99a32;
+}
+.th-delete-dest {
+  background: #00a7c6;
+}
+.th-delete-all {
+  background: #ea5455;
+}
+.th-overlay .th-progress {
+  width: 480px;
+  padding: 30px;
+  text-align: center;
+}
+.th-progress h2 {
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+progress {
+  width: 100%;
+  height: 6px;
+  border: 0;
+  border-radius: 6px;
+  accent-color: #7367f0;
+}
+.th-progress p,
+.th-queue-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+.th-queue-dialog header {
+  padding: 23px;
+  border-bottom: 1px solid var(--line);
+}
+.th-queue-body {
+  padding: 18px 22px 25px;
+}
+.th-queue-count {
+  text-align: right;
+  margin: 4px 0 12px;
+}
+.th-queue-tabs {
+  display: flex;
+  overflow: auto;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+.th-queue-tabs button {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  white-space: nowrap;
+  padding: 10px 15px;
+}
+.th-queue-tabs .active {
+  border-bottom: 2px solid #7367f0;
+  color: #7367f0;
+}
+.th-queue-tabs small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.th-queue-file {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
   flex-wrap: wrap;
 }
-.th-overlay dl {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 15px;
-  padding: 20px 24px;
-  margin: 0;
-  font-size: 13px;
-}
-.th-overlay dt {
-  color: var(--muted, #9ba8ba);
-}
-.th-overlay dd {
-  margin: 0;
+.th-queue-file-name {
+  min-width: 0;
   overflow-wrap: anywhere;
-}
-.th-job {
-  z-index: 110;
-}
-.th-job-body {
-  padding: 15px 22px;
-}
-.th-job-body li {
-  padding: 8px 0;
+  flex: 1;
   font-size: 13px;
 }
-.th-job-body li small {
-  display: block;
-  color: var(--muted, #9ba8ba);
-  font-size: 11px;
-  margin-bottom: 4px;
+.th-queue-file small {
+  flex-basis: 100%;
 }
-@media (max-width: 700px) {
-  .th-filters input,
-  .th-filters select,
-  .th-filters > button {
-    width: 100%;
-    flex-basis: 100%;
-    min-width: 0;
+.th-queue-file-name small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.th-queue-file-name .th-status {
+  margin-left: 8px;
+}
+.th-queue-cancel {
+  border: 0;
+  background: none;
+  font-size: 22px;
+  padding: 0 7px;
+}
+.th-file-progress {
+  flex-basis: 100%;
+  text-align: center;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+@media (max-width: 900px) {
+  .th-pagination nav button:not(.active):not([aria-label='上一页']):not([aria-label='下一页']) {
+    display: none;
   }
-  .th-overlay {
-    padding: 6px;
+  .th-table-wrap {
+    height: calc(100dvh - 270px);
   }
-  .th-heading p {
-    font-size: 12px;
+  .th-delete-actions {
+    flex-direction: column;
   }
-  .th-overlay dl {
-    grid-template-columns: 80px 1fr;
-    padding: 15px;
-    gap: 12px;
+  .th-delete-actions button {
+    margin: 0;
   }
-  .th-overlay > section {
-    max-height: 96dvh;
+  .th-pagination {
+    gap: 10px;
+  }
+  .th-fab-stack {
+    right: 15px;
+    bottom: 65px;
   }
 }
 </style>

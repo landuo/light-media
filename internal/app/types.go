@@ -185,6 +185,7 @@ type Intent struct {
 	PreviewID            string        `json:"preview_id"`
 }
 type Asset struct {
+	Part                string        `json:"part,omitempty"`
 	IdentitySource      string        `json:"identity_source,omitempty"`
 	IdentityConfirmedAt string        `json:"identity_confirmed_at,omitempty"`
 	ID                  string        `json:"id"`
@@ -208,6 +209,7 @@ type Asset struct {
 	MissingSeenAt       string        `json:"missing_seen_at"`
 }
 type PlanFile struct {
+	Part     string `json:"part,omitempty"`
 	Method   string `json:"method"`
 	ID       string `json:"id"`
 	Source   string `json:"source"`
@@ -223,6 +225,8 @@ type PlanFile struct {
 	AssetID  string `json:"asset_id"`
 }
 type ImportPlan struct {
+	Manual            bool          `json:"manual,omitempty"`
+	ReorganizeAssetID string        `json:"reorganize_asset_id,omitempty"`
 	Renaming          *bool         `json:"renaming,omitempty"`
 	Scraping          *bool         `json:"scraping,omitempty"`
 	LibraryTypeFolder *bool         `json:"library_type_folder,omitempty"`

@@ -174,9 +174,13 @@ func (a *App) previewAssetRemoval(ctx context.Context, asset Asset) (assetRemova
 	return preview, nil
 }
 
-func (a *App) removeAsset(ctx context.Context, assetID, previewID string, deleteFiles, exclude bool) error {
+func (a *App) removeAsset(ctx context.Context, assetID, previewID string, deleteFiles, exclude bool, preserveExclusions ...bool) error {
 	a.importMu.Lock()
 	defer a.importMu.Unlock()
+	return a.removeAssetLocked(ctx, assetID, previewID, deleteFiles, exclude, preserveExclusions...)
+}
+
+func (a *App) removeAssetLocked(ctx context.Context, assetID, previewID string, deleteFiles, exclude bool, preserveExclusions ...bool) error {
 	var preview assetRemovalPreview
 	if err := a.Store.Get(ctx, "removal_preview", previewID, &preview); err != nil {
 		return bad("REMOVAL_PREVIEW_REQUIRED", "删除预览不存在，请重新预览")
@@ -312,10 +316,12 @@ func (a *App) removeAsset(ctx context.Context, assetID, previewID string, delete
 	if _, err = tx.ExecContext(ctx, `DELETE FROM asset_slots WHERE asset_id=?`, asset.ID); err != nil {
 		return err
 	}
-	for _, episode := range importEpisodes(asset.Episodes) {
-		key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), asset.Season, episode)
-		if err = txPut(ctx, tx, "exclusion", key, map[string]any{"blocked": exclude, "reason": "user_removed", "at": now()}); err != nil {
-			return err
+	if len(preserveExclusions) == 0 || !preserveExclusions[0] {
+		for _, episode := range importEpisodes(asset.Episodes) {
+			key := fmt.Sprintf("%s:%d:%d", mediaKey(asset.Media), asset.Season, episode)
+			if err = txPut(ctx, tx, "exclusion", key, map[string]any{"blocked": exclude, "reason": "user_removed", "at": now()}); err != nil {
+				return err
+			}
 		}
 	}
 	preview.State = "completed"
@@ -368,7 +374,7 @@ func (a *App) checkAssetLocked(ctx context.Context, assetID string) error {
 	if err := a.Store.Get(ctx, "asset", assetID, &asset); err != nil {
 		return err
 	}
-	if asset.State == "removed" || asset.State == "missing_confirmed" {
+	if asset.State == "removed" || asset.State == "missing_confirmed" || asset.State == "superseded" {
 		return nil
 	}
 	root, err := a.importRoot(asset.RootID)

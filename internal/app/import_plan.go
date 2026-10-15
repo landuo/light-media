@@ -18,12 +18,17 @@ import (
 )
 
 type ImportFileRequest struct {
-	Path     string `json:"path"`
-	Season   int    `json:"season"`
-	Episodes []int  `json:"episodes"`
+	Path            string `json:"path"`
+	Season          int    `json:"season"`
+	SeasonExplicit  bool   `json:"season_explicit,omitempty"`
+	SourceEpisodeID int64  `json:"source_episode_id,omitempty"`
+	Episodes        []int  `json:"episodes"`
+	Part            string `json:"part,omitempty"`
 }
 
 type ImportRequest struct {
+	Manual            bool                `json:"-"`
+	ReorganizeAssetID string              `json:"-"`
 	Renaming          *bool               `json:"renaming,omitempty"`
 	Scraping          *bool               `json:"scraping,omitempty"`
 	LibraryTypeFolder *bool               `json:"library_type_folder,omitempty"`
@@ -45,10 +50,11 @@ type importSidecar struct {
 }
 
 type importMetadata struct {
-	RootPath string                     `json:"root_path"`
-	Methods  map[string]string          `json:"methods"`
-	Episodes map[string]catalog.Episode `json:"episodes"`
-	Sidecars map[string][]importSidecar `json:"sidecars"`
+	Reorganize *importReorganize          `json:"reorganize,omitempty"`
+	RootPath   string                     `json:"root_path"`
+	Methods    map[string]string          `json:"methods"`
+	Episodes   map[string]catalog.Episode `json:"episodes"`
+	Sidecars   map[string][]importSidecar `json:"sidecars"`
 }
 
 type importScanFile struct {
@@ -68,6 +74,32 @@ type importInferredMedia struct {
 	Title     string `json:"title"`
 	Year      int    `json:"year"`
 	EpisodeID int64  `json:"episode_id,omitempty"`
+}
+
+func parseManualImportFile(file ImportFileRequest) media.ParseResult {
+	name := filepath.Base(file.Path)
+	parsed := media.Parse(name)
+	if file.SeasonExplicit && file.Season == 0 && parsed.Original == nil {
+		// Keep global S00 recognition conservative. Once a user explicitly
+		// selects specials, reuse only the filename's title and episode syntax;
+		// the real season remains 0 and is checked against TMDB before import.
+		if index := strings.Index(strings.ToLower(name), "s00e"); index >= 0 {
+			parsed = media.Parse(name[:index] + "S01E" + name[index+4:])
+		}
+	}
+	if parsed.Original != nil && parsed.Original.Season == nil && file.SeasonExplicit {
+		// An explicit season supplies the missing context of an EP-only name.
+		// Specials use a syntactic stand-in here; the actual requested season
+		// remains 0 and previewImport verifies the real TMDB specials metadata.
+		season := file.Season
+		if season == 0 {
+			season = 1
+		}
+		numbering := *parsed.Original
+		numbering.Season = &season
+		parsed.Original = &numbering
+	}
+	return parsed
 }
 
 func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (any, error) {
@@ -150,7 +182,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		return ImportPlan{}, bad("INVALID_IMPORT", "请选择明确影视身份、1–2000 个源文件及有效整理方式")
 	}
 	if request.TargetPath != "" {
-		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files)
+		rootID, err := a.ensureImportTarget(ctx, request.TargetPath, request.MediaType, request.Files, request.Manual)
 		if err != nil {
 			return ImportPlan{}, err
 		}
@@ -199,7 +231,12 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if identity.ID != request.TMDBID || identity.MediaType != request.MediaType || importName(identity.Title) == "" {
 		return ImportPlan{}, bad("INVALID_METADATA", "未取得可靠影视身份")
 	}
+	reorganize, err := a.prepareImportReorganize(ctx, request)
+	if err != nil {
+		return ImportPlan{}, err
+	}
 	plan := ImportPlan{ID: id("plan_"), WorkflowID: request.WorkflowID, Media: identity, RootID: root.ID, Mode: request.Mode, Renaming: request.Renaming, Scraping: request.Scraping, LibraryTypeFolder: request.LibraryTypeFolder, Files: []PlanFile{}, State: "preview", IntentID: request.IntentID, CreatedAt: now()}
+	plan.Manual, plan.ReorganizeAssetID = request.Manual, request.ReorganizeAssetID
 	if plan.WorkflowID == "" {
 		plan.WorkflowID = id("wf_")
 	}
@@ -209,15 +246,19 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	plan.SpaceAvailable = availableSpace
 	plan.Warnings = []string{"空间是视频、字幕及有上限的刮削图片的保守预估；实际写入前仍会复核可用空间。"}
 	meta := importMetadata{RootPath: root.Path, Methods: map[string]string{}, Episodes: map[string]catalog.Episode{}, Sidecars: map[string][]importSidecar{}}
+	meta.Reorganize = reorganize
 	seasons := map[int]catalog.Season{}
 	seenSources, seenTargets, seenSlots := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	seenSourceInodes := map[string]bool{}
 	for _, requested := range request.Files {
-		file := PlanFile{ID: id("file_"), Source: requested.Path, Season: requested.Season, Episodes: append([]int(nil), requested.Episodes...), Status: "ready"}
+		file := PlanFile{ID: id("file_"), Source: requested.Path, Season: requested.Season, Episodes: append([]int(nil), requested.Episodes...), Part: strings.TrimSpace(requested.Part), Status: "ready"}
 		block := func(reason string) { file.Status = "blocked"; file.Reason = reason }
-		if !a.sourceAllowed(file.Source) || !isVideo(file.Source) || seenSources[file.Source] {
+		if len([]rune(file.Part)) > 64 || importName(file.Part) != file.Part {
+			block("Part 必须是有效的文件名片段，不能包含路径或特殊控制字符")
+		}
+		if !a.importSourceAllowed(file.Source, request.Manual) || !isVideo(file.Source) || seenSources[file.Source] {
 			block("源路径未获允许、不是视频或重复选择")
-		} else {
+		} else if !request.Manual {
 			for _, configured := range a.Settings().Roots {
 				if within(configured.Path, file.Source) {
 					block("源文件已在配置的媒体库中，请使用资产核对功能")
@@ -225,7 +266,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 		}
 		seenSources[file.Source] = true
-		if a.sourceAllowed(file.Source) {
+		if a.importSourceAllowed(file.Source, request.Manual) {
 			if inferred, _, _ := a.importNFOEvidence(file.Source); inferred != nil && (inferred.Type != identity.MediaType || inferred.ID != identity.ID) {
 				plan.Warnings = append(plan.Warnings, "源 NFO 身份与本次明确选择不同；本计划按你选择的 TMDB 身份整理，请核对后确认。")
 			}
@@ -250,7 +291,22 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			file.Season = 0
 			file.Episodes = nil
 		} else if file.Status == "ready" {
-			parsed := media.Parse(filepath.Base(file.Source))
+			explicitSeason := requested.SeasonExplicit
+			nfoEpisodeID := requested.SourceEpisodeID
+			if inferred, numbering, reason := a.importNFOEvidence(file.Source); reason == "" && inferred != nil && inferred.Type == "tv" && inferred.ID == identity.ID && numbering != nil && numbering.Season != nil && len(numbering.Episodes) == 1 && len(file.Episodes) == 0 {
+				if !explicitSeason && file.Season == 0 || file.Season == *numbering.Season {
+					file.Season = *numbering.Season
+					file.Episodes = append([]int(nil), numbering.Episodes...)
+					explicitSeason = true
+					nfoEpisodeID = inferred.EpisodeID
+				}
+			}
+			parsed := parseManualImportFile(requested)
+			if explicitSeason && len(file.Episodes) == 0 && parsed.Original != nil && len(parsed.Original.Episodes) == 1 && len(request.Mappings) == 0 {
+				// An explicit season override (including 0) changes the season,
+				// never the episode number or the video's actual file contents.
+				file.Episodes = append([]int(nil), parsed.Original.Episodes...)
+			}
 			if len(file.Episodes) == 0 && parsed.Original != nil {
 				seasonNumber := file.Season
 				if seasonNumber == 0 && parsed.Original.Season != nil {
@@ -282,8 +338,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 				}
 			}
-			if file.Season < 1 || file.Season > 1000 || len(file.Episodes) != 1 || file.Episodes[0] < 1 {
-				block("需要明确一个标准季集；多集视频和特别篇需人工处理，不能猜测")
+			if file.Season < 0 || file.Season == 0 && !explicitSeason || file.Season > 1000 || len(file.Episodes) != 1 || file.Episodes[0] < 1 {
+				block("需要明确一个标准季集；特别篇须明确第0季，多集视频不能猜测拆分")
 			}
 			if file.Status == "ready" {
 				season, exists := seasons[file.Season]
@@ -294,9 +350,19 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 					seasons[file.Season] = season
 				}
+				if file.Season == 0 && (season.ID <= 0 || season.SeriesID != identity.ID || season.SeasonNumber != 0) {
+					block("未取得对应剧集的 TMDB 第0季信息，请人工核对")
+				}
 				found := false
 				for _, episode := range season.Episodes {
+					if file.Status != "ready" {
+						break
+					}
 					if episode.SeasonNumber == file.Season && episode.EpisodeNumber == file.Episodes[0] && episode.ID > 0 {
+						if nfoEpisodeID > 0 && episode.ID != nfoEpisodeID {
+							block("NFO 单集来源 ID 与 TMDB 季集不符，需人工核对")
+							break
+						}
 						meta.Episodes[file.ID] = episode
 						found = true
 						break
@@ -334,13 +400,17 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				base = fmt.Sprintf("%s S%02dE%02d", title, file.Season, file.Episodes[0])
 				targetDir = filepath.Join(targetDir, fmt.Sprintf("Season %d", file.Season))
 			}
+			if file.Part != "" {
+				base += "-" + file.Part
+			}
 			file.Target = filepath.Join(targetDir, base+strings.ToLower(filepath.Ext(file.Source)))
 			if !importBool(request.Renaming, true) {
 				// MoviePilot keeps the original basename directly in the destination
 				// when smart naming is off, without title or Season subdirectories.
 				file.Target = filepath.Join(baseDir, filepath.Base(file.Source))
 			}
-			if !within(root.Path, file.Target) || file.Source == file.Target || seenTargets[file.Target] {
+			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path
+			if !within(root.Path, file.Target) || file.Source == file.Target && !inPlace || seenTargets[file.Target] {
 				block("目标路径重复、重叠或逃逸")
 			} else {
 				seenTargets[file.Target] = true
@@ -358,16 +428,23 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				block("源与目标跨文件系统，硬链接不可用；请选择复制或自动")
 			}
 			if _, e := os.Lstat(file.Target); e == nil {
-				var existing Asset
-				e = a.assetAtPath(ctx, file.Target, &existing)
-				var ownership managedFile
-				ownershipErr := a.Store.Get(ctx, "managed_file", tokenHash(file.Target), &ownership)
-				actual, targetErr := snapshotPath(file.Target)
-				if e == nil && mediaKey(existing.Media) == mediaKey(identity) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
-					file.Status = "already_imported"
-					file.AssetID = existing.ID
+				if inPlace {
+					actual, inspectErr := snapshotPath(file.Target)
+					if inspectErr != nil || actual != reorganize.Video.Snapshot {
+						block("原整理目标已被外部修改，不能原位重新整理")
+					}
 				} else {
-					block("目标已存在，禁止覆盖")
+					var existing Asset
+					e = a.assetAtPath(ctx, file.Target, &existing)
+					var ownership managedFile
+					ownershipErr := a.Store.Get(ctx, "managed_file", tokenHash(file.Target), &ownership)
+					actual, targetErr := snapshotPath(file.Target)
+					if e == nil && mediaKey(existing.Media) == mediaKey(identity) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
+						file.Status = "already_imported"
+						file.AssetID = existing.ID
+					} else {
+						block("目标已存在，禁止覆盖")
+					}
 				}
 			} else if !os.IsNotExist(e) {
 				block("无法检查目标冲突")
@@ -381,7 +458,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 					seenSlots[slot] = true
 					var count int
-					if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=?`, mediaKey(identity), file.Season, episode).Scan(&count); e != nil {
+					if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(identity), file.Season, episode, request.ReorganizeAssetID).Scan(&count); e != nil {
 						return ImportPlan{}, e
 					}
 					if count > 0 {
@@ -399,7 +476,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 				}
 			}
-			if file.Status == "ready" {
+			if file.Status == "ready" && !inPlace {
 				sidecars, e := importSidecars(file)
 				if e != nil {
 					block("字幕旁车不可访问或发生冲突")
@@ -490,7 +567,7 @@ func importSidecars(file PlanFile) ([]importSidecar, error) {
 
 func (a *App) assetAtPath(ctx context.Context, path string, dst *Asset) error {
 	var raw []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state')!='removed' LIMIT 1`, path).Scan(&raw)
+	err := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND json_extract(payload,'$.path')=? AND json_extract(payload,'$.state') NOT IN ('removed','superseded') LIMIT 1`, path).Scan(&raw)
 	if err != nil {
 		return err
 	}

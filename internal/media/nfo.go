@@ -80,8 +80,8 @@ func EncodeNFO(m NFOMetadata) ([]byte, error) {
 	}
 	d := nfoDocument{XMLName: xml.Name{Local: root}, Title: m.Title, OriginalTitle: m.OriginalTitle, Year: m.Year, Plot: m.Plot, ShowTitle: m.ShowTitle, Aired: m.Aired, UniqueIDs: m.UniqueIDs, TMDBID: tmdbID, Actors: m.Actors}
 	if m.Kind == "episode" {
-		if m.Season <= 0 || m.Episode <= 0 {
-			return nil, fmt.Errorf("episode requires confirmed positive season and episode")
+		if m.Season < 0 || m.Episode <= 0 {
+			return nil, fmt.Errorf("episode requires confirmed nonnegative season and positive episode")
 		}
 		d.Season, d.Episode = &m.Season, &m.Episode
 	} else if m.Season != 0 || m.Episode != 0 {

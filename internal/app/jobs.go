@@ -224,6 +224,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return a.runDownload(ctx, j, p.ID)
 	case "import":
 		return a.runImport(ctx, j, p.ID, p.FileIDs)
+	case "reorganize_cleanup":
+		return a.runReorganizeCleanup(ctx, j, p.ID)
 	case "scrape":
 		return a.runScrape(ctx, j, p.ID)
 	case "fnos_sync":
