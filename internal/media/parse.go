@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 type Status string
@@ -23,12 +24,13 @@ type Numbering struct {
 }
 
 type ParseResult struct {
-	Status   Status     `json:"status"`
-	Reason   string     `json:"reason,omitempty"`
-	Type     string     `json:"type,omitempty"`
-	Title    string     `json:"title,omitempty"`
-	Year     int        `json:"year,omitempty"`
-	Original *Numbering `json:"original,omitempty"`
+	Status          Status     `json:"status"`
+	Reason          string     `json:"reason,omitempty"`
+	Type            string     `json:"type,omitempty"`
+	Title           string     `json:"title,omitempty"`
+	AlternateTitles []string   `json:"alternate_titles,omitempty"`
+	Year            int        `json:"year,omitempty"`
+	Original        *Numbering `json:"original,omitempty"`
 }
 
 var (
@@ -41,8 +43,9 @@ var (
 	displayMarker  = regexp.MustCompile(`(?i)(?:第\s*[0-9一二三四五六七八九十百零〇两]+|(?:^|[ ._\-])EP\s*\d+)`)
 	yearPattern    = regexp.MustCompile(`(?:^|[ ._(\-])((?:19|20)\d{2})(?:$|[ ._)\-])`)
 	absoluteEP     = regexp.MustCompile(`(?i)(?:^|[ ._\-])(?:EP|第)(\d{1,4})(?:集|话)?`)
-	releaseSuffix  = regexp.MustCompile(`(?i)^(?:[ ._()\-+]*(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux|x26[45]|h[ .]?26[45]|hevc|avc|av1|aac[0-9.]*|dts|hd|ma[0-9.]*|truehd[0-9.]*|ddp?[0-9.]*|e?ac3|flac[0-9.]*|atmos|hdr(?:10)?|dovi|dv|10bit|8bit|proper|repack|multi|imax|extended|uncut|amzn|nf|netflix|dsnp|dsny|hmax|max|atvp|hulu|hbo|pcok|pmtp|itunes|it|[ ._\-]))*$`)
+	releaseSuffix  = regexp.MustCompile(`(?i)^(?:[ ._()\-+]*(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux|x26[45]|h[ .]?26[45]|hevc|avc|av1|aac[0-9.]*|dts|hd|ma[0-9.]*|truehd[0-9.]*|ddp?[0-9.]*|e?ac3|flac[0-9.]*|atmos|hdr(?:10)?|hdrvivid|\d{2,3}(?:\.\d+)?fps|dovi|dv|10bit|8bit|proper|repack|multi|imax|extended|uncut|amzn|nf|netflix|dsnp|dsny|hmax|max|atvp|hulu|hbo|pcok|pmtp|itunes|it|[ ._\-]))*$`)
 	releaseQuality = regexp.MustCompile(`(?i)(?:\d{3,4}[pi]|4k|8k|web[- .]?dl|webrip|blu[- .]?ray|bdrip|hdtv|remux)`)
+	bilingualTitle = regexp.MustCompile(`^\[([\p{Han}0-9\s:：·！!？?、，,。.（）()\-]+)\][ ._\-]*([A-Za-z].*)$`)
 )
 
 // Parse accepts explicit SxxExx and EPxxx forms, and conservative Title (year)
@@ -53,7 +56,7 @@ func Parse(filename string) ParseResult {
 	}
 	ext := strings.ToLower(filepath.Ext(filename))
 	switch ext {
-	case ".mkv", ".mp4", ".avi", ".m4v", ".ts", ".mov":
+	case ".mkv", ".mp4", ".avi", ".m4v", ".ts", ".mov", ".m2ts":
 	default:
 		return review("unsupported_media_extension")
 	}
@@ -64,7 +67,7 @@ func Parse(filename string) ParseResult {
 	}
 	if len(matches) == 1 {
 		m := matches[0]
-		title := cleanTitle(stem[:m[0]])
+		title, alternates := releaseTitles(stem[:m[0]])
 		if title == "" {
 			return review("missing_series_title")
 		}
@@ -124,7 +127,7 @@ func Parse(filename string) ParseResult {
 				return review("conflicting_display_episode_number")
 			}
 		}
-		return ParseResult{Status: Parsed, Type: "episode", Title: title, Original: &Numbering{Season: &season, Episodes: episodes, Form: "season_episode"}}
+		return ParseResult{Status: Parsed, Type: "episode", Title: title, AlternateTitles: alternates, Original: &Numbering{Season: &season, Episodes: episodes, Form: "season_episode"}}
 	}
 	if a := absoluteEP.FindAllStringSubmatchIndex(stem, -1); len(a) > 0 {
 		if len(a) != 1 {
@@ -135,11 +138,11 @@ func Parse(filename string) ParseResult {
 			return review("invalid_absolute_episode_marker_boundary")
 		}
 		n, _ := strconv.Atoi(stem[m[2]:m[3]])
-		title := cleanTitle(stem[:m[0]])
+		title, alternates := releaseTitles(stem[:m[0]])
 		if n == 0 || title == "" {
 			return review("invalid_absolute_episode")
 		}
-		return ParseResult{Status: Parsed, Type: "episode", Title: title, Original: &Numbering{Episodes: []int{n}, Form: "absolute_episode"}}
+		return ParseResult{Status: Parsed, Type: "episode", Title: title, AlternateTitles: alternates, Original: &Numbering{Episodes: []int{n}, Form: "absolute_episode"}}
 	}
 	years := yearPattern.FindAllStringSubmatchIndex(stem, -1)
 	if len(years) != 1 {
@@ -147,7 +150,7 @@ func Parse(filename string) ParseResult {
 	}
 	m := years[0]
 	year, _ := strconv.Atoi(stem[m[2]:m[3]])
-	title := cleanTitle(stem[:m[0]])
+	title, alternates := releaseTitles(stem[:m[0]])
 	suffix := strings.Trim(stem[m[3]:], " ()-._")
 	validSuffix := releaseSuffix.MatchString(suffix)
 	if !validSuffix && releaseQuality.MatchString(suffix) {
@@ -163,7 +166,15 @@ func Parse(filename string) ParseResult {
 	if title == "" || !validSuffix {
 		return review("ambiguous_movie_suffix_or_title")
 	}
-	return ParseResult{Status: Parsed, Type: "movie", Title: title, Year: year}
+	return ParseResult{Status: Parsed, Type: "movie", Title: title, AlternateTitles: alternates, Year: year}
+}
+
+func releaseTitles(value string) (string, []string) {
+	value = strings.TrimSpace(value)
+	if bilingual := bilingualTitle.FindStringSubmatch(value); bilingual != nil && strings.ContainsFunc(bilingual[1], func(r rune) bool { return unicode.Is(unicode.Han, r) }) {
+		return cleanTitle(bilingual[2]), []string{cleanTitle(bilingual[1])}
+	}
+	return cleanTitle(value), nil
 }
 
 func cleanTitle(s string) string {

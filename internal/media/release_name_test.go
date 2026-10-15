@@ -1,6 +1,50 @@
 package media
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
+
+func TestMovieBilingualHighFrameRateReleaseName(t *testing.T) {
+	for _, rate := range []string{"60Fps", "59.94fps", "120FPS"} {
+		name := "[飞驰人生3].Pegasus.3.2026.2160p.WEB-DL." + rate + ".HDRVivid.H265.10bit.AAC-UBWEB.mp4"
+		p := Parse(name)
+		if p.Status != Parsed || p.Type != "movie" || p.Title != "Pegasus 3" || p.Year != 2026 || !reflect.DeepEqual(p.AlternateTitles, []string{"飞驰人生3"}) {
+			t.Fatalf("%s: %+v", name, p)
+		}
+	}
+	for _, name := range []string{
+		"[飞驰人生3].Pegasus.3.2026.2160p.WEB-DL.60Fps.HDRVivid.This.Is.Another.Film.H265.AAC-UBWEB.mp4",
+		"[飞驰人生3].Pegasus.3.2026.2160p.WEB-DL.60Fps.HDRVivid.UNKNOWN.H265.AAC-UBWEB.mp4",
+	} {
+		if p := Parse(name); p.Status == Parsed {
+			t.Fatalf("unknown release suffix accepted: %s: %+v", name, p)
+		}
+	}
+}
+
+func TestBilingualTitleDoesNotDiscardOtherBracketedInformation(t *testing.T) {
+	for _, tc := range []struct {
+		name, title string
+	}{
+		{"[English.Group].Film.2024.1080p.WEB-DL.mkv", "[English Group] Film"},
+		{"[2160].Film.2024.1080p.WEB-DL.mkv", "[2160] Film"},
+		{"Film.[副标题].2024.1080p.WEB-DL.mkv", "Film [副标题]"},
+	} {
+		p := Parse(tc.name)
+		if p.Status != Parsed || p.Title != tc.title || len(p.AlternateTitles) != 0 {
+			t.Fatalf("bracketed information was silently removed: %+v", p)
+		}
+	}
+}
+
+func TestM2TSReleaseNamesUseTheSameIdentityParsing(t *testing.T) {
+	for _, name := range []string{"Film.2024.1080p.BluRay.m2ts", "Series.S02E03.m2ts"} {
+		if p := Parse(name); p.Status != Parsed {
+			t.Fatalf("supported media extension rejected: %s: %+v", name, p)
+		}
+	}
+}
 
 func TestMovieReleaseNamesKeepTechnicalSuffixOutOfIdentity(t *testing.T) {
 	for _, name := range []string{
