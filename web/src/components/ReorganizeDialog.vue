@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, useId, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue';
 import { api, errorText, image, label, toast, ui } from '../api';
 import FileManagerIcon from './FileManagerIcon.vue';
 import DirectoryPathPicker from './DirectoryPathPicker.vue';
@@ -85,6 +85,20 @@ const episodeDetailDisabled = computed(
     (props.paths.length !== 1 || props.items?.some((item) => item.type === 'dir')),
 );
 const previewRows = computed(() => result.value?.items || []);
+const formScroll = ref<HTMLElement | null>(null),
+  previewPanel = ref<HTMLElement | null>(null);
+watch([previewVisible, result], async ([visible, response]) => {
+  if (!visible || !response) return;
+  await nextTick();
+  const content = formScroll.value,
+    panel = previewPanel.value;
+  if (content && panel)
+    content.scrollTo({
+      top:
+        content.scrollTop + panel.getBoundingClientRect().top - content.getBoundingClientRect().top,
+      behavior: 'smooth',
+    });
+});
 const failedRows = computed(() =>
   previewRows.value.filter((item) => item.status === 'failed' || item.status === 'blocked'),
 );
@@ -167,6 +181,8 @@ async function preview() {
     result.value = await api('/files/organize', payload(true));
   } catch (e) {
     error.value = errorText(e);
+    await nextTick();
+    formScroll.value?.scrollTo({ top: 0, behavior: 'smooth' });
   } finally {
     previewBusy.value = false;
   }
@@ -311,13 +327,7 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <div class="organize-backdrop" @click.self="!busy && close()">
-      <section
-        class="reorganize-dialog"
-        :class="{ 'preview-open': previewVisible }"
-        role="dialog"
-        aria-modal="true"
-        aria-label="手动整理"
-      >
+      <section class="reorganize-dialog" role="dialog" aria-modal="true" aria-label="手动整理">
         <header class="organize-header">
           <FileManagerIcon name="organize" />
           <div>
@@ -328,161 +338,145 @@ onUnmounted(() => {
             <FileManagerIcon name="close" />
           </button>
         </header>
-        <div class="organize-layout">
-          <div class="organize-left">
-            <div class="organize-form">
-              <p v-if="error" class="error-box" role="alert">{{ error }}</p>
-              <div class="organize-grid">
-                <label
-                  >目的存储<select v-model="storage" :disabled="busy">
-                    <option value="">自动</option>
-                    <option value="local">本地</option></select
-                  ><small>整理目的存储，选择自动时由后端匹配</small></label
-                >
-                <label
-                  >整理方式<select v-model="mode" :disabled="busy">
-                    <option value="">自动</option>
-                    <option value="copy">复制</option>
-                    <option value="hardlink">硬链接</option></select
-                  ><small>选择自动时使用目录配置的整理方式</small></label
-                >
-                <label class="span-all"
-                  >目的路径
-                  <div class="target-combobox">
-                    <input
-                      :value="targetPath"
-                      :list="targetListID"
-                      aria-label="目的路径"
-                      placeholder="自动（可输入路径）"
-                      :disabled="busy"
-                      @focus="($event.target as HTMLInputElement).select()"
-                      @input="
-                        targetPath =
-                          ($event.target as HTMLInputElement).value === '自动'
-                            ? ''
-                            : ($event.target as HTMLInputElement).value
-                      "
-                    />
-                    <datalist :id="targetListID">
-                      <option value="自动" />
-                      <option v-for="path in targetPaths" :key="path" :value="path" />
-                    </datalist>
-                    <DirectoryPathPicker
-                      v-model="targetPath"
-                      :suggestions="targetPaths"
-                      :disabled="busy"
-                    />
-                  </div>
-                  <small>整理目的路径，选择自动将按源路径匹配</small></label
-                >
-                <label
-                  >类型<select v-model="mediaType" :disabled="busy">
-                    <option value="">自动</option>
-                    <option value="movie">电影</option>
-                    <option value="tv">电视剧</option></select
-                  ><small>文件的媒体类型</small></label
-                >
-                <label
-                  >TheMovieDb编号
-                  <div class="id-input">
-                    <input
-                      v-model="mediaID"
-                      inputmode="numeric"
-                      placeholder="留空自动识别"
-                      :disabled="busy || !mediaType"
-                    /><button
-                      class="icon-button"
-                      aria-label="查询媒体编号"
-                      :disabled="busy || !mediaType"
-                      @click="picker = true"
-                    >
-                      <FileManagerIcon name="search" />
-                    </button>
-                  </div>
-                  <small>按名称查询媒体编号，留空自动识别</small></label
-                >
-                <template v-if="mediaType === 'tv'">
-                  <label
-                    >季<select v-model="season" :disabled="busy">
-                      <option value="">自动</option>
-                      <option v-for="number in 101" :key="number - 1" :value="number - 1">
-                        第 {{ number - 1 }} 季
-                      </option></select
-                    ><small>第几季</small></label
-                  >
-                  <label
-                    >集<input
-                      v-model="episodeDetail"
-                      placeholder="起始集,终止集"
-                      :disabled="busy || episodeDetailDisabled"
-                    /><small>集数或范围，如1或1,2</small></label
-                  >
-                  <label
-                    >集数定位<input
-                      v-model="episodeFormat"
-                      placeholder="使用{ep}定位集数"
-                      :disabled="busy"
-                    /><small>使用{ep}定位文件名中的集数部分以辅助识别</small></label
-                  >
-                  <label
-                    >集数偏移<input
-                      v-model="episodeOffset"
-                      placeholder="如-10"
-                      :disabled="busy"
-                    /><small>集数偏移运算，如-10或EP*2</small></label
-                  >
-                </template>
-                <label
-                  >指定Part<input
-                    v-model="episodePart"
-                    placeholder="如part1"
-                    :disabled="busy"
-                  /><small>指定Part，如part1</small></label
-                >
-                <label
-                  >最小文件大小（MB）<input
-                    v-model.number="minFilesize"
-                    type="number"
-                    min="0"
-                    placeholder="0"
-                    :disabled="busy"
-                  /><small>只整理大于最小文件大小的文件</small></label
-                >
-                <label class="organize-switch"
-                  ><input
-                    type="checkbox"
-                    :checked="typeFolder === true"
-                    :disabled="busy"
-                    @change="typeFolder = ($event.target as HTMLInputElement).checked"
-                  /><span>按类型分类<small>目的路径下按媒体类型添加子目录</small></span></label
-                >
-                <label class="organize-switch"
-                  ><input
-                    type="checkbox"
-                    :checked="scraping === true"
-                    :disabled="busy"
-                    @change="scraping = ($event.target as HTMLInputElement).checked"
-                  /><span>刮削元数据<small>整理完成后自动刮削元数据</small></span></label
-                >
-                <label v-if="historyIds?.length" class="organize-switch span-all"
-                  ><input v-model="fromHistory" type="checkbox" :disabled="busy" /><span
-                    >复用历史识别信息<small>使用历史整理记录中已识别的媒体信息</small></span
-                  ></label
-                >
+        <div ref="formScroll" class="organize-form">
+          <p v-if="error" class="error-box" role="alert">{{ error }}</p>
+          <div class="organize-grid">
+            <label
+              >目的存储<select v-model="storage" :disabled="busy">
+                <option value="">自动</option>
+                <option value="local">本地</option></select
+              ><small>整理目的存储，选择自动时由后端匹配</small></label
+            >
+            <label
+              >整理方式<select v-model="mode" :disabled="busy">
+                <option value="">自动</option>
+                <option value="copy">复制</option>
+                <option value="hardlink">硬链接</option></select
+              ><small>选择自动时使用目录配置的整理方式</small></label
+            >
+            <label class="span-all"
+              >目的路径
+              <div class="target-combobox">
+                <input
+                  :value="targetPath"
+                  :list="targetListID"
+                  aria-label="目的路径"
+                  placeholder="自动（可输入路径）"
+                  :disabled="busy"
+                  @focus="($event.target as HTMLInputElement).select()"
+                  @input="
+                    targetPath =
+                      ($event.target as HTMLInputElement).value === '自动'
+                        ? ''
+                        : ($event.target as HTMLInputElement).value
+                  "
+                />
+                <datalist :id="targetListID">
+                  <option value="自动" />
+                  <option v-for="path in targetPaths" :key="path" :value="path" />
+                </datalist>
+                <DirectoryPathPicker
+                  v-model="targetPath"
+                  :suggestions="targetPaths"
+                  :disabled="busy"
+                />
               </div>
-            </div>
-            <footer class="organize-actions">
-              <button class="preview-action" :disabled="busy || previewBusy" @click="preview">
-                {{ previewBusy ? '正在预览…' : previewVisible ? '隐藏预览' : '预览' }}</button
-              ><button class="queue-action" :disabled="busy || previewBusy" @click="organize(true)">
-                ＋ 加入整理队列</button
-              ><span></span
-              ><button class="primary" :disabled="busy || previewBusy" @click="organize(false)">
-                立即整理 →
-              </button>
-            </footer>
+              <small>整理目的路径，选择自动将按源路径匹配</small></label
+            >
+            <label
+              >类型<select v-model="mediaType" :disabled="busy">
+                <option value="">自动</option>
+                <option value="movie">电影</option>
+                <option value="tv">电视剧</option></select
+              ><small>文件的媒体类型</small></label
+            >
+            <label
+              >TheMovieDb编号
+              <div class="id-input">
+                <input
+                  v-model="mediaID"
+                  inputmode="numeric"
+                  placeholder="留空自动识别"
+                  :disabled="busy || !mediaType"
+                /><button
+                  class="icon-button"
+                  aria-label="查询媒体编号"
+                  :disabled="busy || !mediaType"
+                  @click="picker = true"
+                >
+                  <FileManagerIcon name="search" />
+                </button>
+              </div>
+              <small>按名称查询媒体编号，留空自动识别</small></label
+            >
+            <template v-if="mediaType === 'tv'">
+              <label
+                >季<select v-model="season" :disabled="busy">
+                  <option value="">自动</option>
+                  <option v-for="number in 101" :key="number - 1" :value="number - 1">
+                    第 {{ number - 1 }} 季
+                  </option></select
+                ><small>第几季</small></label
+              >
+              <label
+                >集<input
+                  v-model="episodeDetail"
+                  placeholder="起始集,终止集"
+                  :disabled="busy || episodeDetailDisabled"
+                /><small>集数或范围，如1或1,2</small></label
+              >
+              <label
+                >集数定位<input
+                  v-model="episodeFormat"
+                  placeholder="使用{ep}定位集数"
+                  :disabled="busy"
+                /><small>使用{ep}定位文件名中的集数部分以辅助识别</small></label
+              >
+              <label
+                >集数偏移<input
+                  v-model="episodeOffset"
+                  placeholder="如-10"
+                  :disabled="busy"
+                /><small>集数偏移运算，如-10或EP*2</small></label
+              >
+            </template>
+            <label
+              >指定Part<input v-model="episodePart" placeholder="如part1" :disabled="busy" /><small
+                >指定Part，如part1</small
+              ></label
+            >
+            <label
+              >最小文件大小（MB）<input
+                v-model.number="minFilesize"
+                type="number"
+                min="0"
+                placeholder="0"
+                :disabled="busy"
+              /><small>只整理大于最小文件大小的文件</small></label
+            >
+            <label class="organize-switch"
+              ><input
+                type="checkbox"
+                :checked="typeFolder === true"
+                :disabled="busy"
+                @change="typeFolder = ($event.target as HTMLInputElement).checked"
+              /><span>按类型分类<small>按二级分类策略添加子目录</small></span></label
+            >
+            <label class="organize-switch"
+              ><input
+                type="checkbox"
+                :checked="scraping === true"
+                :disabled="busy"
+                @change="scraping = ($event.target as HTMLInputElement).checked"
+              /><span>刮削元数据<small>整理完成后自动刮削元数据</small></span></label
+            >
+            <label v-if="historyIds?.length" class="organize-switch span-all"
+              ><input v-model="fromHistory" type="checkbox" :disabled="busy" /><span
+                >复用历史识别信息<small>使用历史整理记录中已识别的媒体信息</small></span
+              ></label
+            >
           </div>
-          <aside v-if="previewVisible" class="organize-preview">
+          <section v-if="previewVisible" ref="previewPanel" class="organize-preview">
             <header>
               <h3>整理结果预览</h3>
               <span v-if="result"
@@ -512,8 +506,18 @@ onUnmounted(() => {
                 {{ row.error || row.reason }}
               </p>
             </article>
-          </aside>
+          </section>
         </div>
+        <footer class="organize-actions">
+          <button class="preview-action" :disabled="busy || previewBusy" @click="preview">
+            {{ previewBusy ? '正在预览…' : previewVisible ? '隐藏预览' : '预览' }}</button
+          ><button class="queue-action" :disabled="busy || previewBusy" @click="organize(true)">
+            ＋ 加入整理队列</button
+          ><span></span
+          ><button class="primary" :disabled="busy || previewBusy" @click="organize(false)">
+            立即整理 →
+          </button>
+        </footer>
         <div v-if="busy" class="organize-progress" role="status">
           <span class="spinner"></span>
           <div>
@@ -586,11 +590,9 @@ onUnmounted(() => {
   flex-direction: column;
   overflow: hidden;
 }
-.reorganize-dialog.preview-open {
-  width: min(1320px, 100%);
-}
 .organize-header {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 12px;
   padding: 12px 24px;
@@ -616,24 +618,9 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.organize-layout {
-  display: flex;
-  min-height: 0;
-  flex: 1;
-  overflow: hidden;
-}
-.organize-left {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-.preview-open .organize-left {
-  width: 55%;
-  flex: none;
-}
 .organize-form {
   padding: 24px;
+  min-height: 0;
   overflow-y: auto;
   flex: 1;
 }
@@ -726,6 +713,7 @@ onUnmounted(() => {
 }
 .organize-actions {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 10px;
   padding: 16px 24px;
@@ -745,10 +733,10 @@ onUnmounted(() => {
   border-color: transparent;
 }
 .organize-preview {
-  width: 45%;
-  border-left: 1px solid var(--line);
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
   padding: 20px;
-  overflow-y: auto;
   background: var(--surface-subtle, #f9fafc);
 }
 .organize-preview header {
@@ -885,31 +873,13 @@ onUnmounted(() => {
     max-height: 100dvh;
     border-radius: 0;
   }
-  .organize-layout {
-    flex-direction: column;
-    overflow: auto;
-  }
-  .organize-left,
-  .preview-open .organize-left {
-    width: 100%;
-    flex: none;
-  }
   .organize-form {
-    overflow: visible;
     padding: 24px;
   }
   .organize-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .organize-preview {
-    width: 100%;
-    border-left: 0;
-    border-top: 1px solid var(--line);
-    overflow: visible;
-  }
   .organize-actions {
-    position: sticky;
-    bottom: 0;
     background: var(--surface);
     z-index: 1;
     padding: 14px 12px;

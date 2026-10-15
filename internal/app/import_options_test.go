@@ -42,9 +42,9 @@ func TestImportRenameScrapeAndTypeFolderOptionsPublishRealFiles(t *testing.T) {
 						base := target
 						if typeFolder {
 							if kind == "movie" {
-								base = filepath.Join(base, "电影")
+								base = filepath.Join(base, "华语电影")
 							} else {
-								base = filepath.Join(base, "电视剧")
+								base = filepath.Join(base, "国产剧")
 							}
 						}
 						want := filepath.Join(base, name)
@@ -153,7 +153,7 @@ func TestDirectoryImportOptionsPropagateAndKeepLegacyFingerprint(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	if plan.Files[0].Target != filepath.Join(root.Path, "电影", filepath.Base(path)) {
+	if plan.Files[0].Target != filepath.Join(root.Path, "华语电影", filepath.Base(path)) {
 		t.Fatal("monitor target", plan.Files[0].Target)
 	}
 	if directoryFingerprint(rule) == legacy {
@@ -176,7 +176,7 @@ func TestManualImportInheritsDirectoryOptionsAndExplicitOverrides(t *testing.T) 
 	if e != nil {
 		t.Fatal(e)
 	}
-	if plan.Mode != "copy" || importBool(plan.Renaming, true) || importBool(plan.Scraping, true) || plan.Files[0].Target != filepath.Join(target, "电影", filepath.Base(path)) {
+	if plan.Mode != "copy" || importBool(plan.Renaming, true) || importBool(plan.Scraping, true) || plan.Files[0].Target != filepath.Join(target, "华语电影", filepath.Base(path)) {
 		t.Fatalf("manual did not inherit %+v", plan)
 	}
 	request.Renaming, request.Scraping, request.LibraryTypeFolder = importFlag(true), importFlag(true), importFlag(false)
@@ -233,7 +233,7 @@ func TestCompletedDownloadPassesDirectoryImportOptions(t *testing.T) {
 	if e = a.Store.Get(ctx, "import_plan", intent.ImportPlanID, &plan); e != nil {
 		t.Fatal(e)
 	}
-	if importBool(plan.Renaming, true) || importBool(plan.Scraping, true) || plan.Files[0].Target != filepath.Join(target, "电影", name) {
+	if importBool(plan.Renaming, true) || importBool(plan.Scraping, true) || plan.Files[0].Target != filepath.Join(target, "华语电影", name) {
 		t.Fatalf("completion dropped directory options %+v", plan)
 	}
 }

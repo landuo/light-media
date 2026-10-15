@@ -55,7 +55,7 @@ func TestManualOrganizeHTTPTypeFolderPublishesAndReorganizesSelectedDirectory(t 
 				wantTarget := func(typeFolder bool) string {
 					base := selectedTarget
 					if typeFolder {
-						base = filepath.Join(base, map[string]string{"movie": "电影", "tv": "电视剧"}[kind])
+						base = filepath.Join(base, map[string]string{"movie": "华语电影", "tv": "国产剧"}[kind])
 					}
 					folder := fmt.Sprintf("%s (%d)", identity.Title, identity.Year)
 					if kind == "tv" {

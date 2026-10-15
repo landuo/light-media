@@ -43,6 +43,10 @@ func importCache(t *testing.T, a *App, key string, value any) {
 func importFixture(t *testing.T, a *App, kind string) catalog.Media {
 	t.Helper()
 	identity := catalog.Media{ID: 123, MediaType: kind, Title: "测试影片", OriginalTitle: "Test Film", Year: 2024, Overview: "测试简介", Cast: []catalog.CastMember{{ID: 1, Name: "演员", Character: "角色", Order: 0}}, Genres: []catalog.Genre{{ID: 18, Name: "剧情"}}}
+	identity.OriginalLanguage = "zh"
+	identity.OriginCountry = []string{"CN"}
+	identity.ProductionCountries = []catalog.Country{{ISO3166_1: "CN", Name: "China"}}
+	identity.CategoryMetadataKnown = true
 	if kind == "tv" {
 		identity.Title = "测试剧集"
 	}

@@ -16,35 +16,38 @@ type wirePage struct {
 }
 
 type wireMedia struct {
-	ID                int64                  `json:"id"`
-	MediaType         string                 `json:"media_type"`
-	Title             string                 `json:"title"`
-	Name              string                 `json:"name"`
-	OriginalTitle     string                 `json:"original_title"`
-	OriginalName      string                 `json:"original_name"`
-	Overview          string                 `json:"overview"`
-	PosterPath        string                 `json:"poster_path"`
-	BackdropPath      string                 `json:"backdrop_path"`
-	ReleaseDate       string                 `json:"release_date"`
-	FirstAirDate      string                 `json:"first_air_date"`
-	VoteAverage       float64                `json:"vote_average"`
-	VoteCount         int                    `json:"vote_count"`
-	Popularity        float64                `json:"popularity"`
-	Genres            []Genre                `json:"genres"`
-	GenreIDs          []int64                `json:"genre_ids"`
-	Credits           *wireCredits           `json:"credits"`
-	Recommendations   *wirePage              `json:"recommendations"`
-	Seasons           []SeasonSummary        `json:"seasons"`
-	NumberOfEpisodes  int                    `json:"number_of_episodes"`
-	NumberOfSeasons   int                    `json:"number_of_seasons"`
-	Status            string                 `json:"status"`
-	Runtime           int                    `json:"runtime"`
-	Character         string                 `json:"character"`
-	Job               string                 `json:"job"`
-	Adult             bool                   `json:"adult"`
-	IMDbID            string                 `json:"imdb_id"`
-	ExternalIDs       *wireExternalIDs       `json:"external_ids"`
-	AlternativeTitles *wireAlternativeTitles `json:"alternative_titles"`
+	ID                  int64                  `json:"id"`
+	MediaType           string                 `json:"media_type"`
+	Title               string                 `json:"title"`
+	Name                string                 `json:"name"`
+	OriginalTitle       string                 `json:"original_title"`
+	OriginalName        string                 `json:"original_name"`
+	OriginalLanguage    string                 `json:"original_language"`
+	OriginCountry       []string               `json:"origin_country"`
+	ProductionCountries []Country              `json:"production_countries"`
+	Overview            string                 `json:"overview"`
+	PosterPath          string                 `json:"poster_path"`
+	BackdropPath        string                 `json:"backdrop_path"`
+	ReleaseDate         string                 `json:"release_date"`
+	FirstAirDate        string                 `json:"first_air_date"`
+	VoteAverage         float64                `json:"vote_average"`
+	VoteCount           int                    `json:"vote_count"`
+	Popularity          float64                `json:"popularity"`
+	Genres              []Genre                `json:"genres"`
+	GenreIDs            []int64                `json:"genre_ids"`
+	Credits             *wireCredits           `json:"credits"`
+	Recommendations     *wirePage              `json:"recommendations"`
+	Seasons             []SeasonSummary        `json:"seasons"`
+	NumberOfEpisodes    int                    `json:"number_of_episodes"`
+	NumberOfSeasons     int                    `json:"number_of_seasons"`
+	Status              string                 `json:"status"`
+	Runtime             int                    `json:"runtime"`
+	Character           string                 `json:"character"`
+	Job                 string                 `json:"job"`
+	Adult               bool                   `json:"adult"`
+	IMDbID              string                 `json:"imdb_id"`
+	ExternalIDs         *wireExternalIDs       `json:"external_ids"`
+	AlternativeTitles   *wireAlternativeTitles `json:"alternative_titles"`
 }
 
 type wireCredits struct {
@@ -160,11 +163,15 @@ func (c *Client) media(raw wireMedia, kind string, includeRelated bool) (Media, 
 	}
 	result := Media{
 		ID: raw.ID, MediaType: kind, Title: c.text(title, 512), OriginalTitle: c.text(original, 512),
+		OriginalLanguage: raw.OriginalLanguage, OriginCountry: []string{}, ProductionCountries: []Country{},
 		Year: year, Overview: c.text(raw.Overview, 32000), PosterPath: c.image(raw.PosterPath), BackdropPath: c.image(raw.BackdropPath),
 		ReleaseDate: release, VoteAverage: raw.VoteAverage, VoteCount: raw.VoteCount, Popularity: raw.Popularity,
 		Genres: []Genre{}, GenreIDs: []int64{}, Cast: []CastMember{}, Recommendations: []Media{}, Seasons: []SeasonSummary{}, Aliases: []string{},
 		NumberOfEpisodes: raw.NumberOfEpisodes, NumberOfSeasons: raw.NumberOfSeasons, Status: c.text(raw.Status, 100),
 		Runtime: raw.Runtime, Character: c.text(raw.Character, 1024), Job: c.text(raw.Job, 256),
+	}
+	if err := c.categoryMetadata(raw, includeRelated, &result); err != nil {
+		return Media{}, err
 	}
 	for _, genre := range raw.Genres {
 		if !validID(genre.ID) {

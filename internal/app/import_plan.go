@@ -232,6 +232,13 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if identity.ID != request.TMDBID || identity.MediaType != request.MediaType || importName(identity.Title) == "" {
 		return ImportPlan{}, bad("INVALID_METADATA", "未取得可靠影视身份")
 	}
+	category := ""
+	if importBool(request.LibraryTypeFolder, false) {
+		identity, category, err = a.importMediaCategory(ctx, identity)
+		if err != nil {
+			return ImportPlan{}, err
+		}
+	}
 	reorganize, err := a.prepareImportReorganize(ctx, request)
 	if err != nil {
 		return ImportPlan{}, err
@@ -392,12 +399,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 			base := folder
 			baseDir := root.Path
-			if importBool(request.LibraryTypeFolder, false) {
-				typeName := "电影"
-				if request.MediaType == "tv" {
-					typeName = "电视剧"
-				}
-				baseDir = filepath.Join(baseDir, typeName)
+			if category != "" {
+				baseDir = filepath.Join(baseDir, category)
 			}
 			targetDir := filepath.Join(baseDir, folder)
 			if request.MediaType == "tv" {
