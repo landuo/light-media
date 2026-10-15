@@ -18,7 +18,12 @@ function create(kind: string) {
   while (data.value.downloaders.some((row: any) => row.config.name === '下载器' + n)) n++;
   data.value.downloaders.push({
     config: {
-      id: 'downloader-' + crypto.randomUUID(),
+      // getRandomValues also works when the app is served over LAN HTTP.
+      id:
+        'downloader-' +
+        Array.from(crypto.getRandomValues(new Uint32Array(4)), (value) =>
+          value.toString(16).padStart(8, '0'),
+        ).join(''),
       name: '下载器' + n,
       kind,
       base_url: '',
