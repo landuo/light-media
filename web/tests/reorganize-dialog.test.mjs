@@ -16,7 +16,7 @@ const compiled = ts.transpileModule(script.content, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText;
 
-function openDialog(t, initial = {}) {
+function openDialog(t, initial = {}, options = {}) {
   const requests = [];
   const apiModule = {
     ui: {
@@ -28,6 +28,7 @@ function openDialog(t, initial = {}) {
     },
     api: async (path, body) => {
       requests.push({ path, body });
+      if (options.api) return options.api(path, body, requests.length);
       return { items: [], total: 0, submitted: 0, failed: 0 };
     },
     label: (value) => value,
@@ -72,11 +73,14 @@ function openDialog(t, initial = {}) {
   const pathInput = () => nodes().find((node) => node.props?.['aria-label'] === '目的路径');
   const selects = () => nodes().filter((node) => node.type === 'select');
   const switches = () => nodes().filter((node) => node.props?.type === 'checkbox');
+  const previewButton = () => nodes().find((node) => node.props?.class === 'preview-action');
   return {
     requests,
+    nodes,
     pathInput,
     selects,
     switches,
+    previewButton,
     async browsePath(value) {
       const picker = nodes().find((node) => node.type?.name === 'DirectoryPathPicker');
       picker.props['onUpdate:modelValue'](value);
@@ -95,8 +99,8 @@ function openDialog(t, initial = {}) {
       await vue.nextTick();
     },
     async preview() {
-      const button = nodes().find((node) => node.props?.class === 'preview-action');
-      await button.props.onClick();
+      await previewButton().props.onClick();
+      await vue.nextTick();
       return requests.at(-1).body;
     },
   };
@@ -168,4 +172,132 @@ test('directory tree selection only changes the target path', async (t) => {
   assert.equal(body.mode, 'hardlink');
   assert.equal(body.library_type_folder, true);
   assert.equal(body.scraping, true);
+});
+
+function renderedText(node) {
+  if (node == null) return '';
+  if (typeof node === 'string') return node;
+  if (Array.isArray(node)) return node.map(renderedText).join(' ');
+  return renderedText(node.children);
+}
+
+test('preview remains an action and every later click requests current form values again', async (t) => {
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      api: async (_path, body, count) => ({
+        items: [
+          {
+            source: '/downloads/Test.mkv',
+            target: `${body.target_path}/preview-${count}.mkv`,
+            status: 'ready',
+          },
+        ],
+        total: 1,
+        submitted: 0,
+        failed: 0,
+      }),
+    },
+  );
+  await dialog.path('/library/first');
+  await dialog.select(1, 'hardlink');
+  await dialog.preview();
+  assert.equal(dialog.requests.length, 1);
+  assert.equal(renderedText(dialog.previewButton()).trim(), '预览');
+  assert.ok(dialog.nodes().some((node) => node.props?.class === 'organize-preview'));
+  assert.ok(
+    dialog.nodes().some((node) => renderedText(node).includes('/library/first/preview-1.mkv')),
+  );
+
+  await dialog.preview();
+  assert.equal(dialog.requests.length, 2, 'the second click must request again instead of hiding');
+  assert.equal(renderedText(dialog.previewButton()).trim(), '预览');
+  assert.ok(dialog.nodes().some((node) => node.props?.class === 'organize-preview'));
+  assert.ok(
+    dialog.nodes().some((node) => renderedText(node).includes('/library/first/preview-2.mkv')),
+  );
+
+  await dialog.path('/library/changed');
+  await dialog.select(1, 'copy');
+  await dialog.toggle(0, true);
+  await dialog.preview();
+  assert.equal(dialog.requests.length, 3);
+  assert.deepEqual(
+    dialog.requests.map(({ body }) => [body.target_path, body.mode, body.preview, body.background]),
+    [
+      ['/library/first', 'hardlink', true, false],
+      ['/library/first', 'hardlink', true, false],
+      ['/library/changed', 'copy', true, false],
+    ],
+  );
+  assert.equal(dialog.requests[2].body.library_type_folder, true);
+  assert.ok(
+    dialog.nodes().some((node) => renderedText(node).includes('/library/changed/preview-3.mkv')),
+  );
+  assert.equal(dialog.pathInput().props.value, '/library/changed');
+});
+
+test('a pending preview keeps its label and blocks duplicate requests', async (t) => {
+  let resolve;
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      api: () =>
+        new Promise((finish) => {
+          resolve = finish;
+        }),
+    },
+  );
+  const pending = dialog.preview();
+  await vue.nextTick();
+  assert.equal(dialog.requests.length, 1);
+  assert.equal(renderedText(dialog.previewButton()).trim(), '预览');
+  assert.equal(dialog.previewButton().props.disabled, true);
+  assert.equal(dialog.previewButton().props['aria-busy'], true);
+  await dialog.preview();
+  assert.equal(dialog.requests.length, 1);
+  resolve({ items: [], total: 0, submitted: 0, failed: 0 });
+  await pending;
+  assert.equal(dialog.previewButton().props.disabled, false);
+  assert.equal(dialog.previewButton().props['aria-busy'], false);
+});
+
+test('failed refresh clears old preview results, retains the form, and allows another preview', async (t) => {
+  const dialog = openDialog(
+    t,
+    { target_path: '/library/retained' },
+    {
+      api: async (_path, _body, count) => {
+        if (count === 2) throw new Error('无法读取源文件，请重试');
+        return {
+          items: [
+            {
+              source: '/downloads/Test.mkv',
+              target: `/library/retained/result-${count}.mkv`,
+              status: 'ready',
+            },
+          ],
+          total: 1,
+          submitted: 0,
+          failed: 0,
+        };
+      },
+    },
+  );
+  await dialog.preview();
+  await dialog.preview();
+  assert.equal(dialog.requests.length, 2);
+  assert.ok(dialog.nodes().some((node) => renderedText(node).includes('无法读取源文件，请重试')));
+  assert.equal(
+    dialog.nodes().some((node) => renderedText(node).includes('result-1.mkv')),
+    false,
+  );
+  assert.equal(dialog.pathInput().props.value, '/library/retained');
+  assert.equal(renderedText(dialog.previewButton()).trim(), '预览');
+  assert.equal(dialog.previewButton().props.disabled, false);
+  await dialog.preview();
+  assert.equal(dialog.requests.length, 3);
+  assert.ok(dialog.nodes().some((node) => renderedText(node).includes('result-3.mkv')));
 });

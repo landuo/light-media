@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, useId } from 'vue';
 import {
   api,
   action,
@@ -27,12 +27,11 @@ import {
   type CalendarView,
 } from '../features/subscription-calendar';
 import AppIcon from './AppIcon.vue';
-import Policy from './Policy.vue';
 import Schedule from './Schedule.vue';
 import MappingRules from './MappingRules.vue';
 import MultiSeasonSubscribe from './MultiSeasonSubscribe.vue';
-import DownloadTarget from './DownloadTarget.vue';
-import { downloadDestination } from '../features/download-directories';
+import SubscriptionField from './SubscriptionField.vue';
+import { downloadDestination, downloadDirectoryPaths } from '../features/download-directories';
 const props = defineProps<{ view: string }>(),
   subs = ref<any[]>([]),
   entries = ref<any[]>([]),
@@ -51,11 +50,25 @@ const props = defineProps<{ view: string }>(),
   lookupResults = ref<any[]>([]),
   editingTab = ref('basic'),
   sitesOpen = ref(false),
+  siteQuery = ref(''),
+  activeSite = ref(-1),
   selectedEvent = ref<any>(null),
   loading = ref(false);
 const calendarView = ref<CalendarView>('month'),
   calendarAnchor = ref(calendarDay(new Date()));
 const siteOptions = computed(() => (ui.settings?.sites || []).filter((site: any) => site.enabled));
+const visibleSiteOptions = computed(() =>
+  siteOptions.value.filter((site: any) =>
+    String(site.name || site.id)
+      .toLocaleLowerCase()
+      .includes(siteQuery.value.toLocaleLowerCase()),
+  ),
+);
+const downloaderOptions = computed(() =>
+  (ui.settings?.downloaders || []).filter((downloader: any) => downloader.enabled !== false),
+);
+const downloadPaths = computed(() => downloadDirectoryPaths(ui.settings?.directories || []));
+const editorID = 'subscription-editor-' + useId();
 const selectedSites = computed(() =>
   (editing.value?.site_ids || []).map(
     (id: string) => ui.settings?.sites?.find((site: any) => site.id === id) || { id, name: id },
@@ -139,6 +152,47 @@ function toggleSite(id: string) {
   editing.value.site_ids = values.includes(id)
     ? values.filter((value: string) => value !== id)
     : [...values, id];
+  siteQuery.value = '';
+  activeSite.value = -1;
+}
+function closeSites() {
+  sitesOpen.value = false;
+  siteQuery.value = '';
+  activeSite.value = -1;
+}
+function siteKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    closeSites();
+    event.stopPropagation();
+    return;
+  }
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    event.preventDefault();
+    sitesOpen.value = true;
+    const count = visibleSiteOptions.value.length;
+    if (count)
+      activeSite.value =
+        activeSite.value < 0
+          ? event.key === 'ArrowDown'
+            ? 0
+            : count - 1
+          : (activeSite.value + (event.key === 'ArrowDown' ? 1 : -1) + count) % count;
+  } else if (event.key === 'Enter' && sitesOpen.value) {
+    event.preventDefault();
+    const site = visibleSiteOptions.value[Math.max(activeSite.value, 0)];
+    if (site) toggleSite(site.id);
+  }
+}
+function policyCSV(field: string, event: Event) {
+  editing.value.policy[field] = (event.target as HTMLInputElement).value
+    .split(/[,，]+/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+function policySize(field: string, event: Event) {
+  const value = Number((event.target as HTMLInputElement).value);
+  editing.value.policy[field] =
+    Number.isFinite(value) && value > 0 ? Math.round(value * 1073741824) : 0;
 }
 function setSeason(value: number) {
   editing.value.season = value;
@@ -198,6 +252,8 @@ function begin(s?: any) {
   multiSeason.value = false;
   editingTab.value = 'basic';
   sitesOpen.value = false;
+  siteQuery.value = '';
+  activeSite.value = -1;
   convertLegacy.value = false;
   editing.value.start_episode ||= 1;
   editing.value.download_path ||= '';
@@ -283,9 +339,15 @@ async function save() {
   }
 }
 async function remove(s: any) {
-  if (!confirm('删除《' + s.media.title + '》的订阅？已下载文件会保留。')) return;
+  if (!confirm('删除《' + s.media.title + '》的订阅？已下载文件会保留。')) return false;
   const r = await action(() => api('/subscriptions/' + s.id, undefined, 'DELETE'), '订阅已删除');
-  if (r !== undefined) load();
+  if (r === undefined) return false;
+  await load();
+  return true;
+}
+async function cancelSubscription() {
+  const current = editing.value;
+  if ((await remove(current)) && editing.value === current) editing.value = null;
 }
 async function check(s: any) {
   await action(() => api('/subscriptions/' + s.id + '/check', {}), '检查任务已提交');
@@ -592,18 +654,23 @@ watch(() => props.view, applyView);
       <p>可以从发现页选择作品，或在此创建订阅。</p>
     </div></template
   >
-  <div v-if="editing && !multiSeason" class="modal-backdrop">
+  <div
+    v-if="editing && !multiSeason"
+    class="modal-backdrop subscription-editor-backdrop"
+    @click.self="editing = null"
+  >
     <section
       class="modal subscription-dialog"
       role="dialog"
       aria-modal="true"
-      aria-label="订阅设置"
+      :aria-labelledby="editorID + '-title'"
+      @keydown.esc="editing = null"
     >
       <header class="subscription-dialog-header">
         <div class="subscription-dialog-title">
-          <AppIcon name="jobs" />
+          <AppIcon name="clipboard" />
           <div>
-            <h2>{{ editing.id ? '编辑订阅' : '新建订阅' }}</h2>
+            <h2 :id="editorID + '-title'">{{ editing.id ? '编辑订阅' : '新建订阅' }}</h2>
             <p v-if="editing.media">
               {{ editing.media.title
               }}{{ editing.media.media_type === 'tv' ? ' 第 ' + editing.season + ' 季' : '' }}
@@ -630,59 +697,77 @@ watch(() => props.view, applyView);
           </div>
         </div>
         <template v-else>
-          <div class="tabs">
-            <button :class="{ selected: editingTab === 'basic' }" @click="editingTab = 'basic'">
+          <div class="tabs subscription-edit-tabs" role="tablist" aria-label="订阅设置">
+            <button
+              :id="editorID + '-basic-tab'"
+              role="tab"
+              :aria-selected="editingTab === 'basic'"
+              :aria-controls="editorID + '-basic'"
+              :class="{ selected: editingTab === 'basic' }"
+              @click="
+                editingTab = 'basic';
+                closeSites();
+              "
+            >
               基础</button
             ><button
+              :id="editorID + '-advanced-tab'"
+              role="tab"
+              :aria-selected="editingTab === 'advanced'"
+              :aria-controls="editorID + '-advanced'"
               :class="{ selected: editingTab === 'advanced' }"
-              @click="editingTab = 'advanced'"
+              @click="
+                editingTab = 'advanced';
+                closeSites();
+              "
             >
               进阶
             </button>
           </div>
-          <div v-show="editingTab === 'basic'">
-            <div v-if="editing.media.media_type === 'tv'" class="form-grid three-columns">
-              <label
-                >季号<select
-                  :value="editing.season"
-                  @change="setSeason(Number(($event.target as HTMLSelectElement).value))"
-                >
-                  <option
-                    v-for="season in (editing.media.seasons || []).filter(
-                      (value: any) => value.season_number > 0,
-                    )"
-                    :key="season.season_number"
-                    :value="season.season_number"
-                  >
-                    {{ season.name || '第 ' + season.season_number + ' 季' }}
-                  </option>
-                  <option v-if="!editing.media.seasons?.length" :value="editing.season">
-                    第 {{ editing.season }} 季
-                  </option>
-                </select></label
+          <div
+            v-show="editingTab === 'basic'"
+            :id="editorID + '-basic'"
+            role="tabpanel"
+            :aria-labelledby="editorID + '-basic-tab'"
+            class="subscription-basic"
+          >
+            <div class="subscription-edit-grid three-columns">
+              <SubscriptionField label="搜索关键词" icon="search" hint="指定搜索站点时使用的关键词">
+                <input v-model.trim="editing.keyword" aria-label="搜索关键词" />
+              </SubscriptionField>
+              <SubscriptionField
+                v-if="editing.media.media_type === 'tv'"
+                label="总集数"
+                icon="playlist"
+                hint="剧集总集数"
               >
-            </div>
-            <div class="form-grid three-columns">
-              <label>搜索关键词<input v-model.trim="editing.keyword" /></label>
-              <label v-if="editing.media.media_type === 'tv'"
-                >总集数<input
+                <input
                   v-model.number="editing.total_episodes"
+                  aria-label="总集数"
                   type="number"
                   min="0"
                   step="1"
                   placeholder="自动"
-              /></label>
-              <label v-if="editing.media.media_type === 'tv'"
-                >开始集数<input
+                />
+              </SubscriptionField>
+              <SubscriptionField
+                v-if="editing.media.media_type === 'tv'"
+                label="开始集数"
+                icon="play"
+                hint="开始订阅集数"
+              >
+                <input
                   v-model.number="editing.start_episode"
+                  aria-label="开始集数"
                   type="number"
                   min="1"
                   step="1"
-              /></label>
+                />
+              </SubscriptionField>
             </div>
-            <div class="form-grid three-columns">
-              <label
-                >质量<select v-model="editing.policy.source">
+            <div class="subscription-edit-grid three-columns">
+              <SubscriptionField label="质量" icon="quality" hint="订阅资源质量">
+                <select v-model="editing.policy.source" aria-label="质量">
                   <option value="">默认</option>
                   <option value="WEB-DL">WEB-DL</option>
                   <option value="WEBRip">WEBRip</option>
@@ -691,77 +776,271 @@ watch(() => props.view, applyView);
                   <option value="HDTV">HDTV</option>
                   <option value="REMUX">REMUX</option>
                   <option value="DVD">DVD</option>
-                </select></label
-              >
-              <label
-                >分辨率<select v-model="editing.policy.resolution">
+                </select>
+              </SubscriptionField>
+              <SubscriptionField label="分辨率" icon="tv" hint="订阅资源分辨率">
+                <select v-model="editing.policy.resolution" aria-label="分辨率">
                   <option value="">默认</option>
                   <option>2160p</option>
                   <option>1080p</option>
                   <option>720p</option>
-                </select></label
-              >
-              <label
-                >特效<select v-model="editing.policy.hdr">
+                </select>
+              </SubscriptionField>
+              <SubscriptionField label="特效" icon="sparkles" hint="订阅资源特效">
+                <select v-model="editing.policy.hdr" aria-label="特效">
                   <option value="">默认</option>
                   <option value="sdr">SDR</option>
                   <option value="hdr10">HDR10</option>
                   <option value="hdr10plus">HDR10+</option>
                   <option value="dolby_vision">Dolby Vision</option>
-                </select></label
-              >
+                </select>
+              </SubscriptionField>
             </div>
-            <div class="subscription-sites">
-              <label>订阅站点</label>
+            <div
+              class="subscription-sites"
+              @focusout="
+                if (!($event.currentTarget as HTMLElement).contains($event.relatedTarget as Node))
+                  closeSites();
+              "
+            >
+              <span class="subscription-sites-label">订阅站点</span>
               <div class="site-selection">
-                <span v-for="site in selectedSites" :key="site.id" class="site-chip"
-                  >{{ site.name
-                  }}<button
-                    class="icon-button"
-                    :aria-label="'取消 ' + site.name"
-                    @click="toggleSite(site.id)"
-                  >
-                    ×
-                  </button></span
-                ><button
-                  class="site-dropdown"
+                <AppIcon name="globe" />
+                <div class="site-values">
+                  <span v-for="site in selectedSites" :key="site.id" class="site-chip">{{
+                    site.name
+                  }}</span>
+                  <input
+                    v-model="siteQuery"
+                    class="site-query"
+                    role="combobox"
+                    aria-label="搜索订阅站点"
+                    autocomplete="off"
+                    :placeholder="selectedSites.length ? '' : '默认'"
+                    :aria-expanded="sitesOpen"
+                    :aria-controls="editorID + '-sites'"
+                    :aria-activedescendant="
+                      activeSite >= 0 ? editorID + '-site-' + activeSite : undefined
+                    "
+                    @focus="sitesOpen = true"
+                    @input="
+                      sitesOpen = true;
+                      activeSite = 0;
+                    "
+                    @keydown="siteKeydown"
+                  />
+                </div>
+                <button
+                  class="icon-button site-dropdown"
+                  aria-label="订阅站点选择"
                   :aria-expanded="sitesOpen"
-                  @click="sitesOpen = !sitesOpen"
+                  @click="sitesOpen ? closeSites() : (sitesOpen = true)"
                 >
-                  {{ selectedSites.length ? '⌄' : '默认　⌄' }}</button
+                  <AppIcon :name="sitesOpen ? 'chevron-up' : 'chevron-down'" /></button
                 ><button
                   v-if="selectedSites.length"
                   class="icon-button"
                   aria-label="清除站点"
-                  @click="editing.site_ids = []"
+                  @click="
+                    editing.site_ids = [];
+                    siteQuery = '';
+                    activeSite = -1;
+                  "
                 >
-                  ×
+                  <AppIcon name="close" />
                 </button>
               </div>
-              <div v-if="sitesOpen" class="site-options">
-                <label v-for="site in siteOptions" :key="site.id" class="check"
-                  ><input
-                    type="checkbox"
-                    :checked="editing.site_ids.includes(site.id)"
-                    @change="toggleSite(site.id)"
-                  />{{ site.name }}</label
+              <small>订阅的站点范围，不选使用系统设置</small>
+              <div
+                v-if="sitesOpen"
+                :id="editorID + '-sites'"
+                class="site-options"
+                role="listbox"
+                aria-label="订阅站点"
+                aria-multiselectable="true"
+                @keydown.esc.stop="closeSites"
+              >
+                <button
+                  v-for="(site, index) in visibleSiteOptions"
+                  :id="editorID + '-site-' + index"
+                  :key="site.id"
+                  role="option"
+                  :aria-selected="editing.site_ids.includes(site.id)"
+                  :class="{ 'site-option-active': activeSite === index }"
+                  @click="toggleSite(site.id)"
                 >
-                <p v-if="!siteOptions.length" class="hint">没有启用的站点。</p>
+                  <span
+                    class="site-option-check"
+                    :class="{ checked: editing.site_ids.includes(site.id) }"
+                  >
+                    <AppIcon v-if="editing.site_ids.includes(site.id)" name="check" />
+                  </span>
+                  {{ site.name }}
+                </button>
+                <p v-if="!visibleSiteOptions.length" class="hint">
+                  {{ siteOptions.length ? '没有匹配的站点。' : '没有启用的站点。' }}
+                </p>
               </div>
             </div>
-            <DownloadTarget
-              v-model:downloader="editing.downloader_id"
-              v-model:download-path="editing.download_path"
-            />
+            <div class="subscription-edit-grid">
+              <SubscriptionField label="下载器" icon="download" hint="指定该订阅使用的下载器">
+                <select v-model="editing.downloader_id" aria-label="下载器">
+                  <option value="">默认</option>
+                  <option
+                    v-for="downloader in downloaderOptions"
+                    :key="downloader.id"
+                    :value="downloader.id"
+                  >
+                    {{ downloader.name || downloader.id }}
+                  </option>
+                </select>
+              </SubscriptionField>
+              <SubscriptionField
+                label="保存路径"
+                icon="folder"
+                hint="指定该订阅的下载保存路径，留空自动使用设定的下载目录"
+              >
+                <input
+                  v-model="editing.download_path"
+                  aria-label="保存目录"
+                  :list="editorID + '-directories'"
+                  placeholder="自动"
+                />
+              </SubscriptionField>
+              <datalist :id="editorID + '-directories'">
+                <option v-for="path in downloadPaths" :key="path" :value="path" />
+              </datalist>
+            </div>
           </div>
-          <div v-show="editingTab === 'advanced'" class="subscription-advanced">
-            <Policy :model="editing.policy" advanced />
-            <label
-              >状态<select v-model="editing.state">
-                <option value="active">启用</option>
-                <option value="paused">暂停</option>
-              </select></label
-            >
+          <div
+            v-show="editingTab === 'advanced'"
+            :id="editorID + '-advanced'"
+            role="tabpanel"
+            :aria-labelledby="editorID + '-advanced-tab'"
+            class="subscription-advanced"
+          >
+            <div class="subscription-edit-grid">
+              <SubscriptionField
+                label="包含（关键字、正则式）"
+                icon="plus"
+                hint="包含规则，支持正则表达式"
+              >
+                <input v-model="editing.policy.include" aria-label="包含" />
+              </SubscriptionField>
+              <SubscriptionField
+                label="排除（关键字、正则式）"
+                icon="close"
+                hint="排除规则，支持正则表达式"
+              >
+                <input v-model="editing.policy.exclude" aria-label="排除" />
+              </SubscriptionField>
+            </div>
+            <div class="subscription-edit-grid">
+              <SubscriptionField
+                v-if="editing.media.media_type === 'tv'"
+                label="指定季"
+                icon="calendar"
+                hint="指定订阅的季度"
+              >
+                <select
+                  :value="editing.season"
+                  aria-label="季"
+                  @change="setSeason(Number(($event.target as HTMLSelectElement).value))"
+                >
+                  <option v-for="season in 99" :key="season" :value="season">
+                    第 {{ season }} 季
+                  </option>
+                </select>
+              </SubscriptionField>
+              <SubscriptionField label="状态" icon="play" hint="暂停后停止自动检查，已下载文件保留">
+                <select v-model="editing.state" aria-label="订阅状态">
+                  <option value="active">启用</option>
+                  <option value="paused">暂停</option>
+                </select>
+              </SubscriptionField>
+            </div>
+            <h3>资源筛选</h3>
+            <div class="subscription-edit-grid">
+              <SubscriptionField label="最低做种数" icon="upload">
+                <input
+                  v-model.number="editing.policy.min_seeders"
+                  aria-label="最低做种数"
+                  type="number"
+                  min="0"
+                />
+              </SubscriptionField>
+              <SubscriptionField label="编码" icon="film">
+                <select v-model="editing.policy.codec" aria-label="编码">
+                  <option value="">不限</option>
+                  <option>HEVC</option>
+                  <option>AVC</option>
+                  <option>AV1</option>
+                </select>
+              </SubscriptionField>
+              <SubscriptionField label="音轨语言" icon="globe" hint="多个语言用逗号分隔，如 zh, en">
+                <input
+                  :value="(editing.policy.languages || []).join(', ')"
+                  aria-label="音轨语言"
+                  @input="policyCSV('languages', $event)"
+                />
+              </SubscriptionField>
+              <SubscriptionField label="字幕" icon="logs" hint="多个字幕用逗号分隔，如 zh-Hans, en">
+                <input
+                  :value="(editing.policy.subtitles || []).join(', ')"
+                  aria-label="字幕"
+                  @input="policyCSV('subtitles', $event)"
+                />
+              </SubscriptionField>
+              <SubscriptionField label="最小体积（GiB）" icon="filter">
+                <input
+                  :value="editing.policy.min_bytes ? editing.policy.min_bytes / 1073741824 : ''"
+                  aria-label="最小体积（GiB）"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder="不限制"
+                  @input="policySize('min_bytes', $event)"
+                />
+              </SubscriptionField>
+              <SubscriptionField label="最大体积（GiB）" icon="filter">
+                <input
+                  :value="editing.policy.max_bytes ? editing.policy.max_bytes / 1073741824 : ''"
+                  aria-label="最大体积（GiB）"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder="不限制"
+                  @input="policySize('max_bytes', $event)"
+                />
+              </SubscriptionField>
+              <SubscriptionField
+                label="优先发布组"
+                icon="sort"
+                hint="按优先顺序填写，多个发布组用逗号分隔"
+              >
+                <input
+                  :value="(editing.policy.preferred_groups || []).join(', ')"
+                  aria-label="优先发布组"
+                  @input="policyCSV('preferred_groups', $event)"
+                />
+              </SubscriptionField>
+              <SubscriptionField
+                label="优先分辨率"
+                icon="tv"
+                hint="按优先顺序填写，如 2160p, 1080p"
+              >
+                <input
+                  :value="(editing.policy.preferred_resolutions || []).join(', ')"
+                  aria-label="优先分辨率"
+                  @input="policyCSV('preferred_resolutions', $event)"
+                />
+              </SubscriptionField>
+            </div>
+            <label class="subscription-toggle">
+              <input v-model="editing.policy.free_only" type="checkbox" />
+              <span>仅免费资源</span>
+            </label>
+            <p class="hint">硬性要求用于筛选资源；优先条件只影响排序，不会自动升级已入库作品。</p>
             <h3>更新时间与检查周期</h3>
             <Schedule :model="editing.schedule" />
             <template v-if="editing.media.media_type === 'tv'">
@@ -795,6 +1074,14 @@ watch(() => props.view, applyView);
       </div>
       <footer v-if="editing.media" class="subscription-dialog-footer button-row">
         <button
+          v-if="editing.id"
+          class="cancel-subscription"
+          :disabled="ui.busy > 0"
+          @click="cancelSubscription"
+        >
+          取消订阅
+        </button>
+        <button
           v-if="
             !editing.id && editing.media.media_type === 'tv' && editing.media.seasons?.length > 1
           "
@@ -802,8 +1089,10 @@ watch(() => props.view, applyView);
         >
           选择多个季度订阅
         </button>
-        <button @click="editing = null">取消</button
-        ><button class="primary" :disabled="ui.busy > 0" @click="save">保存</button>
+        <span class="subscription-action-spacer"></span>
+        <button class="primary subscription-save" :disabled="ui.busy > 0" @click="save">
+          <AppIcon name="save" />保存
+        </button>
       </footer>
     </section>
   </div>
@@ -1387,7 +1676,7 @@ watch(() => props.view, applyView);
   flex-direction: column;
   width: min(720px, calc(100vw - 48px));
   max-width: 720px;
-  max-height: calc(100dvh - 48px);
+  max-height: min(92dvh, 1024px);
   padding: 0;
   border-radius: 8px;
   overflow: hidden;
@@ -1409,6 +1698,10 @@ watch(() => props.view, applyView);
 .subscription-dialog-title > :deep(.app-icon) {
   width: 24px;
   height: 24px;
+  color: var(--muted);
+}
+.subscription-dialog-title > div {
+  min-width: 0;
 }
 .subscription-dialog-title h2 {
   margin: 0;
@@ -1419,6 +1712,9 @@ watch(() => props.view, applyView);
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .subscription-dialog-body {
   flex: 1;
@@ -1426,8 +1722,31 @@ watch(() => props.view, applyView);
   overflow: auto;
   padding: 0 20px 20px;
 }
-.subscription-dialog-body > .tabs {
-  margin-bottom: 20px;
+.subscription-edit-tabs {
+  display: flex;
+  width: 100%;
+  margin: 0 0 28px;
+  border-bottom: 1px solid var(--line);
+}
+.subscription-edit-tabs > button {
+  flex: 0 0 90px;
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.subscription-basic {
+  display: grid;
+  gap: 24px;
+}
+.subscription-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+}
+.subscription-advanced > .subscription-edit-grid + .subscription-edit-grid {
+  margin-top: 24px;
 }
 .subscription-dialog-footer {
   display: flex;
@@ -1436,7 +1755,20 @@ watch(() => props.view, applyView);
   flex-wrap: wrap;
   gap: 8px;
   margin: 0;
-  padding: 12px 20px;
+  padding: 12px 24px 16px;
+}
+.subscription-action-spacer {
+  flex: 1;
+}
+.subscription-dialog-footer .cancel-subscription {
+  border-color: transparent;
+  background: rgba(255, 76, 81, 0.12);
+  color: var(--danger);
+  box-shadow: none;
+}
+.subscription-save {
+  gap: 8px;
+  padding-inline: 20px;
 }
 .three-columns {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1448,40 +1780,85 @@ watch(() => props.view, applyView);
 }
 .subscription-sites {
   position: relative;
-  margin: 20px 0;
-  font-size: 14px;
+  min-width: 0;
+}
+.subscription-sites-label {
+  position: absolute;
+  z-index: 1;
+  top: -8px;
+  left: 12px;
+  padding: 0 4px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+.subscription-sites:focus-within .subscription-sites-label {
+  color: var(--accent);
 }
 .site-selection {
   display: flex;
   align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 7px 12px;
+  border: 1px solid rgba(58, 53, 65, 0.22);
+  border-radius: 6px;
+}
+.site-selection:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.site-selection > :deep(.app-icon) {
+  width: 24px;
+  height: 24px;
+  color: var(--muted);
+}
+.site-values {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  min-height: 48px;
-  margin-top: 7px;
-  padding: 5px 8px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+}
+.site-query {
+  flex: 1;
+  width: 80px;
+  min-width: 60px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 16px;
+}
+.site-query:focus {
+  box-shadow: none;
+}
+.subscription-sites > small {
+  display: block;
+  margin: 4px 12px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 18px;
 }
 .site-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 5px 2px 9px;
-  border-radius: 6px;
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-.site-chip .icon-button {
-  min-width: 24px;
-  min-height: 24px;
-  padding: 2px;
-  font-size: 17px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 12px;
+  background: rgba(58, 53, 65, 0.08);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 24px;
 }
 .site-dropdown {
-  flex: 1;
-  justify-content: flex-start;
+  flex: none;
+  min-width: 24px;
   min-height: 32px;
-  padding: 4px;
+  padding: 0;
   border: 0;
   background: none;
   color: var(--muted);
@@ -1491,24 +1868,49 @@ watch(() => props.view, applyView);
 .site-options {
   position: absolute;
   z-index: 10;
-  top: 100%;
+  top: 60px;
   left: 0;
   width: 100%;
   max-height: 210px;
   overflow: auto;
   padding: 8px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(58, 53, 65, 0.12);
 }
-.site-options > label {
+.site-options > button {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
   min-height: 40px;
   padding: 8px 12px;
+  border: 0;
   border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
 }
-.site-options > label:hover {
+.site-options > button:hover,
+.site-options > .site-option-active {
   background: var(--accent-soft);
+}
+.site-option-check {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--muted);
+  border-radius: 3px;
+}
+.site-option-check.checked {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+.site-option-check :deep(.app-icon) {
+  width: 15px;
+  height: 15px;
 }
 .subscription-advanced > h3 {
   margin-top: 24px;
@@ -1517,6 +1919,42 @@ watch(() => props.view, applyView);
   color: var(--text);
   font-size: 16px;
   font-weight: 500;
+}
+.subscription-advanced > :deep(.section-heading) {
+  margin-top: 24px;
+}
+.subscription-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.subscription-toggle input {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  appearance: none;
+  background: rgba(58, 53, 65, 0.28);
+}
+.subscription-toggle input::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  content: '';
+}
+.subscription-toggle input:checked {
+  background: var(--accent);
+}
+.subscription-toggle input:checked::after {
+  transform: translateX(14px);
 }
 .event-detail {
   display: flex;
@@ -1582,6 +2020,10 @@ watch(() => props.view, applyView);
   }
 }
 @media (max-width: 959px) {
+  .subscription-editor-backdrop {
+    padding: 0;
+    overflow: hidden;
+  }
   .subscription-dialog {
     width: 100vw;
     max-width: 100vw;
@@ -1589,6 +2031,7 @@ watch(() => props.view, applyView);
     max-height: 100dvh;
     border-radius: 0;
   }
+  .subscription-edit-grid,
   .three-columns {
     grid-template-columns: 1fr;
   }

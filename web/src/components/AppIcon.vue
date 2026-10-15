@@ -12,6 +12,12 @@ const paths: Record<string, string> = {
   download: 'M12 3v13 M7 11l5 5 5-5 M4 16v5h16v-5',
   chart: 'M4 4v16h17 M9 15v-4 M14 15V7 M19 15v-6',
   check: 'M5 12l4 4L19 6',
+  save: 'M4 3h13l4 4v14H3V3h1Z M7 3v6h10V3 M7 21v-8h10v8',
+  clipboard: 'M8 5H5v16h14V5h-3 M9 3h6v4H9V3Z M8 11h8 M8 15h2 M8 18h2 M13 15h3',
+  playlist: 'M4 5h12 M4 10h12 M4 15h7 M16 13l5 4-5 4v-8Z',
+  quality: 'M3 5h18v14H3V5Z M7 8v8 M11 8v8 M7 12h4 M15 8h3v8h-3V8Z M17 14l3 4',
+  sparkles:
+    'm15 2 1.8 4.2L21 8l-4.2 1.8L15 14l-1.8-4.2L9 8l4.2-1.8L15 2Z M3 18l7-7 M3 3v4 M1 5h4 M18 17v4 M16 19h4',
   clock: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z M12 7v5l3 2',
   'arrow-up': 'M12 20V4 M6 10l6-6 6 6',
   'arrow-down': 'M12 4v16 M6 14l6 6 6-6',

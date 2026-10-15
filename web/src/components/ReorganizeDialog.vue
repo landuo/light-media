@@ -170,13 +170,10 @@ function payload(preview: boolean, background = false) {
 }
 async function preview() {
   if (busy.value || previewBusy.value) return;
-  if (previewVisible.value) {
-    previewVisible.value = false;
-    return;
-  }
   previewVisible.value = true;
   previewBusy.value = true;
   error.value = '';
+  result.value = null;
   try {
     result.value = await api('/files/organize', payload(true));
   } catch (e) {
@@ -509,8 +506,13 @@ onUnmounted(() => {
           </section>
         </div>
         <footer class="organize-actions">
-          <button class="preview-action" :disabled="busy || previewBusy" @click="preview">
-            {{ previewBusy ? '正在预览…' : previewVisible ? '隐藏预览' : '预览' }}</button
+          <button
+            class="preview-action"
+            :disabled="busy || previewBusy"
+            :aria-busy="previewBusy"
+            @click="preview"
+          >
+            预览</button
           ><button class="queue-action" :disabled="busy || previewBusy" @click="organize(true)">
             ＋ 加入整理队列</button
           ><span></span
