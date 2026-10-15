@@ -267,7 +267,7 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		return nil, e
 	}
 	if len(parts) == 1 && r.Method == "GET" {
-		rows, e := a.Store.DB.QueryContext(r.Context(), `SELECT seq,time,workflow_id,job_id,level,module,event,message FROM events WHERE workflow_id=? ORDER BY seq LIMIT 1000`, j.WorkflowID)
+		rows, e := a.Store.DB.QueryContext(r.Context(), `SELECT seq,time,workflow_id,job_id,level,module,event,message FROM events WHERE job_id=? ORDER BY seq LIMIT 1000`, j.ID)
 		if e != nil {
 			return nil, e
 		}
@@ -289,7 +289,11 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		if e != nil {
 			return nil, e
 		}
-		return map[string]any{"job": j, "events": events, "decisions": decisions}, nil
+		view, e := a.jobView(r.Context(), j)
+		if e != nil {
+			return nil, e
+		}
+		return map[string]any{"job": view, "events": events, "decisions": decisions}, nil
 	}
 	if len(parts) == 2 && r.Method == "POST" {
 		var result sql.Result

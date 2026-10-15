@@ -16,6 +16,7 @@ import {
   materialLabel,
 } from '../api';
 import DownloadReview from './DownloadReview.vue';
+import { jobQueueInfo } from '../features/job-queue';
 const props = defineProps<{ view: string; initialJob?: string }>(),
   data = ref<any>(null),
   loading = ref(false),
@@ -69,7 +70,7 @@ const names: any = {
     '扫描允许的目录，人工确认身份与季集，再预览执行。',
   ],
   library: ['LIBRARY', '我的媒体库', '查看媒体资产、外部文件登记与飞牛入库状态。'],
-  jobs: ['WORKFLOWS', '每一步都有迹可循', '失败任务可以查看原因并重试，取消仅影响当前任务。'],
+  jobs: ['WORKFLOWS', '任务队列', '查看具体处理的影视、文件与当前阶段，失败时可查看原因并重试。'],
   logs: ['OBSERVABILITY', '日志中心', '按级别、模块、任务和时间定位问题。'],
 };
 const filteredAssets = computed(() =>
@@ -78,6 +79,15 @@ const filteredAssets = computed(() =>
         (a.media?.title + ' ' + a.path).toLowerCase().includes(assetQuery.value.toLowerCase()),
       )
     : [],
+);
+const queueJobs = computed(() =>
+  (Array.isArray(data.value) ? data.value : []).map((job: any) => ({
+    ...job,
+    display: jobQueueInfo(job),
+  })),
+);
+const selectedJobInfo = computed(() =>
+  jobDetail.value?.job ? jobQueueInfo(jobDetail.value.job) : null,
 );
 let timer: number,
   sse: EventSource | null = null;
@@ -811,29 +821,48 @@ onUnmounted(() => {
     </div></template
   >
   <template v-else-if="view === 'jobs'"
-    ><div class="table-wrap">
+    ><div class="table-wrap job-queue-table">
       <table>
         <thead>
           <tr>
-            <th>任务</th>
-            <th>状态</th>
-            <th>执行安排</th>
-            <th>关联与操作</th>
+            <th>任务与对象</th>
+            <th>状态与阶段</th>
+            <th>执行时间</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="j in data || []" :key="j.id">
-            <td>
-              <button class="text-button" @click="inspectJob(j)">{{ label(j.kind) }}</button
-              ><small>{{ j.id }}</small
-              ><small class="error-text">{{ j.error_message || j.error_code }}</small>
+          <tr v-for="j in queueJobs" :key="j.id">
+            <td class="job-object">
+              <button class="text-button job-title" @click="inspectJob(j)">
+                {{ j.display.title }}
+              </button>
+              <small v-if="j.display.showSubject">{{ j.display.subject }}</small>
+              <small v-if="j.display.extra">{{ j.display.extra }}</small>
+              <small v-if="j.display.source" class="job-path" :title="j.display.source">
+                源：{{ j.display.source }}
+              </small>
+              <small v-if="j.display.target" class="job-path" :title="j.display.target">
+                目标：{{ j.display.target }}
+              </small>
             </td>
-            <td>
+            <td class="job-progress">
               <span :class="['badge', { bad: j.state === 'failed' }]">{{ label(j.state) }}</span
-              ><small>第 {{ j.attempt }} 次尝试</small>
+              ><small class="job-stage">{{ j.display.stage }}</small>
+              <small v-if="j.display.activity" class="job-activity">
+                最近记录：{{ j.display.activity }}
+                <span v-if="j.display.activityAt"> · {{ date(j.display.activityAt) }}</span>
+              </small>
+              <small v-if="j.error_message || j.error_code" class="error-text">
+                {{ j.error_message || j.error_code }}
+              </small>
             </td>
-            <td>
-              {{ date(j.updated_at) }}<small>计划：{{ date(j.run_at * 1000) }}</small>
+            <td class="job-timing">
+              <small>更新：{{ date(j.updated_at) }}</small>
+              <small v-if="['queued', 'retry_wait', 'waiting_paused'].includes(j.state)">
+                计划：{{ date(j.run_at * 1000) }}
+              </small>
+              <small>{{ j.attempt > 0 ? `已尝试 ${j.attempt} 次` : '尚未执行' }}</small>
             </td>
             <td>
               <div class="button-row">
@@ -854,7 +883,6 @@ onUnmounted(() => {
                   取消
                 </button>
               </div>
-              <small>{{ j.workflow_id }}</small>
             </td>
           </tr>
         </tbody>
@@ -862,7 +890,7 @@ onUnmounted(() => {
     </div>
     <div v-if="!data?.length && !loading" class="empty-state">
       <h3>当前没有任务</h3>
-      <p>下载、整理、刮削与媒体库操作会在这里记录。</p>
+      <p>下载、订阅检查、整理和刮削任务会在这里记录。</p>
     </div></template
   >
   <template v-else-if="view === 'logs'"
@@ -1078,16 +1106,44 @@ onUnmounted(() => {
     </section>
   </div>
   <div v-if="jobDetail" class="modal-backdrop" @click.self="jobDetail = null">
-    <section class="modal wide">
+    <section class="modal wide job-detail">
       <div class="section-heading">
-        <h2>任务详情 · {{ label(jobDetail.job.kind) }}</h2>
-        <button class="icon-button" @click="jobDetail = null">×</button>
+        <h2>{{ selectedJobInfo?.title }}</h2>
+        <button class="icon-button" aria-label="关闭任务详情" @click="jobDetail = null">×</button>
       </div>
-      <div class="notice">
-        {{ jobDetail.job.id }}<br />{{ label(jobDetail.job.state) }} ·
-        {{ jobDetail.job.workflow_id }}
+      <div class="notice job-detail-state">
+        <span :class="['badge', { bad: jobDetail.job.state === 'failed' }]">
+          {{ label(jobDetail.job.state) }}
+        </span>
+        <span>{{ selectedJobInfo?.stage }}</span>
       </div>
+      <dl class="job-facts">
+        <dt>任务类型</dt>
+        <dd>{{ selectedJobInfo?.typeLabel }}</dd>
+        <dt>处理对象</dt>
+        <dd>{{ selectedJobInfo?.subject }}</dd>
+        <template v-if="selectedJobInfo?.source">
+          <dt>源文件 / 目录</dt>
+          <dd>{{ selectedJobInfo.source }}</dd>
+        </template>
+        <template v-if="selectedJobInfo?.target">
+          <dt>目标文件 / 目录</dt>
+          <dd>{{ selectedJobInfo.target }}</dd>
+        </template>
+        <template v-if="selectedJobInfo?.fileCount">
+          <dt>文件数量</dt>
+          <dd>{{ selectedJobInfo.fileCount }} 个</dd>
+        </template>
+        <template v-if="selectedJobInfo?.downloader">
+          <dt>下载器</dt>
+          <dd>{{ selectedJobInfo.downloader }}</dd>
+        </template>
+        <dt>更新时间</dt>
+        <dd>{{ date(jobDetail.job.updated_at) }}</dd>
+      </dl>
       <p v-if="jobDetail.job.error_message" class="error-box">{{ jobDetail.job.error_message }}</p>
+      <h3>执行记录</h3>
+      <p v-if="!jobDetail.events?.length" class="muted">此任务暂无执行记录。</p>
       <div v-for="e in jobDetail.events || []" :key="e.seq" class="timeline-entry">
         <small>{{ date(e.time) }} · {{ e.level }} · {{ e.module }}</small>
         <p>{{ e.message || e.event }}</p>
@@ -1115,8 +1171,20 @@ onUnmounted(() => {
           {{ site.id }} · {{ label(site.status) }} · {{ friendly(site.message || '') }}
         </p>
       </details>
-      <details>
-        <summary>任务参数</summary>
+      <details class="job-technical">
+        <summary>技术信息与任务参数</summary>
+        <dl class="job-facts">
+          <dt>任务 ID</dt>
+          <dd>{{ jobDetail.job.id }}</dd>
+          <dt>工作流 ID</dt>
+          <dd>{{ jobDetail.job.workflow_id || '—' }}</dd>
+          <dt>任务类型标识</dt>
+          <dd>{{ jobDetail.job.kind }}</dd>
+          <dt>执行次数</dt>
+          <dd>{{ jobDetail.job.attempt }}</dd>
+          <dt>创建时间</dt>
+          <dd>{{ date(jobDetail.job.created_at) }}</dd>
+        </dl>
         <pre class="code-box">{{ JSON.stringify(jobDetail.job.payload, null, 2) }}</pre>
       </details>
       <div class="button-row">
@@ -1140,3 +1208,106 @@ onUnmounted(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+.job-object {
+  width: 41%;
+  min-width: 240px;
+  max-width: 450px;
+}
+.job-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.job-path {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.job-progress {
+  min-width: 180px;
+  max-width: 300px;
+}
+.job-stage {
+  color: #43516a;
+}
+.job-activity {
+  overflow-wrap: anywhere;
+}
+.job-timing {
+  min-width: 155px;
+}
+.job-detail .section-heading {
+  align-items: start;
+}
+.job-detail h2 {
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.job-detail-state {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.job-facts {
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr);
+  gap: 10px 16px;
+  margin: 20px 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.job-facts dt {
+  color: #69768a;
+}
+.job-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #43516a;
+}
+.job-technical {
+  margin-top: 18px;
+}
+@media (max-width: 760px) {
+  .job-queue-table table,
+  .job-queue-table tbody,
+  .job-queue-table tr,
+  .job-queue-table td {
+    display: block;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+  }
+  .job-queue-table thead {
+    display: none;
+  }
+  .job-queue-table tr {
+    padding: 16px;
+    border-bottom: 1px solid #edf0f5;
+  }
+  .job-queue-table tr:last-child {
+    border-bottom: 0;
+  }
+  .job-queue-table td {
+    padding: 0;
+    border: 0;
+  }
+  .job-queue-table td + td {
+    margin-top: 12px;
+  }
+  .job-timing small {
+    display: inline;
+    margin-right: 10px;
+  }
+  .job-facts {
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 10px;
+  }
+}
+</style>
