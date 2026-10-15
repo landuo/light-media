@@ -152,13 +152,6 @@ onMounted(load);
       <div>
         <p class="eyebrow">{{ query ? 'SEARCH' : 'YOUR NEXT FAVORITE' }}</p>
         <h1>{{ query ? '“' + query + '” 的搜索结果' : '发现好故事' }}</h1>
-        <p class="muted">
-          {{
-            query
-              ? '电影和剧集一起呈现，在结果中直接搜索资源或订阅。'
-              : '热门、高分和最新趋势，找到想看的电影与剧集。'
-          }}
-        </p>
       </div>
       <form v-if="parts[0] === 'search'" class="search-field" @submit.prevent="submitSearch">
         <span>⌕</span

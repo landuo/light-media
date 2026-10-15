@@ -119,7 +119,6 @@ onMounted(load);
     <header class="section-heading">
       <div>
         <h2>目录</h2>
-        <p class="muted">设置媒体文件整理目录结构，按先后顺序依次匹配。</p>
       </div>
     </header>
     <p v-if="loadError" class="error-box">{{ loadError }}</p>
@@ -142,7 +141,7 @@ onMounted(load);
               class="icon-button directory-drag"
               draggable="true"
               aria-label="拖动排序"
-              title="拖动排序"
+              title="拖动排序，按排列顺序依次匹配目录规则"
               @dragstart="dragging = directory._key"
               @dragend="dragging = ''"
             >

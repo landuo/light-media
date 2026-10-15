@@ -165,7 +165,6 @@ onMounted(load);
     <header class="manager-heading">
       <div>
         <h1>站点管理</h1>
-        <p>维护资源站点，查看账户流量、分享率和做种数据。</p>
       </div>
       <div class="manager-actions">
         <button :disabled="loading || refreshing.length > 0" @click="refreshAll">

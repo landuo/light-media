@@ -63,15 +63,11 @@ let candidateGeneration = 0,
   registrationGeneration = 0,
   identityGeneration = 0;
 const names: any = {
-  downloads: ['DOWNLOADS', '下载任务', '下载器保持原有做种状态，整理不会移动或删除下载源。'],
-  organize: [
-    'ORGANIZE',
-    '整理，让文件回到该在的位置',
-    '扫描允许的目录，人工确认身份与季集，再预览执行。',
-  ],
-  library: ['LIBRARY', '我的媒体库', '查看媒体资产、外部文件登记与飞牛入库状态。'],
-  jobs: ['WORKFLOWS', '任务队列', '查看具体处理的影视、文件与当前阶段，失败时可查看原因并重试。'],
-  logs: ['OBSERVABILITY', '日志中心', '按级别、模块、任务和时间定位问题。'],
+  downloads: ['DOWNLOADS', '下载任务'],
+  organize: ['ORGANIZE', '整理，让文件回到该在的位置'],
+  library: ['LIBRARY', '我的媒体库'],
+  jobs: ['WORKFLOWS', '任务队列'],
+  logs: ['OBSERVABILITY', '日志中心'],
 };
 const filteredAssets = computed(() =>
   Array.isArray(data.value)
@@ -436,7 +432,6 @@ onUnmounted(() => {
     <div>
       <p class="eyebrow">{{ names[view]?.[0] }}</p>
       <h1>{{ names[view]?.[1] }}</h1>
-      <p class="muted">{{ names[view]?.[2] }}</p>
     </div>
     <button @click="load()" :disabled="loading">↻ 刷新</button>
   </div>

@@ -101,7 +101,6 @@ onMounted(load);
     <header class="section-heading">
       <div>
         <h2>下载器</h2>
-        <p class="muted">设置下载器连接信息。</p>
       </div>
     </header>
     <div class="downloader-grid">

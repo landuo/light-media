@@ -204,7 +204,6 @@ onUnmounted(() => {
     <div>
       <p class="eyebrow">SEARCH</p>
       <h1>资源搜索</h1>
-      <p class="muted">直接按资源标题、发布组或关键词搜索站点。</p>
     </div>
     <form class="search-field" @submit.prevent="submitSearch">
       <input v-model="query" placeholder="搜索资源关键词" required /><button class="small primary">
