@@ -433,7 +433,7 @@ onUnmounted(() => {
             }}
           </p>
         </div>
-        <div v-else class="file-list" aria-label="文件列表">
+        <div v-else class="file-manager-list" aria-label="文件列表">
           <div
             v-for="item in items"
             :key="item.path"
@@ -680,13 +680,16 @@ onUnmounted(() => {
 </template>
 <style scoped>
 .file-manager {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   background: var(--surface);
   border-radius: 10px;
   overflow: hidden;
-  min-height: calc(100dvh - 132px);
+  height: calc(100dvh - 132px);
 }
 .file-toolbar {
+  flex: none;
   min-height: 60px;
   display: flex;
   align-items: center;
@@ -752,13 +755,18 @@ onUnmounted(() => {
 }
 .file-browser-body {
   display: flex;
-  min-height: calc(100dvh - 194px);
+  flex: 1;
+  min-height: 0;
 }
 .file-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   min-width: 0;
   flex: 1;
 }
 .file-filterbar {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -795,8 +803,10 @@ onUnmounted(() => {
   display: flex;
   gap: 2px;
 }
-.file-list {
-  min-height: 300px;
+.file-manager-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 .file-row {
   display: flex;
@@ -920,6 +930,9 @@ onUnmounted(() => {
   background: transparent;
 }
 .file-detail {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
   padding: 55px 20px;
   text-align: center;
   overflow-wrap: anywhere;
@@ -1039,7 +1052,7 @@ onUnmounted(() => {
 }
 @media (max-width: 760px) {
   .file-manager {
-    min-height: calc(100dvh - 96px);
+    height: calc(100dvh - 96px);
   }
   .file-toolbar {
     padding: 7px 8px;
