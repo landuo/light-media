@@ -98,21 +98,6 @@ function resetPreview() {
   result.value = null;
   error.value = '';
 }
-watch(targetPath, (path) => {
-  if (!path) {
-    storage.value = '';
-    mode.value = '';
-    scraping.value = null;
-    typeFolder.value = null;
-  } else {
-    const directory = ui.settings?.directories?.find((row: any) => row.library_path === path);
-    storage.value = 'local';
-    mode.value ||= directory?.mode || 'copy';
-    scraping.value = directory?.scraping ?? false;
-    typeFolder.value = directory?.library_type_folder ?? false;
-  }
-  resetPreview();
-});
 watch(mediaType, () => {
   mediaID.value = '';
   season.value = '';
@@ -123,6 +108,7 @@ watch(
   [
     storage,
     mode,
+    targetPath,
     mediaID,
     season,
     episodeDetail,
@@ -363,10 +349,10 @@ onUnmounted(() => {
                   >目的路径
                   <div class="target-combobox">
                     <input
-                      :value="targetPath || '自动'"
+                      :value="targetPath"
                       :list="targetListID"
                       aria-label="目的路径"
-                      placeholder="选择自动或输入路径"
+                      placeholder="自动（可输入路径）"
                       :disabled="busy"
                       @focus="($event.target as HTMLInputElement).select()"
                       @input="

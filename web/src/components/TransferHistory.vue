@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { api, bytes, date, errorText, label, toast } from '../api';
 import ReorganizeDialog from './ReorganizeDialog.vue';
+import { deleteHistoryBatch } from '../features/history-delete';
 import {
   historyGroups,
   historyTitle,
@@ -39,6 +40,7 @@ const query = ref(initialState.search),
   reorganizeItems = ref<HistoryRow[]>([]),
   deleteItems = ref<HistoryRow[]>([]),
   deleting = ref(false),
+  deleteError = ref(''),
   deleteProgress = ref({ done: 0, total: 0, title: '' }),
   queueOpen = ref(false),
   queueLoading = ref(false),
@@ -156,40 +158,46 @@ async function reorganized() {
   await load();
 }
 function openDelete(rows: HistoryRow[]) {
+  if (deleting.value || !rows.length) return;
   openMenu.value = '';
   deleteItems.value = [...rows];
 }
 async function remove(deleteSource: boolean, deleteTarget: boolean) {
+  if (deleting.value || !deleteItems.value.length) return;
   const deletingItems = [...deleteItems.value];
   deleteItems.value = [];
   deleting.value = true;
   deleteProgress.value = { done: 0, total: deletingItems.length, title: '' };
   error.value = '';
-  const failures: string[] = [];
-  for (const item of deletingItems) {
-    deleteProgress.value.title = historyTitle(item);
-    try {
-      await api(
-        '/history/transfers/' + encodeURIComponent(item.id),
-        {
-          confirm: true,
-          file_id: item.file_id || item.id,
-          delete_source: deleteSource,
-          delete_target: deleteTarget,
-        },
-        'DELETE',
-      );
-      selected.value = selected.value.filter((id) => id !== item.id);
-    } catch (e) {
-      failures.push(historyTitle(item) + '：' + errorText(e));
-    } finally {
-      deleteProgress.value.done++;
-    }
+  deleteError.value = '';
+  const outcome = await deleteHistoryBatch(
+    deletingItems,
+    deleteSource,
+    deleteTarget,
+    (item, request) => api('/history/transfers/' + encodeURIComponent(item.id), request, 'DELETE'),
+    (item, done, total) => {
+      deleteProgress.value = { done, total, title: historyTitle(item) + ' ' + numbers(item) };
+    },
+  );
+  const succeeded = new Set(outcome.succeeded.map((item) => item.id));
+  selected.value = [
+    ...new Set([
+      ...selected.value.filter((id) => !succeeded.has(id)),
+      ...outcome.failed.map(({ item }) => item.id),
+    ]),
+  ];
+  for (const id of succeeded) knownRows.value.delete(id);
+  if (outcome.failed.length) {
+    deleteError.value =
+      `已删除 ${outcome.succeeded.length} 条，${outcome.failed.length} 条删除失败，失败项已保留选中。\n` +
+      outcome.failed
+        .map(({ item, error }) => `${historyTitle(item)} ${numbers(item)}：${errorText(error)}`)
+        .join('\n');
+  } else {
+    toast(`已删除 ${outcome.succeeded.length} 条整理记录`);
   }
-  deleting.value = false;
   await load();
-  if (failures.length) error.value = failures.join('\n');
-  else toast('删除完成');
+  deleting.value = false;
 }
 async function load(silent = false) {
   const run = ++generation;
@@ -324,6 +332,7 @@ onUnmounted(() => {
 <template>
   <section class="transfer-history" aria-label="整理历史">
     <p v-if="error" class="th-error th-notice" role="alert">{{ error }}</p>
+    <p v-if="deleteError" class="th-error th-notice" role="alert">{{ deleteError }}</p>
     <div class="th-card">
       <div class="th-toolbar">
         <form class="th-search" @submit.prevent="searchNow">
@@ -584,20 +593,22 @@ onUnmounted(() => {
     <div class="th-fab-stack">
       <button
         v-if="selected.length"
-        class="th-fab th-fab-delete"
+        class="th-fab th-fab-action th-fab-delete"
         aria-label="批量删除"
         :title="'批量删除（已选 ' + selected.length + ' 条）'"
+        :disabled="deleting"
         @click="openDelete(selectedItems)"
       >
-        ⌫</button
+        <span aria-hidden="true">⌫</span><span>批量删除（{{ selected.length }}）</span></button
       ><button
         v-if="selected.length"
-        class="th-fab th-fab-redo"
+        class="th-fab th-fab-action th-fab-redo"
         aria-label="批量重新整理"
         :title="'批量重新整理（已选 ' + selected.length + ' 条）'"
+        :disabled="deleting"
         @click="reorganize(selectedItems)"
       >
-        ↻</button
+        <span aria-hidden="true">↻</span><span>批量重新整理</span></button
       ><button
         class="th-fab th-fab-queue"
         aria-label="整理队列"
@@ -627,17 +638,17 @@ onUnmounted(() => {
           {{
             deleteItems.length === 1
               ? '确认删除 ' + historyTitle(deleteItems[0]!) + ' ' + numbers(deleteItems[0]!) + ' ?'
-              : '确认删除 ' + deleteItems.length + ' 条记录 ?'
+              : '确认批量删除选中的 ' + deleteItems.length + ' 条整理记录 ?'
           }}
         </h2>
         <div class="th-delete-actions">
-          <button class="th-delete-record" @click="remove(false, false)">仅删除转移记录</button
+          <button class="th-delete-record" @click="remove(false, false)">仅删除整理记录</button
           ><button class="th-delete-source" @click="remove(true, false)">
-            删除转移记录和源文件</button
+            删除整理记录和原文件</button
           ><button class="th-delete-dest" @click="remove(false, true)">
-            删除转移记录和媒体库文件</button
+            删除媒体库文件和整理记录</button
           ><button class="th-delete-all" @click="remove(true, true)">
-            删除转移记录、源文件和媒体库文件
+            删除媒体库文件、整理记录和原文件
           </button>
         </div>
       </section>
@@ -1044,6 +1055,15 @@ input[type='checkbox'] {
 .th-fab-delete {
   background: #fff0db;
   color: #c47b14;
+}
+.th-fab-action {
+  width: auto;
+  gap: 8px;
+  padding: 0 14px;
+}
+.th-fab-action span:last-child {
+  font-size: 13px;
+  white-space: nowrap;
 }
 .th-fab-redo {
   background: #e4f6ec;
