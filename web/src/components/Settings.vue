@@ -12,6 +12,7 @@ const form = ref<any>(null),
   tab = ref(routeTab()),
   visitedTabs = ref(new Set([routeTab()])),
   testResult = ref<any>(null),
+  testing = ref(false),
   saving = ref(false),
   logging = ref<any>(null),
   debugScope = ref('module'),
@@ -65,7 +66,19 @@ async function save(section: 'tmdb' | 'fnos') {
   }
 }
 async function test(target: 'tmdb' | 'fnos') {
-  if (await save(target)) testResult.value = await action(() => api('/settings/test', { target }));
+  testResult.value = null;
+  testing.value = true;
+  try {
+    if (!(await save(target))) return;
+    const result = await action(() => api('/settings/test', { target }));
+    if (result) {
+      testResult.value = result;
+      const passed = result.status === 'ok' || result.status === 'passed';
+      toast(result.message || (passed ? '连接测试成功' : '连接测试失败，请查看测试结果'), !passed);
+    }
+  } finally {
+    testing.value = false;
+  }
 }
 async function saveLogging(debug?: {
   scope: string;
@@ -143,7 +156,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('tmdb')">保存</button
-          ><button @click="test('tmdb')">测试</button>
+          ><button :disabled="testing || saving" @click="test('tmdb')">测试</button>
         </div>
       </section>
       <section class="panel"><DownloaderManager /></section>
@@ -156,7 +169,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
             >地址<input
               v-model="form.fnos.host"
               type="url"
-              placeholder="https://nas.example.com:8080/v"
+              placeholder="http://192.168.1.10:8005/v"
           /></label>
           <label>用户名<input v-model="form.fnos.username" autocomplete="off" /></label>
           <label
@@ -169,7 +182,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('fnos')">保存</button
-          ><button @click="test('fnos')">测试</button>
+          ><button :disabled="testing || saving" @click="test('fnos')">测试</button>
         </div>
       </section>
     </div>
@@ -265,7 +278,11 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         <h2>测试结果</h2>
         <button class="small" @click="testResult = null">收起</button>
       </header>
-      <pre class="code-box">{{ JSON.stringify(testResult, null, 2) }}</pre>
+      <p v-if="testResult.message" role="status">{{ testResult.message }}</p>
+      <details>
+        <summary>诊断详情</summary>
+        <pre class="code-box">{{ JSON.stringify(testResult, null, 2) }}</pre>
+      </details>
     </section>
   </template>
 </template>

@@ -44,7 +44,7 @@ func (e *ServiceError) Error() string {
 	case "not_configured":
 		return "飞牛影视凭据尚未配置"
 	case "invalid_config":
-		return "飞牛影视配置无效，请使用证书可信的 HTTPS 地址"
+		return "飞牛影视地址无效，请使用可信 HTTPS 地址，或内网 IP 的 HTTP 地址；路径仅支持 /v"
 	case "invalid_input":
 		return "飞牛影视请求参数或目录无效"
 	case "unauthorized":
@@ -56,7 +56,13 @@ func (e *ServiceError) Error() string {
 	case "redirect_blocked":
 		return "飞牛影视返回了不允许的重定向"
 	case "canceled":
-		return "飞牛影视请求已取消或超时"
+		return "飞牛影视请求已取消"
+	case "tls_certificate_failed":
+		return "飞牛影视 HTTPS 证书校验失败，请使用证书可信的地址，或内网 HTTP 端口"
+	case "timeout":
+		return "连接飞牛影视超时，请检查地址、端口和网络"
+	case "connection_refused":
+		return "飞牛影视端口拒绝连接，请确认端口正确且服务已启动"
 	default:
 		return "飞牛影视暂时不可用，请稍后重试"
 	}
@@ -68,8 +74,8 @@ func (*Service) GoString() string { return "fnos.Service{[redacted]}" }
 func NewService(config Config) (*Service, error) { return newService(config, http.DefaultTransport) }
 
 func newService(config Config, transport http.RoundTripper) (*Service, error) {
-	u, err := url.Parse(config.Host)
-	if err != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || u.RawQuery != "" || u.ForceQuery || u.Fragment != "" || u.RawPath != "" || (u.Path != "" && u.Path != "/" && u.Path != "/v" && u.Path != "/v/") || config.AccessCode != "" {
+	host, err := NormalizeHost(config.Host)
+	if err != nil || config.AccessCode != "" {
 		return nil, &ServiceError{Code: "invalid_config"}
 	}
 	if config.Username == "" || config.Password == "" {
@@ -78,8 +84,7 @@ func newService(config Config, transport http.RoundTripper) (*Service, error) {
 	if !serviceText(config.Username, 256) || !serviceText(config.Password, 8192) {
 		return nil, &ServiceError{Code: "invalid_config"}
 	}
-	u.Path = "/v"
-	return &Service{config: Config{Username: config.Username, Password: config.Password}, host: u.String(), http: &http.Client{
+	return &Service{config: Config{Username: config.Username, Password: config.Password}, host: host, http: &http.Client{
 		Timeout: 12 * time.Second, Transport: logging.Transport(transport),
 		CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse },
 	}}, nil
@@ -141,10 +146,7 @@ func (s *serviceSession) call(ctx context.Context, endpoint string, body any, qu
 	s.requests++
 	response, err := s.service.http.Do(request)
 	if err != nil {
-		if ctx.Err() != nil {
-			return &ServiceError{Code: "canceled"}
-		}
-		return &ServiceError{Code: "unavailable"}
+		return &ServiceError{Code: transportErrorCode(err)}
 	}
 	defer response.Body.Close()
 	if response.StatusCode == 401 || response.StatusCode == 403 {
@@ -158,7 +160,7 @@ func (s *serviceSession) call(ctx context.Context, endpoint string, body any, qu
 	}
 	raw, err := io.ReadAll(io.LimitReader(response.Body, 2<<20+1))
 	if err != nil {
-		return &ServiceError{Code: "unavailable"}
+		return &ServiceError{Code: transportErrorCode(err)}
 	}
 	var env envelope
 	if len(raw) > 2<<20 || json.Unmarshal(raw, &env) != nil || env.Code == nil {

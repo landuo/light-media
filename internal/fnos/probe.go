@@ -59,6 +59,7 @@ type Result struct {
 	TraceTargetID         string         `json:"trace_target_id,omitempty"`
 	Status                string         `json:"status"`
 	Code                  string         `json:"code,omitempty"`
+	Message               string         `json:"message,omitempty"`
 	Frontend              string         `json:"frontend,omitempty"`
 	Backend               string         `json:"backend,omitempty"`
 	Authenticated         bool           `json:"authenticated"`
@@ -136,7 +137,11 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 	c.requests++
 	resp, err := c.http.Do(r)
 	if err != nil {
-		return nil, fmt.Errorf("TRANSPORT_FAILED")
+		code := transportErrorCode(err)
+		if code == "unavailable" {
+			return nil, fmt.Errorf("TRANSPORT_FAILED")
+		}
+		return nil, fmt.Errorf("%s", strings.ToUpper(code))
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
@@ -144,6 +149,9 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 	}
 	data, err := io.ReadAll(io.LimitReader(resp.Body, 2*1024*1024+1))
 	if err != nil {
+		if code := transportErrorCode(err); code != "unavailable" {
+			return nil, fmt.Errorf("%s", strings.ToUpper(code))
+		}
 		return nil, fmt.Errorf("BODY_FAILED")
 	}
 	if len(data) > 2*1024*1024 {
@@ -164,6 +172,13 @@ func (c *client) requestQuery(ctx context.Context, path string, body any, query 
 
 func Probe(ctx context.Context, cfg Config) (out Result) {
 	out.Status = "failed"
+	defer func() {
+		if out.Code != "" {
+			out.Message = probeMessage(out.Code)
+		} else if out.Status == "passed" {
+			out.Message = "飞牛影视连接成功，认证及媒体库读取正常"
+		}
+	}()
 	ctx, out.TraceTargetID = logging.Target(ctx, "fnos")
 	if len(cfg.SampleTitles) > 3 {
 		out.Code = "SAMPLE_TITLE_LIMIT"
@@ -179,8 +194,8 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 		out.Code = "FIXED_DETAIL_SAMPLES_REQUIRED"
 		return
 	}
-	u, err := url.Parse(cfg.Host)
-	if err != nil || u.Host == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || (u.Scheme != "http" && u.Scheme != "https") {
+	host, err := NormalizeHost(cfg.Host)
+	if err != nil {
 		out.Code = "INVALID_HOST"
 		return
 	}
@@ -189,16 +204,15 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 		out.Code = "ACCESS_CODE_SESSION_REQUIRED"
 		return
 	}
-	host := strings.TrimRight(cfg.Host, "/")
-	if !strings.HasSuffix(host, "/v") {
-		host += "/v"
-	}
 	c := client{host: host, http: &http.Client{Timeout: 12 * time.Second, Transport: logging.Transport(nil), CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}}
 	defer func() { out.Requests = c.requests; sanitizeResult(&out, []string{cfg.Username, cfg.Password, c.token}) }()
 	step := func(path string, body any, dst any) bool {
 		data, e := c.request(ctx, path, body)
 		if e != nil {
 			out.Code = e.Error()
+			if path == "/login" && (strings.HasPrefix(out.Code, "BUSINESS_") || out.Code == "HTTP_401" || out.Code == "HTTP_403") {
+				out.Code = "AUTHENTICATION_FAILED"
+			}
 			return false
 		}
 		if json.Unmarshal(data, dst) != nil {

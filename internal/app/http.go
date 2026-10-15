@@ -135,8 +135,11 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		e = decodeBody(w, r, &c)
 		if e == nil {
 			a.settingsMu.Lock()
-			a.preserveSecrets(&c)
-			e = a.saveSettings(ctx, c)
+			e = validateFNOSCredentialChange(c.FNOS, a.Settings().FNOS)
+			if e == nil {
+				a.preserveSecrets(&c)
+				e = a.saveSettings(ctx, c)
+			}
 			a.settingsMu.Unlock()
 		}
 		out = a.publicSettings()
@@ -501,6 +504,24 @@ func (a *App) publicSettings() map[string]any {
 	m["secret_state"] = secretState
 	return m
 }
+
+func sameFNOSCredentialEndpoint(incoming, previous string) bool {
+	if incoming == previous {
+		return true
+	}
+	next, nextErr := fnos.NormalizeHost(incoming)
+	old, oldErr := fnos.NormalizeHost(previous)
+	return nextErr == nil && oldErr == nil && next == old
+}
+
+func validateFNOSCredentialChange(incoming, previous FNConfig) error {
+	if incoming.Password == "" && previous.Password != "" &&
+		(incoming.Username != previous.Username || !sameFNOSCredentialEndpoint(incoming.Host, previous.Host)) {
+		return bad("FNOS_CREDENTIALS_REQUIRED", "飞牛影视地址或账号已修改，请重新输入密码；原配置已保留")
+	}
+	return nil
+}
+
 func (a *App) preserveSecrets(c *Settings) {
 	old := a.Settings()
 	if c.Roots == nil {
@@ -534,7 +555,7 @@ func (a *App) preserveSecrets(c *Settings) {
 	if c.TMDB.APIKey == "" && c.TMDB.AccessToken == "" {
 		c.TMDB = old.TMDB
 	}
-	if c.FNOS.Password == "" && c.FNOS.Host == old.FNOS.Host && c.FNOS.Username == old.FNOS.Username {
+	if c.FNOS.Password == "" && sameFNOSCredentialEndpoint(c.FNOS.Host, old.FNOS.Host) && c.FNOS.Username == old.FNOS.Username {
 		c.FNOS.Password = old.FNOS.Password
 		if c.FNOS.Mappings == nil {
 			c.FNOS.Mappings = old.FNOS.Mappings
