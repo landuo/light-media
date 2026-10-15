@@ -44,6 +44,8 @@ type output struct {
 	BaselineUnchanged bool             `json:"baseline_unchanged"`
 	Candidates        []library        `json:"candidates,omitempty"`
 	Items             []map[string]any `json:"items,omitempty"`
+	FileEvidence      *fileEvidence    `json:"file_evidence,omitempty"`
+	FilesVerified     bool             `json:"file_associations_verified"`
 	Payload           any              `json:"planned_create_body,omitempty"`
 	Note              string           `json:"note,omitempty"`
 }
@@ -197,7 +199,7 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 		out.Code = "INVALID_EXPERIMENT_ID"
 		return
 	}
-	if action != "prepare" && action != "scan" && action != "observe" && action != "cleanup" && action != "diagnose" && action != "image_shape" && action != "images" {
+	if action != "prepare" && action != "scan" && action != "observe" && action != "cleanup" && action != "diagnose" && action != "image_shape" && action != "images" && action != "inspect_files" {
 		out.Code = "INVALID_ACTION"
 		return
 	}
@@ -213,6 +215,10 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 		out.Status = "dry_run"
 		out.Payload = createBody(receipt{Name: out.Name, Root: out.Root})
 		out.Note = "No network or file writes. Apply requires exclusive synthetic directory prepared without symlinks; no existing library may overlap."
+		if action == "inspect_files" {
+			out.Payload = nil
+			out.Note = "No network or file writes. Apply performs only scoped file-detail reads for an already receipt-claimed library; no create, scan, update or delete."
+		}
 		return
 	}
 	if c.Username == "" || c.Password == "" || len(c.Username) > 4096 || len(c.Password) > 4096 {
@@ -295,6 +301,10 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 			out.Code = "ALREADY_CLEANED"
 			return
 		}
+		if action == "inspect_files" && !guidPattern.MatchString(r.OwnedGUID) {
+			out.Code = "OWNED_GUID_REQUIRED"
+			return
+		}
 	}
 	if action == "diagnose" {
 		libs, err := a.libraries(ctx)
@@ -353,9 +363,11 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 		out.Code = "BASELINE_CHANGED"
 		return
 	}
-	if e = saveReceipt(r); e != nil {
-		out.Code = e.Error()
-		return
+	if action != "inspect_files" {
+		if e = saveReceipt(r); e != nil {
+			out.Code = e.Error()
+			return
+		}
 	}
 	switch action {
 	case "prepare":
@@ -394,7 +406,20 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 			return
 		}
 		out.Status = "observed"
-		out.Note = "Synthetic experiment observations only; no real metadata IDs were supplied. Empty or mismatched metadata is not an NFO pass."
+		out.Note = "Owned-library observations only. Supplied source identities, metadata matches and file associations require separate evidence comparisons; empty or mismatched metadata is not an NFO pass."
+	case "inspect_files":
+		out.Items, out.FileEvidence, e = a.inspectFiles(ctx, r)
+		if e != nil {
+			out.Code = e.Error()
+			return
+		}
+		out.FilesVerified = completeFileEvidence(out.FileEvidence)
+		out.Status = "unverified"
+		out.Code = "FILES_NOT_PROVEN"
+		if out.FilesVerified {
+			out.Status, out.Code = "observed", ""
+		}
+		out.Note = "Read-only file-detail diagnostics for already scoped owned items. Bindings require actual returned paths inside this experiment root; no path was inferred from an item GUID or local manifest. File association alone is not an NFO metadata pass. Receipt unchanged."
 	case "cleanup":
 		r.Phase = "delete_requested"
 		if e = saveReceipt(r); e != nil {
@@ -425,9 +450,11 @@ func run(ctx context.Context, c config, action string, apply bool) (out output) 
 		out.Status = "cleaned"
 		out.Note = "Temporary library absence verified. Runner does not delete files; remove only this experiment's own synthetic directory separately."
 	}
-	if e = saveReceipt(r); e != nil {
-		out.Status = "failed"
-		out.Code = e.Error()
+	if action != "inspect_files" {
+		if e = saveReceipt(r); e != nil {
+			out.Status = "failed"
+			out.Code = e.Error()
+		}
 	}
 	return
 }
@@ -489,6 +516,9 @@ func (a *api) observe(ctx context.Context, r receipt) ([]map[string]any, error) 
 		summary["parent_guid"] = stringField(detail, "parent_guid")
 		summary["ancestor_guid"] = stringField(detail, "ancestor_guid")
 		summary["scope_verified"] = true
+		for key, value := range observedSourceFields(detail) {
+			summary[key] = value
+		}
 		summary["tree_depth"] = n.depth
 		keys := []string{}
 		for k := range detail {
@@ -670,6 +700,22 @@ func sanitize(out *output, secrets []string) {
 	out.Name = clean(out.Name)
 	out.Root = clean(out.Root)
 	out.Note = clean(out.Note)
+	if evidence := out.FileEvidence; evidence != nil {
+		values := []string{evidence.ExperimentID, evidence.OwnedGUID, evidence.Root}
+		for _, binding := range evidence.Bindings {
+			values = append(values, binding.ItemGUID, binding.RelativePath, binding.ActualPath)
+		}
+		for _, value := range values {
+			if clean(value) != value {
+				// Exact backend paths must not be silently changed while still
+				// claiming an association, nor bypass credential sanitization.
+				out.FileEvidence = nil
+				out.FilesVerified = false
+				out.Status, out.Code = "failed", "FILE_EVIDENCE_SENSITIVE"
+				break
+			}
+		}
+	}
 }
 func main() {
 	trace, err := logging.NewRun(os.Stderr)
@@ -680,7 +726,7 @@ func main() {
 	flags := flag.NewFlagSet("fnos-nfo-experiment", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
 	apply := flags.Bool("apply", false, "apply isolated action")
-	action := flags.String("action", "prepare", "prepare, scan, observe, cleanup, diagnose, image_shape, images")
+	action := flags.String("action", "prepare", "prepare, scan, observe, cleanup, diagnose, image_shape, images, inspect_files")
 	var c config
 	b, e := io.ReadAll(io.LimitReader(os.Stdin, 65537))
 	if flags.Parse(os.Args[1:]) != nil || flags.NArg() != 0 || e != nil || len(b) > 65536 || json.Unmarshal(b, &c) != nil {
@@ -693,7 +739,7 @@ func main() {
 	if trace.Report(os.Stdout, out, out.Status, c.Username, c.Password) != nil {
 		os.Exit(1)
 	}
-	if out.Status == "failed" {
+	if out.Status == "failed" || out.Status == "unverified" {
 		os.Exit(1)
 	}
 }

@@ -45,6 +45,7 @@ type nfoDocument struct {
 	Episode       *int       `xml:"episode,omitempty"`
 	ShowTitle     string     `xml:"showtitle,omitempty"`
 	Aired         string     `xml:"aired,omitempty"`
+	TMDBID        string     `xml:"tmdbid,omitempty"`
 	UniqueIDs     []UniqueID `xml:"uniqueid"`
 	Actors        []Actor    `xml:"actor,omitempty"`
 }
@@ -58,6 +59,7 @@ func EncodeNFO(m NFOMetadata) ([]byte, error) {
 		return nil, fmt.Errorf("invalid year")
 	}
 	seen, defaults := map[string]bool{}, 0
+	tmdbID := ""
 	for _, id := range m.UniqueIDs {
 		if id.Type == "" || id.Value == "" || seen[id.Type] {
 			return nil, fmt.Errorf("invalid or duplicate ID type")
@@ -66,6 +68,7 @@ func EncodeNFO(m NFOMetadata) ([]byte, error) {
 			if n, err := strconv.ParseUint(id.Value, 10, 64); err != nil || n == 0 {
 				return nil, fmt.Errorf("invalid TMDB ID")
 			}
+			tmdbID = id.Value
 		}
 		seen[id.Type] = true
 		if id.Default {
@@ -75,7 +78,7 @@ func EncodeNFO(m NFOMetadata) ([]byte, error) {
 	if defaults != 1 {
 		return nil, fmt.Errorf("exactly one default unique ID is required")
 	}
-	d := nfoDocument{XMLName: xml.Name{Local: root}, Title: m.Title, OriginalTitle: m.OriginalTitle, Year: m.Year, Plot: m.Plot, ShowTitle: m.ShowTitle, Aired: m.Aired, UniqueIDs: m.UniqueIDs, Actors: m.Actors}
+	d := nfoDocument{XMLName: xml.Name{Local: root}, Title: m.Title, OriginalTitle: m.OriginalTitle, Year: m.Year, Plot: m.Plot, ShowTitle: m.ShowTitle, Aired: m.Aired, UniqueIDs: m.UniqueIDs, TMDBID: tmdbID, Actors: m.Actors}
 	if m.Kind == "episode" {
 		if m.Season <= 0 || m.Episode <= 0 {
 			return nil, fmt.Errorf("episode requires confirmed positive season and episode")

@@ -21,6 +21,7 @@ experiments:
 	CGO_ENABLED=0 go build -o bin/experiments/nfo-fixtures ./experiments/nfo-fixtures
 	CGO_ENABLED=0 go build -o bin/experiments/nfo-compare ./experiments/nfo-compare
 	CGO_ENABLED=0 go build -o bin/experiments/metadata-nfo ./experiments/metadata-nfo
+	CGO_ENABLED=0 go build -o bin/experiments/real-nfo-compare ./experiments/real-nfo-compare
 
 offline:
 	mkdir -p work

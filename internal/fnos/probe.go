@@ -27,11 +27,12 @@ const clientID = "16CCEB3D-AB42-077D-36A1-F355324E4237"
 const signingPrefix = "NDzZTVxnRKP8Z0jXg1VAMonaG8akvh"
 
 type Config struct {
-	Host         string   `json:"host"`
-	Username     string   `json:"username"`
-	Password     string   `json:"password"`
-	AccessCode   string   `json:"access_code"`
-	SampleTitles []string `json:"sample_titles,omitempty"`
+	Host                 string   `json:"host"`
+	Username             string   `json:"username"`
+	Password             string   `json:"password"`
+	AccessCode           string   `json:"access_code"`
+	SampleTitles         []string `json:"sample_titles,omitempty"`
+	CaptureSampleDetails bool     `json:"capture_sample_details,omitempty"`
 }
 
 type Sample struct {
@@ -49,9 +50,10 @@ type Library struct {
 	Samples     []Sample `json:"samples,omitempty"`
 }
 type SearchSample struct {
-	Query   string   `json:"query"`
-	Status  string   `json:"status"`
-	Samples []Sample `json:"samples"`
+	Query   string         `json:"query"`
+	Status  string         `json:"status"`
+	Samples []Sample       `json:"samples"`
+	Details *SampleDetails `json:"details,omitempty"`
 }
 type Result struct {
 	TraceTargetID         string         `json:"trace_target_id,omitempty"`
@@ -173,6 +175,10 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 			return
 		}
 	}
+	if cfg.CaptureSampleDetails && !fixedDetailTitles(cfg.SampleTitles) {
+		out.Code = "FIXED_DETAIL_SAMPLES_REQUIRED"
+		return
+	}
 	u, err := url.Parse(cfg.Host)
 	if err != nil || u.Host == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || (u.Scheme != "http" && u.Scheme != "https") {
 		out.Code = "INVALID_HOST"
@@ -260,6 +266,7 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 		out.Truncated = true
 		libs = libs[:8]
 	}
+	knownLibraries := make(map[string]bool, len(libs))
 	for _, l := range libs {
 		name := l.Name
 		if name == "" {
@@ -303,25 +310,22 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 			lib.Samples = append(lib.Samples, Sample{Type: item.Type, Title: item.Title, SourceID: item.SourceID, Season: item.Season, Episode: item.Episode})
 		}
 		out.Libraries = append(out.Libraries, lib)
+		knownLibraries[l.GUID] = true
 	}
+	detailsUnverified := false
 	for _, title := range cfg.SampleTitles {
 		data, e := c.requestQuery(ctx, "/search/list", nil, title)
 		if e != nil {
 			out.Code = e.Error()
 			return
 		}
-		var items []struct {
-			Type     string `json:"type"`
-			Title    string `json:"title"`
-			SourceID string `json:"trim_id"`
-			Season   *int   `json:"season_number"`
-			Episode  *int   `json:"episode_number"`
-		}
+		var items []searchItem
 		if json.Unmarshal(data, &items) != nil || items == nil {
 			out.Code = "INVALID_SEARCH_DATA"
 			return
 		}
 		search := SearchSample{Query: title, Status: "ok", Samples: []Sample{}}
+		searchTruncated := len(items) > 3
 		if len(items) > 3 {
 			items = items[:3]
 			out.Truncated = true
@@ -336,9 +340,16 @@ func Probe(ctx context.Context, cfg Config) (out Result) {
 			}
 			search.Samples = append(search.Samples, Sample{Type: item.Type, Title: item.Title, SourceID: item.SourceID, Season: item.Season, Episode: item.Episode})
 		}
+		if cfg.CaptureSampleDetails {
+			search.Details = c.captureDetails(ctx, title, items, searchTruncated, knownLibraries)
+			detailsUnverified = detailsUnverified || search.Details.Status != "observed"
+		}
 		out.SearchSamples = append(out.SearchSamples, search)
 	}
 	out.Status = "passed"
+	if detailsUnverified {
+		out.Status, out.Code = "unverified", "SAMPLE_DETAILS_UNVERIFIED"
+	}
 	return
 }
 
@@ -400,6 +411,20 @@ func sanitizeResult(out *Result, secrets []string) {
 			item.Type = clean(item.Type, 32)
 			item.Title = clean(item.Title, 256)
 			item.SourceID = clean(item.SourceID, 128)
+		}
+		if d := s.Details; d != nil {
+			d.GUID = clean(d.GUID, 32)
+			d.AncestorGUID = clean(d.AncestorGUID, 32)
+			if d.ParentGUID != nil {
+				v := clean(*d.ParentGUID, 32)
+				d.ParentGUID = &v
+			}
+			d.Type = clean(d.Type, 32)
+			d.Title = clean(d.Title, 256)
+			if d.TrimID != nil {
+				v := clean(*d.TrimID, 128)
+				d.TrimID = &v
+			}
 		}
 	}
 }

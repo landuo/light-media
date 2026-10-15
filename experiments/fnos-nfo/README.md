@@ -8,7 +8,7 @@ Credentials are one JSON object on stdin, never CLI arguments:
 ```
 
 Build from repository root: `go build -o work/fnos-nfo-experiment ./experiments/fnos-nfo`.
-Default is a zero-network dry run. Apply requires `--apply --action prepare|scan|observe|cleanup|diagnose|image_shape|images`.
+Default is a zero-network dry run. Apply requires `--apply --action prepare|scan|observe|cleanup|diagnose|image_shape|images|inspect_files`.
 Keep working directory at repository root so receipts remain discoverable.
 
 1. Separately prepare exactly `/vol2/1000/media/light-media-m0-test-UUID` with an exclusive creation operation. Verify no symlinks, no physical aliases into existing libraries, and no existing media reuse. Use only newly generated synthetic clips/NFO, UUID-prefixed titles/actors/custom IDs. Do not supply actual movie/person metadata-provider IDs.
@@ -28,6 +28,61 @@ Protocol evidence: installed public `work/fnos-public-mdb-view.js`, `fz` create-
 Synthetic verification: `go test -race ./experiments/fnos-nfo`, `go vet ./experiments/fnos-nfo`. Tests cover full create/scan/observe/delete lifecycle, read-back, original-library invariance, scoped signatures, redirects, null/missing/business/oversized responses, credential and URL/newline projection, root overlaps, existing GUID rejection, and receipt scope. Actual NAS execution is performed separately by the parent task, not these tests.
 
 `diagnose` is read-only after login: it lists only names prefixed by this exact experiment UUID, reports name/category/dirs/GUID, and does not change the receipt. Directory equality accepts trailing/repeated separators but rejects dot path components. It preserves original GUID and overlap safeguards.
+
+`inspect_files` is a read-only diagnostic for an existing receipt with a claimed
+owned GUID. It verifies that library and the complete bounded `observe` tree
+before POST `/item/getEditDetail` with only `{item_guid}` for at most three
+current Movie/Episode items. The route and request body are evidenced by the
+installed public client/view bundles, not guessed mutation endpoints. Neither
+the receipt nor library is changed; the usual per-experiment local lock still
+serializes runners. `observe` now describes evidence neutrally, irrespective of
+whether its prepared NFO used synthetic custom IDs or separately verified
+standard source IDs. No observation automatically proves those IDs were read.
+If edit detail has no unique usable path, the action re-GETs only that already
+known `/item/:guid`, verifies its kind/ancestor/parent/depth again, and inspects
+only the returned `media_stream` shape. A foreign identity or bad edit path
+fails immediately and cannot invoke this fallback. Both endpoint shapes remain
+visible. If that fresh media stream also has no unique path, the final read is
+GET `/media/itemfile/:guid` for the same scoped item. The installed client's
+`W.files` route and view `QB(itemGuid)` show a bounded array of `file_path`
+strings; this is an item attachment read, not library GUID or playback access.
+At most four records are inspected, with present ownership/parent assertions
+checked and only one unambiguous attachment eligible. All three endpoint shapes
+remain visible. The representative full fallback uses exactly the existing
+32-request cap; it does not increase the budget. Missing fields or multiple
+attachments remain unverified rather than supplying an inferred path.
+
+The diagnostic reports only fixed allowed field names, value types and bounded
+container shapes. It never returns the full edit detail, unknown string values,
+headers, URLs or rejected paths. Present item/library identity fields must match
+the scoped target, including nested ancestor/mdb/item assertions. Unknown shape
+or absent paths remains `unverified` with nonzero CLI completion. A foreign
+library/target, traversal/URL, path outside the own root, noncanonical filename
+or conflicting binding stops the action. Generic `path`/`file_path` and bounded
+known file-container selectors are **diagnostic candidates**, not a claim that
+this fnOS version has returned any such field; live field evidence is separate.
+
+Only an actual backend-returned absolute string equal to the owned root plus
+one of the three canonical paths below may form a binding:
+
+- `夜王 (2026)/夜王 (2026).mkv` for Movie;
+- `生活大爆炸/Season 7/生活大爆炸 S07E17.mkv` for Episode;
+- `诛仙/Season 4/诛仙 S04E05.mkv` for Episode.
+
+`file_evidence` has `{experiment_id,owned_guid,root,bindings}` and each binding
+has `{item_guid,relative_path,actual_path}`. `actual_path` is never generated from
+a GUID, basename or local manifest. Exactly three distinct bindings are needed
+for `file_associations_verified=true`; partial bindings do not satisfy the
+offline comparator. A lexical backend path association does not establish
+physical symlink/inode identity, file contents, NFO field matches or global
+provider-cache isolation. Separately prepared file manifests and comparisons
+must supply those other facts.
+
+Scoped item observations additionally retain `tmdb_id`, `source` and `source_id`
+only when actually returned and accepted by narrow value rules: known source
+namespaces, positive bounded numeric IDs, or short known opaque ID spellings.
+Numbers/strings and opaque prefixes are preserved, never converted into an
+assumed TMDB type/ID. Other values produce only a type state.
 
 `image_shape` reads only three owned root items and reports fixed local route templates, field types, segment counts and extensions. It does not expose raw image references. `images` additionally fetches at most six images (poster/backdrop per item), only from the same origin under `/v/api/v1/sys/img/`. Remote-proxy routes, URL user info/query/fragment, encoded separators, traversal and redirects are refused. Images are bounded to 2 MiB and decoded as JPEG/PNG under dimension/pixel limits. `fixture_dir` selects a new local fixture directory under work (default `work/nfo-live-fixture-v2`); NFO XML supplies the exact type/title identity. `posters` must match that work’s poster file, and `backdrops` must match its fanart file in SHA-256, format and dimensions. Unknown/missing/duplicate work identities, missing image fields, mismatches or equal hashes across fixture roles fail. Exactly one .jpg or .png is allowed per role. The verifier requires three root works and six distinct role hashes. No width/resize parameter is supplied. `observe` image_bytes_verified=false applies only to its metadata inspection; the separate images action supplies byte verification.
 

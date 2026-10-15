@@ -1,6 +1,6 @@
 # light-media
 
-独立的 Go 影视自动化项目，以 `docs/design-v1.4.txt` 为需求基线。当前阶段为 **M0 技术验证**，尚未实现可用的影视管理应用。
+独立的 Go 影视自动化项目，以 `docs/design-v1.4.txt` 为需求基线。**M0 技术验证已按原始有限范围全部通过（10/10 交付物、6/6 进入 M1 条件）**；尚未实现可用的影视管理应用。
 
 ## 开发环境
 
@@ -19,7 +19,7 @@ go mod verify
 | --- | --- | --- |
 | `go run ./cmd/integrationcheck` | 从 stdin 接收授权配置，探测 qB/Transmission 与五站鉴权、有限搜索 | 登录、只读接口与单页搜索；不加种/暂停/修改设置 |
 | `go run ./cmd/metainfocheck` | 五站各最多一页搜索、一份种子材料，验证 bencode 与文件结构 | 登录、搜索及获取材料；仅在内存检查，不保存私有种子、不提交下载器 |
-| `go run ./cmd/metadatacheck` | 三作品与两单集的标准 TMDB 身份；stdin 提供自用凭据 | 最多五次固定官方只读 GET；未配置为 unverified，零请求 |
+| `go run ./cmd/metadatacheck` | 三作品与两单集的标准 TMDB 身份；stdin 提供授权凭据 | 最多五次固定官方只读 GET；未配置为 unverified，零请求 |
 | `go run ./cmd/fnoscheck` | 从 stdin 接收影视账号配置，读取版本、库与少量作品 | 登录与只读查询；不扫描、写入或删除媒体 |
 | `go run ./cmd/fnosprovidercheck` | 核对飞牛同源搜索是否返回明确的标准作品/单集身份 | 最多五次版本/登录/查询；不重新刮削，不把 Trim ID 推断为 TMDB ID |
 | `go run ./cmd/mediacheck` | 文件名、人工集号映射及 NFO 编码 | 默认离线；显式 `--out-dir` 只在给定工作目录创建新文件 |
@@ -43,10 +43,12 @@ go run ./cmd/sqlitebench --driver mattn
 
 HTTP 验证 CLI 的 stdout 为结果 JSON，stderr 为每次运行独立、有总量限制的 JSONL；通过生成的 run、target、request ID 关联。凭据与完整 URL 不进入日志。日志接线验证不能代替业务成功判定。
 
-`experiments/metadata-nfo` 为剩余三代表样本准备标准 NFO：只接受固定五条完整标准元数据核对报告，默认输出计划，显式 apply 才在独占新 work 子目录创建五份 XML。它不联网、不创建视频或演员、不写 NAS；保留 supplied evidence 与输入/NFO 哈希，不把报告中的 `live_request` 声明当成独立的来源真实性证明。未配置报告会在落盘前拒绝。真实来源及飞牛读回验收仍须另行完成，见 `docs/m0-final-steps.md`。
+`experiments/metadata-nfo` 为三代表样本生成标准 NFO：只接受固定五条完整标准元数据核对报告，默认输出计划，显式 apply 才在独占新 work 子目录创建五份 XML。合法 TMDB 身份同时写入同值 `tmdbid` 与 `uniqueid`，单集使用自身 ID。它不联网、不创建视频或演员、不写 NAS；保留 supplied evidence 与输入/NFO 哈希，不把报告中的 `live_request` 声明当成独立的来源真实性证明。未配置报告会在落盘前拒绝。
+
+`experiments/real-nfo-compare` 离线核对五条报告、实际 XML、飞牛七节点和三条服务返回文件路径；固定支持历史 uniqueid-only 与新 tmdbid+uniqueid 编码。真实官方请求及两轮实际关联各 30 项检查均通过。比较器不独立认证来源，也不声称飞牛直接回传标准 ID；真实执行证据与兼容限制见 `docs/m0-final-steps.md`。
 
 ## M0 证据
 
-详细结果与仍待验证的门槛见 `docs/m0-report.md`，逐项状态见 `docs/m0-acceptance-matrix.md`。SQLite 独立基线见 `docs/sqlite-baseline.md`。实测结果只对应标明的版本、路径、样本和负载；完整应用内存、长时间稳定性、自动化闭环及 P1 插件尚须后续验收。
+详细结果及兼容限制见 `docs/m0-report.md`，逐项状态见 `docs/m0-acceptance-matrix.md`。SQLite 独立基线见 `docs/sqlite-baseline.md`。实测结果只对应标明的版本、路径、样本和负载；完整应用内存、长时间稳定性、自动化闭环及 P1 插件尚须后续验收。
 
 所有旧项目保持独立。本项目没有旧系统数据库迁移、Python 运行依赖或生产服务部署。

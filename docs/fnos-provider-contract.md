@@ -26,7 +26,11 @@
 
 如果响应实际包含嵌套 episodes/seasons，只在明确 `tmdb_id` 单集 ID、show_id 与父剧匹配、正季集恰好等于 S07E17/S04E05、日期与标题有效且匹配唯一时记录该目标；裸 id 的 namespace 未证实会保持未验证。这只是严格读取返回数据，不凭造新字段向服务器请求。
 
-结果类型是 `live_fnos_provider_query`，与直连 TMDB `live_request`、本地 `existing_read_only_nfo` 和 `installed_library_cache` 分开。仅作品匹配而缺单集标准 ID时输出 `partial_evidence`、episode_identity_complete=false，并以非零退出，**不能关闭原 M0 单集身份门槛**。标准响应字段真能证明同等 identity 时才允许完成；自用 TMDB Key/Token 的 M1 配置仍须独立解决。
+结果类型是 `live_fnos_provider_query`，与直连 TMDB `live_request`、本地 `existing_read_only_nfo` 和 `installed_library_cache` 分开。仅作品匹配而缺单集标准 ID 时，本探针仍输出 `partial_evidence`、episode_identity_complete=false，并以非零退出；该份结果不能单独证明标准单集身份。后续主任务已按用户新授权从原 MoviePilot 配置只读取用 TMDB 凭据，固定五次官方查询全部通过，取得两个独立单集 ID，来源证据见 [metadata-contract.md](metadata-contract.md)。因此这条代理查询的局限不再是整个 M0 未完成的标准身份缺口，也不需要额外索要一份自用 Key 才承认实际结果。M1 运行时凭据配置尚需实现，本次有限实验没有提供完整的生产凭据管理功能。
+
+M0 飞牛兼容核对采用权威官方报告 → 实际 NFO → 服务返回的实际文件路径、父链与季集/日期的有限关联。`trim_id` 为空和没有显式标准 ID 字段，只能记录为 `direct_standard_id_readback=unverified`；不能推断服务内部保存了 uniqueid，也不能据此断言飞牛完全不支持 TMDB 字段。原方案允许字段兼容说明，这项直接回读不被增加为额外 M0 硬门槛。公开 provider 查询仍保持原来的不透明 namespace 和 `partial_evidence`，没有被改标为标准身份成功。
+
+后续 v1 `uniqueid` 和 v2 同值 `tmdbid+uniqueid` 两轮独占新库实验均完成七节点、三条实际文件路径及父链/季集日期核对，各 30 项比较通过；既有三作品和七库配置的有限前后摘要相同，两个库与十六文件均已清理。M0 **10/10 交付项、6/6 进入 M1 条件在限定范围内通过**，这些成功依据与本代理五请求的 `partial_evidence` 分开。完整范围及直接标准 ID/全局共享缓存限制见 [m0-final-steps.md](m0-final-steps.md)。
 
 不输出用户名、密码、会话 token、host、完整 URL、签名或完整响应。只显示固定样本、受限类型/provider ID、已认可的字段名称、安全标题/日期与状态。没有媒体库修改、刷新、扫描、重新刮削或目录访问。
 
@@ -35,4 +39,4 @@ CGO_ENABLED=0 go build -o work/fnos-providercheck ./cmd/fnosprovidercheck
 # 由已授权broker通过stdin输入原有飞牛 Config。
 ```
 
-所有自动测试均为 **synthetic HTTP round-trip**，不是捕获的实站响应。主任务的实际 5 次调用另计为 live_fnos_provider_query，仍未关闭标准身份门槛。测试明确验证只读调用 body 与路由、来源 namespace、多来源标准 ID 一致性/非法值、缺单集不猜测、标准单集父/季集边界、鉴权/重定向/过大响应失败和脱敏。此阶段契约不等于飞牛代理已经满足全部标准身份验收。
+所有自动测试均为 **synthetic HTTP round-trip**，不是捕获的实站响应。主任务的实际 5 次同源调用另计为 `live_fnos_provider_query`，没有单独证明标准身份；后续官方 API 的五次 `live_request` 是独立来源证据。测试明确验证只读调用 body 与路由、来源 namespace、多来源标准 ID 一致性/非法值、缺单集不猜测、标准单集父/季集边界、鉴权/重定向/过大响应失败和脱敏。此阶段契约不等于飞牛代理已经满足全部标准身份验收，也不因其有限结果否定其他已取得的真实证据。
