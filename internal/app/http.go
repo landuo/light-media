@@ -56,7 +56,7 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 		out = &APIError{"NOT_FOUND", "记录不存在", 404}
 	}
 	if out.Status >= 500 {
-		a.writeLog(map[string]any{"time": now(), "id": id("log_"), "level": "ERROR", "module": "api", "event": "request_failed", "message": e.Error(), "error_code": out.Code, "http_status": out.Status, "request_id": w.Header().Get("X-Request-ID"), "app_version": "0.1.0"})
+		a.writeLog(map[string]any{"time": now(), "id": id("log_"), "level": "ERROR", "module": "api", "event": "request_failed", "message": e.Error(), "error_code": out.Code, "http_status": out.Status, "request_id": w.Header().Get("X-Request-ID"), "app_version": appVersion})
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(out.Status)
@@ -70,7 +70,7 @@ func (a *App) handler() http.Handler {
 			http.Error(w, "database unavailable", 503)
 			return
 		}
-		writeJSON(w, r, map[string]string{"status": "ok", "version": "0.1.0"})
+		writeJSON(w, r, map[string]string{"status": "ok", "version": appVersion})
 	})
 	mux.HandleFunc("/api/", a.api)
 	if a.web != nil {
@@ -141,8 +141,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		var c Settings
 		e = decodeBody(w, r, &c)
 		if e == nil {
+			a.settingsMu.Lock()
 			a.preserveSecrets(&c)
 			e = a.saveSettings(ctx, c)
+			a.settingsMu.Unlock()
 		}
 		out = a.publicSettings()
 	case p == "settings/test" && method == "POST":
@@ -154,6 +156,44 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		if e == nil {
 			out, e = a.testConnection(ctx, in.Target, in.ID)
 		}
+	case strings.HasPrefix(p, "files/"):
+		out, e = a.fileManagerAPI(r, strings.TrimPrefix(p, "files/"))
+	case strings.HasPrefix(p, "history/"):
+		out, e = a.transferHistoryAPI(r, strings.TrimPrefix(p, "history/"))
+	case p == "sites/manage" && method == "GET":
+		out, e = a.managedSites(ctx)
+	case p == "sites/manage" && method == "POST":
+		var in SiteConfig
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.saveManagedSite(ctx, in)
+		}
+	case strings.HasPrefix(p, "sites/manage/"):
+		parts := strings.Split(strings.TrimPrefix(p, "sites/manage/"), "/")
+		if len(parts) == 1 && method == "DELETE" {
+			out, e = a.deleteManagedSite(ctx, parts[0])
+		} else if len(parts) == 2 && parts[1] == "refresh" && method == "POST" {
+			out, e = a.refreshManagedSite(ctx, parts[0])
+		} else if len(parts) == 2 && parts[1] == "history" && method == "GET" {
+			out, e = a.managedSiteHistory(ctx, parts[0])
+		} else {
+			e = &APIError{"NOT_FOUND", "接口不存在", 404}
+		}
+	case p == "downloaders/manage" && method == "GET":
+		out, e = a.managedDownloaders(ctx)
+	case p == "downloaders/manage" && method == "POST":
+		var in ManagedDownloaderRequest
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.saveManagedDownloader(ctx, in)
+		}
+	case strings.HasPrefix(p, "downloaders/manage/"):
+		parts := strings.Split(strings.TrimPrefix(p, "downloaders/manage/"), "/")
+		if len(parts) == 1 && method == "DELETE" {
+			out, e = a.deleteManagedDownloader(ctx, parts[0])
+		} else if len(parts) == 2 && parts[1] == "test" && method == "POST" {
+			out, e = a.testManagedDownloader(ctx, parts[0])
+		} else {
+			e = &APIError{"NOT_FOUND", "接口不存在", 404}
+		}
 	case strings.HasPrefix(p, "catalog/") && method == "GET":
 		if p == "catalog/image" {
 			if err := a.catalogImage(w, r); err != nil {
@@ -162,6 +202,11 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		out, e = a.catalogAPI(r, strings.TrimPrefix(p, "catalog/"))
+	case p == "search/resources" && method == "POST":
+		var in SearchRequest
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.searchResources(ctx, in)
+		}
 	case p == "search" && method == "POST":
 		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
 			a.streamSearch(w, r)
@@ -397,7 +442,7 @@ func (a *App) status(ctx context.Context) map[string]any {
 	if logErr != "" {
 		logStatus = "failed"
 	}
-	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": "0.1.0", "time": now()}
+	return map[string]any{"logging": map[string]string{"status": logStatus, "error": logErr}, "control": state, "active_writes": n, "counts": counts, "version": appVersion, "time": now()}
 }
 func (a *App) publicSettings() map[string]any {
 	c := a.Settings()
@@ -433,7 +478,7 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 	for i := range c.Sites {
 		for _, v := range old.Sites {
-			if c.Sites[i].ID == v.ID && c.Sites[i].BaseURL == v.BaseURL {
+			if c.Sites[i].ID == v.ID && c.Sites[i].BaseURL == v.BaseURL && c.Sites[i].Kind == v.Kind {
 				if c.Sites[i].Cookie == "" {
 					c.Sites[i].Cookie = v.Cookie
 				}
@@ -470,7 +515,7 @@ func validateSettings(c Settings) error {
 			return bad("INVALID_DEBUG_EXPIRY", "临时DEBUG期限最长2小时")
 		}
 	}
-	if len(c.Sites) > 5 || len(c.Downloaders) > 8 || len(c.Roots) > 16 || len(c.AllowedRoots) > 32 {
+	if len(c.Sites) > 32 || len(c.Downloaders) > 8 || len(c.Roots) > 16 || len(c.AllowedRoots) > 32 {
 		return bad("CONFIG_LIMIT", "配置数量超出上限")
 	}
 	if c.TMDB.APIKey != "" && c.TMDB.AccessToken != "" {
@@ -573,27 +618,34 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 		page = 1
 	}
 	kind := q.Get("kind")
+	if kind == "" {
+		kind = q.Get("media_type")
+	}
+	query := q.Get("q")
+	if query == "" {
+		query = q.Get("query")
+	}
 	var result any
 	var cachedAt time.Time
 	var e error
 	switch action {
 	case "browse", "search":
 		var p catalog.Page
-		key := action + ":" + kind + ":" + q.Get("list") + ":" + q.Get("q") + ":" + strconv.Itoa(page)
+		key := action + ":" + kind + ":" + q.Get("list") + ":" + query + ":" + strconv.Itoa(page)
 		ttl := time.Hour
 		if q.Get("list") == "top_rated" {
 			ttl = 6 * time.Hour
 		}
 		cachedAt, e = a.cached(ctx, key, ttl, &p, func() (any, error) {
 			if action == "search" {
-				return a.catalog().Search(ctx, q.Get("q"), kind, page)
+				return a.catalog().Search(ctx, query, kind, page)
 			}
 			return a.catalog().Browse(ctx, kind, q.Get("list"), page)
 		})
 		if e == nil {
 			e = a.decorateMedia(ctx, p.Results)
 		}
-		result = map[string]any{"results": p.Results, "page": p.Page, "total_pages": p.TotalPages, "total_results": p.TotalResults, "cached_at": cachedAt}
+		result = map[string]any{"results": p.Results, "page": p.Page, "total_pages": p.TotalPages, "total_results": p.TotalResults, "has_more": p.Page < p.TotalPages, "cached_at": cachedAt}
 	case "detail":
 		var m catalog.Media
 		m, e = a.media(ctx, kind, int64(atoi(q.Get("id"))))

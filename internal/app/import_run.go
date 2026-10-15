@@ -68,6 +68,23 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	defer tx.Rollback()
+	// A lost HTTP response must not turn the same confirmation into another
+	// execution or a misleading error. Different selections remain separate.
+	existing, findErr := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused','succeeded') ORDER BY created_at DESC LIMIT 1`, plan.ID))
+	if findErr == nil {
+		var payload struct {
+			FileIDs []string `json:"file_ids"`
+		}
+		if err = json.Unmarshal(existing.Payload, &payload); err != nil {
+			return Job{}, err
+		}
+		prior, selectionErr := selectImportFiles(plan, payload.FileIDs)
+		if selectionErr == nil && sameImportSelection(prior, selected) {
+			return existing, tx.Commit()
+		}
+	} else if !errors.Is(findErr, sql.ErrNoRows) {
+		return Job{}, findErr
+	}
 	if plan.IntentID != "" {
 		if _, err = importIntentTx(ctx, tx, plan); err != nil {
 			return Job{}, err
@@ -101,6 +118,18 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 	default:
 	}
 	return job, nil
+}
+
+func sameImportSelection(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func selectImportFiles(plan ImportPlan, requested []string) ([]int, error) {

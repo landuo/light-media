@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { api, action, ui, refreshSettings, toast, date, bytes } from '../api';
+import { api, action, ui, refreshSettings, toast, date, bytes, go } from '../api';
 const form = ref<any>(null),
   tab = ref('connect'),
   testResult = ref<any>(null),
@@ -162,15 +162,21 @@ onMounted(() => action(load));
   <div class="page-heading">
     <div>
       <p class="eyebrow">SETTINGS</p>
-      <h1>连接你的媒体空间</h1>
-      <p class="muted">从元数据到存储，一次配置，持续运转。</p>
+      <h1>设定</h1>
+      <p class="muted">配置元数据、服务、媒体目录及系统维护。</p>
     </div>
     <button class="primary" :disabled="saving || !form" @click="save">
       {{ saving ? '正在保存…' : '保存设置' }}
     </button>
   </div>
   <template v-if="form"
-    ><div class="setup-checklist">
+    ><div class="button-row" style="margin-bottom: 20px">
+      <button @click="go('sites')">站点管理与数据</button
+      ><button @click="go('downloaders')">下载器配置</button
+      ><button @click="go('files')">文件管理</button
+      ><button @click="go('history')">整理历史</button>
+    </div>
+    <div class="setup-checklist">
       <div v-for="r in ready" :key="r.name" :class="{ done: r.ok }">
         <span>{{ r.ok ? '✓' : '○' }}</span
         >{{ r.name }}

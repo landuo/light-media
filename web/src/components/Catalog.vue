@@ -8,11 +8,15 @@ const creditsKind = ref('all'),
   creditsLimit = ref(24),
   creditsSort = ref('popularity');
 const props = defineProps<{ route: string }>();
-const parts = props.route.split('/'),
+const [routePath, routeQuery] = props.route.split('?'),
+  routeParams = new URLSearchParams(routeQuery),
+  parts = routePath!.split('/'),
   page = ref(1),
   kind = ref(parts[0] === 'detail' ? parts[1] : 'movie'),
   list = ref('popular'),
-  query = ref(''),
+  query = ref(routeParams.get('query') || routeParams.get('q') || ''),
+  searchKind = ref('all'),
+  hasMore = ref(false),
   results = ref<any[]>([]),
   total = ref(0),
   cached = ref(''),
@@ -25,6 +29,11 @@ const parts = props.route.split('/'),
   selected = ref<number[]>([]),
   loading = ref(true),
   error = ref('');
+const visibleResults = computed(() =>
+  results.value.filter(
+    (m) => !query.value || searchKind.value === 'all' || m.media_type === searchKind.value,
+  ),
+);
 const filteredCredits = computed(() =>
   credits.value
     .filter((m) => creditsKind.value === 'all' || m.media_type === creditsKind.value)
@@ -50,14 +59,18 @@ async function load() {
         api('/catalog/person/credits?id=' + parts[1]).then((r: any) => r.results || []),
       ]);
     } else {
-      const q = new URLSearchParams({ kind: kind.value!, page: String(page.value) });
-      if (query.value) {
-        q.set('q', query.value);
-      } else q.set('list', list.value);
+      const q = new URLSearchParams({ page: String(page.value) });
+      if (query.value.trim()) {
+        q.set('query', query.value.trim());
+      } else {
+        q.set('kind', kind.value!);
+        q.set('list', list.value);
+      }
       const r = await api('/catalog/' + (query.value ? 'search' : 'browse') + '?' + q);
       if (generation !== loadSeq) return;
       results.value = r.results || [];
       total.value = r.total_pages || 0;
+      hasMore.value = r.has_more ?? page.value < total.value;
       cached.value = r.cached_at || '';
     }
   } catch (e) {
@@ -96,6 +109,18 @@ function resource() {
       selected.value.join(','),
   );
 }
+function submitSearch() {
+  if (query.value.trim()) {
+    const target = 'search?query=' + encodeURIComponent(query.value.trim());
+    if (props.route === target) {
+      page.value = 1;
+      load();
+    } else go(target);
+  } else {
+    page.value = 1;
+    load();
+  }
+}
 function subscribe() {
   go(
     'subscriptions/new/' +
@@ -104,8 +129,7 @@ function subscribe() {
       detail.value.id +
       '?season=' +
       season.value +
-      '&episodes=' +
-      selected.value.join(','),
+      '&start_episode=1',
   );
 }
 onMounted(load);
@@ -117,14 +141,20 @@ onMounted(load);
       检查 TMDB 设置
     </button>
   </div>
-  <template v-if="parts[0] === 'discover'"
+  <template v-if="parts[0] === 'discover' || parts[0] === 'search'"
     ><div class="page-heading">
       <div>
         <p class="eyebrow">DISCOVER</p>
-        <h1>发现下一部好作品</h1>
-        <p class="muted">从榜单开始，让喜欢的故事自动来到媒体库。</p>
+        <h1>{{ query ? '“' + query + '” 的搜索结果' : '发现' }}</h1>
+        <p class="muted">
+          {{
+            query
+              ? '电影和剧集一起呈现，在结果中直接搜索资源或订阅。'
+              : '热门、高分和最新趋势，找到想看的电影与剧集。'
+          }}
+        </p>
       </div>
-      <form class="search-field" @submit.prevent="change">
+      <form class="search-field" @submit.prevent="submitSearch">
         <span>⌕</span
         ><input v-model="query" placeholder="搜索电影、剧集…" aria-label="搜索影视" /><button
           class="small primary"
@@ -134,7 +164,26 @@ onMounted(load);
       </form>
     </div>
     <div class="toolbar">
-      <div class="segmented">
+      <div v-if="query" class="segmented">
+        <button class="selected">影视</button>
+        <button @click="go('resource-search?query=' + encodeURIComponent(query))">资源</button>
+      </div>
+      <div v-if="query" class="segmented">
+        <button
+          v-for="t in [
+            { id: 'all', name: '全部' },
+            { id: 'movie', name: '电影' },
+            { id: 'tv', name: '剧集' },
+          ]"
+          :key="t.id"
+          :class="{ selected: searchKind === t.id }"
+          @click="searchKind = t.id"
+        >
+          {{ t.name }}
+          <small>{{ results.filter((m) => t.id === 'all' || m.media_type === t.id).length }}</small>
+        </button>
+      </div>
+      <div v-else class="segmented">
         <button
           :class="{ selected: kind === 'movie' }"
           @click="
@@ -154,6 +203,7 @@ onMounted(load);
         </button>
       </div>
       <select
+        v-if="!query"
         v-model="list"
         @change="
           query = '';
@@ -169,13 +219,13 @@ onMounted(load);
       <div v-for="i in 12" :key="i" class="skeleton"></div>
     </div>
     <template v-else
-      ><MediaCards :items="results" />
-      <div v-if="!results.length && !error" class="empty-state">
+      ><MediaCards :items="visibleResults" :quick-actions="true" />
+      <div v-if="!visibleResults.length && !error" class="empty-state">
         <span>⌕</span>
         <h3>没有找到相关作品</h3>
         <p>试试原名、中文名或其他关键词。</p>
       </div>
-      <div class="pagination" v-if="total > 1">
+      <div class="pagination" v-if="total > 1 || hasMore">
         <button
           :disabled="page <= 1"
           @click="
@@ -186,7 +236,7 @@ onMounted(load);
           上一页</button
         ><span>{{ page }} / {{ total }}</span
         ><button
-          :disabled="page >= total"
+          :disabled="!hasMore"
           @click="
             page++;
             load();
@@ -248,27 +298,30 @@ onMounted(load);
     </section>
     <section class="panel" v-if="kind === 'tv'">
       <div class="section-heading">
-        <h2>季度与剧集</h2>
+        <h2>季度</h2>
         <select v-model.number="season" @change="loadSeason">
           <option v-for="s in detail.seasons" :key="s.season_number" :value="s.season_number">
             {{ s.name }} · {{ s.episode_count }} 集
           </option>
         </select>
       </div>
-      <p class="hint">选择需要的集数后搜索或订阅；不选择表示该季全部。</p>
+      <p class="hint">订阅以季为单位，添加订阅时可设置从哪一集开始，后续更新自动追踪。</p>
       <p v-if="seasonLoading" class="hint">正在加载所选季度的标准单集信息…</p>
       <button v-else-if="!seasonData" class="small" @click="loadSeason">重试加载本季</button>
-      <div class="episode-grid">
-        <label
-          v-for="e in seasonData?.episodes || []"
-          :key="e.id"
-          :class="['episode-option', { selected: selected.includes(e.episode_number) }]"
-          ><input type="checkbox" :value="e.episode_number" v-model="selected" /><span
-            ><strong>E{{ String(e.episode_number).padStart(2, '0') }} · {{ e.name }}</strong
-            ><small>{{ e.air_date || '日期待定' }}</small></span
-          ></label
-        >
-      </div>
+      <details>
+        <summary>本季剧集 · 可选集数搜索资源</summary>
+        <div class="episode-grid">
+          <label
+            v-for="e in seasonData?.episodes || []"
+            :key="e.id"
+            :class="['episode-option', { selected: selected.includes(e.episode_number) }]"
+            ><input type="checkbox" :value="e.episode_number" v-model="selected" /><span
+              ><strong>E{{ String(e.episode_number).padStart(2, '0') }} · {{ e.name }}</strong
+              ><small>{{ e.air_date || '日期待定' }}</small></span
+            ></label
+          >
+        </div>
+      </details>
     </section>
     <section v-if="detail.cast?.length" class="section">
       <div class="section-heading">

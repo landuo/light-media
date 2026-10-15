@@ -54,6 +54,9 @@ func (a *App) requestLogged(next http.Handler) http.Handler {
 		module := strings.Split(strings.TrimPrefix(r.URL.Path, "/api/"), "/")[0]
 		allowed := map[string]bool{"auth": true, "status": true, "settings": true, "catalog": true, "search": true, "downloads": true, "subscriptions": true, "calendar": true, "schedule": true, "import": true, "assets": true, "jobs": true, "logs": true, "fnos": true, "backups": true, "restore": true, "control": true, "notifications": true, "audit": true}
 		allowed["frontend-errors"] = true
+		for _, name := range []string{"files", "history", "sites", "downloaders"} {
+			allowed[name] = true
+		}
 		if !allowed[module] {
 			module = "unknown"
 		}
@@ -67,6 +70,6 @@ func (a *App) requestLogged(next http.Handler) http.Handler {
 		if r.Method != "GET" && status < 400 && module != "auth" && module != "logs" && module != "frontend-errors" {
 			a.auditRequest(r.Context(), r.Method+"."+module, capture.Header().Get("X-Request-ID"), status)
 		}
-		a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "http." + module, "event": "request_completed", "message": "API 请求处理完成", "request_id": capture.Header().Get("X-Request-ID"), "method": r.Method, "http_status": status, "duration_ms": time.Since(start).Milliseconds(), "app_version": "0.1.0"})
+		a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "http." + module, "event": "request_completed", "message": "API 请求处理完成", "request_id": capture.Header().Get("X-Request-ID"), "method": r.Method, "http_status": status, "duration_ms": time.Since(start).Milliseconds(), "app_version": appVersion})
 	})
 }

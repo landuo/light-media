@@ -17,6 +17,8 @@ import (
 )
 
 type SubscriptionRequest struct {
+	TargetScope  string              `json:"target_scope"`
+	StartEpisode int                 `json:"start_episode"`
 	MediaType    string              `json:"media_type"`
 	TMDBID       int64               `json:"tmdb_id"`
 	Media        catalog.Media       `json:"media"`
@@ -127,6 +129,9 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		if e != nil {
 			return Subscription{}, e
 		}
+	}
+	if e = normalizeSubscriptionScope(&in, snapshot, m.MediaType); e != nil {
+		return Subscription{}, e
 	}
 	schedule, e := normalizeSchedule(in.Schedule)
 	if e != nil {
@@ -274,7 +279,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if old.ID == "" && count >= 500 {
 		return old, bad("SUBSCRIPTION_LIMIT", "订阅数量已达500个上限")
 	}
-	s := Subscription{ID: key, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: d.ID, RootID: root.ID, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
+	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: d.ID, RootID: root.ID, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
 	if s.CreatedAt == "" {
 		s.CreatedAt = now()
 	}
@@ -350,9 +355,10 @@ type subscriptionCoverage struct {
 }
 
 func (a *App) subscriptionCoverage(ctx context.Context, s Subscription, known []int) (subscriptionCoverage, error) {
+	known = subscriptionTargetEpisodes(s, known)
 	out := subscriptionCoverage{Known: append([]int{}, known...), Missing: []int{}, Library: []int{}, Reserved: []int{}, Excluded: append([]int{}, s.Excluded...), Unreleased: []int{}, UnknownDate: []int{}, PendingImport: []int{}}
-	wanted := s.Episodes
-	if len(wanted) == 0 {
+	wanted := subscriptionTargetEpisodes(s, s.Episodes)
+	if len(s.Episodes) == 0 {
 		wanted = known
 	}
 	if s.Media.MediaType == "movie" {
@@ -601,6 +607,9 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		today := time.Now().In(shanghai()).Format("2006-01-02")
 		for _, ep := range season.Episodes {
 			known = append(known, ep.EpisodeNumber)
+			if ep.EpisodeNumber < subscriptionStartEpisode(s) {
+				continue
+			}
 			date, skip := effectiveEpisodeDate(s, ep.EpisodeNumber, ep.AirDate)
 			if skip {
 				continue
@@ -651,8 +660,13 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	}
 	quotaSites := []string{}
 	created := 0
+	scheduled := map[int]bool{}
+	checkedPacks := map[string]bool{}
 	reason := "暂未找到符合筛选条件的资源，下次继续补漏"
 	for _, ep := range missing {
+		if scheduled[ep] {
+			continue
+		}
 		if created >= 4 {
 			reason = "本轮已安排4个下载，剩余缺集下轮继续"
 			break
@@ -662,6 +676,9 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			episodes = []int{ep}
 		}
 		for _, site := range a.Settings().Sites {
+			if created >= 4 {
+				break
+			}
 			if !site.Enabled {
 				continue
 			}
@@ -689,8 +706,26 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			}
 			acquired := false
 			for _, candidate := range result.Candidates {
-				if !candidate.Accepted || candidate.NeedsConfirmation {
+				pack := s.Media.MediaType == "tv" && automaticPackCandidate(candidate, s.Season)
+				if (!candidate.Accepted || candidate.NeedsConfirmation) && !pack {
 					continue
+				}
+				if created >= 4 {
+					break
+				}
+				previewRequest := request
+				if pack {
+					packKey := site.ID + ":" + candidate.Resource.ID
+					if checkedPacks[packKey] {
+						continue
+					}
+					checkedPacks[packKey] = true
+					previewRequest.Episodes = []int{}
+					for _, wanted := range missing {
+						if !scheduled[wanted] {
+							previewRequest.Episodes = append(previewRequest.Episodes, wanted)
+						}
+					}
 				}
 				if e := a.guardSubscriptionContext(ctx); e != nil {
 					return e
@@ -698,13 +733,16 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				if e := a.jobCancelled(ctx, j); e != nil {
 					return e
 				}
-				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: request, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: s.RootID, SubscriptionID: s.ID, Revision: s.Revision}, true)
+				preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: previewRequest, automaticSeasonPack: pack, SiteID: site.ID, ResourceID: candidate.Resource.ID, DownloaderID: s.DownloaderID, RootID: s.RootID, SubscriptionID: s.ID, Revision: s.Revision}, true)
 				if e != nil {
 					var api *APIError
 					if errors.As(e, &api) && api.Code == "SITE_QUOTA" {
 						quotaSites = append(quotaSites, site.ID)
 					}
 					a.event(ctx, j, "WARN", "subscriptions", "candidate_rejected", e.Error())
+					if pack {
+						reason = "整季包包含起始集、在库或未知范围，需要人工核对；继续寻找符合条件的资源"
+					}
 					continue
 				}
 				if e := a.guardSubscriptionContext(ctx); e != nil {
@@ -723,9 +761,14 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 					continue
 				}
 				created++
-				acquired = true
+				for _, covered := range preview.Episodes {
+					scheduled[covered] = true
+				}
+				acquired = s.Media.MediaType == "movie" || scheduled[ep]
 				reason = "已安排 " + strconv.Itoa(created) + " 个下载；在途目标不会重复获取"
-				break
+				if acquired {
+					break
+				}
 			}
 			if acquired {
 				break

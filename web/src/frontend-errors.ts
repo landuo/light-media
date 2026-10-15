@@ -12,6 +12,11 @@ const pages = new Set([
   'calendar',
   'person',
   'workflows',
+  'sites',
+  'downloaders',
+  'files',
+  'history',
+  'resource-search',
 ]);
 const pageAliases: Record<string, string> = {
   resources: 'search',

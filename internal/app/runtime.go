@@ -32,6 +32,7 @@ type App struct {
 	Dir              string
 	web              http.Handler
 	cfgMu            sync.RWMutex
+	settingsMu       sync.Mutex
 	config           Settings
 	controlMu        sync.Mutex
 	control          string
@@ -53,6 +54,9 @@ type Options struct {
 	DataDir string
 	Web     http.Handler
 }
+
+const appVersion = "0.2.0"
+
 type APIError struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
@@ -135,11 +139,31 @@ func (a *App) Settings() Settings {
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
 	c.DebugUntil = "" // Use process-local, expiring module/site overrides.
+	for i := range c.Sites {
+		if c.Sites[i].Enabled {
+			if err := normalizeManagedSite(&c.Sites[i]); err != nil {
+				return err
+			}
+		}
+	}
 	if e := validateSettings(c); e != nil {
 		return e
 	}
 	sealed, e := a.Store.Seal(c)
 	if e != nil {
+		return e
+	}
+	// Callers serialize read-modify-write with settingsMu. Publish destination
+	// changes in the same lock order as download submission and file import:
+	// a successful save cannot race an Add that already passed its snapshot
+	// check, nor an import publishing to a previously reviewed root.
+	// Validation and encryption above perform no network requests; site data
+	// refresh never takes these locks.
+	a.downloadMu.Lock()
+	defer a.downloadMu.Unlock()
+	a.importMu.Lock()
+	defer a.importMu.Unlock()
+	if e = ctx.Err(); e != nil {
 		return e
 	}
 	previous := a.Settings()
@@ -228,7 +252,7 @@ func (a *App) clean(s string) string {
 	return boundedLogString(cleanWithSettings(s, a.Settings()), 2048)
 }
 func (a *App) log(level, module, event, message, workflow, job string) {
-	entry := map[string]any{"time": now(), "id": id("log_"), "level": level, "module": module, "event": event, "message": message, "app_version": "0.1.0", "workflow_id": workflow, "job_id": job}
+	entry := map[string]any{"time": now(), "id": id("log_"), "level": level, "module": module, "event": event, "message": message, "app_version": appVersion, "workflow_id": workflow, "job_id": job}
 	a.writeLog(entry)
 }
 func (a *App) writeLog(entry map[string]any) {

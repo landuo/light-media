@@ -3,9 +3,14 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, toast, errorText, date } from './api';
 import Catalog from './components/Catalog.vue';
 import Resources from './components/Resources.vue';
+import KeywordResources from './components/KeywordResources.vue';
 import Subscriptions from './components/Subscriptions.vue';
 import Operations from './components/Operations.vue';
 import Settings from './components/Settings.vue';
+import SiteManager from './components/SiteManager.vue';
+import DownloaderManager from './components/DownloaderManager.vue';
+import FileManager from './components/FileManager.vue';
+import TransferHistory from './components/TransferHistory.vue';
 const route = ref(location.hash.slice(1) || 'discover'),
   auth = ref<any>(null),
   username = ref(''),
@@ -13,23 +18,78 @@ const route = ref(location.hash.slice(1) || 'discover'),
   authError = ref(''),
   starting = ref(true),
   mobile = ref(false);
+const globalQuery = ref(''),
+  searchInput = ref<HTMLInputElement>(),
+  initialFilePaths = ref<string[]>([]);
+const pageKey = computed(() => route.value.split('?')[0]!.split('/')[0]!);
+const icons: Record<string, string> = {
+  search: 'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
+  star: 'm12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z',
+  movie: 'M3 6h18v15H3ZM3 6l3-4m3 4 3-4m3 4 3-4M3 11h18',
+  tv: 'M3 5h18v14H3ZM8 23l4-4 4 4',
+  calendar: 'M3 5h18v16H3ZM7 2v6m10-6v6M3 10h18M7 14h2m3 0h2m3 0h1M7 18h2m3 0h2',
+  download: 'M12 2v13m-5-5 5 5 5-5M3 16v5h18v-5',
+  history: 'M3 12a9 9 0 1 1 3 6M3 3v9h9m0-6v6l4 3',
+  folder: 'M2 5h8l2 3h10v13H2Z',
+  library: 'M3 3h4v18H3Zm7 0h4v18h-4Zm7 1 4-1 3 17-4 1Z',
+  globe: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18',
+  server: 'M3 3h18v7H3Zm0 11h18v7H3ZM7 6h1m-1 11h1',
+  jobs: 'M9 5h12M9 12h12M9 19h12M2 5l2 2 3-4M2 12l2 2 3-4M2 19l2 2 3-4',
+  logs: 'm3 5 5 5-5 5m9 0h9',
+  settings:
+    'M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8M10 2h4l1 3 3 1 3-1 2 4-2 2v3l2 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 2-2v-3L1 9l2-4 3 1 3-1Z',
+};
 const nav = [
-  ['discover', '◈', '发现影视'],
-  ['subscriptions', '◉', '我的订阅'],
-  ['calendar', '▦', '追剧日历'],
-  ['downloads', '↓', '下载任务'],
-  ['organize', '⇄', '手动整理'],
-  ['library', '▤', '媒体库'],
-  ['jobs', '☷', '任务队列'],
-  ['logs', '⌁', '日志中心'],
-  ['settings', '⚙', '设置'],
+  { label: '', items: [['search', 'search', '搜索结果']] },
+  { label: '发现', items: [['discover', 'star', '推荐']] },
+  {
+    label: '订阅',
+    items: [
+      ['subscriptions?type=movie', 'movie', '电影'],
+      ['subscriptions?type=tv', 'tv', '电视剧'],
+      ['calendar', 'calendar', '日历'],
+    ],
+  },
+  {
+    label: '整理',
+    items: [
+      ['downloads', 'download', '下载管理'],
+      ['history', 'history', '媒体整理'],
+      ['files', 'folder', '文件管理'],
+      ['library', 'library', '媒体库'],
+    ],
+  },
+  {
+    label: '系统',
+    items: [
+      ['sites', 'globe', '站点管理'],
+      ['downloaders', 'server', '下载器'],
+      ['jobs', 'jobs', '任务队列'],
+      ['logs', 'logs', '日志'],
+      ['settings', 'settings', '设定'],
+    ],
+  },
 ];
+const activeNav = (target: string) =>
+  target.includes('?')
+    ? route.value.startsWith(target)
+    : pageKey.value === target || (target === 'search' && pageKey.value === 'resource-search');
+const navHref = (target: string) =>
+  '#' +
+  (target === 'search' && globalQuery.value.trim()
+    ? 'search?query=' + encodeURIComponent(globalQuery.value.trim())
+    : target);
 const title = computed(
   () =>
-    nav.find((n) => n[0] === route.value.split('/')[0])?.[2] ||
-    ({ detail: '影视详情', person: '演员资料', resources: '搜索资源' } as any)[
-      route.value.split('/')[0]!
-    ] ||
+    nav.flatMap((g) => g.items).find((n) => activeNav(n[0]!))?.[2] ||
+    (
+      {
+        detail: '影视详情',
+        person: '演员资料',
+        resources: '搜索资源',
+        'resource-search': '资源搜索',
+      } as any
+    )[pageKey.value] ||
     '光影',
 );
 const paused = computed(() =>
@@ -54,6 +114,20 @@ function change() {
   route.value = location.hash.slice(1) || 'discover';
   mobile.value = false;
   window.scrollTo(0, 0);
+  if (pageKey.value !== 'files') initialFilePaths.value = [];
+}
+function searchMedia() {
+  if (globalQuery.value.trim()) go('search?query=' + encodeURIComponent(globalQuery.value.trim()));
+}
+function searchShortcut(e: KeyboardEvent) {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    searchInput.value?.focus();
+  }
+}
+function organizePaths(paths: string[]) {
+  initialFilePaths.value = paths;
+  go('files');
 }
 function expired() {
   auth.value = { authenticated: false, setup_required: false };
@@ -102,6 +176,7 @@ let timer: number;
 onMounted(() => {
   window.addEventListener('hashchange', change);
   window.addEventListener('session-expired', expired);
+  window.addEventListener('keydown', searchShortcut);
   bootstrap();
   timer = window.setInterval(() => {
     if (auth.value?.authenticated && !document.hidden) {
@@ -114,6 +189,7 @@ onUnmounted(() => {
   clearInterval(timer);
   window.removeEventListener('hashchange', change);
   window.removeEventListener('session-expired', expired);
+  window.removeEventListener('keydown', searchShortcut);
 });
 </script>
 <template>
@@ -159,24 +235,36 @@ onUnmounted(() => {
       <a class="brand" href="#discover"
         ><span class="brand-mark">◈</span><span>光影<small>LIGHT MEDIA</small></span></a
       >
-      <div class="nav-caption">你的媒体空间</div>
       <nav>
-        <a
-          v-for="n in nav"
-          :key="n[0]"
-          :href="'#' + n[0]"
-          :class="{ active: route.split('/')[0] === n[0] }"
-          ><span class="nav-icon">{{ n[1] }}</span
-          >{{ n[2]
-          }}<span v-if="n[0] === 'jobs' && ui.status?.counts?.active_jobs" class="counter">{{
-            ui.status.counts.active_jobs
-          }}</span></a
+        <template v-for="group in nav" :key="group.label">
+          <div v-if="group.label" class="nav-caption">{{ group.label }}</div>
+          <a
+            v-for="n in group.items"
+            :key="n[0]"
+            :href="navHref(n[0]!)"
+            :class="{ active: activeNav(n[0]!) }"
+            ><span class="nav-icon"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path :d="icons[n[1]!]" /></svg></span
+            >{{ n[2]
+            }}<span v-if="n[0] === 'jobs' && ui.status?.counts?.active_jobs" class="counter">{{
+              ui.status.counts.active_jobs
+            }}</span></a
+          ></template
         >
       </nav>
       <div class="sidebar-bottom">
         <span class="dot" :class="{ amber: paused }"></span
         >{{ paused ? '自动流程已暂停' : ui.status ? '服务运行中' : '服务状态待确认'
-        }}<small>轻量，自在，井然有序</small>
+        }}<small>Light Media · P0 操作对齐版</small>
       </div>
     </aside>
     <div class="main-shell">
@@ -189,9 +277,24 @@ onUnmounted(() => {
         >
           ☰
         </button>
-        <div class="breadcrumb">
-          我的媒体空间 <span>/</span> <strong>{{ title }}</strong>
-        </div>
+        <form class="global-search" role="search" @submit.prevent="searchMedia">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            aria-hidden="true"
+          >
+            <path :d="icons.search" />
+          </svg>
+          <input
+            ref="searchInput"
+            v-model="globalQuery"
+            aria-label="搜索电影、剧集"
+            placeholder="搜索电影、剧集以及更多…"
+          />
+          <button type="submit" aria-label="搜索影视">搜索</button><kbd>⌘K</kbd>
+        </form>
         <div class="topbar-actions">
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button class="small ghost" @click="control">
@@ -210,7 +313,7 @@ onUnmounted(() => {
             ><span v-if="notifications.unread">{{
               notifications.unread > 99 ? '99+' : notifications.unread
             }}</span></button
-          ><button class="avatar" title="退出登录" aria-label="退出登录" @click="logout">退</button>
+          ><button class="avatar" title="退出登录" aria-label="退出登录" @click="logout">A</button>
         </div>
       </header>
       <div
@@ -258,7 +361,11 @@ onUnmounted(() => {
       </section>
       <main>
         <Catalog
-          v-if="['discover', 'detail', 'person'].includes(route.split('/')[0]!)"
+          v-if="['discover', 'search', 'detail', 'person'].includes(pageKey)"
+          :key="route"
+          :route="route"
+        /><KeywordResources
+          v-else-if="pageKey === 'resource-search'"
           :key="route"
           :route="route"
         /><Resources
@@ -269,7 +376,21 @@ onUnmounted(() => {
           v-else-if="route.startsWith('subscriptions') || route === 'calendar'"
           :key="route"
           :view="route"
-        /><Settings v-else-if="route === 'settings'" /><Operations
+        /><SiteManager v-else-if="pageKey === 'sites'" />
+        <DownloaderManager v-else-if="pageKey === 'downloaders'" />
+        <FileManager
+          v-else-if="pageKey === 'files' || pageKey === 'organize'"
+          :key="route"
+          :initial-paths="initialFilePaths"
+          @history="go('history')"
+          @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
+        />
+        <TransferHistory
+          v-else-if="pageKey === 'history'"
+          @organize="organizePaths"
+          @job="(job: string) => go('jobs/' + encodeURIComponent(job))"
+        />
+        <Settings v-else-if="route === 'settings'" /><Operations
           v-else
           :key="route"
           :view="route.split('/')[0]!"
@@ -278,7 +399,9 @@ onUnmounted(() => {
           "
         />
       </main>
-      <footer>Light Media · Go + Vue <span>所有任务状态均来自当前服务</span></footer>
+      <footer>
+        Light Media <span>{{ title }}</span>
+      </footer>
     </div>
   </div>
   <div class="toasts" role="status">

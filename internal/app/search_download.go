@@ -20,27 +20,29 @@ import (
 )
 
 type SearchRequest struct {
-	WorkflowID   string              `json:"workflow_id"`
-	Query        string              `json:"query,omitempty"`
-	MediaType    string              `json:"media_type"`
-	TMDBID       int64               `json:"tmdb_id"`
-	Season       int                 `json:"season"`
-	Episodes     []int               `json:"episodes"`
-	Policy       Policy              `json:"policy"`
-	SiteIDs      []string            `json:"site_ids"`
-	Page         int                 `json:"page"`
-	Mappings     []media.MappingRule `json:"mappings"`
-	AllowEarly   []int               `json:"allow_early"`
-	EpisodeDates map[int]string      `json:"episode_dates"`
+	VerifiedSeasonPack bool                `json:"verified_season_pack,omitempty"`
+	WorkflowID         string              `json:"workflow_id"`
+	Query              string              `json:"query,omitempty"`
+	MediaType          string              `json:"media_type"`
+	TMDBID             int64               `json:"tmdb_id"`
+	Season             int                 `json:"season"`
+	Episodes           []int               `json:"episodes"`
+	Policy             Policy              `json:"policy"`
+	SiteIDs            []string            `json:"site_ids"`
+	Page               int                 `json:"page"`
+	Mappings           []media.MappingRule `json:"mappings"`
+	AllowEarly         []int               `json:"allow_early"`
+	EpisodeDates       map[int]string      `json:"episode_dates"`
 }
 type PreviewRequest struct {
 	SearchRequest
-	SiteID         string `json:"site_id"`
-	ResourceID     string `json:"resource_id"`
-	DownloaderID   string `json:"downloader_id"`
-	RootID         string `json:"root_id"`
-	SubscriptionID string `json:"subscription_id"`
-	Revision       int    `json:"revision"`
+	automaticSeasonPack bool
+	SiteID              string `json:"site_id"`
+	ResourceID          string `json:"resource_id"`
+	DownloaderID        string `json:"downloader_id"`
+	RootID              string `json:"root_id"`
+	SubscriptionID      string `json:"subscription_id"`
+	Revision            int    `json:"revision"`
 }
 
 func (a *App) site(key string) (SiteConfig, error) {
@@ -297,9 +299,13 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	return out, nil
 }
 func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool) (DownloadPreview, error) {
+	in.VerifiedSeasonPack = false // Never accept a client assertion of material validation.
 	t, e := a.target(ctx, in.SearchRequest, auto)
 	if e != nil {
 		return DownloadPreview{}, e
+	}
+	if t.Media.MediaType == "tv" && len(in.Episodes) == 0 {
+		return DownloadPreview{}, bad("REVIEW_EPISODES", "请选择此资源的目标集数；整季下载也须先明确确认本季集数")
 	}
 	in.Episodes = append([]int{}, t.Episodes...)
 	site, e := a.site(in.SiteID)
@@ -355,7 +361,8 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		return DownloadPreview{}, e
 	}
 	choice := decision.Evaluate(fresh, t, decisionPolicy(in.Policy))
-	if !choice.Accepted {
+	verifiedPack := auto && in.automaticSeasonPack && eligibleAutomaticSeasonPack(fresh, t, in.Policy)
+	if !choice.Accepted && !verifiedPack {
 		return DownloadPreview{}, bad("RESOURCE_REJECTED", strings.Join(choice.Reasons, "；"))
 	}
 	material, e := metainfo.ParseMaterial(torrent)
@@ -389,7 +396,11 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		fileResource.Title = filepath.Base(f.Path)
 		fileResource.Subtitle = ""
 		fileResource.Size = f.Size
-		fileChoice := decision.Evaluate(fileResource, t, decision.Policy{})
+		fileTarget := t
+		if verifiedPack {
+			fileTarget.AllowEarly = nil
+		}
+		fileChoice := decision.Evaluate(fileResource, fileTarget, decision.Policy{})
 		if !fileChoice.Accepted || fileChoice.NeedsConfirmation {
 			if auto {
 				return p, bad("REVIEW_FILE_IDENTITY", "种子实际视频文件名不能确认目标身份，请手动核对")
@@ -416,6 +427,9 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 				if ep.Season != in.Season || !containsInt(in.Episodes, ep.Episode) {
 					p.ExtraFiles = true
 				} else {
+					if verifiedPack && coverage[ep.Episode] {
+						return p, bad("REVIEW_SEASON_PACK", "整季包同一集包含多个视频版本，请人工核对")
+					}
 					coverage[ep.Episode] = true
 				}
 			}
@@ -423,6 +437,22 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	}
 	if videos == 0 {
 		return p, bad("NO_MEDIA_FILES", "种子未包含支持的视频文件")
+	}
+	if verifiedPack {
+		if p.ExtraFiles || len(coverage) == 0 {
+			return p, bad("REVIEW_SEASON_PACK", "整季包包含目标缺集之外或无法确认的文件，请人工核对")
+		}
+		// Every actual video already passed the normal strict automatic identity,
+		// season, known/aired and target checks above. Freeze exactly that subset.
+		p.Episodes = []int{}
+		for ep := range coverage {
+			p.Episodes = append(p.Episodes, ep)
+		}
+		sort.Ints(p.Episodes)
+		in.Episodes = append([]int{}, p.Episodes...)
+		p.Request.Episodes = append([]int{}, p.Episodes...)
+		p.Request.VerifiedSeasonPack = true
+		p.Warnings, p.NeedsConfirmation = []string{}, false
 	}
 	if t.Media.MediaType == "tv" {
 		for _, ep := range in.Episodes {
@@ -604,6 +634,29 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	request.TMDBID = in.Media.ID
 	request.Season = in.Season
 	request.Episodes = in.Episodes
+	if in.Auto && in.Media.MediaType == "tv" {
+		// The check's effective dates were a snapshot. Reapply the unchanged
+		// subscription's explicit overrides to current provider data before Add.
+		var current Subscription
+		if in.SubscriptionID == "" {
+			return bad("REVIEW_EPISODE_DATE", "自动剧集下载缺少订阅来源，请人工核对")
+		}
+		if e = a.Store.Get(ctx, "subscription", in.SubscriptionID, &current); e != nil {
+			return e
+		}
+		season, err := a.season(ctx, in.Media.ID, in.Season)
+		if err != nil {
+			return err
+		}
+		request.EpisodeDates = map[int]string{}
+		for _, episode := range season.Episodes {
+			date, skip := effectiveEpisodeDate(current, episode.EpisodeNumber, episode.AirDate)
+			if skip && containsInt(in.Episodes, episode.EpisodeNumber) {
+				return bad("REVIEW_EPISODE_DATE", "剧集目标已被更新例外跳过，请人工核对")
+			}
+			request.EpisodeDates[episode.EpisodeNumber] = date
+		}
+	}
 	target, e := a.target(ctx, request, in.Auto)
 	if e != nil {
 		return e
@@ -636,6 +689,9 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		}
 		err = nil
 		choice := decision.Evaluate(*fresh, target, decisionPolicy(preview.Policy))
+		if in.Auto && request.VerifiedSeasonPack && eligibleAutomaticSeasonPack(*fresh, target, preview.Policy) {
+			choice.Accepted, choice.NeedsConfirmation, choice.Reasons = true, false, []string{}
+		}
 		newReason := false
 		for _, reason := range choice.Reasons {
 			found := false
@@ -666,6 +722,11 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	}
 	if e = actualSizePolicy(material.TotalBytes, preview.Policy); e != nil {
 		return e
+	}
+	if in.Auto && request.VerifiedSeasonPack {
+		if e = validateAutomaticSeasonPackFiles(material, target, in.SiteID); e != nil {
+			return e
+		}
 	}
 	if e = a.jobCancelled(ctx, j); e != nil {
 		return e

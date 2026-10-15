@@ -110,6 +110,7 @@ func OpenStore(dir string) (*Store, error) {
  CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,expires_at INTEGER NOT NULL);
  CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY,workflow_id TEXT NOT NULL,kind TEXT NOT NULL,state TEXT NOT NULL,payload BLOB NOT NULL,attempt INTEGER NOT NULL DEFAULT 0,generation INTEGER NOT NULL DEFAULT 0,run_at INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,error_code TEXT NOT NULL DEFAULT '',error_message TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
  CREATE INDEX IF NOT EXISTS jobs_due ON jobs(state,run_at);
+ CREATE INDEX IF NOT EXISTS jobs_subject ON jobs(kind,json_extract(payload,'$.id'),created_at);
  CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT,time TEXT NOT NULL,workflow_id TEXT NOT NULL,job_id TEXT NOT NULL,level TEXT NOT NULL,module TEXT NOT NULL,event TEXT NOT NULL,message TEXT NOT NULL);
  CREATE INDEX IF NOT EXISTS events_job ON events(job_id,seq);
  CREATE TABLE IF NOT EXISTS reservations(media_key TEXT NOT NULL,season INTEGER NOT NULL,episode INTEGER NOT NULL,intent_id TEXT NOT NULL,PRIMARY KEY(media_key,season,episode));

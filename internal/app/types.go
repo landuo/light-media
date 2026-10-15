@@ -101,6 +101,8 @@ type ScheduleException struct {
 	Episode    int    `json:"episode"`
 }
 type Subscription struct {
+	TargetScope  string              `json:"target_scope"`
+	StartEpisode int                 `json:"start_episode"`
 	ID           string              `json:"id"`
 	Media        catalog.Media       `json:"media"`
 	Season       int                 `json:"season"`

@@ -64,6 +64,8 @@ func (a *App) loggingAPI(w http.ResponseWriter, r *http.Request) (any, error) {
 	if d.Decode(&trailing) != io.EOF {
 		return nil, bad("INVALID_LOG_SETTINGS", "日志设置必须为一个JSON对象")
 	}
+	a.settingsMu.Lock()
+	defer a.settingsMu.Unlock()
 	c := a.Settings()
 	if in.Level != nil {
 		if *in.Level != "INFO" && *in.Level != "WARN" && *in.Level != "ERROR" {
@@ -350,7 +352,7 @@ func (a *App) frontendErrorAPI(w http.ResponseWriter, r *http.Request) (any, err
 		return nil, bad("INVALID_FRONTEND_ERROR", "前端诊断必须为一个JSON对象")
 	}
 	pages := map[string]bool{}
-	for _, p := range strings.Fields("home discover detail search subscriptions downloads import assets jobs settings logs calendar person workflows") {
+	for _, p := range strings.Fields("home discover detail search subscriptions downloads import assets jobs settings logs calendar person workflows sites downloaders files history resource-search") {
 		pages[p] = true
 	}
 	codes := map[string]string{"VUE_RENDER_ERROR": "页面渲染发生异常", "UNHANDLED_REJECTION": "页面异步操作发生异常", "SCRIPT_ERROR": "页面脚本发生异常"}

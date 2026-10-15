@@ -1,6 +1,7 @@
 import { reactive } from 'vue';
 export type Any = Record<string, any>;
 const messages: Record<string, string> = {
+  media_identity_required: '下载前请选择影视身份并确认季集',
   site_api_key_required: '请填写站点 API Key',
   site_cookie_required: '请填写站点 Cookie',
   site_authentication_failed: '站点认证失败，请更新凭据',

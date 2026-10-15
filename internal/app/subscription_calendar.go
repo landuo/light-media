@@ -89,6 +89,9 @@ func (a *App) calendar(ctx context.Context, from, to string) (any, error) {
 			return nil, e
 		}
 		for _, ep := range cached.Data.Episodes {
+			if ep.EpisodeNumber < subscriptionStartEpisode(s) {
+				continue
+			}
 			if len(s.Episodes) > 0 && !containsInt(s.Episodes, ep.EpisodeNumber) {
 				continue
 			}
