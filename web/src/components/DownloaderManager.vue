@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppIcon from './AppIcon.vue';
 import { onMounted, ref } from 'vue';
 import { api, action, clone, errorText, friendly, refreshSettings, toast } from '../api';
 const data = ref<any>({ downloaders: [], default_downloader: '' }),
@@ -125,14 +126,14 @@ onMounted(load);
             @dragstart="dragging = row.config.id"
             @dragend="dragging = ''"
           >
-            ⠿
+            <AppIcon name="grip" />
           </button>
           <button
             class="icon-button danger"
             :aria-label="'移除 ' + row.config.name"
             @click.stop="remove(row)"
           >
-            ×
+            <AppIcon name="close" />
           </button>
         </div>
         <div class="card-content">
@@ -150,9 +151,11 @@ onMounted(load);
               {{ friendly(row.connection.error) }}
             </p>
           </div>
-          <span class="downloader-logo" aria-hidden="true">{{
-            row.config.kind === 'transmission' ? '⇅' : 'qB'
-          }}</span>
+          <span class="downloader-logo" aria-hidden="true"
+            ><AppIcon v-if="row.config.kind === 'transmission'" name="download" /><template v-else
+              >qB</template
+            ></span
+          >
         </div>
       </article>
     </div>
@@ -163,7 +166,7 @@ onMounted(load);
       </button>
       <div class="add-menu">
         <button aria-label="添加下载器" :aria-expanded="adding" @click="adding = !adding">
-          ＋
+          <AppIcon name="plus" />
         </button>
         <div v-if="adding" class="add-menu-options">
           <button @click="create('qbittorrent')">qBittorrent</button
@@ -185,7 +188,7 @@ onMounted(load);
             <p class="hint">{{ editing.name }}</p>
           </div>
           <button type="button" class="icon-button" aria-label="关闭" @click="editing = null">
-            ×
+            <AppIcon name="close" />
           </button>
         </header>
         <div class="form-grid">
@@ -229,40 +232,66 @@ onMounted(load);
 .downloader-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 18px;
-  margin: 24px 0;
+  gap: 16px;
+  margin: 20px 0 24px;
 }
 .downloader-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 14px 20px 22px;
+  padding: 10px 20px 24px;
   cursor: pointer;
+  box-shadow: 0 2px 8px #172b3a03;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
 }
 .downloader-card.disabled .card-content {
-  opacity: 0.55;
+  opacity: 0.65;
 }
 .downloader-card:focus-visible,
 .downloader-card:hover {
   border-color: var(--accent);
+  box-shadow: 0 4px 16px #172b3a09;
 }
 .card-controls {
   display: flex;
   justify-content: flex-end;
   gap: 4px;
+  margin-right: -10px;
+  margin-bottom: 8px;
+}
+.card-controls .icon-button,
+.modal .icon-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 7px;
+  border-radius: 8px;
+}
+.card-controls .icon-button:hover {
+  background: var(--surface-subtle, #f4f7f8);
 }
 .card-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  min-height: 62px;
+}
+.card-content > div {
+  min-width: 0;
 }
 .card-content h3 {
+  overflow-wrap: anywhere;
   font-size: 17px;
   margin: 0 0 9px;
 }
 .card-content small {
   color: var(--muted);
+  font-size: 12px;
 }
 .downloader-logo {
   background: var(--accent-soft);
@@ -274,10 +303,15 @@ onMounted(load);
   border-radius: 14px;
   font-size: 25px;
   font-weight: 700;
+  flex-shrink: 0;
+}
+.downloader-logo :deep(svg) {
+  width: 26px;
+  height: 26px;
 }
 .default-dot {
   display: inline-block;
-  color: #37854f;
+  color: var(--accent);
   margin-right: 8px;
   font-size: 11px;
   vertical-align: middle;
@@ -294,11 +328,11 @@ onMounted(load);
   top: calc(100% + 6px);
   z-index: 20;
   min-width: 170px;
-  padding: 5px;
+  padding: 6px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
-  box-shadow: 0 10px 25px #0002;
+  box-shadow: 0 8px 28px #172b3a1a;
 }
 .add-menu-options button {
   display: block;
@@ -306,6 +340,20 @@ onMounted(load);
   text-align: left;
   border: 0;
   background: none;
+  border-radius: 7px;
+  min-height: 40px;
+}
+.add-menu > button {
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+}
+.add-menu-options button:hover {
+  background: var(--surface-subtle, #f4f7f8);
+}
+.downloader-settings > footer {
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 }
 .span-two {
   grid-column: 1/-1;
@@ -313,5 +361,15 @@ onMounted(load);
 .modal footer {
   margin-top: 24px;
   justify-content: flex-end;
+}
+@media (max-width: 760px) {
+  .downloader-card {
+    padding: 10px 18px 22px;
+  }
+  .card-controls .icon-button,
+  .modal .icon-button {
+    width: 40px;
+    height: 40px;
+  }
 }
 </style>

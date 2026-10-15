@@ -104,7 +104,7 @@ onMounted(() => {
 onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
 </script>
 <template>
-  <div class="tabs">
+  <div class="tabs settings-tabs">
     <button
       v-for="item in [
         ['system', '系统'],
@@ -119,7 +119,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     </button>
   </div>
   <template v-if="form">
-    <div v-if="visitedTabs.has('system')" v-show="tab === 'system'">
+    <div v-if="visitedTabs.has('system')" v-show="tab === 'system'" class="settings-page">
       <section class="panel">
         <header class="section-heading">
           <h2>TMDB 元数据</h2>
@@ -176,7 +176,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     <div v-if="visitedTabs.has('directory')" v-show="tab === 'directory'">
       <DirectoryManager @organize="emit('organize', $event)" />
     </div>
-    <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'">
+    <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'" class="settings-page">
       <section v-if="logging" class="panel">
         <h2>日志与保留策略</h2>
         <div class="form-grid">
@@ -270,10 +270,67 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
   </template>
 </template>
 <style scoped>
+.settings-tabs {
+  margin-bottom: 22px;
+}
+.settings-page {
+  display: grid;
+  gap: 20px;
+  max-width: 1400px;
+}
+.settings-page .panel {
+  margin: 0;
+  padding: 24px;
+  border-radius: 14px;
+}
+.settings-page .section-heading {
+  margin-bottom: 22px;
+}
+.settings-page .section-heading h2,
+.settings-page .panel > h2 {
+  color: var(--text, #172b3a);
+  font-size: 16px;
+  font-weight: 650;
+}
+.settings-page .panel > h2 {
+  margin: 0 0 22px;
+}
+.settings-page .panel > h3 {
+  padding-top: 24px;
+  margin-top: 26px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+.settings-page .form-grid {
+  gap: 20px 24px;
+}
+.settings-page .notice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.settings-page .notice .small {
+  margin-left: auto;
+}
 .span-two {
   grid-column: 1 / -1;
 }
 .panel > .button-row {
-  margin-top: 20px;
+  margin-top: 24px;
+}
+.settings-page .form-grid + .primary {
+  margin-top: 24px;
+}
+@media (max-width: 760px) {
+  .settings-page .panel {
+    padding: 20px;
+  }
+  .settings-page .form-grid {
+    gap: 18px;
+  }
+  .settings-page .button-row > button {
+    min-height: 42px;
+  }
 }
 </style>

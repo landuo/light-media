@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { api, errorText } from '../api';
+import AppIcon from './AppIcon.vue';
 import {
   importSiteDocument,
   readSiteImport,
@@ -113,7 +114,7 @@ async function start() {
           :disabled="importing || reading"
           @click="close"
         >
-          ×
+          <AppIcon name="close" />
         </button>
       </header>
       <div class="site-import-body">
@@ -126,6 +127,9 @@ async function start() {
           @dragleave="dragging = false"
           @drop.prevent="drop"
         >
+          <span class="import-upload-icon"><AppIcon name="upload" /></span>
+          <p>将文件拖放到此处，或选择文件</p>
+          <small>{{ reading ? '正在读取…' : '支持 JSON 文件，最大 2 MiB' }}</small>
           <input
             ref="fileInput"
             type="file"
@@ -134,8 +138,6 @@ async function start() {
             :disabled="reading"
             @change="select"
           />
-          <p>将文件拖放到此处，或选择文件</p>
-          <small>{{ reading ? '正在读取…' : '支持 JSON 文件，最大 2 MiB' }}</small>
         </div>
         <template v-else-if="importing">
           <p role="status">正在导入 {{ completed }} / {{ document.sites.length }}</p>
@@ -147,8 +149,18 @@ async function start() {
             {{ result.skipped }}，失败 {{ result.failed }}
           </p>
           <ul class="site-import-list">
-            <li v-for="row in result.results" :key="row.index">
-              <strong>{{ row.name }} · {{ status[row.status] }}</strong
+            <li v-for="row in result.results" :key="row.index" :class="row.status">
+              <strong
+                ><AppIcon
+                  :name="
+                    row.status === 'failed'
+                      ? 'warning'
+                      : row.status === 'skipped'
+                        ? 'info'
+                        : 'check-circle'
+                  "
+                />{{ row.name }}
+                <span class="import-result-status">{{ status[row.status] }}</span></strong
               ><span>{{ row.message }}</span
               ><small v-for="(warning, index) in row.warnings" :key="index">{{ warning }}</small>
             </li>
@@ -164,7 +176,8 @@ async function start() {
           </h3>
           <ul class="site-import-list">
             <li v-for="(row, index) in preview" :key="index">
-              <strong>{{ row.valid ? '✓' : '!' }} {{ row.name }}</strong
+              <strong
+                ><AppIcon :name="row.valid ? 'check-circle' : 'warning'" />{{ row.name }}</strong
               ><span>{{ row.url || '未提供有效站点地址' }}</span>
             </li>
           </ul>
@@ -185,44 +198,99 @@ async function start() {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: #12233270;
+  background: #12233273;
+  backdrop-filter: blur(4px);
 }
 .site-import-dialog {
   width: min(760px, 100%);
   max-height: calc(100dvh - 40px);
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
   background: var(--surface);
-  box-shadow: 0 24px 80px #0003;
+  box-shadow: 0 24px 80px #172b3a29;
 }
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 16px 20px;
+  padding: 22px 26px;
   border-bottom: 1px solid var(--line);
 }
 h2 {
-  margin: 0 0 5px;
+  margin: 0 0 7px;
   font-size: 18px;
+  font-weight: 650;
 }
 small {
   color: var(--muted);
 }
 h3 {
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0 12px;
+}
+h3 small {
+  font-weight: 400;
 }
 .site-import-body {
-  padding: 22px;
+  padding: 24px 26px;
   overflow: auto;
 }
 .site-import-drop {
-  border: 2px dashed var(--line);
-  border-radius: 10px;
-  padding: 36px 24px;
+  border: 1px dashed color-mix(in srgb, var(--muted) 45%, var(--line));
+  border-radius: 12px;
+  padding: 36px 20px;
   text-align: center;
+  background: color-mix(in srgb, var(--line) 12%, var(--surface));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.site-import-drop p {
+  margin: 3px 0 0;
+  font-size: 14px;
+  font-weight: 550;
+}
+.site-import-drop > small {
+  font-size: 12px;
+}
+.import-upload-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.import-upload-icon .app-icon {
+  width: 27px;
+  height: 27px;
+}
+.site-import-drop input {
+  width: min(310px, 100%);
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 9px;
+  padding: 0;
+  background: var(--surface);
+}
+.site-import-drop input::file-selector-button {
+  cursor: pointer;
+  border: 0;
+  border-right: 1px solid var(--line);
+  padding: 10px 14px;
+  margin-right: 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 550;
 }
 .site-import-drop.dragging {
   border-color: var(--accent);
@@ -232,10 +300,11 @@ h3 {
   list-style: none;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 11px;
+  overflow: hidden;
 }
 .site-import-list li {
-  padding: 12px 15px;
+  padding: 16px;
   border-bottom: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
@@ -248,17 +317,62 @@ h3 {
   margin-top: 5px;
   font-size: 12px;
 }
+.site-import-list strong {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 550;
+}
+.site-import-list strong .app-icon {
+  width: 17px;
+  height: 17px;
+  color: var(--accent);
+}
+.site-import-list .failed strong .app-icon {
+  color: var(--danger);
+}
+.site-import-list .import-result-status {
+  margin: 0 0 0 auto;
+  color: var(--accent);
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: var(--accent-soft);
+}
+.site-import-list .failed .import-result-status {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 8%, var(--surface));
+}
+.site-import-list li > span {
+  color: var(--muted);
+  padding-left: 26px;
+}
+.site-import-list li > small {
+  padding-left: 26px;
+  line-height: 1.7;
+}
 footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 }
 progress {
   width: 100%;
+  height: 6px;
+  accent-color: var(--accent);
+  border-radius: 5px;
 }
 .site-import-summary {
   line-height: 1.7;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--accent-soft) 50%, var(--surface));
+  border-radius: 9px;
+  font-size: 13px;
 }
 @media (max-width: 600px) {
   .site-import-backdrop {
@@ -266,6 +380,9 @@ progress {
   }
   .site-import-body {
     padding: 16px;
+  }
+  header {
+    padding: 18px 16px;
   }
 }
 </style>

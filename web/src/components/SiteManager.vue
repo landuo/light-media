@@ -4,6 +4,7 @@ import { api, bytes, clone, date, errorText, friendly, refreshSettings, toast, u
 import { downloadSiteExport, type SiteImportResult } from '../features/site-transfer';
 import SiteImportDialog from './SiteImportDialog.vue';
 import SiteResourceDialog from './SiteResourceDialog.vue';
+import AppIcon from './AppIcon.vue';
 
 const data = ref<any>({ sites: [], supported: [] });
 const filter = ref('all'),
@@ -319,14 +320,25 @@ onMounted(load);
 <template>
   <section class="site-manager" @keydown.esc="menu = ''">
     <div class="site-toolbar">
-      <input v-model="query" aria-label="查找站点" placeholder="搜索站点名称或地址" />
+      <div class="site-search">
+        <AppIcon name="search" />
+        <input v-model="query" aria-label="查找站点" placeholder="搜索站点名称或地址" />
+      </div>
       <select v-model="filter" aria-label="站点状态">
         <option v-for="(title, key) in statuses" :key="key" :value="key">{{ title }}</option>
       </select>
-      <button :disabled="working" :aria-pressed="sortMode" @click="startSort">
+      <button
+        :disabled="working"
+        :aria-pressed="sortMode"
+        :aria-label="sortMode ? '退出排序' : '排序'"
+        @click="startSort"
+      >
+        <AppIcon name="sort" />
         {{ sortMode ? '退出排序' : '排序' }}
       </button>
-      <button :disabled="working" @click="load">刷新</button>
+      <button :disabled="working" aria-label="刷新" @click="load">
+        <AppIcon name="refresh" />刷新
+      </button>
     </div>
     <p v-if="error" class="error-box" role="alert">{{ error }}</p>
     <p v-if="sortMode" class="sort-notice">
@@ -361,8 +373,13 @@ onMounted(load);
         <div class="site-card-body">
           <div class="site-card-title">
             <span class="site-monogram">{{ row.config.name.slice(0, 1) }}</span>
-            <h2>{{ row.config.name }}</h2>
-            <small v-if="!row.config.enabled">已停用</small>
+            <div class="site-card-identity">
+              <h2>{{ row.config.name }}</h2>
+              <span class="site-status" :class="!row.config.enabled ? 'disabled' : state(row)">
+                <span aria-hidden="true"></span
+                >{{ !row.config.enabled ? '已停用' : statuses[state(row)] }}
+              </span>
+            </div>
           </div>
           <a
             class="site-url"
@@ -370,18 +387,21 @@ onMounted(load);
             target="_blank"
             rel="noopener noreferrer"
             @click.stop
-            >{{ homepage(row) }}</a
-          >
+            ><span>{{ homepage(row) }}</span
+            ><AppIcon name="external"
+          /></a>
           <div class="site-traffic">
             <div>
-              <span>↑ {{ value(row.stats, 'uploaded') }}</span
+              <span class="traffic-label"><AppIcon name="arrow-up" />上传</span
+              ><strong>{{ value(row.stats, 'uploaded') }}</strong
               ><progress
                 :value="row.stats?.uploaded || 0"
                 :max="Math.max(row.stats?.uploaded || 0, row.stats?.downloaded || 0, 1)"
               ></progress>
             </div>
             <div>
-              <span>↓ {{ value(row.stats, 'downloaded') }}</span
+              <span class="traffic-label"><AppIcon name="arrow-down" />下载</span
+              ><strong>{{ value(row.stats, 'downloaded') }}</strong
               ><progress
                 :value="row.stats?.downloaded || 0"
                 :max="Math.max(row.stats?.uploaded || 0, row.stats?.downloaded || 0, 1)"
@@ -398,14 +418,25 @@ onMounted(load);
             :disabled="working"
             @click="refresh(row)"
           >
-            {{ refreshing.includes(row.config.id) ? '…' : '●' }}
+            <AppIcon
+              :name="
+                refreshing.includes(row.config.id)
+                  ? 'refresh'
+                  : state(row) === 'connected'
+                    ? 'check'
+                    : state(row) === 'failed'
+                      ? 'warning'
+                      : 'clock'
+              "
+              :class="{ spinning: refreshing.includes(row.config.id) }"
+            />
           </button>
           <button
             :aria-label="row.config.name + ' 用户数据'"
             title="用户数据"
             @click="openHistory(row)"
           >
-            ▥
+            <AppIcon name="chart" />
           </button>
           <button
             :aria-label="'更新 ' + row.config.name + ' 凭据'"
@@ -416,7 +447,7 @@ onMounted(load);
               credentialTab = 'cookie';
             "
           >
-            ↻
+            <AppIcon name="key" />
           </button>
           <div class="site-menu">
             <button
@@ -424,13 +455,24 @@ onMounted(load);
               :aria-expanded="menu === row.config.id"
               @click="menu = menu === row.config.id ? '' : row.config.id"
             >
-              ⋮
+              <AppIcon name="more" />
             </button>
             <div v-if="menu === row.config.id" class="site-menu-items">
-              <button :disabled="working" @click="edit(row)">编辑</button
-              ><button :disabled="working" @click="toggle(row)">
+              <button :disabled="working" aria-label="编辑" @click="edit(row)">编辑</button
+              ><button
+                :disabled="working"
+                :aria-label="row.config.enabled ? '停用' : '启用'"
+                @click="toggle(row)"
+              >
                 {{ row.config.enabled ? '停用' : '启用' }}</button
-              ><button class="danger" :disabled="working" @click="requestDelete(row)">删除</button>
+              ><button
+                class="danger"
+                :disabled="working"
+                aria-label="删除"
+                @click="requestDelete(row)"
+              >
+                删除
+              </button>
             </div>
           </div>
         </div>
@@ -441,33 +483,37 @@ onMounted(load);
             :aria-label="'上移 ' + row.config.name"
             @click="reorder(row.config.id, filtered[index - 1].config.id)"
           >
-            ↑</button
+            <AppIcon name="arrow-up" /></button
           ><button
             :disabled="working || index === filtered.length - 1"
             :aria-label="'下移 ' + row.config.name"
             @click="reorder(row.config.id, filtered[index + 1].config.id)"
           >
-            ↓
+            <AppIcon name="arrow-down" />
           </button>
         </div>
       </article>
     </div>
     <div class="site-floating-actions">
-      <button aria-label="站点统计" title="站点统计" @click="statistics = true">▥</button
+      <button aria-label="站点统计" title="站点统计" @click="statistics = true">
+        <AppIcon name="chart" /></button
       ><button
         aria-label="导出站点"
         title="导出站点（文件包含 Cookie / API Key）"
         :disabled="transferBlocked || !data.sites.length"
         @click="exportSites"
       >
-        {{ exporting ? '…' : '⇧' }}</button
+        <AppIcon
+          :name="exporting ? 'refresh' : 'upload'"
+          :class="{ spinning: exporting }"
+        /></button
       ><button
         aria-label="导入站点"
         title="导入站点"
         :disabled="transferBlocked"
         @click="openImport"
       >
-        ⇩</button
+        <AppIcon name="download" /></button
       ><button
         class="primary"
         aria-label="添加站点"
@@ -475,7 +521,7 @@ onMounted(load);
         :disabled="working"
         @click="create"
       >
-        ＋
+        <AppIcon name="plus" />
       </button>
     </div>
     <SiteImportDialog
@@ -505,7 +551,7 @@ onMounted(load);
             :disabled="saving"
             @click="editing = null"
           >
-            ×
+            <AppIcon name="close" />
           </button>
         </header>
         <div class="manager-form-grid">
@@ -705,7 +751,7 @@ onMounted(load);
               statistics = false;
             "
           >
-            ×
+            <AppIcon name="close" />
           </button>
         </header>
         <template v-if="statistics"
@@ -795,14 +841,40 @@ onMounted(load);
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
-.site-toolbar input {
-  max-width: 320px;
+.site-search {
+  position: relative;
+  width: min(360px, 100%);
   margin-right: auto;
 }
+.site-search > .app-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+  width: 18px;
+  height: 18px;
+}
+.site-search input {
+  padding-left: 41px;
+}
 .site-toolbar select {
-  max-width: 160px;
+  width: 154px;
+}
+.site-toolbar button {
+  gap: 7px;
+}
+.site-toolbar button .app-icon {
+  width: 17px;
+  height: 17px;
+}
+.site-toolbar button[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .empty {
   padding: 70px 20px;
@@ -811,128 +883,206 @@ onMounted(load);
 }
 .site-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
 }
 .site-card {
   display: flex;
   min-width: 0;
   border: 1px solid var(--line);
-  border-top: 3px solid #c4cbd5;
-  border-radius: 11px;
+  border-radius: 13px;
   background: var(--surface);
   position: relative;
   cursor: pointer;
-  transition: box-shadow 0.15s;
+  box-shadow: 0 2px 5px #172b3a03;
+  transition:
+    box-shadow 0.18s,
+    border-color 0.18s;
+}
+.site-card:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 3px;
 }
 .site-card:hover {
-  box-shadow: 0 5px 20px #172b4d0e;
-}
-.site-card.connected {
-  border-top-color: #58a879;
-}
-.site-card.failed {
-  border-top-color: var(--danger);
-}
-.site-card.slow {
-  border-top-color: #dba24c;
+  box-shadow: var(--shadow);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
 }
 .site-card.inactive {
-  opacity: 0.7;
+  background: color-mix(in srgb, var(--surface) 70%, var(--line));
+}
+.site-card.inactive .site-monogram {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--line) 65%, var(--surface));
 }
 .site-card.sortable {
   cursor: grab;
 }
 .site-card-body {
-  padding: 14px;
+  padding: 20px;
   min-width: 0;
   flex: 1;
 }
 .site-card-title {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 11px;
+}
+.site-card-identity {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
 }
 .site-monogram {
   display: grid;
   place-items: center;
   flex: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 7px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 19px;
+  font-size: 20px;
+  font-weight: 650;
 }
 .site-card h2 {
-  font-size: 16px;
+  font-size: 15px;
   margin: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.site-card-title small {
+.site-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--muted);
   white-space: nowrap;
-  margin-left: auto;
-  font-size: 10px;
+  font-size: 11px;
+}
+.site-status > span {
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+}
+.site-status.connected {
+  color: var(--accent);
+}
+.site-status.failed {
+  color: var(--danger);
+}
+.site-status.slow {
+  color: #a56f17;
 }
 .site-url {
-  display: block;
-  margin: 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 17px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.site-url span {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px;
-  color: var(--muted);
+}
+.site-url .app-icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.site-card:hover .site-url .app-icon,
+.site-url:focus-visible .app-icon {
+  opacity: 1;
 }
 .site-traffic {
   border-top: 1px solid var(--line);
-  padding-top: 10px;
+  padding-top: 12px;
+  display: grid;
+  gap: 11px;
 }
 .site-traffic > div {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 10px;
-  margin-top: 6px;
+  gap: 7px 10px;
   font-size: 12px;
 }
-.site-traffic span {
-  min-width: 90px;
+.traffic-label {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  color: var(--muted);
+}
+.traffic-label .app-icon {
+  width: 13px;
+  height: 13px;
+}
+.site-traffic strong {
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
 }
 .site-traffic progress {
-  height: 4px;
+  grid-column: 1/-1;
+  height: 3px;
   width: 100%;
   accent-color: var(--accent);
+  border: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--line);
+}
+.site-traffic progress::-webkit-progress-bar {
+  background: var(--line);
+}
+.site-traffic progress::-webkit-progress-value {
+  background: var(--accent);
+  border-radius: 4px;
 }
 .site-traffic > div:last-child progress {
-  accent-color: #47a885;
+  accent-color: #8ba8b3;
+}
+.site-traffic > div:last-child progress::-webkit-progress-value {
+  background: #8ba8b3;
 }
 .site-card-actions {
   display: flex;
   flex-direction: column;
-  width: 40px;
-  padding: 5px 3px;
-  background: #f7f9fc;
-  border-radius: 0 8px 8px 0;
+  width: 46px;
+  padding: 8px 5px;
+  background: color-mix(in srgb, var(--line) 16%, var(--surface));
+  border-left: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+  border-radius: 0 12px 12px 0;
+  gap: 4px;
 }
 .site-card-actions button {
   border: 0;
   background: transparent;
-  padding: 6px;
+  padding: 8px;
   box-shadow: none;
-  font-size: 19px;
+  color: var(--muted);
+  border-radius: 7px;
 }
-.connection-dot {
+.site-card-actions button:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.site-card-actions .app-icon {
+  width: 18px;
+  height: 18px;
+}
+.site-card-actions .connection-dot {
   color: #9aa7b7;
 }
-.connection-dot.connected {
-  color: #4d9b6f;
+.site-card-actions .connection-dot.connected {
+  color: var(--accent);
 }
-.connection-dot.failed {
+.site-card-actions .connection-dot.failed {
   color: var(--danger);
 }
-.connection-dot.slow {
+.site-card-actions .connection-dot.slow {
   color: #c28c2c;
 }
 .site-menu {
@@ -944,21 +1094,25 @@ onMounted(load);
 }
 .site-menu-items {
   position: absolute;
-  right: 34px;
+  right: 38px;
   bottom: 0;
   z-index: 5;
-  min-width: 110px;
+  min-width: 130px;
   background: var(--surface);
   border: 1px solid var(--line);
   padding: 5px;
-  border-radius: 8px;
-  box-shadow: 0 8px 25px #172b4d1a;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
 }
 .site-menu-items button {
   width: 100%;
   justify-content: flex-start;
   font-size: 13px;
-  padding: 9px 12px;
+  padding: 10px 12px;
+  gap: 9px;
+}
+.site-menu-items button.danger {
+  color: var(--danger);
 }
 .site-floating-actions {
   position: fixed;
@@ -966,16 +1120,25 @@ onMounted(load);
   bottom: 26px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
   z-index: 50;
 }
 .site-floating-actions button {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   padding: 0;
-  border-radius: 50%;
-  font-size: 23px;
-  box-shadow: 0 4px 14px #172b4d1f;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px #172b3a12;
+}
+.site-floating-actions button.primary {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px #087f7830;
+}
+.site-floating-actions button.primary .app-icon {
+  width: 24px;
+  height: 24px;
 }
 .sort-notice {
   display: flex;
@@ -983,8 +1146,8 @@ onMounted(load);
   align-items: center;
   gap: 10px;
   padding: 13px 16px;
-  background: #fff5df;
-  border-radius: 9px;
+  background: var(--accent-soft);
+  border-radius: 10px;
   font-size: 13px;
 }
 .sort-controls {
@@ -995,7 +1158,11 @@ onMounted(load);
   gap: 6px;
 }
 .sort-controls button {
-  padding: 3px 7px;
+  padding: 6px;
+}
+.sort-controls .app-icon {
+  width: 16px;
+  height: 16px;
 }
 .sort-controls span {
   text-align: center;
@@ -1005,7 +1172,8 @@ onMounted(load);
 .manager-backdrop {
   position: fixed;
   inset: 0;
-  background: #12233270;
+  background: #12233273;
+  backdrop-filter: blur(4px);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -1013,25 +1181,30 @@ onMounted(load);
   padding: 20px;
 }
 .manager-dialog {
-  width: 720px;
+  --manager-dialog-padding: 28px;
+  width: 760px;
   max-width: 100%;
   max-height: calc(100dvh - 40px);
   overflow: auto;
   background: var(--surface);
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 24px 80px #0003;
+  padding: var(--manager-dialog-padding);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px #172b3a29;
 }
 .manager-dialog header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
+  padding-bottom: 21px;
+  border-bottom: 1px solid var(--line);
 }
 .manager-dialog h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 18px;
+  font-weight: 650;
 }
 .manager-dialog header small {
   display: block;
@@ -1042,18 +1215,34 @@ onMounted(load);
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 22px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+form.manager-dialog {
+  scroll-padding-bottom: 100px;
+}
+form.manager-dialog footer {
+  position: sticky;
+  bottom: calc(-1 * var(--manager-dialog-padding));
+  z-index: 2;
+  margin-right: calc(-1 * var(--manager-dialog-padding));
+  margin-bottom: calc(-1 * var(--manager-dialog-padding));
+  margin-left: calc(-1 * var(--manager-dialog-padding));
+  padding: 18px var(--manager-dialog-padding);
+  background: var(--surface);
+  box-shadow: 0 -8px 18px #172b3a05;
 }
 .manager-form-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px 14px;
+  gap: 22px 16px;
 }
 .manager-form-grid > label {
   display: grid;
   align-content: start;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .half {
   grid-column: span 2;
@@ -1064,25 +1253,44 @@ onMounted(load);
 .manager-form-grid small,
 .manager-note {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .credential-tabs {
   display: flex;
-  gap: 7px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 8px;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--line) 35%, var(--surface));
 }
 .credential-tabs button {
   border: 0;
   background: transparent;
+  flex: 1;
+  border-radius: 7px;
+  padding: 8px 16px;
+  box-shadow: none;
 }
 .credential-tabs button[aria-selected='true'] {
-  background: var(--accent-soft);
+  background: var(--surface);
   color: var(--accent);
+  box-shadow: 0 1px 4px #172b3a0d;
+}
+.manager-form-grid textarea {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.preserved-options {
+  padding: 13px 14px;
+  background: color-mix(in srgb, var(--line) 15%, var(--surface));
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 .preserved-options > label {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
   gap: 8px;
   font-size: 13px;
@@ -1098,11 +1306,13 @@ onMounted(load);
 .limit-fields {
   display: flex;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 15px;
   font-size: 12px;
 }
 .limit-fields label {
   min-width: 0;
+  display: grid;
+  gap: 7px;
 }
 .delete-dialog {
   width: 460px;
@@ -1113,8 +1323,13 @@ onMounted(load);
 .site-metrics {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 12px;
   margin: 22px 0;
+}
+.site-metrics > div {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 .site-metrics dt {
   color: var(--muted);
@@ -1123,8 +1338,9 @@ onMounted(load);
 }
 .site-metrics dd {
   margin: 0;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 .site-totals {
   display: grid;
@@ -1134,9 +1350,10 @@ onMounted(load);
 .site-totals > div {
   display: grid;
   gap: 10px;
-  padding: 16px;
+  padding: 20px;
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent-soft) 40%, var(--surface));
 }
 .site-totals strong {
   font-size: 23px;
@@ -1146,6 +1363,8 @@ onMounted(load);
 }
 .manager-table {
   overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 table {
   width: 100%;
@@ -1159,11 +1378,29 @@ td {
   text-align: left;
   white-space: nowrap;
 }
+.manager-table th {
+  color: var(--muted);
+  font-weight: 550;
+  background: color-mix(in srgb, var(--line) 20%, var(--surface));
+}
+.spinning {
+  animation: site-spin 1s linear infinite;
+}
+@keyframes site-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinning {
+    animation: none;
+  }
+}
 @media (max-width: 650px) {
   .site-toolbar {
     flex-wrap: wrap;
   }
-  .site-toolbar input {
+  .site-search {
     flex-basis: 100%;
     max-width: none;
   }
@@ -1174,7 +1411,7 @@ td {
     padding: 10px;
   }
   .manager-dialog {
-    padding: 18px;
+    --manager-dialog-padding: 18px;
     max-height: calc(100dvh - 20px);
   }
   .manager-form-grid {
@@ -1189,6 +1426,15 @@ td {
   }
   .site-metrics {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .site-toolbar select {
+    flex: 1;
+  }
+  .site-card-body {
+    padding: 18px;
+  }
+  .limit-fields {
+    flex-direction: column;
   }
 }
 </style>

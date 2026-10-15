@@ -12,6 +12,7 @@ import SiteManager from './components/SiteManager.vue';
 import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
+import AppIcon from './components/AppIcon.vue';
 function normalizeRoute(value: string) {
   if (['library', 'assets'].includes(value.split('?')[0]!.split('/')[0]!)) return 'files';
   if (value.split('?')[0] === 'downloaders') return 'settings?tab=system';
@@ -29,22 +30,6 @@ const globalQuery = ref(''),
   searchInput = ref<HTMLInputElement>(),
   initialFilePaths = ref<string[]>([]);
 const pageKey = computed(() => route.value.split('?')[0]!.split('/')[0]!);
-const icons: Record<string, string> = {
-  search: 'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
-  star: 'm12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z',
-  movie: 'M3 6h18v15H3ZM3 6l3-4m3 4 3-4m3 4 3-4M3 11h18',
-  tv: 'M3 5h18v14H3ZM8 23l4-4 4 4',
-  calendar: 'M3 5h18v16H3ZM7 2v6m10-6v6M3 10h18M7 14h2m3 0h2m3 0h1M7 18h2m3 0h2',
-  download: 'M12 2v13m-5-5 5 5 5-5M3 16v5h18v-5',
-  history: 'M3 12a9 9 0 1 1 3 6M3 3v9h9m0-6v6l4 3',
-  folder: 'M2 5h8l2 3h10v13H2Z',
-  globe: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18',
-  server: 'M3 3h18v7H3Zm0 11h18v7H3ZM7 6h1m-1 11h1',
-  jobs: 'M9 5h12M9 12h12M9 19h12M2 5l2 2 3-4M2 12l2 2 3-4M2 19l2 2 3-4',
-  logs: 'm3 5 5 5-5 5m9 0h9',
-  settings:
-    'M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8M10 2h4l1 3 3 1 3-1 2 4-2 2v3l2 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 2-2v-3L1 9l2-4 3 1 3-1Z',
-};
 const nav = [
   {
     label: '',
@@ -232,18 +217,7 @@ onUnmounted(() => {
             :href="navHref(n[0]!)"
             :class="{ active: activeNav(n[0]!) }"
             :aria-current="activeNav(n[0]!) ? 'page' : undefined"
-            ><span class="nav-icon"
-              ><svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path :d="icons[n[1]!]" /></svg></span
-            >{{ n[2]
+            ><span class="nav-icon"><AppIcon :name="n[1]!" /></span>{{ n[2]
             }}<span v-if="n[0] === 'jobs' && ui.status?.counts?.active_jobs" class="counter">{{
               ui.status.counts.active_jobs
             }}</span></a
@@ -256,17 +230,10 @@ onUnmounted(() => {
           class="sidebar-settings"
           :class="{ active: pageKey === 'settings' }"
           :aria-current="pageKey === 'settings' ? 'page' : undefined"
-          ><svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path :d="icons.settings" /></svg
-          >设置<span aria-hidden="true">›</span></a
-        >
+          ><AppIcon name="settings" />设置<AppIcon
+            name="chevron-right"
+            class="sidebar-settings-arrow"
+        /></a>
         <span class="dot" :class="{ amber: paused }"></span
         >{{ paused ? '自动流程已暂停' : ui.status ? '服务运行中' : '服务状态待确认' }}
       </div>
@@ -279,26 +246,10 @@ onUnmounted(() => {
           :aria-expanded="mobile"
           @click="mobile = !mobile"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            aria-hidden="true"
-          >
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <AppIcon name="menu" />
         </button>
         <form class="global-search" role="search" @submit.prevent="searchMedia">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            aria-hidden="true"
-          >
-            <path :d="icons.search" />
-          </svg>
+          <AppIcon name="search" />
           <input
             ref="searchInput"
             v-model="globalQuery"
@@ -318,23 +269,11 @@ onUnmounted(() => {
               loadNotifications().catch(() => {});
             "
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M9 21h6" /></svg
-            ><span v-if="notifications.unread">{{
+            <AppIcon name="bell" /><span v-if="notifications.unread">{{
               notifications.unread > 99 ? '99+' : notifications.unread
             }}</span></button
           ><button class="icon-button" title="退出登录" aria-label="退出登录" @click="logout">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-            </svg>
+            <AppIcon name="logout" />
           </button>
         </div>
       </header>
@@ -357,7 +296,7 @@ onUnmounted(() => {
             后台任务通知 <span class="badge">{{ notifications.unread || 0 }} 条未读</span>
           </h3>
           <button class="icon-button" aria-label="关闭通知" @click="notificationsOpen = false">
-            ×
+            <AppIcon name="close" />
           </button>
         </div>
         <article
@@ -422,7 +361,6 @@ onUnmounted(() => {
           "
         />
       </main>
-      <footer>Light Media</footer>
     </div>
   </div>
   <div class="toasts" role="status">
@@ -432,7 +370,10 @@ onUnmounted(() => {
       :class="['toast', { error: t.error }]"
       @click="ui.toasts = ui.toasts.filter((x) => x.id !== t.id)"
     >
-      {{ t.error ? '!' : '✓' }} {{ t.text }}<span>×</span>
+      <AppIcon :name="t.error ? 'warning' : 'check-circle'" /><span class="toast-message">{{
+        t.text
+      }}</span
+      ><AppIcon name="close" class="toast-close" />
     </button>
   </div>
 </template>

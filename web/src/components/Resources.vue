@@ -52,7 +52,9 @@ const season = ref(kind === 'movie' ? 0 : Number(q.get('season') || 1)),
   loading = ref(false),
   initialized = ref(false),
   error = ref('');
-const mappings = ref<any[]>([]), mappingsLoading = ref(kind === 'tv'), mappingsError = ref('');
+const mappings = ref<any[]>([]),
+  mappingsLoading = ref(kind === 'tv'),
+  mappingsError = ref('');
 const view = ref(localStorage.getItem('light-media.resource-view') || 'card'),
   filters = ref(emptyResourceFilters()),
   sort = ref('default'),
@@ -61,7 +63,8 @@ const view = ref(localStorage.getItem('light-media.resource-view') || 'card'),
   selected = ref<string[]>([]),
   downloaded = ref<Record<string, string>>({});
 const searchedRequest = ref<any>(null);
-const activeCandidate = ref<Candidate | null>(null), queue = ref<Candidate[]>([]);
+const activeCandidate = ref<Candidate | null>(null),
+  queue = ref<Candidate[]>([]);
 const names = computed<Record<string, string>>(() =>
   Object.fromEntries((ui.settings?.sites || []).map((s: any) => [s.id, s.name || s.id])),
 );
@@ -152,7 +155,9 @@ async function loadMappings() {
 async function loadDownloads() {
   try {
     const r = await api('/downloads'),
-      items = Array.isArray(r) ? r : [...(r?.intents || r?.items || []), ...(r?.native_downloads || [])];
+      items = Array.isArray(r)
+        ? r
+        : [...(r?.intents || r?.items || []), ...(r?.native_downloads || [])];
     downloaded.value = Object.fromEntries(
       items
         .filter((i: any) => !['cancelled', 'failed'].includes(i.state))
@@ -211,12 +216,26 @@ async function search() {
 function cancelSearch() {
   searchController?.abort();
 }
-function openDownload(c: Candidate) { queue.value = []; activeCandidate.value = c; }
-function openSelected() { queue.value = selectedCandidates.value; activeCandidate.value = queue.value.shift() || null; }
-function closeDownload() { activeCandidate.value = null; queue.value = []; }
+function openDownload(c: Candidate) {
+  queue.value = [];
+  activeCandidate.value = c;
+}
+function openSelected() {
+  queue.value = selectedCandidates.value;
+  activeCandidate.value = queue.value.shift() || null;
+}
+function closeDownload() {
+  activeCandidate.value = null;
+  queue.value = [];
+}
 function downloadAdded() {
-  if (activeCandidate.value) { const key = candidateKey(activeCandidate.value); downloaded.value[key] = 'planned'; selected.value = selected.value.filter((v) => v !== key); }
-  toast('下载任务已添加'); activeCandidate.value = queue.value.shift() || null;
+  if (activeCandidate.value) {
+    const key = candidateKey(activeCandidate.value);
+    downloaded.value[key] = 'planned';
+    selected.value = selected.value.filter((v) => v !== key);
+  }
+  toast('下载任务已添加');
+  activeCandidate.value = queue.value.shift() || null;
 }
 onMounted(async () => {
   selectedSites.value = (ui.settings?.sites || [])
@@ -561,30 +580,45 @@ onUnmounted(() => {
     <h3>请先添加并启用站点</h3>
     <button @click="go('sites')">配置站点</button>
   </div>
-  <AddDownloadDialog v-if="activeCandidate" :candidate="activeCandidate" :request="searchedRequest" :media="media" @close="closeDownload" @done="downloadAdded" />
+  <AddDownloadDialog
+    v-if="activeCandidate"
+    :candidate="activeCandidate"
+    :request="searchedRequest"
+    :media="media"
+    @close="closeDownload"
+    @done="downloadAdded"
+  />
 </template>
 <style scoped>
+.page-actions {
+  margin-bottom: 12px;
+}
 .resource-context {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 18px;
-  padding: 18px;
+  gap: 18px;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-radius: 12px;
 }
 .resource-context img {
-  width: 64px;
-  height: 96px;
+  width: 48px;
+  height: 72px;
   object-fit: cover;
-  border-radius: 7px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px #172b3a12;
 }
 .resource-context h2 {
   margin: 0 0 5px;
   font-size: 20px;
+  color: #172b3a;
+  font-weight: 650;
 }
 .resource-context h2 small {
   font-weight: 400;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 13px;
+  margin-left: 6px;
 }
 .resource-context p {
   margin: 5px 0 10px;
@@ -592,23 +626,50 @@ onUnmounted(() => {
 .search-controls {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 17px;
   flex-wrap: wrap;
 }
 .search-controls > label {
-  min-width: 150px;
+  min-width: 145px;
+  font-size: 12px;
+  color: #5b7180;
+}
+.search-options {
+  padding: 14px 18px;
+  border-radius: 12px;
+}
+.site-selector .check {
+  min-height: 32px;
+  padding: 3px 0;
+  font-size: 12px;
+  color: #4c6472;
 }
 .search-controls .site-selector {
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 17px;
   margin: 0;
 }
 .search-options > details {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border, #2a354a);
+  margin: 8px 0 0;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--line);
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+}
+.search-options > details > summary {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  min-height: 0;
+  margin: 0;
+}
+.search-options > details[open] > summary {
+  margin-bottom: 12px;
 }
 .search-options > details > label {
   display: block;
@@ -618,17 +679,27 @@ onUnmounted(() => {
 .site-progress {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 18px 0;
+  gap: 8px;
+  margin: 12px 0;
 }
 .site-progress-item {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 12px;
-  border: 1px solid var(--border, #2a354a);
+  padding: 8px 11px;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  font-size: 12px;
+  background: var(--surface);
+  color: #536b79;
+  font-size: 11px;
+}
+.site-progress-item.ok {
+  border-color: #d1e7dd;
+  background: #f4faf6;
+}
+.site-progress-item.failed {
+  border-color: #eddbdc;
+  background: #fdf7f7;
 }
 .site-progress-item small {
   color: var(--muted);
@@ -642,11 +713,11 @@ onUnmounted(() => {
 .filter-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 .filter-row + .filter-row {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 .filter-row input {
   flex: 1;
@@ -657,20 +728,27 @@ onUnmounted(() => {
   flex: 1;
 }
 .resource-filters {
-  padding: 16px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fbfcfd;
+}
+.filter-row input,
+.filter-row select {
+  min-height: 37px;
+  background: var(--surface);
 }
 .resource-toolbar {
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin: 20px 0;
+  margin: 16px 0;
 }
 .resource-toolbar select {
   width: auto;
 }
 .release-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 325px), 1fr));
+  gap: 18px;
 }
 .resource-title {
   min-width: 300px;
@@ -678,6 +756,20 @@ onUnmounted(() => {
 }
 .resource-title strong {
   overflow-wrap: anywhere;
+  display: block;
+  margin-bottom: 5px;
+  line-height: 1.6;
+  color: #243c4a;
+  font-size: 12px;
+}
+.resource-title > small {
+  color: var(--muted);
+  line-height: 1.6;
+}
+.pagination {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 }
 .resource-title details {
   margin-top: 6px;

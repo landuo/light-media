@@ -15,6 +15,7 @@ import {
 import ReorganizeDialog from './ReorganizeDialog.vue';
 import FileDirectoryTree from './FileDirectoryTree.vue';
 import FileManagerIcon from './FileManagerIcon.vue';
+import AppIcon from './AppIcon.vue';
 const props = defineProps<{ initialPaths?: string[] }>();
 defineEmits<{ history: []; job: [id: string] }>();
 const roots = ref<BrowserRoot[]>([]),
@@ -506,7 +507,7 @@ onUnmounted(() => {
               class="file-mobile-menu"
               @click.stop
             >
-              <summary :aria-label="item.name + ' 操作'">⋮</summary>
+              <summary :aria-label="item.name + ' 操作'"><AppIcon name="more" /></summary>
               <div>
                 <button @click="recognize(item)">识别</button
                 ><button @click="openScrape([item.path])">刮削</button
@@ -684,17 +685,20 @@ onUnmounted(() => {
   flex-direction: column;
   border: 1px solid var(--line);
   background: var(--surface);
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
-  height: calc(100dvh - 132px);
+  height: calc(
+    100dvh - var(--topbar-height, 72px) - var(--content-top, 28px) - var(--content-bottom, 36px)
+  );
+  box-shadow: var(--shadow);
 }
 .file-toolbar {
   flex: none;
-  min-height: 60px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--line);
 }
 .file-toolbar nav {
@@ -718,7 +722,7 @@ onUnmounted(() => {
 .file-toolbar nav .storage-home {
   padding-right: 10px;
   gap: 8px;
-  color: #3d485a;
+  color: var(--text, #172b3a);
 }
 .file-current {
   font-size: 13px;
@@ -731,13 +735,13 @@ onUnmounted(() => {
   gap: 2px;
 }
 .file-icon-button {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border: 0;
   padding: 7px;
   background: transparent;
-  border-radius: 50%;
-  color: var(--accent);
+  border-radius: 9px;
+  color: var(--muted);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -749,6 +753,7 @@ onUnmounted(() => {
 }
 .file-icon-button.active {
   background: var(--accent-soft);
+  color: var(--accent);
 }
 .danger-action {
   color: var(--danger) !important;
@@ -769,9 +774,11 @@ onUnmounted(() => {
   flex: none;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 10px;
-  min-height: 54px;
+  gap: 8px;
+  padding: 8px 14px;
+  min-height: 58px;
+  background: var(--surface-subtle, #f4f7f8);
+  border-bottom: 1px solid var(--line);
 }
 .file-filterbar > svg {
   width: 18px;
@@ -811,19 +818,21 @@ onUnmounted(() => {
 .file-row {
   display: flex;
   align-items: center;
-  padding: 7px 13px;
-  gap: 17px;
+  padding: 8px 18px;
+  gap: 16px;
   min-height: 64px;
   cursor: pointer;
+  border-bottom: 1px solid var(--surface-subtle, #f4f7f8);
+  transition: background 0.15s;
 }
 .file-row:hover {
-  background: #f7f8fc;
+  background: var(--surface-subtle, #f4f7f8);
 }
 .file-row.selected {
   background: var(--accent-soft);
 }
 .file-row > svg {
-  color: #647084;
+  color: var(--muted);
   margin-left: 5px;
 }
 .file-selection-control {
@@ -869,13 +878,13 @@ onUnmounted(() => {
   display: block;
   font-size: 14px;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
   overflow-wrap: anywhere;
-  color: #344052;
+  color: var(--text, #172b3a);
 }
 .file-row-name small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 2px;
 }
@@ -890,7 +899,7 @@ onUnmounted(() => {
   visibility: visible;
 }
 .file-row-actions .file-icon-button {
-  color: #626f84;
+  color: var(--muted);
   width: 32px;
   height: 32px;
   padding: 6px;
@@ -898,6 +907,11 @@ onUnmounted(() => {
 .file-mobile-menu {
   display: none;
   position: relative;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 .file-mobile-menu summary {
   list-style: none;
@@ -909,6 +923,9 @@ onUnmounted(() => {
   font-size: 22px;
   color: var(--muted);
 }
+.file-mobile-menu[open] summary {
+  margin-bottom: 0;
+}
 .file-mobile-menu[open] > div {
   position: absolute;
   right: 0;
@@ -918,7 +935,7 @@ onUnmounted(() => {
   border: 1px solid var(--line);
   background: var(--surface);
   padding: 6px;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
 .file-mobile-menu button {
@@ -945,11 +962,11 @@ onUnmounted(() => {
 .file-detail > svg {
   width: 68px;
   height: 68px;
-  color: #8a96ab;
+  color: var(--muted);
 }
 .file-detail h2 {
   font-size: 19px;
-  font-weight: 500;
+  font-weight: 600;
   margin: 22px 0 13px;
 }
 .file-detail p {
@@ -979,7 +996,7 @@ onUnmounted(() => {
 .file-dialog-backdrop {
   position: fixed;
   inset: 0;
-  background: #111b3659;
+  background: #102b3b66;
   backdrop-filter: blur(3px);
   z-index: 120;
   display: flex;
@@ -991,10 +1008,10 @@ onUnmounted(() => {
   width: min(500px, 100%);
   max-height: 85dvh;
   overflow: auto;
-  padding: 20px 24px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 14px;
   background: var(--surface);
-  box-shadow: 0 24px 90px #111b3633;
+  box-shadow: 0 24px 80px #102b3b2b;
 }
 .file-action-dialog header {
   display: flex;
@@ -1052,7 +1069,9 @@ onUnmounted(() => {
 }
 @media (max-width: 760px) {
   .file-manager {
-    height: calc(100dvh - 96px);
+    height: calc(
+      100dvh - var(--topbar-height, 64px) - var(--content-top, 27px) - var(--content-bottom, 35px)
+    );
   }
   .file-toolbar {
     padding: 7px 8px;
@@ -1090,9 +1109,24 @@ onUnmounted(() => {
     display: block;
   }
   .file-icon-button {
-    width: 34px;
-    height: 34px;
-    padding: 6px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+  .file-mobile-menu summary {
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+  }
+  .file-filterbar > svg {
+    display: none;
+  }
+  .file-mobile-menu button {
+    min-height: 42px;
+  }
+  .file-selection-control {
+    width: 44px;
+    height: 44px;
   }
   .file-action-dialog {
     padding: 18px;

@@ -469,7 +469,7 @@ watch(() => props.view, applyView);
         <div>
           <div class="section-heading">
             <h3>{{ s.media.title }}</h3>
-            <span class="badge">{{ label(s.state) }}</span>
+            <span :class="['badge', 'subscription-state', s.state]">{{ label(s.state) }}</span>
           </div>
           <p class="muted">
             {{ s.media.media_type === 'tv' ? '第 ' + s.season + ' 季' : '电影' }} ·
@@ -999,6 +999,344 @@ watch(() => props.view, applyView);
   .agenda-entry {
     gap: 9px;
     flex-wrap: wrap;
+  }
+}
+
+.stat-row {
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.stat {
+  padding: 19px 23px;
+  border-color: var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.stat > span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #657c89;
+}
+.stat > strong {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.7px;
+  color: #213e4b;
+  font-variant-numeric: tabular-nums;
+}
+.stat:nth-child(2) > strong {
+  color: var(--accent);
+}
+.toolbar {
+  gap: 11px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.toolbar > select {
+  min-width: 115px;
+}
+.subscription-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.subscription-card {
+  align-items: flex-start;
+  gap: 19px;
+  padding: 22px;
+  border-color: var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.subscription-card > img {
+  display: block;
+  width: 86px;
+  height: 129px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px #172b3a0d;
+}
+.subscription-card .section-heading {
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.subscription-card h3 {
+  margin: 0;
+  color: #172b3a;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+.subscription-state {
+  flex: none;
+  padding: 4px 7px;
+  border: 0;
+  border-radius: 5px;
+  background: #f0f4f6;
+  color: #70808d;
+  font-size: 10px;
+  font-weight: 500;
+}
+.subscription-state.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.subscription-state.completed {
+  background: #edf6ef;
+  color: #387d54;
+}
+.subscription-state.paused {
+  background: #fff5e6;
+  color: #9a7429;
+}
+.subscription-card .muted {
+  margin: 0 0 10px;
+  color: #6c818e;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.subscription-progress {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 15px 0 12px;
+}
+.subscription-progress progress {
+  width: 100%;
+  height: 5px;
+  border: 0;
+  border-radius: 4px;
+  accent-color: var(--accent);
+  overflow: hidden;
+}
+.subscription-progress progress::-webkit-progress-bar {
+  background: #eaf0f2;
+  border-radius: 4px;
+}
+.subscription-progress progress::-webkit-progress-value {
+  background: var(--accent);
+  border-radius: 4px;
+}
+.subscription-progress progress::-moz-progress-bar {
+  background: var(--accent);
+  border-radius: 4px;
+}
+.subscription-progress > span {
+  font-size: 11px;
+  color: #7b8b96;
+}
+.subscription-progress b {
+  color: var(--accent);
+  font-weight: 600;
+}
+.subscription-card .tags {
+  gap: 5px;
+  margin: 11px 0;
+}
+.subscription-card .tags > span {
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 5px;
+  background: #f2f6f7;
+  color: #637986;
+  font-size: 10px;
+}
+.subscription-card .hint {
+  margin: 10px 0 14px;
+  color: #7a8d99;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.subscription-card .button-row {
+  gap: 6px;
+  margin-top: 15px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.subscription-card .small {
+  min-height: 30px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.calendar-toolbar {
+  margin-bottom: 20px;
+}
+.calendar-toolbar h2 {
+  color: #263e4c;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+.calendar-grid {
+  border-color: var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.calendar-weekday {
+  padding: 13px;
+  border-color: var(--line);
+  background: #f4f7f9;
+  color: #748793;
+  font-size: 11px;
+  font-weight: 550;
+}
+.calendar-day {
+  min-height: 150px;
+  padding: 12px 10px;
+  border-color: var(--line);
+}
+.calendar-day > strong {
+  color: #738692;
+  font-size: 11px;
+}
+.calendar-day.today {
+  background: #f2faf8;
+}
+.calendar-day.today > strong {
+  width: 25px;
+  height: 25px;
+  background: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+.calendar-day.outside {
+  background: #fafcfc;
+}
+.event-card {
+  gap: 8px;
+  padding: 7px;
+  border-left: 3px solid #71b7ab;
+  border-radius: 6px;
+  background: #edf7f4;
+  color: #2b5b58;
+}
+.event-card:hover {
+  background: #e1f2eb;
+}
+.event-card > img {
+  width: 32px;
+  height: 48px;
+  border-radius: 4px;
+}
+.event-card strong {
+  color: #2e5c59;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.event-card small {
+  color: #71918a;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.event-card.complete {
+  background: #f1f5f3;
+  border-left-color: #9cbbb0;
+}
+.calendar-agenda {
+  padding: 8px 22px;
+  border-radius: 12px;
+}
+.calendar-agenda section {
+  padding: 16px 0;
+}
+.calendar-agenda section:last-child {
+  border-bottom: 0;
+}
+.calendar-agenda h3 {
+  margin: 0 0 10px;
+  color: #657c89;
+  font-size: 12px;
+  font-weight: 600;
+}
+.agenda-entry {
+  padding: 10px;
+  border-radius: 8px;
+}
+.agenda-entry > img {
+  width: 36px;
+  height: 54px;
+  border-radius: 5px;
+}
+.agenda-entry > strong {
+  color: #28414f;
+  font-size: 13px;
+}
+.site-options {
+  border-radius: 10px;
+  box-shadow: 0 10px 25px #172b3a16;
+}
+.site-options > label {
+  min-height: 34px;
+  border-radius: 6px;
+}
+.site-options > label:hover {
+  background: var(--accent-soft);
+}
+.event-detail > img {
+  border-radius: 9px;
+  box-shadow: 0 3px 10px #172b3a12;
+}
+@media (max-width: 1200px) {
+  .subscription-grid {
+    grid-template-columns: 1fr;
+  }
+  .subscription-card > img {
+    width: 94px;
+    height: 141px;
+  }
+}
+@media (max-width: 700px) {
+  .stat-row {
+    gap: 10px;
+  }
+  .stat {
+    padding: 15px;
+  }
+  .stat > strong {
+    font-size: 24px;
+  }
+  .calendar-day {
+    padding: 8px 5px;
+  }
+  .event-card {
+    padding: 5px;
+    gap: 6px;
+  }
+  .event-card > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+}
+@media (max-width: 520px) {
+  .subscription-card {
+    gap: 14px;
+    padding: 17px;
+  }
+  .subscription-card > img {
+    width: 67px;
+    height: 100px;
+  }
+  .subscription-card h3 {
+    font-size: 15px;
+  }
+  .subscription-card .small {
+    padding: 6px 8px;
+  }
+  .stat {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 14px;
+  }
+  .stat > span {
+    font-size: 11px;
+  }
+  .calendar-agenda {
+    padding: 4px 13px;
   }
 }
 </style>

@@ -16,6 +16,7 @@ import {
   materialLabel,
 } from '../api';
 import DownloadReview from './DownloadReview.vue';
+import AppIcon from './AppIcon.vue';
 import { jobQueueInfo } from '../features/job-queue';
 const props = defineProps<{ view: string; initialJob?: string }>(),
   data = ref<any>(null),
@@ -422,7 +423,7 @@ onUnmounted(() => {
 </script>
 <template>
   <div class="page-actions">
-    <button @click="load()" :disabled="loading">↻ 刷新</button>
+    <button @click="load()" :disabled="loading"><AppIcon name="refresh" />刷新</button>
   </div>
   <p v-if="error" class="error-box">{{ error }}</p>
   <template v-if="view === 'downloads'"
@@ -878,7 +879,7 @@ onUnmounted(() => {
     </div></template
   >
   <template v-else-if="view === 'logs'"
-    ><section class="panel">
+    ><section class="panel logs-filter">
       <form class="form-grid" @submit.prevent="load()">
         <label
           >级别<select v-model="logLevel">
@@ -1077,7 +1078,9 @@ onUnmounted(() => {
     <section class="modal">
       <div class="section-heading">
         <h2>移除自管库文件</h2>
-        <button class="icon-button" @click="removePreview = null">×</button>
+        <button class="icon-button" aria-label="关闭移除预览" @click="removePreview = null">
+          <AppIcon name="close" />
+        </button>
       </div>
       <p class="warning">
         以下文件将被删除。下载源和下载器内的原始数据会保留，默认不触发重新获取。
@@ -1093,7 +1096,9 @@ onUnmounted(() => {
     <section class="modal wide job-detail">
       <div class="section-heading">
         <h2>{{ selectedJobInfo?.title }}</h2>
-        <button class="icon-button" aria-label="关闭任务详情" @click="jobDetail = null">×</button>
+        <button class="icon-button" aria-label="关闭任务详情" @click="jobDetail = null">
+          <AppIcon name="close" />
+        </button>
       </div>
       <div class="notice job-detail-state">
         <span :class="['badge', { bad: jobDetail.job.state === 'failed' }]">
@@ -1194,17 +1199,32 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.job-queue-table {
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.job-queue-table th {
+  background: var(--surface-subtle, #f4f7f8);
+  padding: 14px 18px;
+}
+.job-queue-table td {
+  padding: 18px;
+}
+.job-queue-table tbody tr:hover {
+  background: var(--surface-subtle, #f4f7f8);
+}
 .job-object {
   width: 41%;
   min-width: 240px;
   max-width: 450px;
 }
 .job-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.7;
   text-align: left;
   overflow-wrap: anywhere;
+  color: var(--text, #172b3a);
 }
 .job-path {
   display: -webkit-box;
@@ -1212,16 +1232,24 @@ onUnmounted(() => {
   -webkit-line-clamp: 2;
   overflow: hidden;
   overflow-wrap: anywhere;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
 }
 .job-progress {
   min-width: 180px;
   max-width: 300px;
 }
 .job-stage {
-  color: #43516a;
+  color: var(--text, #172b3a);
+  margin-top: 7px;
+  line-height: 1.6;
 }
 .job-activity {
   overflow-wrap: anywhere;
+  color: var(--muted);
+  line-height: 1.7;
 }
 .job-timing {
   min-width: 155px;
@@ -1248,15 +1276,101 @@ onUnmounted(() => {
   line-height: 1.7;
 }
 .job-facts dt {
-  color: #69768a;
+  color: var(--muted);
 }
 .job-facts dd {
   margin: 0;
   overflow-wrap: anywhere;
-  color: #43516a;
+  color: var(--text, #172b3a);
 }
 .job-technical {
   margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-subtle, #f4f7f8);
+}
+.logs-filter {
+  padding: 22px 24px;
+  border-radius: 14px;
+}
+.logs-filter .form-grid {
+  gap: 18px 20px;
+}
+.logs-filter .button-row {
+  grid-column: 1 / -1;
+  padding-top: 4px;
+}
+.logs-filter > .hint {
+  margin-bottom: 0;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.log-view {
+  border: 1px solid #263d4c;
+  border-radius: 14px;
+  padding: 10px 0;
+  background: #132532;
+  color: #dce7ed;
+  box-shadow: var(--shadow);
+}
+.log-line {
+  display: grid;
+  grid-template-columns: 158px 52px 118px minmax(0, 1fr);
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid #ffffff0a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'PingFang SC', monospace;
+  font-size: 12px;
+  line-height: 1.85;
+}
+.log-line:last-child {
+  border-bottom: 0;
+}
+.log-line:hover {
+  background: #ffffff03;
+}
+.log-line time {
+  color: #859eac;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.log-line > b {
+  color: #81c9b6;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  font-weight: 650;
+  line-height: 2.2;
+}
+.log-line .log-module {
+  color: #a3bac8;
+  overflow-wrap: anywhere;
+}
+.log-line > span:last-child {
+  color: #dce7ed;
+  overflow-wrap: anywhere;
+}
+.log-line small {
+  display: block;
+  color: #8ca5b3;
+  font-size: 10px;
+  margin-top: 3px;
+  line-height: 1.8;
+}
+.log-line.warn > b {
+  color: #e3b96f;
+}
+.log-line.error {
+  background: #e3858509;
+}
+.log-line.error > b {
+  color: #ed9f9f;
+}
+.log-view .empty-state h3 {
+  color: #dce7ed;
+}
+.log-view .empty-state p {
+  color: #8ca5b3;
 }
 @media (max-width: 760px) {
   .job-queue-table table,
@@ -1273,7 +1387,7 @@ onUnmounted(() => {
   }
   .job-queue-table tr {
     padding: 16px;
-    border-bottom: 1px solid #edf0f5;
+    border-bottom: 1px solid var(--line);
   }
   .job-queue-table tr:last-child {
     border-bottom: 0;
@@ -1292,6 +1406,24 @@ onUnmounted(() => {
   .job-facts {
     grid-template-columns: 82px minmax(0, 1fr);
     gap: 10px;
+  }
+  .job-queue-table .button-row > button {
+    min-height: 40px;
+  }
+  .logs-filter {
+    padding: 20px;
+  }
+  .logs-filter .button-row > button,
+  .logs-filter .button-row > .button {
+    min-height: 42px;
+  }
+  .log-line {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 4px 12px;
+    padding: 14px 16px;
+  }
+  .log-line > span:last-child {
+    grid-column: 1 / -1;
   }
 }
 </style>

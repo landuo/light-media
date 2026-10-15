@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppIcon from './AppIcon.vue';
 import { onMounted, ref } from 'vue';
 import { api, action, clone, errorText, refreshSettings, toast } from '../api';
 import PathPicker from './PathPicker.vue';
@@ -145,7 +146,7 @@ onMounted(load);
               @dragstart="dragging = directory._key"
               @dragend="dragging = ''"
             >
-              ⠿
+              <AppIcon name="grip" />
             </button>
             <button
               type="button"
@@ -153,7 +154,7 @@ onMounted(load);
               :aria-label="'移除 ' + directory.name"
               @click="remove(directory._key)"
             >
-              ×
+              <AppIcon name="close" />
             </button>
           </header>
           <div v-show="expanded.includes(directory._key)" class="directory-fields form-grid">
@@ -222,7 +223,7 @@ onMounted(load);
             :aria-expanded="expanded.includes(directory._key)"
             @click="toggle(directory._key)"
           >
-            {{ expanded.includes(directory._key) ? '⌃' : '⌄' }}
+            <AppIcon name="chevron-down" />
           </button>
         </article>
       </div>
@@ -231,7 +232,7 @@ onMounted(load);
         <button class="primary" type="submit" :disabled="saving || loading">
           {{ saving ? '保存中…' : '保存' }}
         </button>
-        <button type="button" @click="add">＋ 添加</button>
+        <button type="button" @click="add"><AppIcon name="plus" />添加</button>
       </footer>
     </form>
   </section>
@@ -244,7 +245,7 @@ onMounted(load);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
   gap: 18px;
-  margin: 24px 0;
+  margin: 20px 0 24px;
   align-items: start;
 }
 .directory-card {
@@ -252,13 +253,25 @@ onMounted(load);
   border-radius: 12px;
   overflow: hidden;
   background: var(--surface);
+  box-shadow: 0 2px 8px #172b3a03;
 }
 .directory-card > header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 10px;
   padding: 16px 20px;
+  background: var(--surface-subtle, #f4f7f8);
+}
+.directory-card > header .icon-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  padding: 7px;
+  flex-shrink: 0;
 }
 .directory-drag {
   cursor: grab;
@@ -268,16 +281,17 @@ onMounted(load);
 }
 .directory-card > header input {
   font-weight: 600;
+  background: var(--surface);
 }
 .directory-fields {
-  padding: 0 20px 18px;
+  padding: 22px 20px;
 }
 .span-two {
   grid-column: 1 / -1;
 }
 .directory-summary {
   margin: 0;
-  padding: 0 20px 16px;
+  padding: 18px 20px;
   font-size: 12px;
   color: var(--muted);
   overflow-wrap: anywhere;
@@ -291,5 +305,36 @@ onMounted(load);
   background: transparent;
   font-size: 22px;
   line-height: 1;
+  min-height: 40px;
+  color: var(--muted);
+}
+.directory-expand:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.directory-expand :deep(svg) {
+  transition: transform 0.18s;
+}
+.directory-expand[aria-expanded='true'] :deep(svg) {
+  transform: rotate(180deg);
+}
+.directory-settings form > footer {
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 760px) {
+  .directory-card > header {
+    padding: 14px 16px;
+  }
+  .directory-card > header .icon-button {
+    width: 40px;
+    height: 40px;
+  }
+  .directory-fields {
+    padding: 20px 16px;
+  }
+  .directory-expand {
+    min-height: 44px;
+  }
 }
 </style>

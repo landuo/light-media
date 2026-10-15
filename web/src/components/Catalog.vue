@@ -164,7 +164,7 @@ onMounted(load);
       :style="
         image(spotlight.backdrop_path, 'w1280')
           ? {
-              backgroundImage: `linear-gradient(90deg,rgba(18,25,43,.98) 0%,rgba(18,25,43,.86) 35%,rgba(18,25,43,.12) 100%),url(${image(spotlight.backdrop_path, 'w1280')})`,
+              backgroundImage: `linear-gradient(90deg,rgba(13,31,39,.97) 0%,rgba(13,31,39,.81) 38%,rgba(13,31,39,.12) 100%),url(${image(spotlight.backdrop_path, 'w1280')})`,
             }
           : {}
       "
@@ -419,114 +419,290 @@ onMounted(load);
 <style scoped>
 .discovery-spotlight {
   position: relative;
-  min-height: 282px;
-  border-radius: 15px;
-  padding: 30px 34px;
-  margin: 0 0 28px;
-  color: #fff;
-  background: #182138;
+  min-height: 290px;
+  padding: 31px 36px;
+  margin: 0 0 25px;
+  border: 1px solid #ffffff18;
+  border-radius: 14px;
+  background: #152f39;
   background-size: cover;
   background-position: center 35%;
   overflow: hidden;
+  color: #fff;
+  box-shadow: 0 8px 24px #172b3a10;
 }
 .spotlight-copy {
-  max-width: 510px;
+  max-width: 520px;
 }
 .spotlight-kicker {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #d4dbec;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
+  color: #cfdfdf;
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 1px;
 }
 .spotlight-kicker > span {
-  height: 6px;
   width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #b8b0ff;
+  background: #73c9b7;
+  box-shadow: 0 0 0 4px #73c9b715;
 }
 .spotlight-copy h2 {
+  margin: 18px 0 10px;
   color: #fff;
-  margin: 20px 0 9px;
-  font-size: 31px;
+  font-size: clamp(27px, 2.6vw, 36px);
   line-height: 1.3;
   font-weight: 700;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.8px;
 }
 .spotlight-meta {
   display: flex;
   gap: 16px;
-  color: #bec9de;
-  font-size: 12px;
   margin: 0 0 12px;
+  color: #bbd0d3;
+  font-size: 12px;
 }
 .spotlight-rating {
-  color: #f9d98a;
+  color: #f3cf7b;
+  font-weight: 600;
 }
 .spotlight-overview {
-  color: #cbd4e5;
-  line-height: 1.8;
-  font-size: 13px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-width: 440px;
   margin-bottom: 23px;
+  color: #c9d8db;
+  font-size: 13px;
+  line-height: 1.85;
 }
 .spotlight-actions {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 22px;
 }
 .spotlight-actions button {
-  background: #fff;
+  min-height: 36px;
+  padding: 9px 16px;
   border-color: #fff;
-  color: #202b43;
+  border-radius: 8px;
+  background: #fff;
+  color: #1c3e45;
   font-size: 12px;
   font-weight: 600;
-  padding: 10px 17px;
-}
-.spotlight-actions .spotlight-secondary {
-  background: #ffffff0b;
-  border-color: #ffffff38;
-  color: #fff;
 }
 .spotlight-actions button:hover {
-  background: #eeedff;
-  color: #3b359e;
-  border-color: #eeedff;
+  border-color: #dbf1eb;
+  background: #dbf1eb;
+  color: #126a61;
+}
+.spotlight-actions .spotlight-secondary {
+  border-color: #ffffff38;
+  background: #ffffff0a;
+  color: #fff;
+}
+.spotlight-actions .spotlight-secondary:hover {
+  border-color: #ffffff70;
+  background: #ffffff16;
+  color: #fff;
+}
+.toolbar {
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.toolbar > select {
+  min-width: 140px;
+  width: auto;
+}
+.pagination {
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+.pagination > span {
+  min-width: 68px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.detail-hero {
+  gap: 32px;
+  padding: 32px;
+  border-radius: 14px;
+  background-color: #17323b;
+}
+.detail-poster {
+  width: 184px;
+  height: 276px;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+}
+.detail-copy h1 {
+  margin: 5px 0 8px;
+  color: #fff;
+  font-size: clamp(26px, 2.7vw, 36px);
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+}
+.detail-copy .eyebrow {
+  color: #a2cdca;
+  font-size: 11px;
+}
+.detail-copy .overview {
+  margin: 17px 0 21px;
+  color: #cfdbdf;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.detail-copy .tags span {
+  padding: 4px 8px;
+  border: 1px solid #ffffff20;
+  border-radius: 6px;
+  background: #ffffff08;
+  color: #d3e0e3;
+}
+.detail-copy .tags .gold {
+  color: #efce87;
+}
+.detail-copy .hint {
+  color: #adc3cb;
+}
+.episode-option {
+  padding: 13px;
+  border-color: var(--line);
+  border-radius: 9px;
+  background: #f8fafb;
+}
+.episode-option.selected {
+  border-color: #9acbc4;
+  background: var(--accent-soft);
+}
+.episode-option strong {
+  color: #344d5b;
+  font-size: 12px;
+}
+.episode-option small {
+  color: var(--muted);
+}
+.cast-row {
+  gap: 17px;
+  padding: 2px 0 16px;
+}
+.cast-card {
+  flex-basis: 105px;
+}
+.cast-card > img,
+.cast-placeholder {
+  border-radius: 10px;
+}
+.cast-card strong {
+  margin-top: 10px;
+  color: #243d4c;
+  font-size: 12px;
+}
+.cast-card small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.person-header {
+  align-items: flex-start;
+  gap: 28px;
+  padding: 28px;
+  border-radius: 14px;
+}
+.person-header > img {
+  width: 155px;
+  border-radius: 10px;
+}
+.person-header h1 {
+  margin: 6px 0 12px;
+  color: #172b3a;
+  font-size: 28px;
+}
+.person-header .eyebrow {
+  color: var(--accent);
+}
+.biography {
+  color: #5b707e;
+  font-size: 13px;
+  line-height: 1.9;
 }
 @media (max-width: 760px) {
   .discovery-spotlight {
-    padding: 24px;
-    min-height: 260px;
+    min-height: 270px;
+    padding: 27px;
     background-position: 60% center;
   }
   .spotlight-copy {
-    max-width: 400px;
+    max-width: 420px;
   }
-  .spotlight-copy h2 {
-    font-size: 27px;
+  .toolbar {
+    flex-wrap: wrap;
   }
-  .spotlight-overview {
-    max-width: 330px;
+  .detail-hero {
+    gap: 22px;
+    padding: 25px;
+  }
+  .detail-poster {
+    width: 140px;
+    height: 210px;
+  }
+  .detail-copy .overview {
+    font-size: 12px;
+  }
+  .person-header {
+    gap: 20px;
+    padding: 22px;
+  }
+  .person-header > img {
+    width: 120px;
   }
 }
 @media (max-width: 520px) {
   .discovery-spotlight {
+    min-height: 255px;
     padding: 23px;
-    min-height: 240px;
     border-radius: 12px;
   }
   .spotlight-copy h2 {
-    font-size: 25px;
-    margin-top: 17px;
+    margin-top: 18px;
+    font-size: 27px;
   }
   .spotlight-overview {
+    max-width: 330px;
     font-size: 12px;
+  }
+  .spotlight-actions button {
+    padding: 8px 13px;
+  }
+  .detail-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 23px;
+  }
+  .detail-poster {
+    width: 126px;
+    height: 189px;
+  }
+  .detail-copy h1 {
+    font-size: 27px;
+  }
+  .person-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .person-header h1 {
+    font-size: 25px;
+  }
+  .section-heading {
+    flex-wrap: wrap;
   }
 }
 </style>

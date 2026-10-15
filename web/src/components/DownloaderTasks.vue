@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import AppIcon from './AppIcon.vue';
 import { api, action, bytes, errorText, image, ui, go } from '../api';
 import {
   downloadTaskInfo,
@@ -68,7 +69,7 @@ onUnmounted(() => {
 </script>
 <template>
   <div class="page-actions">
-    <button :disabled="loading" @click="load()">刷新</button>
+    <button :disabled="loading" @click="load()"><AppIcon name="refresh" />刷新</button>
   </div>
   <div v-if="clients.length" class="tabs" role="tablist" aria-label="下载器">
     <button
@@ -115,7 +116,7 @@ onUnmounted(() => {
               :disabled="busy.includes(task.hash)"
               @click="control(task, downloadingTaskIsRunning(task) ? 'pause' : 'start')"
             >
-              {{ downloadingTaskIsRunning(task) ? 'Ⅱ' : '▶' }}</button
+              <AppIcon :name="downloadingTaskIsRunning(task) ? 'pause' : 'play'" /></button
             ><button
               class="icon-button danger"
               :aria-label="'删除下载任务和文件 ' + task.name"
@@ -123,7 +124,7 @@ onUnmounted(() => {
               :disabled="busy.includes(task.hash)"
               @click="control(task, 'remove_with_data')"
             >
-              ×
+              <AppIcon name="trash" />
             </button>
           </div>
         </div>
@@ -138,62 +139,102 @@ onUnmounted(() => {
 <style scoped>
 .download-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
   gap: 18px;
 }
 .download-card {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
-  background: #263348;
-  color: #fff;
-  min-height: 220px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text, #172b3a);
+  min-height: 242px;
+  box-shadow: var(--shadow);
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+.download-card:hover {
+  border-color: #bdcfd2;
+  box-shadow: 0 7px 24px #172b3a0c;
 }
 .download-backdrop {
   position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.25;
+  opacity: 0.1;
+  filter: saturate(0.65);
 }
 .download-info {
   position: relative;
-  padding: 22px;
-  background: linear-gradient(180deg, transparent, #172235bb);
+  padding: 24px;
+  background: linear-gradient(145deg, #ffffffa6, #fffffff2 70%);
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 .download-info h3 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   overflow-wrap: anywhere;
   font-size: 17px;
+  font-weight: 650;
   line-height: 1.5;
 }
 .download-filename,
 .download-speed {
   font-size: 12px;
-  opacity: 0.85;
+  color: var(--muted);
   overflow-wrap: anywhere;
-  margin: 4px 0;
+  margin: 4px 0 8px;
+  line-height: 1.7;
 }
 .download-info .progress {
   margin-top: auto;
-  margin-bottom: 8px;
-  background: #ffffff30;
+  margin-bottom: 14px;
+  background: #e3eceb;
+  height: 5px;
 }
 .download-info .progress span {
-  background: #9a8aff;
+  background: var(--accent);
 }
 .download-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
+  color: var(--muted);
+}
+.download-footer > span {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  color: var(--accent);
 }
 .download-footer button {
-  color: #fff;
+  color: var(--muted);
   background: transparent;
   border: 0;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 9px;
+}
+.download-footer button:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.download-footer button.danger:hover {
+  background: #fceff0;
+  color: var(--danger);
+}
+@media (max-width: 760px) {
+  .download-info {
+    padding: 20px;
+  }
+  .download-footer button {
+    width: 42px;
+    height: 42px;
+  }
 }
 </style>

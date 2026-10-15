@@ -741,25 +741,30 @@ onUnmounted(() => {
 }
 .th-card {
   border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--panel, #fff);
-  box-shadow: 0 2px 10px #1b264b05;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 .th-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 20px;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
 }
 .th-search {
   display: flex;
   align-items: center;
   width: 400px;
   max-width: calc(100% - 65px);
-  border-radius: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
   padding: 0 12px;
-  background: var(--bg, #f5f6f8);
+  background: var(--surface-subtle, #f4f7f8);
+}
+.th-search:focus-within {
+  border-color: var(--accent);
 }
 .th-search input {
   border: 0;
@@ -813,9 +818,11 @@ th {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: var(--panel, #fff);
+  background: var(--surface-subtle, #f4f7f8);
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 th button {
@@ -829,10 +836,11 @@ td {
   font-size: 12px;
 }
 tbody tr:hover {
-  background: #6d63e806;
+  background: var(--surface-subtle, #f4f7f8);
 }
-.th-selected {
-  background: #6d63e80c;
+.th-selected,
+tbody tr.th-selected:hover {
+  background: var(--accent-soft);
 }
 .th-selection {
   width: 34px;
@@ -876,7 +884,7 @@ input[type='checkbox'] {
   display: inline-block;
   border-radius: 4px;
   padding: 0 6px;
-  background: #787d8b13;
+  background: var(--surface-subtle, #f4f7f8);
   color: var(--muted);
   margin-right: 6px;
   font-size: 10px;
@@ -886,9 +894,9 @@ input[type='checkbox'] {
   line-height: 1;
 }
 .th-mode {
-  border: 1px solid #7367f0;
+  border: 1px solid var(--line);
   border-radius: 6px;
-  color: #7367f0;
+  color: var(--muted);
   padding: 3px 7px;
   white-space: nowrap;
 }
@@ -906,8 +914,8 @@ input[type='checkbox'] {
   padding: 3px 8px;
   border-radius: 20px;
   white-space: nowrap;
-  color: #48515f;
-  background: #79839117;
+  color: var(--muted);
+  background: var(--surface-subtle, #f4f7f8);
   font-size: 11px;
 }
 .th-status.success,
@@ -915,18 +923,18 @@ input[type='checkbox'] {
 .th-status.already_imported,
 .th-status.completed,
 .th-status.succeeded {
-  color: #1f9254;
-  background: #28c76f19;
+  color: #237a50;
+  background: #edf7f1;
 }
 .th-status.pending,
 .th-status.queued,
 .th-status.running {
-  color: #6554d5;
-  background: #7367f01a;
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 .th-status.failed {
-  color: #d9444f;
-  background: #ea54551a;
+  color: var(--danger);
+  background: #fceff0;
 }
 .th-menu-cell {
   width: 35px;
@@ -938,7 +946,10 @@ input[type='checkbox'] {
 .th-more {
   border: 0;
   background: transparent;
+  min-width: 36px;
+  min-height: 36px;
   padding: 2px 10px;
+  border-radius: 9px;
   font-size: 25px;
   color: var(--muted);
 }
@@ -946,24 +957,25 @@ input[type='checkbox'] {
   position: fixed;
   z-index: 60;
   width: 155px;
-  border-radius: 7px;
-  padding: 5px;
+  border-radius: 10px;
+  padding: 6px;
   border: 1px solid var(--line);
-  background: var(--panel, #fff);
-  box-shadow: 0 5px 18px #26324822;
+  background: var(--surface);
+  box-shadow: 0 8px 28px #172b3a1a;
 }
 .th-menu button {
   display: flex;
   gap: 12px;
   width: 100%;
-  padding: 9px;
+  min-height: 40px;
+  padding: 9px 10px;
   border: 0;
   background: transparent;
   text-align: left;
-  border-radius: 4px;
+  border-radius: 7px;
 }
 .th-menu button:hover {
-  background: #7367f00b;
+  background: var(--surface-subtle, #f4f7f8);
 }
 .th-menu button span {
   font-size: 17px;
@@ -972,7 +984,7 @@ input[type='checkbox'] {
 }
 .th-group-row td {
   padding: 6px 10px;
-  background: #787d8b08;
+  background: var(--surface-subtle, #f4f7f8);
 }
 .th-group-heading {
   display: flex;
@@ -995,7 +1007,7 @@ input[type='checkbox'] {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 12px;
+  padding: 14px 20px;
   border-top: 1px solid var(--line);
 }
 .th-pagination select {
@@ -1014,17 +1026,18 @@ input[type='checkbox'] {
   gap: 4px;
 }
 .th-pagination nav button {
-  min-width: 32px;
+  min-width: 34px;
+  min-height: 34px;
   padding: 5px 8px;
   border: 0;
   background: transparent;
 }
 .th-pagination nav .active {
-  background: #7367f01a;
-  color: #7367f0;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 .th-error {
-  color: #d9444f;
+  color: var(--danger);
   white-space: pre-wrap;
 }
 .th-notice {
@@ -1046,10 +1059,10 @@ input[type='checkbox'] {
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 14px;
+  border-radius: 12px;
   width: 43px;
   height: 43px;
-  box-shadow: 0 4px 10px #171b3a1c;
+  box-shadow: 0 6px 20px #172b3a20;
   font-size: 26px;
 }
 .th-fab-delete {
@@ -1070,7 +1083,7 @@ input[type='checkbox'] {
   color: #21935a;
 }
 .th-fab-queue {
-  background: #7367f0;
+  background: var(--accent);
   color: white;
   width: 50px;
   height: 50px;
@@ -1079,7 +1092,8 @@ input[type='checkbox'] {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #17223b77;
+  background: #102b3b66;
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1087,8 +1101,8 @@ input[type='checkbox'] {
 }
 .th-overlay > section {
   position: relative;
-  background: var(--panel, #fff);
-  border-radius: 12px;
+  background: var(--surface);
+  border-radius: 14px;
   border: 1px solid var(--line);
   width: 800px;
   max-width: 100%;
@@ -1097,7 +1111,7 @@ input[type='checkbox'] {
 }
 .th-overlay h2 {
   font-size: 19px;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0;
 }
 .th-close {
@@ -1105,10 +1119,12 @@ input[type='checkbox'] {
   right: 12px;
   top: 12px;
   border: 0;
-  background: #787d8b0f;
+  background: var(--surface-subtle, #f4f7f8);
   padding: 0 8px;
   font-size: 24px;
-  border-radius: 6px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 8px;
   color: var(--muted);
 }
 .th-delete-overlay {
@@ -1137,7 +1153,7 @@ input[type='checkbox'] {
   font-size: 13px;
 }
 .th-delete-record {
-  background: #7367f0;
+  background: var(--accent);
 }
 .th-delete-source {
   background: #d99a32;
@@ -1162,7 +1178,7 @@ progress {
   height: 6px;
   border: 0;
   border-radius: 6px;
-  accent-color: #7367f0;
+  accent-color: var(--accent);
 }
 .th-progress p,
 .th-queue-count {
@@ -1194,8 +1210,8 @@ progress {
   padding: 10px 15px;
 }
 .th-queue-tabs .active {
-  border-bottom: 2px solid #7367f0;
-  color: #7367f0;
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
 }
 .th-queue-tabs small {
   display: block;

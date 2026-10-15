@@ -33,7 +33,10 @@ function promotion(r: Record<string, any>) {
 }
 </script>
 <template>
-  <article class="release-card">
+  <article
+    class="release-card"
+    :class="{ 'is-selected': selected.includes(candidateKey(candidates[0]!)) }"
+  >
     <div class="release-top">
       <label class="check"
         ><input
@@ -145,73 +148,131 @@ function promotion(r: Record<string, any>) {
 .release-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border, #2a354a);
-  border-radius: 12px;
-  padding: 20px;
-  background: var(--surface, #171f2e);
   min-width: 0;
-  box-shadow: 0 2px 6px #18233804;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
   transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+    border-color 0.18s,
+    box-shadow 0.18s;
 }
 .release-card:hover {
-  border-color: #c7cce0;
-  box-shadow: 0 5px 16px #18233808;
+  border-color: #b9cecf;
+  box-shadow: 0 5px 16px #172b3a08;
+}
+.release-card.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 .release-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 13px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
+}
+.release-top .check {
+  min-width: 0;
+  min-height: 28px;
+  padding: 2px 0;
+  color: #566b78;
 }
 .promo {
-  background: #fff3df;
-  color: #8c5c15;
-  padding: 3px 8px;
-  border-radius: 5px;
-  font-size: 11px;
+  flex: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #fff5e6;
+  color: #956119;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.4;
   white-space: nowrap;
 }
 .promo.free {
-  background: #e7f7ee;
-  color: #24794e;
+  background: #e8f5ee;
+  color: #267b50;
 }
 h3 {
-  font-size: 14px;
-  line-height: 1.65;
-  overflow-wrap: anywhere;
-  margin: 0;
-  color: #26344b;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin: 0;
+  color: #172b3a;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 .release-description {
-  font-size: 12px;
-  color: var(--muted, #9aa8be);
-  line-height: 1.7;
-  margin: 8px 0 12px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin: 7px 0 13px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.release-card .tags {
+  gap: 5px;
+  margin: 0;
+}
+.release-card .tags span {
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 5px;
+  background: #f1f5f7;
+  color: #607480;
+  font-size: 10px;
+  font-weight: 500;
+}
+.release-card .tags .downloaded {
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 .release-facts {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 14px;
+  margin-top: 20px;
+  color: var(--muted);
   font-size: 12px;
-  margin-top: 14px;
+  font-variant-numeric: tabular-nums;
 }
 .release-facts b {
   margin-right: auto;
-  font-size: 16px;
-  color: #26344b;
+  color: #263d4c;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.4px;
+}
+.release-facts .green {
+  color: #27815d;
+}
+.release-card .hint {
+  margin: 8px 0 13px;
+  font-size: 11px;
+}
+.release-review {
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+}
+.release-review summary {
+  padding: 4px 0;
+  background: none;
+  font-size: 12px;
+}
+.release-review p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
 }
 .release-actions {
   display: flex;
@@ -219,66 +280,47 @@ h3 {
   justify-content: space-between;
   gap: 10px;
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
 }
 .release-link {
+  color: #718491;
   font-size: 12px;
-  color: var(--muted, #a8b8d3);
+  text-decoration: none;
+}
+.release-link:hover {
+  color: var(--accent);
+}
+.release-actions .primary {
+  min-width: 78px;
+  min-height: 33px;
+  border-radius: 7px;
 }
 .more-sources {
-  margin-top: 12px;
-  border-top: 1px solid var(--border, #2a354a);
-  padding-top: 10px;
+  margin: 13px 0 0;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 12px;
+}
+.more-sources summary {
+  color: #566b78;
   font-size: 12px;
 }
 .source-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 10px;
 }
 .source-row small {
   color: var(--muted);
 }
-.release-review {
-  font-size: 12px;
-  margin: 4px 0 14px;
-  padding: 0;
-  border: 0;
-}
-.release-review summary {
-  font-size: 12px;
-  padding: 5px 0;
-  background: none;
-}
-.release-review p {
-  margin: 8px 0 0;
-  color: var(--muted);
-}
-.more-sources {
-  margin-bottom: 0;
-  border: 0;
-  border-top: 1px solid var(--line);
-  border-radius: 0;
-  padding: 12px 0 0;
-}
-.more-sources summary {
-  font-size: 12px;
-}
-.release-card .hint {
-  font-size: 11px;
-  margin: 10px 0;
-}
-.release-card .tags {
-  margin: 0;
-  gap: 5px;
-}
-.release-top label {
-  color: #536078;
-}
-.downloaded {
-  color: #167448;
+@media (max-width: 520px) {
+  .release-card {
+    padding: 17px;
+  }
 }
 </style>

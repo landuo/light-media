@@ -4,6 +4,7 @@ import { api, errorText, friendly, toast } from '../api';
 import { candidateKey, type Candidate } from '../features/resources';
 import ResourceCard from './ResourceCard.vue';
 import AddDownloadDialog from './AddDownloadDialog.vue';
+import AppIcon from './AppIcon.vue';
 const props = defineProps<{ site: { id: string; name: string; enabled: boolean } }>();
 const emit = defineEmits<{ close: [] }>();
 const query = ref(''),
@@ -77,22 +78,32 @@ onUnmounted(() => {
       :aria-label="site.name + ' 资源浏览'"
     >
       <header>
-        <h2>{{ site.name }} · 资源</h2>
-        <button class="icon-button" aria-label="关闭站点资源" @click="emit('close')">×</button>
+        <div class="site-resource-heading">
+          <span><AppIcon name="globe" /></span>
+          <h2>{{ site.name }} · 资源</h2>
+        </div>
+        <button class="icon-button" aria-label="关闭站点资源" @click="emit('close')">
+          <AppIcon name="close" />
+        </button>
       </header>
       <form @submit.prevent="search(true)">
-        <input
-          v-model="query"
-          aria-label="站点资源关键词"
-          placeholder="搜索关键词，留空浏览最新资源"
-        /><button class="primary" :disabled="loading">搜索</button
+        <div class="site-resource-search">
+          <AppIcon name="search" /><input
+            v-model="query"
+            aria-label="站点资源关键词"
+            placeholder="搜索关键词，留空浏览最新资源"
+          />
+        </div>
+        <button class="primary" :disabled="loading">搜索</button
         ><button v-if="selected.length" type="button" :disabled="loading" @click="openSelected">
           下载所选 {{ selected.length }} 项
         </button>
       </form>
       <div class="site-resource-body">
         <p v-if="error" class="error-box" role="alert">{{ error }}</p>
-        <p v-if="loading" role="status">正在读取站点资源…</p>
+        <p v-if="loading" class="site-resource-loading" role="status">
+          <AppIcon name="refresh" />正在读取站点资源…
+        </p>
         <p
           v-for="siteResult in output?.sites || []"
           :key="siteResult.id"
@@ -100,7 +111,9 @@ onUnmounted(() => {
         >
           {{ siteResult.message ? friendly(siteResult.message) : '' }}
         </p>
-        <p v-if="output && !candidates.length">本页未返回资源。</p>
+        <p v-if="output && !candidates.length" class="site-resource-empty">
+          <AppIcon name="search" />本页未返回资源。
+        </p>
         <div class="site-resource-grid">
           <ResourceCard
             v-for="candidate in candidates"
@@ -153,7 +166,8 @@ onUnmounted(() => {
 .site-resource-backdrop {
   position: fixed;
   inset: 0;
-  background: #12233270;
+  background: #12233273;
+  backdrop-filter: blur(4px);
   z-index: 200;
   display: grid;
   place-items: center;
@@ -165,47 +179,115 @@ onUnmounted(() => {
   width: min(1180px, 100%);
   height: min(860px, calc(100dvh - 40px));
   background: var(--surface);
-  border-radius: 12px;
-  box-shadow: 0 24px 80px #0003;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px #172b3a29;
+  overflow: hidden;
 }
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
+  padding: 18px 24px;
   border-bottom: 1px solid var(--line);
 }
 h2 {
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: 650;
   margin: 0;
+}
+.site-resource-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-resource-heading > span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 form {
   display: flex;
   gap: 10px;
-  padding: 15px 20px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
 }
-form input {
+.site-resource-search {
+  position: relative;
   flex: 1;
   min-width: 0;
+}
+.site-resource-search > .app-icon {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.site-resource-search input {
+  padding-left: 41px;
 }
 .site-resource-body {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 0 20px 20px;
+  padding: 20px 24px;
+  background: color-mix(in srgb, var(--line) 12%, var(--surface));
 }
 .site-resource-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+.site-resource-loading,
+.site-resource-empty {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.site-resource-loading .app-icon,
+.site-resource-empty .app-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+.site-resource-loading .app-icon {
+  animation: site-resource-spin 1s linear infinite;
 }
 footer {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 12px;
+  padding: 14px;
   border-top: 1px solid var(--line);
+}
+footer span {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+@keyframes site-resource-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-resource-loading .app-icon {
+    animation: none;
+  }
 }
 .site-download-layer {
   position: fixed;
@@ -224,7 +306,13 @@ footer {
     flex-wrap: wrap;
   }
   .site-resource-body {
-    padding: 0 12px 12px;
+    padding: 12px;
+  }
+  header {
+    padding: 14px;
+  }
+  .site-resource-search {
+    flex-basis: calc(100% - 90px);
   }
 }
 </style>

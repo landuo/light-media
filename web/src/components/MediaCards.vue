@@ -62,7 +62,13 @@ function detail(m: any) {
   </div>
 </template>
 <style scoped>
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 28px 20px;
+}
 .media-card {
+  min-width: 0;
   text-align: left;
 }
 .poster-action {
@@ -70,62 +76,173 @@ function detail(m: any) {
   border: 0;
   width: 100%;
   display: block;
-  border-radius: 10px;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
   overflow: hidden;
+  background: #e8edf0;
+  box-shadow: 0 4px 10px #172b3a0c;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.poster-action:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px #172b3a20;
+}
+.poster-action img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.poster-action:after {
+  inset: 65% 0 0;
+  background: linear-gradient(transparent, #10212d99);
+}
+.poster-empty {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(145deg, #edf2f5, #dce6e9);
+  color: #8c9da8;
+  font-size: 30px;
+}
+.poster-empty small {
+  font-size: 12px;
+  font-weight: 400;
+}
+.rating {
+  top: 9px;
+  right: 9px;
+  padding: 4px 7px;
+  border: 1px solid #ffffff24;
+  border-radius: 6px;
+  background: #122632d9;
+  font-size: 11px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.poster-kind {
+  bottom: 10px;
+  left: 11px;
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.5px;
+  animation: none;
+}
+.media-state {
+  top: 10px;
+  left: 9px;
+  right: 50px;
+  bottom: auto;
+  align-items: flex-start;
+}
+.media-state > span {
+  padding: 3px 6px;
+  border: 1px solid #ffffff30;
+  border-radius: 5px;
+  background: #174e48e8;
+  color: #fff;
+  font-size: 10px;
 }
 .media-name {
   display: block;
-  padding: 12px 0 0;
+  height: 55px;
+  padding: 11px 0 0;
   border: 0;
   background: none;
   width: 100%;
   text-align: left;
+  white-space: normal;
 }
 .media-name strong {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   font-size: 14px;
   font-weight: 650;
-  color: #273247;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.55;
+  color: #172b3a;
+  white-space: normal;
+}
+.media-name:hover strong {
+  color: var(--accent);
+}
+.media-card > p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
 }
 .media-actions {
   display: flex;
   gap: 7px;
-  margin-top: 11px;
+  margin-top: 12px;
 }
 .media-actions button {
   min-width: 0;
   flex: 1;
-  padding: 7px 5px;
+  min-height: 32px;
+  padding: 6px 5px;
+  border-color: var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: #526674;
   font-size: 12px;
-  border-color: #e1e5ef;
-  background: #fff;
-  color: #5b6680;
+  font-weight: 500;
 }
 .media-actions button:hover {
-  border-color: #c6c0fa;
+  border-color: #98c7c2;
   color: var(--accent);
-  background: #f3f1ff;
+  background: var(--accent-soft);
 }
 .media-actions svg {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
 }
-.poster-action:hover {
-  box-shadow: 0 10px 25px #17203320;
+@media (max-width: 1440px) {
+  .media-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
 }
-.media-name:hover {
-  color: var(--accent);
-}
-.media-name:hover strong {
-  color: inherit;
+@media (max-width: 1100px) {
+  .media-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 25px 17px;
+  }
 }
 @media (max-width: 760px) {
+  .media-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .media-name strong {
     font-size: 13px;
+  }
+}
+@media (max-width: 520px) {
+  .media-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 14px;
+  }
+  .poster-action {
+    border-radius: 10px;
+  }
+  .media-name {
+    height: 52px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .poster-action,
+  .poster-action img {
+    transition: none;
+  }
+  .poster-action:hover,
+  .media-card:hover .poster-action img {
+    transform: none;
   }
 }
 </style>
