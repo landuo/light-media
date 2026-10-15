@@ -117,7 +117,6 @@ onMounted(() => {
 onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
 </script>
 <template>
-  <div class="page-heading"><h1>设置</h1></div>
   <div class="tabs">
     <button
       v-for="item in [

@@ -200,11 +200,7 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="page-heading">
-    <div>
-      <p class="eyebrow">SEARCH</p>
-      <h1>资源搜索</h1>
-    </div>
+  <div class="page-actions">
     <form class="search-field" @submit.prevent="submitSearch">
       <input v-model="query" placeholder="搜索资源关键词" required /><button class="small primary">
         搜索

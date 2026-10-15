@@ -163,9 +163,6 @@ onMounted(load);
 <template>
   <section class="site-manager">
     <header class="manager-heading">
-      <div>
-        <h1>站点管理</h1>
-      </div>
       <div class="manager-actions">
         <button :disabled="loading || refreshing.length > 0" @click="refreshAll">
           刷新全部数据</button
@@ -399,13 +396,9 @@ onMounted(load);
   gap: 12px;
 }
 .manager-heading {
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: 24px;
 }
-.manager-heading h1 {
-  margin: 0 0 8px;
-}
-.manager-heading p,
 .manager-note {
   color: var(--muted);
   margin: 0;

@@ -88,19 +88,6 @@ const navHref = (target: string) =>
   (target === 'search' && globalQuery.value.trim()
     ? 'search?query=' + encodeURIComponent(globalQuery.value.trim())
     : target);
-const title = computed(
-  () =>
-    nav.flatMap((g) => g.items).find((n) => activeNav(n[0]!))?.[2] ||
-    (
-      {
-        detail: '影视详情',
-        person: '演员资料',
-        resources: '搜索资源',
-        'resource-search': '资源搜索',
-      } as any
-    )[pageKey.value] ||
-    '光影',
-);
 const paused = computed(() =>
   typeof ui.status?.control === 'string'
     ? ui.status.control !== 'running'
@@ -443,9 +430,7 @@ onUnmounted(() => {
           "
         />
       </main>
-      <footer>
-        Light Media <span>{{ title }}</span>
-      </footer>
+      <footer>Light Media</footer>
     </div>
   </div>
   <div class="toasts" role="status">

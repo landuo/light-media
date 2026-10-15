@@ -241,11 +241,7 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="page-heading">
-    <div>
-      <p class="eyebrow">RESOURCE</p>
-      <h1>资源搜索</h1>
-    </div>
+  <div class="page-actions">
     <div class="button-row">
       <button @click="go('detail/' + kind + '/' + id)">影视详情</button
       ><button

@@ -365,15 +365,13 @@ td small {
 .section-heading > .inline-form {
   margin-left: auto;
 }
-.page-heading {
+.page-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 25px;
-  margin-bottom: 31px;
-}
-.page-heading p:last-child {
-  margin-bottom: 0;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 .toolbar {
   display: flex;
@@ -1608,9 +1606,6 @@ details .panel {
   .skeleton-grid {
     grid-template-columns: repeat(5, 1fr);
   }
-  .page-heading {
-    align-items: flex-start;
-  }
   .search-field {
     width: 275px;
   }
@@ -1668,9 +1663,6 @@ details .panel {
   }
   h1 {
     font-size: 26px;
-  }
-  .page-heading {
-    flex-wrap: wrap;
   }
   .search-field {
     width: 100%;
@@ -1769,14 +1761,7 @@ details .panel {
   main {
     padding: 27px 20px 35px;
   }
-  .page-heading {
-    gap: 17px;
-    margin-bottom: 25px;
-  }
-  .page-heading > div {
-    min-width: 0;
-  }
-  .page-heading > button {
+  .page-actions > button {
     padding: 8px 12px;
     font-size: 11px;
   }
@@ -2315,12 +2300,6 @@ details .panel {
 .stat {
   box-shadow: 0 2px 5px #18233803;
 }
-.page-heading h1 {
-  color: #1d293b;
-}
-.page-heading .muted {
-  margin-top: 8px;
-}
 .panel > :last-child {
   margin-bottom: 0;
 }
@@ -2421,9 +2400,6 @@ small,
   .topbar-actions .avatar {
     width: 30px;
     height: 30px;
-  }
-  .page-heading {
-    margin-bottom: 24px;
   }
   .muted,
   .hint,

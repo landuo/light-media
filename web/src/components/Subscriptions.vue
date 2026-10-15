@@ -336,9 +336,8 @@ onMounted(applyView);
 watch(() => props.view, applyView);
 </script>
 <template>
-  <div class="page-heading">
-    <h1>{{ isCalendar ? '订阅日历' : '我的订阅' }}</h1>
-    <button v-if="!isCalendar" class="primary" @click="begin()">＋ 新建订阅</button>
+  <div v-if="!isCalendar" class="page-actions">
+    <button class="primary" @click="begin()">＋ 新建订阅</button>
   </div>
   <template v-if="isCalendar">
     <div class="calendar-toolbar">

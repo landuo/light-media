@@ -67,8 +67,7 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="page-heading">
-    <h1>下载管理</h1>
+  <div class="page-actions">
     <button :disabled="loading" @click="load()">刷新</button>
   </div>
   <div v-if="clients.length" class="tabs" role="tablist" aria-label="下载器">

@@ -62,13 +62,6 @@ const registrationError = ref('');
 let candidateGeneration = 0,
   registrationGeneration = 0,
   identityGeneration = 0;
-const names: any = {
-  downloads: ['DOWNLOADS', '下载任务'],
-  organize: ['ORGANIZE', '整理，让文件回到该在的位置'],
-  library: ['LIBRARY', '我的媒体库'],
-  jobs: ['WORKFLOWS', '任务队列'],
-  logs: ['OBSERVABILITY', '日志中心'],
-};
 const filteredAssets = computed(() =>
   Array.isArray(data.value)
     ? data.value.filter((a: any) =>
@@ -428,11 +421,7 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="page-heading">
-    <div>
-      <p class="eyebrow">{{ names[view]?.[0] }}</p>
-      <h1>{{ names[view]?.[1] }}</h1>
-    </div>
+  <div class="page-actions">
     <button @click="load()" :disabled="loading">↻ 刷新</button>
   </div>
   <p v-if="error" class="error-box">{{ error }}</p>

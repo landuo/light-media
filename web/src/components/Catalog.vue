@@ -148,12 +148,8 @@ onMounted(load);
     </button>
   </div>
   <template v-if="parts[0] === 'discover' || parts[0] === 'search'"
-    ><div class="page-heading">
-      <div>
-        <p class="eyebrow">{{ query ? 'SEARCH' : 'YOUR NEXT FAVORITE' }}</p>
-        <h1>{{ query ? '“' + query + '” 的搜索结果' : '发现好故事' }}</h1>
-      </div>
-      <form v-if="parts[0] === 'search'" class="search-field" @submit.prevent="submitSearch">
+    ><div v-if="parts[0] === 'search'" class="page-actions">
+      <form class="search-field" @submit.prevent="submitSearch">
         <span>⌕</span
         ><input v-model="query" placeholder="搜索电影、剧集…" aria-label="搜索影视" /><button
           class="small primary"
