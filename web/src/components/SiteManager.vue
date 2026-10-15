@@ -147,7 +147,7 @@ function edit(row: any) {
   if (working.value || importVisible.value) return;
   original.value = row;
   error.value = '';
-  editing.value = clone(row.config);
+  editing.value = { timeout: 0, downloader: '', ...clone(row.config) };
   editing.value.pri ??=
     data.value.sites.findIndex((site: any) => site.config.id === row.config.id) + 1;
   limitEnabled.value = !!(
@@ -533,7 +533,7 @@ onMounted(load);
     <SiteResourceDialog v-if="resources" :site="resources" @close="resources = null" />
     <div v-if="editing" class="manager-backdrop" @click.self="!saving && (editing = null)">
       <form
-        class="manager-dialog"
+        class="manager-dialog site-editor"
         role="dialog"
         aria-modal="true"
         aria-label="编辑站点配置"
@@ -554,154 +554,185 @@ onMounted(load);
             <AppIcon name="close" />
           </button>
         </header>
-        <div class="manager-form-grid">
-          <label class="half"
-            >站点网址<input
-              v-model.trim="editing.base_url"
-              type="url"
-              required
-              aria-label="站点网址"
-              placeholder="https://example.org"
-            /><small>输入站点完整地址，自动识别站点类型</small></label
-          >
-          <label
-            >优先级<input
-              v-model.number="editing.pri"
-              type="number"
-              min="0"
-              max="10000"
-              required
-              aria-label="优先级"
-            /><small>数字越小越优先</small></label
-          >
-          <label
-            >状态<select v-model="editing.enabled" aria-label="状态">
-              <option :value="true">启用</option>
-              <option :value="false">停用</option>
-            </select></label
-          >
-          <label class="half"
-            >RSS 地址<input
-              v-model="editing.rss"
-              type="password"
-              disabled
-              :placeholder="original?.credential_state?.rss ? '已保存，保留原配置' : '未配置'"
-            /><small>兼容保留，RSS 调度暂未接入</small></label
-          >
-          <label
-            >超时时间<input
-              v-model.number="editing.timeout"
-              type="number"
-              min="0"
-              max="120"
-              aria-label="超时时间"
-            /><small>秒；0 使用默认值</small></label
-          >
-          <label
-            >下载器<select v-model="editing.downloader" disabled>
-              <option value="">默认</option>
-              <option v-if="editing.downloader" :value="editing.downloader">
-                {{ editing.downloader }}
-              </option></select
-            ><small>兼容保留，站点指定下载器暂未接入</small></label
-          >
-          <div class="credential-tabs span-all" role="tablist">
-            <button
-              type="button"
-              role="tab"
-              :aria-selected="credentialTab === 'cookie'"
-              @click="credentialTab = 'cookie'"
+        <div class="site-editor-body">
+          <div class="manager-form-grid">
+            <label class="half"
+              >站点网址<input
+                v-model.trim="editing.base_url"
+                type="url"
+                required
+                aria-label="站点网址"
+                placeholder="https://example.org"
+              /><small>输入站点完整地址，自动识别站点类型</small></label
             >
-              Cookie</button
-            ><button
-              type="button"
-              role="tab"
-              :aria-selected="credentialTab === 'api'"
-              @click="credentialTab = 'api'"
+            <label
+              >优先级<input
+                v-model.number="editing.pri"
+                type="number"
+                min="0"
+                max="10000"
+                required
+                aria-label="优先级"
+              /><small>数字越小越优先</small></label
             >
-              API
-            </button>
-          </div>
-          <template v-if="credentialTab === 'cookie'"
-            ><label class="span-all"
-              >Cookie<textarea
-                v-model="editing.cookie"
-                rows="4"
-                autocomplete="off"
-                aria-label="Cookie"
-                :placeholder="
-                  original?.credential_state?.cookie || original?.credential_configured
-                    ? '已保存，留空保留原凭据'
-                    : '填写浏览器登录后的 Cookie'
-                "
-              /></label
-            ><label class="span-all"
-              >User-Agent<input
-                v-model="editing.ua"
-                aria-label="User-Agent"
-                placeholder="使用浏览器对应的 User-Agent" /></label
-          ></template>
-          <template v-else
-            ><label class="half"
-              >Authorization<input
-                v-model="editing.token"
+            <label
+              >状态<select v-model="editing.enabled" aria-label="状态">
+                <option :value="true">启用</option>
+                <option :value="false">停用</option>
+              </select></label
+            >
+            <label class="half"
+              >RSS 地址<input
+                v-model="editing.rss"
                 type="password"
                 disabled
-                :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
-              /><small>兼容保留，通用 Token 认证暂未接入</small></label
-            ><label class="half"
-              >API Key<input
-                v-model="editing.api_key"
-                type="password"
-                autocomplete="new-password"
-                aria-label="API Key"
-                :placeholder="
-                  original?.credential_state?.api_key || original?.credential_configured
-                    ? '已保存，留空保留原凭据'
-                    : '填写站点 API Key'
-                " /></label
-          ></template>
-          <div class="span-all preserved-options">
-            <label
-              ><input
-                type="checkbox"
-                v-model="limitEnabled"
-                aria-label="限制访问频率"
-              />限制访问频率</label
+                :placeholder="original?.credential_state?.rss ? '已保存，保留原配置' : '未配置'"
+              /><small>暂不支持 RSS 调度</small></label
             >
-            <div v-if="limitEnabled" class="limit-fields">
-              <label
-                >单位周期（秒）<input
-                  v-model.number="editing.limit_interval"
-                  type="number"
-                  min="0"
-                  aria-label="单位周期（秒）" /></label
-              ><label
-                >周期内访问次数<input
-                  v-model.number="editing.limit_count"
-                  type="number"
-                  min="0"
-                  aria-label="周期内访问次数" /></label
-              ><label
-                >访问间隔（秒）<input
-                  v-model.number="editing.limit_seconds"
-                  type="number"
-                  min="0"
-                  aria-label="访问间隔（秒）"
-              /></label>
+            <label
+              >超时时间<input
+                v-model.number="editing.timeout"
+                type="number"
+                min="0"
+                max="120"
+                aria-label="超时时间"
+              /><small>秒；0 使用默认值</small></label
+            >
+            <label
+              >下载器<select v-model="editing.downloader" disabled>
+                <option value="">默认</option>
+                <option v-if="editing.downloader" :value="editing.downloader">
+                  {{ editing.downloader }}
+                </option></select
+              ><small>暂不支持站点绑定</small></label
+            >
+            <div class="credential-tabs span-all" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                :aria-selected="credentialTab === 'cookie'"
+                @click="credentialTab = 'cookie'"
+              >
+                Cookie</button
+              ><button
+                type="button"
+                role="tab"
+                :aria-selected="credentialTab === 'api'"
+                @click="credentialTab = 'api'"
+              >
+                API
+              </button>
+            </div>
+            <template v-if="credentialTab === 'cookie'"
+              ><label class="span-all"
+                >Cookie<textarea
+                  v-model="editing.cookie"
+                  rows="3"
+                  autocomplete="off"
+                  aria-label="Cookie"
+                  :placeholder="
+                    original?.credential_state?.cookie || original?.credential_configured
+                      ? '已保存，留空保留原凭据'
+                      : '填写浏览器登录后的 Cookie'
+                  "
+                /></label
+              ><label class="span-all"
+                >User-Agent<input
+                  v-model="editing.ua"
+                  aria-label="User-Agent"
+                  placeholder="使用浏览器对应的 User-Agent" /></label
+            ></template>
+            <template v-else
+              ><label class="half"
+                >Authorization<input
+                  v-model="editing.token"
+                  type="password"
+                  disabled
+                  :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
+                /><small>暂不支持 Token 认证</small></label
+              ><label class="half"
+                >API Key<input
+                  v-model="editing.api_key"
+                  type="password"
+                  autocomplete="new-password"
+                  aria-label="API Key"
+                  :placeholder="
+                    original?.credential_state?.api_key || original?.credential_configured
+                      ? '已保存，留空保留原凭据'
+                      : '填写站点 API Key'
+                  " /></label
+            ></template>
+            <div class="span-all site-option-list">
+              <label class="site-option-row">
+                <span class="site-option-copy">
+                  <span class="site-option-title">限制访问频率</span>
+                  <small>控制请求间隔和单位周期内的访问次数</small>
+                </span>
+                <input
+                  class="site-switch"
+                  type="checkbox"
+                  role="switch"
+                  v-model="limitEnabled"
+                  aria-label="限制访问频率"
+                />
+              </label>
+              <div v-if="limitEnabled" class="limit-fields">
+                <label
+                  >单位周期（秒）<input
+                    v-model.number="editing.limit_interval"
+                    type="number"
+                    min="0"
+                    aria-label="单位周期（秒）" /></label
+                ><label
+                  >周期内访问次数<input
+                    v-model.number="editing.limit_count"
+                    type="number"
+                    min="0"
+                    aria-label="周期内访问次数" /></label
+                ><label
+                  >访问间隔（秒）<input
+                    v-model.number="editing.limit_seconds"
+                    type="number"
+                    min="0"
+                    aria-label="访问间隔（秒）"
+                /></label>
+              </div>
+              <label class="site-option-row site-option-unavailable">
+                <span class="site-option-copy">
+                  <span class="site-option-title"
+                    >使用代理 <span class="option-unavailable">暂不可用</span></span
+                  >
+                  <small>站点独立代理尚未接入</small>
+                </span>
+                <input
+                  class="site-switch"
+                  type="checkbox"
+                  role="switch"
+                  :checked="editing.proxy"
+                  aria-label="使用代理"
+                  disabled
+                />
+              </label>
+              <label class="site-option-row site-option-unavailable">
+                <span class="site-option-copy">
+                  <span class="site-option-title"
+                    >浏览器模拟 <span class="option-unavailable">暂不可用</span></span
+                  >
+                  <small>浏览器验证引擎尚未接入</small>
+                </span>
+                <input
+                  class="site-switch"
+                  type="checkbox"
+                  role="switch"
+                  :checked="editing.render"
+                  aria-label="浏览器模拟"
+                  disabled
+                />
+              </label>
             </div>
           </div>
-          <div class="half preserved-options">
-            <label><input type="checkbox" :checked="editing.proxy" disabled />使用代理</label
-            ><small>兼容保留，站点独立代理暂未接入</small>
-          </div>
-          <div class="half preserved-options">
-            <label><input type="checkbox" :checked="editing.render" disabled />浏览器模拟</label
-            ><small>尚未配置浏览器引擎，暂不可用</small>
-          </div>
         </div>
-        <p class="manager-note">Cookie / UA 可手动维护；账号密码登录自动获取 Cookie 暂未接入。</p>
-        <p v-if="error" class="error-box" role="alert">{{ error }}</p>
+        <p v-if="error" class="error-box site-editor-error" role="alert">{{ error }}</p>
         <footer>
           <button type="button" :disabled="saving" @click="editing = null">取消</button
           ><button type="submit" class="primary" :disabled="saving">
@@ -1219,19 +1250,45 @@ onMounted(load);
   padding-top: 20px;
   border-top: 1px solid var(--line);
 }
-form.manager-dialog {
-  scroll-padding-bottom: 100px;
+.site-editor {
+  display: flex;
+  flex-direction: column;
+  width: 720px;
+  max-height: min(850px, calc(100dvh - 48px));
+  padding: 0;
+  overflow: hidden;
 }
-form.manager-dialog footer {
-  position: sticky;
-  bottom: calc(-1 * var(--manager-dialog-padding));
-  z-index: 2;
-  margin-right: calc(-1 * var(--manager-dialog-padding));
-  margin-bottom: calc(-1 * var(--manager-dialog-padding));
-  margin-left: calc(-1 * var(--manager-dialog-padding));
-  padding: 18px var(--manager-dialog-padding);
+.site-editor > header {
+  flex: none;
+  margin: 0;
+  padding: 16px 24px;
   background: var(--surface);
-  box-shadow: 0 -8px 18px #172b3a05;
+}
+.site-editor > header .icon-button {
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+}
+.site-editor-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 24px 20px;
+}
+.site-editor > footer {
+  flex: none;
+  margin: 0;
+  padding: 13px 24px;
+  background: var(--surface-subtle, #f4f7f8);
+}
+.site-editor .manager-form-grid {
+  gap: 12px 16px;
+}
+.site-editor-error {
+  flex: none;
+  max-height: 120px;
+  overflow: auto;
+  margin: 0 24px 14px;
 }
 .manager-form-grid {
   display: grid;
@@ -1281,38 +1338,125 @@ form.manager-dialog footer {
   font-size: 12px;
   line-height: 1.7;
 }
-.preserved-options {
-  padding: 13px 14px;
-  background: color-mix(in srgb, var(--line) 15%, var(--surface));
+.site-option-list {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface);
 }
-.preserved-options > label {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+.site-option-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 16px;
+  margin: 0;
+  padding: 11px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
 }
-.preserved-options input[type='checkbox'] {
+.site-option-row:last-child {
+  border-bottom: 0;
+}
+.site-option-row:first-child:hover {
+  background: var(--surface-subtle, #f4f7f8);
+}
+.site-option-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.site-option-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--text, #172b3a);
+}
+.site-option-copy small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.site-option-unavailable {
+  cursor: default;
+  background: #fafcfc;
+}
+.site-option-unavailable .site-option-title {
+  color: #677b88;
+}
+.option-unavailable {
+  padding: 1px 5px;
+  border: 1px solid #e0e7eb;
+  border-radius: 4px;
+  color: #748591;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+input.site-switch[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 22px;
+  min-width: 38px;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 99px;
+  background: #cbd6dd;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+input.site-switch[type='checkbox']::before {
+  content: '';
+  position: absolute;
   width: 16px;
   height: 16px;
+  top: 3px;
+  left: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px #172b3a20;
+  transition: transform 0.18s;
 }
-.preserved-options > small {
-  display: block;
-  margin-top: 5px;
+input.site-switch[type='checkbox']:checked {
+  background: var(--accent);
+}
+input.site-switch[type='checkbox']:checked::before {
+  transform: translateX(16px);
+}
+input.site-switch[type='checkbox']:focus-visible {
+  outline: 3px solid #79bdb2;
+  outline-offset: 3px;
+}
+input.site-switch[type='checkbox']:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .limit-fields {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-subtle, #f4f7f8);
   font-size: 12px;
 }
 .limit-fields label {
   min-width: 0;
   display: grid;
   gap: 7px;
+}
+.limit-fields input {
+  min-width: 0;
 }
 .delete-dialog {
   width: 460px;
@@ -1413,6 +1557,26 @@ td {
   .manager-dialog {
     --manager-dialog-padding: 18px;
     max-height: calc(100dvh - 20px);
+  }
+  .site-editor {
+    max-height: calc(100dvh - 20px);
+    padding: 0;
+  }
+  .site-editor > header {
+    padding: 16px 18px;
+  }
+  .site-editor-body {
+    padding: 18px;
+  }
+  .site-editor > footer {
+    padding: 13px 18px;
+  }
+  .site-editor-error {
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+  .limit-fields {
+    grid-template-columns: 1fr;
   }
   .manager-form-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
