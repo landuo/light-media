@@ -11,6 +11,7 @@ const paths: Record<string, string> = {
   mkdir: 'M3 6h7l2 3h9v11H3V6Z M12 12v6 M9 15h6',
   refresh: 'M20 8a8 8 0 1 0 0 8 M20 3v5h-5',
   select: 'M8 3H3v5 M16 3h5v5 M3 16v5h5 M21 16v5h-5 M8 12l3 3 5-6',
+  'select-remove': 'M8 3H3v5 M16 3h5v5 M3 16v5h5 M21 16v5h-5 M8 8l8 8 M16 8l-8 8',
   recognize: 'M4 7V4h4 M16 4h4v3 M20 17v3h-4 M8 20H4v-3 M8 9h8 M12 9v7 M9 16h6',
   scrape: 'M4 20 16 8 M13 5l6 6 M17 2v3 M20 6h3 M4 4v4 M2 6h4 M18 16v4 M16 18h4',
   rename: 'M4 16 16 4l4 4L8 20H4v-4Z M13 7l4 4',

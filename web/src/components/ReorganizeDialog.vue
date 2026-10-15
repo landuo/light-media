@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, useId, watch } from 'vue';
 import { api, errorText, image, label, toast, ui } from '../api';
 import FileManagerIcon from './FileManagerIcon.vue';
+import DirectoryPathPicker from './DirectoryPathPicker.vue';
 
 type OrganizeResultItem = {
   source: string;
@@ -366,6 +367,11 @@ onUnmounted(() => {
                       <option value="自动" />
                       <option v-for="path in targetPaths" :key="path" :value="path" />
                     </datalist>
+                    <DirectoryPathPicker
+                      v-model="targetPath"
+                      :suggestions="targetPaths"
+                      :disabled="busy"
+                    />
                   </div>
                   <small>整理目的路径，选择自动将按源路径匹配</small></label
                 >

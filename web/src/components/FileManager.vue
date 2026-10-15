@@ -6,6 +6,8 @@ import {
   cleanBrowserPath,
   commonDownloadPath,
   filterBrowserItems,
+  isSelectableBrowserItem,
+  retainBrowserSelection,
   virtualBrowserChildren,
   type BrowserItem,
   type BrowserRoot,
@@ -60,11 +62,12 @@ let generation = 0;
 let alive = true;
 async function load(path = currentPath.value) {
   const run = ++generation;
+  const nextPath = cleanBrowserPath(path);
   loading.value = true;
   error.value = '';
   detailFile.value = null;
-  selected.value = [];
-  currentPath.value = cleanBrowserPath(path);
+  if (nextPath !== currentPath.value) selected.value = [];
+  currentPath.value = nextPath;
   try {
     const root = browserRootForPath(roots.value, currentPath.value);
     if (root) {
@@ -84,18 +87,20 @@ async function load(path = currentPath.value) {
       listing.value = virtualBrowserChildren(roots.value, currentPath.value);
       truncated.value = false;
     }
+    selected.value = retainBrowserSelection(selected.value, listing.value);
     refreshKey.value++;
   } catch (e) {
     if (run === generation) {
       error.value = errorText(e);
       listing.value = [];
+      selected.value = [];
     }
   } finally {
     if (run === generation) loading.value = false;
   }
 }
 function openItem(item: BrowserItem) {
-  if (selectMode.value) {
+  if (selectMode.value && isSelectableBrowserItem(item)) {
     select(item.path);
     return;
   }
@@ -107,6 +112,7 @@ function openItem(item: BrowserItem) {
   }
 }
 function select(path: string, checked = !selected.value.includes(path)) {
+  if (!listing.value.some((item) => item.path === path && isSelectableBrowserItem(item))) return;
   selected.value = checked
     ? [...new Set([...selected.value, path])]
     : selected.value.filter((value) => value !== path);
@@ -385,11 +391,12 @@ onUnmounted(() => {
             ><button
               class="file-icon-button"
               :class="{ active: selectMode }"
+              :aria-pressed="selectMode"
               :aria-label="selectMode ? '退出多选' : '多选文件'"
               :title="selectMode ? '退出多选' : '多选'"
               @click="toggleSelection"
             >
-              <FileManagerIcon name="select" /></button></template
+              <FileManagerIcon :name="selectMode ? 'select-remove' : 'select'" /></button></template
           ><template v-else
             ><span class="toolbar-space"></span
             ><button
@@ -434,14 +441,18 @@ onUnmounted(() => {
             :class="{ selected: selected.includes(item.path) }"
             @click="openItem(item)"
           >
-            <input
-              v-if="selectMode && !item.virtual && ['dir', 'file'].includes(item.type)"
-              type="checkbox"
-              :aria-label="'选择 ' + item.name"
-              :checked="selected.includes(item.path)"
+            <label
+              v-if="selectMode && isSelectableBrowserItem(item)"
+              class="file-selection-control"
               @click.stop
-              @change="select(item.path, ($event.target as HTMLInputElement).checked)"
-            /><FileManagerIcon
+            >
+              <input
+                type="checkbox"
+                :aria-label="'选择 ' + item.name"
+                :checked="selected.includes(item.path)"
+                @change="select(item.path, ($event.target as HTMLInputElement).checked)"
+              /> </label
+            ><FileManagerIcon
               v-else
               :name="item.type === 'dir' ? 'folder' : item.video ? 'video' : 'file'"
             /><button class="file-row-name" :title="item.path" @click.stop="openItem(item)">
@@ -805,10 +816,27 @@ onUnmounted(() => {
   color: #647084;
   margin-left: 5px;
 }
-.file-row > input {
-  width: 18px;
-  height: 18px;
-  margin: 0 4px;
+.file-selection-control {
+  width: 40px;
+  height: 40px;
+  margin: 0 -3px 0 -7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  flex: none;
+}
+.file-selection-control:hover,
+.file-selection-control:focus-within {
+  background: var(--accent-soft);
+}
+.file-selection-control input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
   accent-color: var(--accent);
   flex: none;
 }

@@ -39,6 +39,7 @@ function openDialog(t, initial = {}) {
   new Function('require', 'exports', compiled)((name) => {
     if (name === '../api') return apiModule;
     if (name === './FileManagerIcon.vue') return { default: {} };
+    if (name === './DirectoryPathPicker.vue') return { name: 'DirectoryPathPicker' };
     if (name === 'vue')
       return {
         ...vue,
@@ -76,6 +77,11 @@ function openDialog(t, initial = {}) {
     pathInput,
     selects,
     switches,
+    async browsePath(value) {
+      const picker = nodes().find((node) => node.type?.name === 'DirectoryPathPicker');
+      picker.props['onUpdate:modelValue'](value);
+      await vue.nextTick();
+    },
     async path(value) {
       pathInput().props.onInput({ target: { value } });
       await vue.nextTick();
@@ -146,4 +152,20 @@ test('choosing automatic target retains other automatic values and preserves exp
   assert.equal(body.mode, '');
   assert.equal(body.library_type_folder, false);
   assert.equal(body.scraping, false);
+});
+
+test('directory tree selection only changes the target path', async (t) => {
+  const dialog = openDialog(t);
+  await dialog.select(0, 'local');
+  await dialog.select(1, 'hardlink');
+  await dialog.toggle(0, true);
+  await dialog.toggle(1, true);
+  await dialog.browsePath('/library/from-tree');
+  assert.equal(dialog.pathInput().props.value, '/library/from-tree');
+  const body = await dialog.preview();
+  assert.equal(body.target_path, '/library/from-tree');
+  assert.equal(body.target_storage, 'local');
+  assert.equal(body.mode, 'hardlink');
+  assert.equal(body.library_type_folder, true);
+  assert.equal(body.scraping, true);
 });

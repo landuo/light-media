@@ -10,6 +10,15 @@ export type BrowserItem = {
   virtual?: boolean;
 };
 
+export function isSelectableBrowserItem(item: BrowserItem) {
+  return !item.virtual && ['dir', 'file'].includes(item.type);
+}
+
+export function retainBrowserSelection(selected: string[], items: BrowserItem[]) {
+  const available = new Set(items.filter(isSelectableBrowserItem).map((item) => item.path));
+  return [...new Set(selected)].filter((path) => available.has(path));
+}
+
 export function cleanBrowserPath(path: string) {
   return path.replace(/\/+$/, '') || '/';
 }
