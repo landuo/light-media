@@ -1,0 +1,95 @@
+=== RUN   TestNativeInotifyRenameDeleteAndDurableBoundEffects
+--- PASS: TestNativeInotifyRenameDeleteAndDurableBoundEffects (0.04s)
+=== RUN   TestNativeInotifyCleanCloseRecoverStillDeletes
+--- PASS: TestNativeInotifyCleanCloseRecoverStillDeletes (0.06s)
+=== RUN   TestNativeInotifyRecursiveMovePreservesEntityAndStopsOutsideScope
+--- PASS: TestNativeInotifyRecursiveMovePreservesEntityAndStopsOutsideScope (0.57s)
+=== RUN   TestNativeInotifyContinuousDeadlineActuallyFires
+--- PASS: TestNativeInotifyContinuousDeadlineActuallyFires (10.07s)
+=== RUN   TestNativeTrickplayMovesArePairedBeforeSourceFilter
+=== RUN   TestNativeTrickplayMovesArePairedBeforeSourceFilter/into
+=== RUN   TestNativeTrickplayMovesArePairedBeforeSourceFilter/out-of
+--- PASS: TestNativeTrickplayMovesArePairedBeforeSourceFilter (0.06s)
+    --- PASS: TestNativeTrickplayMovesArePairedBeforeSourceFilter/into (0.04s)
+    --- PASS: TestNativeTrickplayMovesArePairedBeforeSourceFilter/out-of (0.02s)
+=== RUN   TestNativeUnpairedMoveOrderAndInstalledWatchdogGrace
+--- PASS: TestNativeUnpairedMoveOrderAndInstalledWatchdogGrace (0.56s)
+=== RUN   TestNativeOverlappingHardlinkAndSTRMWatchesBothExecute
+--- PASS: TestNativeOverlappingHardlinkAndSTRMWatchesBothExecute (0.02s)
+=== RUN   TestRealLocalLinksBoundApplyAndSeparateReceipts
+--- PASS: TestRealLocalLinksBoundApplyAndSeparateReceipts (0.02s)
+=== RUN   TestDelayedQueueDedupRestartAndWorkerStopDoesNotDrain
+--- PASS: TestDelayedQueueDedupRestartAndWorkerStopDoesNotDrain (0.03s)
+=== RUN   TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate
+=== RUN   TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/stop
+=== RUN   TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/reload
+--- PASS: TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate (0.03s)
+    --- PASS: TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/stop (0.03s)
+    --- PASS: TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/reload (0.01s)
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/leaf-before-delay
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/size-before-delay
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/mtime-before-delay
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/leaf-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/symlink-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/parent-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/root-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/parent-missing-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/root-missing-during-rename
+--- PASS: TestReplacementSizeMtimeParentAndRootCAS (0.11s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/leaf-before-delay (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/size-before-delay (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/mtime-before-delay (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/leaf-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/symlink-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/parent-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/root-during-rename (0.02s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/parent-missing-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/root-missing-during-rename (0.02s)
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-stage
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-unlink
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/external-uncertain
+--- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart (0.03s)
+    --- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-stage (0.01s)
+    --- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-unlink (0.01s)
+    --- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/external-uncertain (0.01s)
+=== RUN   TestLocalSTRMStorageAndUnknownReferences
+--- PASS: TestLocalSTRMStorageAndUnknownReferences (0.01s)
+=== RUN   TestAuthorityRejectsTraversalSymlinksMissingRootsAndRevokedGuard
+--- PASS: TestAuthorityRejectsTraversalSymlinksMissingRootsAndRevokedGuard (0.00s)
+=== RUN   TestInterruptedJournalAndCanceledCallPreservePendingWork
+--- PASS: TestInterruptedJournalAndCanceledCallPreservePendingWork (0.01s)
+=== RUN   TestConcurrentSameEventHasSingleOutcome
+--- PASS: TestConcurrentSameEventHasSingleOutcome (0.04s)
+=== RUN   TestOpenDoesNotRunExpiredQueueBeforeExplicitRecover
+--- PASS: TestOpenDoesNotRunExpiredQueueBeforeExplicitRecover (0.12s)
+=== RUN   TestMediaOriginAndSourceFollowerHaveSeparateDeletionReceipts
+--- PASS: TestMediaOriginAndSourceFollowerHaveSeparateDeletionReceipts (0.02s)
+=== RUN   TestStorageAndRecursiveScrapSafetyDoNotInventSuccess
+--- PASS: TestStorageAndRecursiveScrapSafetyDoNotInventSuccess (0.01s)
+=== RUN   TestCapturedEventsRequireOrderAndReloadDrainsPendingUnderNewFlags
+--- PASS: TestCapturedEventsRequireOrderAndReloadDrainsPendingUnderNewFlags (0.02s)
+=== RUN   TestCanceledAtSelectionCannotMoveOrUnlink
+--- PASS: TestCanceledAtSelectionCannotMoveOrUnlink (0.01s)
+=== RUN   TestMovedDestinationSymlinkCannotAuthorizeFallbackCleanup
+--- PASS: TestMovedDestinationSymlinkCannotAuthorizeFallbackCleanup (0.00s)
+=== RUN   TestStopDrainsCapturedEventsAndRevokesFurtherDelivery
+--- PASS: TestStopDrainsCapturedEventsAndRevokesFurtherDelivery (0.03s)
+=== RUN   TestCleanCloseRecoverRestoresMonitoring
+--- PASS: TestCleanCloseRecoverRestoresMonitoring (0.02s)
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-independent-entity
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-same-entity-protects-queue
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/changed-existing-target
+--- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets (0.05s)
+    --- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-independent-entity (0.03s)
+    --- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-same-entity-protects-queue (0.01s)
+    --- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/changed-existing-target (0.02s)
+=== RUN   TestCapturedEventCannotBorrowGlobalAuthorityOutsideMonitorScope
+--- PASS: TestCapturedEventCannotBorrowGlobalAuthorityOutsideMonitorScope (0.00s)
+=== RUN   TestCapturedButUnappliedEventAfterCrashRequiresReview
+--- PASS: TestCapturedButUnappliedEventAfterCrashRequiresReview (0.00s)
+=== RUN   TestFrozenCandidateSourceAndEvidence
+--- PASS: TestFrozenCandidateSourceAndEvidence (0.00s)
+PASS

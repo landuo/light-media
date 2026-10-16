@@ -1,0 +1,48 @@
+{
+  "phase": "isolated candidate before formal package relocation",
+  "source_algorithm_identical_to_manifest": true,
+  "binary_in_repository": false,
+  "binary_sha256": "3838c7533a0d122764a975be1651798808c649af7046286c711890b5cf56d713",
+  "remote_sha256": "3838c7533a0d122764a975be1651798808c649af7046286c711890b5cf56d713",
+  "remote_sha256_after": "3838c7533a0d122764a975be1651798808c649af7046286c711890b5cf56d713",
+  "state": {
+    "Status": "exited",
+    "Running": false,
+    "OOMKilled": false,
+    "ExitCode": 0,
+    "StartedAt": "2026-10-16T15:53:30.916615617Z",
+    "FinishedAt": "2026-10-16T15:53:42.980200311Z"
+  },
+  "ssh_start_exit": 0,
+  "top_level_tests": 25,
+  "skipped": 0,
+  "failed": 0,
+  "isolation": {
+    "image": "alpine:3.22",
+    "uid": 1000,
+    "gid": 1001,
+    "network": "none",
+    "read_only_root": true,
+    "capabilities": "drop ALL",
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "production_media_mounted": false
+  },
+  "cleanup": {
+    "container_exited_before_removal": true,
+    "container_removed": true,
+    "owner_marker_verified_before_stage_removal": true,
+    "stage_removed": true
+  },
+  "redactions": [
+    "local workspace path",
+    "remote scratch path",
+    "container ID/name",
+    "Docker host-specific inspection fields"
+  ],
+  "original_evidence_relative": "work/_remove_link_host/linux-evidence-20261016-235326"
+}

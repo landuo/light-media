@@ -1,0 +1,73 @@
+{
+  "plugin_id": "RemoveLink",
+  "version": "2.17",
+  "installed_source_sha256": "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4",
+  "installed_reference": "../remove-link-2.17/installed-reference.json",
+  "pure_package_commit": "a00c150",
+  "candidate_directory": "work/_remove_link_host",
+  "source_license": {
+    "status": "not established from installed file",
+    "note": "Installed source and supplied sanitized reference contain no license header. No new license grant is inferred. See existing original-source provenance; upstream distribution license must be verified separately before redistribution."
+  },
+  "copied_go_files": {
+    "host.go": {
+      "candidate_file": "host.go",
+      "sha256": "577b5a2566bcb3555bbb251a3c6695c214fa43ccff4d2082f21c6b3f8b29fc8a",
+      "formal_sha256": "3133aa6db5d96b3dbf4c9877e01c3149f6ebc2de24aebf65207090561f002dd0"
+    },
+    "host_linux_test.go": {
+      "candidate_file": "host_linux_test.go",
+      "sha256": "8cff00425fd465b5159ab9e92f9ff2f73a481213814a8774b8003a903cba64ce",
+      "formal_sha256": "4d870bc980dd01a10d6a887b021c21c90a6fa22cc11bb6eab3dd4955b3268ce5"
+    },
+    "host_test.go": {
+      "candidate_file": "host_test.go",
+      "sha256": "04ccf214823f9cd55fceb8145a9105bde421914413404db983bcc89a19316bce",
+      "formal_sha256": "e7b6fe86f1bae3f889120dd8bebdf0e75d98723cead2a8dab949e464d0613a85"
+    },
+    "fixture_journal_test.go": {
+      "candidate_file": "journal.go",
+      "sha256": "e91d3da25ed9655b16ad2194f81a413e07955cb3e55f59e6a00ea4dabf75aff3"
+    },
+    "local.go": {
+      "candidate_file": "local.go",
+      "sha256": "62e060addce759f49c11c78b77a5c744680608e23cb68717020f3d6bf292af64"
+    },
+    "rename_darwin.go": {
+      "candidate_file": "rename_darwin.go",
+      "sha256": "4927ae333466f23f0a6be4bf5297704539a7b83b3d499c5c374c60b560dbaf1f"
+    },
+    "rename_linux.go": {
+      "candidate_file": "rename_linux.go",
+      "sha256": "22c9db38c066a6746bc987e088ad8837ffc07236507fe7ebbd57fe926abfebf1"
+    },
+    "types.go": {
+      "candidate_file": "types.go",
+      "sha256": "2723a8e8458692a3acf8ffe69954531a16ab8c307221ffa05d3cbe233e73c79f"
+    },
+    "watch_linux.go": {
+      "candidate_file": "watch_linux.go",
+      "sha256": "58a722c729f69e2359f001facab613b108b51a695ca8f5244f96a0571ac04379"
+    },
+    "watch_other.go": {
+      "candidate_file": "watch_other.go",
+      "sha256": "6108efef62137ad196e3ee3f79eb1380276bf4cef6138f86e4fa5a12763a922b"
+    }
+  },
+  "evidence_files": {
+    "candidate-nas-result.json": "1525bad631bf4c5d580c66942ede2d9ad2865882592d00fff95f243facbcaf03",
+    "candidate-nas-tests.log": "e673358b51eebf8f453be249439fea83c8adc5293c84714f44737fb7df719a34",
+    "installed-watchdog-metadata.json": "5e6b0f145bad4c640fe4d79c2f923375b045366096fb7d5bc17f699abda21178"
+  },
+  "formal_patches": [
+    {
+      "name": "clean-close-recover-watches",
+      "runtime_file": "host.go",
+      "description": "Restore Machine.Watches from validated recover specs before checkpoint/activation. Preserve original stopped checkpoint, queue deadlines, state identity merge and frozen deletion pins. New common/native Linux tests prove actual deletion after clean Close/Open/Recover."
+    }
+  ],
+  "formal_validation_evidence": {
+    "formal-clean-recover-nas-result.json": "380680c8e49bf434f3945449952d845566cac66ad8458b2eb70cf059c1a004f3",
+    "formal-clean-recover-nas-tests.log": "066415bdc4618edc8fec124e4bd043d48cbdf07863b39cdf1ca7d4acf1348636"
+  }
+}

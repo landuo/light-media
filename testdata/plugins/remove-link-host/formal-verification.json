@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-17",
+  "phase": "formal pure host after clean-close recovery fix; no App installation",
+  "regression_before": {
+    "exit": 1,
+    "error": "authorized event rejected ErrUnsafe",
+    "log": "work/remove-link-host-clean-recover-before.log"
+  },
+  "normal": {
+    "exit": 0,
+    "seconds": 5.233,
+    "log": "work/remove-link-host-clean-recover-normal.log"
+  },
+  "race": {
+    "exit": 0,
+    "seconds": 6.793,
+    "log": "work/remove-link-host-clean-recover-race.log"
+  },
+  "vet": {
+    "exit": 0,
+    "log": "work/remove-link-host-clean-recover-vet.log"
+  },
+  "linux_build": {
+    "exit": 0,
+    "CGO_ENABLED": "0",
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+    "binary_submitted": false,
+    "sha256": "11b2c12063cee7fd905327b303f4d1f78aacde14951089026549149579c93536",
+    "log": "work/remove-link-host-clean-recover-linux-build.log"
+  },
+  "formal_binary_nas_run": true,
+  "formal_nas_evidence": "formal-clean-recover-nas-result.json",
+  "candidate_nas_evidence": "candidate-nas-result.json",
+  "remaining_integration_requirements": [
+    "normal config publication requires an owner transition barrier",
+    "platform explicit reload needs old-object Stop then new-object Init, separate from ordinary init"
+  ],
+  "files": {
+    "docs/plugin-remove-link-host-go-port.md": "7f3498518e4891cc73a1c87605004e9f40a9bbee3b1a1ff032374a5f5c89fc64",
+    "internal/plugins/removelink/host/doc.go": "6a03714b3f9e7b3f88ae7c19e942418c5001388555a1ffe46898bbfd2698e05c",
+    "internal/plugins/removelink/host/fixture_journal_test.go": "e91d3da25ed9655b16ad2194f81a413e07955cb3e55f59e6a00ea4dabf75aff3",
+    "internal/plugins/removelink/host/host.go": "3133aa6db5d96b3dbf4c9877e01c3149f6ebc2de24aebf65207090561f002dd0",
+    "internal/plugins/removelink/host/host_linux_test.go": "4d870bc980dd01a10d6a887b021c21c90a6fa22cc11bb6eab3dd4955b3268ce5",
+    "internal/plugins/removelink/host/host_test.go": "e7b6fe86f1bae3f889120dd8bebdf0e75d98723cead2a8dab949e464d0613a85",
+    "internal/plugins/removelink/host/local.go": "62e060addce759f49c11c78b77a5c744680608e23cb68717020f3d6bf292af64",
+    "internal/plugins/removelink/host/provenance_test.go": "c1ba6aafea9c50cb7f7867691f9216b10d4bd3b650da04c03895080e0b838910",
+    "internal/plugins/removelink/host/rename_darwin.go": "4927ae333466f23f0a6be4bf5297704539a7b83b3d499c5c374c60b560dbaf1f",
+    "internal/plugins/removelink/host/rename_linux.go": "22c9db38c066a6746bc987e088ad8837ffc07236507fe7ebbd57fe926abfebf1",
+    "internal/plugins/removelink/host/types.go": "2723a8e8458692a3acf8ffe69954531a16ab8c307221ffa05d3cbe233e73c79f",
+    "internal/plugins/removelink/host/watch_linux.go": "58a722c729f69e2359f001facab613b108b51a695ca8f5244f96a0571ac04379",
+    "internal/plugins/removelink/host/watch_other.go": "6108efef62137ad196e3ee3f79eb1380276bf4cef6138f86e4fa5a12763a922b",
+    "testdata/plugins/remove-link-host/build_linux.py": "e2b7fb90ca42beeddb3269eb1d3635b939827814b6a9d1ad21f82c85516f9b87",
+    "testdata/plugins/remove-link-host/candidate-nas-result.json": "1525bad631bf4c5d580c66942ede2d9ad2865882592d00fff95f243facbcaf03",
+    "testdata/plugins/remove-link-host/candidate-nas-tests.log": "e673358b51eebf8f453be249439fea83c8adc5293c84714f44737fb7df719a34",
+    "testdata/plugins/remove-link-host/formal-clean-recover-nas-result.json": "380680c8e49bf434f3945449952d845566cac66ad8458b2eb70cf059c1a004f3",
+    "testdata/plugins/remove-link-host/formal-clean-recover-nas-tests.log": "066415bdc4618edc8fec124e4bd043d48cbdf07863b39cdf1ca7d4acf1348636",
+    "testdata/plugins/remove-link-host/installed-watchdog-metadata.json": "5e6b0f145bad4c640fe4d79c2f923375b045366096fb7d5bc17f699abda21178",
+    "testdata/plugins/remove-link-host/run_linux.py": "1819d637516b8a7759d3e9e91181bef6ac27b313ea4f8fc8ddaba4acc38ae3c7",
+    "testdata/plugins/remove-link-host/source-manifest.json": "bcf0ce2b6f1d4ad0b4aa99cc1895e1595e089ab38ee88a78846ae0665f8494bd"
+  }
+}
