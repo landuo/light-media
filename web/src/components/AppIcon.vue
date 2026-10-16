@@ -4,6 +4,8 @@ defineProps<{ name: string }>();
 const paths: Record<string, string> = {
   search: 'M15.5 15.5 21 21 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z',
   plus: 'M12 5v14 M5 12h14',
+  plugin:
+    'M9 3v3H3v5h3a2 2 0 1 1 0 4H3v6h6v-3a2 2 0 1 1 4 0v3h6v-6h-3a2 2 0 1 1 0-4h3V6h-6V3a2 2 0 1 0-4 0Z',
   close: 'M6 6l12 12 M18 6 6 18',
   refresh: 'M20 8a8 8 0 1 0 0 8 M20 3v5h-5',
   more: 'M12 5h.01 M12 12h.01 M12 19h.01',

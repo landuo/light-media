@@ -108,6 +108,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	var out any
 	var e error
 	switch {
+	case p == "plugins" || strings.HasPrefix(p, "plugins/"):
+		out, e = a.pluginAPI(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "plugins"), "/"))
 	case p == "auth/status" && method == "GET":
 		out = map[string]any{"setup_required": !a.hasAdmin(), "authenticated": a.authenticated(r)}
 	case (p == "auth/login" || p == "auth/setup") && method == "POST":

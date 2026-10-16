@@ -1,0 +1,234 @@
+package app
+
+import (
+	"context"
+	"database/sql"
+	"encoding/json"
+	"errors"
+	"os"
+	"path/filepath"
+	"slices"
+	"time"
+
+	"light-media/internal/plugins"
+	"light-media/internal/plugins/builtin"
+)
+
+func (a *App) pluginExecutable(pluginID string) (plugins.Command, error) {
+	if a.pluginCommand != nil {
+		return a.pluginCommand(pluginID)
+	}
+	path, err := os.Executable()
+	if err != nil {
+		return plugins.Command{}, bad("PLUGIN_EXECUTABLE_UNAVAILABLE", "插件执行程序不可用")
+	}
+	return plugins.Command{Path: path, Args: []string{"--plugin-worker", pluginID}}, nil
+}
+
+func (a *App) wakePlugins() {
+	select {
+	case a.pluginWake <- struct{}{}:
+	default:
+	}
+}
+
+func (a *App) pluginWorker(ctx context.Context) {
+	timer := time.NewTicker(5 * time.Second)
+	defer timer.Stop()
+	for {
+		if ctx.Err() != nil {
+			return
+		}
+		run, err := a.pluginStore.ClaimRun(ctx)
+		if err == nil {
+			a.executePluginRun(ctx, run)
+			continue
+		}
+		if !errors.Is(err, sql.ErrNoRows) && ctx.Err() == nil {
+			a.log("ERROR", "plugins", "claim_failed", "读取插件执行队列失败", "", "")
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-a.pluginWake:
+		case <-timer.C:
+		}
+	}
+}
+
+func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
+	ctx, cancelRun := context.WithTimeout(ctx, 2*time.Minute)
+	defer cancelRun()
+	select {
+	case a.pluginProcess <- struct{}{}:
+		defer func() { <-a.pluginProcess }()
+	case <-ctx.Done():
+		// Leave the running claim for restart reconciliation; no worker started.
+		return
+	}
+	installation, err := a.pluginStore.Installation(ctx, run.InstanceID)
+	var manifest plugins.Manifest
+	if err == nil {
+		err = json.Unmarshal(installation.Manifest, &manifest)
+	}
+	compiled, _, available := builtin.Lookup(installation.PluginID)
+	available = available && compiled.Version == installation.Version
+	if err == nil && (manifest.PluginID != installation.PluginID || manifest.Version != installation.Version || manifest.SchemaVersion != installation.ManifestSchemaVersion) {
+		err = bad("PLUGIN_MANIFEST_MISMATCH", "插件清单与固定安装版本不一致")
+	}
+	var command plugins.Command
+	if err == nil && available {
+		command, err = a.pluginExecutable(installation.PluginID)
+	} else if err == nil {
+		err = bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "当前版本没有该插件的可执行实现")
+	}
+	result := plugins.RunResult{}
+	hostErrorCode := ""
+	if err == nil {
+		result, err = (plugins.Runner{Timeout: 2 * time.Minute}).Run(ctx, command, manifest, installation.InstanceID, "invoke", run.Input, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+			value, hostErr := a.pluginHostCall(ctx, installation, &run, identity, method, raw)
+			if hostErr != nil {
+				var api *APIError
+				if errors.As(hostErr, &api) {
+					hostErrorCode = api.Code
+				} else {
+					hostErrorCode = "PLUGIN_HOST_FAILED"
+				}
+			}
+			return value, hostErr
+		})
+	}
+	state, errorCode := "succeeded", ""
+	if err != nil {
+		state, errorCode = "failed", "PLUGIN_EXECUTION_FAILED"
+		var api *APIError
+		if errors.As(err, &api) {
+			errorCode = api.Code
+		}
+		var protocol *plugins.Error
+		if errors.As(err, &protocol) {
+			errorCode = protocol.Code
+		}
+		if hostErrorCode != "" {
+			errorCode = hostErrorCode
+		}
+		if ctx.Err() != nil {
+			state = "reconcile_pending"
+		}
+	}
+	finishCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	if finishErr := a.pluginStore.FinishRun(finishCtx, run.ID, state, errorCode, result.Result); finishErr != nil {
+		a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，需要对账", "PLUGIN_FINISH_FAILED")
+		return
+	}
+	if err != nil {
+		a.pluginExecutionLog(installation, run, "ERROR", "execution_failed", "插件执行失败，详情见插件执行记录", errorCode)
+	} else {
+		a.pluginExecutionLog(installation, run, "INFO", "execution_completed", "插件执行已完成", "")
+	}
+}
+
+func (a *App) pluginExecutionLog(installation PluginInstallation, run PluginRun, level, event, message, code string) {
+	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "plugins", "event": event, "message": message, "plugin_id": installation.PluginID, "plugin_version": run.Version, "plugin_instance_id": run.InstanceID, "plugin_run_id": run.ID, "error_code": code, "app_version": appVersion})
+}
+
+// Every write rechecks installation, generation and config revision while
+// sharing pluginMu with configuration/reset/uninstall. Workers cannot choose
+// another instance, an arbitrary path, SQL, command or URL.
+func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallation, run *PluginRun, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+	if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version {
+		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
+	}
+	// The catalog is the host grant list. A self-declared manifest is insufficient.
+	trusted, _, exists := builtin.Lookup(installation.PluginID)
+	if !exists || !slices.Contains(trusted.Capabilities, method) {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "该插件未获授权调用此操作")
+	}
+	a.pluginMu.Lock()
+	defer a.pluginMu.Unlock()
+	if run != nil {
+		current, err := a.pluginStore.Installation(ctx, installation.InstanceID)
+		if err != nil || !current.Installed || !current.DesiredEnabled || current.Version != run.Version || current.Generation != run.Generation {
+			return nil, bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
+		}
+		config, err := a.pluginStore.Config(ctx, run.InstanceID)
+		if err != nil || config.Revision != run.ConfigRevision {
+			return nil, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
+		}
+		persisted, err := a.pluginStore.Run(ctx, run.ID)
+		if err != nil || persisted.State != "running" {
+			return nil, bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
+		}
+	} else if method != "category.read" {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "配置表单只能读取默认分类策略")
+	}
+	switch method {
+	case "category.read":
+		return json.Marshal(map[string]string{"content": defaultMediaCategoryPolicy})
+	case "category.write":
+		var in struct {
+			Content string `json:"content"`
+		}
+		if json.Unmarshal(raw, &in) != nil {
+			return nil, bad("INVALID_CATEGORY_POLICY", "二级分类策略无效")
+		}
+		if _, err := parseMediaCategoryPolicy([]byte(in.Content)); err != nil {
+			return nil, err
+		}
+		if err := a.writePluginCategory(in.Content); err != nil {
+			return nil, err
+		}
+		return json.RawMessage(`{"applied":true}`), nil
+	case "config.patch":
+		var fields map[string]json.RawMessage
+		if json.Unmarshal(raw, &fields) != nil || len(fields) != 1 || string(fields["enabled"]) != "false" {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "二级分类插件只能关闭自身的一次性开关")
+		}
+		if err := a.pluginStore.patchRunConfig(ctx, run, fields); err != nil {
+			return nil, err
+		}
+		return json.RawMessage(`{"saved":true}`), nil
+	case "notification.post":
+		var notice struct {
+			Title   string `json:"title"`
+			Message string `json:"message"`
+		}
+		if json.Unmarshal(raw, &notice) != nil || notice.Title != "二级分类策略" || notice.Message != "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！" {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件通知内容不符合已授权动作")
+		}
+		n := Notification{ID: "plugin_notice_" + run.ID, Title: notice.Title, Message: notice.Message, CreatedAt: now()}
+		if err := a.Store.Put(ctx, "notification", n.ID, n); err != nil {
+			return nil, err
+		}
+		return json.RawMessage(`{"posted":true}`), nil
+	default:
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件操作尚未实现")
+	}
+}
+
+func (a *App) writePluginCategory(content string) error {
+	path := filepath.Join(a.Dir, "category.yaml")
+	if info, err := os.Lstat(path); err == nil && !info.Mode().IsRegular() || err != nil && !errors.Is(err, os.ErrNotExist) {
+		return bad("CATEGORY_FILE_UNSAFE", "分类策略目标不是普通配置文件")
+	}
+	file, err := os.CreateTemp(a.Dir, ".category-*.tmp")
+	if err != nil {
+		return bad("CATEGORY_WRITE_FAILED", "无法创建二级分类策略文件，请检查配置目录权限")
+	}
+	defer os.Remove(file.Name())
+	defer file.Close()
+	if _, err = file.WriteString(content); err == nil {
+		err = file.Sync()
+	}
+	if err == nil {
+		err = file.Close()
+	}
+	if err == nil {
+		err = os.Rename(file.Name(), path)
+	}
+	if err != nil {
+		return bad("CATEGORY_WRITE_FAILED", "写入二级分类策略失败，原配置保留")
+	}
+	return nil
+}

@@ -151,7 +151,7 @@ var logSecretPattern = regexp.MustCompile(`(?i)(bearer\s+)[^\s,;]+|(password|pas
 var logFields = map[string]bool{}
 
 func init() {
-	for _, k := range strings.Fields("time id level module event message app_version instance_id workflow_id job_id request_id parent_request_id parent_job_id site_id media_id download_id import_id attempt duration_ms error_code retryable next_retry_at run_id target_id target_kind operation method http_status status stack page code build truncated") {
+	for _, k := range strings.Fields("time id level module event message app_version instance_id workflow_id job_id request_id parent_request_id parent_job_id site_id media_id download_id import_id attempt duration_ms error_code retryable next_retry_at run_id target_id target_kind operation method http_status status stack page code build truncated plugin_id plugin_version plugin_instance_id plugin_run_id") {
 		logFields[k] = true
 	}
 }

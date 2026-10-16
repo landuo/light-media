@@ -19,6 +19,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 	"light-media/internal/catalog"
+	"light-media/internal/plugins"
 )
 
 type App struct {
@@ -50,6 +51,11 @@ type App struct {
 	materials        map[string][]byte
 	siteLocks        sync.Map
 	cancel           context.CancelFunc
+	pluginMu         sync.Mutex
+	pluginStore      *PluginStore
+	pluginWake       chan struct{}
+	pluginProcess    chan struct{}
+	pluginCommand    func(string) (plugins.Command, error)
 }
 type Options struct {
 	DataDir string
@@ -84,6 +90,16 @@ func New(opts Options) (*App, error) {
 		s.Close()
 		return nil, e
 	}
+	a.pluginStore, e = NewPluginStore(context.Background(), s)
+	if e == nil {
+		e = a.pluginStore.recoverPluginRuns(context.Background())
+	}
+	if e != nil {
+		s.Close()
+		return nil, e
+	}
+	a.pluginWake = make(chan struct{}, 1)
+	a.pluginProcess = make(chan struct{}, 1)
 	// The global default is fixed; explicit directory and manual choices remain independent.
 	a.config.AutoImportMode = "hardlink"
 	if e = mountedMediaRoots(&a.config, a.Dir, os.Getenv("LIGHT_MEDIA_MEDIA_ROOTS")); e != nil {
@@ -124,6 +140,8 @@ func (a *App) Start(parent context.Context) {
 	}
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.scheduler(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.pluginWorker(ctx) }()
 	a.log("INFO", "runtime", "started", "服务已启动", "", "")
 	a.controlMu.Lock()
 	initialControl := a.control

@@ -60,7 +60,7 @@ type namedLog struct {
 
 func logQuery(r *http.Request) map[string]string {
 	q := map[string]string{}
-	for _, k := range []string{"level", "module", "job_id", "workflow_id", "site_id", "q", "from", "to", "limit", "cursor"} {
+	for _, k := range []string{"level", "module", "job_id", "workflow_id", "site_id", "plugin_id", "plugin_instance_id", "plugin_run_id", "q", "from", "to", "limit", "cursor"} {
 		q[k] = r.URL.Query().Get(k)
 	}
 	return q
@@ -148,7 +148,7 @@ func (a *App) parseLogCursor(s string) (logCursor, error) {
 }
 func validLogFilters(q map[string]string) (map[string]string, error) {
 	out := map[string]string{}
-	for _, k := range []string{"level", "module", "job_id", "workflow_id", "site_id", "q", "from", "to"} {
+	for _, k := range []string{"level", "module", "job_id", "workflow_id", "site_id", "plugin_id", "plugin_instance_id", "plugin_run_id", "q", "from", "to"} {
 		v := strings.TrimSpace(q[k])
 		if len(v) > 512 || strings.ContainsAny(v, "\x00\r\n") {
 			return nil, bad("INVALID_LOG_FILTER", "日志筛选内容无效")
@@ -177,7 +177,7 @@ func validLogFilters(q map[string]string) (map[string]string, error) {
 	return out, nil
 }
 func logMatches(v map[string]any, q map[string]string) bool {
-	for _, k := range []string{"level", "job_id", "workflow_id", "site_id"} {
+	for _, k := range []string{"level", "job_id", "workflow_id", "site_id", "plugin_id", "plugin_instance_id", "plugin_run_id"} {
 		if q[k] != "" && fmt.Sprint(v[k]) != q[k] {
 			return false
 		}

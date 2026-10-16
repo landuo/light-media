@@ -1,6 +1,6 @@
 # light-media
 
-独立的 Go 影视自动化应用，以 `docs/design-v1.4.txt` 的 P0 为需求基线。Vue 页面嵌入 Go 服务；运行时使用 Go + SQLite，无 Python、Node、Redis 或独立数据库依赖。P1 插件、辅种与转移做种仍按后续阶段实施。
+独立的 Go 影视自动化应用，以 `docs/design-v1.4.txt` 的 P0 和 `AGENTS.md` 中用户后续确认的调整为需求基线。Vue 页面嵌入 Go 服务；运行时使用 Go + SQLite，无 Python、Node、Redis 或独立数据库依赖。P1 插件平台及原版已装 23 个插件正在逐个用 Go 移植，尚未完成交付；实际进展与差异见 [插件技术方案](docs/plugin-runtime-architecture.md) 和 [迁移清单](docs/plugin-installed-migration-baseline.md)。
 
 ## 本次 NAS 使用入口
 
@@ -109,4 +109,4 @@ HTTP 验证 CLI 的 stdout 为结果 JSON，stderr 为每次运行独立、有�
 
 详细结果及兼容限制见 `docs/m0-report.md`，逐项状态见 `docs/m0-acceptance-matrix.md`。SQLite 独立基线见 `docs/sqlite-baseline.md`。这些文件保留 M0 当时的结论；其中“完整应用/自动化闭环尚待实现或验收”仅描述历史技术验证范围，不表示本次 P0 应用仍只有探针。早期 P0 的浏览器、下载器、整理刮削、飞牛和恢复演练证据保留在 `docs/p0-acceptance.md`；当前版本的改动与验证范围以对应交付报告为准。完整应用的 72 小时混合负载验证仍未完成；P1 插件尚未交付。
 
-所有旧项目保持独立，不导入或改写旧系统业务数据库。实际部署使用新应用目录和端口。
+所有旧项目保持独立，原系统数据库与服务在本轮迁移准备中保持只读。插件配置、运行数据和文件须按迁移方案转换到新应用，不能直接改写旧库。实际部署使用新应用目录和端口。

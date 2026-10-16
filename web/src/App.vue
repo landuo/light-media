@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import Catalog from './components/Catalog.vue';
 import Resources from './components/Resources.vue';
@@ -13,6 +13,7 @@ import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
 import AppIcon from './components/AppIcon.vue';
+const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
 function normalizeRoute(value: string) {
   if (['library', 'assets'].includes(value.split('?')[0]!.split('/')[0]!)) return 'files';
   if (value.split('?')[0] === 'downloaders') return 'settings?tab=system';
@@ -59,6 +60,7 @@ const nav = [
     label: '系统',
     items: [
       ['sites', 'globe', '站点管理'],
+      ['plugins', 'plugin', '插件'],
       ['jobs', 'jobs', '任务队列'],
       ['logs', 'logs', '日志'],
       ['settings', 'settings', '设置'],
@@ -323,6 +325,7 @@ onUnmounted(() => {
           :key="route"
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
+        <Plugins v-else-if="pageKey === 'plugins'" />
         <FileManager
           v-else-if="pageKey === 'files' || pageKey === 'organize'"
           :key="route"
