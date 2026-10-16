@@ -42,7 +42,7 @@ const fixtureOrganization = () => ({
     { type: 'folder', id: '旧组', order: 2 },
   ],
 });
-async function mount(t, { failSave = false, initialOrganization } = {}) {
+async function mount(t, { failSave = false, initialOrganization, installed } = {}) {
   const fixture = {
     organization: initialOrganization || fixtureOrganization(),
     requests: [],
@@ -72,7 +72,7 @@ async function mount(t, { failSave = false, initialOrganization } = {}) {
               body: body === undefined ? undefined : clone(body),
               method,
             });
-            if (path === '/plugins') return ['one', 'two', 'three'].map(plugin);
+            if (path === '/plugins') return installed || ['one', 'two', 'three'].map(plugin);
             if (path === '/plugins/market') return [];
             if (path === '/plugins/organization') {
               if (method === 'PUT') {
@@ -345,4 +345,110 @@ test('legacy order, empty folders, literal hostile names and background URLs do 
     organization.safeFolderBackground('https://example.invalid/x'),
     'https://example.invalid/x',
   );
+});
+
+test('installed filters match all 28 actual reference branches and keep folder counts scoped', () => {
+  const ref = JSON.parse(
+    readFileSync(new URL('./fixtures/plugin-installed-filter-reference.json', import.meta.url)),
+  );
+  assert.equal(ref.cases.length, 28);
+  const installed = ref.plugins.map((source) => ({
+    ...plugin(source.id),
+    name: source.plugin_name,
+    state: source.state,
+    has_update: source.has_update,
+  }));
+  const groups = { revision: 1, folders: { 分组: ['one', 'two', 'three'], 空组: [] }, order: [] };
+  for (const row of ref.cases) {
+    const flags = { running: row.running, updates: row.updates };
+    const matches = installed
+      .filter((item) => organization.installedPluginMatches(item, row.query || '', flags))
+      .map((item) => item.instance_id);
+    assert.deepEqual(matches, row.ids, JSON.stringify(row));
+    const inner = organization.organizationGrid(groups, installed, '分组', row.query || '', flags);
+    assert.deepEqual(
+      inner.map((item) => item.id),
+      ['one', 'two', 'three'].filter((id) => row.ids.includes(id)),
+    );
+    const outer = organization.organizationGrid(groups, installed, '', row.query || '', flags);
+    const folders = outer.filter((item) => item.type === 'folder');
+    const count = row.ids.filter((id) => ['one', 'two', 'three'].includes(id)).length;
+    assert.equal(folders.find((item) => item.id === '分组')?.count || 0, count);
+    assert.equal(
+      folders.some((item) => item.id === '空组'),
+      !row.query && !row.running && !row.updates,
+    );
+    assert.deepEqual(
+      outer.filter((item) => item.type === 'plugin').map((item) => item.id),
+      ['four', 'five'].filter((id) => row.ids.includes(id)),
+    );
+  }
+});
+
+test('actual installed menu supports name choose/clear, quick-filter precedence, IME enter and close', async (t) => {
+  const installed = [
+    { ...plugin('one'), name: 'Alpha', state: true, has_update: false },
+    { ...plugin('two'), name: 'Beta', state: false, has_update: true },
+    { ...plugin('three'), name: 'Gamma', state: true, has_update: true },
+  ];
+  const app = await mount(t, { installed });
+  const rootIDs = () => app.component('Draggable')?.props.modelValue.map((item) => item.id) || [];
+  await app.click('筛选已安装插件');
+  let input = app.label('插件名称');
+  assert.deepEqual(input.props.items, ['Alpha', 'Beta', 'Gamma']);
+  assert.ok(Object.hasOwn(input.props, 'clearable'));
+  assert.equal(input.props.variant, 'outlined');
+  input.props['onUpdate:modelValue']('ALPHA');
+  await app.flush();
+  assert.deepEqual(rootIDs(), ['旧组']);
+  input = app.label('插件名称');
+  input.props.onKeyup({ key: 'Enter', isComposing: true });
+  await app.flush();
+  assert.ok(app.label('插件名称'), 'IME enter must leave the menu open');
+  app.label('插件名称').props.onKeyup({ key: 'Enter', isComposing: false });
+  await app.flush();
+  assert.equal(app.label('插件名称'), undefined);
+  await app.click('筛选已安装插件');
+  await app.click('运行中');
+  assert.equal(app.label('插件名称'), undefined, 'quick choice closes the menu');
+  assert.deepEqual(rootIDs(), ['three', '旧组'], 'running overrides ALPHA');
+  await app.click('筛选已安装插件');
+  await app.click('有新版本');
+  assert.deepEqual(rootIDs(), ['three'], 'running and update are AND');
+  await app.click('筛选已安装插件');
+  await app.click('运行中');
+  assert.deepEqual(rootIDs(), ['新组', 'three'], 'update alone overrides name');
+  await app.click('筛选已安装插件');
+  await app.click('有新版本');
+  assert.deepEqual(rootIDs(), ['旧组'], 'name remains when quick filters are cleared');
+  await app.click('筛选已安装插件');
+  app.label('插件名称').props['onUpdate:modelValue'](null);
+  await app.flush();
+  assert.deepEqual(rootIDs(), ['新组', 'three', '旧组']);
+  assert.equal(app.writes().length, 0, 'filtering never saves the organization or plugin config');
+});
+
+test('installed filters apply inside a folder and polling keeps the selected filters', async (t) => {
+  const installed = [
+    { ...plugin('one'), state: false },
+    { ...plugin('two'), state: true },
+    { ...plugin('three'), state: true },
+  ];
+  const app = await mount(t, {
+    installed,
+    initialOrganization: { revision: 1, folders: { 全部: ['one', 'two'] }, order: [] },
+  });
+  app
+    .nodes()
+    .find((node) => node.type?.name === 'PluginFolderCard')
+    .props.onOpen();
+  await app.flush();
+  await app.click('筛选已安装插件');
+  await app.click('运行中');
+  const ids = () => app.component('Draggable')?.props.modelValue.map((item) => item.id) || [];
+  assert.deepEqual(ids(), ['two']);
+  await app.fixture.polls[0]();
+  await app.flush();
+  assert.deepEqual(ids(), ['two']);
+  assert.equal(app.writes().length, 0);
 });

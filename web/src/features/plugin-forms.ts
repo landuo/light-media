@@ -172,6 +172,7 @@ export type PluginCard = {
   author_url: string;
   installed: boolean;
   state: boolean;
+  has_update?: boolean;
   has_page?: boolean;
   dashboards?: string[];
 };

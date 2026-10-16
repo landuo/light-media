@@ -23,6 +23,21 @@ export type PluginGridItem =
   | { type: 'folder'; id: string; count: number; config: FolderConfig }
   | { type: 'plugin'; id: string; plugin: PluginCard };
 
+export type InstalledPluginFilters = { running?: boolean; updates?: boolean };
+
+// Match the reference view: either quick filter takes precedence over the name;
+// when both quick filters are selected they are combined with AND.
+export function installedPluginMatches(
+  plugin: PluginCard,
+  query: string,
+  filters: InstalledPluginFilters = {},
+): boolean {
+  if (filters.updates && filters.running) return !!plugin.has_update && plugin.state;
+  if (filters.updates) return !!plugin.has_update;
+  if (filters.running) return plugin.state;
+  return plugin.name.toLowerCase().includes(query.toLowerCase());
+}
+
 // Presets copied from the reference PluginFolderSettingsDialog, not redesigned.
 export const folderIcons = [
   'mdi-folder',
@@ -89,9 +104,11 @@ export function organizationGrid(
   plugins: PluginCard[],
   folder: string,
   query: string,
+  filters: InstalledPluginFilters = {},
 ): PluginGridItem[] {
   const byID = new Map(plugins.map((plugin) => [plugin.instance_id, plugin]));
-  const match = (plugin: PluginCard) => plugin.name.toLowerCase().includes(query.toLowerCase());
+  const match = (plugin: PluginCard) => installedPluginMatches(plugin, query, filters);
+  const filtering = !!query || filters.running || filters.updates;
   if (folder)
     return folderMembers(value.folders[folder]).flatMap((id) => {
       const plugin = byID.get(id);
@@ -108,7 +125,7 @@ export function organizationGrid(
       }).length,
       config: folderAppearance(value.folders[id]),
     }))
-    .filter((item) => !query || item.count > 0);
+    .filter((item) => !filtering || item.count > 0);
   folders.sort(
     (a, b) =>
       (a.type === 'folder' ? (a.config.order ?? 999) : 999) -

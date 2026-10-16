@@ -7,6 +7,9 @@ import { VTabs, VTab } from 'vuetify/components/VTabs';
 import { VMenu } from 'vuetify/components/VMenu';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VAlert } from 'vuetify/components/VAlert';
+import { VCombobox } from 'vuetify/components/VCombobox';
+import { VDivider } from 'vuetify/components/VDivider';
+import { VList, VListItem, VListItemTitle, VListSubheader } from 'vuetify/components/VList';
 import Draggable from 'vuedraggable';
 import { VDialog } from 'vuetify/components/VDialog';
 import { api, errorText, toast } from '../api';
@@ -46,6 +49,21 @@ const tab = ref('installed'),
   query = ref(''),
   items = ref<PluginCard[]>([]),
   market = ref<PluginCard[]>([]);
+const installedQuery = ref<string | null>(null),
+  runningFilter = ref(false),
+  updateFilter = ref(false),
+  filterMenu = ref(false);
+const installedFiltering = computed(
+  () => !!installedQuery.value || runningFilter.value || updateFilter.value,
+);
+function toggleInstalledFilter(filter: 'running' | 'updates') {
+  if (filter === 'running') runningFilter.value = !runningFilter.value;
+  else updateFilter.value = !updateFilter.value;
+  filterMenu.value = false;
+}
+function submitInstalledFilter(event: KeyboardEvent) {
+  if (!event.isComposing) filterMenu.value = false;
+}
 const loading = ref(true),
   error = ref(''),
   busy = ref(false),
@@ -83,13 +101,21 @@ function rebuildGrid() {
       organization.value,
       items.value,
       currentFolder.value,
-      query.value,
+      installedQuery.value || '',
+      { running: runningFilter.value, updates: updateFilter.value },
     );
 }
-watch([organization, items, currentFolder, query], rebuildGrid, { deep: true });
+watch(
+  [organization, items, currentFolder, installedQuery, runningFilter, updateFilter],
+  rebuildGrid,
+  {
+    deep: true,
+  },
+);
 watch(tab, () => {
   sortMode.value = false;
   currentFolder.value = '';
+  filterMenu.value = false;
   load();
 });
 async function load() {
@@ -285,6 +311,9 @@ async function install(plugin: PluginCard) {
   try {
     await api('/plugins/install', { plugin_id: plugin.plugin_id });
     toast(plugin.name + '已安装');
+    installedQuery.value = null;
+    runningFilter.value = false;
+    updateFilter.value = false;
     tab.value = 'installed';
     await load();
   } catch (e) {
@@ -347,7 +376,24 @@ onUnmounted(() => clearInterval(timer));
         ><VTab value="installed">我的插件</VTab><VTab value="market">插件市场</VTab></VTabs
       >
       <div class="plugin-toolbar-actions">
-        <input v-model="query" type="search" aria-label="搜索插件" placeholder="搜索插件" /><VBtn
+        <input
+          v-if="tab === 'market'"
+          v-model="query"
+          type="search"
+          aria-label="搜索插件"
+          placeholder="搜索插件"
+        /><VBtn
+          v-if="tab === 'installed'"
+          variant="text"
+          icon
+          aria-label="筛选已安装插件"
+          data-menu-activator="installed-filter-btn"
+          :color="installedFiltering ? 'primary' : undefined"
+          @click="filterMenu = true"
+          ><VIcon icon="mdi-filter-multiple-outline"
+        /></VBtn>
+        <VBtn
+          v-if="tab === 'market'"
           variant="text"
           icon
           aria-label="刷新插件"
@@ -367,6 +413,62 @@ onUnmounted(() => clearInterval(timer));
         /></VBtn>
       </div>
     </div>
+    <VMenu
+      v-if="tab === 'installed' && filterMenu"
+      v-model="filterMenu"
+      :close-on-content-click="false"
+      activator="[data-menu-activator=installed-filter-btn]"
+      location="bottom end"
+      content-class="plugin-dialog-surface"
+      ><VCard min-width="220"
+        ><div class="pa-3">
+          <VCombobox
+            v-model="installedQuery"
+            :items="items.map((plugin) => plugin.name)"
+            aria-label="插件名称"
+            placeholder="名称"
+            prepend-inner-icon="mdi-magnify"
+            density="compact"
+            variant="outlined"
+            hide-details
+            clearable
+            @keyup.enter="submitInstalledFilter"
+          />
+        </div>
+        <VDivider class="mt-2" />
+        <VList density="compact" class="px-2 py-1"
+          ><VListSubheader>筛选</VListSubheader>
+          <VListItem
+            :active="runningFilter"
+            aria-label="运行中"
+            density="compact"
+            @click="toggleInstalledFilter('running')"
+            ><template #prepend
+              ><VIcon icon="mdi-play-circle" color="success" size="small" /></template
+            ><VListItemTitle>运行中</VListItemTitle
+            ><template #append
+              ><VIcon
+                v-if="runningFilter"
+                icon="mdi-check"
+                color="primary"
+                size="small" /></template
+          ></VListItem>
+          <VListItem
+            :active="updateFilter"
+            aria-label="有新版本"
+            density="compact"
+            @click="toggleInstalledFilter('updates')"
+            ><template #prepend
+              ><VIcon icon="mdi-arrow-up-circle" color="info" size="small" /></template
+            ><VListItemTitle>有新版本</VListItemTitle
+            ><template #append
+              ><VIcon
+                v-if="updateFilter"
+                icon="mdi-check"
+                color="primary"
+                size="small" /></template></VListItem></VList
+      ></VCard>
+    </VMenu>
     <div v-if="tab === 'installed' && currentFolder" class="plugin-folder-breadcrumb">
       <VBtn
         variant="text"
@@ -394,7 +496,13 @@ onUnmounted(() => clearInterval(timer));
     <p v-if="loading" role="status">正在加载插件…</p>
     <template v-else-if="tab === 'installed'">
       <div v-if="!grid.length" class="empty">
-        {{ query ? '没有匹配的插件' : currentFolder ? '文件夹中没有插件' : '尚未安装插件' }}
+        {{
+          installedFiltering
+            ? '没有匹配的插件'
+            : currentFolder
+              ? '文件夹中没有插件'
+              : '尚未安装插件'
+        }}
       </div>
       <Draggable
         v-else

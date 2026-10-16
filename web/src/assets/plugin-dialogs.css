@@ -1,3 +1,8 @@
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) {
+  /* Vuetify main.css normally supplies this root value. Keep its original
+     value scoped here so menu/active overlays do not become opaque. */
+  --v-theme-overlay-multiplier: 1;
+}
 .plugin-dialog-surface {
   color: var(--text);
   font-family: inherit;

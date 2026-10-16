@@ -62,6 +62,11 @@ THE SOFTWARE.
   gap: 12px !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-2) {
+  margin-top: 8px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-4),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-4) {
   margin-top: 16px !important;
@@ -95,6 +100,23 @@ THE SOFTWARE.
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.pa-0),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.pa-0) {
   padding: 0px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.pa-3),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.pa-3) {
+  padding: 12px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.px-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.px-2) {
+  padding-right: 8px !important;
+  padding-left: 8px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.py-1),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.py-1) {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ps-4),

@@ -1,0 +1,206 @@
+{
+  "source": "MoviePilot-Frontend/src/views/plugin/PluginCardListView.vue",
+  "source_sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+  "reference_body": "\n    if (!installedFilter.value && !hasUpdateFilter.value && !enabledFilter.value) return true\n    if (hasUpdateFilter.value && enabledFilter.value) {\n      return item.has_update && item.state\n    }\n    if (hasUpdateFilter.value) return item.has_update\n    if (enabledFilter.value) return item.state\n    if (installedFilter.value) {\n      return item.plugin_name?.toLowerCase().includes((installedFilter.value as string).toLowerCase())\n    }\n    return true",
+  "plugins": [
+    {
+      "id": "one",
+      "plugin_name": "Alpha站点",
+      "state": true,
+      "has_update": false
+    },
+    {
+      "id": "two",
+      "plugin_name": "Beta",
+      "state": false,
+      "has_update": true
+    },
+    {
+      "id": "three",
+      "plugin_name": "alpha第三",
+      "state": true,
+      "has_update": true
+    },
+    {
+      "id": "four",
+      "plugin_name": "Delta",
+      "state": false,
+      "has_update": false
+    },
+    {
+      "id": "five",
+      "plugin_name": "İmage",
+      "state": true
+    }
+  ],
+  "cases": [
+    {
+      "query": null,
+      "running": false,
+      "updates": false,
+      "ids": ["one", "two", "three", "four", "five"]
+    },
+    {
+      "query": null,
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": null,
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": null,
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    },
+    {
+      "query": "",
+      "running": false,
+      "updates": false,
+      "ids": ["one", "two", "three", "four", "five"]
+    },
+    {
+      "query": "",
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": "",
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": "",
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    },
+    {
+      "query": "ALPHA",
+      "running": false,
+      "updates": false,
+      "ids": ["one", "three"]
+    },
+    {
+      "query": "ALPHA",
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": "ALPHA",
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": "ALPHA",
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    },
+    {
+      "query": "站点",
+      "running": false,
+      "updates": false,
+      "ids": ["one"]
+    },
+    {
+      "query": "站点",
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": "站点",
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": "站点",
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    },
+    {
+      "query": "bet",
+      "running": false,
+      "updates": false,
+      "ids": ["two"]
+    },
+    {
+      "query": "bet",
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": "bet",
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": "bet",
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    },
+    {
+      "query": "missing",
+      "running": false,
+      "updates": false,
+      "ids": []
+    },
+    {
+      "query": "missing",
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": "missing",
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": "missing",
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    },
+    {
+      "query": "i̇",
+      "running": false,
+      "updates": false,
+      "ids": ["five"]
+    },
+    {
+      "query": "i̇",
+      "running": false,
+      "updates": true,
+      "ids": ["two", "three"]
+    },
+    {
+      "query": "i̇",
+      "running": true,
+      "updates": false,
+      "ids": ["one", "three", "five"]
+    },
+    {
+      "query": "i̇",
+      "running": true,
+      "updates": true,
+      "ids": ["three"]
+    }
+  ]
+}
