@@ -17,7 +17,7 @@ func TestFormalSourceAndOriginalReferenceIntegrity(t *testing.T) {
 		t.Fatal(err)
 	}
 	sum := sha256.Sum256(raw)
-	if hex.EncodeToString(sum[:]) != "6906b8d1cec1c6b87962c458e4ede139edc5963953495cbec2e78f05c14f9f86" {
+	if hex.EncodeToString(sum[:]) != "4943e98b86155e8162102fb8bd74b3490559b9aa3c4889cb93e6c6f87a2b074e" {
 		t.Fatal("formal input manifest changed without review")
 	}
 	var manifest struct {
@@ -25,7 +25,7 @@ func TestFormalSourceAndOriginalReferenceIntegrity(t *testing.T) {
 		Files    map[string]string
 		Fixtures map[string]string
 	}
-	if json.Unmarshal(raw, &manifest) != nil || manifest.Version != 1 || len(manifest.Files) != 63 || len(manifest.Fixtures) != 34 {
+	if json.Unmarshal(raw, &manifest) != nil || manifest.Version != 1 || len(manifest.Files) != 65 || len(manifest.Fixtures) != 35 {
 		t.Fatal("formal input inventory incomplete")
 	}
 	for _, files := range []map[string]string{manifest.Files, manifest.Fixtures} {

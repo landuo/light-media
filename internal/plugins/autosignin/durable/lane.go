@@ -87,17 +87,9 @@ func (l *Lane) Effect(ctx context.Context, kind, key string, value any, mutation
 	return nil
 }
 func (l *Lane) lookup(ctx context.Context, kind, digest string) (Entry, bool, error) {
-	state, err := l.execution.Store.State(ctx, l.execution.Binding)
+	entry, exists, err := readEntry(ctx, l.execution.Store, l.execution.Binding, l.execution.RunID, l.Name, l.index)
 	if err != nil {
 		return Entry{}, false, l.stop(err)
-	}
-	run := state.Runs[l.execution.RunID]
-	if run == nil {
-		return Entry{}, false, l.stop(ErrConflict)
-	}
-	entry, exists, err := at(run, l.Name, l.index)
-	if err != nil {
-		return entry, exists, l.stop(err)
 	}
 	if exists && (entry.Kind != kind || entry.Digest != digest || entry.Phase != "applied") {
 		return entry, true, l.stop(ErrConflict)

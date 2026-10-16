@@ -19,14 +19,14 @@ func (c Cache) Ensure(ctx context.Context) error {
 }
 func (c Cache) Read(ctx context.Context) ([]byte, error) {
 	raw, err := c.Lane.Value(ctx, "cache.read", c.Key, func() (json.RawMessage, error) {
-		s, err := c.Lane.execution.Store.State(ctx, c.Lane.execution.Binding)
+		cached, err := readCache(ctx, c.Lane.execution.Store, c.Lane.execution.Binding, c.Key)
 		if err != nil {
 			return nil, err
 		}
 		return marshal(struct {
 			Value []byte
 			Found bool
-		}{s.Cache[c.Key], s.Cache[c.Key] != nil}), nil
+		}{cached.Value, cached.Found}), nil
 	})
 	if err != nil {
 		return nil, err

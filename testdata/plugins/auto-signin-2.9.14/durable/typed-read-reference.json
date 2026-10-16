@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "reference": "Frozen Go durable State/Cache.Read behavior before additive typed dispatch, commit b00a46f; this is a storage compatibility reference, not another installed-Python AST oracle or a live-site result.",
+  "frozen_sources": {
+    "internal/plugins/autosignin/durable/lane.go": "9397833557152bbb90d89c22addf6b6e5fec376c8e941ddc6252fe9328cb6c3b",
+    "internal/plugins/autosignin/durable/effects.go": "c7a7d34723a3d33b5ec5b219c2582aaaba42fd923377a7d4eedb21f882621f3d",
+    "internal/plugins/autosignin/durable/controller.go": "5b950fafd47db81033d0ae401535a05a6093f21628b5c10dcbac6f189a7a742c"
+  },
+  "cases": [
+    {"name": "absent", "keyExists": false, "found": false, "nil": true, "value": ""},
+    {"name": "stored-nil", "keyExists": true, "found": false, "nil": true, "value": ""},
+    {"name": "stored-empty", "keyExists": true, "found": true, "nil": false, "value": ""},
+    {"name": "stored-bytes", "keyExists": true, "found": true, "nil": false, "value": "original-cache"}
+  ],
+  "retained_boundaries": [
+    "Lane.Value accepts only an applied matching kind/digest receipt; known_error stays rejected here.",
+    "Cache.Read records its observation as an indexed local receipt; replay does not refetch cache.",
+    "Existing runs keep frozen inventory/baseline and Start checks immutable action/plan.",
+    "StateJournal.State and all mutation/network/outbox/lifecycle paths remain complete-state reference implementations."
+  ]
+}

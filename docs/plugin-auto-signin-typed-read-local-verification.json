@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "scope": "Additive trusted read capabilities in durable only. Formal App backend/transition/registration and all complete-state mutation paths unchanged.",
+  "manifest_sha256": "4943e98b86155e8162102fb8bd74b3490559b9aa3c4889cb93e6c6f87a2b074e",
+  "manifest_inventory": {"files": 65, "fixtures": 35},
+  "commands": {
+    "normal": "go test -json ./internal/plugins/autosignin/... -count=1",
+    "race": "go test -race -json ./internal/plugins/autosignin/... -count=1",
+    "vet": "go vet ./internal/plugins/autosignin/..."
+  },
+  "result": {
+    "normal_exit": 0,
+    "race_exit": 0,
+    "vet_exit": 0,
+    "passed_top_level_tests": 99,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "no_test_package": "light-media/internal/plugins/autosignin/imagehash/jpegport",
+    "packages": {
+      "light-media/internal/plugins/autosignin": {"top_level_tests": 41, "normal_seconds": 2.074, "race_seconds": 20.738},
+      "light-media/internal/plugins/autosignin/durable": {"top_level_tests": 39, "normal_seconds": 8.208, "race_seconds": 10.048},
+      "light-media/internal/plugins/autosignin/imagehash": {"top_level_tests": 19, "normal_seconds": 0.911, "race_seconds": 9.585}
+    }
+  },
+  "evidence": {
+    "normal": "work/_autosignin_typed_app_draft/formal-normal.jsonl",
+    "race": "work/_autosignin_typed_app_draft/formal-race.jsonl",
+    "vet": "work/_autosignin_typed_app_draft/formal-vet.txt",
+    "read_compatibility": "testdata/plugins/auto-signin-2.9.14/durable/typed-read-reference.json"
+  },
+  "new_test_scope": [
+    "Native backend forwarding and legacy full State fallback; stale owner rejected.",
+    "Typed read errors stop without fallback, source fetch, receipt or new run.",
+    "Nil/empty/absent cache and journaled cache observation replay.",
+    "Applied-only receipt phase with exact kind and digest.",
+    "Legacy and typed controller final effects identical; immutable existing inventory/action/plan retained."
+  ],
+  "not_claimed": [
+    "Production App typed backend integration or plugin registration.",
+    "Sparse cost from fixture readers that deliberately call the full State reference.",
+    "Typed network/write/outbox/lifecycle or retention support.",
+    "Whole-run resource compliance, peak RSS, NAS validation or live site sign-in."
+  ]
+}

@@ -1,0 +1,57 @@
+AutoSignIn additive typed read capabilities
+
+This slice changes only durable read dispatch. The original StateJournal.State,
+complete StateBackend.View/Update and all writes remain intact. Existing Journal
+and StateBackend implementations need no new methods. A host can optionally
+implement EntryReader, CacheReader or RunStartReader, independently; the matching
+StateJournal method forwards the capability and otherwise uses the old complete
+State logic. A typed error stops execution and never causes a fallback/refetch.
+
+EntryReader replaces Lane.lookup's complete State read; Lane still checks the
+same kind/digest/applied phase. In particular, known_error is not reclassified
+as a successful Value. CacheReader replaces the fetch inside Cache.Read, but the
+observation remains an indexed cache.read receipt. Nil, empty and absent retain
+the existing Found semantics; a replay never reads changed cache data.
+
+RunStartHead is a named DTO without lanes, not a truncated Run. It carries the
+current RuntimeEpoch and either the selected run's immutable baseline/identity
+or a new-run seed from current runtime/history/config/keys. Controller keeps the
+existing baseline for replay and asks Inventory only for a new run. Start still
+validates action/plan and loads/writes full state; this slice does not optimize it.
+
+The native host must enforce the same owned lifecycle, immutable running input,
+generation/revision and authenticated-storage contract as View. A Binding is not
+worker authority. Returned snapshots must be owned; verified absence must be
+distinct from not-loaded. A partial projection must never reach the old Update
+writer. No RPC, worker-selected cell list or new task queue is introduced here.
+
+Compatibility tests use the unchanged encrypted FileStore/full-state fixture to
+answer typed reads. They prove optional dispatch, identical final source effects,
+legacy fallback, exact receipt checks, fail-closed errors, cache replay/presence,
+and immutable action/plan/inventory behavior. They do not prove sparse SQL costs
+or production Manager integration. typed-read-reference.json is explicitly a
+frozen Go storage compatibility fixture, not another installed-Python oracle.
+The existing installed AST/HTTP/22-adapter fixtures remain unchanged.
+
+This core slice leaves the App journal/transition and registration unchanged.
+A separate native App bridge is under review and is not part of this slice's
+validation. The earlier sparse cost experiment remains frozen in
+work/_autosignin_sparse_port. Its local benchmarks measure allocation/time,
+not peak RSS or NAS sign-in cost.
+
+Local normal/race tests passed all 99 top-level tests across adapters, durable
+and imagehash, with no failures or skips; vet passed. On the NAS, the adapters
+and durable packages passed 80 top-level tests with CGO disabled, no network,
+256 MiB memory and GOMEMLIMIT=64MiB. Imagehash was not rerun in that NAS batch.
+Both static binary hashes matched after transfer, no OOM occurred, all owned
+temporary resources were removed and the existing services were unchanged.
+See plugin-auto-signin-typed-read-local-verification.json and
+plugin-auto-signin-typed-read-nas-verification.json. These are pure-package
+checks, not proof of the App SQL bridge, reduced peak RSS, actual sign-in,
+notifications, registration, deployment or migration of user data.
+
+Remaining resource work: authenticated directory scanning is O(rows); large
+baseline history and old config-proof closure are still materialized. Network
+intent/reply/unknown, outbox, history/stats/config CAS, Finish/lifecycle and all
+retention remain on the full path. No unknown outcome, undelivered outbox or
+configuration proof is removed. No age-based data collection is implemented.

@@ -1,28 +1,20 @@
 {
-  "version": 1,
-  "original_plugin": "AutoSignIn",
-  "original_version": "2.9.14",
-  "original_main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
   "engine": "single effect-aware Engine shared by SDK/form/adapters and durable controller; no copied core/compat engine",
-  "test_only": [
-    "old SDK Machine end-of-command checkpoint fixture",
-    "standalone encrypted FileStore and OS lease; production StateJournal takes host StateBackend"
-  ],
   "files": {
     "internal/plugins/autosignin/UNICODE-LICENSE.txt": "f5062c9a188d81dfe66b56db4182dcf9e4b17c0d9b0d311a8e20b3a1b075c443",
     "internal/plugins/autosignin/config.go": "a81ac58a82cc9d1a9d5029ebbe4204b45052fa69163c970045af9f065d880229",
     "internal/plugins/autosignin/config_test.go": "209cdb77ff1678022317cf73e7f37c572ee455c99c27daf938bdaf6efd633bc4",
     "internal/plugins/autosignin/durable/cache_flow_test.go": "a47fdeafc44bd0089c2f7a47623ac67b30831a38dd48fc0f417b121a2c510925",
-    "internal/plugins/autosignin/durable/controller.go": "5b950fafd47db81033d0ae401535a05a6093f21628b5c10dcbac6f189a7a742c",
+    "internal/plugins/autosignin/durable/controller.go": "d5762e076935580e66fe0c8e60e8c69a647b09b5035c3dc24da6f0b78ef8982f",
     "internal/plugins/autosignin/durable/deterministic_test.go": "ad4f97fafee5b95b70bb36f13d112020af2d42d882c23d1728620f98d434f603",
     "internal/plugins/autosignin/durable/durable_test.go": "d0b39f00459a2e1423e858cf8d36d39a3e421c06d0e129d3afe8d258fc8524eb",
-    "internal/plugins/autosignin/durable/effects.go": "c7a7d34723a3d33b5ec5b219c2582aaaba42fd923377a7d4eedb21f882621f3d",
+    "internal/plugins/autosignin/durable/effects.go": "408df883b8bf9eaf30086e0f94f0e121241cb12b50fde303ce8259ab901e4ffc",
     "internal/plugins/autosignin/durable/entropy.go": "c566b6fd1fee8475243e662b39c3747b0ec65d6af7d19688d0a147a1bcb5bad7",
     "internal/plugins/autosignin/durable/failure_test.go": "3cf6a17991a852b56e20ab4f786fcb4f78a22db8c8cf55690f660ce10ebc55f0",
     "internal/plugins/autosignin/durable/file_backend_fixture_test.go": "8b9c4850b1fad130b01c4ecf950f251a3d1eb361166346fc9cc0e90d79176414",
     "internal/plugins/autosignin/durable/file_store_fixture_test.go": "5ae8a9918182d98d1708863ea585924e1aa8a05149239dfb50555e169a00c483",
     "internal/plugins/autosignin/durable/fixture_test.go": "5b44910c17e44d1e1c24937b7cfc47520327ff2f23ea786a6c33405143a0ad8f",
-    "internal/plugins/autosignin/durable/lane.go": "9397833557152bbb90d89c22addf6b6e5fec376c8e941ddc6252fe9328cb6c3b",
+    "internal/plugins/autosignin/durable/lane.go": "5e7a3d134409e9b063e54a53d08d44dc5f95cd75629614accdedcbdb54f7357f",
     "internal/plugins/autosignin/durable/lifecycle.go": "da01b8ce7290ba16b861daddd41f6101e16c0282c9cd6659c7324a42b0e4b4af",
     "internal/plugins/autosignin/durable/loopback_test.go": "7c3ba34b87416e7fe961ff30d6bb0e1b27d87cb074e3ac4f02d97ce9b7e7cf7c",
     "internal/plugins/autosignin/durable/network.go": "ccc52e6c8e2cb58e7ba950224218a9bfe7926f597874484bf58a19e24034d898",
@@ -31,6 +23,8 @@
     "internal/plugins/autosignin/durable/state_journal.go": "d43f564f4d19db8c35e218bb00e3222ef8d4ba0dafad4fb4e952a779446da371",
     "internal/plugins/autosignin/durable/state_journal_test.go": "4ee3a0a831ae8e232caa20ccd023f9dbb342ae4820c0d6d1915d6d7e4f014c99",
     "internal/plugins/autosignin/durable/statistic_test.go": "73bc10bd27bcc00f96e7897c368c7eca3ea4818ce9553ad48bda044063f0570c",
+    "internal/plugins/autosignin/durable/typed.go": "b2e40126d691659d36114609520ffa7bf5bdcfa3c3fea4c5b757c908e9f23b55",
+    "internal/plugins/autosignin/durable/typed_test.go": "4d16bd40b3823288a98b86c1441f910a726a666a10641fef8a01bf062593ffd5",
     "internal/plugins/autosignin/durable/types.go": "cd7425aeb09410870cf20d61845fed9d163c2122fc46e145f7a95ee9be10fa8a",
     "internal/plugins/autosignin/dynamic_adapters.go": "75ec092e898e0379f507fb649375b5517e6c06622223d3a00c3d80f3dbb6b907",
     "internal/plugins/autosignin/effects.go": "f45553fb22763d74b7a0121689a9383a0f4a45e1615ac5fa15ca16ea3ef37fd1",
@@ -79,6 +73,7 @@
     "testdata/plugins/auto-signin-2.9.14/durable/effect-original-oracle.json": "6cdf4eea87afac3fc6e9a87bb819f01d1e6be2e170b089775542ef4b482c3a08",
     "testdata/plugins/auto-signin-2.9.14/durable/provenance.json": "d0d3c7974c2a63b8c9693a43f510db9400c87b92a3337ea5a3ab18f59c502c0e",
     "testdata/plugins/auto-signin-2.9.14/durable/statistic-original-oracle.json": "ec81dd16e5ed847d5c5178af2657caba34b998174f7a1311ae1bae85e40bdcea",
+    "testdata/plugins/auto-signin-2.9.14/durable/typed-read-reference.json": "a220e959c50899b799754c335e4ba5a26cfe1c94d29e05ea21cacbfc39868ad3",
     "testdata/plugins/auto-signin-2.9.14/dynamic-inputs.json": "4e0e4d1ae3c9b4bcd6177262c004fc8c23d8c22bd175259c46a217a5142eae56",
     "testdata/plugins/auto-signin-2.9.14/dynamic-reference.json": "ee8a1888e1279386cd5906575b4750ff43509c0ece05424bed9f8b3abb554e3c",
     "testdata/plugins/auto-signin-2.9.14/fixed-reference.json": "a7af3258317029402f95d96f8d1896a161c1d018aa94c19a06c1f073e04da3f7",
@@ -108,5 +103,14 @@
     "testdata/plugins/auto-signin-2.9.14/tjupt-inputs.json": "179270ba77468e65d4b2f21fa9807e8d423e7dcb103e79ef3f87ae616a9a7bf0",
     "testdata/plugins/auto-signin-2.9.14/tjupt-reference.json": "705ff1bc0ac778a96f791545cbb9367c0911cdd0233be0ac892dc96495559174",
     "testdata/plugins/auto-signin-2.9.14/visit-reference.json": "aa44b05e7fb316b597a63baa5b3e4195381a0e92ad0d70295eae707d811404d5"
-  }
+  },
+  "original_main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+  "original_plugin": "AutoSignIn",
+  "original_version": "2.9.14",
+  "test_only": [
+    "old SDK Machine end-of-command checkpoint fixture",
+    "standalone encrypted FileStore and OS lease; production StateJournal takes host StateBackend"
+  ],
+  "typed_read_scope": "Additive native Entry/Cache/RunStartHead read capabilities with complete StateJournal fallback; no typed mutation/network/outbox/retention or formal App registration.",
+  "version": 1
 }

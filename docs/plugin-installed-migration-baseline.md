@@ -81,3 +81,5 @@ CleanInvalidSeed 的正式宿主、实际 App journal 和两份 NAS 验证范围
 聚合通知原表单需要的页签、子弹窗、完整字面键和链接已补，655节点检查及跨渠道编辑/一次保存的浏览器证据见 [原版表单交互](plugin-merge-message-form-ui.md)。这不是正式安装、账户发送或完整模板依赖的证据。
 
 Lark 原 App Secret 显隐已映射为固定原生动作并验证 password→text→password 与一次保存保留原值，见 [表单交互](plugin-lark-password-ui.md)。原对象 rules 的 warning 如实保留，不声明前端 required 验证完成；整个 Lark 业务及配置迁移仍未完成。
+
+AutoSignIn 新增可选的逐条收据、缓存与运行头读取接口，保留旧完整 State 兼容路径；本地99项与NAS80项纯包检查通过，见 [读取接口与验证边界](plugin-auto-signin-typed-read-go-port.txt)。这一批不包含仍在审阅的实际 App typed SQL 接线，也不证明完整运行内存、资源回收、站点签到或数据迁移完成。

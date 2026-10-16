@@ -82,20 +82,18 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 	if zone == "" {
 		zone = "UTC"
 	}
-	state, err := c.Journal.State(ctx, c.Binding)
+	head, err := readRunStartHead(ctx, c.Journal, c.Binding, runID)
 	if err != nil {
 		return nil, err
 	}
-	if state.RuntimeEpoch != c.Binding.Epoch && command.Action != "cold_init" && state.Runs[runID] == nil {
+	if head.RuntimeEpoch != c.Binding.Epoch && command.Action != "cold_init" && !head.Exists {
 		return nil, ErrStale
 	}
 	var inventory source.Inventory
-	var base Baseline
-	if previous := state.Runs[runID]; previous != nil {
-		// Start still validates the immutable action/plan. A replay must not
-		// depend on a current inventory that its frozen baseline cannot use.
-		base = previous.Baseline
-	} else {
+	// Start still validates the immutable action/plan. A replay must not depend
+	// on a current inventory that its frozen baseline cannot use.
+	base := head.Baseline
+	if !head.Exists {
 		if c.Dependencies.Inventory == nil {
 			return nil, ErrStale
 		}
@@ -104,7 +102,7 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 			return nil, err
 		}
 		inventory = publicInventory(inventory)
-		base = Baseline{Runtime: state.Runtime, History: marshal(state.History), Inventory: marshal(inventory), Config: state.Config, Timezone: zone, Keys: append([]string{}, state.Keys...)}
+		base.Inventory, base.Timezone = marshal(inventory), zone
 	}
 	plan := marshal(command)
 	run, err := c.Journal.Start(ctx, c.Binding, runID, command.Action, plan, base)

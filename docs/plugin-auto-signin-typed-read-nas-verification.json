@@ -1,0 +1,52 @@
+{
+  "id": "259efa16-5b72-4bf2-84c2-1be86eba01d1",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "packages": [
+    {
+      "id": "adapters",
+      "pkg": "./internal/plugins/autosignin",
+      "expected_tests": 41,
+      "sha256": "5b6435e017e4aa08623570286114431ad7e245210906edeaa3ad5d5f07c63dbe",
+      "remote_sha256": "5b6435e017e4aa08623570286114431ad7e245210906edeaa3ad5d5f07c63dbe"
+    },
+    {
+      "id": "durable",
+      "pkg": "./internal/plugins/autosignin/durable",
+      "expected_tests": 39,
+      "sha256": "a28872d9c84371972c3dc768068393a3dc0157d35e03d50d1a3c8a05f1a98162",
+      "remote_sha256": "a28872d9c84371972c3dc768068393a3dc0157d35e03d50d1a3c8a05f1a98162"
+    }
+  ],
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 80,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "Formal AutoSignIn core and durable regression including 5 new additive read-capability tests. Fixed native read interfaces preserve legacy full State fallback, errors stop without fallback. This pure-package proof excludes the App typed SQL bridge, all sparse cost claims, typed writers/retention, live site sign-in, browser/OCR, real notifications, registration, migration and deployment.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}
