@@ -1,0 +1,463 @@
+{
+  "cases": [
+    {
+      "kind": "extensions",
+      "args": [
+        ""
+      ],
+      "result": [],
+      "error": null
+    },
+    {
+      "kind": "extensions",
+      "args": [
+        "NFO，.JSON\n-mediainfo.JSON, txt, NFO"
+      ],
+      "result": [
+        ".nfo",
+        ".json",
+        "-mediainfo.json",
+        ".txt"
+      ],
+      "error": null
+    },
+    {
+      "kind": "extensions",
+      "args": [
+        "İ,ΟΣ,ΟΣΑ"
+      ],
+      "result": [
+        ".i̇",
+        ".ος",
+        ".οσα"
+      ],
+      "error": null
+    },
+    {
+      "kind": "extensions",
+      "args": [
+        ".nfo,,.srt，.😀"
+      ],
+      "result": [
+        ".nfo",
+        ".srt",
+        ".😀"
+      ],
+      "error": null
+    },
+    {
+      "kind": "extensions",
+      "args": [
+        "...,.a.b,-suffix"
+      ],
+      "result": [
+        "...",
+        ".a.b",
+        "-suffix"
+      ],
+      "error": null
+    },
+    {
+      "kind": "trickplay",
+      "args": [
+        "/m/a.TRICKPLAY/file.mkv"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "trickplay",
+      "args": [
+        "/m/a.trickplay/../file.mkv"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "trickplay",
+      "args": [
+        "/m/a.trickplay.txt"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "trickplay",
+      "args": [
+        "relative/.trickplay/a"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "trickplay",
+      "args": [
+        "/m/a.mkv"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        ""
+      ],
+      "result": [
+        ".",
+        ".",
+        "",
+        "",
+        ""
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "."
+      ],
+      "result": [
+        ".",
+        ".",
+        "",
+        "",
+        ""
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "/"
+      ],
+      "result": [
+        "/",
+        "/",
+        "",
+        "",
+        ""
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "//"
+      ],
+      "result": [
+        "//",
+        "//",
+        "",
+        "",
+        ""
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "/m//a/../b.STRM"
+      ],
+      "result": [
+        "/m/a/../b.STRM",
+        "/m/a/..",
+        "b.STRM",
+        "b",
+        ".STRM"
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        ".mkv"
+      ],
+      "result": [
+        ".mkv",
+        ".",
+        ".mkv",
+        ".mkv",
+        ""
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "...foo"
+      ],
+      "result": [
+        "...foo",
+        ".",
+        "...foo",
+        "..",
+        ".foo"
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "foo."
+      ],
+      "result": [
+        "foo.",
+        ".",
+        "foo.",
+        "foo.",
+        ""
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "foo.tar.gz"
+      ],
+      "result": [
+        "foo.tar.gz",
+        ".",
+        "foo.tar.gz",
+        "foo.tar",
+        ".gz"
+      ],
+      "error": null
+    },
+    {
+      "kind": "path",
+      "args": [
+        "//server/a.strm"
+      ],
+      "result": [
+        "//server/a.strm",
+        "//server",
+        "a.strm",
+        "a",
+        ".strm"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "/m:/cloud",
+        "/m/a.strm"
+      ],
+      "result": [
+        "local",
+        "/cloud/a"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "/m:alist:/cloud",
+        "/movie/a.strm"
+      ],
+      "result": [
+        "alist",
+        "/cloud/ovie/a"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "/m:u115:/x\n/m/sub:alist:/y",
+        "/m/sub/a.strm"
+      ],
+      "result": [
+        "u115",
+        "/x/sub/a"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "/m:/a\n/m/sub:/b\n/m:/last",
+        "/m/a.STRM"
+      ],
+      "result": [
+        "local",
+        "/last/a.STRM"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        ":/root",
+        "/any/a.strm"
+      ],
+      "result": [
+        "local",
+        "/root/any/a"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "/m:/x",
+        "/m/../a.strm"
+      ],
+      "result": [
+        "local",
+        "/x/../a"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "//server:/x",
+        "//server/a.strm"
+      ],
+      "result": [
+        "local",
+        "/x/a"
+      ],
+      "error": null
+    },
+    {
+      "kind": "mapping",
+      "args": [
+        "/m:/x",
+        "/unmatched/a.strm"
+      ],
+      "result": [
+        null,
+        null
+      ],
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "/a/b",
+        "/a"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "/ab",
+        "/a"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "/a",
+        "/a"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "a/b",
+        "/a"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "/a/../b",
+        "/b"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "/a/b",
+        ""
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "child",
+      "args": [
+        "//server/a",
+        "//server"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/a.NFO",
+        ""
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/.nfo",
+        ""
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/foo-mediainfo.JSON",
+        "-mediainfo.json"
+      ],
+      "result": true,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/ΟΣ",
+        "ος"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/İ",
+        "i̇"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/a.json",
+        ".txt"
+      ],
+      "result": false,
+      "error": null
+    },
+    {
+      "kind": "scrap",
+      "args": [
+        "/movie.mkv.nfo",
+        ""
+      ],
+      "result": true,
+      "error": null
+    }
+  ]
+}
