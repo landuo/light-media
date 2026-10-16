@@ -1,0 +1,52 @@
+{
+  "id": "fbc8734f-4a84-4cb3-af13-6a6e5bff4d00",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "packages": [
+    {
+      "id": "adapters",
+      "pkg": "./internal/plugins/autosignin",
+      "expected_tests": 41,
+      "sha256": "406d2bf486f57da9bee2310809e4d62258f6f21123ec4e438a10740f2b8d6864",
+      "remote_sha256": "406d2bf486f57da9bee2310809e4d62258f6f21123ec4e438a10740f2b8d6864"
+    },
+    {
+      "id": "durable",
+      "pkg": "./internal/plugins/autosignin/durable",
+      "expected_tests": 34,
+      "sha256": "749cc6b147e89c75bb59f4f97d833493ba6e623d8f7bb8a7a9c3a7028a980b05",
+      "remote_sha256": "749cc6b147e89c75bb59f4f97d833493ba6e623d8f7bb8a7a9c3a7028a980b05"
+    }
+  ],
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 75,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal pure-Go AutoSignIn single effect-aware engine, 22 adapters, controlled HTTP/SDK and durable StateJournal. Test-only encrypted FileStore/OS lease, owned loopbacks/crash fixtures. No production PluginStore, live site sign-in, browser/OCR service, external notification, registration, migration or deployment.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

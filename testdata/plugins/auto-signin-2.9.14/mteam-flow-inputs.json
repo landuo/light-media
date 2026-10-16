@@ -1,0 +1,919 @@
+{
+  "classes": [
+    [
+      "mteam.py",
+      "MTorrent"
+    ]
+  ],
+  "output": "mteam-flow-reference.json",
+  "cases": [
+    {
+      "name": "MTorrent-adapter-success",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-success",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-success",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-success",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-source-fail-is-success",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-source-fail-is-success",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-source-fail-is-success",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-source-fail-is-success",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-false-code",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-false-code",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-false-code",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-false-code",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-expired",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-expired",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-expired",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-expired",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-none",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-none",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-none",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-none",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-503",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-503",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-503",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-503",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-invalid-json",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-invalid-json",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-invalid-json",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-invalid-json",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-invalid-shape",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-invalid-shape",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-invalid-shape",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-invalid-shape",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-exception",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-login-adapter-exception",
+      "adapter": "MTorrent",
+      "kind": "login-adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-exception",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-exception",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-missing-token",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": null,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-missing-token",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": null,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-missing-token",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": null,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-empty-token",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-empty-token",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-empty-token",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-proxy",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-proxy",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-proxy",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-no-agent",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "ua": null
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-no-agent",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "ua": null
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-no-agent",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "ua": null
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-adapter-io-family",
+      "adapter": "MTorrent",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.io/",
+          "token": "synthetic-login-token",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-wrapper-io-family",
+      "adapter": "MTorrent",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.io/",
+          "token": "synthetic-login-token",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "MTorrent-do-io-family",
+      "adapter": "MTorrent",
+      "kind": "do",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.io/",
+          "token": "synthetic-login-token",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      }
+    }
+  ]
+}

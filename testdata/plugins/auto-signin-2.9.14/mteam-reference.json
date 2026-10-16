@@ -1,0 +1,627 @@
+{
+  "provenance": {
+    "ascii_upper": {
+      "223": "SS",
+      "305": "I",
+      "383": "S",
+      "64256": "FF",
+      "64257": "FI",
+      "64258": "FL",
+      "64259": "FFI",
+      "64260": "FFL",
+      "64261": "ST",
+      "64262": "ST"
+    },
+    "source_sha256": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4",
+    "execution": "actual installed class AST; stdlib crypto; synthetic RequestUtils/time/settings, no app imports/real HTTP/credentials"
+  },
+  "cases": [
+    {
+      "name": "headers-0",
+      "kind": "headers",
+      "input": {
+        "url": "https://kp.m-team.cc",
+        "token": "synthetic-token-only",
+        "ua": "synthetic-agent",
+        "timestamp_ms": 0
+      },
+      "expected": {
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json, text/plain, */*",
+          "Authorization": "synthetic-token-only",
+          "Origin": "https://kp.m-team.cc",
+          "Referer": "https://kp.m-team.cc/index",
+          "Ts": "0",
+          "webversion": "2000",
+          "Did": "9617f3b9999027fea7cdc06beb4b103b",
+          "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+          "User-Agent": "synthetic-agent"
+        },
+        "sign": "OYsCIzz2GCC/Qp6LNGAe0Jioegw="
+      }
+    },
+    {
+      "name": "headers-1",
+      "kind": "headers",
+      "input": {
+        "url": "https://kp.m-team.cc",
+        "token": "synthetic-token-only",
+        "ua": "synthetic-agent",
+        "timestamp_ms": 1
+      },
+      "expected": {
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json, text/plain, */*",
+          "Authorization": "synthetic-token-only",
+          "Origin": "https://kp.m-team.cc",
+          "Referer": "https://kp.m-team.cc/index",
+          "Ts": "0",
+          "webversion": "2000",
+          "Did": "9617f3b9999027fea7cdc06beb4b103b",
+          "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+          "User-Agent": "synthetic-agent"
+        },
+        "sign": "daZ/Q+2+YzdQUW9MWD5M/iTTLT8="
+      }
+    },
+    {
+      "name": "headers--1",
+      "kind": "headers",
+      "input": {
+        "url": "https://kp.m-team.cc",
+        "token": "synthetic-token-only",
+        "ua": "synthetic-agent",
+        "timestamp_ms": -1
+      },
+      "expected": {
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json, text/plain, */*",
+          "Authorization": "synthetic-token-only",
+          "Origin": "https://kp.m-team.cc",
+          "Referer": "https://kp.m-team.cc/index",
+          "Ts": "-1",
+          "webversion": "2000",
+          "Did": "9617f3b9999027fea7cdc06beb4b103b",
+          "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+          "User-Agent": "synthetic-agent"
+        },
+        "sign": "BnlGyy+2TEkzkpOT1DvQenJffow="
+      }
+    },
+    {
+      "name": "headers--1001",
+      "kind": "headers",
+      "input": {
+        "url": "https://kp.m-team.cc",
+        "token": "synthetic-token-only",
+        "ua": "synthetic-agent",
+        "timestamp_ms": -1001
+      },
+      "expected": {
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json, text/plain, */*",
+          "Authorization": "synthetic-token-only",
+          "Origin": "https://kp.m-team.cc",
+          "Referer": "https://kp.m-team.cc/index",
+          "Ts": "-2",
+          "webversion": "2000",
+          "Did": "9617f3b9999027fea7cdc06beb4b103b",
+          "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+          "User-Agent": "synthetic-agent"
+        },
+        "sign": "jDcmJKMRGYGuFGhRAK8Pd1ANaOM="
+      }
+    },
+    {
+      "name": "headers-1792152000125",
+      "kind": "headers",
+      "input": {
+        "url": "https://kp.m-team.cc",
+        "token": "synthetic-token-only",
+        "ua": "synthetic-agent",
+        "timestamp_ms": 1792152000125
+      },
+      "expected": {
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json, text/plain, */*",
+          "Authorization": "synthetic-token-only",
+          "Origin": "https://kp.m-team.cc",
+          "Referer": "https://kp.m-team.cc/index",
+          "Ts": "1792152000",
+          "webversion": "2000",
+          "Did": "9617f3b9999027fea7cdc06beb4b103b",
+          "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+          "User-Agent": "synthetic-agent"
+        },
+        "sign": "PciPWF4CN9608cyDRcuwvV4wfv4="
+      }
+    },
+    {
+      "name": "headers-9223372036854775807",
+      "kind": "headers",
+      "input": {
+        "url": "https://kp.m-team.cc",
+        "token": "synthetic-token-only",
+        "ua": "synthetic-agent",
+        "timestamp_ms": 9223372036854775807
+      },
+      "expected": {
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json, text/plain, */*",
+          "Authorization": "synthetic-token-only",
+          "Origin": "https://kp.m-team.cc",
+          "Referer": "https://kp.m-team.cc/index",
+          "Ts": "9223372036854775",
+          "webversion": "2000",
+          "Did": "9617f3b9999027fea7cdc06beb4b103b",
+          "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+          "User-Agent": "synthetic-agent"
+        },
+        "sign": "6hmyjFfWHzDN5ribN71VlvuAKXo="
+      }
+    },
+    {
+      "name": "payload-6",
+      "kind": "payload",
+      "input": null,
+      "expected": [
+        false,
+        "模拟登录失败，接口返回数据异常"
+      ]
+    },
+    {
+      "name": "payload-7",
+      "kind": "payload",
+      "input": [],
+      "expected": [
+        false,
+        "模拟登录失败，接口返回数据异常"
+      ]
+    },
+    {
+      "name": "payload-8",
+      "kind": "payload",
+      "input": false,
+      "expected": [
+        false,
+        "模拟登录失败，接口返回数据异常"
+      ]
+    },
+    {
+      "name": "payload-9",
+      "kind": "payload",
+      "input": {},
+      "expected": [
+        false,
+        "模拟登录失败，接口未确认访问时间更新"
+      ]
+    },
+    {
+      "name": "payload-10",
+      "kind": "payload",
+      "input": {
+        "code": 0
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-11",
+      "kind": "payload",
+      "input": {
+        "code": "0"
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-12",
+      "kind": "payload",
+      "input": {
+        "code": 0.0
+      },
+      "expected": [
+        false,
+        "模拟登录失败，接口未确认访问时间更新"
+      ]
+    },
+    {
+      "name": "payload-13",
+      "kind": "payload",
+      "input": {
+        "code": true
+      },
+      "expected": [
+        false,
+        "模拟登录失败，接口未确认访问时间更新"
+      ]
+    },
+    {
+      "name": "payload-14",
+      "kind": "payload",
+      "input": {
+        "success": true
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-15",
+      "kind": "payload",
+      "input": {
+        "success": 1
+      },
+      "expected": [
+        false,
+        "模拟登录失败，接口未确认访问时间更新"
+      ]
+    },
+    {
+      "name": "payload-16",
+      "kind": "payload",
+      "input": {
+        "message": " success "
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-17",
+      "kind": "payload",
+      "input": {
+        "message": "SUCCEß"
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-18",
+      "kind": "payload",
+      "input": {
+        "message": "ſucceſſ"
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-19",
+      "kind": "payload",
+      "input": {
+        "code": 1,
+        "message": "FAIL",
+        "data": null
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-20",
+      "kind": "payload",
+      "input": {
+        "code": "1",
+        "message": "Fail",
+        "data": {}
+      },
+      "expected": [
+        true,
+        "模拟登录成功"
+      ]
+    },
+    {
+      "name": "payload-21",
+      "kind": "payload",
+      "input": {
+        "code": 401
+      },
+      "expected": [
+        false,
+        "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token"
+      ]
+    },
+    {
+      "name": "payload-22",
+      "kind": "payload",
+      "input": {
+        "code": "403",
+        "message": "Full Authentication is required"
+      },
+      "expected": [
+        false,
+        "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token"
+      ]
+    },
+    {
+      "name": "payload-23",
+      "kind": "payload",
+      "input": {
+        "code": false,
+        "message": "no"
+      },
+      "expected": [
+        false,
+        "模拟登录失败，接口未确认访问时间更新"
+      ]
+    },
+    {
+      "name": "payload-24",
+      "kind": "payload",
+      "input": {
+        "message": [
+          "full authentication"
+        ]
+      },
+      "expected": [
+        false,
+        "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token"
+      ]
+    },
+    {
+      "name": "match-25",
+      "kind": "match",
+      "input": {
+        "url": "https://kp.m-team.cc/"
+      },
+      "expected": true
+    },
+    {
+      "name": "match-26",
+      "kind": "match",
+      "input": {
+        "url": "https://m-team.cc/"
+      },
+      "expected": false
+    },
+    {
+      "name": "match-27",
+      "kind": "match",
+      "input": {
+        "url": "m-team.cc"
+      },
+      "expected": true
+    },
+    {
+      "name": "match-28",
+      "kind": "match",
+      "input": {
+        "url": "https://m-team.cc.evil.invalid/"
+      },
+      "expected": false
+    },
+    {
+      "name": "match-29",
+      "kind": "match",
+      "input": {
+        "url": "https://evil-m-team.invalid/"
+      },
+      "expected": false
+    },
+    {
+      "name": "match-30",
+      "kind": "match",
+      "input": {
+        "url": "https://M-TEAM.cc/"
+      },
+      "expected": false
+    },
+    {
+      "name": "match-31",
+      "kind": "match",
+      "input": {
+        "url": "https://foo.m-team.cc.evil.invalid/"
+      },
+      "expected": true
+    },
+    {
+      "name": "signin-0",
+      "kind": "signin",
+      "input": {
+        "site": {}
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）"
+        ],
+        "calls": []
+      }
+    },
+    {
+      "name": "signin-1",
+      "kind": "signin",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-token-only",
+          "ua": "synthetic-agent"
+        },
+        "response": null
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，无法打开网站"
+        ],
+        "calls": [
+          {
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-token-only",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1792152000",
+              "webversion": "2000",
+              "Did": "9617f3b9999027fea7cdc06beb4b103b",
+              "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": null,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1792152000125",
+              "_sgin": "PciPWF4CN9608cyDRcuwvV4wfv4="
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "signin-2",
+      "kind": "signin",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-token-only",
+          "proxy": true,
+          "timeout": 17
+        },
+        "response": {
+          "status": 401
+        }
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，状态码：401"
+        ],
+        "calls": [
+          {
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-token-only",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1792152000",
+              "webversion": "2000",
+              "Did": "9617f3b9999027fea7cdc06beb4b103b",
+              "visitorid": "8dc719737852d7c0f286bc13979a6cd0"
+            },
+            "timeout": 17,
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1792152000125",
+              "_sgin": "PciPWF4CN9608cyDRcuwvV4wfv4="
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "signin-3",
+      "kind": "signin",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-token-only"
+        },
+        "response": {
+          "json_error": true
+        }
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口返回数据异常"
+        ],
+        "calls": [
+          {
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-token-only",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1792152000",
+              "webversion": "2000",
+              "Did": "9617f3b9999027fea7cdc06beb4b103b",
+              "visitorid": "8dc719737852d7c0f286bc13979a6cd0"
+            },
+            "timeout": null,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1792152000125",
+              "_sgin": "PciPWF4CN9608cyDRcuwvV4wfv4="
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "signin-4",
+      "kind": "signin",
+      "input": {
+        "site": {
+          "name": "Synthetic",
+          "url": "https://kp.m-team.cc///",
+          "token": "  synthetic-token-only  ",
+          "ua": "synthetic-agent"
+        },
+        "response": {
+          "payload": {
+            "code": "1",
+            "message": "FAIL",
+            "data": null
+          }
+        }
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-token-only",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1792152000",
+              "webversion": "2000",
+              "Did": "9617f3b9999027fea7cdc06beb4b103b",
+              "visitorid": "8dc719737852d7c0f286bc13979a6cd0",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": null,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1792152000125",
+              "_sgin": "PciPWF4CN9608cyDRcuwvV4wfv4="
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

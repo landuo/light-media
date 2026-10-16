@@ -1,0 +1,1695 @@
+{
+  "classes": [
+    [
+      "ttg.py",
+      "TTG"
+    ],
+    [
+      "hdchina.py",
+      "HDChina"
+    ]
+  ],
+  "output": "dynamic-reference.json",
+  "cases": [
+    {
+      "name": "TTG-adapter-none",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-none",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-503",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "err",
+            "status": 503
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-503",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "err",
+            "status": 503
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-503",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "err",
+            "status": 503
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-empty",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-empty",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-expired",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-expired",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-already",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "<b style=\"color:green;\">已签到</b>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "<b style=\"color:green;\">已签到</b>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-already",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "<b style=\"color:green;\">已签到</b>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-token-missing",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-token-missing",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-token-missing",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-timestamp-missing",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_token: \"synthetic\"",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-timestamp-missing",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_token: \"synthetic\"",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-timestamp-missing",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_token: \"synthetic\"",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-post-none",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-post-none",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-post-none",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          null
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-post-503",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到10天",
+            "status": 503
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-post-503",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到10天",
+            "status": 503
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-post-503",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到10天",
+            "status": 503
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-success",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到10天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到10天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-success",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到10天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-repeat",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "亲，您今天已签到过，不要太贪哦",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-repeat",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "亲，您今天已签到过，不要太贪哦",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-repeat",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "亲，您今天已签到过，不要太贪哦",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-unknown",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-unknown",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-unknown",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-hidden",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "<template>您已连续签到10天</template>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-hidden",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "<template>您已连续签到10天</template>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-hidden",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"1792152000\"; signed_token: \"synthetic-token\";",
+            "status": 200
+          },
+          {
+            "text": "<template>您已连续签到10天</template>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-greedy-token",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"17921520001\"; signed_token: \"first\" and \"last\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到1天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-greedy-token",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"17921520001\"; signed_token: \"first\" and \"last\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到1天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-greedy-token",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"17921520001\"; signed_token: \"first\" and \"last\";",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到1天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-adapter-unicode-timestamp",
+      "kind": "adapter",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"１２３４５６７８９０\"; signed_token: \"synthetic\"",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到1天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-wrapper-unicode-timestamp",
+      "kind": "wrapper",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"１２３４５６７８９０\"; signed_token: \"synthetic\"",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到1天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "TTG-do-unicode-timestamp",
+      "kind": "do",
+      "adapter": "TTG",
+      "input": {
+        "responses": [
+          {
+            "text": "signed_timestamp: \"１２３４５６７８９０\"; signed_token: \"synthetic\"",
+            "status": 200
+          },
+          {
+            "text": "您已连续签到1天",
+            "status": 200
+          }
+        ],
+        "site": {
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-missing-cookie",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [],
+        "site": {
+          "cookie": null
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-missing-cookie",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [],
+        "site": {
+          "cookie": null
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-missing-cookie",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [],
+        "site": {
+          "cookie": null
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-no-hdchina",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [],
+        "site": {
+          "cookie": "other=x"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-no-hdchina",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [],
+        "site": {
+          "cookie": "other=x"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-no-hdchina",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [],
+        "site": {
+          "cookie": "other=x"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-none",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-none",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-503",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "err",
+            "status": 503
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-503",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "err",
+            "status": 503
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-503",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "err",
+            "status": 503
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-expired",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-expired",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-blocked",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "阻断页面",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-blocked",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "阻断页面",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-blocked",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "阻断页面",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-already",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<a class=\"label label-default\" href=\"#\">已签到</a>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<a class=\"label label-default\" href=\"#\">已签到</a>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-already",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<a class=\"label label-default\" href=\"#\">已签到</a>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-empty",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-empty",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-missing-meta",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<div>home</div>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-missing-meta",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<div>home</div>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-missing-meta",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<div>home</div>",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-empty-meta",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-empty-meta",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-empty-meta",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-post-none",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-post-none",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-post-none",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          null
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-post-503",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 503
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-post-503",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 503
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-post-503",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 503
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-success",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200,
+            "cookies": [
+              [
+                "fresh",
+                "renewed"
+              ],
+              [
+                "hdchina",
+                "new-synthetic"
+              ]
+            ]
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200,
+            "cookies": [
+              [
+                "fresh",
+                "renewed"
+              ],
+              [
+                "hdchina",
+                "new-synthetic"
+              ]
+            ]
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-success",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200,
+            "cookies": [
+              [
+                "fresh",
+                "renewed"
+              ],
+              [
+                "hdchina",
+                "new-synthetic"
+              ]
+            ]
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-failed",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-failed",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-failed",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-invalid-json",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-invalid-json",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-invalid-json",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-empty-cookies",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-empty-cookies",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-empty-cookies",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "other=old; hdchina=synthetic-only; x=drop"
+        }
+      }
+    },
+    {
+      "name": "HDChina-adapter-substring-cookie",
+      "kind": "adapter",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "prefixhdchina=synthetic"
+        }
+      }
+    },
+    {
+      "name": "HDChina-wrapper-substring-cookie",
+      "kind": "wrapper",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "prefixhdchina=synthetic"
+        }
+      }
+    },
+    {
+      "name": "HDChina-do-substring-cookie",
+      "kind": "do",
+      "adapter": "HDChina",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"state\": \"success\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "cookie": "prefixhdchina=synthetic"
+        }
+      }
+    }
+  ]
+}

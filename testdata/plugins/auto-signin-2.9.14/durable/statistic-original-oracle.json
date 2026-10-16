@@ -1,0 +1,817 @@
+{
+  "provenance": {
+    "site_oper_sha256": "08e202eb3fc97c7fe5d67d7253867334ada9bdd1747eb23b2d3cbe26da7f0cf0",
+    "model_sha256": "492fb63635c0e55b988b5022f146344bfed24108b5ff7c605de1123a909d043c",
+    "execution": "actual installed success/fail AST with recording model and fixed datetime; no SQLAlchemy/session/user DB; does not prove source ORM concurrency"
+  },
+  "cases": [
+    {
+      "input": {
+        "name": "fresh-zero",
+        "calls": [
+          {
+            "success": true,
+            "seconds": 0
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-02 12:00:00": 1
+          }
+        }
+      ],
+      "operations": [
+        {
+          "op": "create",
+          "data": {
+            "domain": "synthetic.invalid",
+            "success": 1,
+            "fail": 0,
+            "seconds": 1,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-02 12:00:00": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "fresh-none",
+        "calls": [
+          {
+            "success": true,
+            "seconds": null
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {}
+        }
+      ],
+      "operations": [
+        {
+          "op": "create",
+          "data": {
+            "domain": "synthetic.invalid",
+            "success": 1,
+            "fail": 0,
+            "seconds": 1,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {}
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "fresh-fail",
+        "calls": [
+          {
+            "success": false
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 0,
+          "fail": 1,
+          "seconds": null,
+          "lst_state": 1,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": null
+        }
+      ],
+      "operations": [
+        {
+          "op": "create",
+          "data": {
+            "domain": "synthetic.invalid",
+            "success": 0,
+            "fail": 1,
+            "seconds": null,
+            "lst_state": 1,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": null
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "repeat-same-second",
+        "calls": [
+          {
+            "success": true,
+            "seconds": 10
+          },
+          {
+            "success": true,
+            "seconds": 4
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 10,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-02 12:00:00": 10
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 2,
+          "fail": 0,
+          "seconds": 4,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-02 12:00:00": 4
+          }
+        }
+      ],
+      "operations": [
+        {
+          "op": "create",
+          "data": {
+            "domain": "synthetic.invalid",
+            "success": 1,
+            "fail": 0,
+            "seconds": 10,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-02 12:00:00": 10
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 2,
+            "seconds": 4,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-02 12:00:00": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "append11-pretruncate-denominator",
+        "calls": [
+          {
+            "success": true,
+            "seconds": 1,
+            "date": "2026-01-02 12:00:00"
+          },
+          {
+            "success": true,
+            "seconds": 2,
+            "date": "2026-01-02 12:00:01"
+          },
+          {
+            "success": true,
+            "seconds": 3,
+            "date": "2026-01-02 12:00:02"
+          },
+          {
+            "success": true,
+            "seconds": 4,
+            "date": "2026-01-02 12:00:03"
+          },
+          {
+            "success": true,
+            "seconds": 5,
+            "date": "2026-01-02 12:00:04"
+          },
+          {
+            "success": true,
+            "seconds": 6,
+            "date": "2026-01-02 12:00:05"
+          },
+          {
+            "success": true,
+            "seconds": 7,
+            "date": "2026-01-02 12:00:06"
+          },
+          {
+            "success": true,
+            "seconds": 8,
+            "date": "2026-01-02 12:00:07"
+          },
+          {
+            "success": true,
+            "seconds": 9,
+            "date": "2026-01-02 12:00:08"
+          },
+          {
+            "success": true,
+            "seconds": 10,
+            "date": "2026-01-02 12:00:09"
+          },
+          {
+            "success": true,
+            "seconds": 11,
+            "date": "2026-01-02 12:00:10"
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-02 12:00:00": 1
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 2,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:01",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 3,
+          "fail": 0,
+          "seconds": 2,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:02",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 4,
+          "fail": 0,
+          "seconds": 2,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:03",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 5,
+          "fail": 0,
+          "seconds": 3,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:04",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:04": 5
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 6,
+          "fail": 0,
+          "seconds": 3,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:05",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:04": 5,
+            "2026-01-02 12:00:05": 6
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 7,
+          "fail": 0,
+          "seconds": 4,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:06",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:04": 5,
+            "2026-01-02 12:00:05": 6,
+            "2026-01-02 12:00:06": 7
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 8,
+          "fail": 0,
+          "seconds": 4,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:07",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:04": 5,
+            "2026-01-02 12:00:05": 6,
+            "2026-01-02 12:00:06": 7,
+            "2026-01-02 12:00:07": 8
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 9,
+          "fail": 0,
+          "seconds": 5,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:08",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:04": 5,
+            "2026-01-02 12:00:05": 6,
+            "2026-01-02 12:00:06": 7,
+            "2026-01-02 12:00:07": 8,
+            "2026-01-02 12:00:08": 9
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 10,
+          "fail": 0,
+          "seconds": 5,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:09",
+          "note": {
+            "2026-01-02 12:00:00": 1,
+            "2026-01-02 12:00:01": 2,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:04": 5,
+            "2026-01-02 12:00:05": 6,
+            "2026-01-02 12:00:06": 7,
+            "2026-01-02 12:00:07": 8,
+            "2026-01-02 12:00:08": 9,
+            "2026-01-02 12:00:09": 10
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 11,
+          "fail": 0,
+          "seconds": 5,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:10",
+          "note": {
+            "2026-01-02 12:00:10": 11,
+            "2026-01-02 12:00:09": 10,
+            "2026-01-02 12:00:08": 9,
+            "2026-01-02 12:00:07": 8,
+            "2026-01-02 12:00:06": 7,
+            "2026-01-02 12:00:05": 6,
+            "2026-01-02 12:00:04": 5,
+            "2026-01-02 12:00:03": 4,
+            "2026-01-02 12:00:02": 3,
+            "2026-01-02 12:00:01": 2
+          }
+        }
+      ],
+      "operations": [
+        {
+          "op": "create",
+          "data": {
+            "domain": "synthetic.invalid",
+            "success": 1,
+            "fail": 0,
+            "seconds": 1,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-02 12:00:00": 1
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 2,
+            "seconds": 1,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:01",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 3,
+            "seconds": 2,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:02",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 4,
+            "seconds": 2,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:03",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 5,
+            "seconds": 3,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:04",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:04": 5
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 6,
+            "seconds": 3,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:05",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:04": 5,
+              "2026-01-02 12:00:05": 6
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 7,
+            "seconds": 4,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:06",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:04": 5,
+              "2026-01-02 12:00:05": 6,
+              "2026-01-02 12:00:06": 7
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 8,
+            "seconds": 4,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:07",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:04": 5,
+              "2026-01-02 12:00:05": 6,
+              "2026-01-02 12:00:06": 7,
+              "2026-01-02 12:00:07": 8
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 9,
+            "seconds": 5,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:08",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:04": 5,
+              "2026-01-02 12:00:05": 6,
+              "2026-01-02 12:00:06": 7,
+              "2026-01-02 12:00:07": 8,
+              "2026-01-02 12:00:08": 9
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 10,
+            "seconds": 5,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:09",
+            "note": {
+              "2026-01-02 12:00:00": 1,
+              "2026-01-02 12:00:01": 2,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:04": 5,
+              "2026-01-02 12:00:05": 6,
+              "2026-01-02 12:00:06": 7,
+              "2026-01-02 12:00:07": 8,
+              "2026-01-02 12:00:08": 9,
+              "2026-01-02 12:00:09": 10
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "success": 11,
+            "seconds": 5,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:10",
+            "note": {
+              "2026-01-02 12:00:10": 11,
+              "2026-01-02 12:00:09": 10,
+              "2026-01-02 12:00:08": 9,
+              "2026-01-02 12:00:07": 8,
+              "2026-01-02 12:00:06": 7,
+              "2026-01-02 12:00:05": 6,
+              "2026-01-02 12:00:04": 5,
+              "2026-01-02 12:00:03": 4,
+              "2026-01-02 12:00:02": 3,
+              "2026-01-02 12:00:01": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "fail-keeps-success-note",
+        "calls": [
+          {
+            "success": true,
+            "seconds": 3
+          },
+          {
+            "success": false
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 3,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-02 12:00:00": 3
+          }
+        },
+        {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 3,
+          "lst_state": 1,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-02 12:00:00": 3
+          }
+        }
+      ],
+      "operations": [
+        {
+          "op": "create",
+          "data": {
+            "domain": "synthetic.invalid",
+            "success": 1,
+            "fail": 0,
+            "seconds": 3,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-02 12:00:00": 3
+            }
+          }
+        },
+        {
+          "op": "update",
+          "data": {
+            "fail": 1,
+            "lst_state": 1,
+            "lst_mod_date": "2026-01-02 12:00:00"
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "existing-no-seconds",
+        "initial": {
+          "domain": "synthetic.invalid",
+          "success": 2,
+          "fail": 3,
+          "seconds": 4,
+          "note": null
+        },
+        "calls": [
+          {
+            "success": true,
+            "seconds": null
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 3,
+          "fail": 3,
+          "seconds": 4,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {}
+        }
+      ],
+      "operations": [
+        {
+          "op": "update",
+          "data": {
+            "success": 3,
+            "seconds": 4,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {}
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "negative-floor",
+        "initial": {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "note": {
+            "2026-01-01 00:00:00": -5
+          }
+        },
+        "calls": [
+          {
+            "success": true,
+            "seconds": 2
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 2,
+          "fail": 0,
+          "seconds": -2,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-01 00:00:00": -5,
+            "2026-01-02 12:00:00": 2
+          }
+        }
+      ],
+      "operations": [
+        {
+          "op": "update",
+          "data": {
+            "success": 2,
+            "seconds": -2,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-01 00:00:00": -5,
+              "2026-01-02 12:00:00": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "zero-average-preserves-old",
+        "initial": {
+          "domain": "synthetic.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "note": {
+            "2026-01-01 00:00:00": -1
+          }
+        },
+        "calls": [
+          {
+            "success": true,
+            "seconds": 1
+          }
+        ]
+      },
+      "states": [
+        {
+          "domain": "synthetic.invalid",
+          "success": 2,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-01-02 12:00:00",
+          "note": {
+            "2026-01-01 00:00:00": -1,
+            "2026-01-02 12:00:00": 1
+          }
+        }
+      ],
+      "operations": [
+        {
+          "op": "update",
+          "data": {
+            "success": 2,
+            "seconds": 7,
+            "lst_state": 0,
+            "lst_mod_date": "2026-01-02 12:00:00",
+            "note": {
+              "2026-01-01 00:00:00": -1,
+              "2026-01-02 12:00:00": 1
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

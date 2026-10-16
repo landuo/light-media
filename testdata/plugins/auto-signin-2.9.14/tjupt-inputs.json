@@ -1,0 +1,3230 @@
+{
+  "classes": [
+    [
+      "tjupt.py",
+      "Tjupt"
+    ]
+  ],
+  "output": "tjupt-reference.json",
+  "include_steps": true,
+  "cases": [
+    {
+      "name": "Tjupt-adapter-home-none",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-home-none",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-home-none",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-home-503",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "home",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-home-503",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "home",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-home-503",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "home",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-home-empty",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-home-empty",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-home-empty",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-home-expired",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-home-expired",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-home-expired",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-already",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-already",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-already",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-ensure-create",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "directory_exists": false,
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-ensure-create",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "directory_exists": false,
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-ensure-create",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "directory_exists": false,
+        "responses": [
+          {
+            "text": "<a href=\"attendance.php\">今日已签到</a>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-ensure-error",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "ensure_error": "synthetic ensure IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-ensure-error",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "ensure_error": "synthetic ensure IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-ensure-error",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "ensure_error": "synthetic ensure IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-no-img",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<p>no image</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-no-img",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<p>no image</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-no-img",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<p>no image</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-empty-img",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-empty-img",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-empty-img",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-img-none",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-img-none",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-img-none",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-img-503",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "text": "not image",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-img-503",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "text": "not image",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-img-503",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "text": "not image",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-no-values",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" >甲片<input name=\"ban_robot\" >乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-no-values",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" >甲片<input name=\"ban_robot\" >乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-no-values",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" >甲片<input name=\"ban_robot\" >乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-no-options",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\"><input name=\"ban_robot\" value=\"2\"></p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-no-options",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\"><input name=\"ban_robot\" value=\"2\"></p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-no-options",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\"><input name=\"ban_robot\" value=\"2\"></p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-cache-hit",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-cache-hit",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-cache-hit",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-cache-hit-int-label",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": 123}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">123<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-cache-hit-int-label",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": 123}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">123<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-cache-hit-int-label",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": 123}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">123<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-cache-hit-post-none",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-cache-hit-post-none",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-cache-hit-post-none",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-cache-hit-post-no-receipt",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-cache-hit-post-no-receipt",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-cache-hit-post-no-receipt",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u7532\\u7247\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-empty-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-empty-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-empty-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-missing-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-missing-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-missing-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-io-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "read_error": "synthetic read IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-io-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "read_error": "synthetic read IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-io-cache-match-no-write",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "read_error": "synthetic read IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-nonempty-cache-match-write",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"older\":\"旧答案\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-nonempty-cache-match-write",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"older\":\"旧答案\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-nonempty-cache-match-write",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"older\":\"旧答案\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-write-io-keeps-success",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"older\":\"old\"}",
+        "write_error": "synthetic write IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-write-io-keeps-success",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"older\":\"old\"}",
+        "write_error": "synthetic write IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-write-io-keeps-success",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"older\":\"old\"}",
+        "write_error": "synthetic write IO error",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-value-cache-not-label",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"1\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-value-cache-not-label",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"1\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-value-cache-not-label",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"1\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-zero-cache-not-label",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": 0}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-zero-cache-not-label",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": 0}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-zero-cache-not-label",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": 0}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-malformed-cache",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "not-json",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-malformed-cache",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "not-json",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-malformed-cache",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "not-json",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-list-cache",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "[]",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-list-cache",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "[]",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-list-cache",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "[]",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-null-cache",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "null",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-null-cache",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "null",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-null-cache",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "null",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-string-cache",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "\"abc\"",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-string-cache",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "\"abc\"",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-string-cache",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "\"abc\"",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-suggest-none-skips-sleep",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-suggest-none-skips-sleep",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-suggest-none-skips-sleep",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-suggest-503-skips-sleep",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "x",
+            "status": 503
+          },
+          {
+            "text": "x",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-suggest-503-skips-sleep",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "x",
+            "status": 503
+          },
+          {
+            "text": "x",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-suggest-503-skips-sleep",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "x",
+            "status": 503
+          },
+          {
+            "text": "x",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-empty-suggestions-sleep",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[]",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-empty-suggestions-sleep",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[]",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-empty-suggestions-sleep",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[]",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-object-suggestion",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "{\"img\":\"https://img.doubanio.com/synthetic.png\"}",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-object-suggestion",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "{\"img\":\"https://img.doubanio.com/synthetic.png\"}",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-object-suggestion",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "{\"img\":\"https://img.doubanio.com/synthetic.png\"}",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-malformed-suggestion",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "not-json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-malformed-suggestion",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "not-json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-malformed-suggestion",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "not-json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-missing-image-key",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{}]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-missing-image-key",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{}]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-missing-image-key",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{}]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-null-suggestion",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-null-suggestion",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-null-suggestion",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-candidate-none-continues",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          null,
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-candidate-none-continues",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          null,
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-candidate-none-continues",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          null,
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-candidate-503-continues",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "text": "x",
+            "status": 503
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-candidate-503-continues",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "text": "x",
+            "status": 503
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-candidate-503-continues",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "text": "x",
+            "status": 503
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-mismatch-then-match",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-mismatch-then-match",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-mismatch-then-match",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-all-mismatch",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-all-mismatch",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-all-mismatch",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c63484e4a4c888f8b8d898e62888c080f0b0d090e0a0c60f0f7f3f5f1f6f2f4707763707571767274b0b7b3b561b0b6b2b4303733353136623034d0d7d3d5d1d6d2d4605057535551565254909763909591969294101713156110161214e0e7e3e5e1e662e0e4606763656166626400008dea13571301e0a90000000049454e44ae426082"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-post-503",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "unknown",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-post-503",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "unknown",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-post-503",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "unknown",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-hidden-receipt",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "<template>这是您的首次签到，本次签到获得10个魔力值。</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-hidden-receipt",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "<template>这是您的首次签到，本次签到获得10个魔力值。</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-hidden-receipt",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "<template>这是您的首次签到，本次签到获得10个魔力值。</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-options-following-sibling-set",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u672b\\u5c3e\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片<span>nested</span>末尾</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[]",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-options-following-sibling-set",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u672b\\u5c3e\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片<span>nested</span>末尾</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[]",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-options-following-sibling-set",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17
+        },
+        "cache": "{\"0000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111\": \"\\u672b\\u5c3e\"}",
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片<span>nested</span>末尾</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[]",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-adapter-render",
+      "adapter": "Tjupt",
+      "kind": "adapter",
+      "input": {
+        "site": {
+          "timeout": 17,
+          "render": true
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-wrapper-render",
+      "adapter": "Tjupt",
+      "kind": "wrapper",
+      "input": {
+        "site": {
+          "timeout": 17,
+          "render": true
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-render",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "site": {
+          "timeout": 17,
+          "render": true
+        },
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tjupt-do-history-129",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Tjupt-do-history-130",
+      "adapter": "Tjupt",
+      "kind": "do",
+      "input": {
+        "responses": [
+          {
+            "text": "<table class=\"captcha\"><tr><td><img src=\"/captcha.png\"></td></tr></table><p><input name=\"ban_robot\" value=\"1\">甲片<input name=\"ban_robot\" value=\"2\">乙片</p>",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "[{\"img\":\"https://img.doubanio.com/synthetic.png\"}]",
+            "status": 200
+          },
+          {
+            "raw_hex": "89504e470d0a1a0a0000000d494844520000000a0000000a0800000000a85990610000007649444154789c636060646266616563e7e064e0e2e6e1e5e3171014126610111513979094929691659093575054525651555367d0d0d4d2d6d1d5d3373064303236313533b7b0b4b266b0b1b5b3777074727671657073f7f0f4f2f6f1f5f36708080c0a0e090d0b8f8864888a8e898d8b4f484c4a0600c24f1357ed68984b0000000049454e44ae426082"
+          },
+          {
+            "text": "这是您的首次签到，本次签到获得10个魔力值。",
+            "status": 200
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": false,
+                "message": "签到失败"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

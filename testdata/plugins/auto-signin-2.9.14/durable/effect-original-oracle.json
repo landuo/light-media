@@ -1,0 +1,2456 @@
+{
+  "provenance": {
+    "main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+    "execution": "actual installed AutoSignIn AST; injected exceptions before synthetic Base/Scheduler/Event boundaries; no DB/network/notification; Pool ordered sequential stub, not ORM/concurrency proof"
+  },
+  "cases": [
+    {
+      "scene": "init",
+      "failure_kind": "",
+      "failure_occurrence": 0,
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": false,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": false,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "load_modules"
+          },
+          {
+            "op": "scheduler_new",
+            "timezone": "UTC"
+          },
+          {
+            "op": "scheduler_job",
+            "func": {
+              "callable": "sign_in"
+            },
+            "trigger": "date",
+            "run_date": "2026-01-02T12:00:03+00:00",
+            "name": "站点自动签到"
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": false,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "scheduler_print"
+          },
+          {
+            "op": "scheduler_start"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_new",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_job",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 2
+        },
+        {
+          "kind": "scheduler_print",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_start",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "config",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": true,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": false,
+        "config": {},
+        "data": {},
+        "trace": []
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "config",
+      "failure_occurrence": 2,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": false,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": true,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "load_modules"
+          },
+          {
+            "op": "scheduler_new",
+            "timezone": "UTC"
+          },
+          {
+            "op": "scheduler_job",
+            "func": {
+              "callable": "sign_in"
+            },
+            "trigger": "date",
+            "run_date": "2026-01-02T12:00:03+00:00",
+            "name": "站点自动签到"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_new",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_job",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 2
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "load_modules",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": true,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": false,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": true,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "scheduler_new",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": true,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": true,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "load_modules"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_new",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "scheduler_job",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": true,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": true,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "load_modules"
+          },
+          {
+            "op": "scheduler_new",
+            "timezone": "UTC"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_new",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_job",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "scheduler_print",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": false,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": false,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "load_modules"
+          },
+          {
+            "op": "scheduler_new",
+            "timezone": "UTC"
+          },
+          {
+            "op": "scheduler_job",
+            "func": {
+              "callable": "sign_in"
+            },
+            "trigger": "date",
+            "run_date": "2026-01-02T12:00:03+00:00",
+            "name": "站点自动签到"
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": false,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_new",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_job",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 2
+        },
+        {
+          "kind": "scheduler_print",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "init",
+      "failure_kind": "scheduler_start",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": false,
+        "queue_cnt": 5,
+        "sign_sites": [
+          1
+        ],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": false,
+          "queue_cnt": 5,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": true,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "load_modules"
+          },
+          {
+            "op": "scheduler_new",
+            "timezone": "UTC"
+          },
+          {
+            "op": "scheduler_job",
+            "func": {
+              "callable": "sign_in"
+            },
+            "trigger": "date",
+            "run_date": "2026-01-02T12:00:03+00:00",
+            "name": "站点自动签到"
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": false,
+              "queue_cnt": 5,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          },
+          {
+            "op": "scheduler_print"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        },
+        {
+          "kind": "load_modules",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_new",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_job",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 2
+        },
+        {
+          "kind": "scheduler_print",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_start",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "stop",
+      "failure_kind": "",
+      "failure_occurrence": 0,
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "scheduler_remove"
+          },
+          {
+            "op": "scheduler_stop"
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 5,
+              "sign_sites": [],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "scheduler_remove",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_stop",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "stop",
+      "failure_kind": "scheduler_remove",
+      "failure_occurrence": 1,
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 5,
+              "sign_sites": [],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "scheduler_remove",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "stop",
+      "failure_kind": "scheduler_stop",
+      "failure_occurrence": 1,
+      "expected": {
+        "enabled": false,
+        "notify": null,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [],
+        "login_sites": [],
+        "retry_keyword": null,
+        "auto_cf": null,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": false,
+          "notify": null,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [],
+          "login_sites": [],
+          "retry_keyword": null,
+          "auto_cf": null,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "scheduler_remove"
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": false,
+              "notify": null,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 5,
+              "sign_sites": [],
+              "login_sites": [],
+              "retry_keyword": null,
+              "auto_cf": null,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "scheduler_remove",
+          "occurrence": 1
+        },
+        {
+          "kind": "scheduler_stop",
+          "occurrence": 1
+        },
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "",
+      "failure_occurrence": 0,
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1,
+              2
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效",
+                "logged_in": false
+              },
+              "2": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1,
+                2
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效",
+                  "logged_in": false
+                },
+                "2": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "action": "cloudflare_speedtest"
+            }
+          },
+          {
+            "op": "message",
+            "title": "【站点自动签到】",
+            "mtype": "NotificationType.SiteMessage",
+            "text": "全部签到数量: 2 \n本次签到数量: 2 \n下次签到数量: 1 \n确认签到成功: 1 \n仅确认登录: 0 \n登录或访问失败: 1 \n【Beta】签到成功\n【Alpha】签到失败，Cookie已失效"
+          },
+          {
+            "op": "message",
+            "channel": "synthetic-channel",
+            "title": "站点签到完成！",
+            "userid": "synthetic-user"
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": true,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 5,
+              "sign_sites": [
+                "all"
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": 1,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 2
+        },
+        {
+          "kind": "emit",
+          "occurrence": 2
+        },
+        {
+          "kind": "notify",
+          "occurrence": 1
+        },
+        {
+          "kind": "notify",
+          "occurrence": 2
+        },
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "history.delete",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "签到-2025-12-01": {},
+          "12月1日": []
+        },
+        "trace": []
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "history.delete",
+      "failure_occurrence": 2,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "12月1日": []
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "history.put",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "history.put",
+      "failure_occurrence": 2,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ]
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 2
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "emit",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ]
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "emit",
+      "failure_occurrence": 2,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1,
+              2
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效",
+                "logged_in": false
+              },
+              "2": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1,
+                2
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效",
+                  "logged_in": false
+                },
+                "2": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 2
+        },
+        {
+          "kind": "emit",
+          "occurrence": 2
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "notify",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1,
+              2
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效",
+                "logged_in": false
+              },
+              "2": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1,
+                2
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效",
+                  "logged_in": false
+                },
+                "2": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "action": "cloudflare_speedtest"
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 2
+        },
+        {
+          "kind": "emit",
+          "occurrence": 2
+        },
+        {
+          "kind": "notify",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "notify",
+      "failure_occurrence": 2,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1,
+              2
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效",
+                "logged_in": false
+              },
+              "2": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1,
+                2
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效",
+                  "logged_in": false
+                },
+                "2": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "action": "cloudflare_speedtest"
+            }
+          },
+          {
+            "op": "message",
+            "title": "【站点自动签到】",
+            "mtype": "NotificationType.SiteMessage",
+            "text": "全部签到数量: 2 \n本次签到数量: 2 \n下次签到数量: 1 \n确认签到成功: 1 \n仅确认登录: 0 \n登录或访问失败: 1 \n【Beta】签到成功\n【Alpha】签到失败，Cookie已失效"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 2
+        },
+        {
+          "kind": "emit",
+          "occurrence": 2
+        },
+        {
+          "kind": "notify",
+          "occurrence": 1
+        },
+        {
+          "kind": "notify",
+          "occurrence": 2
+        }
+      ]
+    },
+    {
+      "scene": "do",
+      "failure_kind": "config",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {
+          "1月2日": [
+            {
+              "site": "Alpha",
+              "status": "签到失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            },
+            {
+              "site": "Beta",
+              "status": "签到成功",
+              "site_id": 2,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1,
+              2
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效",
+                "logged_in": false
+              },
+              "2": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "trace": [
+          {
+            "op": "delete",
+            "key": "签到-2025-12-01"
+          },
+          {
+            "op": "delete",
+            "key": "12月1日"
+          },
+          {
+            "op": "pool",
+            "workers": 2
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Alpha",
+                "status": "签到失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              },
+              {
+                "site": "Beta",
+                "status": "签到成功",
+                "site_id": 2,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1,
+                2
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效",
+                  "logged_in": false
+                },
+                "2": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "action": "cloudflare_speedtest"
+            }
+          },
+          {
+            "op": "message",
+            "title": "【站点自动签到】",
+            "mtype": "NotificationType.SiteMessage",
+            "text": "全部签到数量: 2 \n本次签到数量: 2 \n下次签到数量: 1 \n确认签到成功: 1 \n仅确认登录: 0 \n登录或访问失败: 1 \n【Beta】签到成功\n【Alpha】签到失败，Cookie已失效"
+          },
+          {
+            "op": "message",
+            "channel": "synthetic-channel",
+            "title": "站点签到完成！",
+            "userid": "synthetic-user"
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "history.delete",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.delete",
+          "occurrence": 2
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 1
+        },
+        {
+          "kind": "emit",
+          "occurrence": 1
+        },
+        {
+          "kind": "history.put",
+          "occurrence": 2
+        },
+        {
+          "kind": "emit",
+          "occurrence": 2
+        },
+        {
+          "kind": "notify",
+          "occurrence": 1
+        },
+        {
+          "kind": "notify",
+          "occurrence": 2
+        },
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "deleted",
+      "failure_kind": "",
+      "failure_occurrence": 0,
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {},
+        "trace": [
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": true,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 5,
+              "sign_sites": [
+                "all"
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": 1,
+              "clean": null
+            }
+          }
+        ]
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    },
+    {
+      "scene": "deleted",
+      "failure_kind": "config",
+      "failure_occurrence": 1,
+      "error": {
+        "class": "Injected",
+        "message": "synthetic source boundary failure"
+      },
+      "expected": {
+        "enabled": true,
+        "notify": true,
+        "cron": null,
+        "onlyonce": null,
+        "queue_cnt": 5,
+        "sign_sites": [
+          "all"
+        ],
+        "login_sites": [],
+        "retry_keyword": "Cookie已失效",
+        "auto_cf": 1,
+        "clean": null,
+        "start_time": null,
+        "end_time": null,
+        "schema_loaded": true,
+        "config": {
+          "enabled": true,
+          "notify": true,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 5,
+          "sign_sites": [
+            "all"
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": 1,
+          "clean": null
+        },
+        "data": {},
+        "trace": []
+      },
+      "attempts": [
+        {
+          "kind": "config",
+          "occurrence": 1
+        }
+      ]
+    }
+  ]
+}

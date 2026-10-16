@@ -1,0 +1,5479 @@
+{
+  "provenance": {
+    "main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+    "base_sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+    "adapter_sha256": {
+      "mteam.py": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4"
+    },
+    "execution": "actual installed adapter/base/main AST and installed requests.Response/chardet/lxml; RequestUtils/browser/stats/indexer/store/messages are explicit synthetic recorders; original ThreadPool sequential stub, not concurrency proof; no app imports/user config/real HTTP"
+  },
+  "cases": [
+    {
+      "name": "MTorrent-adapter-success",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-success",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录成功（未执行签到）",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-success",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录成功（未执行签到）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录成功（未执行签到）",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录成功（未执行签到）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录成功（未执行签到）",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-source-fail-is-success",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-source-fail-is-success",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-source-fail-is-success",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录成功（未执行签到）",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-source-fail-is-success",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录成功（未执行签到）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录成功（未执行签到）",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录成功（未执行签到）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录成功（未执行签到）",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-false-code",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口未确认访问时间更新"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-false-code",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口未确认访问时间更新"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-false-code",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，接口未确认访问时间更新",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-false-code",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":1,\"message\":\"failure\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，接口未确认访问时间更新",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，接口未确认访问时间更新",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，接口未确认访问时间更新",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，接口未确认访问时间更新",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-expired",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-expired",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-expired",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":401}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，Token登录态已失效，请重新登录站点后更新Token",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-none",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，无法打开网站"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-none",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，无法打开网站"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，无法打开网站",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-none",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，无法打开网站",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，无法打开网站",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，无法打开网站",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，无法打开网站",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-503",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，状态码：503"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-503",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，状态码：503"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-503",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，状态码：503",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-503",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":0}",
+            "status": 503
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，状态码：503",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，状态码：503",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，状态码：503",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，状态码：503",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-invalid-json",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口返回数据异常"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-invalid-json",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口返回数据异常"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-invalid-json",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，接口返回数据异常",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-invalid-json",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "invalid",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，接口返回数据异常",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，接口返回数据异常",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，接口返回数据异常",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，接口返回数据异常",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-invalid-shape",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口返回数据异常"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-invalid-shape",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，接口返回数据异常"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-invalid-shape",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，接口返回数据异常",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-invalid-shape",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，接口返回数据异常",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，接口返回数据异常",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，接口返回数据异常",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，接口返回数据异常",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-exception",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic mteam exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-login-adapter-exception",
+      "kind": "login-adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic mteam exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-exception",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic mteam exception",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-exception",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " synthetic-login-token ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "error": "synthetic mteam exception"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败：synthetic mteam exception",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败：synthetic mteam exception",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败：synthetic mteam exception",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败：synthetic mteam exception",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-missing-token",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": null,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）"
+        ],
+        "calls": [],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-missing-token",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": null,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-missing-token",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": null,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-empty-token",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）"
+        ],
+        "calls": [],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-empty-token",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-empty-token",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": " ",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [
+          {
+            "success": false,
+            "domain": "m-team.cc"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录失败，未配置站点Token（需填写浏览器登录态Authorization）",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-proxy",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-proxy",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录成功（未执行签到）",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-proxy",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "proxy": true
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录成功（未执行签到）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录成功（未执行签到）",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录成功（未执行签到）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录成功（未执行签到）",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-no-agent",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "ua": null
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-no-agent",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "ua": null
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录成功（未执行签到）",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-no-agent",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.cc/",
+          "token": "synthetic-login-token",
+          "timeout": 17,
+          "ua": null
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.cc",
+              "Referer": "https://kp.m-team.cc/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.cc",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录成功（未执行签到）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录成功（未执行签到）",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录成功（未执行签到）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录成功（未执行签到）",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.cc/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "python-requests/2.34.2",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.cc",
+            "Referer": "https://kp.m-team.cc/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-adapter-io-family",
+      "kind": "adapter",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.io/",
+          "token": "synthetic-login-token",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "模拟登录成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.io",
+              "Referer": "https://kp.m-team.io/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.io/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.io/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.io",
+            "Referer": "https://kp.m-team.io/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-wrapper-io-family",
+      "kind": "wrapper",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.io/",
+          "token": "synthetic-login-token",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "模拟登录成功（未执行签到）",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.io",
+              "Referer": "https://kp.m-team.io/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.io/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.io",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.io/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.io",
+            "Referer": "https://kp.m-team.io/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    },
+    {
+      "name": "MTorrent-do-io-family",
+      "kind": "do",
+      "adapter": "MTorrent",
+      "input": {
+        "site": {
+          "url": "https://kp.m-team.io/",
+          "token": "synthetic-login-token",
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "{\"code\":\"1\",\"message\":\"FAIL\"}",
+            "status": 200
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "Accept": "application/json, text/plain, */*",
+              "Authorization": "synthetic-login-token",
+              "Origin": "https://kp.m-team.io",
+              "Referer": "https://kp.m-team.io/index",
+              "Ts": "1767355200",
+              "webversion": "2000",
+              "Did": "4cce750a205910b968976f5e749ca1cc",
+              "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+              "User-Agent": "synthetic-agent"
+            },
+            "timeout": 17,
+            "proxies": null,
+            "url": "https://api.m-team.io/api/member/updateLastBrowse",
+            "data": {
+              "_timestamp": "1767355200000",
+              "_sgin": "OYoHnpx8oNZ1jDUQBGE2ThdTXW0="
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "m-team.io",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "模拟登录成功（未执行签到）",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "模拟登录成功（未执行签到）",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "模拟登录成功（未执行签到）",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "模拟登录成功（未执行签到）",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      },
+      "network_evidence": [
+        {
+          "url": "https://api.m-team.io/api/member/updateLastBrowse",
+          "cookie": "",
+          "headers": {
+            "User-Agent": "synthetic-agent",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "application/json, text/plain, */*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization": "synthetic-login-token",
+            "Origin": "https://kp.m-team.io",
+            "Referer": "https://kp.m-team.io/index",
+            "Ts": "1767355200",
+            "webversion": "2000",
+            "Did": "4cce750a205910b968976f5e749ca1cc",
+            "visitorid": "11bd93b90d07f978afeba8a25ec9f711",
+            "Content-Length": "61"
+          },
+          "body_hex": "5f74696d657374616d703d31373637333535323030303030265f7367696e3d4f596f486e7078386f4e5a316a4455514247453254686454585730253344"
+        }
+      ],
+      "entropy": []
+    }
+  ]
+}

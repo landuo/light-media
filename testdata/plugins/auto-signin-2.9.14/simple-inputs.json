@@ -1,0 +1,2306 @@
+{
+  "classes": [
+    [
+      "btschool.py",
+      "BTSchool"
+    ],
+    [
+      "hdupt.py",
+      "HDUpt"
+    ],
+    [
+      "pttime.py",
+      "PTTime"
+    ],
+    [
+      "haidan.py",
+      "HaiDan"
+    ]
+  ],
+  "output": "simple-reference.json",
+  "cases": [
+    {
+      "name": "BTSchool-adapter-none",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-none",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-status",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-status",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-status",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-empty",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-empty",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-expired",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-expired",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-error",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-error",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-none",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-none",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-status",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-status",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-status",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-empty",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-empty",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-expired",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-expired",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-error",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-error",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-none",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-none",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-status",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-status",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-status",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-empty",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-empty",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-expired",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-expired",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-error",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-error",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-none",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-none",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-status",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-status",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-status",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-empty",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-empty",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-expired",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-expired",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-error",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-error",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic class exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-already",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-already",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-success",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>今天签到您获得12点魔力值",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>今天签到您获得12点魔力值",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-success",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>今天签到您获得12点魔力值",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-notlogged",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-notlogged",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-notlogged",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-pending",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a><button>签到</button>签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-pending",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a><button>签到</button>签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-pending",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a><button>签到</button>签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-second-none",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-second-none",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-second-none",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-second-expired",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<input type=\"password\">签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-second-expired",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<input type=\"password\">签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-second-expired",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<input type=\"password\">签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-adapter-hidden-receipt",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a><template>签到成功</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-hidden-receipt",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a><template>签到成功</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "BTSchool-do-hidden-receipt",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a><template>签到成功</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-already",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-already",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-success",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": " .23 ",
+            "status": 200
+          },
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": " .23 ",
+            "status": 200
+          },
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-success",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": " .23 ",
+            "status": 200
+          },
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-no-receipt",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "404",
+            "status": 200
+          },
+          {
+            "text": "home",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-no-receipt",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "404",
+            "status": 200
+          },
+          {
+            "text": "home",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-no-receipt",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "404",
+            "status": 200
+          },
+          {
+            "text": "home",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-notnumeric",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "error404",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-notnumeric",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "error404",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-notnumeric",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "error404",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-unicode-number",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "１２.٣",
+            "status": 200
+          },
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-unicode-number",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "１２.٣",
+            "status": 200
+          },
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-unicode-number",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "１２.٣",
+            "status": 200
+          },
+          {
+            "text": "<span id=\"yiqiandao\"></span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-hidden-state",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<template><span id=\"yiqiandao\"></span></template>",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          {
+            "text": "home",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-hidden-state",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<template><span id=\"yiqiandao\"></span></template>",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          {
+            "text": "home",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-hidden-state",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "<template><span id=\"yiqiandao\"></span></template>",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          {
+            "text": "home",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-second-none",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-second-none",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-second-none",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-adapter-third-none",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-third-none",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HDUpt-do-third-none",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-success",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-success",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-negative",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到失败 签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-negative",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到失败 签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-negative",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到失败 签到成功",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-hidden",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>签到成功</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-hidden",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>签到成功</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-hidden",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>签到成功</template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-attribute",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"签到成功\">unknown</span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-attribute",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"签到成功\">unknown</span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-attribute",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"签到成功\">unknown</span>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-adapter-unknown",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-wrapper-unknown",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTTime-do-unknown",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-success",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-success",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-first-none-still-check",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null,
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-first-none-still-check",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null,
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-first-none-still-check",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          null,
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-second-none",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-second-none",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-second-none",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-expired-second",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-expired-second",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-expired-second",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-hidden-second",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<template><input value=\"已经打卡\" type=\"button\"></template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-hidden-second",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<template><input value=\"已经打卡\" type=\"button\"></template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-hidden-second",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<template><input value=\"已经打卡\" type=\"button\"></template>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-unknown-second",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-unknown-second",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-do-unknown-second",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "unknown",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "HaiDan-adapter-subdir",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "url": "https://haidan.cc/sub/"
+        }
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-subdir",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "url": "https://haidan.cc/sub/"
+        }
+      }
+    },
+    {
+      "name": "HaiDan-do-subdir",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "url": "https://haidan.cc/sub/"
+        }
+      }
+    },
+    {
+      "name": "PTTime-adapter-render",
+      "kind": "adapter",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true,
+          "proxy": true,
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "PTTime-wrapper-render",
+      "kind": "wrapper",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true,
+          "proxy": true,
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "PTTime-do-render",
+      "kind": "do",
+      "adapter": "PTTime",
+      "input": {
+        "responses": [
+          {
+            "text": "签到成功",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true,
+          "proxy": true,
+          "timeout": 17
+        }
+      }
+    },
+    {
+      "name": "BTSchool-adapter-render",
+      "kind": "adapter",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>签到成功",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "BTSchool-wrapper-render",
+      "kind": "wrapper",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>签到成功",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "BTSchool-do-render",
+      "kind": "do",
+      "adapter": "BTSchool",
+      "input": {
+        "responses": [
+          {
+            "text": "<a href=\"logout.php\">Logout</a>",
+            "status": 200
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>签到成功",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "HDUpt-adapter-render",
+      "kind": "adapter",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "HDUpt-wrapper-render",
+      "kind": "wrapper",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "HDUpt-do-render",
+      "kind": "do",
+      "adapter": "HDUpt",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": ".23",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "HaiDan-adapter-render",
+      "kind": "adapter",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "HaiDan-wrapper-render",
+      "kind": "wrapper",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    },
+    {
+      "name": "HaiDan-do-render",
+      "kind": "do",
+      "adapter": "HaiDan",
+      "input": {
+        "responses": [
+          {
+            "text": "redirect",
+            "status": 200
+          },
+          {
+            "text": "<input value=\"已经打卡\" type=\"button\">",
+            "status": 200
+          }
+        ],
+        "site": {
+          "render": true
+        }
+      }
+    }
+  ]
+}

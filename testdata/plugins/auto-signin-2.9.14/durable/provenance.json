@@ -1,0 +1,85 @@
+{
+  "scope": "ignored independent module only; no formal App/catalog/plugin registration, real sites, credentials or notifications",
+  "implementation": "full Go runtime; Python files generate source-only offline references and are not runtime dependencies",
+  "actual_source": {
+    "effects": {
+      "main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+      "execution": "actual installed AutoSignIn AST; injected exceptions before synthetic Base/Scheduler/Event boundaries; no DB/network/notification; Pool ordered sequential stub, not ORM/concurrency proof"
+    },
+    "statistics": {
+      "site_oper_sha256": "08e202eb3fc97c7fe5d67d7253867334ada9bdd1747eb23b2d3cbe26da7f0cf0",
+      "model_sha256": "492fb63635c0e55b988b5022f146344bfed24108b5ff7c605de1123a909d043c",
+      "execution": "actual installed success/fail AST with recording model and fixed datetime; no SQLAlchemy/session/user DB; does not prove source ORM concurrency"
+    }
+  },
+  "references": {
+    "effects": {
+      "cases": 23,
+      "sha256": "6cdf4eea87afac3fc6e9a87bb819f01d1e6be2e170b089775542ef4b482c3a08"
+    },
+    "statistics": {
+      "scenes": 9,
+      "sha256": "ec81dd16e5ed847d5c5178af2657caba34b998174f7a1311ae1bae85e40bdcea"
+    },
+    "frozen_original": {
+      "_autosignin_port/oracle.json": "407efaaca1c50c39261bfef9cc13c78bde77d94bf146e35b09cc7c91573dcd9d",
+      "_autosignin_port/slice-provenance.json": "8b51cc4be85c4c04b40f203d8fde1743a64c942bc747e1a9a714e17e6d029c26"
+    }
+  },
+  "validation": {
+    "normal": {
+      "command": "go test ./...",
+      "exit_code": 0,
+      "log": "ok  \tlight-media/work/autosignin-durable-port\t5.889s\nok  \tlight-media/work/autosignin-durable-port/core\t(cached)\n",
+      "sha256": "dfa2b6ccf7f08387424bd032c76ad64ea0e229fa467bffc598fa5a37694324e4"
+    },
+    "race": {
+      "command": "go test -race ./...",
+      "exit_code": 0,
+      "log": "ok  \tlight-media/work/autosignin-durable-port\t6.779s\nok  \tlight-media/work/autosignin-durable-port/core\t(cached)\n",
+      "sha256": "c120345d63548598dc7e83db70d4890d49da80e6fe0355402cbc67a9cf9a53b1"
+    },
+    "vet": {
+      "command": "go vet ./...",
+      "exit_code": 0,
+      "log": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "go_tests": 31
+  },
+  "files": {
+    "INTEGRATION_CONTRACT.md": "795d3802bcea241b6b4dce242d7097058236e966278fd6a7cba492e47ac68801",
+    "README.md": "6dfaf04583ab7301fe520a89c1bd53d312ad7014ca75be8770e03a2b2e292791",
+    "cache_flow_test.go": "7a35f1265e7597288162f3d14737111953c948d816c9260ac8814646f6844dec",
+    "controller.go": "ac33f18044bc6f2828f0df26d2b90efc4329fb27181ee20b069bdfdc1a68693b",
+    "core/compat.go": "736258d8ebc8961107c16f6758b720a22f62fcba6ba9b0d708eb969ef3f49211",
+    "core/config.go": "2ca8f0e41e7be6975a20c3d82e09481b77792e22a9f1b22a517669ae5f62b1ab",
+    "core/config_test.go": "15e48fae2de75cb32980d2ca2a245a5df9f7fb9da4eb851c331ec4a4e1d69850",
+    "core/effects.go": "850e43d2c392a2633a764d4794914835b8b730521f5b5ba43927922b9e410cf5",
+    "core/effects_test.go": "088854cd3156f4324627ff95daf31ad35923f5091e32e5d363a1eaecd51de107",
+    "core/entrypoints.go": "37d35813fb4600ec29c040edb66f39fbab6ca679f62de2b3ab7b12b9ea48a256",
+    "core/form.json": "ee966c497f70b49c36718ba959e59ebffd73bec586c7788d5cfed3c5317413bb",
+    "core/run.go": "64acb469c9438aa70db6071553cf016708e7ac84d1467dafe3507dd4702742e0",
+    "core/run_test.go": "4b2440337d23ce476fd0c79d9b274cf368038574d7023eaaf5edaf67df4d9a6f",
+    "core/services.go": "23bdfdd1939675f0435acd5e95b5ab0d2a227d6ea1945e4484866f9ad348523d",
+    "core-source-manifest.json": "7310fed33406d5c9c93df2cbb57260eb1e2b3e63aa198613dd9e5482a99ad4e4",
+    "deterministic_test.go": "d126b18ec823b085b0b6ca1e7bb193d4db00aa439047c908d27f95e0b294b65e",
+    "durable_test.go": "a2eb5a35d6bbf12ff8e45f38e6652e2d854b2e746efe8df192768a561534c83a",
+    "effect-original-oracle.json": "6cdf4eea87afac3fc6e9a87bb819f01d1e6be2e170b089775542ef4b482c3a08",
+    "effects.go": "cfec1121d45cc92e9f74cd63467fc9ce0246e3be10b3d527eef73e76369d90c3",
+    "entropy.go": "c566b6fd1fee8475243e662b39c3747b0ec65d6af7d19688d0a147a1bcb5bad7",
+    "failure_test.go": "c18e59f8ad2aed15f5dee26365f969363f456bd682b49a2d5f09c69370b93f18",
+    "file_store.go": "782bf5d009686c3efe1a6e088eb89bc311895363b94a7a4e3ace0b8ef1b29a51",
+    "generate_effect_oracle.py": "b4396138711c5f494f40671d7436b6e5f736fb9d991f3deb9c3da9d8559b597d",
+    "generate_statistic_oracle.py": "c7b64fff33f69d77cf1c0a702a86e5f8ebab5332844f766cd0f175e12c3a8215",
+    "go.mod": "3e4cf40f8ec2e3e37fc6a0bad5f83bfc18e0ceec41aca47ee20f42bad43585c2",
+    "go.sum": "9961111fa702e157a1cbd9bdbaf9fa9a32230d3d9948cf9728bbec8f52548a40",
+    "lane.go": "826e23ad64b8d1eeed54696e8ebce20bc1cfd555a749e25c6bd7918d1ce1e760",
+    "loopback_test.go": "643848b6fa9e14e63a0e5ffe251e4fb5ac20bcc5eae513f8fffda0d22b2cff1f",
+    "network.go": "23f588aad10814f8d092fff892c39e95f4c37d2826dbc99a3ddff85b1aef1faa",
+    "outbox.go": "498b90511505301d059739ce8e100333aa4f6f3f2c059d8cc6b34ad6b691ba01",
+    "statistic-original-oracle.json": "ec81dd16e5ed847d5c5178af2657caba34b998174f7a1311ae1bae85e40bdcea",
+    "statistic_test.go": "df820f6543508baf1f76757ac5fb11b4475d7cc966a2a1806253d0e9c1f86b0e",
+    "types.go": "486f64170d64f7dcf3155bb40c1d92fdacc7201d1ac7b0272d2bf5324052338b"
+  }
+}

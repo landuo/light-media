@@ -1,0 +1,556 @@
+{
+  "version": "2.9.14",
+  "main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+  "methods": [
+    "init_plugin",
+    "get_state",
+    "__update_config",
+    "get_command",
+    "get_api",
+    "get_service",
+    "get_form",
+    "_resolve_site_ids",
+    "__custom_sites",
+    "get_page",
+    "_add_site_info",
+    "_build_sites_info",
+    "_get_site_display_name",
+    "_status_meta",
+    "_latest_record",
+    "_date_label",
+    "_calculate_day_stats",
+    "_build_stat_item",
+    "_build_summary",
+    "_build_status_section",
+    "_build_status_table",
+    "_site_sort_key",
+    "_build_status_row",
+    "_build_status_dot",
+    "sign_in",
+    "_clean_history",
+    "__do",
+    "__build_class",
+    "signin_by_domain",
+    "signin_site",
+    "_site_result",
+    "__signin_base",
+    "login_site",
+    "_login_result",
+    "__login_base",
+    "stop_service",
+    "site_deleted",
+    "__remove_site_id"
+  ],
+  "configuration_models": [
+    "auto_cf",
+    "clean",
+    "cron",
+    "enabled",
+    "login_sites",
+    "notify",
+    "onlyonce",
+    "queue_cnt",
+    "retry_keyword",
+    "sign_sites"
+  ],
+  "components": [
+    "VAlert",
+    "VChip",
+    "VCol",
+    "VCronField",
+    "VForm",
+    "VIcon",
+    "VRow",
+    "VSelect",
+    "VSpacer",
+    "VSwitch",
+    "VTable",
+    "VTextField",
+    "div",
+    "span",
+    "style",
+    "tbody",
+    "td",
+    "th",
+    "thead",
+    "tr"
+  ],
+  "sites": [
+    {
+      "file": "sites/52pt.py",
+      "class": "Pt52",
+      "methods": [
+        "match",
+        "signin",
+        "__signin"
+      ],
+      "imports": [
+        "import random",
+        "import re",
+        "from typing import Tuple",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils",
+        "from lxml import etree"
+      ],
+      "sha256": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb"
+    },
+    {
+      "file": "sites/btschool.py",
+      "class": "BTSchool",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.result import has_signin_evidence",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.site import SiteUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "efc63422cc4b2c3e18c35324f358b4d9899a58cffbf8099c4efc533cc5b48bcd"
+    },
+    {
+      "file": "sites/chdbits.py",
+      "class": "CHDBits",
+      "methods": [
+        "match",
+        "signin",
+        "__signin"
+      ],
+      "imports": [
+        "import random",
+        "import re",
+        "from typing import Tuple",
+        "from lxml import etree",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89"
+    },
+    {
+      "file": "sites/haidan.py",
+      "class": "HaiDan",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from urllib.parse import urljoin",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "d68586c83b5721a495e7af5172e7642cbe6cf74d7c555eab8a3c3153ba281461"
+    },
+    {
+      "file": "sites/hares.py",
+      "class": "Hares",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import json",
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.result import has_signin_evidence",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2"
+    },
+    {
+      "file": "sites/hdarea.py",
+      "class": "HDArea",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630"
+    },
+    {
+      "file": "sites/hdchina.py",
+      "class": "HDChina",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import json",
+        "from typing import Tuple",
+        "from lxml import etree",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "dec9063410d6601c885df2de60844feacf2fb143d4aa662eba47fcad27948731"
+    },
+    {
+      "file": "sites/hdcity.py",
+      "class": "HDCity",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475"
+    },
+    {
+      "file": "sites/hdsky.py",
+      "class": "HDSky",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import json",
+        "import time",
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.helper.ocr import OcrHelper",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70"
+    },
+    {
+      "file": "sites/hdupt.py",
+      "class": "HDUpt",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import re",
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "eb8e2c96088fdf956a0cb1efb58ac69716d89ebfd4d3240089eb53fa0c0e55f3"
+    },
+    {
+      "file": "sites/mteam.py",
+      "class": "MTorrent",
+      "methods": [
+        "match",
+        "signin",
+        "login",
+        "_build_headers",
+        "_build_sign",
+        "_parse_payload"
+      ],
+      "imports": [
+        "import base64",
+        "import hashlib",
+        "import hmac",
+        "import time",
+        "from typing import Optional, Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4"
+    },
+    {
+      "file": "sites/nexushd.py",
+      "class": "NexusHD",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf"
+    },
+    {
+      "file": "sites/opencd.py",
+      "class": "Opencd",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import json",
+        "import time",
+        "from typing import Tuple",
+        "from lxml import etree",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.helper.ocr import OcrHelper",
+        "from app.log import logger",
+        "from app.plugins.autosignin.result import has_signin_evidence",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b"
+    },
+    {
+      "file": "sites/pterclub.py",
+      "class": "PTerClub",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import json",
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.result import has_signin_evidence",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3"
+    },
+    {
+      "file": "sites/pttime.py",
+      "class": "PTTime",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "e1e8e5a446ed15802774eda142c57b22a8482ddee511d49aff256a5a8089bb7b"
+    },
+    {
+      "file": "sites/ptzone.py",
+      "class": "PTZone",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from urllib.parse import urljoin, urlparse",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.helper.cloudflare import under_challenge",
+        "from app.plugins.autosignin.result import has_login_evidence, has_login_form, has_signin_evidence",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils"
+      ],
+      "sha256": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90"
+    },
+    {
+      "file": "sites/rousipro.py",
+      "class": "RousiPro",
+      "methods": [
+        "_bearer_auth",
+        "_response_code",
+        "_already_signed",
+        "match",
+        "signin",
+        "login"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.log import logger",
+        "from app.plugins.autosignin.result import has_signin_evidence",
+        "from app.core.config import settings",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler"
+      ],
+      "sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0"
+    },
+    {
+      "file": "sites/tjupt.py",
+      "class": "Tjupt",
+      "methods": [
+        "match",
+        "signin",
+        "__signin",
+        "__write_local_answer",
+        "_tohash",
+        "_comparehash"
+      ],
+      "imports": [
+        "import json",
+        "import os",
+        "import time",
+        "from io import BytesIO",
+        "from typing import Tuple",
+        "from PIL import Image",
+        "from lxml import etree",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0"
+    },
+    {
+      "file": "sites/ttg.py",
+      "class": "TTG",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import re",
+        "from typing import Tuple",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b"
+    },
+    {
+      "file": "sites/u2.py",
+      "class": "U2",
+      "methods": [
+        "_is_success_response",
+        "_has_signed_state",
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import datetime",
+        "import random",
+        "import re",
+        "from typing import Tuple",
+        "from urllib.parse import urljoin, urlparse",
+        "from lxml import etree",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.site import SiteUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5"
+    },
+    {
+      "file": "sites/yema.py",
+      "class": "YemaPT",
+      "methods": [
+        "match",
+        "signin",
+        "login"
+      ],
+      "imports": [
+        "from typing import Tuple",
+        "from urllib.parse import urljoin",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils"
+      ],
+      "sha256": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b"
+    },
+    {
+      "file": "sites/zhuque.py",
+      "class": "ZhuQue",
+      "methods": [
+        "match",
+        "signin"
+      ],
+      "imports": [
+        "import json",
+        "from typing import Tuple",
+        "from lxml import etree",
+        "from ruamel.yaml import CommentedMap",
+        "from app.core.config import settings",
+        "from app.log import logger",
+        "from app.plugins.autosignin.sites import _ISiteSigninHandler",
+        "from app.utils.http import RequestUtils",
+        "from app.utils.string import StringUtils"
+      ],
+      "sha256": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563"
+    }
+  ],
+  "dependencies": {
+    "requests": "2.34.2",
+    "urllib3": "2.7.0",
+    "lxml": "6.1.1",
+    "pytz": "2026.3.post1",
+    "APScheduler": "3.11.3",
+    "ruamel.yaml": "0.19.1",
+    "chardet": "7.4.3",
+    "numpy": "2.5.2",
+    "Pillow": "12.2.0",
+    "opencv-python": null,
+    "opencv-python-headless": null,
+    "playwright": "1.62.0",
+    "pyquery": "2.0.2",
+    "cssselect": "1.4.0"
+  },
+  "compiled_sites_helper": {
+    "path": "/app/app/helper/sites.cpython-312-x86_64-linux-gnu.so",
+    "sha256": "8a14c1668778305b9b40bdd5456e6a95afe6ef101b11db02750fbcd4e7ae0b64",
+    "boundary": "no installed Python source; no actual indexer/config accessed"
+  },
+  "notifications_executed": false,
+  "real_site_requests": 0,
+  "references": {
+    "oracle.json": {
+      "cases": 84,
+      "sha256": "407efaaca1c50c39261bfef9cc13c78bde77d94bf146e35b09cc7c91573dcd9d"
+    },
+    "mteam-reference.json": {
+      "cases": 37,
+      "sha256": "8c98de661be015e8d57f361d8246cdc9c967dba428cd75f8c80d8f52c2c043d6"
+    }
+  }
+}

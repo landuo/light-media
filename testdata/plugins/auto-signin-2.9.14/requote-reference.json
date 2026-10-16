@@ -1,0 +1,107 @@
+{
+  "provenance": {
+    "python": "3.12.13",
+    "requests": "2.34.2",
+    "urllib3_url_sha256": "59187e4cc617a2c9a0a7c9bc953e07e6ca681f0e7252395c3027d4e77024a00b",
+    "utils_sha256": "657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c",
+    "execution": "actual installed requests.Request.prepare, no sends/session/netrc/site config"
+  },
+  "cases": [
+    {
+      "label": "甲片",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%E7%94%B2%E7%89%87"
+    },
+    {
+      "label": " a b ",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%20a%20b%20"
+    },
+    {
+      "label": "a&b=c",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=a&b=c"
+    },
+    {
+      "label": "a#片",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=a#%E7%89%87"
+    },
+    {
+      "label": "x%41%7E%2f%25",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=xA~%2F%25"
+    },
+    {
+      "label": "x%4G",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=x%254G"
+    },
+    {
+      "label": "x%",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=x%25"
+    },
+    {
+      "label": "x%4",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=x%254"
+    },
+    {
+      "label": "%E7%94%B2",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%E7%94%B2"
+    },
+    {
+      "label": "%00",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%00"
+    },
+    {
+      "label": "a+b",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=a+b"
+    },
+    {
+      "label": "()[]{}|\\<>\"`^",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=()%5B%5D%7B%7D%7C%5C%3C%3E%22%60%5E"
+    },
+    {
+      "label": "a\nb\rc\td",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=a%0Ab%0Dc%09d"
+    },
+    {
+      "label": "\u0000",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%00"
+    },
+    {
+      "label": "emoji😀",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=emoji%F0%9F%98%80"
+    },
+    {
+      "label": "ＡＢＣ",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%EF%BC%A1%EF%BC%A2%EF%BC%A3"
+    },
+    {
+      "label": "%c3%a9",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%C3%A9"
+    },
+    {
+      "label": "a?x=1",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=a?x=1"
+    },
+    {
+      "label": "a;b",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=a;b"
+    },
+    {
+      "label": "​",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%E2%80%8B"
+    },
+    {
+      "label": "﻿",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%EF%BB%BF"
+    },
+    {
+      "label": " ",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%C2%A0"
+    },
+    {
+      "label": "%G0%41",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=%25G0%2541"
+    },
+    {
+      "label": "100% 比例",
+      "prepared_url": "https://movie.douban.com/j/subject_suggest?q=100%25%20%E6%AF%94%E4%BE%8B"
+    }
+  ]
+}

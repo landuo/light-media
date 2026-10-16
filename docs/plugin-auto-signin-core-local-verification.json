@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-17",
+  "base_commit": "0a24d9d",
+  "go_version": "go version go1.26.2 darwin/arm64",
+  "manifest_sha256": "6906b8d1cec1c6b87962c458e4ede139edc5963953495cbec2e78f05c14f9f86",
+  "formal_files": 63,
+  "reference_files": 34,
+  "commands": [
+    {
+      "command": "go build ./internal/plugins/autosignin/...",
+      "exit_code": 0
+    },
+    {
+      "command": "go test ./internal/plugins/autosignin/... -count=1",
+      "exit_code": 0,
+      "packages": {
+        "autosignin_seconds": 2.76,
+        "durable_seconds": 7.883,
+        "imagehash_seconds": 1.606
+      }
+    },
+    {
+      "command": "go test -race ./internal/plugins/autosignin/... -count=1",
+      "exit_code": 0,
+      "packages": {
+        "autosignin_seconds": 20.688,
+        "durable_seconds": 8.772,
+        "imagehash_seconds": 9.572
+      }
+    },
+    {
+      "command": "go vet ./internal/plugins/autosignin/...",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Formal single effect-aware AutoSignIn engine, 22 adapters and production StateJournal/StateBackend contract including pure owner restore. Old checkpoint Machine and standalone encrypted FileStore/OS lease are test-only. Controlled HTTP, SDK fixtures and crash/replay tests, not live credentials or real site verification. App SQL owner integration still under construction and not included in this report.",
+  "production": {
+    "registered": false,
+    "deployed": false,
+    "original_config_imported": false,
+    "original_KV_imported": false,
+    "live_signin": false,
+    "external_notification_sent": false
+  }
+}

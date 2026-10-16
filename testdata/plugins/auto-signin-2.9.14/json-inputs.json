@@ -1,0 +1,3815 @@
+{
+  "classes": [
+    [
+      "hares.py",
+      "Hares"
+    ],
+    [
+      "pterclub.py",
+      "PTerClub"
+    ],
+    [
+      "rousipro.py",
+      "RousiPro"
+    ],
+    [
+      "yema.py",
+      "YemaPT"
+    ],
+    [
+      "zhuque.py",
+      "ZhuQue"
+    ]
+  ],
+  "output": "json-reference.json",
+  "cases": [
+    {
+      "name": "Hares-adapter-none",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-none",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-503",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-503",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-503",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-empty",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-empty",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-expired",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-expired",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-error",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-error",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-none",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-none",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-503",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-503",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-503",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-empty",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-empty",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-expired",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-expired",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-error",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-error",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-none",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-none",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-503",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-503",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-503",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "error",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-empty",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-empty",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-empty",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-expired",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-expired",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-error",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-error",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-error",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic JSON adapter exception"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-success",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-success",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-bool-zero",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-bool-zero",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-bool-zero",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-float-zero",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0.0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-float-zero",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0.0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-float-zero",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0.0}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-string-zero",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": \"0\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-string-zero",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": \"0\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-string-zero",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": \"0\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-already",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"您今天已经签到过了\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"您今天已经签到过了\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-already",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"您今天已经签到过了\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-bool-one",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": true, \"msg\": \"签到成功\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-bool-one",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": true, \"msg\": \"签到成功\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-bool-one",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": true, \"msg\": \"签到成功\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-float-one",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1.0, \"msg\": \"签到成功\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-float-one",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1.0, \"msg\": \"签到成功\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-float-one",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1.0, \"msg\": \"签到成功\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-already-unknown",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"unknown\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-already-unknown",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"unknown\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-already-unknown",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"unknown\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-already-hidden",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"<template>签到成功</template>\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-already-hidden",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"<template>签到成功</template>\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-already-hidden",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": \"<template>签到成功</template>\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-message-false",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-message-false",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-message-false",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1, \"msg\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-message-none",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-message-none",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-message-none",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-negative",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 2}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-negative",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 2}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-negative",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 2}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-list",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-list",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-list",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-null",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-null",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-null",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-submit-none",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-submit-none",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-submit-none",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-submit-503",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-submit-503",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-submit-503",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-adapter-submit-invalid",
+      "kind": "adapter",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-wrapper-submit-invalid",
+      "kind": "wrapper",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "Hares-do-submit-invalid",
+      "kind": "do",
+      "adapter": "Hares",
+      "input": {
+        "responses": [
+          {
+            "text": "home",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-success",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"1\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"1\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-success",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"1\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-numeric-one",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-numeric-one",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-numeric-one",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-already",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"您今天已经签到过了\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"您今天已经签到过了\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-already",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"您今天已经签到过了\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-already-hidden",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"<template>签到成功</template>\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-already-hidden",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"<template>签到成功</template>\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-already-hidden",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"<template>签到成功</template>\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-unknown",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"unknown\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-unknown",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"unknown\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-unknown",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": \"unknown\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-false-message",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-false-message",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-false-message",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"status\": \"0\", \"message\": false}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-list",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-list",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-list",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-null",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-null",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-null",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "null",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-missing",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-missing",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-missing",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-adapter-invalid",
+      "kind": "adapter",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-wrapper-invalid",
+      "kind": "wrapper",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "PTerClub-do-invalid",
+      "kind": "do",
+      "adapter": "PTerClub",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "RousiPro-adapter-missing",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": []
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-missing",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": []
+      }
+    },
+    {
+      "name": "RousiPro-do-missing",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": []
+      }
+    },
+    {
+      "name": "RousiPro-adapter-success",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-success",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-code-bool",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-code-bool",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-code-bool",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-code-float",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0.0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-code-float",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0.0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-code-float",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0.0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-code-string",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": \"0\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-code-string",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": \"0\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-code-string",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": \"0\"}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-already",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"签到成功\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-already",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"签到成功\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-already",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"签到成功\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-already-hidden",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"<template>签到成功</template>\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-already-hidden",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"<template>签到成功</template>\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-already-hidden",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"<template>签到成功</template>\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-message-fallback",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": false, \"msg\": \"您今天已经签到过了\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-message-fallback",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": false, \"msg\": \"您今天已经签到过了\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-message-fallback",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": false, \"msg\": \"您今天已经签到过了\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-400-other",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"invalid permissions\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-400-other",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"invalid permissions\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-400-other",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 1, \"message\": \"invalid permissions\"}",
+            "status": 400
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-403",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 403
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-403",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 403
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-403",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 403
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-none",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-none",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-invalid-json",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-invalid-json",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-invalid-json",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-token-only",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "Bearer synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-token-only",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "Bearer synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-token-only",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "Bearer synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-token-uppercase",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "bEaReR synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-token-uppercase",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "bEaReR synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-token-uppercase",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "bEaReR synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-personal-token-fallback",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 401
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-personal-token-fallback",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 401
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-personal-token-fallback",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 401
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-personal-bad-token-fail",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null,
+          {
+            "text": "{}",
+            "status": 403
+          },
+          null,
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-personal-bad-token-fail",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null,
+          {
+            "text": "{}",
+            "status": 403
+          },
+          null,
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-personal-bad-token-fail",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null,
+          {
+            "text": "{}",
+            "status": 403
+          },
+          null,
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-adapter-personal-wins-no-fallback",
+      "kind": "adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-wrapper-personal-wins-no-fallback",
+      "kind": "wrapper",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-do-personal-wins-no-fallback",
+      "kind": "do",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-personal",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-token",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-fallback",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 401
+          },
+          {
+            "text": "{\"code\": 0}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": "synthetic-token"
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-status",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 403
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-no-creds",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": []
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-none",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          null
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-code-bool",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"code\": false}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "RousiPro-login-adapter-login-invalid-json",
+      "kind": "login-adapter",
+      "adapter": "RousiPro",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ],
+        "site": {
+          "apikey": "synthetic-personal-key",
+          "token": null
+        }
+      }
+    },
+    {
+      "name": "YemaPT-adapter-success",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-success",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-numeric-one",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-numeric-one",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-numeric-one",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-missing",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-missing",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-missing",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-error-text",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"errorMessage\": \"invalid token\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-error-text",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"errorMessage\": \"invalid token\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-error-text",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"errorMessage\": \"invalid token\"}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-status",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"errorMessage\": \"blocked\"}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-status",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"errorMessage\": \"blocked\"}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-status",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"errorMessage\": \"blocked\"}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-invalid",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-invalid",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-invalid",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-list",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-list",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-list",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "[]",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-none",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-none",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-do-none",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-adapter-subdir",
+      "kind": "adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "url": "https://yemapt.org/sub/"
+        }
+      }
+    },
+    {
+      "name": "YemaPT-wrapper-subdir",
+      "kind": "wrapper",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "url": "https://yemapt.org/sub/"
+        }
+      }
+    },
+    {
+      "name": "YemaPT-do-subdir",
+      "kind": "do",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ],
+        "site": {
+          "url": "https://yemapt.org/sub/"
+        }
+      }
+    },
+    {
+      "name": "YemaPT-login-adapter-login-success",
+      "kind": "login-adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": true}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-login-adapter-login-status-invalid-body",
+      "kind": "login-adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "not json",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-login-adapter-login-numeric-one",
+      "kind": "login-adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          {
+            "text": "{\"success\": 1}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "YemaPT-login-adapter-login-none",
+      "kind": "login-adapter",
+      "adapter": "YemaPT",
+      "input": {
+        "responses": [
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-success",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 12}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-success",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 12}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-success",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 12}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-unicode-int",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": \"１２\"}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-unicode-int",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": \"１２\"}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-unicode-int",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": \"１２\"}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-float-int",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 1.7}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-float-int",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 1.7}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-float-int",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 1.7}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-bool-int",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": true}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-bool-int",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": true}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-bool-int",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": true}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-non200-still-bonus",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 3}}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-non200-still-bonus",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 3}}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-non200-still-bonus",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {\"bonus\": 3}}",
+            "status": 503
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-business-failure",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 403}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-business-failure",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 403}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-business-failure",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 403}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-empty-meta",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-empty-meta",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-empty-meta",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"\">",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-no-meta",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<div>home</div>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-no-meta",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<div>home</div>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-no-meta",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<div>home</div>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-post-none",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-post-none",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-post-none",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          null
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-post-invalid",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-post-invalid",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-post-invalid",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "not json",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-missing-status",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-missing-status",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-missing-status",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-missing-bonus",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-missing-bonus",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-missing-bonus",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<meta name=\"x-csrf-token\" content=\"synthetic-csrf\">",
+            "status": 200
+          },
+          {
+            "text": "{\"status\": 200, \"data\": {}}",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-adapter-html-empty",
+      "kind": "adapter",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<html></html>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-wrapper-html-empty",
+      "kind": "wrapper",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<html></html>",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "ZhuQue-do-html-empty",
+      "kind": "do",
+      "adapter": "ZhuQue",
+      "input": {
+        "responses": [
+          {
+            "text": "<html></html>",
+            "status": 200
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,789 @@
+{
+  "provenance": {
+    "http_source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "distributions": {
+      "requests": "2.34.2",
+      "urllib3": "2.7.0",
+      "certifi": "2026.7.22",
+      "idna": "3.18",
+      "charset-normalizer": "3.4.9",
+      "chardet": "7.4.3",
+      "brotli": "1.2.0",
+      "zstandard": "0.25.0"
+    },
+    "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "execution": "actual installed RequestUtils/cookie_parse AST and matching dependency versions; disposable loopback HTTP/TLS only; original app/user config/real credentials/notifications never imported; empty fixture netrc; strict TLS behavior is documented Go divergence"
+  },
+  "tls": {
+    "source_verify_false_sends_synthetic_cookie": true,
+    "strict_tls_rejects_before_http": true,
+    "strict_http_handler_calls": 0
+  },
+  "cases": [
+    {
+      "name": "network-0",
+      "method": "GET",
+      "path": "/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-1",
+      "method": "POST",
+      "path": "/ptzone/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/ptzone/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "referer": "<origin>/ptzone/attendance.php",
+            "cookie": "sid=synthetic-only",
+            "content-length": "0"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "post",
+          "path": "/ptzone/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-2",
+      "method": "GET",
+      "path": "/ptzone/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/ptzone/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/ptzone/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><button>签到</button>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c627574746f6e3ee7adbee588b03c2f627574746f6e3e"
+      }
+    },
+    {
+      "name": "network-3",
+      "method": "GET",
+      "path": "/pending/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/pending/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/pending/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><button>签到</button>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c627574746f6e3ee7adbee588b03c2f627574746f6e3e"
+      }
+    },
+    {
+      "name": "network-4",
+      "method": "GET",
+      "path": "/redirect/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/redirect/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        },
+        {
+          "method": "GET",
+          "path": "/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "cookie": "sid=synthetic-only; newcookie=fresh"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/redirect/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-5",
+      "method": "POST",
+      "path": "/redirect/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/redirect/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "referer": "<origin>/redirect/attendance.php",
+            "cookie": "sid=synthetic-only",
+            "content-length": "0"
+          },
+          "body_hex": ""
+        },
+        {
+          "method": "GET",
+          "path": "/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "referer": "<origin>/redirect/attendance.php",
+            "cookie": "sid=synthetic-only; newcookie=fresh"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "post",
+          "path": "/redirect/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-6",
+      "method": "GET",
+      "path": "/attendance.php",
+      "cookie": "a=first; b=x%20y; a=last; bad; c=x%2By; d=%C3%A9",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "a=last; b=x y; c=x+y; d=%C3%A9"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-7",
+      "method": "GET",
+      "path": "/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": null,
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/attendance.php",
+          "headers": {
+            "user-agent": "python-urllib3/2.7.0",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-8",
+      "method": "GET",
+      "path": "/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/attendance.php",
+          "headers": {
+            "user-agent": "",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-9",
+      "method": "GET",
+      "path": "/503/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/503/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/503/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 503,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-10",
+      "method": "GET",
+      "path": "/latin1/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/latin1/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/latin1/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">Logout</a>é",
+        "encoding": "ISO-8859-1",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223e4c6f676f75743c2f613ee980"
+      }
+    },
+    {
+      "name": "network-11",
+      "method": "GET",
+      "path": "/gbk/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/gbk/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/gbk/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "GBK",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ecdcbb3f6b5c7c2bc3c2f613e3c6469763ec7a9b5bdb3c9b9a63c2f6469763e"
+      }
+    },
+    {
+      "name": "network-12",
+      "method": "GET",
+      "path": "/no-header/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/no-header/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/no-header/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": null,
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-13",
+      "method": "GET",
+      "path": "/gzip/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/gzip/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/gzip/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-14",
+      "method": "GET",
+      "path": "/deflate/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/deflate/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/deflate/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-15",
+      "method": "GET",
+      "path": "/deflate-raw/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/deflate-raw/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/deflate-raw/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-16",
+      "method": "GET",
+      "path": "/br/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/br/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/br/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-17",
+      "method": "GET",
+      "path": "/zstd/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/zstd/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/zstd/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e"
+      }
+    },
+    {
+      "name": "network-18",
+      "method": "GET",
+      "path": "/truncated/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/truncated/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/truncated/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": null
+    },
+    {
+      "name": "network-19",
+      "method": "GET",
+      "path": "/invalid-utf8/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/invalid-utf8/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/invalid-utf8/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">退出登录</a><div>签到成功</div>���",
+        "encoding": "UTF-8",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763effffe282"
+      }
+    },
+    {
+      "name": "network-20",
+      "method": "GET",
+      "path": "/bad-gzip/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/bad-gzip/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/bad-gzip/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": null
+    },
+    {
+      "name": "network-21",
+      "method": "GET",
+      "path": "/ascii/attendance.php",
+      "cookie": "sid=synthetic-only",
+      "ua": "synthetic-UA",
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/ascii/attendance.php",
+          "headers": {
+            "user-agent": "synthetic-UA",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cookie": "sid=synthetic-only"
+          },
+          "body_hex": ""
+        }
+      ],
+      "calls": [
+        {
+          "method": "get",
+          "path": "/ascii/attendance.php",
+          "verify": false
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "text": "<a href=\"logout.php\">������������</a><div>������������</div>��",
+        "encoding": "ASCII",
+        "raw_hex": "3c6120687265663d226c6f676f75742e706870223ee98080e587bae799bbe5bd953c2f613e3c6469763ee7adbee588b0e68890e58a9f3c2f6469763e80ff"
+      }
+    }
+  ]
+}

@@ -1,0 +1,374 @@
+{
+  "base_commit": "0a24d9d",
+  "method": "Merge the four effect-aware engine files into the original adapter package; no duplicate engine or production standalone FileStore; original SDK checkpoint machine is test-only. No App/catalog registration or original data import.",
+  "inputs": {
+    "work/_autosignin_port/quiz_adapters.go": {
+      "sha256": "14e791eb94930344d9f42b886f16d128886b09b016ca2f4801cd582a9943b873",
+      "target": "internal/plugins/autosignin/quiz_adapters.go"
+    },
+    "work/_autosignin_port/dynamic_adapters.go": {
+      "sha256": "75ec092e898e0379f507fb649375b5517e6c06622223d3a00c3d80f3dbb6b907",
+      "target": "internal/plugins/autosignin/dynamic_adapters.go"
+    },
+    "work/_autosignin_port/sdk.go": {
+      "sha256": "ce7e7348e6084c0f29ad0c115a0cb3285aa1e1083c7ae62fcfe4ee0acd52285b",
+      "target": "internal/plugins/autosignin/sdk.go"
+    },
+    "work/_autosignin_port/config.go": {
+      "sha256": "e5c6cae99e32a9a6b4724d209ff5ab92eb173fab1a0fb8bc3f3b4a4caf29c01a",
+      "target": "internal/plugins/autosignin/config.go"
+    },
+    "work/_autosignin_port/request_encoding.go": {
+      "sha256": "fbc5737924cb72a1c7a94cac0b1e0f39001c07a960935c2d9561797ea7100692",
+      "target": "internal/plugins/autosignin/request_encoding.go"
+    },
+    "work/_autosignin_port/services.go": {
+      "sha256": "23673e1c650d2a39a3012d21498a2a64c04478adc85f2f60baf03656b5ef3006",
+      "target": "internal/plugins/autosignin/services.go"
+    },
+    "work/_autosignin_port/run.go": {
+      "sha256": "f5c3b3b446c19b34d08e6e92d3cac9103b87cd273006b4f773c4492c3a7b2416",
+      "target": "internal/plugins/autosignin/run.go"
+    },
+    "work/_autosignin_port/http_transport_test.go": {
+      "sha256": "3187b3863cf6c870e2acbae60c97d28674a991c75d668498d0a82d94d6dca841",
+      "target": "internal/plugins/autosignin/http_transport_test.go"
+    },
+    "work/_autosignin_port/visits_test.go": {
+      "sha256": "e3ceb0c8b63f7885467c37e7ee9076615d45a247bc4c2734748379bcd54070d1",
+      "target": "internal/plugins/autosignin/visits_test.go"
+    },
+    "work/_autosignin_port/tjupt_adapters.go": {
+      "sha256": "0f45fa17aba0fa3bafe57cabeeed056ccc22451c5a922274c010791c650726e2",
+      "target": "internal/plugins/autosignin/tjupt_adapters.go"
+    },
+    "work/_autosignin_port/fixed_adapters.go": {
+      "sha256": "caa4064a227ebc4bd757839ced3ae9ed44ea75abdf2d6176eb50aca3414366e0",
+      "target": "internal/plugins/autosignin/fixed_adapters.go"
+    },
+    "work/_autosignin_port/page.go": {
+      "sha256": "4f0645a4a9df6670d0bc88eeb4a84483ce7ec591b3ed9442ecef438c181ff51b",
+      "target": "internal/plugins/autosignin/page.go"
+    },
+    "work/_autosignin_port/html.go": {
+      "sha256": "d3da93c50c82b9593a29e12e49a52eb3091e3f2010555f8d5659a6b77c724256",
+      "target": "internal/plugins/autosignin/html.go"
+    },
+    "work/_autosignin_port/host_grants.go": {
+      "sha256": "92d56b2ab5aeb9cd4d4fe3632866f505edb949ca55ff1472ed62a2318fa1b245",
+      "target": "internal/plugins/autosignin/host_grants.go"
+    },
+    "work/_autosignin_port/html_test.go": {
+      "sha256": "2565164cef3d0ac1b9f4b10f89fa3472e86fe6863e9a8b13481184bc64a66aaa",
+      "target": "internal/plugins/autosignin/html_test.go"
+    },
+    "work/_autosignin_port/ocr_loop_test.go": {
+      "sha256": "b9c3380d9e88a88339faff429a6381f13258afc6dc9514a3eb5996a13111860b",
+      "target": "internal/plugins/autosignin/ocr_loop_test.go"
+    },
+    "work/_autosignin_port/mteam_transport_test.go": {
+      "sha256": "07971abca3b0ed264aecab15d14b90694dc57ecb71f906bac810580a18f44513",
+      "target": "internal/plugins/autosignin/mteam_transport_test.go"
+    },
+    "work/_autosignin_port/tjupt_transport_test.go": {
+      "sha256": "b9a4b86aab00d8c2f60d7578ff9ef3ae3245700b653262c8434ad182e119d5a5",
+      "target": "internal/plugins/autosignin/tjupt_transport_test.go"
+    },
+    "work/_autosignin_port/run_test.go": {
+      "sha256": "c7e42aac30781e88a0dd4beceb07c8817b3225f51052706968a6efaacb95f6c4",
+      "target": "internal/plugins/autosignin/run_test.go"
+    },
+    "work/_autosignin_port/mteam.go": {
+      "sha256": "c046da4de15ff6fe537d69f7f16e4a456295b09af3bfcb09fe006d615c54962d",
+      "target": "internal/plugins/autosignin/mteam.go"
+    },
+    "work/_autosignin_port/entrypoints.go": {
+      "sha256": "2252d5bf0a3dcdaea57a2d8e2b3faa12903ab68240a849e6b41b052e8c4916f8",
+      "target": "internal/plugins/autosignin/entrypoints.go"
+    },
+    "work/_autosignin_port/ocr_adapters.go": {
+      "sha256": "9473e1d4c83181159a48fa7a2de8536347d704c68cd74b8c8dc3a2238b1cb189",
+      "target": "internal/plugins/autosignin/ocr_adapters.go"
+    },
+    "work/_autosignin_port/http_transport.go": {
+      "sha256": "cdd0070a490f9ab53c0fad1288f4f78e1eb17d4ba0d45b6970ee3a0dce3c09ac",
+      "target": "internal/plugins/autosignin/http_transport.go"
+    },
+    "work/_autosignin_port/page_test.go": {
+      "sha256": "2c42dc5bba2eb41c6590ab9d909e70f3445a0dc58c44d17e2605a869eb169e05",
+      "target": "internal/plugins/autosignin/page_test.go"
+    },
+    "work/_autosignin_port/tjupt_adapters_test.go": {
+      "sha256": "e82b6517182d11646be6c636e2d169517fb6811420e2c721bc46374c0ae20129",
+      "target": "internal/plugins/autosignin/tjupt_adapters_test.go"
+    },
+    "work/_autosignin_port/mteam_test.go": {
+      "sha256": "1927197bae07a57d48cf3b891ef1b2f193f4604690a52cfc77efaf186cb2eefc",
+      "target": "internal/plugins/autosignin/mteam_test.go"
+    },
+    "work/_autosignin_port/sdk_test.go": {
+      "sha256": "15eec9b80be200b78cb7c1d5de16ecd3fe209dc5229adeb928fadcf6e55f18fe",
+      "target": "internal/plugins/autosignin/sdk_test.go"
+    },
+    "work/_autosignin_port/json_adapters.go": {
+      "sha256": "c2380e4f02748075ddffa014173e83bf4df0b8ad06e6849de519722aa79fefcc",
+      "target": "internal/plugins/autosignin/json_adapters.go"
+    },
+    "work/_autosignin_port/visits.go": {
+      "sha256": "a459b26ebe44760530f126906861c2ae41ff82bf2cd5ea4a1c012362d2568f5e",
+      "target": "internal/plugins/autosignin/visits.go"
+    },
+    "work/_autosignin_port/config_test.go": {
+      "sha256": "756f8b3ce53ab360213bf98c3d7257e78d17d7421c4f3113f57f391d82c52b44",
+      "target": "internal/plugins/autosignin/config_test.go"
+    },
+    "work/_autosignin_port/integration_test.go": {
+      "sha256": "019e4cf89d80d1389772181ab46f1d0fa0b0160c7123b8d04c93385c1e6b4666",
+      "target": "internal/plugins/autosignin/integration_test.go"
+    },
+    "work/_autosignin_port/simple_adapters.go": {
+      "sha256": "8cda619cd6f4190358e28126785ef28306864833e00059549cbb8024225160a5",
+      "target": "internal/plugins/autosignin/simple_adapters.go"
+    },
+    "work/_autosignin_port/fixed_adapters_test.go": {
+      "sha256": "d99b9649d32825740b445bbcab2e9e0e6db7f04bddecc54b60dbd6c3f0ddcb43",
+      "target": "internal/plugins/autosignin/fixed_adapters_test.go"
+    },
+    "work/_autosignin_port/mteam_transport.go": {
+      "sha256": "a41837ac32f9337a14f53320dd53ff22db973ffdb51fa9e5a60523d0733cae57",
+      "target": "internal/plugins/autosignin/mteam_transport.go"
+    },
+    "work/_autosignin_port/form.json": {
+      "sha256": "ee966c497f70b49c36718ba959e59ebffd73bec586c7788d5cfed3c5317413bb",
+      "target": "internal/plugins/autosignin/form.json"
+    },
+    "work/_autosignin_port/html-data.json": {
+      "sha256": "baa0679d8355cd25ac622608faffe6bb944df091439f869e3ac978dc47e1d579",
+      "target": "internal/plugins/autosignin/html-data.json"
+    },
+    "work/_autosignin_port/mteam-protocol.json": {
+      "sha256": "bed1c4290ee745c07a2fff771d6fcd2c95226d0016cf290d116ed80bbd703c77",
+      "target": "internal/plugins/autosignin/mteam-protocol.json"
+    },
+    "work/_autosignin_port/page.css": {
+      "sha256": "ef2a328d5d182d205079b0f23156d3b3b42df36788080abe7879759f1c61312a",
+      "target": "internal/plugins/autosignin/page.css"
+    },
+    "work/_autosignin_port/UNICODE-LICENSE.txt": {
+      "sha256": "f5062c9a188d81dfe66b56db4182dcf9e4b17c0d9b0d311a8e20b3a1b075c443",
+      "target": "internal/plugins/autosignin/UNICODE-LICENSE.txt"
+    },
+    "work/_autosignin_port/http-reference.json": {
+      "sha256": "f3ca8031d32ea210eb60089ae622136fadfaa61e80ed41b2b4db07e611bbf29e",
+      "target": "testdata/plugins/auto-signin-2.9.14/http-reference.json"
+    },
+    "work/_autosignin_port/source-verification.json": {
+      "sha256": "6ce839b2f87afc9d7fe7ab2bd7acc7c3ba8f3ef0cdcd6964fa864062eca1ab89",
+      "target": "testdata/plugins/auto-signin-2.9.14/source-verification.json"
+    },
+    "work/_autosignin_port/slice-provenance.json": {
+      "sha256": "8b51cc4be85c4c04b40f203d8fde1743a64c942bc747e1a9a714e17e6d029c26",
+      "target": "testdata/plugins/auto-signin-2.9.14/slice-provenance.json"
+    },
+    "work/_autosignin_port/requote-reference.json": {
+      "sha256": "6bd69aff968a0f1c5c6952083ae25c3ddd72266239d414d18f865a5f5455bf5c",
+      "target": "testdata/plugins/auto-signin-2.9.14/requote-reference.json"
+    },
+    "work/_autosignin_port/ocr-inputs.json": {
+      "sha256": "7cd15ab7a6fe2916be59ac7e8ca568a926ff52775e2fbbbde419473f0a9be7e4",
+      "target": "testdata/plugins/auto-signin-2.9.14/ocr-inputs.json"
+    },
+    "work/_autosignin_port/fixed-reference.json": {
+      "sha256": "a7af3258317029402f95d96f8d1896a161c1d018aa94c19a06c1f073e04da3f7",
+      "target": "testdata/plugins/auto-signin-2.9.14/fixed-reference.json"
+    },
+    "work/_autosignin_port/quiz-reference.json": {
+      "sha256": "971b8f2d35588628850d9588155366af12a42480f6262c5da1676518c4854893",
+      "target": "testdata/plugins/auto-signin-2.9.14/quiz-reference.json"
+    },
+    "work/_autosignin_port/html-reference.json": {
+      "sha256": "28ea8c1ac3779f35ff32d764bdd27027ffd0273da90120c71bb0df79726584d1",
+      "target": "testdata/plugins/auto-signin-2.9.14/html-reference.json"
+    },
+    "work/_autosignin_port/json-reference.json": {
+      "sha256": "a9dd4d7967651f3b68655b6df1fcc55c170d4e049489023fbec0a016d37749b5",
+      "target": "testdata/plugins/auto-signin-2.9.14/json-reference.json"
+    },
+    "work/_autosignin_port/simple-inputs.json": {
+      "sha256": "92215254f0705982b16b6ada304184931a5b5fc116884b3d51465a4f4ea91429",
+      "target": "testdata/plugins/auto-signin-2.9.14/simple-inputs.json"
+    },
+    "work/_autosignin_port/installed-source.json": {
+      "sha256": "fb2600431526fc563dcc2220473872b6db687c19ce596e0f7a443a8083585ca4",
+      "target": "testdata/plugins/auto-signin-2.9.14/installed-source.json"
+    },
+    "work/_autosignin_port/mteam-reference.json": {
+      "sha256": "8c98de661be015e8d57f361d8246cdc9c967dba428cd75f8c80d8f52c2c043d6",
+      "target": "testdata/plugins/auto-signin-2.9.14/mteam-reference.json"
+    },
+    "work/_autosignin_port/tjupt-reference.json": {
+      "sha256": "705ff1bc0ac778a96f791545cbb9367c0911cdd0233be0ac892dc96495559174",
+      "target": "testdata/plugins/auto-signin-2.9.14/tjupt-reference.json"
+    },
+    "work/_autosignin_port/oracle.json": {
+      "sha256": "407efaaca1c50c39261bfef9cc13c78bde77d94bf146e35b09cc7c91573dcd9d",
+      "target": "testdata/plugins/auto-signin-2.9.14/oracle.json"
+    },
+    "work/_autosignin_port/json-inputs.json": {
+      "sha256": "5285a1cfb120a745862c516b99685f7417a34a15cd9df0ca7d49f9b7af5c48a4",
+      "target": "testdata/plugins/auto-signin-2.9.14/json-inputs.json"
+    },
+    "work/_autosignin_port/ocr-reference.json": {
+      "sha256": "886fbb1219a285924f14f835857fd8db2736b26408e24bacff8e96da00c37d1d",
+      "target": "testdata/plugins/auto-signin-2.9.14/ocr-reference.json"
+    },
+    "work/_autosignin_port/tjupt-inputs.json": {
+      "sha256": "179270ba77468e65d4b2f21fa9807e8d423e7dcb103e79ef3f87ae616a9a7bf0",
+      "target": "testdata/plugins/auto-signin-2.9.14/tjupt-inputs.json"
+    },
+    "work/_autosignin_port/installed-codec-reference.json": {
+      "sha256": "d285dcf78a9cb21a1b1cf6f90daad8f56b1fc4d746b9ab952ce79668a5c709c9",
+      "target": "testdata/plugins/auto-signin-2.9.14/installed-codec-reference.json"
+    },
+    "work/_autosignin_port/dynamic-reference.json": {
+      "sha256": "ee8a1888e1279386cd5906575b4750ff43509c0ece05424bed9f8b3abb554e3c",
+      "target": "testdata/plugins/auto-signin-2.9.14/dynamic-reference.json"
+    },
+    "work/_autosignin_port/mteam-flow-reference.json": {
+      "sha256": "0e42b747d333226ed95d2f28d7c00445cd6d587682e060e8bc3f52beab2585f6",
+      "target": "testdata/plugins/auto-signin-2.9.14/mteam-flow-reference.json"
+    },
+    "work/_autosignin_port/quiz-inputs.json": {
+      "sha256": "84a496f0862eb055fd70640a546502cdd3b142bf6ca349f174b2006cbcb237b7",
+      "target": "testdata/plugins/auto-signin-2.9.14/quiz-inputs.json"
+    },
+    "work/_autosignin_port/dynamic-inputs.json": {
+      "sha256": "4e0e4d1ae3c9b4bcd6177262c004fc8c23d8c22bd175259c46a217a5142eae56",
+      "target": "testdata/plugins/auto-signin-2.9.14/dynamic-inputs.json"
+    },
+    "work/_autosignin_port/inventory.json": {
+      "sha256": "916163921374984c32cee98d1c86d72a79c83e14b3e37c495a175b9a66fc2fc1",
+      "target": "testdata/plugins/auto-signin-2.9.14/inventory.json"
+    },
+    "work/_autosignin_port/visit-reference.json": {
+      "sha256": "aa44b05e7fb316b597a63baa5b3e4195381a0e92ad0d70295eae707d811404d5",
+      "target": "testdata/plugins/auto-signin-2.9.14/visit-reference.json"
+    },
+    "work/_autosignin_port/adapter-status.json": {
+      "sha256": "f17b9feab6661b744c2d6e361f2963934a6f7992e3cc775eed5d79685de844ac",
+      "target": "testdata/plugins/auto-signin-2.9.14/adapter-status.json"
+    },
+    "work/_autosignin_port/requestutils-source.json": {
+      "sha256": "ec7bf901ca729cd446bf2cb05785dec79ef047790711059276e6661b39b44546",
+      "target": "testdata/plugins/auto-signin-2.9.14/requestutils-source.json"
+    },
+    "work/_autosignin_port/mteam-flow-inputs.json": {
+      "sha256": "6aed07fe1b6016545c23d91da649b0b561aedddde327b6fe3f60d20ea14ea4c4",
+      "target": "testdata/plugins/auto-signin-2.9.14/mteam-flow-inputs.json"
+    },
+    "work/_autosignin_port/installed-http-reference.json": {
+      "sha256": "50adf93481c5da87a699c499e8c8855232c37c0297014069b35235d506c38865",
+      "target": "testdata/plugins/auto-signin-2.9.14/installed-http-reference.json"
+    },
+    "work/_autosignin_port/simple-reference.json": {
+      "sha256": "a19fecb53980e07158a50c39c707b2544b425676cf1f31fa87163d469db6630e",
+      "target": "testdata/plugins/auto-signin-2.9.14/simple-reference.json"
+    },
+    "work/_autosignin_durable_port/core/config.go": {
+      "sha256": "2ca8f0e41e7be6975a20c3d82e09481b77792e22a9f1b22a517669ae5f62b1ab",
+      "target": "internal/plugins/autosignin/config.go"
+    },
+    "work/_autosignin_durable_port/core/run.go": {
+      "sha256": "64acb469c9438aa70db6071553cf016708e7ac84d1467dafe3507dd4702742e0",
+      "target": "internal/plugins/autosignin/run.go"
+    },
+    "work/_autosignin_durable_port/core/services.go": {
+      "sha256": "23bdfdd1939675f0435acd5e95b5ab0d2a227d6ea1945e4484866f9ad348523d",
+      "target": "internal/plugins/autosignin/services.go"
+    },
+    "work/_autosignin_durable_port/core/entrypoints.go": {
+      "sha256": "37d35813fb4600ec29c040edb66f39fbab6ca679f62de2b3ab7b12b9ea48a256",
+      "target": "internal/plugins/autosignin/entrypoints.go"
+    },
+    "work/_autosignin_durable_port/core/effects.go": {
+      "sha256": "850e43d2c392a2633a764d4794914835b8b730521f5b5ba43927922b9e410cf5",
+      "target": "internal/plugins/autosignin/effects.go"
+    },
+    "work/_autosignin_durable_port/core/effects_test.go": {
+      "sha256": "088854cd3156f4324627ff95daf31ad35923f5091e32e5d363a1eaecd51de107",
+      "target": "internal/plugins/autosignin/effects_original_test.go"
+    },
+    "work/_autosignin_durable_port/file_store.go": {
+      "sha256": "782bf5d009686c3efe1a6e088eb89bc311895363b94a7a4e3ace0b8ef1b29a51",
+      "target": "internal/plugins/autosignin/durable/file_store_fixture_test.go"
+    },
+    "work/_autosignin_durable_port/controller.go": {
+      "sha256": "ac33f18044bc6f2828f0df26d2b90efc4329fb27181ee20b069bdfdc1a68693b",
+      "target": "internal/plugins/autosignin/durable/controller.go"
+    },
+    "work/_autosignin_durable_port/effects.go": {
+      "sha256": "cfec1121d45cc92e9f74cd63467fc9ce0246e3be10b3d527eef73e76369d90c3",
+      "target": "internal/plugins/autosignin/durable/effects.go"
+    },
+    "work/_autosignin_durable_port/types.go": {
+      "sha256": "486f64170d64f7dcf3155bb40c1d92fdacc7201d1ac7b0272d2bf5324052338b",
+      "target": "internal/plugins/autosignin/durable/types.go"
+    },
+    "work/_autosignin_durable_port/durable_test.go": {
+      "sha256": "a2eb5a35d6bbf12ff8e45f38e6652e2d854b2e746efe8df192768a561534c83a",
+      "target": "internal/plugins/autosignin/durable/durable_test.go"
+    },
+    "work/_autosignin_durable_port/network.go": {
+      "sha256": "23f588aad10814f8d092fff892c39e95f4c37d2826dbc99a3ddff85b1aef1faa",
+      "target": "internal/plugins/autosignin/durable/network.go"
+    },
+    "work/_autosignin_durable_port/statistic_test.go": {
+      "sha256": "df820f6543508baf1f76757ac5fb11b4475d7cc966a2a1806253d0e9c1f86b0e",
+      "target": "internal/plugins/autosignin/durable/statistic_test.go"
+    },
+    "work/_autosignin_durable_port/loopback_test.go": {
+      "sha256": "643848b6fa9e14e63a0e5ffe251e4fb5ac20bcc5eae513f8fffda0d22b2cff1f",
+      "target": "internal/plugins/autosignin/durable/loopback_test.go"
+    },
+    "work/_autosignin_durable_port/failure_test.go": {
+      "sha256": "c18e59f8ad2aed15f5dee26365f969363f456bd682b49a2d5f09c69370b93f18",
+      "target": "internal/plugins/autosignin/durable/failure_test.go"
+    },
+    "work/_autosignin_durable_port/cache_flow_test.go": {
+      "sha256": "7a35f1265e7597288162f3d14737111953c948d816c9260ac8814646f6844dec",
+      "target": "internal/plugins/autosignin/durable/cache_flow_test.go"
+    },
+    "work/_autosignin_durable_port/outbox.go": {
+      "sha256": "498b90511505301d059739ce8e100333aa4f6f3f2c059d8cc6b34ad6b691ba01",
+      "target": "internal/plugins/autosignin/durable/outbox_fixture_test.go"
+    },
+    "work/_autosignin_durable_port/entropy.go": {
+      "sha256": "c566b6fd1fee8475243e662b39c3747b0ec65d6af7d19688d0a147a1bcb5bad7",
+      "target": "internal/plugins/autosignin/durable/entropy.go"
+    },
+    "work/_autosignin_durable_port/deterministic_test.go": {
+      "sha256": "d126b18ec823b085b0b6ca1e7bb193d4db00aa439047c908d27f95e0b294b65e",
+      "target": "internal/plugins/autosignin/durable/deterministic_test.go"
+    },
+    "work/_autosignin_durable_port/lane.go": {
+      "sha256": "826e23ad64b8d1eeed54696e8ebce20bc1cfd555a749e25c6bd7918d1ce1e760",
+      "target": "internal/plugins/autosignin/durable/lane.go"
+    },
+    "work/_autosignin_durable_port/provenance.json": {
+      "sha256": "d0d3c7974c2a63b8c9693a43f510db9400c87b92a3337ea5a3ab18f59c502c0e",
+      "target": "testdata/plugins/auto-signin-2.9.14/durable/provenance.json"
+    },
+    "work/_autosignin_durable_port/core-source-manifest.json": {
+      "sha256": "7310fed33406d5c9c93df2cbb57260eb1e2b3e63aa198613dd9e5482a99ad4e4",
+      "target": "testdata/plugins/auto-signin-2.9.14/durable/core-source-manifest.json"
+    },
+    "work/_autosignin_durable_port/effect-original-oracle.json": {
+      "sha256": "6cdf4eea87afac3fc6e9a87bb819f01d1e6be2e170b089775542ef4b482c3a08",
+      "target": "testdata/plugins/auto-signin-2.9.14/durable/effect-original-oracle.json"
+    },
+    "work/_autosignin_durable_port/statistic-original-oracle.json": {
+      "sha256": "ec81dd16e5ed847d5c5178af2657caba34b998174f7a1311ae1bae85e40bdcea",
+      "target": "testdata/plugins/auto-signin-2.9.14/durable/statistic-original-oracle.json"
+    }
+  }
+}

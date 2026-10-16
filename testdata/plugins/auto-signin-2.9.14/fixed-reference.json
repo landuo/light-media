@@ -1,0 +1,7731 @@
+{
+  "provenance": {
+    "main_sha256": "04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d",
+    "base_sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+    "adapter_sha256": {
+      "hdarea.py": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630",
+      "nexushd.py": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf",
+      "hdcity.py": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475"
+    },
+    "execution": "actual installed adapter/base/main AST and installed chardet+HTML libraries; network/browser/stats/indexer/store/messages are synthetic recorders; original ThreadPool ordered map stub, not real concurrency evidence; no app import/user config/real HTTP"
+  },
+  "cases": [
+    {
+      "name": "HDArea-adapter-0",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-1",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "status": 401,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-2",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "status": 503,
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-3",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-4",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-5",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php 此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，Cookie已失效"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-6",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"login\">此次签到您获得10魔力</span>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-7",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-8",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "请不要重复签到哦"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "今日已签到"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-9",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>此次签到您获得10魔力</template>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-10",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "<div title=\"此次签到您获得10魔力\">unknown</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-11",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "签到失败 此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-adapter-12",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic fixed exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-render",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "site": {
+          "render": true
+        },
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-proxy-timeout",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "site": {
+          "proxy": true,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "timeout": 17,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-zero-timeout",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "site": {
+          "timeout": 0
+        },
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 0,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-www",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "site": {
+          "url": "https://www.hdarea.club/"
+        },
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-missing-cookie",
+      "kind": "adapter",
+      "adapter": "HDArea",
+      "input": {
+        "site": {
+          "cookie": null
+        },
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": null,
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-wrapper-confirmed",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-confirmed",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到成功",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到成功",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-wrapper-repeat",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "请不要重复签到哦"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "今日已签到",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-repeat",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "请不要重复签到哦"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "今日已签到",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "今日已签到",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "今日已签到",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "今日已签到",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-wrapper-fallback-login",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-fallback-login",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "登录成功，签到未确认",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "登录成功，签到未确认",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "登录成功，签到未确认",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "登录成功，签到未确认",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-wrapper-failed",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-failed",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-expired",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-wrapper-hidden",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>此次签到您获得10魔力</template>"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-hidden",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>此次签到您获得10魔力</template>"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-wrapper-exception",
+      "kind": "wrapper",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-exception",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdarea.club/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdarea.club"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-do-history-32",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDArea-do-history-33",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": false,
+                "message": "签到失败"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://hdarea.club/sign_in.php",
+            "data": {
+              "action": "sign_in"
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdarea.club",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          },
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到成功",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ]
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到成功",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDArea-do-history-34",
+      "kind": "do",
+      "adapter": "HDArea",
+      "input": {
+        "responses": [
+          {
+            "text": "此次签到您获得10魔力"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": true,
+                "message": "登录成功，签到未确认"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": true,
+                "message": "登录成功，签到未确认"
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-0",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-1",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "status": 401,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-2",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "status": 503,
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-3",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-4",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-5",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php 本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，Cookie已失效"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-6",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"login\">本次签到获得10魔力</span>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-7",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-8",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "你今天已经签到过了"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "今日已签到"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-9",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>本次签到获得10魔力</template>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-10",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "<div title=\"本次签到获得10魔力\">unknown</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-11",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "签到失败 本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-adapter-12",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic fixed exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-render",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "site": {
+          "render": true
+        },
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-proxy-timeout",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "site": {
+          "proxy": true,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "timeout": 17,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-zero-timeout",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "site": {
+          "timeout": 0
+        },
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 0,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-www",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "site": {
+          "url": "https://www.v6.nexushd.org/"
+        },
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-missing-cookie",
+      "kind": "adapter",
+      "adapter": "NexusHD",
+      "input": {
+        "site": {
+          "cookie": null
+        },
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": null,
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-confirmed",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-confirmed",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到成功",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到成功",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-repeat",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "你今天已经签到过了"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "今日已签到",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-repeat",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "你今天已经签到过了"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "今日已签到",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "今日已签到",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "今日已签到",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "今日已签到",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-fallback-login",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-fallback-login",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "登录成功，签到未确认",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "登录成功，签到未确认",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "登录成功，签到未确认",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "登录成功，签到未确认",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-failed",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-failed",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-expired",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-hidden",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>本次签到获得10魔力</template>"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-hidden",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>本次签到获得10魔力</template>"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-wrapper-exception",
+      "kind": "wrapper",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-exception",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://v6.nexushd.org/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "nexushd.org"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-do-history-67",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "NexusHD-do-history-68",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": false,
+                "message": "签到失败"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "POST",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": null,
+            "url": "https://v6.nexushd.org/signin.php",
+            "data": {
+              "action": "post",
+              "content": ""
+            }
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "nexushd.org",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          },
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到成功",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ]
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到成功",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "NexusHD-do-history-69",
+      "kind": "do",
+      "adapter": "NexusHD",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得10魔力"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": true,
+                "message": "登录成功，签到未确认"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": true,
+                "message": "登录成功，签到未确认"
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-0",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          null
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-1",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "status": 401,
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-2",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "status": 503,
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-3",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": ""
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，请检查站点连通性"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-4",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-5",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php 本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，Cookie已失效"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-6",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "<span title=\"login\">本次签到获得魅力10</span>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败，Cookie已失效"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-7",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-8",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "已签到"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "今日已签到"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-9",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>本次签到获得魅力10</template>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-10",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "<div title=\"本次签到获得魅力10\">unknown</div>"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-11",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "签到失败 本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          false,
+          "签到失败"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-adapter-12",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          }
+        ]
+      },
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic fixed exception"
+      },
+      "partial": {
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-render",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "site": {
+          "render": true
+        },
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "BROWSER",
+            "url": "https://hdcity.city/sign",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-proxy-timeout",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "site": {
+          "proxy": true,
+          "timeout": 17
+        },
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": {
+              "https": "synthetic-proxy-reference"
+            },
+            "timeout": 17,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-zero-timeout",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "site": {
+          "timeout": 0
+        },
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-www",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "site": {
+          "url": "https://www.hdcity.city/"
+        },
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-missing-cookie",
+      "kind": "adapter",
+      "adapter": "HDCity",
+      "input": {
+        "site": {
+          "cookie": null
+        },
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": [
+          true,
+          "签到成功"
+        ],
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": null
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-wrapper-confirmed",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到成功",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-confirmed",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到成功",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到成功",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-wrapper-repeat",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "已签到"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "今日已签到",
+          "success": true,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-repeat",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "已签到"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "今日已签到",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "今日已签到",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "今日已签到",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "今日已签到",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-wrapper-fallback-login",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "登录成功，签到未确认",
+          "success": false,
+          "logged_in": true
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-fallback-login",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "unknown"
+          },
+          {
+            "text": "<a href=\"logout.php\">Logout</a>"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "登录成功，签到未确认",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": true
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "登录成功，签到未确认",
+                "logged_in": true
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "登录成功，签到未确认",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "登录成功，签到未确认",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-wrapper-failed",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-failed",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          null,
+          null
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，请检查站点连通性；模拟登录失败，无法打开网站！",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-wrapper-expired",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-expired",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "login.php"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败，Cookie已失效；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-wrapper-hidden",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>本次签到获得魅力10</template>"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-hidden",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "<template>本次签到获得魅力10</template>"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-wrapper-exception",
+      "kind": "wrapper",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "site_name": "Synthetic",
+          "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+          "success": false,
+          "logged_in": false
+        },
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {},
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-exception",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "error": "synthetic fixed exception"
+          },
+          {
+            "text": "<input type=\"password\">"
+          }
+        ]
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          },
+          {
+            "method": "GET",
+            "cookies": "synthetic-cookie=not-a-credential",
+            "ua": "synthetic-agent",
+            "proxies": null,
+            "timeout": 60,
+            "url": "https://hdcity.city/"
+          }
+        ],
+        "stats": [
+          {
+            "success": false,
+            "domain": "hdcity.city"
+          }
+        ],
+        "data": {
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+              "site_id": 1,
+              "type": "签到",
+              "success": false,
+              "logged_in": false
+            }
+          ],
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                "logged_in": false
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                "site_id": 1,
+                "type": "签到",
+                "success": false,
+                "logged_in": false
+              }
+            ]
+          },
+          {
+            "op": "event",
+            "event": "EventType.PluginAction",
+            "data": {
+              "site_id": 1,
+              "action": "site_refresh"
+            }
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [
+                1
+              ],
+              "results": {
+                "1": {
+                  "success": false,
+                  "message": "签到失败：synthetic fixed exception；模拟登录失败，Cookie已失效",
+                  "logged_in": false
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-do-history-102",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "logged_in": true,
+                "message": "签到成功"
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    },
+    {
+      "name": "HDCity-do-history-103",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [
+              1
+            ],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": false,
+                "message": "签到失败"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [
+          {
+            "method": "GET",
+            "headers": {
+              "User-Agent": "synthetic-agent",
+              "Cookie": "synthetic-cookie=not-a-credential"
+            },
+            "proxies": null,
+            "timeout": 20,
+            "url": "https://hdcity.city/sign"
+          }
+        ],
+        "stats": [
+          {
+            "success": true,
+            "domain": "hdcity.city",
+            "seconds": 0
+          }
+        ],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": true,
+                "message": "签到成功",
+                "logged_in": true
+              }
+            }
+          },
+          "1月2日": [
+            {
+              "site": "Synthetic",
+              "status": "签到成功",
+              "site_id": 1,
+              "type": "签到",
+              "success": true,
+              "logged_in": true
+            }
+          ]
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": [
+          {
+            "op": "pool",
+            "workers": 1
+          },
+          {
+            "op": "put",
+            "key": "1月2日",
+            "value": [
+              {
+                "site": "Synthetic",
+                "status": "签到成功",
+                "site_id": 1,
+                "type": "签到",
+                "success": true,
+                "logged_in": true
+              }
+            ]
+          },
+          {
+            "op": "put",
+            "key": "签到-2026-01-02",
+            "value": {
+              "do": [
+                1
+              ],
+              "retry": [],
+              "results": {
+                "1": {
+                  "success": true,
+                  "message": "签到成功",
+                  "logged_in": true
+                }
+              }
+            }
+          },
+          {
+            "op": "config",
+            "value": {
+              "enabled": true,
+              "notify": false,
+              "cron": null,
+              "onlyonce": null,
+              "queue_cnt": 1,
+              "sign_sites": [
+                1
+              ],
+              "login_sites": [],
+              "retry_keyword": "Cookie已失效",
+              "auto_cf": null,
+              "clean": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "HDCity-do-history-104",
+      "kind": "do",
+      "adapter": "HDCity",
+      "input": {
+        "responses": [
+          {
+            "text": "本次签到获得魅力10"
+          }
+        ],
+        "history": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": true,
+                "message": "登录成功，签到未确认"
+              }
+            }
+          }
+        }
+      },
+      "expected": {
+        "result": null,
+        "calls": [],
+        "stats": [],
+        "data": {
+          "签到-2026-01-02": {
+            "do": [
+              1
+            ],
+            "retry": [],
+            "results": {
+              "1": {
+                "success": false,
+                "logged_in": true,
+                "message": "登录成功，签到未确认"
+              }
+            }
+          }
+        },
+        "config": {
+          "enabled": true,
+          "notify": false,
+          "cron": null,
+          "onlyonce": null,
+          "queue_cnt": 1,
+          "sign_sites": [
+            1
+          ],
+          "login_sites": [],
+          "retry_keyword": "Cookie已失效",
+          "auto_cf": null,
+          "clean": false
+        },
+        "trace": []
+      }
+    }
+  ]
+}
