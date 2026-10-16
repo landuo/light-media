@@ -31,6 +31,8 @@ import Schedule from './Schedule.vue';
 import MappingRules from './MappingRules.vue';
 import MultiSeasonSubscribe from './MultiSeasonSubscribe.vue';
 import SubscriptionField from './SubscriptionField.vue';
+import SubscriptionFilters from './SubscriptionFilters.vue';
+import { subscriptionFilterValue, setSubscriptionFilter } from '../features/subscription-filters';
 import { downloadDestination, downloadDirectoryPaths } from '../features/download-directories';
 const props = defineProps<{ view: string }>(),
   subs = ref<any[]>([]),
@@ -765,37 +767,7 @@ watch(() => props.view, applyView);
                 />
               </SubscriptionField>
             </div>
-            <div class="subscription-edit-grid three-columns">
-              <SubscriptionField label="质量" icon="quality" hint="订阅资源质量">
-                <select v-model="editing.policy.source" aria-label="质量">
-                  <option value="">默认</option>
-                  <option value="WEB-DL">WEB-DL</option>
-                  <option value="WEBRip">WEBRip</option>
-                  <option value="BluRay">BluRay</option>
-                  <option value="BDRip">BDRip</option>
-                  <option value="HDTV">HDTV</option>
-                  <option value="REMUX">REMUX</option>
-                  <option value="DVD">DVD</option>
-                </select>
-              </SubscriptionField>
-              <SubscriptionField label="分辨率" icon="tv" hint="订阅资源分辨率">
-                <select v-model="editing.policy.resolution" aria-label="分辨率">
-                  <option value="">默认</option>
-                  <option>2160p</option>
-                  <option>1080p</option>
-                  <option>720p</option>
-                </select>
-              </SubscriptionField>
-              <SubscriptionField label="特效" icon="sparkles" hint="订阅资源特效">
-                <select v-model="editing.policy.hdr" aria-label="特效">
-                  <option value="">默认</option>
-                  <option value="sdr">SDR</option>
-                  <option value="hdr10">HDR10</option>
-                  <option value="hdr10plus">HDR10+</option>
-                  <option value="dolby_vision">Dolby Vision</option>
-                </select>
-              </SubscriptionField>
-            </div>
+            <SubscriptionFilters v-model="editing.policy" />
             <div
               class="subscription-sites"
               @focusout="
@@ -925,14 +897,34 @@ watch(() => props.view, applyView);
                 icon="plus"
                 hint="包含规则，支持正则表达式"
               >
-                <input v-model="editing.policy.include" aria-label="包含" />
+                <input
+                  :value="subscriptionFilterValue(editing.policy, 'include')"
+                  aria-label="包含"
+                  @input="
+                    editing.policy = setSubscriptionFilter(
+                      editing.policy,
+                      'include',
+                      ($event.target as HTMLInputElement).value,
+                    )
+                  "
+                />
               </SubscriptionField>
               <SubscriptionField
                 label="排除（关键字、正则式）"
                 icon="close"
                 hint="排除规则，支持正则表达式"
               >
-                <input v-model="editing.policy.exclude" aria-label="排除" />
+                <input
+                  :value="subscriptionFilterValue(editing.policy, 'exclude')"
+                  aria-label="排除"
+                  @input="
+                    editing.policy = setSubscriptionFilter(
+                      editing.policy,
+                      'exclude',
+                      ($event.target as HTMLInputElement).value,
+                    )
+                  "
+                />
               </SubscriptionField>
             </div>
             <div class="subscription-edit-grid">

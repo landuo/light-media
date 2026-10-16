@@ -50,6 +50,8 @@ const messages: Record<string, string> = {
   episode_not_in_authoritative_metadata: '集号未被标准元数据确认',
   numbering_mapping_required_for_absolute_numbering: '绝对集号需要明确映射',
   resolution_mismatch: '分辨率不符合要求',
+  original_filter_not_matched: '不符合订阅附加筛选规则',
+  invalid_original_filter: '订阅附加筛选规则无效或匹配超时',
   codec_mismatch: '编码不符合要求',
   resolution_unknown: '分辨率未知',
   codec_unknown: '编码未知',

@@ -11,11 +11,14 @@ import (
 // The one permissible automatic pack review is an explicit same-season package.
 // Actual files must still pass the unchanged strict automatic checks in preview.
 func eligibleAutomaticSeasonPack(resource sites.Resource, target decision.Target, policy Policy) bool {
+	return eligibleAutomaticSeasonPackPolicy(resource, target, decisionPolicy(policy))
+}
+func eligibleAutomaticSeasonPackPolicy(resource sites.Resource, target decision.Target, policy decision.Policy) bool {
 	if target.Media.MediaType != "tv" {
 		return false
 	}
 	target.Auto = false
-	result := decision.Evaluate(resource, target, decisionPolicy(policy))
+	result := decision.Evaluate(resource, target, policy)
 	return result.Accepted && result.Season == target.Season && len(result.Reasons) == 1 && result.Reasons[0] == "season_pack_requires_confirmation"
 }
 func automaticPackCandidate(candidate Candidate, season int) bool {

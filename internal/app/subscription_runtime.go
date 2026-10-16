@@ -15,6 +15,7 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
+	"light-media/internal/torrentfilter"
 )
 
 type SubscriptionRequest struct {
@@ -86,6 +87,11 @@ func subscriptionNumbers(values []int) ([]int, error) {
 	return out, nil
 }
 func validateSubscriptionPolicy(p Policy) error {
+	if p.FilterParams != nil {
+		if err := torrentfilter.Validate(*p.FilterParams); err != nil {
+			return bad("INVALID_POLICY", "质量、分辨率、特效或附加筛选规则无效")
+		}
+	}
 	if len(p.FilterGroups) > 1000 {
 		return bad("INVALID_POLICY", "优先级规则组数量超出上限")
 	}
@@ -97,7 +103,14 @@ func validateSubscriptionPolicy(p Policy) error {
 	if p.MinSeeders < 0 || p.MinBytes < 0 || p.MaxBytes < 0 || (p.MaxBytes > 0 && p.MinBytes > p.MaxBytes) {
 		return bad("INVALID_POLICY", "做种人数或体积范围无效")
 	}
-	for _, v := range []string{p.Include, p.Exclude} {
+	legacy := []string{}
+	if p.FilterParams == nil || p.FilterParams.Include == nil {
+		legacy = append(legacy, p.Include)
+	}
+	if p.FilterParams == nil || p.FilterParams.Exclude == nil {
+		legacy = append(legacy, p.Exclude)
+	}
+	for _, v := range legacy {
 		if len(v) > 512 {
 			return bad("INVALID_POLICY", "筛选正则过长")
 		}

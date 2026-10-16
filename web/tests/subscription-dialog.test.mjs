@@ -6,6 +6,7 @@ import ts from 'typescript';
 import * as vue from 'vue';
 import * as realApi from '../src/api.ts';
 import * as subscriptions from '../src/features/subscriptions.ts';
+import * as subscriptionFilters from '../src/features/subscription-filters.ts';
 import * as calendar from '../src/features/subscription-calendar.ts';
 import * as directories from '../src/features/download-directories.ts';
 
@@ -132,6 +133,7 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
           },
         };
       if (dependency === '../features/subscriptions') return subscriptions;
+      if (dependency === '../features/subscription-filters') return subscriptionFilters;
       if (dependency === '../features/subscription-calendar') return calendar;
       if (dependency === '../features/download-directories') return directories;
       if (dependency.endsWith('.vue'))
@@ -186,6 +188,16 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
       await vue.nextTick();
     },
     async update(name, value) {
+      const field = { 质量: 'quality', 分辨率: 'resolution', 特效: 'effect' }[name];
+      if (field) {
+        const node = nodes().find((node) => node.type?.name === 'SubscriptionFilters');
+        assert.ok(node, name);
+        node.props['onUpdate:modelValue'](
+          subscriptionFilters.setSubscriptionFilter(node.props.modelValue, field, value),
+        );
+        await vue.nextTick();
+        return;
+      }
       const node = label(name);
       assert.ok(node, name);
       if (node.props['onUpdate:modelValue']) node.props['onUpdate:modelValue'](value);
@@ -211,9 +223,9 @@ test('editing across tabs preserves subscription details and saves an isolated d
   assert.equal(app.button('基础').props['aria-selected'], true);
   await app.update('搜索关键词', '新关键词');
   await app.update('开始集数', 5);
-  await app.update('质量', 'WEB-DL');
-  await app.update('分辨率', '1080p');
-  await app.update('特效', 'hdr10');
+  await app.update('质量', 'WEB-?DL|WEB-?RIP');
+  await app.update('分辨率', '1080[pi]|x1080');
+  await app.update('特效', 'HDR10|HDR10\\+');
   await app.update('下载器', 'tr');
   await app.update('保存目录', '/data/custom/downloads');
   await app.click('订阅站点选择');
@@ -262,11 +274,18 @@ test('editing across tabs preserves subscription details and saves an isolated d
       site_ids: ['one', 'two'],
     },
   );
-  assert.equal(saved.body.policy.source, 'WEB-DL');
-  assert.equal(saved.body.policy.resolution, '1080p');
-  assert.equal(saved.body.policy.hdr, 'hdr10');
-  assert.equal(saved.body.policy.include, 'Synthetic');
-  assert.equal(saved.body.policy.exclude, 'CAM');
+  assert.deepEqual(saved.body.policy.filter_params, {
+    quality: 'WEB-?DL|WEB-?RIP',
+    resolution: '1080[pi]|x1080',
+    effect: 'HDR10|HDR10\\+',
+    include: 'Synthetic',
+    exclude: 'CAM',
+  });
+  assert.equal(saved.body.policy.source, '');
+  assert.equal(saved.body.policy.resolution, '');
+  assert.equal(saved.body.policy.hdr, '');
+  assert.equal(saved.body.policy.include, '');
+  assert.equal(saved.body.policy.exclude, '');
   assert.deepEqual(saved.body.policy.preferred_groups, ['SyntheticGroup']);
   assert.equal(saved.body.schedule.source, 'custom');
   assert.equal(saved.body.schedule.active_minutes, 45);

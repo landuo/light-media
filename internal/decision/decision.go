@@ -3,6 +3,7 @@
 package decision
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 	"regexp"
@@ -14,23 +15,26 @@ import (
 	"light-media/internal/catalog"
 	"light-media/internal/media"
 	"light-media/internal/sites"
+	"light-media/internal/torrentfilter"
 )
 
 type Policy struct {
-	Source               string   `json:"source"`
-	HDR                  string   `json:"hdr"`
-	Languages            []string `json:"languages"`
-	Subtitles            []string `json:"subtitles"`
-	PreferredGroups      []string `json:"preferred_groups"`
-	PreferredResolutions []string `json:"preferred_resolutions"`
-	MinSeeders           int      `json:"min_seeders"`
-	FreeOnly             bool     `json:"free_only"`
-	Resolution           string   `json:"resolution"`
-	Codec                string   `json:"codec"`
-	MinBytes             int64    `json:"min_bytes"`
-	MaxBytes             int64    `json:"max_bytes"`
-	Include              string   `json:"include"`
-	Exclude              string   `json:"exclude"`
+	FilterParams         *torrentfilter.Parameters `json:"filter_params,omitempty"`
+	FilterResource       *sites.Resource           `json:"-"`
+	Source               string                    `json:"source"`
+	HDR                  string                    `json:"hdr"`
+	Languages            []string                  `json:"languages"`
+	Subtitles            []string                  `json:"subtitles"`
+	PreferredGroups      []string                  `json:"preferred_groups"`
+	PreferredResolutions []string                  `json:"preferred_resolutions"`
+	MinSeeders           int                       `json:"min_seeders"`
+	FreeOnly             bool                      `json:"free_only"`
+	Resolution           string                    `json:"resolution"`
+	Codec                string                    `json:"codec"`
+	MinBytes             int64                     `json:"min_bytes"`
+	MaxBytes             int64                     `json:"max_bytes"`
+	Include              string                    `json:"include"`
+	Exclude              string                    `json:"exclude"`
 }
 type Target struct {
 	Media         catalog.Media       `json:"media"`
@@ -65,6 +69,9 @@ var (
 // Evaluate distinguishes hard rejection from an explicit manual confirmation.
 // A confirmation item can be previewed manually, but is never auto accepted.
 func Evaluate(resource sites.Resource, target Target, policy Policy) Decision {
+	return EvaluateContext(context.Background(), resource, target, policy)
+}
+func EvaluateContext(ctx context.Context, resource sites.Resource, target Target, policy Policy) Decision {
 	out := Decision{Accepted: true, Reasons: []string{}, Season: target.Season, Episodes: []int{}}
 	hard := false
 	reason := func(value string) {
@@ -82,7 +89,7 @@ func Evaluate(resource sites.Resource, target Target, policy Policy) Decision {
 		reject("invalid_media_identity")
 		return finish()
 	}
-	if !checkResourcePolicy(resource, policy, reject) {
+	if !checkResourcePolicy(ctx, resource, policy, reject) {
 		return finish()
 	}
 	matched, year := titleIdentity(resource.Title, target.Media)
@@ -196,6 +203,9 @@ func Evaluate(resource sites.Resource, target Target, policy Policy) Decision {
 // Acceptance here only describes resource policy; it never authorizes automatic
 // media matching or file organization.
 func EvaluateResource(resource sites.Resource, policy Policy) Decision {
+	return EvaluateResourceContext(context.Background(), resource, policy)
+}
+func EvaluateResourceContext(ctx context.Context, resource sites.Resource, policy Policy) Decision {
 	out := Decision{Accepted: true, Reasons: []string{}, Episodes: []int{}}
 	reject := func(reason string) {
 		out.Accepted = false
@@ -206,12 +216,60 @@ func EvaluateResource(resource sites.Resource, policy Policy) Decision {
 		}
 		out.Reasons = append(out.Reasons, reason)
 	}
-	checkResourcePolicy(resource, policy, reject)
+	checkResourcePolicy(ctx, resource, policy, reject)
 	return out
 }
 
-// False preserves the two early returns used by identity-aware Evaluate.
-func checkResourcePolicy(resource sites.Resource, policy Policy, reject func(string)) bool {
+// NativePolicy masks only native fields explicitly replaced by an original
+// parameter, leaving independent size/codec/language requirements intact.
+// The search collector applies the original parameters to raw rows itself.
+func NativePolicy(policy Policy) Policy {
+	if p := policy.FilterParams; p != nil {
+		if p.Include != nil {
+			policy.Include = ""
+		}
+		if p.Exclude != nil {
+			policy.Exclude = ""
+		}
+		if p.Quality != nil {
+			policy.Source = ""
+		}
+		if p.Resolution != nil {
+			policy.Resolution = ""
+		}
+		if p.Effect != nil {
+			policy.HDR = ""
+		}
+		if p.Size != nil {
+			policy.MinBytes, policy.MaxBytes = 0, 0
+		}
+	}
+	policy.FilterParams, policy.FilterResource = nil, nil
+	return policy
+}
+
+// False preserves the early returns used by identity-aware Evaluate.
+func checkResourcePolicy(ctx context.Context, resource sites.Resource, policy Policy, reject func(string)) bool {
+	if p := policy.FilterParams; p != nil {
+		original := resource
+		if policy.FilterResource != nil {
+			original = *policy.FilterResource
+		}
+		description := original.SourceSubtitle
+		if description == nil {
+			description = &original.Subtitle
+		}
+		matched, err := torrentfilter.Match(ctx, *p, torrentfilter.Torrent{Title: original.Title, Description: description, Labels: original.Labels, Size: original.Size, UploadFactor: &original.UploadFactor, DownloadFactor: &original.DownloadFactor})
+		if err != nil {
+			reject("invalid_original_filter")
+			return false
+		}
+		if !matched {
+			reject("original_filter_not_matched")
+			return false
+		}
+	}
+	policy = NativePolicy(policy)
 	if len(resource.Title) == 0 || len(resource.Title) > 4096 || len(resource.Subtitle) > 4096 || strings.ContainsAny(resource.Title+resource.Subtitle, "\x00\r\n") {
 		reject("invalid_resource_title")
 		return false

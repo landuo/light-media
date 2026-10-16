@@ -8,6 +8,7 @@ import (
 	"light-media/internal/media"
 	"light-media/internal/priorityrules"
 	"light-media/internal/sites"
+	"light-media/internal/torrentfilter"
 	"time"
 )
 
@@ -95,21 +96,22 @@ type Settings struct {
 	DebugUntil           string                       `json:"debug_until"`
 }
 type Policy struct {
-	FilterGroups         []string `json:"filter_groups,omitempty"`
-	Source               string   `json:"source"`
-	HDR                  string   `json:"hdr"`
-	Languages            []string `json:"languages"`
-	Subtitles            []string `json:"subtitles"`
-	PreferredGroups      []string `json:"preferred_groups"`
-	PreferredResolutions []string `json:"preferred_resolutions"`
-	MinSeeders           int      `json:"min_seeders"`
-	FreeOnly             bool     `json:"free_only"`
-	Resolution           string   `json:"resolution"`
-	Codec                string   `json:"codec"`
-	MinBytes             int64    `json:"min_bytes"`
-	MaxBytes             int64    `json:"max_bytes"`
-	Include              string   `json:"include"`
-	Exclude              string   `json:"exclude"`
+	FilterParams         *torrentfilter.Parameters `json:"filter_params,omitempty"`
+	FilterGroups         []string                  `json:"filter_groups,omitempty"`
+	Source               string                    `json:"source"`
+	HDR                  string                    `json:"hdr"`
+	Languages            []string                  `json:"languages"`
+	Subtitles            []string                  `json:"subtitles"`
+	PreferredGroups      []string                  `json:"preferred_groups"`
+	PreferredResolutions []string                  `json:"preferred_resolutions"`
+	MinSeeders           int                       `json:"min_seeders"`
+	FreeOnly             bool                      `json:"free_only"`
+	Resolution           string                    `json:"resolution"`
+	Codec                string                    `json:"codec"`
+	MinBytes             int64                     `json:"min_bytes"`
+	MaxBytes             int64                     `json:"max_bytes"`
+	Include              string                    `json:"include"`
+	Exclude              string                    `json:"exclude"`
 }
 type Schedule struct {
 	Source          string              `json:"source"`

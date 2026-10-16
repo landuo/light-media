@@ -159,16 +159,24 @@ func (a *App) parseManualImportFile(file ImportFileRequest) media.ParseResult {
 	return parseManualImportName(file, a.prepareRecognitionTitle(filepath.Base(file.Path)))
 }
 func (a *App) evaluateResource(resource sites.Resource, target decision.Target, policy decision.Policy) decision.Decision {
+	return a.evaluateResourceContext(context.Background(), resource, target, policy)
+}
+func (a *App) evaluateResourceContext(ctx context.Context, resource sites.Resource, target decision.Target, policy decision.Policy) decision.Decision {
+	original := resource
+	policy.FilterResource = &original
 	resource.Title = a.prepareRecognitionTitle(resource.Title)
-	return decision.Evaluate(resource, target, policy)
+	return decision.EvaluateContext(ctx, resource, target, policy)
 }
 func (a *App) resourceNumberingSuggestion(title string) (int, []int) {
 	return resourceNumberingSuggestion(a.prepareRecognitionTitle(title))
 }
 
 func (a *App) eligibleAutomaticSeasonPack(resource sites.Resource, target decision.Target, policy Policy) bool {
+	original := resource
+	filters := decisionPolicy(policy)
+	filters.FilterResource = &original
 	resource.Title = a.prepareRecognitionTitle(resource.Title)
-	return eligibleAutomaticSeasonPack(resource, target, policy)
+	return eligibleAutomaticSeasonPackPolicy(resource, target, filters)
 }
 func (a *App) validateAutomaticSeasonPackFiles(material metainfo.Material, target decision.Target, siteID string) error {
 	return validateAutomaticSeasonPackFilesWithWords(material, target, siteID, a.prepareRecognitionTitle)

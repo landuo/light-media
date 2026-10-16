@@ -24,6 +24,8 @@ type siteSearchOutput struct {
 // particular configured site and enforces its shared budget and cooldown.
 // Only the collector calls the progress callback / writes the HTTP stream.
 func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutput, run func(context.Context, SiteConfig) siteSearchOutput) (SearchOutput, error) {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	settings := a.Settings()
 	filter, err := a.preparePriorityFilter(ctx, in, settings)
 	if err != nil {
@@ -33,6 +35,7 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 	if err != nil {
 		return out, err
 	}
+	additional := snapshotAdditionalFilter(in.Policy.FilterParams)
 	selected := map[string]bool{}
 	selectedIDs := in.SiteIDs
 	if len(selectedIDs) == 0 {
@@ -106,6 +109,17 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 				out.Sites[update.index].Status = "searching"
 			} else {
 				completed++
+				filtered, filterErr := additional.apply(ctx, update.result.candidates)
+				if filterErr != nil {
+					out.Candidates = []Candidate{}
+					a.log("ERROR", "rules", "subscription_filter_failed", filterErr.Error(), out.WorkflowID, "")
+					emitSearchProgress(ctx, out)
+					return out, filterErr
+				}
+				update.result.candidates = filtered
+				if in.Policy.FilterParams != nil {
+					update.result.status.Count = len(filtered)
+				}
 				out.Sites[update.index] = update.result.status
 				collected = append(collected, update.result.candidates...)
 				out.Candidates = append([]Candidate{}, collected...)

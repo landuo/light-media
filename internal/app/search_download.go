@@ -260,9 +260,10 @@ func (a *App) target(ctx context.Context, in SearchRequest, auto bool) (decision
 	return t, nil
 }
 func decisionPolicy(p Policy) decision.Policy {
-	return decision.Policy{Source: p.Source, HDR: p.HDR, Languages: p.Languages, Subtitles: p.Subtitles, PreferredGroups: p.PreferredGroups, PreferredResolutions: p.PreferredResolutions, MinSeeders: p.MinSeeders, FreeOnly: p.FreeOnly, Resolution: p.Resolution, Codec: p.Codec, MinBytes: p.MinBytes, MaxBytes: p.MaxBytes, Include: p.Include, Exclude: p.Exclude}
+	return decision.Policy{FilterParams: p.FilterParams, Source: p.Source, HDR: p.HDR, Languages: p.Languages, Subtitles: p.Subtitles, PreferredGroups: p.PreferredGroups, PreferredResolutions: p.PreferredResolutions, MinSeeders: p.MinSeeders, FreeOnly: p.FreeOnly, Resolution: p.Resolution, Codec: p.Codec, MinBytes: p.MinBytes, MaxBytes: p.MaxBytes, Include: p.Include, Exclude: p.Exclude}
 }
 func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOutput, error) {
+	in.Policy.FilterParams = snapshotAdditionalFilter(in.Policy.FilterParams).params
 	t, e := a.target(ctx, in, auto)
 	if e != nil {
 		return SearchOutput{}, e
@@ -286,7 +287,7 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 						queries[resource.ID] = query
 						seen[resource.ID] = true
 					}
-					if a.evaluateResource(resource, t, decisionPolicy(in.Policy)).Accepted {
+					if a.evaluateResourceContext(siteCtx, resource, t, decision.NativePolicy(decisionPolicy(in.Policy))).Accepted {
 						accepted = true
 					}
 				}
@@ -307,7 +308,7 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 		}
 		if successfulQueries > 0 || len(result.Resources) > 0 {
 			for _, r := range result.Resources {
-				d := a.evaluateResource(r, t, decisionPolicy(in.Policy))
+				d := a.evaluateResourceContext(siteCtx, r, t, decision.NativePolicy(decisionPolicy(in.Policy)))
 				found.candidates = append(found.candidates, Candidate{Resource: r, Accepted: d.Accepted, Reasons: d.Reasons, Season: d.Season, Episodes: d.Episodes, NeedsConfirmation: d.NeedsConfirmation})
 			}
 			if err := a.cacheSearchResources(ctx, result.Resources, queries, in.Page, mediaKey(t.Media)); err != nil && ctx.Err() == nil {
@@ -385,7 +386,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
-	choice := a.evaluateResource(fresh, t, decisionPolicy(in.Policy))
+	choice := a.evaluateResourceContext(ctx, fresh, t, decisionPolicy(in.Policy))
 	verifiedPack := auto && in.automaticSeasonPack && a.eligibleAutomaticSeasonPack(fresh, t, in.Policy)
 	if !choice.Accepted && !verifiedPack {
 		return DownloadPreview{}, bad("RESOURCE_REJECTED", strings.Join(choice.Reasons, "；"))
@@ -425,7 +426,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		if verifiedPack {
 			fileTarget.AllowEarly = nil
 		}
-		fileChoice := a.evaluateResource(fileResource, fileTarget, decision.Policy{})
+		fileChoice := a.evaluateResourceContext(ctx, fileResource, fileTarget, decision.Policy{})
 		if !fileChoice.Accepted || fileChoice.NeedsConfirmation {
 			if auto {
 				return p, bad("REVIEW_FILE_IDENTITY", "种子实际视频文件名不能确认目标身份，请手动核对")
@@ -717,7 +718,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			a.log("WARN", "sites", "partial_recheck", "同页其他资源解析不完整；当前资源已独立重新确认", in.WorkflowID, j.ID)
 		}
 		err = nil
-		choice := a.evaluateResource(*fresh, target, decisionPolicy(preview.Policy))
+		choice := a.evaluateResourceContext(ctx, *fresh, target, decisionPolicy(preview.Policy))
 		if in.Auto && request.VerifiedSeasonPack && a.eligibleAutomaticSeasonPack(*fresh, target, preview.Policy) {
 			choice.Accepted, choice.NeedsConfirmation, choice.Reasons = true, false, []string{}
 		}

@@ -43,3 +43,5 @@
 订阅规则自动填充的源码行为、规则对照和核心创建事件进度见 [plugin-subscribe-group-port.md](plugin-subscribe-group-port.md)。它目前是规则与事件基础，尚未加入可执行目录；不能据此把已有七个实际 Go 插件行为改称八个可用插件，更不能增加“已迁移”数量。
 
 优先级规则依赖的 Go 内核、202 组双路径样本、88 组原版排序参考、原版规则管理页、分区保存边界及实际关键词/订阅搜索证据见 [priority-rules-go-port.md](priority-rules-go-port.md)。原用户规则还未正式迁移，完整元数据、独立规则测试工具和订阅插件宿主接线仍在范围内。
+
+附加订阅过滤已接通原版质量/分辨率/特效表达式和编辑控件，313 组原调用参考、真实搜索进度前过滤、保存/重载及边界见 [subscription-additional-filters-go-port.md](subscription-additional-filters-go-port.md)。这是订阅规则插件的核心依赖，不增加已迁移数量；宿主事务和原数据迁移仍待完成。

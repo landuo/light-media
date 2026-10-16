@@ -14,6 +14,7 @@ import (
 // Keyword search applies resource filters without inventing a TMDB identity.
 // Directory organization performs the separate media recognition step.
 func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutput, error) {
+	in.Policy.FilterParams = snapshotAdditionalFilter(in.Policy.FilterParams).params
 	in.Query = strings.TrimSpace(in.Query)
 	if in.Query == "" || len([]rune(in.Query)) > 200 || strings.ContainsAny(in.Query, "\x00\r\n") {
 		return SearchOutput{}, bad("INVALID_QUERY", "请输入200字以内的资源关键词")
@@ -38,7 +39,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
 			season, episodes := a.resourceNumberingSuggestion(resource.Title)
-			choice := decision.EvaluateResource(resource, decisionPolicy(in.Policy))
+			choice := decision.EvaluateResourceContext(siteCtx, resource, decision.NativePolicy(decisionPolicy(in.Policy)))
 			if choice.Accepted {
 				choice.Reasons = append(choice.Reasons, "media_identity_required")
 			}
