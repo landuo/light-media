@@ -10,7 +10,7 @@
 | RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 原算法、原表单及Go SDK纯包已验证；连续宿主含native inotify、真实删除/恢复、配置切换屏障与原reload语义，正式NAS41项通过；加密SQL journal和配置/run同事务切换已验证，联合NAS37项通过。App管理入口、Guard/核心Effects及正式迁移未接入，不在可安装目录 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
-| AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程及站点适配正在独立候选对照；正式Go图片哈希依赖已通过588原始模式、160 PNG/GIF和8比较参考，JPEG差异已发现、仍在补齐。完整宿主、注册、正式迁移与实机验收未完成 |
+| AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程及站点适配正在独立候选对照；正式Go图片依赖已通过588原始模式、160 PNG/GIF、8比较和1449 JPEG原机参考，已接入受控JPEG解码/内存检查，仍有明确未覆盖格式。完整宿主、注册、正式迁移与实机验收未完成 |
 | MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 待实现、待迁移、待验证 |
 | IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 待实现、待迁移、待验证 |
 | SystemProcess | 系统进程 | 1.1 | 启用 | 0 | Go 进程采样、配置/详情页及仪表板数据已验证；仪表板布局待接入，待正式迁移 |
@@ -60,6 +60,6 @@ RemoveLink 连续本地宿主、正常关闭恢复、Linux原生事件、文件�
 
 源文件联动清理的纯包及与 RemoveLink 不同的 Stop、known_paths、覆盖移动、刮削保护和根目录行为见 [plugin-scrape-file-clean-go-port.md](plugin-scrape-file-clean-go-port.md)。没有把纯算法或 SDK 测试当作生产删除宿主已就绪。
 
-AutoSignIn 的 Tjupt 图像处理参考与纯Go依赖边界见 [plugin-auto-signin-image-hash-go-port.md](plugin-auto-signin-image-hash-go-port.md)。JPEG不等价分支保持未就绪，不以缩放样本或其他格式通过替代整个签到插件完成。
+AutoSignIn 的 Tjupt 图像处理参考与纯Go依赖边界见 [plugin-auto-signin-image-hash-go-port.md](plugin-auto-signin-image-hash-go-port.md)、[plugin-auto-signin-jpeg-go-port.md](plugin-auto-signin-jpeg-go-port.md)。已验证JPEG现走专用纯Go解码，明确未覆盖格式仍失败，不以缩放样本或其他格式通过替代整个签到插件完成。
 
 清理无效做种的完整原执行参考、原生属性/包装器、Go SDK与未接宿主边界见 [plugin-clean-invalid-seed-go-port.md](plugin-clean-invalid-seed-go-port.md)。源消息中的“已删除”计数不等于下载器实际成功收据，迁入纯包不表示已清理任何用户种子。

@@ -10,7 +10,7 @@ import (
 )
 
 // Hash decodes formats whose pixel/mode mapping has an exact reference suite.
-// JPEG is intentionally not routed through Go's different IDCT implementation.
+// JPEG uses the installed Pillow-compatible path, never Go's different IDCT.
 func Hash(encoded []byte) (string, error) {
 	r, e := Decode(encoded)
 	if e != nil {
@@ -22,6 +22,9 @@ func Hash(encoded []byte) (string, error) {
 func Decode(encoded []byte) (Raster, error) {
 	if len(encoded) == 0 || len(encoded) > 8<<20 {
 		return Raster{}, ErrInvalid
+	}
+	if len(encoded) >= 3 && encoded[0] == 0xff && encoded[1] == 0xd8 && encoded[2] == 0xff {
+		return DecodeJPEG(encoded)
 	}
 	var cfg image.Config
 	var img image.Image

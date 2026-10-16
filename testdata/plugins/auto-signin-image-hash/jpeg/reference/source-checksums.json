@@ -1,0 +1,97 @@
+{
+  "go_base": {
+    "base_url": "https://raw.githubusercontent.com/golang/go/go1.26.2/src/image/jpeg/",
+    "license_sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "source_sha256": {
+      "dct.go": "c16e9585a6fb9ba08a0aacfd36911bf394ec3abaaaa633a2589256101be16d30",
+      "huffman.go": "0dc31ab00dcdfc9853d11ff56cce8ce5ff2099e8b2ed18ab35561aa12993897c",
+      "reader.go": "9af311c6149311b0863a3f3175ac7b5ecb7f86b487006a6ba65f0aa69f7ddb3d",
+      "scan.go": "bb475bb88f5b57a6b55e88a018244cdfae9d7c89487471050ab449f89e1bc39f"
+    },
+    "version": "go1.26.2"
+  },
+  "installed_binary_provenance_sha256": "87bcc77f596dd27c938fb1c43de4d8f9df8ccba9b769e0928616512044af6e7e",
+  "libjpeg_turbo": {
+    "base_url": "https://raw.githubusercontent.com/libjpeg-turbo/libjpeg-turbo/9217719d3a58633923b096af4c1d50d304768a64/",
+    "commit": "9217719d3a58633923b096af4c1d50d304768a64",
+    "sources": {
+      "LICENSE.md": "e10114e6e40f3d0311c401ca25245ac5ef459a43c20f976fd63f03e816f5741f",
+      "README.ijg": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6",
+      "simd_nasm_jsimdext.inc": "68c5d236785edf75344cebe8b9bec36568bd35c96eb72cc67ffecd66c17dbd74",
+      "simd_x86_64_jidctint-avx2.asm": "37139148853f94ff07abc052b401afff788775d00c5c69bdbb7bc5e531873ce2",
+      "simd_x86_64_jidctint-sse2.asm": "61b02d8d1cb5bf3b4d012edde4c9838a82a9986185e75de13dcf2191bc32897a",
+      "simd_x86_64_jsimd.c": "16174844d94c88bc5b998b292965f12000b19549c8e25965d37be9cf41e0abb1",
+      "src_jdapimin.c": "03c7c476f4cfc19fc0b7f53c6bef9f3122e682cbfd37410743fed4a1ecaecbc1",
+      "src_jdcolor.c": "b51cdf7f6dc93f8874fdfa82aaea7030cc70bf3408e7fcb60cf76017b07000cf",
+      "src_jdct.h": "dec739e58411e143e23041508f828d948d74bf670819aea770e52e6134024de5",
+      "src_jddctmgr.c": "92efac51e3488c93ede3e689f8f1fe859ba8ee17f622bee42af2ebd2b603a3b3",
+      "src_jdhuff.c": "712ecd1b7e2b520ce0648cb742f1dad89f675ab8871dc054227cb28aed84b377",
+      "src_jdinput.c": "b3c155ed22ce4b49431d4900392f09354275daa59602450fafc6b9cd7adfcc13",
+      "src_jdmaster.c": "aeaf73d414cdac5fe34c9c5ae3594a22433c241e56da927d8d77231ee9663c7d",
+      "src_jdmerge.c": "7a08564c3867c660623fac6c45b5eb894ce79616db2f101187bf9e045048cd4c",
+      "src_jdsample.c": "7736ee967c5df3afaa0f86e7638bd550e67774b670d484e070d9f8685ced12c0",
+      "src_jidctint.c": "25c26bdfdba0fd95413dda570c79de6268e6e3be418299160a58fb03cb3872a4",
+      "src_jmorecfg.h": "b86b4abf452d39b737cb45503591e04e9ca38c5fd0e90d429387d0464005a28b",
+      "src_jstdhuff.c": "79e2cbf605326ce6349a60f58695b97d574510662f8b089474f30c07bf06be28"
+    },
+    "version": "3.1.4.1"
+  },
+  "offline_generators": {
+    "generate.py": "25d24c0d83bc64bccecd40650fd04623833381c30be72add79ce34e95c9aaaed",
+    "generate_coefficient.py": "51618128327afa2b9606fcdcb701e76d25b8c6541238151f1cd382d56fce1964",
+    "generate_coefficient_runtime.py": "61dea9b370acd55de1ac4c1af0a3cabae2741548ba3f3be5a007b8dc944f5024",
+    "generate_fullblock.py": "d220f5e9f962a13453e21b01dc76b92fb9d543f222e7da566045c53c4dbaddfa",
+    "generate_fullblock_runtime.py": "d776c4abbfea457a25dad03f35288759f870e620c9a4e6cfcc3c9f86685b5464",
+    "generate_marker.py": "d87793490399ada9b1e9766b6237418fa22ac5870c52aced396aa6bed45f91d2",
+    "generate_marker_runtime.py": "23b9f6d9c24c546906f1196beeb9abfb9371348a9ce1b7f317e2bc240a9f1a78",
+    "generate_provenance.py": "6e0174501bab079a42047e3e52b7c3ea4baa65dc129dd44307761751b1018a9c",
+    "generate_provenance_runtime.py": "da016346f1ffe6ae1be186010c700ea4e45034356e17651a92621678a4f2dcfa",
+    "generate_runtime.py": "3c129e45f8919c09fb9851c1fc35fb8d06b9ee2fdf2f033d21b771fca5ec9d5a",
+    "generate_standard_huffman.py": "e7a20e62ed7e866c80fe15b141782f8b02654d2773b848c7c09046fe8091c171",
+    "generate_table.py": "f5e346b43e846d0698dd623e30d9da59b85db9957bedb2e6cb914369093b679e",
+    "generate_table_runtime.py": "a66ca8b7a7e05dfc68a841645553077ba40a0bb07088d14d4c13a698adf45a5e"
+  },
+  "original_oracles": {
+    "jpeg-coefficient-pillow-12.2.0.jsonl.gz": "c341192b5ddf3d685bd32c68b8e097838c5d70c8c23cc39e125cce334eaf7540",
+    "jpeg-fullblock-pillow-12.2.0.jsonl.gz": "11a4b84aa04eb19736002041ab355294af00c0dee5487a83ee4a616a93d8397c",
+    "jpeg-marker-pillow-12.2.0.jsonl.gz": "00f5f8c36582d0862b5a7fcac66e09d8d9ccdaaea1485408121447959eb419a1",
+    "jpeg-pillow-12.2.0.jsonl.gz": "e4121c3f4810ed24304be021b40f4718c9309bb1907dfa97461cf60140ec5316",
+    "jpeg-table-pillow-12.2.0.jsonl.gz": "bfed56cc0aa34b5b92f7483bf42ac91dc2e2cc156c8668d7ed41f59d72d06f1f",
+    "pillow-12.2.0-reference.json.gz": "5831ffe0159af234038054a225be69231e6ae038e058ce64c0225169452479bc"
+  },
+  "parent_hash_copy": {
+    "sha256": "90f71d16575b6cd7d1043db93c4c85792f60aa53cfeef85c9a5c6c50c8108e22",
+    "source": "../_tjupt_imagehash_port/hash.go",
+    "source_hash_methods_ast_sha256": "8298a5ba26f3156e1f83fdf318af3d557c04b34f312b4f9f9781dd9e6a15d8df",
+    "source_tjupt_sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0"
+  },
+  "pillow": {
+    "base_url": "https://raw.githubusercontent.com/python-pillow/Pillow/3c41c095064200a02672d89cc5ff629eaf4b0d4f/",
+    "commit": "3c41c095064200a02672d89cc5ff629eaf4b0d4f",
+    "sources": {
+      "Pillow-LICENSE": "15181e7363dca9aed78b79bebebc7fde7f1814b8bd311ea3b87ae8ccadfc185b",
+      "pillow_src_PIL_JpegImagePlugin.py": "27ebe8f59a7a12e40277f8f84ce4637c300145e181fb5bd05ad894b89c391bb1",
+      "pillow_src_libImaging_Jpeg.h": "6c8e541d259afb406418d1af3bbc3dda437274e60012bee23dd136ed91211850",
+      "pillow_src_libImaging_JpegDecode.c": "895fc76b3f04e93fbc8a31f952e168432ecd140ae38fc1bba3c70d5803ed4682",
+      "pillow_src_libImaging_JpegEncode.c": "1b144602c37f60bd3f9fce3cc5eb677c3891c6b739ebae09ed9cd1cc170ac330",
+      "pillow_src_libImaging_Unpack.c": "3dbb745a7914c0fd0ba31f25385d61b7a3aed831dac930d2b7961d25ab3b3f57"
+    },
+    "version": "12.2.0"
+  },
+  "runtime_go": {
+    "decode.go": "5b59436b11fc236d6ca6046c49cee0a2e0be76f88ecd6b73eafad068aaa9c7a7",
+    "hash.go": "90f71d16575b6cd7d1043db93c4c85792f60aa53cfeef85c9a5c6c50c8108e22",
+    "jpegport/dct.go": "a2d6416b9bed9c86f11d6e4d83f37574584ca4e737f08029b1bd4f6fe79a7ae8",
+    "jpegport/huffman.go": "fdff3c61756505a44d224f8306594b7fe3150db1c08d0faaece18eb13588337a",
+    "jpegport/idct_islow.go": "e095e7fe9e6df24253a0e0666a67e97dd284a43b50756a6deecbd5944a26249a",
+    "jpegport/raster.go": "601524acdf45f5565dbbdde5804a4b1285229416dfd54e276ce383207fde8b5c",
+    "jpegport/reader.go": "bb74de2ffe5926e2c5cde634dd9d7e8c51240db0bf8ce5031f09e5aaafc27436",
+    "jpegport/scan.go": "599884186122cfe2aa75f5aaa485072c498cd06f1172dbc799542495a39a79d5",
+    "jpegport/standard_huffman.go": "2befc90da9eb55f5e10641bcb70e4bbd32f5ba7155f88f643f72cb39a29c8e78"
+  },
+  "status": "isolated candidate; not formal or deployed; 8-bit Huffman DCT slice only",
+  "tests_go": {
+    "jpeg_concurrent_test.go": "efdc1e1e1fa75dec52fc23dad6f6f78ecbcf926413e272bc1b30ea67dae1e303",
+    "jpeg_test.go": "6350eb975dda8dafdb4b7634b54dac3af72adcf956ec09c48c72abcbf70080d3"
+  }
+}

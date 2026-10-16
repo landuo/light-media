@@ -97,7 +97,7 @@ func TestConcurrentInputsRemainUnchanged(t *testing.T) {
 
 func FuzzDecodeBounded(f *testing.F) {
 	for _, c := range fixture(f).Encoded {
-		if c.Width == 1 && c.Height == 1 && c.Format != "JPEG" {
+		if c.Width == 1 && c.Height == 1 {
 			f.Add(c.Encoded)
 		}
 	}
@@ -152,8 +152,8 @@ func TestStandardJPEGDecoderDifference(t *testing.T) {
 		if h != c.Hash {
 			hashDiff++
 		}
-		if _, e := Hash(c.Encoded); e != ErrUnsupported {
-			t.Fatalf("unverified JPEG accepted: %v", e)
+		if h, e := Hash(c.Encoded); e != nil || h != c.Hash {
+			t.Fatalf("verified JPEG pipeline differs %s/%v want %s", h, e, c.Hash)
 		}
 	}
 	t.Logf("synthetic JPEG references=%d gray differences=%d hash differences=%d", count, grayDiff, hashDiff)

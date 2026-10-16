@@ -1,0 +1,40 @@
+{
+  "id": "42964942-6a8f-4add-ba03-4c7a6ec6a98f",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "",
+  "test_regex": "^Test",
+  "sha256": "ad8e2b0066a0dd2316863b5817a7dbc161718e2caebaab337efd6b2627ae13a9",
+  "remote_sha256": "ad8e2b0066a0dd2316863b5817a7dbc161718e2caebaab337efd6b2627ae13a9",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 18,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal Go imagehash with pure JPEG port: installed Tjupt/Pillow and libjpeg-turbo x86 synthetic pixels, PNG/GIF and 1449 JPEG references; exact gray/hash, preallocation memory rejection, unsupported format rejection and concurrent decoder independence; no real images, network or production plugin registration/migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}
