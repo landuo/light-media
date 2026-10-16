@@ -13,6 +13,7 @@ const supported = new Set([
   'VAceEditor',
   'VAlert',
   'VTextField',
+  'VCronField',
   'VTextarea',
   'VSelect',
 ]);

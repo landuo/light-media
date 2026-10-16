@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-17",
+  "original_frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "original_files": {
+    "src/components/field/CronField.vue": "2527f969ac02bea80aede7e4a4f2336f871976886c2684294c77a58847ab0e28",
+    "src/components/input/CronInput.vue": "081897464f0722282247f8d5acb2f251633be15add060e4da2ce00d5626b1c86"
+  },
+  "dependencies": {
+    "@vue-js-cron/vuetify": "5.0.9",
+    "@vue-js-cron/core": "5.4.1",
+    "vuetify": "3.7.3"
+  },
+  "implementation": "Original field/menu interaction adapted to explicit Vue imports, existing safe form renderer and lazy dependency registration. Null clears remain null in the saved plugin config; only the inner cron library sees undefined for a null display value.",
+  "checks": {
+    "frontend_tests": {
+      "pass": 138,
+      "fail": 0,
+      "skip": 0
+    },
+    "typecheck_and_production_build": {
+      "exit_code": 0
+    },
+    "browser": "Codex in-app browser, owned Vite loopback fixture using actual PluginConfigDialog + original AutoSignIn form + current renderer. Every API is a local synthetic recorder; no App backend, credentials, real plugin installation or schedules.",
+    "browser_cases": [
+      {
+        "case": "open-and-dismiss-without-selection",
+        "submitted_cron": "2.3/9-23",
+        "posts": 1,
+        "saved": 1,
+        "errors": []
+      },
+      {
+        "case": "typed-cron-and-nested-weekday-selection",
+        "initial": "0 9 * * 5",
+        "selected": "每周; add 星期一",
+        "submitted_cron": "0 9 * * 1,5",
+        "posts": 1,
+        "saved": 1,
+        "observed_browser_event": "ResizeObserver loop completed with undelivered notifications."
+      },
+      {
+        "case": "clear-to-automatic",
+        "submitted_cron": null,
+        "posts": 1,
+        "saved": 1,
+        "errors": []
+      },
+      {
+        "case": "final-menu-display",
+        "displayed": "每周的周一,周五的09:00",
+        "current_console_errors_or_warnings": 0
+      }
+    ]
+  },
+  "screenshot": {
+    "path": "docs/plugin-cron-field-ui.png",
+    "sha256": "0631f79c943a18f0dd8ee858e1bfdf0d5a3c9a381dcbe51f7f168876042da7e8"
+  },
+  "limits": "UI source/build only, not deployed. Does not complete AutoSignIn SQL owner, timer firing, Browser/OCR, configuration/KV migration or the full PL-25 dynamic renderer contract."
+}

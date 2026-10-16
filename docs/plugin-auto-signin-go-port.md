@@ -49,7 +49,9 @@ HTML 仅覆盖已核验 lxml 文档形状，尚非完整 libxml2；编码检测�
 
 Tjupt 使用正式纯 Go imagehash/JPEG。已有原始像素/PNG/GIF/JPEG 对照见图片专文；16 bit PNG、JPEG arithmetic/lossless 和任意 Pillow 格式仍不承诺。受控公共图片 origin、答案缓存真实目录及自定义站点/SitesHelper 宿主仍须接线。
 
-仍待完成：正式 SQL backend 与实际 owner/执行授权、配置 CAS 投影及 revision 转换、统计/KV 投影、源定时器安装/触发/停止收据、事件/命令/API 注册、消息路由、VCronField/页面 CSS 与组件、不可变私有站点快照、Browser/OCR，以及原配置/KV/文件/引用迁移和实机验收。不能因为测试 FileStore 可恢复，就宣称这些生产边界已经成立。
+仍待完成：正式 SQL backend 与实际 owner/执行授权、配置 CAS 投影及 revision 转换、统计/KV 投影、源定时器安装/触发/停止收据、事件/命令/API 注册、消息路由、页面 CSS 与其余组件、不可变私有站点快照、Browser/OCR，以及原配置/KV/文件/引用迁移和实机验收。不能因为测试 FileStore 可恢复，就宣称这些生产边界已经成立。
+
+前端随后已接原版 VCronField：复用锁定的 `@vue-js-cron/vuetify` 5.0.9 / core 5.4.1，沿用中文图形选择、可手写/清空、嵌套菜单及外部点击收起。仅在异步字段加载时注册第三方所需 Vuetify 组件，不开放任意插件脚本。使用实际配置弹窗和原完整表单的隔离页面已核对 `2.3/9-23` 不因打开菜单被改写、星期选择得到 `0 9 * * 1,5`、清空仍保存 null；138 个前端测试及类型检查/构建通过。该页面的 API 是本地合成 recorder，不是生产插件安装或配置迁移。一次嵌套交互观察到非致命 ResizeObserver 布局事件，提交结果正常；最终菜单无控制台错误/警告。见 [UI 验证记录](plugin-cron-field-ui-verification.json) 和 [界面截图](plugin-cron-field-ui.png)。
 
 ## 验证记录
 

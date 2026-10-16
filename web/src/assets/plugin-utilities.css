@@ -62,6 +62,11 @@ THE SOFTWARE.
   gap: 12px !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-1),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-1) {
+  margin-top: 4px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-2),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-2) {
   margin-top: 8px !important;
@@ -236,6 +241,11 @@ THE SOFTWARE.
   letter-spacing: 0.0333333333em !important;
   font-family: inherit;
   text-transform: none !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.cursor-default),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.cursor-default) {
+  cursor: default !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.h-100),

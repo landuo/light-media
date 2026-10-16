@@ -187,3 +187,27 @@ test('original uninstall switches and installed-plugin multiselect use supported
   );
   assert.deepEqual(pluginFormIssues(form.conf), []);
 });
+
+test('complete original AutoSignIn form retains its cron editor and independent interval draft', () => {
+  const form = JSON.parse(
+    readFileSync(new URL('../../internal/plugins/autosignin/form.json', import.meta.url), 'utf8'),
+  );
+  assert.deepEqual(pluginFormIssues(form.conf), []);
+  const find = (nodes) => {
+    for (const node of nodes) {
+      if (node.component === 'VCronField') return node;
+      const nested = find(node.content || []);
+      if (nested) return nested;
+    }
+  };
+  const node = find(form.conf);
+  assert.equal(node.props.model, 'cron');
+  const model = { ...form.model, cron: '2.3/9-23', unrelated: false };
+  const bound = pluginFieldProps(node.props, model);
+  assert.equal(bound.modelValue, '2.3/9-23');
+  bound['onUpdate:modelValue']('0 9 * * 5');
+  assert.equal(model.cron, '0 9 * * 5');
+  bound['onUpdate:modelValue'](null);
+  assert.equal(model.cron, null);
+  assert.equal(model.unrelated, false);
+});

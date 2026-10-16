@@ -27,6 +27,7 @@ const components: Record<string, Component | string> = {
   VTextField,
   VTextarea,
   VSelect,
+  VCronField: defineAsyncComponent(() => import('./PluginCronField.vue')),
   VAceEditor,
   VTable,
   VCard,
