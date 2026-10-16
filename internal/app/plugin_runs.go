@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"time"
 )
 
 // PluginRun's public projection is metadata only. Config snapshots, input and
@@ -114,6 +115,9 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_schedules SET active=0 WHERE instance_id=?`, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
@@ -304,6 +308,21 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		state, errorCode := "running", ""
 		if current != 1 {
 			state, errorCode = "canceled", "PLUGIN_SNAPSHOT_STALE"
+		} else if run.Action == "service" {
+			errorCode, err = p.claimPluginScheduleTx(ctx, tx, run, time.Now())
+			if err != nil {
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
+			if errorCode != "" {
+				state = "canceled"
+			}
+		}
+		if state == "canceled" {
+			if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=CASE WHEN state='missed' THEN state ELSE 'canceled' END WHERE run_id=? AND state IN ('queued','running','missed')`, run.ID); err != nil {
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
 		}
 		_, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
 		if err != nil {
@@ -340,14 +359,22 @@ func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode str
 	if err != nil {
 		return err
 	}
-	changed, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state=?,result=?,error_code=?,updated_at=? WHERE id=? AND state='running'`, state, sealed, errorCode, now(), runID)
+	tx, err := p.store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,result=?,error_code=?,updated_at=? WHERE id=? AND state='running'`, state, sealed, errorCode, now(), runID)
 	if err != nil {
 		return err
 	}
 	if n, _ := changed.RowsAffected(); n != 1 {
 		return bad("PLUGIN_RUN_TERMINAL", "插件执行已结束或不在执行状态")
 	}
-	return nil
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=? WHERE run_id=? AND state='running'`, state, runID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
@@ -357,6 +384,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 	_, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state=CASE WHEN instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id IN ('CategoryEditor','CustomHosts','SystemProcess')) THEN 'pending' ELSE 'reconcile_pending' END,error_code='PLUGIN_INTERRUPTED',updated_at=? WHERE state='running' OR (state='reconcile_pending' AND instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id IN ('CategoryEditor','CustomHosts','SystemProcess')))`, now())
 	if err == nil {
 		err = p.recoverMediaRefreshRuns(ctx)
+	}
+	if err == nil {
+		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)
 	}
 	return err
 }
@@ -444,6 +474,12 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 		}
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {

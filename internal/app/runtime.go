@@ -150,6 +150,8 @@ func (a *App) Start(parent context.Context) {
 	go func() { defer a.wg.Done(); a.pluginWorker(ctx) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.pluginEventWorker(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.pluginScheduleWorker(ctx) }()
 	a.log("INFO", "runtime", "started", "服务已启动", "", "")
 	a.controlMu.Lock()
 	initialControl := a.control

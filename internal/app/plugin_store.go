@@ -147,6 +147,17 @@ CREATE TABLE IF NOT EXISTS plugin_media_refresh_operations(
 CREATE TABLE IF NOT EXISTS plugin_media_refresh_items(
  run_id TEXT NOT NULL,asset_id TEXT NOT NULL,digest BLOB NOT NULL,
  PRIMARY KEY(run_id,asset_id),FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
+CREATE TABLE IF NOT EXISTS plugin_schedules(
+ instance_id TEXT NOT NULL,service_id TEXT NOT NULL,group_key TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,
+ definition BLOB NOT NULL,definition_digest TEXT NOT NULL,active INTEGER NOT NULL,next_due TEXT,updated_at TEXT NOT NULL,
+ PRIMARY KEY(instance_id,service_id),FOREIGN KEY(instance_id) REFERENCES plugin_installations(instance_id));
+CREATE INDEX IF NOT EXISTS plugin_schedules_due ON plugin_schedules(active,next_due);
+CREATE TABLE IF NOT EXISTS plugin_schedule_occurrences(
+ id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,service_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,
+ scheduled_at TEXT NOT NULL,state TEXT NOT NULL,run_id TEXT UNIQUE,misfire_grace_ms INTEGER NOT NULL,manual INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,
+ UNIQUE(instance_id,service_id,generation,config_revision,scheduled_at,manual),
+ FOREIGN KEY(instance_id,service_id) REFERENCES plugin_schedules(instance_id,service_id),FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
+CREATE INDEX IF NOT EXISTS plugin_schedule_occurrences_runs ON plugin_schedule_occurrences(instance_id,service_id,state);
 INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
 		return nil, err
@@ -382,6 +393,9 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
 		return err
 	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET active=0 WHERE instance_id=?`, instanceID); err != nil {
+		return err
+	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return err
 	}
@@ -405,6 +419,9 @@ func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 		return err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
+		return err
+	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_schedules SET active=0 WHERE instance_id=?`, instanceID); err != nil {
 		return err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
