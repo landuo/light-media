@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-17",
+  "base_commit": "6a48e9b",
+  "source_sha256": {
+    "internal/app/plugin_autosignin_journal.go": "addb18326e54272570a9027e8b88643d4b962608123656e1450496b281876238",
+    "internal/app/plugin_autosignin_journal_test.go": "a1af6186bbc86d7b2700902d4978bc32215b3deb70483c28f6dbdce439ede25c"
+  },
+  "commands": [
+    {
+      "command": "go test ./internal/app -run '^TestPluginAutoSignInSQL' -count=1",
+      "exit_code": 0,
+      "top_level_tests": 13,
+      "seconds": 2.11
+    },
+    {
+      "command": "go test -race ./internal/app -run '^TestPluginAutoSignInSQL' -count=1",
+      "exit_code": 0,
+      "top_level_tests": 13,
+      "seconds": 15.933
+    },
+    {
+      "command": "go vet ./internal/app",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Two frozen production App SQL/owner backend files, invoked by owned SQLite/real PluginRun/loopback Controller fixtures. No Manager/catalog/scheduler/actual source-configuration migration or deployment. Subsequent transition files are excluded.",
+  "limits": [
+    "StateBackend reconstructs the current instance. Incremental writes avoid resealing unchanged large payloads, but reads are not constant memory or constant cost. Completed-run retention and lazy historical response reads remain required before final resource acceptance.",
+    "Public config CAS and internal receipt lineage are implemented; ordinary administrator revision transitions, historical outbox handoff and timer/manager barriers remain separate integration work.",
+    "History/cache/stats currently persist in this journal. Original plugin KV and core SiteOper projections, controlled production Browser/OCR and notification consumers remain required."
+  ]
+}
