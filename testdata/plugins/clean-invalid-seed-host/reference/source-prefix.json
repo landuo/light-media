@@ -1,0 +1,51 @@
+{
+  "source_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+  "cases": [
+    {
+      "case": "toggle_second_notice_failure",
+      "attempts": [
+        "notice",
+        "config",
+        "notice"
+      ],
+      "committed_prefix": [
+        "notice",
+        "config"
+      ],
+      "error": "OSError",
+      "saved_notify_all": true,
+      "scheduler_running": [],
+      "date_jobs": []
+    },
+    {
+      "case": "command_clean_stub_failure",
+      "attempts": [
+        "notice",
+        "clean_stub"
+      ],
+      "committed_prefix": [
+        "notice"
+      ],
+      "error": "OSError",
+      "saved_notify_all": null,
+      "scheduler_running": [],
+      "date_jobs": []
+    },
+    {
+      "case": "onlyonce_config_failure",
+      "attempts": [
+        "date_add",
+        "config"
+      ],
+      "committed_prefix": [],
+      "error": "OSError",
+      "saved_notify_all": null,
+      "scheduler_running": [
+        false
+      ],
+      "date_jobs": [
+        1
+      ]
+    }
+  ]
+}

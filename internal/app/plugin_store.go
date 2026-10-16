@@ -250,6 +250,9 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" {
 		limit = pluginDataValueLimit
 	}
+	if kind == "clean_seed_journal" {
+		limit = pluginCleanInvalidSeedJournalLimit
+	}
 	if len(sealed) < aead.NonceSize()+aead.Overhead() || len(sealed) > limit+aead.NonceSize()+aead.Overhead() {
 		return nil, bad("PLUGIN_DATA_CORRUPT", "插件数据无法通过完整性校验")
 	}

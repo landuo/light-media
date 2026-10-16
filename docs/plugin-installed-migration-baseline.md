@@ -23,7 +23,7 @@
 | TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 待实现、待迁移、待验证 |
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
 | LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 待实现、待迁移、待验证 |
-| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 原算法/表单/五命令、原生下载器对象与真实Go SDK纯包已迁入；85业务/52工具/32原wrapper/14安全getter参考已验证。原生下载器RPC依赖已迁入并通过受控HTTP验证；实际绑定/持久收据、文件删除Host、调度/通知、App注册和正式迁移未接入 |
+| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 原算法/表单/五命令、原生下载器对象及Go SDK已迁入；85业务/52工具/32原wrapper/14安全getter参考已验证。正式host逐效果恢复/文件快照/控制接口26项NAS通过，实际App加密journal另有5项NAS证据；真实owner/Core/barrier/调度/通知、注册及正式迁移未接入 |
 | SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 待实现、待迁移、待验证 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 待实现、待迁移、待验证 |
 | CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | Go 写入/停用恢复及实际域名连接已在 NAS 隔离容器验证；待正式可写挂载和配置迁移 |
@@ -75,3 +75,5 @@ AutoSignIn 已有实际 App SQLite 分行加密、原运行记录核验、内部
 MergeMessageNotify 正式主流程和 SMTP 依赖的原始对照、28项NAS证据及完整 Mako/Apprise、动态类型、表单和宿主未完成项见 [Go 主流程与 SMTP](plugin-merge-message-go-port.md)。真实 SMTP 回环证明不等于实际账户投递、正式注册或配置迁移。
 
 AutoSignIn 原生配置切换已保存旧 admission 原 Scope/配置链/未投递通知，并在真实 drain 证明后原子转交 owner 文件锁；统一24项NAS测试包含6个切换目标，详见 [配置切换记录](plugin-auto-signin-transition.md)。Manager/barrier/历史handoff尚待实际接线，不能据此增加正式迁移数量。
+
+CleanInvalidSeed 的正式宿主、实际 App journal 和两份 NAS 验证范围见 [宿主与 journal](plugin-clean-invalid-seed-host.md)。真实文件/下载器租约、Core/barrier、注册及迁移仍待接入，没有操作用户种子或媒体。
