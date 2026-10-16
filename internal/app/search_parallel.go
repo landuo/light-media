@@ -24,13 +24,17 @@ type siteSearchOutput struct {
 // particular configured site and enforces its shared budget and cooldown.
 // Only the collector calls the progress callback / writes the HTTP stream.
 func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutput, run func(context.Context, SiteConfig) siteSearchOutput) (SearchOutput, error) {
-	filter, err := a.preparePriorityFilter(ctx, in)
+	settings := a.Settings()
+	filter, err := a.preparePriorityFilter(ctx, in, settings)
+	if err != nil {
+		return out, err
+	}
+	sorter, err := a.preparePrioritySorter(ctx, in, settings)
 	if err != nil {
 		return out, err
 	}
 	selected := map[string]bool{}
 	selectedIDs := in.SiteIDs
-	settings := a.Settings()
 	if len(selectedIDs) == 0 {
 		selectedIDs = settings.IndexerSites
 	}
@@ -83,6 +87,7 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			updates <- event{index: i, result: result}
 		}()
 	}
+	var collected []Candidate
 	for completed := 0; completed < len(configs); {
 		select {
 		case <-ctx.Done():
@@ -102,7 +107,8 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			} else {
 				completed++
 				out.Sites[update.index] = update.result.status
-				out.Candidates = append(out.Candidates, update.result.candidates...)
+				collected = append(collected, update.result.candidates...)
+				out.Candidates = append([]Candidate{}, collected...)
 				sortSearchCandidates(out.Candidates, in.Policy)
 				a.logSite(update.result.status, out.WorkflowID)
 			}
@@ -112,12 +118,13 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 	if err := ctx.Err(); err != nil {
 		return out, err
 	}
+	out.Candidates = append([]Candidate{}, collected...)
 	out, err = filter.apply(ctx, a, out)
 	if err != nil {
 		emitSearchProgress(ctx, out)
 		return out, err
 	}
-	sortSearchCandidates(out.Candidates, in.Policy)
+	sorter.sort(a, out.Candidates, in.Policy)
 	emitSearchProgress(ctx, out)
 	return out, nil
 }

@@ -232,6 +232,9 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	if err := validateSettings(c); err != nil {
 		return err
 	}
+	if err := bumpPriorityRuleRevisions(ctx, tx, previous.PriorityRules, c.PriorityRules); err != nil {
+		return err
+	}
 	sealed, err := a.Store.Seal(c)
 	if err != nil {
 		return err

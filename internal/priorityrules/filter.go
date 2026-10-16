@@ -44,6 +44,7 @@ type Configuration struct {
 	Groups          []Group      `json:"groups"`
 	SearchGroups    []string     `json:"search_groups"`
 	SubscribeGroups []string     `json:"subscribe_groups"`
+	TorrentPriority []string     `json:"torrent_priority"`
 	Mode            Mode         `json:"source_mode,omitempty"`
 }
 type Media struct {
@@ -187,11 +188,11 @@ func (e *Engine) filter(ctx context.Context, names []string, torrents []Torrent,
 			for tier, level := range levels {
 				node, err := e.expression(strings.TrimSpace(level))
 				if err != nil {
-					return nil, err
+					return nil, groupFailure(err, group.Name, tier+1)
 				}
 				ok, err := e.evaluate(ctx, node, torrents[previous.Index], media, mode)
 				if err != nil {
-					return nil, err
+					return nil, groupFailure(err, group.Name, tier+1)
 				}
 				if ok {
 					filtered = append(filtered, Match{previous.Index, 100 - tier})
@@ -238,7 +239,8 @@ func (e *Engine) evaluate(ctx context.Context, node *expression, t Torrent, medi
 		return false, err
 	}
 	if node.kind == "atom" {
-		return e.matchRule(ctx, node.atom, t, media, mode)
+		matched, err := e.matchRule(ctx, node.atom, t, media, mode)
+		return matched, ruleFailure(err, node.atom)
 	}
 	left, err := e.evaluate(ctx, node.left, t, media, mode)
 	if err != nil {

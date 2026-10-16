@@ -48,11 +48,15 @@ func TestPriorityRulesRealSearchSettingsAndSubscriptionScopes(t *testing.T) {
 	workflowConfigure(t, a, site.URL, "http://127.0.0.1:1")
 	c := a.Settings()
 	c.DefaultRoot = ""
-	c.PriorityRules = prioritySettings()
-	raw, _ := json.Marshal(c)
-	response := callTest(t, a.Handler(), "PUT", "/api/settings", string(raw), cookie, "")
-	if response.Code != 200 {
-		t.Fatal("priority settings rejected", response.Code, response.Body.String())
+	if err := a.saveSettings(ctx, c); err != nil {
+		t.Fatal(err)
+	}
+	for _, section := range priorityRuleSections {
+		raw, _ := json.Marshal(map[string]any{"revision": 0, "value": ruleSection(*prioritySettings(), section)})
+		response := callTest(t, a.Handler(), "PUT", "/api/settings/rules/"+section, string(raw), cookie, "")
+		if response.Code != 200 {
+			t.Fatal("priority section rejected", section, response.Code, response.Body.String())
+		}
 	}
 	public := callTest(t, a.Handler(), "GET", "/api/settings", "", cookie, "")
 	if public.Code != 200 || !strings.Contains(public.Body.String(), `"priority_rules"`) {
@@ -157,7 +161,7 @@ func TestPriorityRuleFailureClearsProgressAndConfigurationSnapshotIsFrozen(t *te
 	c = a.Settings()
 	c.Sites[0].BaseURL = badSite.URL
 	c.PriorityRules.Groups[0].RuleString = priorityText("Broken")
-	c.PriorityRules.CustomRules = append(c.PriorityRules.CustomRules, priorityrules.Definition{"id": "Broken", "include": "("})
+	c.PriorityRules.CustomRules = append(c.PriorityRules.CustomRules, priorityrules.Definition{"id": "Broken", "include": "synthetic-priority-private-broken-pattern("})
 	if err := a.saveSettings(ctx, c); err != nil {
 		t.Fatal(err)
 	}
@@ -166,6 +170,17 @@ func TestPriorityRuleFailureClearsProgressAndConfigurationSnapshotIsFrozen(t *te
 	out, err := a.searchResources(ctx, SearchRequest{Query: "Synthetic"})
 	if pluginErrorCode(err) != "PRIORITY_RULE_FAILED" || len(out.Candidates) != 0 || len(last.Candidates) != 0 {
 		t.Fatal("rule failure returned raw accepted resources", err, len(out.Candidates), len(last.Candidates))
+	}
+	if !strings.Contains(err.Error(), "quality") || !strings.Contains(err.Error(), "Broken") || !strings.Contains(err.Error(), "优先级 1") {
+		t.Fatal("rule failure cannot be located", err)
+	}
+	if !a.logs.flush(ctx) {
+		t.Fatal("rule diagnostic log not flushed")
+	}
+	page, logErr := a.queryLogs(ctx, map[string]string{"module": "rules"})
+	raw, _ := json.Marshal(page.Entries)
+	if logErr != nil || !strings.Contains(string(raw), "Broken") || !strings.Contains(string(raw), "quality") || strings.Contains(string(raw), "synthetic-priority-private-broken-pattern") {
+		t.Fatal("rule log is missing safe location or exposed its private pattern", logErr)
 	}
 }
 func TestPriorityConfigurationAndPolicyValidation(t *testing.T) {

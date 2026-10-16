@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"path/filepath"
@@ -23,12 +24,11 @@ type priorityFilter struct {
 	siteNames map[string]string
 }
 
-func (a *App) preparePriorityFilter(ctx context.Context, in SearchRequest) (priorityFilter, error) {
+func (a *App) preparePriorityFilter(ctx context.Context, in SearchRequest, settings Settings) (priorityFilter, error) {
 	filter := priorityFilter{}
 	if err := validateSubscriptionPolicy(in.Policy); err != nil {
 		return filter, err
 	}
-	settings := a.Settings()
 	config := settings.PriorityRules
 	if config == nil {
 		return filter, nil
@@ -128,7 +128,17 @@ func (filter priorityFilter) apply(ctx context.Context, a *App, out SearchOutput
 	matches, err := filter.engine.Filter(ctx, filter.names, torrents, filter.media)
 	if err != nil {
 		out.Candidates = []Candidate{}
-		return out, bad("PRIORITY_RULE_FAILED", "优先级规则匹配失败，请检查表达式、条件格式或资源集数；未返回未筛选结果")
+		message := "优先级规则匹配失败"
+		var diagnostic *priorityrules.Diagnostic
+		if errors.As(err, &diagnostic) {
+			message += fmt.Sprintf("：规则组 %q，优先级 %d", diagnostic.Group, diagnostic.Tier)
+			if diagnostic.Rule != "" {
+				message += fmt.Sprintf("，规则 %q", diagnostic.Rule)
+			}
+		}
+		message += "；请检查表达式、条件格式或资源集数"
+		a.log("ERROR", "rules", "priority_rule_failed", message, out.WorkflowID, "")
+		return out, bad("PRIORITY_RULE_FAILED", message)
 	}
 	filtered := make([]Candidate, 0, len(matches))
 	for _, match := range matches {

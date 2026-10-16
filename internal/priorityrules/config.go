@@ -5,6 +5,16 @@ import "strings"
 // These are the actual CustomRule schema fields. Extended trusted builtin
 // definitions are not powers that a public settings payload can introduce.
 func ValidateConfiguration(config Configuration) error {
+	if len(config.TorrentPriority) > 64 {
+		return sourceError("RuleLimit")
+	}
+	for _, key := range config.TorrentPriority {
+		switch key {
+		case "torrent", "site", "upload", "seeder":
+		default:
+			return sourceError("InvalidTorrentPriority")
+		}
+	}
 	if _, err := New(config); err != nil {
 		return err
 	}

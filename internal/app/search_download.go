@@ -320,7 +320,6 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	if e != nil {
 		return out, e
 	}
-	sortSearchCandidates(out.Candidates, in.Policy)
 	a.saveDecision(ctx, out, t.Media)
 	return out, nil
 }

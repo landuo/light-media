@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
 import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
 import ApiTokenSettings from './ApiTokenSettings.vue';
+const RuleManager = defineAsyncComponent(() => import('./RuleManager.vue'));
 const emit = defineEmits<{ organize: [paths: string[]] }>();
 function routeTab() {
   const value = new URLSearchParams(location.hash.split('?')[1] || '').get('tab');
-  return ['system', 'directory', 'maintenance'].includes(value || '') ? value! : 'system';
+  return ['system', 'directory', 'rule', 'maintenance'].includes(value || '') ? value! : 'system';
 }
 const form = ref<any>(null),
   tab = ref(routeTab()),
@@ -127,6 +128,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
       v-for="item in [
         ['system', '系统'],
         ['directory', '目录'],
+        ['rule', '规则'],
         ['maintenance', '维护'],
       ]"
       :key="item[0]"
@@ -212,6 +214,9 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     </div>
     <div v-if="visitedTabs.has('directory')" v-show="tab === 'directory'">
       <DirectoryManager @organize="emit('organize', $event)" />
+    </div>
+    <div v-if="visitedTabs.has('rule')" v-show="tab === 'rule'">
+      <RuleManager />
     </div>
     <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'" class="settings-page">
       <section v-if="logging" class="panel">

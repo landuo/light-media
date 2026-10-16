@@ -140,6 +140,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out = a.status(ctx)
 	case p == "settings" && method == "GET":
 		out = a.publicSettings()
+	case p == "settings/rules" || strings.HasPrefix(p, "settings/rules/"):
+		out, e = a.priorityRulesAPI(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "settings/rules"), "/"))
 	case p == "settings" && method == "PUT":
 		var c Settings
 		e = decodeBody(w, r, &c)
@@ -562,9 +564,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	c.IndexerSites = a.Settings().IndexerSites
 	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
-	if c.PriorityRules == nil {
-		c.PriorityRules = old.PriorityRules
-	}
+	// Rules have independent section revisions. A cached system/directory form
+	// is never an authority to overwrite a more recently saved rule section.
+	c.PriorityRules = old.PriorityRules
 	if c.APIToken == "" {
 		c.APIToken = old.APIToken
 	}
