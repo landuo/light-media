@@ -66,6 +66,7 @@ type App struct {
 	pluginProcessStats      pluginProcessSnapshotter
 	pluginServerStatus      pluginServerStatusRuntime
 	pluginRemoveLink        pluginRemoveLinkRuntime
+	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 
@@ -186,6 +187,7 @@ func (a *App) Close() error {
 	}
 	a.wg.Wait()
 	a.stopRemoveLinkPlugins()
+	a.stopCleanInvalidSeedPlugins()
 	if a.cancel != nil {
 		a.stopMediaRefreshPlugins()
 	}

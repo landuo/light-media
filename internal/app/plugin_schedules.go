@@ -243,8 +243,11 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 				state = "skipped_busy"
 			}
 			if state == "queued" {
-				input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
-				run, err := p.enqueueRunTx(ctx, tx, instanceID, "service", input)
+				run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+				if !handled && err == nil {
+					input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
+					run, err = p.enqueueRunTx(ctx, tx, instanceID, "service", input)
+				}
 				if err != nil {
 					return err // Queue capacity cannot consume this due instant.
 				}
@@ -370,8 +373,11 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 		return PluginRun{}, bad("PLUGIN_SCHEDULE_CORRUPT", "定时服务参数无法读取")
 	}
 	occurrenceID := id("ps_")
-	input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
-	run, err := p.enqueueRunTx(ctx, tx, instanceID, "service", input)
+	run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+	if !handled && err == nil {
+		input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
+		run, err = p.enqueueRunTx(ctx, tx, instanceID, "service", input)
+	}
 	if err != nil {
 		return PluginRun{}, err
 	}

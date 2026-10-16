@@ -14,6 +14,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/uninstall"
 )
@@ -63,6 +64,16 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 			initialize, err := a.shouldInitializeRemoveLink(ctx, installation, config)
 			if err != nil {
 				a.log("ERROR", "plugins", "cleanup_initialize_pending", "文件清理存在待核对状态，未重新初始化；其他插件继续启动", "", "")
+				continue
+			}
+			if !initialize {
+				continue
+			}
+		}
+		if installation.PluginID == "CleanInvalidSeed" {
+			initialize, err := a.shouldInitializeCleanInvalidSeed(ctx, installation, config)
+			if err != nil {
+				a.log("ERROR", "plugins", "clean_seed_initialize_pending", "无效做种清理存在待核对状态，未重新初始化；其他插件继续启动", "", "")
 				continue
 			}
 			if !initialize {
@@ -245,6 +256,9 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			state, errorCode = "reconcile_pending", "PLUGIN_DEFERRED_RECEIPT_FAILED"
 		} else if stored.Phase == "confirmed" && deferredSameRun(stored, deferred.installation, deferred.run) && stored.Method == deferred.record.Method && bytes.Equal(stored.Ack, deferred.record.Ack) && bytes.Equal(stored.Raw, deferred.record.Raw) {
 			result.Result, err, state, errorCode = stored.Result, nil, "succeeded", ""
+		} else if stored.Phase == "terminal_failed" && deferredSameRun(stored, deferred.installation, deferred.run) && stored.Method == deferred.record.Method && bytes.Equal(stored.Ack, deferred.record.Ack) && bytes.Equal(stored.Raw, deferred.record.Raw) {
+			result.Result, state, errorCode = stored.Result, "failed", stored.ErrorCode
+			err = bad(errorCode, "插件操作失败，已保留确证结果")
 		} else if stored.Phase == "started" || stored.Phase == "uncertain" {
 			state = "reconcile_pending"
 		}
@@ -334,6 +348,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == "server.status.configure" {
 		return a.pluginServerStatusConfigure(ctx, installation, run, raw)
+	}
+	if method == cleaninvalidseed.ConfigureCapability || method == cleaninvalidseed.ExecuteCapability || method == cleaninvalidseed.FormCapability {
+		return a.pluginCleanInvalidSeedHost(ctx, installation, run, method, raw)
 	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()

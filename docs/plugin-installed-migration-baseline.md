@@ -23,7 +23,7 @@
 | TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 待实现、待迁移、待验证 |
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
 | LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 主流程、13个消息模块、API/回调与受控HTTP已迁入正式Go包；1,376条原执行及28项NAS隔离测试通过。实际App持久宿主、可信消息入口、完整动态输入及配置/KV迁移未完成，不在可安装目录 |
-| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 原算法/表单/五命令、原生下载器对象及Go SDK已迁入；85业务/52工具/32原wrapper/14安全getter参考已验证。正式host逐效果恢复/文件快照/控制接口26项NAS通过，实际App加密journal另有5项NAS证据；真实owner/Core/barrier/调度/通知、注册及正式迁移未接入 |
+| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 已接正式catalog、真实SDK终态/owner/Core、配置重载与卸载、自动/手动调度和站内历史；24项直接App测试包含在148项联合NAS验证中，另有29项host NAS证据。可信远程五命令入口、外发通知、部分恢复边界及正式迁移未完成 |
 | SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 待实现、待迁移、待验证 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 待实现、待迁移、待验证 |
 | CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | Go 写入/停用恢复及实际域名连接已在 NAS 隔离容器验证；待正式可写挂载和配置迁移 |
@@ -32,7 +32,7 @@
 
 每项完成须同时取得：对应原版行为对照、实际可执行实现、配置/数据/文件迁移收据、引用映射核验、适当的协议/合成与实机证据。平台界面出现卡片不构成该插件已迁移。
 
-当前原版配置、KV 与文件均未导入正式新服务；11 个可安装处理器已有不同程度的实际 Go 行为，不能表述为“11/23 已迁移”。其余 12 个的完整业务尚未接入，其中 ScrapeFileClean、CleanInvalidSeed 已有尚未注册的纯 Go 包，AutoSignIn 的图片处理依赖已移入正式包。完整业务及平台完整交互继续保留在交付范围内。定时触发器和持久队列已接共享识别词及站点统计的一次性刷新；其他具体业务插件注册、公共服务界面和逐项迁移仍需完成，不能因此增加已迁移插件数量。
+当前原版配置、KV 与文件均未导入正式新服务；12 个可安装处理器已有不同程度的实际 Go 行为，不能表述为“12/23 已迁移”。其余 11 个尚未进入可安装目录；其中 ScrapeFileClean、AutoSignIn、MergeMessageNotify、LarkMessager 已有正式 Go 核心和不同范围的对照验证，完整宿主或依赖仍待接入。完整业务及平台完整交互继续保留在交付范围内。定时触发器和持久队列已接共享识别词、站点统计及清理无效做种；其他具体业务插件注册、公共服务界面和逐项迁移仍需完成，不能因此增加已迁移插件数量。
 
 同日只读核查原版 `/config/plugins/<原插件ID>` 的文件元数据：AutoBackup 有 7 个文件、51,658,600 字节，最大单文件 7,414,774 字节；CloudflareSpeedTest 有 12 个文件、15,871,166 字节，最大单文件 7,930,040 字节。两处均无符号链接或特殊文件，其余 21 个已装 ID 未发现对应数据目录。本次没有读取/导出文件正文，也没有把备份包放入 Git。后续迁移须分别保留这些文件的内容和校验收据，密文落盘；不得把旧可执行文件复制后直接运行，也不能因 KV 为 0 就漏掉文件迁移。
 
@@ -76,12 +76,12 @@ MergeMessageNotify 正式主流程和 SMTP 依赖的原始对照、28项NAS证�
 
 AutoSignIn 原生配置切换已保存旧 admission 原 Scope/配置链/未投递通知，并在真实 drain 证明后原子转交 owner 文件锁；统一24项NAS测试包含6个切换目标，详见 [配置切换记录](plugin-auto-signin-transition.md)。Manager/barrier/历史handoff尚待实际接线，不能据此增加正式迁移数量。
 
-CleanInvalidSeed 的正式宿主、实际 App journal 和两份 NAS 验证范围见 [宿主与 journal](plugin-clean-invalid-seed-host.md)。真实文件/下载器租约、Core/barrier、注册及迁移仍待接入，没有操作用户种子或媒体。
+CleanInvalidSeed 的正式宿主、实际 App journal 与后续29项 admission NAS 验证范围见 [宿主与 journal](plugin-clean-invalid-seed-host.md)。真实文件/下载器租约、Core/barrier、配置生命周期、自动/手动调度及目录安装接线见 [App 宿主记录](plugin-clean-invalid-seed-core.md)。可信远程命令、外发通知及正式迁移仍待完成，没有操作用户种子或媒体。
 
 聚合通知原表单需要的页签、子弹窗、完整字面键和链接已补，655节点检查及跨渠道编辑/一次保存的浏览器证据见 [原版表单交互](plugin-merge-message-form-ui.md)。这不是正式安装、账户发送或完整模板依赖的证据。
 
 Lark 原 App Secret 显隐已映射为固定原生动作并验证 password→text→password 与一次保存保留原值，见 [表单交互](plugin-lark-password-ui.md)。原对象 rules 的 warning 如实保留，不声明前端 required 验证完成；整个 Lark 业务及配置迁移仍未完成。
 
-AutoSignIn 新增可选的逐条收据、缓存与运行头读取接口，保留旧完整 State 兼容路径；本地99项与NAS80项纯包检查通过，见 [读取接口与验证边界](plugin-auto-signin-typed-read-go-port.txt)。这一批不包含仍在审阅的实际 App typed SQL 接线，也不证明完整运行内存、资源回收、站点签到或数据迁移完成。
+AutoSignIn 新增可选的逐条收据、缓存与运行头读取接口，保留旧完整 State 兼容路径；本地99项与NAS80项纯包检查通过，见 [读取接口与验证边界](plugin-auto-signin-typed-read-go-port.txt)。这份纯包证据不包含后续实际 SQL 切片；后者的6项真实 App 测试已在148项普通/竞态/NAS联合检查中通过，见 [实际 SQL 读取记录](plugin-auto-signin-typed-sql-go-port.txt)。两者均不证明完整运行内存、资源回收、Manager接线、站点签到或数据迁移完成。
 
 Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验证见 [Go核心迁入记录](plugin-lark-go-port.txt)。跨执行的持久owner、可信回调授权和消息生产者仍待接入，不能把受控HTTP或SDK通过表述为已发送真实消息或已完成迁移。

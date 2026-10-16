@@ -1,0 +1,61 @@
+AutoSignIn App typed SQL read slice — actual App validation
+
+This slice adds only plugin_autosignin_typed_read.go and its actual App test file.
+It uses the real PluginStore, encrypted normalized SQL journal, exclusive OS
+owner, immutable actual PluginRun/input and existing config-proof guard. It does
+not compile the independent draft App/PluginStore shim into the product.
+
+newPluginAutoSignInTypedJournal wraps an actual owned backend with the optional
+durable EntryReader, CacheReader and RunStartReader. The original complete
+View/Update implementation, mutations, transitions and native admission rules
+remain unchanged. App Manager/catalog/worker production registration is not
+connected by adding this constructor.
+
+Every read authenticates sealed meta and the complete small physical row
+directory (collection/token/part/digest/size) with its original aggregate/count/
+size proof, then decrypts selected cells. Needed cells verify AEAD/AAD/HMAC/key/
+chunk order/count/nil markers. Verified absence is distinct from not-loaded; a
+missing part0 with an existing later part fails. No partial State is sent to the
+old writer. This read-only slice exposes no worker cell list or mutation RPC.
+
+Unselected large response/cached-body ciphertext is checked lazily when requested.
+A directory edit fails every read; a corrupt unrequested body stays unknown until
+read, when it fails instead of becoming empty or successful. These are selected
+read semantics, not a claim that every stored body was reverified on every call.
+
+The read-only configuration authorization closure loads the current raw config
+and only the exact old config effects referenced by the sealed public-revision
+chain, then invokes the unchanged actual native guard. This closure never reaches
+Update. Internal source saves preserve original owner/run admission while public
+CAS advances. External config changes, changed run input/revision/state, uninstall,
+generation changes and old/foreign owner proofs remain rejected.
+
+Returned RawMessage values match old StateJournal.State's JSON round-trip: nil
+becomes literal null, and JSON whitespace/HTML escaping is canonicalized. This is
+applied only to public returned DTO fields. Original stored opaque bytes and config
+receipt HMAC inputs are retained unchanged. Cache byte slices preserve nil versus
+empty. New-run Keys use the original non-nil empty slice behavior; every current
+history key is included. Existing runs use their immutable original baseline.
+
+Six actual App test functions cover: full/typed result and unchanged
+ciphertext/source facts; directory/requested-body/lazy-body corruption; actual
+run/config/owner revocation; advancing source config chain and corrupted proof;
+replacement OS owner retaining unknown request and uncertain outbox; actual SQL
+Controller with an owned loopback HTTP request, source notification-boundary SQL
+failure and recovery without a second visit or fresh inventory. No real site,
+user credential, notification sender, downloader or media is used.
+
+All six actual App tests passed within the 148-test normal/race/NAS regression;
+vet also passed. NAS used Linux/amd64, CGO disabled, the modernconly SQL driver,
+256 MiB memory, GOMEMLIMIT=64MiB, no external network and a read-only mount.
+The test binary SHA matched, no OOM occurred, owned resources were cleaned and
+existing services were unchanged. The earlier independent draft's 14 tests and
+allocation benchmarks are not substituted for this actual App evidence.
+See plugin-auto-signin-typed-sql-verification.json for exact commands and scope.
+
+Resource limits remain explicit: each call scans O(physical rows) metadata and
+holds the referenced config chain; a large selected baseline/history is still
+loaded. Start, writes, HTTP/browser/OCR intent/reply/unknown, outbox, Finish and
+lifecycle use the original full state path. No retention/compaction is supplied.
+Unknown outcomes, undelivered outbox and config proofs are not collected by age.
+Actual Manager/barrier/timer/event/notification integration remains separate work.

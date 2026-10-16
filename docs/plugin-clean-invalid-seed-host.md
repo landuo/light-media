@@ -1,6 +1,6 @@
 # CleanInvalidSeed：宿主协议与实际 App journal
 
-正式 `internal/plugins/cleaninvalidseed/host` 实现原算法所需的下载器、文件、配置、通知及调度宿主契约；`internal/app/plugin_clean_invalid_seed_journal.go` 使用本 App 的 SQLite 和加密存储。**App owner/Core/barrier、实际调度接线、注册、用户配置与运行数据迁移仍未完成**，没有清理用户种子、原文件或媒体库。
+正式 `internal/plugins/cleaninvalidseed/host` 实现原算法所需的下载器、文件、配置、通知及调度宿主契约；`internal/app/plugin_clean_invalid_seed_journal.go` 使用本 App 的 SQLite 和加密存储。本文保留首次宿主/journal迁入及后续 admission 的分层证据；后续 App owner/Core/barrier、调度和注册进展见 [App 宿主记录](plugin-clean-invalid-seed-core.md)。用户配置与运行数据迁移仍未执行，没有清理用户种子、原文件或媒体库。
 
 ## 当前实现
 
@@ -22,7 +22,7 @@ NAS linux/amd64、CGO_ENABLED=0 的同 26 项全部通过，0 跳过、0 失败�
 
 实际 App journal 的 4 项测试和私有上限的 1 项测试另在 [统一 24 项 NAS 记录](plugin-auto-transition-clean-journal-nas-verification.json) 中通过；其余 19 项是 AutoSignIn SQL/transition。这两份报告不覆盖随后编写的 BeforeRun lease、App owner/Core/barrier 或真实插件注册。
 
-后续仍须把真实下载器/目录的租约、共享 scheduler/队列、已确证失败与未知结果的终态、通知消费者、HTTP 操作、停止与重载 barrier 接入 App，并在原系统只读的前提下迁移配置、数据和引用。纯包测试、空配置安装和原 JSON 复制都不算迁移完成。
+首次迁入时尚待接通的实际租约、共享 scheduler/队列、终态、HTTP与生命周期已在后续 [App 宿主记录](plugin-clean-invalid-seed-core.md) 中分别计证。通知消费者与可信命令入口仍需接线，并在原系统只读的前提下迁移配置、数据和引用。纯包测试、空配置安装和原 JSON 复制都不算迁移完成。
 
 ## 后续原生 admission 扩展
 

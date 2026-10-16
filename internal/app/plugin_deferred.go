@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/uninstall"
 )
@@ -31,6 +32,7 @@ type pluginDeferredRecord struct {
 	InputSHA                                       string
 	Raw, Ack, Result                               json.RawMessage
 	Phase                                          string
+	ErrorCode                                      string `json:",omitempty"`
 }
 type pluginDeferredCall struct {
 	a                *App
@@ -80,6 +82,29 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 			return removelink.ApplyCapability, raw, nil
 		}
 	}
+	if in.PluginID == "CleanInvalidSeed" && in.Version == "2.1" {
+		switch run.Action {
+		case "init", "reload":
+			return cleaninvalidseed.ConfigureCapability, json.RawMessage(`{}`), nil
+		case "run":
+			return cleaninvalidseed.ExecuteCapability, json.RawMessage(`{"action":"clean"}`), nil
+		case "event", "service", "once", "command":
+			var invocation plugins.Invocation
+			var event struct {
+				ID string `json:"event_id"`
+			}
+			if json.Unmarshal(run.Input, &invocation) != nil {
+				return "", nil, bad("INVALID_PLUGIN_RUN", "插件执行快照无效")
+			}
+			d := json.NewDecoder(bytes.NewReader(invocation.Input))
+			d.DisallowUnknownFields()
+			if d.Decode(&event) != nil || d.Decode(new(any)) != io.EOF || event.ID == "" || len(event.ID) > 128 {
+				return "", nil, bad("PLUGIN_RUN_SCOPE_DENIED", "清理事件没有绑定持久执行")
+			}
+			raw, _ := json.Marshal(event)
+			return cleaninvalidseed.ExecuteCapability, raw, nil
+		}
+	}
 	return "", nil, nil
 }
 func deferredSameRun(r pluginDeferredRecord, in PluginInstallation, run PluginRun) bool {
@@ -101,13 +126,29 @@ func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJourna
 		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作收据损坏")
 	}
 	switch r.Phase {
-	case "prepared", "started", "confirmed", "uncertain":
+	case "prepared", "started", "confirmed", "uncertain", "terminal_failed":
 	default:
 		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作阶段无效")
 	}
+	if !validPluginDeferredOutcome(r) {
+		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作终态收据无效")
+	}
 	return r, sealed, nil
 }
+
+// This is a native receipt format, never an SDK-supplied error or permission to
+// retry. Only the source-specific private journal can establish known failure.
+func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
+	if r.Phase != "terminal_failed" {
+		return r.ErrorCode == ""
+	}
+	return r.Plugin == "CleanInvalidSeed" && r.Version == "2.1" &&
+		(r.ErrorCode == "CLEAN_SEED_SOURCE_FAILED" || r.ErrorCode == "CLEAN_SEED_HOST_DENIED") && json.Valid(r.Result)
+}
 func (p *PluginStore) writeDeferred(ctx context.Context, tx *sql.Tx, r pluginDeferredRecord, previous []byte) error {
+	if !validPluginDeferredOutcome(r) {
+		return bad("PLUGIN_DEFERRED_INVALID", "插件操作终态收据无效")
+	}
 	raw, err := json.Marshal(r)
 	if err == nil {
 		raw, err = pluginResultJSON(raw)
@@ -222,6 +263,9 @@ func deferredPayloadEqual(raw, want []byte) bool {
 	return true
 }
 func (d *pluginDeferredCall) changePhase(ctx context.Context, from, to string, result json.RawMessage) error {
+	return d.changeOutcome(ctx, from, to, result, "")
+}
+func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string, result json.RawMessage, code string) error {
 	tx, err := d.a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -239,7 +283,7 @@ func (d *pluginDeferredCall) changePhase(ctx context.Context, from, to string, r
 			return err
 		}
 	}
-	r.Phase, r.Result = to, result
+	r.Phase, r.Result, r.ErrorCode = to, result, code
 	if err = d.a.pluginStore.writeDeferred(ctx, tx, r, sealed); err != nil {
 		return err
 	}
@@ -306,12 +350,28 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 	// nothing happened. Persist only the known outcome using a fresh context.
 	finish, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	phase := "confirmed"
+	phase, code := "confirmed", ""
 	if err != nil {
 		phase = "uncertain"
 		result = nil
 	}
-	saveErr := d.changePhase(finish, "started", phase, result)
+	if d.record.Plugin == "CleanInvalidSeed" && d.record.Version == "2.1" {
+		known, knownCode, found, proofErr := d.a.pluginStore.cleanInvalidSeedDeferredOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "插件操作结果尚未持久确认，请核对执行记录")
+			if proofErr != nil {
+				err = bad("PLUGIN_DEFERRED_RECEIPT_FAILED", "插件操作结果无法核验")
+			}
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "插件操作失败，已保留确证结果")
+			}
+		}
+	}
+	saveErr := d.changeOutcome(finish, "started", phase, result, code)
 	if saveErr != nil {
 		return nil, bad("PLUGIN_DEFERRED_UNCERTAIN", "插件操作结果尚未持久确认，请核对执行记录")
 	}
@@ -356,13 +416,27 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Run != run.ID || r.Instance != run.InstanceID || r.Version != run.Version || r.Generation != run.Generation || r.Action != run.Action || r.InputSHA != deferredInputSHA(run.Input) {
 			return bad("PLUGIN_DEFERRED_INVALID", "插件操作恢复身份不匹配")
 		}
-		if r.Plugin == "RemoveLink" && (r.Phase == "started" || r.Phase == "uncertain") {
-			result, found, proofErr := p.removeLinkDeferredOutcome(ctx, run, r.Method)
+		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
+			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
+		}
+		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed") && (r.Phase == "started" || r.Phase == "uncertain") {
+			var result json.RawMessage
+			var code string
+			var found bool
+			var proofErr error
+			if r.Plugin == "RemoveLink" {
+				result, found, proofErr = p.removeLinkDeferredOutcome(ctx, run, r.Method)
+			} else {
+				result, code, found, proofErr = p.cleanInvalidSeedDeferredOutcome(ctx, run, r.Method)
+			}
 			if proofErr != nil {
 				return proofErr
 			}
 			if found {
 				r.Phase, r.Result = "confirmed", result
+				if code != "" {
+					r.Phase, r.ErrorCode = "terminal_failed", code
+				}
 				tx, err := p.store.DB.BeginTx(ctx, nil)
 				if err != nil {
 					return err
@@ -376,7 +450,7 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 				}
 			}
 		}
-		if run.State == "failed" && r.Phase != "confirmed" {
+		if run.State == "failed" && r.Phase != "confirmed" && r.Phase != "terminal_failed" {
 			continue
 		}
 		state, code := "reconcile_pending", "PLUGIN_DEFERRED_UNCERTAIN"
@@ -398,8 +472,28 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 				return err
 			}
 			state, code = "succeeded", ""
+		case "terminal_failed":
+			result, err = p.seal("run_result", r.Instance, r.Run, r.Result)
+			if err != nil {
+				return err
+			}
+			state, code = "failed", r.ErrorCode
 		}
-		if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,result=COALESCE(?,result),updated_at=? WHERE id=? AND state IN ('pending','running','reconcile_pending','failed')`, state, code, result, now(), run.ID); err != nil {
+		tx, err := p.store.DB.BeginTx(ctx, nil)
+		if err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,result=COALESCE(?,result),updated_at=? WHERE id=? AND state IN ('pending','running','reconcile_pending','failed')`, state, code, result, now(), run.ID)
+		if err == nil && r.Phase == "terminal_failed" && (run.Action == "init" || run.Action == "reload") {
+			// A crash between receipt and finishRun must not bypass the same
+			// startup replay block used by the ordinary confirmed-failure path.
+			_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO plugin_run_startup_blocks(run_id) SELECT id FROM plugin_runs WHERE id=? AND state='failed'`, run.ID)
+		}
+		if err != nil {
+			_ = tx.Rollback()
+			return err
+		}
+		if err = tx.Commit(); err != nil {
 			return err
 		}
 	}
@@ -433,6 +527,11 @@ func (a *App) retryPluginDeferred(ctx context.Context, instance, runID string) (
 	}
 	if installation.PluginID == "RemoveLink" {
 		if err = a.validateRemoveLinkDeferredRetry(ctx, run); err != nil {
+			return PluginRun{}, err
+		}
+	}
+	if installation.PluginID == "CleanInvalidSeed" {
+		if err = a.validateCleanInvalidSeedDeferredRetry(ctx, run); err != nil {
 			return PluginRun{}, err
 		}
 	}

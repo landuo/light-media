@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "status": "actual_app_normal_race_vet_nas_passed",
+  "scope": "Two new actual App typed read files only; no Manager/catalog/worker registration, no typed mutation or retention implementation.",
+  "source_sha256": {
+    "internal/app/plugin_autosignin_typed_read.go": "bf6f0b747b02ee0c355c390c00733c6b0f1e6948a1f77c2e79c7c031a2c08332",
+    "internal/app/plugin_autosignin_typed_read_test.go": "b1b82926fc26c4441d515643c84369b5f8dcf34e59e9e6f7061fe1ef07de3803"
+  },
+  "prepared_top_level_tests": [
+    "TestPluginAutoSignInTypedReadsMatchActualFullBackendAndNeverWrite",
+    "TestPluginAutoSignInTypedAuthenticationRejectsDirectoryAndRequestedBodyCorruption",
+    "TestPluginAutoSignInTypedReadsRequireActualRunConfigAndOwner",
+    "TestPluginAutoSignInTypedConfigChainPreservesOriginalAdmissionAndRejectsCorruptProof",
+    "TestPluginAutoSignInTypedReplacementOwnerRetainsUnknownAndUncertainOutbox",
+    "TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisit"
+  ],
+  "actual_app": {
+    "normal": {
+      "status": "passed",
+      "command": "go test -json ./internal/app -run '^Test(Plugin(AutoSignIn(SQL|Transition|Typed)|CleanInvalidSeed|Deferred|RemoveLink|Schedules|Uninstall|Organization|CategoryAPI|Native)|BuiltIn)' -count=1 -timeout 180s",
+      "exit_code": 0,
+      "top_level_passes": 148,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "seconds": 24.383,
+      "evidence": "work/plugin-native-verified-normal.jsonl",
+      "typed_top_level_passes": 6,
+      "joint_top_level_passes": 148
+    },
+    "race": {
+      "status": "passed",
+      "command": "go test -race -json ./internal/app -run '^Test(Plugin(AutoSignIn(SQL|Transition|Typed)|CleanInvalidSeed|Deferred|RemoveLink|Schedules|Uninstall|Organization|CategoryAPI|Native)|BuiltIn)' -count=1 -timeout 10m",
+      "exit_code": 0,
+      "top_level_passes": 148,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "seconds": 261.647,
+      "evidence": "work/plugin-native-verified-race-final.jsonl",
+      "initial_window": {
+        "timeout_seconds": 180,
+        "passed_before_timeout": 109,
+        "seconds": 180.848,
+        "race_warnings": 0,
+        "outcome": "time limit exceeded, not counted as a passed run"
+      },
+      "typed_top_level_passes": 6,
+      "joint_top_level_passes": 148
+    },
+    "vet": {
+      "status": "passed",
+      "command": "go vet ./internal/app",
+      "exit_code": 0,
+      "evidence": "work/plugin-native-verified-vet.txt"
+    },
+    "nas": {
+      "status": "passed",
+      "report": "docs/plugin-clean-auto-owner-nas-verification.json",
+      "exit_code": 0,
+      "top_level_passes": 148,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "binary_sha256": "22b5672b1c2865c1ee09172ede6c664cb70698d3b9ffc0036b347b63a9859890",
+      "container_oom_killed": false,
+      "owned_resources_cleaned": true,
+      "typed_top_level_passes": 6,
+      "joint_top_level_passes": 148,
+      "tags": "modernconly",
+      "CGO_ENABLED": "0"
+    }
+  },
+  "reference_only": [
+    "work/_autosignin_sparse_port contains an independent frozen SQL cost experiment, not actual App integration evidence.",
+    "work/_autosignin_typed_app_draft used a minimal owned fixture shim; its 14 tests are not actual App validation.",
+    "work/_autosignin_typed_app_draft/raw-message-copy-reference.txt demonstrates the stdlib JSON normalization boundary; actual App tests compare exact returned fields."
+  ],
+  "not_claimed": [
+    "Live site sign-in",
+    "Actual notification/event delivery",
+    "Production Browser/OCR readiness",
+    "Whole-run low-resource compliance",
+    "Protected-data retention or compaction"
+  ]
+}

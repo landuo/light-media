@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-17",
+  "scope": "Formal App CleanInvalidSeed owner/Core/deferred/lifecycle/scheduler/catalog/runtime and adjacent regressions. No user migration or production activation.",
+  "source_sha256": {
+    "internal/app/plugin_autosignin_typed_read.go": "bf6f0b747b02ee0c355c390c00733c6b0f1e6948a1f77c2e79c7c031a2c08332",
+    "internal/app/plugin_autosignin_typed_read_test.go": "b1b82926fc26c4441d515643c84369b5f8dcf34e59e9e6f7061fe1ef07de3803",
+    "internal/app/plugin_clean_invalid_seed_barrier.go": "f7a20953e98a0b87df6bf874bc7ade310cec8886140e972ee9dfe9b782e133a7",
+    "internal/app/plugin_clean_invalid_seed_core.go": "c5d22ac9068c84bb90618ba2e58f4b1709fb094389d4a4a6835753eb858dde34",
+    "internal/app/plugin_clean_invalid_seed_http.go": "24a1df53f4115f246eea774c172e743b8c88592149c7e2d19052f5c3afcd6c5e",
+    "internal/app/plugin_clean_invalid_seed_http_test.go": "3e7bb3989fad3e093e07ce2ee974e4ffce65398fd0754f130957cd9308dbda61",
+    "internal/app/plugin_clean_invalid_seed_journal.go": "843be90c20f1139bd7378e9f99fc9dbadcc99540ae16df87d654312314885e44",
+    "internal/app/plugin_clean_invalid_seed_journal_test.go": "5eecd6e8b699adf801089792cc40c16e1c5b2de1632090d87596762450b53cf6",
+    "internal/app/plugin_clean_invalid_seed_limits_test.go": "d04ebf4d3f49334b85e9ac8e1efef3fe90a610a4ed70e539677cba018feab5e0",
+    "internal/app/plugin_clean_invalid_seed_owner.go": "eaab3ad715a3efea82cdc9e10235a0167eda26ccbbf5c194b49dceb4785e1fdc",
+    "internal/app/plugin_clean_invalid_seed_owner_test.go": "b1775d5c14596c881d29dec2fa9c4614ff276cb8a986257cd9be5491d7c7bb6b",
+    "internal/app/plugin_clean_invalid_seed_runtime_test.go": "94b909dabf7c876086e742225b3456859c383cf87ecff146a75db6a7198051d2",
+    "internal/app/plugin_clean_invalid_seed_schedules.go": "d09ef83e118c294b0ea04204a6ee04bab7dd8f55a4eb6eae22bb765232a78b40",
+    "internal/app/plugin_clean_invalid_seed_transition.go": "d31ec9e36032fdef0498e39e327fb1d3b1f1c5088d757595c904f3bc6bd6b313",
+    "internal/app/plugin_deferred.go": "7e99ccca74acfb41e542404ea260cd6e9cf805fe217dcc698e04336f50c55ff9",
+    "internal/app/plugin_deferred_failure_test.go": "03c45de78e4b887dc2f281a55e3ca73eba4c0ec1fed0d033b6ccab745ffc3bde",
+    "internal/app/plugin_http.go": "d6eb57f22d80f4f6f44eac5eb04a84d2ce9a35bdf4bc4a5499fab8437ec8344c",
+    "internal/app/plugin_runtime.go": "c00ca84fcba8b5d576a3354e9910aeb343fff112724bd0b0819be8d10adac7e2",
+    "internal/app/plugin_schedules.go": "8a943e6cae623da61508a9a9f74d6875e32d93cbca6fcea103ea1e035f49060f",
+    "internal/app/plugin_uninstall.go": "c9dd8ec0da96be516411df1e7b4dc70d0c430e9ec7ee1dc8c894a4c9cce52f31",
+    "internal/app/runtime.go": "96c7eb9b8cdb450b2b1c960ad67760e99b160049eada7182da41d57d81787334",
+    "internal/plugins/builtin/catalog.go": "9c9f79df08430be9ec8cbd687d4d7b21edce981a06f44f6d8d7c73775be893bb"
+  },
+  "groups": {
+    "AutoSignInSQL": 13,
+    "AutoSignInTransition": 6,
+    "AutoSignInTyped": 6,
+    "CleanInvalidSeed": 24,
+    "RemoveLink": 53,
+    "Deferred": 15,
+    "Organization": 7,
+    "Fixture": 1,
+    "CategoryAPI": 1,
+    "Schedules": 10,
+    "Uninstall": 12
+  },
+  "checks": {
+    "normal": {
+      "command": "go test -json ./internal/app -run '^Test(Plugin(AutoSignIn(SQL|Transition|Typed)|CleanInvalidSeed|Deferred|RemoveLink|Schedules|Uninstall|Organization|CategoryAPI|Native)|BuiltIn)' -count=1 -timeout 180s",
+      "exit_code": 0,
+      "top_level_passes": 148,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "seconds": 24.383,
+      "evidence": "work/plugin-native-verified-normal.jsonl"
+    },
+    "race": {
+      "command": "go test -race -json ./internal/app -run '^Test(Plugin(AutoSignIn(SQL|Transition|Typed)|CleanInvalidSeed|Deferred|RemoveLink|Schedules|Uninstall|Organization|CategoryAPI|Native)|BuiltIn)' -count=1 -timeout 10m",
+      "exit_code": 0,
+      "top_level_passes": 148,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "seconds": 261.647,
+      "evidence": "work/plugin-native-verified-race-final.jsonl",
+      "initial_window": {
+        "timeout_seconds": 180,
+        "passed_before_timeout": 109,
+        "seconds": 180.848,
+        "race_warnings": 0,
+        "outcome": "time limit exceeded, not counted as a passed run"
+      }
+    },
+    "vet": {
+      "command": "go vet ./internal/app",
+      "exit_code": 0,
+      "evidence": "work/plugin-native-verified-vet.txt"
+    },
+    "nas": {
+      "report": "docs/plugin-clean-auto-owner-nas-verification.json",
+      "exit_code": 0,
+      "top_level_passes": 148,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "binary_sha256": "22b5672b1c2865c1ee09172ede6c664cb70698d3b9ffc0036b347b63a9859890",
+      "container_oom_killed": false,
+      "owned_resources_cleaned": true
+    }
+  },
+  "clean_direct_top_level_tests": 24,
+  "known_boundaries": [
+    "Trusted external PluginAction ingress for five commands not connected",
+    "Notice history_saved is not external delivery",
+    "Known pre-write downloader refusal is conservatively unknown until the separate trusted phase slice",
+    "Independent file-recovery maintenance entry not yet connected",
+    "Journal limits do not prove unlimited history or full original workload resource compliance"
+  ],
+  "original_config_kv_files_migrated": 0,
+  "production_services_modified": false,
+  "real_notifications_sent": false,
+  "deployed": false
+}

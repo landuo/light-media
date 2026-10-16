@@ -4,6 +4,7 @@ package builtin
 
 import (
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/removelink"
 	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/uninstall"
@@ -11,6 +12,8 @@ import (
 
 func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 	switch pluginID {
+	case "CleanInvalidSeed":
+		return cleaninvalidseed.Manifest(), cleaninvalidseed.Handle, true
 	case "RemoveLink":
 		return removelink.Manifest(), removelink.Handle, true
 	case "CategoryEditor":
@@ -39,5 +42,5 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest()}
+	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
 }

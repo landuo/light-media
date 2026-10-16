@@ -192,6 +192,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	if a.removeLinkLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginRemoveLinkLifecycleHTTP(w, r, path)
 	}
+	if a.cleanInvalidSeedLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginCleanInvalidSeedLifecycleHTTP(w, r, path)
+	}
 	if r.Method != "GET" {
 		a.pluginLifecycleMu.Lock()
 		defer a.pluginLifecycleMu.Unlock()
@@ -372,6 +375,11 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "CleanInvalidSeed":
+		if _, err := cleanSeedConfigMap(raw); err != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "清理无效做种配置必须是有效对象")
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "RemoveLink":
 		config := removelink.NewConfig()
 		if config.Apply(raw) != nil {

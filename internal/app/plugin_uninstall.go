@@ -7,8 +7,10 @@ import (
 	"encoding/json"
 	"errors"
 	"slices"
+	"sort"
 	"time"
 
+	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 	cleanuphost "light-media/internal/plugins/removelink/host"
 	"light-media/internal/plugins/uninstall"
 )
@@ -363,12 +365,95 @@ func (o *uninstallDatabaseOperations) SaveOwnConfig(ctx context.Context, raw jso
 	return nil
 }
 
+// Different cleanup owners share one globally sorted reservation order. Never
+// acquire an owner gate while lifecycle/process is held, including rollback.
+type pluginUninstallCleanupPrepared struct {
+	from              cleanuphost.Binding
+	pluginID, version string
+	remove            *pluginRemoveLinkPrepared
+	seed              *pluginCleanInvalidSeedPrepared
+}
+
+func (p *pluginUninstallCleanupPrepared) release() {
+	if p.remove != nil {
+		p.remove.release()
+	} else if p.seed != nil {
+		p.seed.release()
+	}
+}
+func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
+	if p.remove != nil {
+		return p.remove.drain(ctx)
+	}
+	if p.seed != nil {
+		return p.seed.drain(ctx)
+	}
+	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
+}
+func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.Tx, to cleanuphost.Binding, runID string) error {
+	if p.remove != nil {
+		return p.remove.publishTx(ctx, tx, to, runID)
+	}
+	if p.seed != nil {
+		return p.seed.publishTx(ctx, tx, seedhost.Binding{InstanceID: to.InstanceID, Generation: to.Generation, Revision: to.Revision}, runID)
+	}
+	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
+}
+func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committed bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if p.remove != nil {
+		return p.remove.resolve(ctx, committed)
+	}
+	if p.seed != nil {
+		return p.seed.resolve(ctx, committed)
+	}
+	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
+}
+func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []PluginInstallation) ([]*pluginUninstallCleanupPrepared, error) {
+	selected = append([]PluginInstallation(nil), selected...)
+	sort.Slice(selected, func(i, j int) bool { return selected[i].InstanceID < selected[j].InstanceID })
+	out := []*pluginUninstallCleanupPrepared{}
+	fail := func(cause error) ([]*pluginUninstallCleanupPrepared, error) {
+		for n := len(out) - 1; n >= 0; n-- {
+			cause = errors.Join(cause, resolveUninstallCleanupPrepared(out[n], false))
+			out[n].release()
+		}
+		return nil, cause
+	}
+	for n, in := range selected {
+		if n > 0 && selected[n-1].InstanceID == in.InstanceID {
+			return fail(bad("PLUGIN_SNAPSHOT_STALE", "清理宿主目标重复"))
+		}
+		p := &pluginUninstallCleanupPrepared{pluginID: in.PluginID, version: in.Version}
+		var err error
+		switch in.PluginID {
+		case "RemoveLink":
+			p.remove, err = a.prepareRemoveLinkTransition(ctx, in, "uninstall")
+			if err == nil {
+				p.from = p.remove.from
+			}
+		case "CleanInvalidSeed":
+			p.seed, err = a.prepareCleanInvalidSeedTransition(ctx, in, "uninstall")
+			if err == nil {
+				p.from = cleanuphost.Binding{InstanceID: p.seed.from.InstanceID, Generation: p.seed.from.Generation, Revision: p.seed.from.Revision}
+			}
+		default:
+			return fail(bad("PLUGIN_SNAPSHOT_STALE", "未识别的清理宿主目标"))
+		}
+		if err != nil {
+			return fail(err)
+		}
+		out = append(out, p)
+	}
+	return out, nil
+}
 func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.RawMessage, error) {
 	selected, err := a.removeLinkUninstallTargets(ctx, run)
 	if err != nil {
 		return nil, err
 	}
-	prepared, err := a.prepareRemoveLinkTransitions(ctx, selected, "uninstall")
+	prepared, err := a.prepareUninstallCleanupTargets(ctx, selected)
 	if err != nil {
 		return nil, err
 	}
@@ -380,7 +465,7 @@ func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.Ra
 	for _, p := range prepared {
 		if err = p.drain(ctx); err != nil {
 			for _, paused := range prepared {
-				_ = resolveRemoveLinkPrepared(paused, false)
+				_ = resolveUninstallCleanupPrepared(paused, false)
 			}
 			return nil, err
 		}
@@ -389,7 +474,7 @@ func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.Ra
 	// The SQL helper has released lifecycle and pluginMu before an owner wait.
 	var resolveErr error
 	for _, p := range prepared {
-		if err := resolveRemoveLinkPrepared(p, operationErr == nil); err != nil && resolveErr == nil {
+		if err := resolveUninstallCleanupPrepared(p, operationErr == nil); err != nil && resolveErr == nil {
 			resolveErr = err
 		}
 	}
@@ -432,14 +517,14 @@ func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([
 	}
 	selected := []PluginInstallation{}
 	for _, in := range inventory {
-		if plan.removed[in.InstanceID] && in.PluginID == "RemoveLink" {
+		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed") {
 			selected = append(selected, in)
 		}
 	}
 	return selected, nil
 }
 
-func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepared []*pluginRemoveLinkPrepared) (json.RawMessage, error) {
+func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepared []*pluginUninstallCleanupPrepared) (json.RawMessage, error) {
 	a.pluginLifecycleMu.Lock()
 	defer a.pluginLifecycleMu.Unlock()
 	a.pluginMu.Lock()
@@ -488,10 +573,10 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 		return json.RawMessage(`null`), nil
 	}
 	for _, instance := range planned.Removed {
-		if target := targets[instance]; target.PluginID == "RemoveLink" {
+		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" {
 			matched := false
 			for _, p := range prepared {
-				if p.from.InstanceID == instance && p.from.Generation == target.Generation {
+				if p.from.InstanceID == instance && p.from.Generation == target.Generation && p.pluginID == target.PluginID && p.version == target.Version {
 					matched = true
 					break
 				}
@@ -553,7 +638,7 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 	for _, p := range prepared {
 		var generation, revision int64
 		var installed bool
-		if err := tx.QueryRowContext(ctx, `SELECT i.generation,i.installed,COALESCE(v.revision,0) FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id='RemoveLink' AND i.version='2.17'`, p.from.InstanceID).Scan(&generation, &installed, &revision); err != nil {
+		if err := tx.QueryRowContext(ctx, `SELECT i.generation,i.installed,COALESCE(v.revision,0) FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=?`, p.from.InstanceID, p.pluginID, p.version).Scan(&generation, &installed, &revision); err != nil {
 			return nil, err
 		}
 		if !installed || generation != p.from.Generation || revision != p.from.Revision {
