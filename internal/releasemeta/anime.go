@@ -16,10 +16,10 @@ var (
 	animeCategory       = regexp.MustCompile(`(?i)[动漫画纪录片电影视连续剧集日美韩中港台海外亚洲华语大陆综艺原盘高清]{2,}|TV|Animation|Movie|Documentar|Anime`)
 	animeLeadingBracket = regexp.MustCompile(`^[^]]*]`)
 	animeFileSize       = regexp.MustCompile(`(?i)[0-9.]+\s*[MGT]i?B`)
-	animeTVBracket      = regexp.MustCompile(`(?i)\[TV\s+(\d{1,4})`)
+	animeTVBracket      = regexp.MustCompile(rustClassPattern(`\[[Tt][Vv]\s+(\d{1,4})`))
 	animeFourKBracket   = regexp.MustCompile(`(?i)\[4k]`)
-	animeNumericBracket = regexp.MustCompile(`\[\d+`)
-	animeMixedChinese   = regexp.MustCompile(`[\d|#:：\-()（）\x{4e00}-\x{9fff}]`)
+	animeNumericBracket = regexp.MustCompile(rustClassPattern(`\[\d+`))
+	animeMixedChinese   = regexp.MustCompile(`(?:` + rustRegexDigits + `|[|#:：\-()（）\x{4e00}-\x{9fff}])`)
 )
 
 func animeContainsChinese(value string) bool {

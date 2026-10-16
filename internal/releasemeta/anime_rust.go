@@ -147,8 +147,8 @@ func parseRustAnime(title string, subtitle *string, options Options) (Metadata, 
 		if err != nil {
 			return Metadata{}, err
 		}
-		if !applySubtitle(&meta, strings.TrimSpace(title)) && subtitle != nil {
-			applySubtitle(&meta, *subtitle)
+		if !applyRustSubtitle(&meta, strings.TrimSpace(title)) && subtitle != nil {
+			applyRustSubtitle(&meta, *subtitle)
 		}
 	}
 	if meta.Type == "未知" && meta.Name == "" {

@@ -171,14 +171,16 @@ func configuredMediaExtension(extension string, options Options) bool {
 	return false
 }
 
+// Rust's route uses regex-syntax 0.8.10 Unicode 16 decimal/space tables,
+// independently of both the engine's Rust stdlib tables and Python regex.
 func isAnime(title string) bool {
-	if rxHas(`【[+0-9XVPI-]+】\s*【|\s+-\s+[\dv]{1,4}\s+`, title, true) {
+	if rustAnimeRouting[0].MatchString(title) || rustAnimeRouting[1].MatchString(title) {
 		return true
 	}
-	if rxHas(`S\d{2}\s*-\s*S\d{2}|S\d{2}|\s+S\d{1,2}|EP?\d{2,4}\s*-\s*EP?\d{2,4}|EP?\d{2,4}|\s+EP?\d{1,4}`, title, true) {
+	if rustAnimeRouting[2].MatchString(title) {
 		return false
 	}
-	return rxHas(`\[[+0-9XVPI-]+]\s*\[`, title, true)
+	return rustAnimeRouting[3].MatchString(title)
 }
 
 type explicitInfo struct {

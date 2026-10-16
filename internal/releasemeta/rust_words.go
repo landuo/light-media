@@ -253,6 +253,10 @@ func (p *rustArithmetic) parse(min int) (int64, bool) {
 }
 
 func rustChineseNumber(text string) (int64, bool) {
+	text = strings.TrimSpace(text)
+	if text == "" {
+		return 0, false
+	}
 	if n, err := strconv.ParseInt(strings.TrimSpace(text), 10, 64); err == nil {
 		return n, true
 	}

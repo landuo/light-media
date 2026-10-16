@@ -71,3 +71,5 @@ legacy 采用独立 Python 3.12.13 / Unicode 15 数据：`isdigit`、`isalnum`�
 正式插件启用和迁移验收仍须结合平台清单及实际数据完成，不能用上述样本通过代替。
 
 原先用于过渡的 Rust 分辨率/season/decimal 扫描已删除，相关行为现在来自完整 `parsing_single_token`、`parse_episode_number`、`parse_anime_title`、`parse_release_group` 等状态机。后续差异必须先定位真实源阶段，扩充实际参考，再修正算法；不能恢复标题黑名单或把未知行为一律变成空值。
+
+本轮真实完整对象参考发现并修正了 Rust 消费路径的两个具体遗漏：`cn_number_to_i64` 会覆写连续中文数字，因此“第一一季”是 S01；Rust 的四条动漫入口路由及预处理数字类来自 `regex-syntax` 0.8.10 / Unicode 16，Garay/Tolong 和全角数字不能用 Go 默认类处理。新增 `releasemeta-rust-reference/routing-numbers.json` 的 36 个实际安装 wrapper 与 1,531 个实际 wheel 路由参考，对应离线 AST 脚本、固定 crate 源 SHA、完整范围核对脚本和数据许可证均已保存。原 139 个 Rust wrapper 参考仍保留。此补丁没有把 work 中正在移植的完整 MetaBase/MetaInfo 构造器算作正式功能，也没有扩大 legacy 普通视频旧投影的等效声明。

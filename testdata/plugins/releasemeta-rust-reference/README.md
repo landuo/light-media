@@ -13,3 +13,7 @@
 许可证：翻译的 anitomy-pure 代码保留 `internal/releasemeta/rustanime/LICENSE.md` 的 MPL-2.0；Unicode 数据许可保留在同目录 `UNICODE-LICENSE.txt`。
 
 `release-meta-rust-unicode-provenance.json` 保存扩展 SHA、编译器提交、官方源 URL/SHA、全部 1,112,064 标量的验证范围和行流摘要。运行 `python3 testdata/plugins/releasemeta-rust-reference/verify_installed_unicode.py --fetch` 可将三个固定公共源码下载到工作目录（核验 SHA），离线编译只读查询器，并将实际 Go 范围/映射逐标量对照。已有下载时可省略 `--fetch` 或指定 `--source-dir`；输出及二进制只进入 `work/`，不修改 Go 表、原安装文件或服务。此工具不会导入应用或读取凭据。
+
+`routing-numbers.json` 增加实际安装 wheel 的 36 个完整 MetaInfo wrapper 参考与 1,531 个路由边界，SHA-256 为 `98d62c40921398057c1ab8fd81219e844dfbfef2dc9a0f7940f931b21bea220d`。`installed_routing_numbers.py` 是相同只读 AST 隔离入口：合成标题、空配置，不读取真实服务配置。路由参考直接调用已安装的 `parse_metainfo_fast` 并记录 kind，覆盖每个十进制范围及相邻标量、长度 1/4/5、季集否决、空白边界及 I/ı/İ/ſ 等大小写差异。36 个 wrapper 同时保留连续中文季数、全角/阿拉伯/Garay/Tolong 数字的资源、名称、类型与季集字段。
+
+必须区分三个来源：Rust stdlib 的 Unicode 17、`regex-syntax` 0.8.10 的 Unicode 16，以及 legacy 入口的 `regex` 2026.5.9。此处 Rust 固定 Cargo.lock 的 `regex-syntax` 包校验和是 `dc897dd8d9e8bd1ed8cdad82b5966c3e0ecae09fb1907d58efaa013543185d0a`；原始十进制、空白和 simple-casefold 表 SHA 在 JSON 的 `regex_source` 中。`rust_regex_classes.go` 从前两表生成精确类，仅用于原路由和动漫预处理的对应表达式；四条路由的字母集合按第三表展开，不借用 Go 或 Python 默认 Unicode 类。数据许可证见 `REGEX-UNICODE-LICENSE.txt`。中文数字则按原 `cn_number_to_i64` 覆写当前位：第一一季为 S01，源允许的十十仍为 20；此修复只作用于 Rust 字幕路径，不将 cn2an 规则套入 Rust，也不改变 legacy 普通视频的旧投影范围。

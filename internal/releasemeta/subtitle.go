@@ -17,6 +17,15 @@ func firstCapture(groups []regexp2.Group) string {
 }
 
 func applySubtitle(meta *Metadata, text string) bool {
+	return applySubtitleNumber(meta, text, chineseNumber)
+}
+
+// Rust's source overwrites consecutive Chinese digits (一一 -> 1). The older
+// ordinary-video legacy projection remains separate from this Rust correction.
+func applyRustSubtitle(meta *Metadata, text string) bool {
+	return applySubtitleNumber(meta, text, func(text string) (int, bool) { n, ok := rustChineseNumber(text); return int(n), ok })
+}
+func applySubtitleNumber(meta *Metadata, text string, number func(string) (int, bool)) bool {
 	if text == "" {
 		return false
 	}
@@ -35,7 +44,7 @@ func applySubtitle(meta *Metadata, text string) bool {
 	matched := false
 	if rxHas(`[全第季集话話期幕]`, text, true) {
 		if m := rxFirst(`[全共]\s*([0-9一二三四五六七八九十]+)\s*季`, text, true); m != nil {
-			if total, ok := chineseNumber(m.GroupByNumber(1).String()); ok && meta.BeginSeason == nil && meta.BeginEpisode == nil {
+			if total, ok := number(m.GroupByNumber(1).String()); ok && meta.BeginSeason == nil && meta.BeginEpisode == nil {
 				meta.BeginSeason, meta.EndSeason, meta.Type = intPointer(1), intPointer(total), "电视剧"
 				return true
 			}
@@ -43,10 +52,10 @@ func applySubtitle(meta *Metadata, text string) bool {
 		}
 		if m := rxFirst(`(?<![全共]\s*)[第\s]+([0-9一二三四五六七八九十S\-]+)\s*季(?!\s*[全共])`, text, true); m != nil {
 			parts := strings.Split(strings.ReplaceAll(strings.ToUpper(m.GroupByNumber(1).String()), "S", ""), "-")
-			begin, ok := chineseNumber(parts[0])
+			begin, ok := number(parts[0])
 			var end *int
 			if len(parts) > 1 {
-				if n, valid := chineseNumber(parts[1]); valid {
+				if n, valid := number(parts[1]); valid {
 					end = intPointer(n)
 				} else {
 					ok = false
@@ -64,8 +73,8 @@ func applySubtitle(meta *Metadata, text string) bool {
 			meta.Type, matched = "电视剧", true
 		}
 		if m := rxFirst(`[第]*\s*([0-9一二三四五六七八九十百零]+)\s*[集话話期幕]?\s*-\s*第*\s*([0-9一二三四五六七八九十百零]+)\s*[集话話期幕]`, text, true); m != nil {
-			begin, a := chineseNumber(m.GroupByNumber(1).String())
-			end, b := chineseNumber(m.GroupByNumber(2).String())
+			begin, a := number(m.GroupByNumber(1).String())
+			end, b := number(m.GroupByNumber(2).String())
 			if !a || !b || begin >= 10000 || end >= 10000 {
 				return matched
 			}
@@ -80,7 +89,7 @@ func applySubtitle(meta *Metadata, text string) bool {
 		}
 		if m := rxFirst(`(?<![全共]\s*)[第\s]+([0-9一二三四五六七八九十百零EP]+)\s*[集话話期幕](?!\s*[全共])`, text, true); m != nil {
 			text := strings.ReplaceAll(strings.ReplaceAll(strings.ToUpper(m.GroupByNumber(1).String()), "E", ""), "P", "")
-			begin, ok := chineseNumber(text)
+			begin, ok := number(text)
 			if !ok || begin >= 10000 {
 				return matched
 			}
@@ -91,7 +100,7 @@ func applySubtitle(meta *Metadata, text string) bool {
 			return true
 		}
 		if m := rxFirst(`([0-9一二三四五六七八九十百零]+)\s*集\s*全|[全共]\s*([0-9一二三四五六七八九十百零]+)\s*[集话話期幕]`, text, true); m != nil {
-			if _, ok := chineseNumber(firstCapture(m.Groups())); ok && meta.BeginEpisode == nil {
+			if _, ok := number(firstCapture(m.Groups())); ok && meta.BeginEpisode == nil {
 				meta.Type = "电视剧"
 				return true
 			}

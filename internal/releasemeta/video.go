@@ -185,8 +185,12 @@ func parseVideo(title string, subtitle *string, isfile bool, options Options) (M
 	if strings.Contains(m.Quality, "BluRay") && (subtitle != nil && rxHas(`DIY`, *subtitle, true) || rxHas(`-DIY@`, title, true)) {
 		m.Quality += " DIY"
 	}
-	if !applySubtitle(&m, title) && subtitle != nil {
-		applySubtitle(&m, *subtitle)
+	subtitleParser := applySubtitle
+	if options.SourceMode == "rust" {
+		subtitleParser = applyRustSubtitle
+	}
+	if !subtitleParser(&m, title) && subtitle != nil {
+		subtitleParser(&m, *subtitle)
 	}
 	for _, name := range []string{s.cn, s.en} {
 		cleaned := strings.TrimSpace(rxReplace(videoPatterns["_name_nostring_re"], name, "", true))
