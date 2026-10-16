@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "status": "independent_candidate_frozen",
+  "source_manifest_sha256": "5a5f2e2851acc6dc14e93feafa99e7ea00ce508f79bbdba2b1a526391ff7b9f0",
+  "formal_edits": false,
+  "actual_app_compile": false,
+  "real_sends": false,
+  "runtime": "go1.26.2 darwin/arm64, product code Go only",
+  "reference": {
+    "counts": {
+      "envelopes": 353,
+      "periods": 19,
+      "windows": 84,
+      "queue": 6,
+      "monitor": 6,
+      "routes": 18,
+      "route_failures": 16,
+      "async_queue": 6,
+      "time_minutes": 11,
+      "coercions": 794,
+      "integrated": 3
+    },
+    "sha256": "2fc943078625a624c285f49d6fb57c2fd8509adff6422aa01be82e86a605cc50",
+    "execution": "Actual installed Notification AST with real installed Pydantic and enums; actual Chain/Template/Queue statements against explicit recording history/config/user/event/sender dependencies. No app import, runtime configuration, DB, real thread, network or message sender. Complete template engine/recipient database/transport not verified.",
+    "async_boundary": "Actual async_send_message AST with recording executor, not actual asyncio thread/executor scheduling."
+  },
+  "checks": {
+    "normal": {
+      "command": "go test -json ./... -count=1",
+      "exit_code": 0,
+      "top_level_passes": 12,
+      "top_level_failures": 0,
+      "top_level_skips": 0,
+      "package_results": [
+        {
+          "Package": "light-media/work/notice-message-port",
+          "Elapsed": 0.356
+        }
+      ],
+      "evidence": "verification-normal.jsonl"
+    },
+    "race": {
+      "command": "go test -race -json ./... -count=1",
+      "exit_code": 0,
+      "top_level_passes": 12,
+      "top_level_failures": 0,
+      "top_level_skips": 0,
+      "package_results": [
+        {
+          "Package": "light-media/work/notice-message-port",
+          "Elapsed": 2.278
+        }
+      ],
+      "evidence": "verification-race.jsonl"
+    },
+    "vet": {
+      "command": "go vet ./...",
+      "exit_code": 0,
+      "evidence": "verification-vet.txt"
+    }
+  },
+  "remaining": [
+    "App durable phase/identity/receipt and full-envelope source-call-boundary validation",
+    "Persistent core queue, lifecycle and per-attempt unknown recovery",
+    "Complete MessageTemplate/Jinja/business-object projection",
+    "Actual recipient database and grants",
+    "NoticeMessage subscribers, MessageChain/channel transports and per-consumer delivery receipts",
+    "No NAS/production claim"
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "status": "formal_pure_leaf_frozen_normal_race_vet_cgo0_passed",
+  "formal_manifest_sha256": "82a017e210606cb5a860783b0f213109a2757a8e3d026b44e010963cb27d2f6b",
+  "formal_inventory_files": 11,
+  "frozen_input_files": 45,
+  "candidate_manifest_sha256": "5a5f2e2851acc6dc14e93feafa99e7ea00ce508f79bbdba2b1a526391ff7b9f0",
+  "source_case_count": 1316,
+  "scope": "Additive internal/notice pure behavior core only. Five production Go files unchanged; two test fixture paths only; three formal provenance tests added. No App/catalog/mod/baseline edits.",
+  "checks": {
+    "normal": {
+      "command": "go test -json ./internal/notice -count=1",
+      "exit_code": 0,
+      "top_level_passes": 15,
+      "top_level_failures": 0,
+      "top_level_skips": 0,
+      "package_seconds": [
+        0.517
+      ],
+      "evidence": "work/notice-message-formal-normal.jsonl",
+      "evidence_sha256": "763e09115b13be2adfcc6900ee107fb3ef6d9b9cde8f2614f64aca6fc404af4a",
+      "top_level_tests": [
+        "TestInstalledSourceAndEnumsPinned",
+        "TestQueueOwnedFIFOConcurrentSendAndTick",
+        "TestQueueStopAndInvalidJSONHaveNoInventedDelivery",
+        "TestRouterTemplateAndDependencyBoundaries",
+        "TestFormalNoticeSourceInventory",
+        "TestFormalNoticeMatchesFrozenCandidate",
+        "TestFormalNoticeOriginalCorpusInventory",
+        "TestInstalledNotificationPydanticJSONOracle",
+        "TestInstalledScheduleAndWindowOracle",
+        "TestInstalledQueueSendOracle",
+        "TestInstalledMonitorOracle",
+        "TestInstalledChainRoutingOracle",
+        "TestInstalledTimeToMinutesOracle",
+        "TestInstalledPydanticIntegerLexicalOracle",
+        "TestInstalledChainAndQueueCompositionOracle"
+      ]
+    },
+    "race": {
+      "command": "go test -race -json ./internal/notice -count=1",
+      "exit_code": 0,
+      "top_level_passes": 15,
+      "top_level_failures": 0,
+      "top_level_skips": 0,
+      "package_seconds": [
+        2.331
+      ],
+      "evidence": "work/notice-message-formal-race.jsonl",
+      "evidence_sha256": "759b5af53fd59c5f597cf8806a394c4a6519fce9c857465bd0841724f8ffc681",
+      "top_level_tests": [
+        "TestInstalledSourceAndEnumsPinned",
+        "TestQueueOwnedFIFOConcurrentSendAndTick",
+        "TestQueueStopAndInvalidJSONHaveNoInventedDelivery",
+        "TestRouterTemplateAndDependencyBoundaries",
+        "TestFormalNoticeSourceInventory",
+        "TestFormalNoticeMatchesFrozenCandidate",
+        "TestFormalNoticeOriginalCorpusInventory",
+        "TestInstalledNotificationPydanticJSONOracle",
+        "TestInstalledScheduleAndWindowOracle",
+        "TestInstalledQueueSendOracle",
+        "TestInstalledMonitorOracle",
+        "TestInstalledChainRoutingOracle",
+        "TestInstalledTimeToMinutesOracle",
+        "TestInstalledPydanticIntegerLexicalOracle",
+        "TestInstalledChainAndQueueCompositionOracle"
+      ]
+    },
+    "cgo0": {
+      "command": "CGO_ENABLED=0 go test -json ./internal/notice -count=1",
+      "exit_code": 0,
+      "top_level_passes": 15,
+      "top_level_failures": 0,
+      "top_level_skips": 0,
+      "package_seconds": [
+        0.513
+      ],
+      "evidence": "work/notice-message-formal-cgo0.jsonl",
+      "evidence_sha256": "62fe9b287656ebdb7f0253dbb22b770d559f43c8935d0b7febc44d0e43773da6",
+      "top_level_tests": [
+        "TestInstalledSourceAndEnumsPinned",
+        "TestQueueOwnedFIFOConcurrentSendAndTick",
+        "TestQueueStopAndInvalidJSONHaveNoInventedDelivery",
+        "TestRouterTemplateAndDependencyBoundaries",
+        "TestFormalNoticeSourceInventory",
+        "TestFormalNoticeMatchesFrozenCandidate",
+        "TestFormalNoticeOriginalCorpusInventory",
+        "TestInstalledNotificationPydanticJSONOracle",
+        "TestInstalledScheduleAndWindowOracle",
+        "TestInstalledQueueSendOracle",
+        "TestInstalledMonitorOracle",
+        "TestInstalledChainRoutingOracle",
+        "TestInstalledTimeToMinutesOracle",
+        "TestInstalledPydanticIntegerLexicalOracle",
+        "TestInstalledChainAndQueueCompositionOracle"
+      ]
+    },
+    "vet": {
+      "command": "go vet ./internal/notice",
+      "exit_code": 0,
+      "evidence": "work/notice-message-formal-vet.txt",
+      "evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "nas": {
+    "status": "formal_leaf_passed",
+    "report": "docs/notice-message-nas-verification.json",
+    "actual_result": {
+      "platform": "linux/amd64",
+      "top_level_passes": 15,
+      "top_level_failures": 0,
+      "top_level_skips": 0,
+      "oom_killed": false,
+      "binary_sha256": "5188fb3d3f9d443e222ab8b552957070d4f8eee36009d5bbe8bbe24a747814b9",
+      "services_unchanged": true,
+      "owned_container_and_stage_removed": true
+    }
+  },
+  "not_claimed": [
+    "App registration or durable ordered route/queue receipts",
+    "Real notification/site/recipient delivery or credential access",
+    "Complete MessageTemplate/Jinja/object projection or recipient DB",
+    "MessageOper/SSE/MessageHelper TTL or independent consumer/channel readiness",
+    "Arbitrary Python objects, Pydantic error prose or full validation engine",
+    "Escaped lone UTF16 surrogate/raw JSON lossless parsing; no original discriminating reference case yet",
+    "Whole-input/raw JSON equivalence, persistent queue or whole-run low-resource compliance"
+  ]
+}

@@ -1,0 +1,175 @@
+Notification envelope, Chain routing and MessageQueue core — independent Go candidate
+
+Scope and evidence
+
+This ignored module is not registered in formal App/catalog/SDK and has made no
+real message, site, login, downloader or media call. Product code is Go only.
+Python is used exclusively by the source-only reference generator. Five complete
+MoviePilot source copies are byte-identical to the actual installed files; the
+reference records their SHA256 values and the actual Python3.12.13,
+Pydantic2.13.4/pydantic-core2.46.4 versions. Original Notification AST is executed
+with the real installed Pydantic and original enums, not a constructor stub.
+Original Chain and MessageQueue method statements run with recording DB/config/
+user/event/sender dependencies; no app imports, real runtime configuration,
+background thread, credential, network request or channel sender is involved.
+
+reference/installed-oracle.json contains:
+353 complete Notification constructions, 794 compact integer lexical cases,
+19 schedule parse cases, 84 windows, 11 time-to-minutes cases,
+6 synchronous sends, 6 actual async function bodies, 6 monitor iterations,
+18 normal route cases, 16 failure-prefix/argument cases and 3 actual Chain+Queue
+composition cases. The async oracle uses a recording executor returning a
+completed awaitable: it proves branch/argument behavior, not asyncio scheduling.
+
+The compact integer matrix exposed differences a regex+int approximation missed.
+String coercion follows the two parsing attempts and cleanup order from the
+version-tagged official Pydantic source and pinned jiter0.14.0 NumberInt parser.
+The crate archive checksum matches that release Cargo.lock. Their MIT licenses
+are retained. This is the consumed integer subset, not a port of all jiter or
+Pydantic. See reference/dependencies.json for exact sources and checksums.
+Official primary source:
+https://github.com/pydantic/pydantic/blob/v2.13.4/pydantic-core/src/input/shared.rs
+
+Exact Go API
+
+NewEnvelope(Object) (*Envelope,error), Envelope.Dump() Object and Get(string) any.
+Object values must be JSON-shaped. Constructor ignores extra fields and preserves
+all installed defaults, nulls, union string/int distinctions, ordered validation
+error types/locations, nested buttons and enum values. json.Number retains large
+integers. Errors omit raw user values. It does not emulate arbitrary Python
+objects, byte strings, Decimal/Fraction, Pydantic error wording/URLs, or model
+mutation aliases. Zero Envelope is invalid; construct it explicitly. Dump/Get
+return owned JSON values. The source's post-construction recipient assignment is
+not revalidated; UserSettings nil differs from an empty map.
+
+ParseSchedule(any) ([]Period,error), TimeToMinutes(string) (*big.Int,error),
+Allowed([]Period,time.Time) bool. Period is [4]*big.Int; no implicit hour/minute
+range validation is added. Python3.12 Unicode15 integer/strip/lower behavior is
+read from the frozen formal legacyanime package where source needs Python rules;
+Pydantic's string integer conversion uses its separate ASCII/Rust cleanup rules.
+Truthy non-map schedule entries raise source AttributeError outside the parse
+try. Invalid start/end values inside that try skip only that period. Endpoints
+are inclusive, equal endpoints allow one minute, overnight wraps midnight.
+
+NewQueue(periods,now,systemStopped,callback) (*Queue,error).
+Queue.Send / AsyncSend(ctx,Call) (Attempt,error), Tick(ctx) []Attempt,
+Pending() []Call, SetPeriods([]Period) error, Stop(). Call has Args and Kwargs.
+Immediately is popped, and Python truth semantics apply (string "false" forces
+send). Callback exceptions are exposed as an internal attempt observation but
+are consumed without retry, as source _send catches them. Attempted is never a
+remote delivery acknowledgment; absent callback is a no-op. Tick is one source
+monitor iteration and checks the clock before and between FIFO entries. Calls
+are removed before callback. Shared queue data is synchronized; no lock is held
+while callback executes. Caller owns callback concurrency/cancellation.
+This is an in-memory core, with no daemon, wait loop, persistent FIFO or recovery.
+Stop disables subsequent Tick iterations; it cannot join a nonexistent source
+thread. Explicit Send after Stop remains allowed. The trusted host owns its
+existing worker/timer and must wait/cancel that worker before shutdown.
+
+Router{Dependencies}.Post(ctx,*Envelope,Business,kwargs) error.
+Dependencies: Now, Superuser, Render, SaveHistory, NotificationSwitch,
+UserSettings, NoticeMessage, QueueCall. All dependencies belong to the trusted
+host, never worker-supplied code/targets. Business carries the four original
+host-side metadata objects; no metadata projection/template semantics are claimed.
+Render is an unported complete MessageTemplateHelper dependency. Without it,
+preformatted messages and messages with no ctype retain source bypass behavior;
+a blank ctype-bearing message explicitly returns ErrTemplateDependency before
+history/effects. Full Jinja/template selection/object projection/catch-and-assign
+semantics and original caller mutation aliases are not implemented here.
+A configured Render callback must implement that entire dependency itself;
+a toy string substitution or success stub must not be registered as ready.
+
+Original call order retained
+
+1. current_time set only if absent, including preserving explicit null.
+2. Render; nil message stops. An empty Notification object remains truthy.
+3. SaveHistory once, before dispatch normalization/forks, unless save_history=false.
+4. Deep copy dispatch; strip/lower internal string system userid to null.
+5. If userid false and mtype true, read NotificationSwitch. Truthy non-string
+   fails with source AttributeError after history. Split on comma without trim.
+6. For each source action resolve targets, emit NoticeMessage, call QueueCall.
+   Admin sends once; a repeated admin falls into the source break branch.
+   Missing user means targets is exactly null, not {}. It falls back to admin
+   once; after admin has already sent the missing user is skipped. Repeated
+   user actions may emit multiple times; they are not silently deduplicated.
+   Unknown/all/user-without-name stops isolation as source specifies.
+7. If source chooses original dispatch, emit NoticeMessage before QueueCall;
+   only this original call explicitly passes immediately=truth(userid).
+   Isolated calls leave immediately absent, unless caller kwargs supplied it.
+
+NoticeMessage data contains every field except save_history, plus type=mtype;
+both type and mtype are present. Channel does not bypass Chain isolation.
+Recipients/default admin/source/plugin IDs are not invented by this candidate.
+Source plugin base link fallback belongs to a trusted producer adapter, not this
+Chain method. Fixed plugin-page link and source mtype must be reconstructed from
+authenticated producer identity as already documented in RemoveLink audit.
+
+NoticeMessage is queued BEFORE MessageQueue window evaluation. Event consumers
+such as MergeMessageNotify can run outside the core send window; do not delay the
+whole event stream until NotificationSendTime. The actual EventManager enqueues
+broadcasts and later dispatches subscribers via an executor. Its return is not a
+subscriber receipt. This candidate invokes only that interface, not consumers.
+LarkMessager is a MessageChain module, not a NoticeMessage subscriber. These are
+separate routes and must have separate consumer/transport readiness and receipts.
+
+Minimum safe App entry and required durability work
+
+0. Construct/validate the full Envelope at the ORIGINAL source Notice call,
+   before Chain/history and before returning to subsequent plugin effects.
+   Original Base.post_message constructs Notification immediately. Invalid
+   channel/mtype/field values fail that call and must prevent later source
+   config/history operations; deferring first validation until a background
+   handoff incorrectly changes the failure prefix. Persist the exact validated
+   complete envelope sealed; do not reconstruct it from a cleaned public inbox
+   title/message subset. Existing history_saved records need their original
+   complete sealed producer envelope, not a public-record round trip.
+1. Authenticate exact original committed outbox/core receipt and payload binding
+   (producer instance/generation/effect identity/digest). Historical retired
+   producers can hand over committed facts but get no new mutation authority.
+   Rebuild Envelope from sealed exact source defaults; no universal worker
+   notify RPC that can fabricate plugin origin, userid, recipients or link.
+2. Reuse existing history_saved sealed handoff. A SaveHistory adapter must verify
+   its exact envelope/record receipt and return the same receipt without adding
+   another record or changing original time/read state. Source history is once
+   before all forks, not once per channel or subscriber.
+3. Persist the first kwargs current_time and the trusted routing snapshot/read
+   receipts. Preserve absent/null/empty. Replaying route execution against new
+   user/switch configuration can change fanout and resend a previous prefix.
+4. Journal each dependency stage in order: history, switch read, user-settings
+   read, NoticeMessage publication, core QueueCall acceptance. IDs bind original
+   intent+route-index+stage+payload digest. An existing exact receipt replays the
+   original response; conflicts fail. A published event references private sealed
+   data and independent per-consumer receipts. Domain-event acceptance cannot
+   acknowledge Merge/Lark or a remote channel. There is no catch-all delivered.
+5. Core QueueCall must reserve capacity and persist full owned call in the same
+   transaction as queue-accepted receipt. It only accepts fixed post_message,
+   with trusted current schedule/timezone and no worker-selected recipient.
+   Persisted FIFO requires monotonic insertion sequence; source time window is
+   reevaluated at drain. Do not hold lifecycle/plugin/SQL locks during send.
+6. For external attempts, persist intent before network, exact response/receipt
+   after, and unknown after reply loss; never blindly replay unknown sends.
+   Source catches errors and consumes rows, which is not a reliable negative ack.
+   Each actual sender needs its own grant, fixed origin/TLS/credential boundary,
+   budget and response/readback contract. Queue callback success alone is not a
+   remote delivered fact. Full remote exactly-once is not promised by source.
+7. Preflight whole encoded frame, envelope/targets, fanout and journal capacity
+   before any new effect. Wire frames have explicit negotiated protocol limits;
+   this pure module does not exempt them, truncate bodies, or weaken limits.
+   Retain private bodies/target IDs sealed; log only opaque IDs/status/digests.
+
+Router.Post and Queue are NOT durable idempotent drivers. Do not register a tick
+that blindly reruns Post for every pending row. They are source behavior cores
+for a journaled host adapter. No active owner/run proof, SQL receipt backend,
+transport/recipient grant, persistent queue, MessageTemplate, MessageOper DB/SSE,
+MessageHelper TTL/SSE, MergeMessageNotify transport or Lark transport is supplied.
+Until those concrete dependencies exist, the only safe formal acceptance remains
+history_saved with NoticeMessage/external stages explicitly pending. This module
+can be migrated as additive pure algorithms without pretending those later
+stages have been delivered.
+
+Validation
+
+verification.json pins commands, terminal outcomes, case counts and the source
+manifest. Only this independent module is compiled; no App build/test, real user
+service, real credential, external sender or original project write occurred.
+Go normal/race/vet validate this scope only; no NAS or production readiness claim.

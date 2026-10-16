@@ -1,0 +1,92 @@
+Shared Notification pure Go core
+
+internal/notice contains the complete installed Notification field/default set,
+JSON-shaped Pydantic coercion/error-location closure, original Chain.post_message
+routing and MessageQueue window/FIFO core. This additive pure package is not App
+registration, a persistent route driver, a recipient grant or a real sender.
+No original project, user configuration or real message service was modified.
+
+Source evidence is testdata/notice-message-core/input/_notice_message_port.
+Five complete source SHA values match actual installed MoviePilot files. Original
+Notification AST ran against real installed Pydantic2.13.4/core2.46.4, and original
+Chain/Queue methods ran with explicit recording dependencies. Reference coverage
+is 1,316 cases: 353 envelope, 794 compact integer lexical, 19 schedule, 84 windows,
+11 time-to-minutes, 6 sync, 6 async, 6 monitor, 18 route, 16 failure prefixes and
+3 actual Chain+Queue combinations. Async uses a recording executor, not an actual
+thread scheduling proof. No stub Notification/Pydantic or real delivery is claimed.
+Pydantic integer cleanup uses the matching official v2.13.4 source and locked
+jiter0.14.0 archive SHA; their MIT licenses are preserved. Python Unicode15
+Integer/Strip/LowerCase reuse the existing Go legacyanime helper. No new external
+Go module, Python runtime or Rust runtime is introduced.
+
+The frozen input snapshot is byte-identical. formal-manifest.json has separate
+11 formal source/reference and 45 input inventories, pinned by the formal test.
+Five production Go files are unchanged from candidate; the only allowed changes
+to two candidate tests are fixture-read paths. Three additional formal tests
+verify complete inventory, allowed transformations and exact corpus counts.
+The candidate's own 40-file manifest is also retained and pinned. Verification
+results are in notice-message-local-verification.json; candidate results are
+not substituted for tests run on the formal package.
+
+API: NewEnvelope/Dump/Get; Router{Dependencies}.Post; ParseSchedule,
+TimeToMinutes, Allowed; NewQueue and Send/AsyncSend/Tick/Pending/SetPeriods/Stop.
+JSON numbers retain int/float distinctions and large integers. Null/empty/absent,
+union strings, enum values and nested buttons are preserved. Schedule endpoints
+are inclusive; equal endpoints allow one minute; original invalid/non-map error
+branches, Unicode integer parsing and out-of-range clock arithmetic are retained.
+
+NewEnvelope validation belongs at the ORIGINAL source Notice call, before the
+source runner proceeds to later config/history effects. Original plugin Base
+constructs Notification before Chain. Invalid channel/mtype or field types must
+fail there; waiting until background handoff changes source failure prefixes.
+The full validated envelope must be sealed directly. The public inbox's cleaned
+title/message fields cannot reconstruct attachments, targets, mtype, link, nulls
+or original kwargs. Existing history_saved records must not create a second row
+or reset first time/read state when later routing is connected.
+
+Chain order is render → once-only local history → system-user normalization →
+trusted isolation reads → NoticeMessage → core QueueCall. Default admin/source/
+plugin identity is not fabricated. Source repeated-admin break, missing-user
+None-versus-empty-map, explicit userid immediate, user repeated fanout and all
+failure prefixes are retained. NoticeMessage payload has both type and mtype and
+excludes save_history. Channel does not bypass Chain routing. NoticeMessage is
+queued before the core time-window check; independent event consumers do not
+inherit MessageQueue's quiet hours. Event acceptance, core queue acceptance,
+sender attempt and each actual consumer delivery need different receipts.
+
+The package has no durable idempotency driver. Do not blindly repeat Post on every
+pending outbox tick. A real App driver must authenticate original intent/core
+receipt, preserve exact first time and route/read results, journal every ordered
+stage and deterministic fork identity, reserve capacity, and atomically persist
+queue acceptance with its receipt. Network intent/reply/unknown need separate
+transport receipts and no blind unknown resend. Payloads/targets stay private and
+sealed; fixed callback capabilities cannot be worker-selected. No lifecycle/SQL
+lock may remain held during actual sending. Frame and whole-envelope/fanout quota
+must be checked before effects; this package grants no limit exemption.
+
+Complete MessageTemplate/Jinja/business-object projection, actual recipient DB,
+MessageOper/SSE/MessageHelper TTL, App ownership/projection, persistent queue,
+NoticeMessage consumers and MessageChain/channel transport are not supplied.
+Missing template dependency for a blank ctype-bearing message is explicit; valid
+preformatted/no-ctype messages keep source bypass behavior. Render callback means
+a complete future source dependency, not a substitution stub. Queue is an owned
+in-memory synchronized core; Tick has no daemon/wait loop, Stop has no source
+thread to join, and the actual host must own shutdown/timing/persistence.
+Full minimal integration contract is retained in the frozen input HANDOFF.txt.
+
+Raw Unicode input boundary: the reference corpus does not cover escaped lone
+UTF16 surrogates. Go encoding/json replaces an unpaired surrogate (and invalid
+UTF8 string bytes) with U+FFFD. Once NewEnvelope receives that already-decoded Go
+string it cannot recover or identify the original bytes. The JSON-shaped API
+therefore does not prove equivalence for every possible raw JSON/Pydantic string.
+No lossless raw JSON codec or raw-boundary surrogate rejection is implemented in
+this slice. Future source-call parsing must reject that case before replacement,
+or use an explicitly verified lossless codec; a simple backslash substring check
+would also reject valid escaped literal text and is insufficient. This boundary
+is not silently counted as one of the 1,316 passing reference cases.
+
+Formal NAS execution: all 15 top-level tests passed on Linux/amd64 CGO0 in an
+owned no-network 256MiB read-only container. Binary SHA and host isolation were
+verified; the owned remote container/stage were removed and observed production
+service identities stayed unchanged. See notice-message-nas-verification.json.
+This remains pure-core verification, not App durable routing or real delivery.

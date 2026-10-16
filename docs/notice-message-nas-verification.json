@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-16T20:54:33.473Z",
+  "pkg": "internal/notice",
+  "formal_manifest_sha256": "82a017e210606cb5a860783b0f213109a2757a8e3d026b44e010963cb27d2f6b",
+  "binary_sha256": "5188fb3d3f9d443e222ab8b552957070d4f8eee36009d5bbe8bbe24a747814b9",
+  "remote_binary_sha256": "5188fb3d3f9d443e222ab8b552957070d4f8eee36009d5bbe8bbe24a747814b9",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "modernconly",
+  "results": {
+    "exit_code": 0,
+    "expected_top_level_tests": 15,
+    "passes": 15,
+    "skips": 0,
+    "failures": 0,
+    "oom_killed": false
+  },
+  "isolation": {
+    "network": "none",
+    "read_only": true,
+    "user": "1000:1001",
+    "memory_bytes": 268435456,
+    "GOMEMLIMIT": "64MiB",
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "pids": 256,
+    "inspect_matches": true
+  },
+  "services_unchanged": true,
+  "scope": "Formal pure Notification/schema/routing and owned queue/time-window reference tests only. No persistent App route, original user data/config migration, real sender, registration or deployment.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}
