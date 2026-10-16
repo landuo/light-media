@@ -29,23 +29,24 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
 type Manifest struct {
-	SchemaVersion int      `json:"schema_version"`
-	PluginID      string   `json:"plugin_id"`
-	Name          string   `json:"name"`
-	Description   string   `json:"description,omitempty"`
-	Icon          string   `json:"icon,omitempty"`
-	Author        string   `json:"author,omitempty"`
-	AuthorURL     string   `json:"author_url,omitempty"`
-	Version       string   `json:"version"`
-	Runtime       string   `json:"runtime"`
-	Entry         string   `json:"entry"`
-	HostAPIMin    int      `json:"host_api_min"`
-	HostAPIMax    int      `json:"host_api_max"`
-	Methods       []string `json:"methods"`
-	Capabilities  []string `json:"capabilities"`
-	Events        []string `json:"events,omitempty"`
-	HasPage       bool     `json:"has_page,omitempty"`
-	Dashboards    []string `json:"dashboards,omitempty"`
+	SchemaVersion int       `json:"schema_version"`
+	PluginID      string    `json:"plugin_id"`
+	Name          string    `json:"name"`
+	Description   string    `json:"description,omitempty"`
+	Icon          string    `json:"icon,omitempty"`
+	Author        string    `json:"author,omitempty"`
+	AuthorURL     string    `json:"author_url,omitempty"`
+	Version       string    `json:"version"`
+	Runtime       string    `json:"runtime"`
+	Entry         string    `json:"entry"`
+	HostAPIMin    int       `json:"host_api_min"`
+	HostAPIMax    int       `json:"host_api_max"`
+	Methods       []string  `json:"methods"`
+	Capabilities  []string  `json:"capabilities"`
+	Events        []string  `json:"events,omitempty"`
+	HasPage       bool      `json:"has_page,omitempty"`
+	Dashboards    []string  `json:"dashboards,omitempty"`
+	APIs          []HTTPAPI `json:"apis,omitempty"`
 }
 
 func (m Manifest) Validate() error {
@@ -60,6 +61,24 @@ func (m Manifest) Validate() error {
 	}
 	if len(m.Methods) == 0 || len(m.Methods) > 64 || len(m.Capabilities) > 64 || len(m.Events) > 64 || len(m.Dashboards) > 64 {
 		return failure("invalid_manifest")
+	}
+	if len(m.APIs) > 128 {
+		return failure("invalid_manifest")
+	}
+	apiKeys := map[string]bool{}
+	paths := map[string]bool{}
+	for _, api := range m.APIs {
+		if api.Validate() != nil || apiKeys[api.Key] {
+			return failure("invalid_manifest")
+		}
+		apiKeys[api.Key] = true
+		for _, method := range api.Methods {
+			key := method + " " + api.Path
+			if paths[key] {
+				return failure("invalid_manifest")
+			}
+			paths[key] = true
+		}
 	}
 	for _, values := range [][]string{m.Methods, m.Capabilities, m.Events, m.Dashboards} {
 		seen := map[string]bool{}

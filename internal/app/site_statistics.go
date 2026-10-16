@@ -161,7 +161,7 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 			return err
 		}
 		a.event(ctx, job, "INFO", "site_refresh", "progress", fmt.Sprintf("正在刷新站点数据（%d/%d）%s", done+1, total, site.Name))
-		snapshot, err := a.collectManagedSite(ctx, site.ID, job.ID+":"+site.ID, func(tx *sql.Tx) error {
+		snapshot, err := a.collectManagedSite(ctx, site.ID, job.ID+":"+site.ID, &siteCollectionHooks{Auto: true, Guard: func(tx *sql.Tx) error {
 			var valid int
 			if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE id=? AND generation=? AND state='running'`, job.ID, job.Generation).Scan(&valid); err != nil {
 				return err
@@ -170,7 +170,7 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 				return bad("JOB_CANCELLED", "站点刷新任务已取消")
 			}
 			return nil
-		})
+		}})
 		if ctx.Err() != nil {
 			return ctx.Err()
 		}

@@ -32,7 +32,7 @@ func (c SiteStatisticConfiguration) Validate() error {
 var siteStatisticForm json.RawMessage
 
 func SiteStatisticManifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "SiteStatistic", Name: "站点数据统计", Description: "站点统计数据图表。", Icon: "statistic.png", Version: "1.9.7", Author: "lightolly,jxxghp", AuthorURL: "https://github.com/lightolly", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{"site.statistics.read", "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify"}, HasPage: true, Dashboards: []string{"default"}}
+	return plugins.Manifest{SchemaVersion: 1, PluginID: "SiteStatistic", Name: "站点数据统计", Description: "站点统计数据图表。", Icon: "statistic.png", Version: "1.9.7", Author: "lightolly,jxxghp", AuthorURL: "https://github.com/lightolly", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{"site.statistics.read", "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify", "site.statistics.refresh_domain"}, HasPage: true, Dashboards: []string{"default"}, APIs: []plugins.HTTPAPI{{Key: "refresh_by_domain", Path: "/refresh_by_domain", Methods: []string{"GET"}, Auth: "apikey", Query: []plugins.HTTPParameter{{Name: "domain", Kind: "string", Required: true}, {Name: "apikey", Kind: "api_key", Required: true}}}}}
 }
 func HandleSiteStatistic(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	if method == "stop" {
@@ -48,6 +48,16 @@ func HandleSiteStatistic(ctx context.Context, method string, raw json.RawMessage
 	}
 	if method == "invoke" {
 		switch invocation.Action {
+		case "api":
+			var request plugins.HTTPRequest
+			if json.Unmarshal(invocation.Input, &request) != nil || request.Key != "refresh_by_domain" || request.Method != "GET" {
+				return nil, errors.New("invalid statistic HTTP invocation")
+			}
+			if !request.CredentialMatches["apikey"] {
+				return plugins.JSONHTTPResponse(200, SiteStatisticResponse(false, "API密钥错误", map[string]any{}))
+			}
+			input, _ := json.Marshal(map[string]string{"domain": request.LastQuery("domain")})
+			return host(ctx, "site.statistics.refresh_domain", input)
 		case "init", "reload":
 			return host(ctx, "site.statistics.configure", json.RawMessage(`{}`))
 		case "service":
@@ -81,4 +91,8 @@ func HandleSiteStatistic(ctx context.Context, method string, raw json.RawMessage
 		mode = "today"
 	}
 	return json.Marshal(map[string]any{"cols": map[string]int{"cols": 12}, "attrs": map[string]any{}, "elements": []map[string]any{{"component": "VRow", "content": statistic.Elements(selected, mode)}}})
+}
+
+func SiteStatisticResponse(success bool, message string, data any) map[string]any {
+	return map[string]any{"success": success, "message": message, "message_i18n": message, "data": data}
 }

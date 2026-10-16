@@ -82,6 +82,9 @@ func (a *App) handler() http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
 		w.Header().Set("X-Frame-Options", "DENY")
+		if a.servePluginCustomAPI(w, r) {
+			return
+		}
 		if strings.HasPrefix(r.URL.Path, "/api/") {
 			if r.Method != "GET" && r.Method != "HEAD" {
 				if !sameRequestOrigin(r) {
@@ -108,6 +111,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	var out any
 	var e error
 	switch {
+	case p == "settings/api-token/reveal" && method == "POST":
+		out = map[string]string{"token": a.Settings().APIToken}
 	case p == "plugins" || strings.HasPrefix(p, "plugins/"):
 		out, e = a.pluginAPI(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "plugins"), "/"))
 	case p == "auth/status" && method == "GET":
@@ -463,7 +468,8 @@ func (a *App) status(ctx context.Context) map[string]any {
 }
 func (a *App) publicSettings() map[string]any {
 	c := a.Settings()
-	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != ""}
+	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != "", "api_token": c.APIToken != ""}
+	c.APIToken = ""
 	siteState := map[string]bool{}
 	for i := range c.Sites {
 		siteState[c.Sites[i].ID] = c.Sites[i].Cookie != "" || c.Sites[i].APIKey != ""
@@ -555,6 +561,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	c.IndexerSites = a.Settings().IndexerSites
 	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
+	if c.APIToken == "" {
+		c.APIToken = old.APIToken
+	}
 	if c.Roots == nil {
 		c.Roots = old.Roots
 	}
@@ -620,6 +629,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 }
 func validateSettings(c Settings) error {
+	if c.APIToken != "" && (len(c.APIToken) < 16 || len(c.APIToken) > 512 || invalidSiteImportText(c.APIToken, 512)) {
+		return bad("INVALID_API_TOKEN", "API令牌长度须为16到512字节，不能包含控制字符")
+	}
 	if c.SiteDataRefreshHours != nil && (*c.SiteDataRefreshHours < 0 || *c.SiteDataRefreshHours > 8760) {
 		return bad("INVALID_SITE_INTERVAL", "站点数据刷新间隔须为0到8760小时")
 	}

@@ -52,6 +52,9 @@ func (a *App) requestLogged(next http.Handler) http.Handler {
 			status = 200
 		}
 		module := strings.Split(strings.TrimPrefix(r.URL.Path, "/api/"), "/")[0]
+		if strings.HasPrefix(r.URL.Path, "/api/v1/plugin/") || strings.HasPrefix(r.URL.Path, "/api/v2/plugin/") {
+			module = "plugins"
+		}
 		allowed := map[string]bool{"auth": true, "status": true, "settings": true, "catalog": true, "search": true, "downloads": true, "subscriptions": true, "calendar": true, "schedule": true, "import": true, "assets": true, "jobs": true, "logs": true, "fnos": true, "backups": true, "restore": true, "control": true, "notifications": true, "audit": true}
 		allowed["frontend-errors"] = true
 		for _, name := range []string{"files", "history", "sites", "downloaders", "plugins"} {

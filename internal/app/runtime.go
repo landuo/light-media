@@ -309,7 +309,7 @@ func (a *App) setControl(ctx context.Context, pause bool) error {
 var urlPattern = regexp.MustCompile(`(?i)https?://[^\s"<>]+`)
 
 func cleanWithSettings(s string, c Settings) string {
-	secrets := []string{c.TMDB.APIKey, c.TMDB.AccessToken, c.FNOS.Password}
+	secrets := []string{c.TMDB.APIKey, c.TMDB.AccessToken, c.FNOS.Password, c.APIToken}
 	for _, x := range c.Sites {
 		secrets = append(secrets, x.Cookie, x.APIKey, x.Token, x.RSS, string(x.Note))
 	}

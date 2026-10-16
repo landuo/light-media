@@ -97,6 +97,7 @@ const states: Record<string, string> = {
   reconcile_pending: '待核对',
 };
 const actions: Record<string, string> = {
+  api: '接口调用',
   init: '应用配置',
   reload: '重新加载',
   service: '定时执行',

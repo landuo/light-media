@@ -70,6 +70,7 @@ type TMDBConfig struct {
 	AccessToken string `json:"access_token"`
 }
 type Settings struct {
+	APIToken             string             `json:"api_token"`
 	SiteDataRefreshHours *int               `json:"site_data_refresh_hours"`
 	IndexerSites         []string           `json:"indexer_sites"`
 	RSSSites             []string           `json:"rss_sites"`

@@ -263,7 +263,13 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 // Site HTTP requests happen outside settings/plugin locks. The observation,
 // daily history and outbox fact publish together after checking the current
 // connection and optional owning job. A failed response never replaces data.
-func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, guard func(*sql.Tx) error) (siteSnapshot, error) {
+type siteCollectionHooks struct {
+	Auto   bool
+	Guard  func(*sql.Tx) error
+	Commit func(*sql.Tx, siteSnapshot) error
+}
+
+func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hooks *siteCollectionHooks) (siteSnapshot, error) {
 	s, e := a.siteForRequest(ctx, key)
 	if e != nil {
 		return siteSnapshot{}, e
@@ -271,7 +277,7 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, guar
 	started := time.Now()
 	snapshot := siteSnapshot{SiteID: key, Name: s.Name, Domain: siteStatisticDomain(s), ConfigKey: a.managedSiteKey(s)}
 	var observed sites.UserStats
-	e = a.withSite(ctx, s, guard != nil, func(client *sites.Client) error { var err error; observed, err = client.UserStats(ctx); return err })
+	e = a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error { var err error; observed, err = client.UserStats(ctx); return err })
 	snapshot.Connection = managedConnection{Status: "ok", CheckedAt: now(), DurationMS: time.Since(started).Milliseconds()}
 	if e != nil {
 		snapshot.Connection.Status = "failed"
@@ -282,6 +288,8 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, guar
 	snapshot.Day = time.Now().In(shanghai()).Format("2006-01-02")
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
+	a.pluginMu.Lock()
+	defer a.pluginMu.Unlock()
 	current, err := a.siteForRequest(ctx, key)
 	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey {
 		return siteSnapshot{}, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
@@ -291,8 +299,8 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, guar
 		return siteSnapshot{}, err
 	}
 	defer tx.Rollback()
-	if guard != nil {
-		if err = guard(tx); err != nil {
+	if hooks != nil && hooks.Guard != nil {
+		if err = hooks.Guard(tx); err != nil {
 			return siteSnapshot{}, err
 		}
 	}
@@ -313,6 +321,11 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, guar
 			return siteSnapshot{}, err
 		}
 		if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='site_stats_history' AND updated_at<?`, time.Now().Add(-90*24*time.Hour).UTC().Format(time.RFC3339Nano)); err != nil {
+			return siteSnapshot{}, err
+		}
+	}
+	if hooks != nil && hooks.Commit != nil {
+		if err = hooks.Commit(tx, snapshot); err != nil {
 			return siteSnapshot{}, err
 		}
 	}

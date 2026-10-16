@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
 import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
+import ApiTokenSettings from './ApiTokenSettings.vue';
 const emit = defineEmits<{ organize: [paths: string[]] }>();
 function routeTab() {
   const value = new URLSearchParams(location.hash.split('?')[1] || '').get('tab');
@@ -137,6 +138,10 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
   </div>
   <template v-if="form">
     <div v-if="visitedTabs.has('system')" v-show="tab === 'system'" class="settings-page">
+      <ApiTokenSettings
+        :configured="!!form.secret_state?.api_token"
+        @saved="form.secret_state = $event.secret_state"
+      />
       <section class="panel">
         <header class="section-heading">
           <h2>TMDB 元数据</h2>

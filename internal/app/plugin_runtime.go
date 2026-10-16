@@ -103,6 +103,9 @@ func (a *App) pluginWorker(ctx context.Context) {
 }
 
 func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
+	if run.RequestID != "" {
+		ctx = a.traceContext(ctx, "", "", run.RequestID)
+	}
 	ctx, cancelRun := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancelRun()
 	select {
@@ -121,6 +124,15 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	available = available && compiled.Version == installation.Version
 	if err == nil && (manifest.PluginID != installation.PluginID || manifest.Version != installation.Version || manifest.SchemaVersion != installation.ManifestSchemaVersion) {
 		err = bad("PLUGIN_MANIFEST_MISMATCH", "插件清单与固定安装版本不一致")
+	}
+	if err == nil && available {
+		// Native workers are part of this executable. The compiled catalog is
+		// the grant authority; an older stored same-source-version manifest must
+		// neither grant new powers nor hide capabilities added with this host.
+		manifest = compiled
+	}
+	if err == nil && run.Action == "api" {
+		err = a.validatePluginHTTPRun(ctx, run)
 	}
 	var command plugins.Command
 	if err == nil && available {
@@ -179,7 +191,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 }
 
 func (a *App) pluginExecutionLog(installation PluginInstallation, run PluginRun, level, event, message, code string) {
-	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "plugins", "event": event, "message": message, "plugin_id": installation.PluginID, "plugin_version": run.Version, "plugin_instance_id": run.InstanceID, "plugin_run_id": run.ID, "error_code": code, "app_version": appVersion})
+	a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": level, "module": "plugins", "event": event, "message": message, "plugin_id": installation.PluginID, "plugin_version": run.Version, "plugin_instance_id": run.InstanceID, "plugin_run_id": run.ID, "request_id": run.RequestID, "error_code": code, "app_version": appVersion})
 }
 
 // Every write rechecks installation, generation and config revision while
@@ -216,6 +228,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == "sites.controls.read" || method == "sites.controls.configure" {
 		return a.pluginSiteControlsHost(ctx, installation, run, method, raw)
+	}
+	if method == "site.statistics.refresh_domain" {
+		return a.pluginSiteStatisticAPIHost(ctx, installation, run, raw)
 	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()

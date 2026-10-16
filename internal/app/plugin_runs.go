@@ -5,12 +5,14 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"strings"
 	"time"
 )
 
 // PluginRun's public projection is metadata only. Config snapshots, input and
 // worker results may contain secrets and are never marshaled by list APIs.
 type PluginRun struct {
+	RequestID      string          `json:"request_id,omitempty"`
 	ID             string          `json:"id"`
 	InstanceID     string          `json:"instance_id"`
 	Version        string          `json:"version"`
@@ -259,6 +261,16 @@ func (p *PluginStore) scanPluginRun(row interface{ Scan(...any) error }) (Plugin
 		return run, err
 	}
 	run.Input, err = p.unseal("run", run.InstanceID, run.ID, input)
+	if err == nil && run.Action == "api" {
+		var envelope struct {
+			Input struct {
+				RequestID string `json:"request_id"`
+			} `json:"input"`
+		}
+		if json.Unmarshal(run.Input, &envelope) == nil && strings.HasPrefix(envelope.Input.RequestID, "req_") && domainReferencePattern.MatchString(envelope.Input.RequestID) {
+			run.RequestID = envelope.Input.RequestID
+		}
+	}
 	if err == nil && len(result) > 0 {
 		run.Result, err = p.unseal("run_result", run.InstanceID, run.ID, result)
 	}
@@ -502,6 +514,9 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 		}
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_api_calls SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
