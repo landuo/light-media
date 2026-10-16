@@ -121,6 +121,9 @@ func (a *App) handler() http.Handler {
 func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	p := strings.TrimPrefix(r.URL.Path, "/api/")
+	if strings.HasPrefix(p, "plugins/") && a.pluginLogHTTP(w, r, strings.TrimPrefix(p, "plugins/")) {
+		return
+	}
 	method := r.Method
 	var out any
 	var e error

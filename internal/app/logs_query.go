@@ -42,6 +42,7 @@ type logCursor struct {
 	Gap     bool              `json:"g,omitempty"`
 }
 type logPage struct {
+	historyGap   bool             // Disk/cursor completeness before global collection health is applied.
 	Entries      []map[string]any `json:"entries"`
 	NextCursor   string           `json:"next_cursor,omitempty"`
 	Complete     bool             `json:"complete"`
@@ -472,6 +473,7 @@ func (a *App) queryLogs(ctx context.Context, q map[string]string) (logPage, erro
 		cursor.Gap = page.Gap
 		page.NextCursor = a.signLogCursor(cursor)
 	}
+	page.historyGap = page.Gap
 	page.Health = a.logs.health()
 	if page.Health.WriteError != "" || page.Health.DroppedDebug+page.Health.DroppedInfo+page.Health.DroppedWarn+page.Health.DroppedError > 0 {
 		page.Gap = true

@@ -1,0 +1,3598 @@
+{
+  "source": {
+    "path": "MoviePilot-Frontend/src/views/system/LoggingView.vue",
+    "sha256": "e5b6b5434d823c16c02d57c4524b5c5e261fb88b5c5aeff5bf44797d5bf1597f",
+    "methods": [
+      "normalizeLevel",
+      "matchesLogFilter",
+      "canMergeIntoGroup"
+    ],
+    "computed": [
+      "groupedLogs",
+      "filteredGroups"
+    ],
+    "boundary": "Only original normalization/grouping/filter methods; Go structured-record adaptation and SSE lifecycle have separate tests."
+  },
+  "levels": [
+    {
+      "input": "WARN",
+      "expected": "WARNING"
+    },
+    {
+      "input": "warn:",
+      "expected": "WARNING"
+    },
+    {
+      "input": " FATAL: ",
+      "expected": "CRITICAL"
+    },
+    {
+      "input": "trace",
+      "expected": "TRACE"
+    },
+    {
+      "input": "INFO:",
+      "expected": "INFO"
+    },
+    {
+      "input": "Warning",
+      "expected": "WARNING"
+    },
+    {
+      "input": " custom: ",
+      "expected": "CUSTOM"
+    },
+    {
+      "input": "",
+      "expected": ""
+    },
+    {
+      "input": "错误",
+      "expected": "错误"
+    },
+    {
+      "input": "Érr:",
+      "expected": "ÉRR"
+    }
+  ],
+  "groups": [
+    {
+      "name": "source-group-0",
+      "entries": [],
+      "expected": []
+    },
+    {
+      "name": "source-group-1",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "name": "source-group-2",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 200,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            },
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 200,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 200
+        }
+      ]
+    },
+    {
+      "name": "source-group-3",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 201,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-INFO-2",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 201,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 201
+        }
+      ]
+    },
+    {
+      "name": "source-group-4",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "ERROR: fixture 2 你好",
+          "level": "ERROR",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 120,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        }
+      ]
+    },
+    {
+      "name": "source-group-5",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 90,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            },
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 90,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 90
+        }
+      ]
+    },
+    {
+      "name": "source-group-6",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": null,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 120,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": null,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            },
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        }
+      ]
+    },
+    {
+      "name": "source-group-7",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": null,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            },
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": null,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "name": "source-group-8",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "",
+          "timestampMs": 100,
+          "secondKey": "",
+          "secondDisplay": "",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "",
+          "timestampMs": 101,
+          "secondKey": "",
+          "secondDisplay": "",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "log-INFO-1",
+          "level": "INFO",
+          "secondKey": "",
+          "secondDisplay": "",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "",
+              "timestampMs": 100,
+              "secondKey": "",
+              "secondDisplay": "",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "log-INFO-2",
+          "level": "INFO",
+          "secondKey": "",
+          "secondDisplay": "",
+          "items": [
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "",
+              "timestampMs": 101,
+              "secondKey": "",
+              "secondDisplay": "",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 101
+        }
+      ]
+    },
+    {
+      "name": "source-group-9",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:01",
+          "timestampMs": 200,
+          "secondKey": "2026-10-16 12:00:01",
+          "secondDisplay": "2026/10/16 12:00:01",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:01-INFO-2",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:01",
+          "secondDisplay": "2026/10/16 12:00:01",
+          "items": [
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:01",
+              "timestampMs": 200,
+              "secondKey": "2026-10-16 12:00:01",
+              "secondDisplay": "2026/10/16 12:00:01",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 200
+        }
+      ]
+    },
+    {
+      "name": "source-group-10",
+      "entries": [
+        {
+          "id": "1",
+          "raw": "INFO: fixture 1 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 100,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 1 你好 <literal>"
+        },
+        {
+          "id": "2",
+          "raw": "INFO: fixture 2 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 190,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 2 你好 <literal>"
+        },
+        {
+          "id": "3",
+          "raw": "INFO: fixture 3 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 280,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 3 你好 <literal>"
+        },
+        {
+          "id": "4",
+          "raw": "INFO: fixture 4 你好",
+          "level": "INFO",
+          "appName": "",
+          "timestamp": "2026-10-16 12:00:00",
+          "timestampMs": 381,
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "timeDisplay": "12:00:00,100",
+          "source": "plugins",
+          "message": "fixture 4 你好 <literal>"
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            },
+            {
+              "id": "2",
+              "raw": "INFO: fixture 2 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 190,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            },
+            {
+              "id": "3",
+              "raw": "INFO: fixture 3 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 280,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 280
+        },
+        {
+          "id": "2026-10-16 12:00:00-INFO-4",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "4",
+              "raw": "INFO: fixture 4 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 381,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 4 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 381
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "level": "ALL",
+      "query": "",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "ALL",
+      "query": "  FIXTURE  ",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "ALL",
+      "query": "你好",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "ALL",
+      "query": "<literal>",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "ALL",
+      "query": "missing",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "ALL",
+      "query": "INFO  2026",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "level": "INFO",
+      "query": "",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "level": "INFO",
+      "query": "  FIXTURE  ",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "level": "INFO",
+      "query": "你好",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "level": "INFO",
+      "query": "<literal>",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "level": "INFO",
+      "query": "missing",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "INFO",
+      "query": "INFO  2026",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        }
+      ]
+    },
+    {
+      "level": "ERROR",
+      "query": "",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        }
+      ]
+    },
+    {
+      "level": "ERROR",
+      "query": "  FIXTURE  ",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        }
+      ]
+    },
+    {
+      "level": "ERROR",
+      "query": "你好",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        }
+      ]
+    },
+    {
+      "level": "ERROR",
+      "query": "<literal>",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        }
+      ]
+    },
+    {
+      "level": "ERROR",
+      "query": "missing",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "ERROR",
+      "query": "INFO  2026",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "WARNING",
+      "query": "",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "WARNING",
+      "query": "  FIXTURE  ",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "WARNING",
+      "query": "你好",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "WARNING",
+      "query": "<literal>",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": [
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ]
+    },
+    {
+      "level": "WARNING",
+      "query": "missing",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "WARNING",
+      "query": "INFO  2026",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "DEBUG",
+      "query": "",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "DEBUG",
+      "query": "  FIXTURE  ",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "DEBUG",
+      "query": "你好",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "DEBUG",
+      "query": "<literal>",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "DEBUG",
+      "query": "missing",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    },
+    {
+      "level": "DEBUG",
+      "query": "INFO  2026",
+      "groups": [
+        {
+          "id": "2026-10-16 12:00:00-INFO-1",
+          "level": "INFO",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "1",
+              "raw": "INFO: fixture 1 你好",
+              "level": "INFO",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 100,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 1 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 100
+        },
+        {
+          "id": "2026-10-16 12:00:00-ERROR-2",
+          "level": "ERROR",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "2",
+              "raw": "ERROR: fixture 2 你好",
+              "level": "ERROR",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 120,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 2 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 120
+        },
+        {
+          "id": "2026-10-16 12:00:00-WARNING-3",
+          "level": "WARNING",
+          "secondKey": "2026-10-16 12:00:00",
+          "secondDisplay": "2026/10/16 12:00:00",
+          "items": [
+            {
+              "id": "3",
+              "raw": "WARNING: fixture 3 你好",
+              "level": "WARNING",
+              "appName": "",
+              "timestamp": "2026-10-16 12:00:00",
+              "timestampMs": 140,
+              "secondKey": "2026-10-16 12:00:00",
+              "secondDisplay": "2026/10/16 12:00:00",
+              "timeDisplay": "12:00:00,100",
+              "source": "plugins",
+              "message": "fixture 3 你好 <literal>"
+            }
+          ],
+          "lastTimestampMs": 140
+        }
+      ],
+      "expected": []
+    }
+  ]
+}

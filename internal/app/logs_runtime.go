@@ -80,10 +80,11 @@ type runtimeLogger struct {
 	stdout                                                           io.Writer
 	frontend                                                         map[string][]time.Time
 	streamSlots                                                      chan struct{}
+	exportSlots                                                      chan struct{}
 }
 
 func newRuntimeLogger(a *App) (*runtimeLogger, error) {
-	l := &runtimeLogger{app: a, boot: id("instance_"), wake: make(chan struct{}, 1), barriers: make(chan logBarrier, 16), stop: make(chan struct{}), done: make(chan struct{}), overrides: map[string]debugOverride{}, stdout: os.Stdout, frontend: map[string][]time.Time{}, streamSlots: make(chan struct{}, 8)}
+	l := &runtimeLogger{app: a, boot: id("instance_"), wake: make(chan struct{}, 1), barriers: make(chan logBarrier, 16), stop: make(chan struct{}), done: make(chan struct{}), overrides: map[string]debugOverride{}, stdout: os.Stdout, frontend: map[string][]time.Time{}, streamSlots: make(chan struct{}, 8), exportSlots: make(chan struct{}, 1)}
 	if err := l.openFile(); err != nil {
 		return nil, err
 	}

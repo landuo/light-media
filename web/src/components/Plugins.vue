@@ -12,7 +12,9 @@ import type { PluginCard } from '../features/plugin-forms';
 import AppIcon from './AppIcon.vue';
 const PluginConfigDialog = defineAsyncComponent(() => import('./PluginConfigDialog.vue'));
 const PluginDataDialog = defineAsyncComponent(() => import('./PluginDataDialog.vue'));
+const PluginLogDialog = defineAsyncComponent(() => import('./PluginLogDialog.vue'));
 const detail = ref<PluginCard>();
+const logPlugin = ref<PluginCard>();
 function openPlugin(plugin: PluginCard) {
   if (!plugin.installed) return;
   if (plugin.has_page) detail.value = plugin;
@@ -179,12 +181,18 @@ onUnmounted(() => clearInterval(timer));
                 title="卸载"
                 @click="confirmation = { plugin, action: 'uninstall' }" /><VListItem
                 title="执行记录"
-                @click="showRuns(plugin)"
+                @click="showRuns(plugin)" /><VListItem title="查看日志" @click="logPlugin = plugin"
             /></VList>
           </VMenu>
         </VCardText>
       </VCard>
     </div>
+    <PluginLogDialog
+      v-if="logPlugin"
+      :key="logPlugin.instance_id"
+      :plugin="logPlugin"
+      @close="logPlugin = undefined"
+    />
     <PluginDataDialog
       v-if="detail"
       :key="detail.instance_id"
