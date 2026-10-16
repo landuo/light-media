@@ -1,0 +1,216 @@
+[
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "value": 3
+        }
+      ]
+    },
+    "expected": {
+      "result": true,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "value": null
+        }
+      ]
+    },
+    "expected": {
+      "result": true,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "error": "AttributeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": false,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "error": "RuntimeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": false,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "value": 3
+        },
+        {
+          "value": 7
+        }
+      ]
+    },
+    "expected": {
+      "result": true,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "value": 3
+        },
+        {
+          "error": "AttributeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": true,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "has",
+      "sequence": [
+        {
+          "value": 3
+        },
+        {
+          "error": "RuntimeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": true,
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "value": 3
+        }
+      ]
+    },
+    "expected": {
+      "result": 3,
+      "reads": 2
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "value": null
+        }
+      ]
+    },
+    "expected": {
+      "result": null,
+      "reads": 2
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "error": "AttributeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": "DEFAULT",
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "error": "RuntimeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": "DEFAULT",
+      "reads": 1
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "value": 3
+        },
+        {
+          "value": 7
+        }
+      ]
+    },
+    "expected": {
+      "result": 7,
+      "reads": 2
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "value": 3
+        },
+        {
+          "error": "AttributeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": "DEFAULT",
+      "reads": 2
+    }
+  },
+  {
+    "input": {
+      "op": "get",
+      "sequence": [
+        {
+          "value": 3
+        },
+        {
+          "error": "RuntimeError"
+        }
+      ]
+    },
+    "expected": {
+      "result": "DEFAULT",
+      "reads": 2
+    }
+  }
+]

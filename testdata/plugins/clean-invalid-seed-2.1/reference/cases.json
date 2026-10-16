@@ -1,0 +1,7450 @@
+[
+  {
+    "id": "detect_invalid",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "delete_keep_data",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "delete_false_is_ignored",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ],
+        "delete_return": false
+      }
+    ]
+  },
+  {
+    "id": "delete_exception_partial",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ],
+        "delete_throw": true
+      }
+    ]
+  },
+  {
+    "id": "label_only_precedes_delete",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "mark",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": true,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "label_default",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": true,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "label_none_not_default",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": null,
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": true,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "category_excluded",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "movies",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "category_not_trimmed",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": " movies ",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "labels_count_each_match",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "own\nkeep",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own, keep,own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "notify_all_empty_filters_source_error",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": true,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "notify_all_nonempty_filters",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": true,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "x",
+      "exclude_labels": "x",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "invalid_no_same_domain_evidence",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unknown_tracker_proves_domain",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "waiting",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/waiting",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "waiting",
+                  "status": 1,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "domain_is_netloc_with_port",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "live",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/live",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic:443/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tracker_tier_minusone_ignored",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": -1
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "no_trackers_not_deleted",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": []
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "valid_tracker_prevents_invalid",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "mixed",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/mixed",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                },
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "x",
+                  "status": 0,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "paused_not_reported",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": true,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "paused",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/paused",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "waiting",
+                  "status": 1,
+                  "tier": 0
+                }
+              ],
+              "state_enum": {
+                "$object": {
+                  "is_paused": true
+                }
+              }
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "custom_error_exact_trim",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "\n Custom deleted \n",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Custom deleted",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "case_sensitive_error",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "TORRENT NOT REGISTERED WITH THIS TRACKER",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unknown_message_not_invalid",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "connection refused",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "list_error",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ],
+        "list_error": true
+      }
+    ]
+  },
+  {
+    "id": "list_throw",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ],
+        "list_throw": true
+      }
+    ]
+  },
+  {
+    "id": "empty_list",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": []
+      }
+    ]
+  },
+  {
+    "id": "no_selection",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "none_selection",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": null,
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inactive",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "active": false
+      }
+    ]
+  },
+  {
+    "id": "unsupported",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "other"
+      }
+    ]
+  },
+  {
+    "id": "false_instance",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "false_instance": true
+      }
+    ]
+  },
+  {
+    "id": "invalid_tracker_url_caught",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://bad[bracket",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "missing_hash_no_action",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hash": null,
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "qB_tracker_attribute_failure",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "fault"
+            },
+            "$faults": {
+              "trackers": "raise"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_dict_error",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": false,
+                  "lastAnnounceResult": "torrent not registered with this tracker",
+                  "hasAnnounced": true,
+                  "tier": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_object_error",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "$object": {
+                    "announce": "https://tracker.synthetic/a",
+                    "last_announce_result": "torrent not registered with this tracker",
+                    "last_announce_succeeded": true,
+                    "tier": 0
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_error_string",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "error": 2,
+              "errorString": " torrent not registered with this tracker ",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_error_string_alias",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "error": 2,
+              "error_string": "torrent not registered with this tracker",
+              "tracker_stats": [
+                {
+                  "$object": {
+                    "announceUrl": "https://tracker.synthetic/a",
+                    "lastAnnounceResult": "torrent not registered with this tracker",
+                    "last_announce_succeeded": null,
+                    "lastAnnounceSucceeded": false
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_trackers_fallback",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackers": [
+                {
+                  "$object": {
+                    "announce": "https://tracker.synthetic/a",
+                    "lastAnnounceResult": "torrent not registered with this tracker",
+                    "lastAnnounceSucceeded": false
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_list_fallback",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerList": [
+                "https://tracker.synthetic/a"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_synthetic_error_trackerList",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "error": 1,
+              "errorString": "torrent not registered with this tracker",
+              "trackerList": [
+                "https://tracker.synthetic/a"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_error_code_only",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "error": 9,
+              "trackerStats": []
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_no_tracker",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tr_labels_append",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "mark",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": true,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceSucceeded": true,
+                  "hasAnnounced": true
+                }
+              ]
+            }
+          },
+          {
+            "$object": {
+              "name": "bad",
+              "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "total_size": 4096,
+              "downloadDir": "/dl",
+              "labels": [
+                "own",
+                "mark"
+              ],
+              "status": "seeding",
+              "trackerStats": [
+                {
+                  "announce": "https://tracker.synthetic/a",
+                  "lastAnnounceResult": "torrent not registered with this tracker"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "files_detect",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_delete",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": true,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": true,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_min_days",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": "1",
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": "1",
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_keyword_blank",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "skip\n",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "skip\n",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_multi_map",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/other,/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/other,/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_original_trailing_slash",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp/:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp/:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_empty_target_map",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_bad_mapping",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "not-a-map",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "not-a-map",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_missing_dir",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/missing:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "keep",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/missing:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "keep",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_empty_unconditional_notice",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": false,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": false,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "files_stat_error",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 1,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 1,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir"
+      },
+      {
+        "path": "/mp/a",
+        "kind": "file",
+        "stat_error": true
+      }
+    ]
+  },
+  {
+    "id": "files_delete_exception_partial",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": true,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir"
+      },
+      {
+        "path": "/mp/a",
+        "kind": "file",
+        "size": 1,
+        "delete_error": true
+      }
+    ]
+  },
+  {
+    "id": "clean_file_scan_per_service",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB",
+        "qB2"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": true,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      },
+      {
+        "name": "qB2",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_detect_invalid_torrents",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "detect_invalid_torrents",
+          "channel": "synthetic",
+          "user": "user"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_delete_invalid_torrents",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "delete_invalid_torrents",
+          "channel": "synthetic",
+          "user": "user"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_detect_invalid_files",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "detect_invalid_files",
+          "channel": "synthetic",
+          "user": "user"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_delete_invalid_files",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "delete_invalid_files",
+          "channel": "synthetic",
+          "user": "user"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_toggle_notify_all",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "toggle_notify_all",
+          "channel": "synthetic",
+          "user": "user"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_other",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "other",
+          "channel": "synthetic",
+          "user": "user"
+        }
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "command_failure_keeps_temp_flags",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ],
+        "delete_throw": true
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": true,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "command",
+        "event": {
+          "action": "delete_invalid_torrents"
+        }
+      }
+    ]
+  },
+  {
+    "id": "init_min_None",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": null,
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_invalid",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": "invalid",
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_2",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": "2",
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_２",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": "２",
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_1_0",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": "1_0",
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_False",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": false,
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_1.9",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 1.9,
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_[]",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": [],
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_min_{}",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": {},
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "state"
+      },
+      {
+        "action": "service"
+      },
+      {
+        "action": "stop"
+      }
+    ]
+  },
+  {
+    "id": "init_empty_missing_downloaders",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {}
+      },
+      {
+        "action": "clean"
+      }
+    ]
+  },
+  {
+    "id": "cron_invalid",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "bad",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "service"
+      }
+    ]
+  },
+  {
+    "id": "reload_stops_once",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "torrents": [
+          {
+            "$object": {
+              "name": "good",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/good",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "Success",
+                  "status": 2,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          },
+          {
+            "$object": {
+              "name": "bad_1",
+              "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size": 2048,
+              "category": "movies",
+              "tags": "own",
+              "content_path": "/dl/bad_1",
+              "trackers": [
+                {
+                  "url": "https://tracker.synthetic/a",
+                  "msg": "torrent not registered with this tracker",
+                  "status": 4,
+                  "tier": 0
+                }
+              ]
+            },
+            "$mapping": true
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": true
+        }
+      },
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "qB"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "service"
+      }
+    ]
+  },
+  {
+    "id": "native_qB_detect",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "native": true,
+        "native_torrents": [
+          {
+            "name": "good",
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/good",
+            "state": "uploading"
+          },
+          {
+            "name": "bad",
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/bad",
+            "state": "uploading"
+          }
+        ],
+        "tracker_by_hash": {
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "Success",
+              "status": 2,
+              "tier": 0
+            }
+          ],
+          "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "torrent not registered with this tracker",
+              "status": 4,
+              "tier": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "native_qB_delete",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "native": true,
+        "native_torrents": [
+          {
+            "name": "good",
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/good",
+            "state": "uploading"
+          },
+          {
+            "name": "bad",
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/bad",
+            "state": "uploading"
+          }
+        ],
+        "tracker_by_hash": {
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "Success",
+              "status": 2,
+              "tier": 0
+            }
+          ],
+          "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "torrent not registered with this tracker",
+              "status": 4,
+              "tier": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "native_qB_label",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": true,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "native": true,
+        "native_torrents": [
+          {
+            "name": "good",
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/good",
+            "state": "uploading"
+          },
+          {
+            "name": "bad",
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/bad",
+            "state": "uploading"
+          }
+        ],
+        "tracker_by_hash": {
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "Success",
+              "status": 2,
+              "tier": 0
+            }
+          ],
+          "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "torrent not registered with this tracker",
+              "status": 4,
+              "tier": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "native_qB_paused",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": true,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "native": true,
+        "native_torrents": [
+          {
+            "name": "good",
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/good",
+            "state": "uploading"
+          },
+          {
+            "name": "bad",
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/bad",
+            "state": "pausedUP"
+          }
+        ],
+        "tracker_by_hash": {
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "Success",
+              "status": 2,
+              "tier": 0
+            }
+          ],
+          "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "waiting",
+              "status": 1,
+              "tier": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "native_TR_stats",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "native": true,
+        "native_torrents": [
+          {
+            "id": 1,
+            "name": "good",
+            "hashString": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "Success",
+                "lastAnnounceSucceeded": true,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "name": "bad",
+            "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "torrent not registered with this tracker",
+                "lastAnnounceSucceeded": false,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "native_TR_error_code_skipped",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "native": true,
+        "native_torrents": [
+          {
+            "id": 1,
+            "name": "good",
+            "hashString": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "Success",
+                "lastAnnounceSucceeded": true,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "name": "bad",
+            "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 2,
+            "errorString": "torrent not registered with this tracker",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "torrent not registered with this tracker",
+                "lastAnnounceSucceeded": false,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "native_TR_label",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": true,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "native": true,
+        "native_torrents": [
+          {
+            "id": 1,
+            "name": "good",
+            "hashString": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "Success",
+                "lastAnnounceSucceeded": true,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "name": "bad",
+            "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "torrent not registered with this tracker",
+                "lastAnnounceSucceeded": false,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "native_TR_files",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": false,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": false,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "native": true,
+        "native_torrents": [
+          {
+            "id": 1,
+            "name": "good",
+            "hashString": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "Success",
+                "lastAnnounceSucceeded": true,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "name": "bad",
+            "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "torrent not registered with this tracker",
+                "lastAnnounceSucceeded": false,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "action": "init",
+        "config": {
+          "enabled": true,
+          "cron": "0 0 * * *",
+          "downloaders": [
+            "TR"
+          ],
+          "label": "",
+          "notify": true,
+          "notify_all": false,
+          "delete_invalid_torrents": false,
+          "delete_invalid_files": false,
+          "detect_invalid_files": false,
+          "label_only": false,
+          "download_dirs": "/mp:/dl",
+          "exclude_categories": "",
+          "exclude_labels": "",
+          "exclude_keywords": "",
+          "custom_error_msg": "",
+          "min_seeding_days": 0,
+          "more_logs": false,
+          "onlyonce": false
+        }
+      },
+      {
+        "action": "files"
+      }
+    ],
+    "files": [
+      {
+        "path": "/mp",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/live",
+        "kind": "file",
+        "size": 4,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old",
+        "kind": "dir",
+        "mtime": 0
+      },
+      {
+        "path": "/mp/old/a",
+        "kind": "file",
+        "size": 1024,
+        "mtime": 0
+      },
+      {
+        "path": "/mp/fresh",
+        "kind": "file",
+        "size": 10,
+        "mtime": 1999999900
+      },
+      {
+        "path": "/mp/keep_me",
+        "kind": "file",
+        "size": 22,
+        "mtime": 0
+      }
+    ]
+  },
+  {
+    "id": "native_qB_delete_more_logs",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "qB"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": true,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "qB",
+        "kind": "qbittorrent",
+        "native": true,
+        "native_torrents": [
+          {
+            "name": "good",
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/good",
+            "state": "uploading"
+          },
+          {
+            "name": "bad",
+            "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "size": 2048,
+            "category": "movies",
+            "tags": "own",
+            "content_path": "/dl/bad",
+            "state": "uploading"
+          }
+        ],
+        "tracker_by_hash": {
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "Success",
+              "status": 2,
+              "tier": 0
+            }
+          ],
+          "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": [
+            {
+              "url": "https://tracker.synthetic/a",
+              "msg": "torrent not registered with this tracker",
+              "status": 4,
+              "tier": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "native_TR_stats_more_logs",
+    "config": {
+      "enabled": true,
+      "cron": "0 0 * * *",
+      "downloaders": [
+        "TR"
+      ],
+      "label": "",
+      "notify": true,
+      "notify_all": false,
+      "delete_invalid_torrents": true,
+      "delete_invalid_files": false,
+      "detect_invalid_files": false,
+      "label_only": false,
+      "download_dirs": "/mp:/dl",
+      "exclude_categories": "",
+      "exclude_labels": "",
+      "exclude_keywords": "",
+      "custom_error_msg": "",
+      "min_seeding_days": 0,
+      "more_logs": true,
+      "onlyonce": false
+    },
+    "services": [
+      {
+        "name": "TR",
+        "kind": "transmission",
+        "native": true,
+        "native_torrents": [
+          {
+            "id": 1,
+            "name": "good",
+            "hashString": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "Success",
+                "lastAnnounceSucceeded": true,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "name": "bad",
+            "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "totalSize": 4096,
+            "downloadDir": "/dl",
+            "labels": [
+              "own"
+            ],
+            "status": 6,
+            "error": 0,
+            "errorString": "",
+            "trackerStats": [
+              {
+                "announce": "https://tracker.synthetic/a",
+                "lastAnnounceResult": "torrent not registered with this tracker",
+                "lastAnnounceSucceeded": false,
+                "tier": 0
+              }
+            ],
+            "trackers": [
+              {
+                "id": 0,
+                "announce": "https://tracker.synthetic/a",
+                "scrape": "",
+                "tier": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

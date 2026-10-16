@@ -1,0 +1,57 @@
+{
+  "id": "ffbb2bd0-356a-4ee9-8d34-023b891d9b6a",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "",
+  "test_regex": "^Test",
+  "sha256": "fc16bef3eb07b98d4dd1aa4b4e1b4f37614da26481fb07ab9c7590e2728e3b94",
+  "remote_sha256": "fc16bef3eb07b98d4dd1aa4b4e1b4f37614da26481fb07ab9c7590e2728e3b94",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 13,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal Go CleanInvalidSeed 2.1 package: installed AST, real native object/wrapper and StringUtils/safe attribute references plus actual Runner/Serve with synthetic Host; no real downloader, user filesystem, notification delivery, App registration or migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  },
+  "prior_attempt": {
+    "sha256": "fc16bef3eb07b98d4dd1aa4b4e1b4f37614da26481fb07ab9c7590e2728e3b94",
+    "results": {
+      "exit_code": 1,
+      "top_level_passes": 12,
+      "top_level_skips": 0,
+      "top_level_failures": 1
+    },
+    "reason": "isolated payload omitted form.json/commands/license files required by the unchanged provenance test; payload fixed without changing the test binary or removing a test",
+    "container_oom_killed": false,
+    "services_unchanged": true,
+    "cleanup": {
+      "container_removed": true,
+      "owned_remote_stage_removed": true,
+      "services_unchanged": true
+    }
+  }
+}

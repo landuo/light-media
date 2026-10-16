@@ -1,0 +1,804 @@
+[
+  {
+    "input": {
+      "id": "qbittorrent_delete_False_normal",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_delete",
+          "args": {
+            "delete_files": false,
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_False_empty",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": false,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_False_duplicates",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_delete",
+          "args": {
+            "delete_files": false,
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_False_unhashable",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_delete",
+          "args": {
+            "delete_files": false,
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_True_normal",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_delete",
+          "args": {
+            "delete_files": false,
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_True_empty",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": true,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_True_duplicates",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_delete",
+          "args": {
+            "delete_files": false,
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_delete_True_unhashable",
+      "kind": "qbittorrent",
+      "op": "delete",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_delete",
+          "args": {
+            "delete_files": false,
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_False_normal",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              "mark"
+            ],
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_False_empty",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": false,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              "mark"
+            ],
+            "torrent_hashes": ""
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_False_duplicates",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              "mark",
+              "own",
+              "mark"
+            ],
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_False_unhashable",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              [
+                "invalid-list"
+              ]
+            ],
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_True_normal",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              "mark"
+            ],
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_True_empty",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": true,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              "mark"
+            ],
+            "torrent_hashes": ""
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_True_duplicates",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              "mark",
+              "own",
+              "mark"
+            ],
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "qbittorrent_tags_True_unhashable",
+      "kind": "qbittorrent",
+      "op": "tags",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": null,
+      "error": null,
+      "trace": [
+        {
+          "method": "torrents_add_tags",
+          "args": {
+            "tags": [
+              [
+                "invalid-list"
+              ]
+            ],
+            "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_False_normal",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "remove_torrent",
+          "args": {
+            "delete_data": false,
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_False_empty",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": false,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_False_duplicates",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "remove_torrent",
+          "args": {
+            "delete_data": false,
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_False_unhashable",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "remove_torrent",
+          "args": {
+            "delete_data": false,
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_True_normal",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "remove_torrent",
+          "args": {
+            "delete_data": false,
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_True_empty",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": true,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_True_duplicates",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "remove_torrent",
+          "args": {
+            "delete_data": false,
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_delete_True_unhashable",
+      "kind": "transmission",
+      "op": "delete",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "remove_torrent",
+          "args": {
+            "delete_data": false,
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_False_normal",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "change_torrent",
+          "args": {
+            "labels": [
+              "mark"
+            ],
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_False_empty",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": false,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_False_duplicates",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": true,
+      "error": null,
+      "trace": [
+        {
+          "method": "change_torrent",
+          "args": {
+            "labels": [
+              "mark",
+              "own"
+            ],
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_False_unhashable",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": false,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_True_normal",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "change_torrent",
+          "args": {
+            "labels": [
+              "mark"
+            ],
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_True_empty",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": true,
+      "hash": "",
+      "tags": [
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_True_duplicates",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        "mark",
+        "own",
+        "mark"
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": [
+        {
+          "method": "change_torrent",
+          "args": {
+            "labels": [
+              "mark",
+              "own"
+            ],
+            "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "id": "transmission_tags_True_unhashable",
+      "kind": "transmission",
+      "op": "tags",
+      "throw": true,
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tags": [
+        [
+          "invalid-list"
+        ]
+      ]
+    },
+    "expected": {
+      "result": false,
+      "error": null,
+      "trace": []
+    }
+  }
+]
