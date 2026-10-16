@@ -1,0 +1,35 @@
+{
+  "id": "7e0436af-efb3-48cb-a1c6-7d23d4d21cb0",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "sha256": "5a774e11ff25fc0840dba3b1e538e79326d97ba4caa7171b83065675b3ba7797",
+  "remote_sha256": "5a774e11ff25fc0840dba3b1e538e79326d97ba4caa7171b83065675b3ba7797",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 10,
+    "top_level_skips": 0,
+    "passed": true
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "GOMEMLIMIT": "64MiB"
+  },
+  "scope": "formal pure Go package; actual owned fixture files/hardlinks and SDK subprocess; no production plugin registration or migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

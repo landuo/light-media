@@ -1,0 +1,274 @@
+{
+  "source_sha256": "c14c36e17112605e6c856614e88ea425530be2462123126a85e1adfea009a3af",
+  "scope": "original _WatchfilesObserver._watch AST; fake watch() ordered changes and recording event handler; owned files only",
+  "cases": [
+    {
+      "case": {
+        "name": "existing-rename",
+        "files": [
+          "a"
+        ],
+        "batches": [
+          {
+            "move": [
+              "a",
+              "b"
+            ],
+            "changes": [
+              [
+                "deleted",
+                "a"
+              ],
+              [
+                "added",
+                "b"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "created",
+          "Src": "/fixture/b",
+          "Dest": "",
+          "Directory": false
+        },
+        {
+          "Kind": "moved",
+          "Src": "/fixture/a",
+          "Dest": "/fixture/b",
+          "Directory": false
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "two-batches",
+        "files": [
+          "a"
+        ],
+        "batches": [
+          {
+            "move": [
+              "a",
+              "b"
+            ],
+            "changes": [
+              [
+                "added",
+                "b"
+              ],
+              [
+                "deleted",
+                "a"
+              ]
+            ]
+          },
+          {
+            "move": [
+              "b",
+              "c"
+            ],
+            "changes": [
+              [
+                "deleted",
+                "b"
+              ],
+              [
+                "added",
+                "c"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "created",
+          "Src": "/fixture/b",
+          "Dest": "",
+          "Directory": false
+        },
+        {
+          "Kind": "moved",
+          "Src": "/fixture/a",
+          "Dest": "/fixture/b",
+          "Directory": false
+        },
+        {
+          "Kind": "created",
+          "Src": "/fixture/c",
+          "Dest": "",
+          "Directory": false
+        },
+        {
+          "Kind": "moved",
+          "Src": "/fixture/b",
+          "Dest": "/fixture/c",
+          "Directory": false
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "unpaired-delete",
+        "files": [
+          "a"
+        ],
+        "batches": [
+          {
+            "remove": "a",
+            "changes": [
+              [
+                "deleted",
+                "a"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "deleted",
+          "Src": "/fixture/a",
+          "Dest": "",
+          "Directory": false
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "missing-initial",
+        "files": [],
+        "batches": [
+          {
+            "changes": [
+              [
+                "deleted",
+                "a"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "deleted",
+          "Src": "/fixture/a",
+          "Dest": "",
+          "Directory": false
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "missing-added-stat",
+        "files": [],
+        "batches": [
+          {
+            "changes": [
+              [
+                "added",
+                "a"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "created",
+          "Src": "/fixture/a",
+          "Dest": "",
+          "Directory": false
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "modified-ignored",
+        "files": [
+          "a"
+        ],
+        "batches": [
+          {
+            "changes": [
+              [
+                "modified",
+                "a"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": []
+    },
+    {
+      "case": {
+        "name": "directory-delete-is-file",
+        "files": [
+          "a"
+        ],
+        "batches": [
+          {
+            "changes": [
+              [
+                "deleted",
+                "directory"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "deleted",
+          "Src": "/fixture/directory",
+          "Dest": "",
+          "Directory": false
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "temp-rename",
+        "files": [
+          "a"
+        ],
+        "batches": [
+          {
+            "move": [
+              "a",
+              "a.tmp"
+            ],
+            "changes": [
+              [
+                "deleted",
+                "a"
+              ],
+              [
+                "added",
+                "a.tmp"
+              ]
+            ]
+          }
+        ]
+      },
+      "trace": [
+        {
+          "Kind": "created",
+          "Src": "/fixture/a.tmp",
+          "Dest": "",
+          "Directory": false
+        },
+        {
+          "Kind": "moved",
+          "Src": "/fixture/a",
+          "Dest": "/fixture/a.tmp",
+          "Directory": false
+        }
+      ]
+    }
+  ]
+}

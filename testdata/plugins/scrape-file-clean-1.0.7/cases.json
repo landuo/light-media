@@ -1,0 +1,2092 @@
+[
+  {
+    "name": "immediate",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "all-effects",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true,
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.nfo": "n",
+      "m/b.zh.srt": "s",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-2",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": null
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-3",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": false
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-4",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-5",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 0
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-6",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 9
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-7",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 10
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-8",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 30
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-9",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 86401
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-10",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": "42"
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-11",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": "bad"
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-12",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 2.9
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-13",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": []
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-14",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": {}
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-15",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": "１２"
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-16",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": "1_000"
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-17",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": "\u001c20"
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delay-18",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 200000
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delayed-same-path-old",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 30,
+      "delete_scrap_infos": true,
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.nfo": "n",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "create",
+        "path": "m/a.mkv",
+        "link": "m/b.mkv",
+        "at": 110
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delayed-new-path",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 30,
+      "delete_scrap_infos": true,
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.nfo": "n",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "create",
+        "path": "m/new.mkv",
+        "link": "m/b.mkv",
+        "at": 110
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delayed-same-path-new",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 30,
+      "delete_scrap_infos": true,
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.nfo": "n",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "create",
+        "path": "m/a.mkv",
+        "at": 110
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delayed-no-change",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delay_seconds": 30,
+      "delete_scrap_infos": true,
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.nfo": "n",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "delayed-known-path-readded",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "create_event",
+        "path": "m/b.mkv",
+        "at": 110
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "queue-two-due",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/x.mkv": "x",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      },
+      {
+        "path": "m/y.mkv",
+        "target": "m/x.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "delete",
+        "path": "m/x.mkv",
+        "at": 110
+      },
+      {
+        "op": "tick",
+        "at": 130
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "pending-stop",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "stop",
+        "at": 101,
+        "config": {
+          "enabled": false
+        }
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "pending-reload",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "reload",
+        "at": 101,
+        "config": {
+          "enabled": false
+        }
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.!qB",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.!qB": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.!qB",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.!QB",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.!QB": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.!QB",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.part",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.part": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.part",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.PART",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.PART": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.PART",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.mp",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.mp": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mp",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.tmp",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.tmp": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.tmp",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.TMP",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.TMP": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.TMP",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.temp",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.temp": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.temp",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "temporary.TEMP",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.TEMP": "v",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.TEMP",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "move-m/new.mkv",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "ignored",
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "m/new.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "move-m/new.tmp",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "ignored",
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "m/new.tmp",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "move-m/ignored.mkv",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "ignored",
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "m/ignored.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "move-outside/new.mkv",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "ignored",
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "outside/new.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "move-outside/new.tmp",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "ignored",
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "outside/new.tmp",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "overwrite-False",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_history": true,
+      "delete_torrents": true,
+      "delete_scrap_infos": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/old.mkv": "old",
+      "m/old.nfo": "old nfo",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      },
+      {
+        "path": "m/old-link.mkv",
+        "target": "m/old.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "m/old.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "overwrite-True",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delete_history": true,
+      "delete_torrents": true,
+      "delete_scrap_infos": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/old.mkv": "old",
+      "m/old.nfo": "old nfo",
+      "m/keep.bin": "k"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      },
+      {
+        "path": "m/old-link.mkv",
+        "target": "m/old.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "m/old.mkv",
+        "at": 100
+      },
+      {
+        "op": "tick",
+        "at": 140
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "missing-move-target",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "move",
+        "path": "m/a.mkv",
+        "dest": "outside/new.mkv",
+        "missing": true,
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "exclude-44",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_dirs": "@ROOT@/m/b.mkv",
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "exclude-45",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_dirs": "@ROOT@/m/b",
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "exclude-46",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_dirs": "@ROOT@/m",
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "exclude-47",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_dirs": " @ROOT@/m/b.mkv \n",
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "keywords-full-scan-still-tracks",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "b.mkv",
+      "delete_history": true,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "directory-keyword-filter",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "exclude_keywords": "m",
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m",
+        "directory": true,
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "directory-event",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_torrents": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m",
+        "directory": true,
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "stale-link-continue",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      },
+      {
+        "path": "m/c.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "external_remove",
+        "path": "m/b.mkv",
+        "at": 90
+      },
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "denied-link",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_history": true,
+      "delete_torrents": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": [
+      "m/b.mkv"
+    ]
+  },
+  {
+    "name": "history-dest-priority",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_history": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "history-src-fallback",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_history": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [
+      "dest:@ROOT@/m/a.mkv",
+      "dest:@ROOT@/m/b.mkv"
+    ],
+    "deny_unlink": []
+  },
+  {
+    "name": "same-stem-other-media",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.mp4": "other",
+      "m/a.nfo": "n",
+      "m/a.zh.srt": "s"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "longer-stem-other-media",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true
+    },
+    "files": {
+      "m/Film.mkv": "v",
+      "m/Film-2.mkv": "o",
+      "m/Film.nfo": "n",
+      "m/Film-2.nfo": "o",
+      "m/Film².nfo": "number",
+      "m/FilmX.nfo": "letter",
+      "m/Film_zh.srt": "sub"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/Film.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "monitor-root-retained",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m/./",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true,
+      "notify": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.nfo": "n"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "nested-empty-cleanup",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true,
+      "notify": true
+    },
+    "files": {
+      "m/sub/a.mkv": "v",
+      "m/sub/a.nfo": "n",
+      "m/sub/poster.jpg": "p"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/sub/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "protected-scrap-child",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true,
+      "exclude_keywords": "protected",
+      "notify": true
+    },
+    "files": {
+      "m/sub/a.mkv": "v",
+      "m/sub/a.protected.nfo": "p",
+      "m/sub/a.nfo": "n"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/sub/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "trickplay-scanned-and-cleaned",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.trickplay/0.jpg": "t",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "custom-suffix",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": false,
+      "delete_scrap_infos": true,
+      "custom_scrap_extensions": "zip，TAG\n-custom,ZIP"
+    },
+    "files": {
+      "m/a.mkv": "v",
+      "m/a.zip": "z",
+      "m/a.TAG": "t",
+      "m/a-custom": "x",
+      "m/keep.bin": "k"
+    },
+    "links": [],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "reload-before-config-apply",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": "@ROOT@/m",
+      "delayed_deletion": true,
+      "delete_history": true
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [
+      {
+        "op": "delete",
+        "path": "m/a.mkv",
+        "at": 100
+      },
+      {
+        "op": "reload",
+        "config": {
+          "enabled": true,
+          "monitor_dirs": "@ROOT@/m",
+          "delete_history": true
+        },
+        "at": 110
+      }
+    ],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "bad-config-63",
+    "config": {
+      "custom_scrap_extensions": [
+        "bad"
+      ]
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "bad-config-64",
+    "config": {
+      "enabled": true,
+      "monitor_dirs": [
+        "bad"
+      ]
+    },
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "bad-config-65",
+    "config": [
+      1
+    ],
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [],
+    "missing_history": [],
+    "deny_unlink": []
+  },
+  {
+    "name": "bad-config-66",
+    "config": null,
+    "files": {
+      "m/a.mkv": "video",
+      "m/keep.bin": "keep"
+    },
+    "links": [
+      {
+        "path": "m/b.mkv",
+        "target": "m/a.mkv"
+      }
+    ],
+    "dirs": [],
+    "steps": [],
+    "missing_history": [],
+    "deny_unlink": []
+  }
+]
