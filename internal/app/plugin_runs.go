@@ -414,6 +414,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 		err = p.recoverSiteStatisticRuns(ctx)
 	}
 	if err == nil {
+		err = p.recoverSubscribeGroupRuns(ctx)
+	}
+	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)
 	}
 	return err
@@ -468,6 +471,18 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 	if err != nil {
 		return err
 	}
+	return p.replaceRunConfigTx(ctx, tx, run, raw)
+}
+
+// Internal full replacements share the same snapshot propagation as patches.
+// Only trusted host adapters choose a replacement; it is not a worker method.
+func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, raw json.RawMessage) error {
+	checked, err := pluginJSON(raw, true)
+	if err != nil {
+		return err
+	}
+	raw = checked
+	revision := run.ConfigRevision
 	value, err := p.saveValueTx(ctx, tx, run.InstanceID, "config", "main", revision, raw)
 	if err != nil {
 		return err

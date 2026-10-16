@@ -22,6 +22,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"light-media/internal/catalog"
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/subscribegroup"
 )
 
 type App struct {
@@ -63,7 +64,13 @@ type App struct {
 	pluginCommand           func(string) (plugins.Command, error)
 	pluginHostsFile         string // Test seam; production always uses the container's /etc/hosts.
 	pluginProcessStats      pluginProcessSnapshotter
-	pluginSitePeerAvailable func(string, string) bool // Protocol-test seam; production uses the compiled catalog.
+	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
+	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
+}
+
+type subscribeGroupCache struct {
+	Generation, Revision int64
+	Rules                map[string]subscribegroup.Rule
 }
 type Options struct {
 	DataDir string
