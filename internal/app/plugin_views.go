@@ -43,12 +43,41 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 		return nil, err
 	}
 	hostErrorCode := ""
+	hostErrorMessage := "读取当前容器进程失败，请重试"
 	result, err := (plugins.Runner{Timeout: 10 * time.Second}).Run(ctx, command, manifest, installation.InstanceID, method, payload, func(ctx context.Context, identity plugins.Identity, capability string, raw json.RawMessage) (json.RawMessage, error) {
-		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read") {
+		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read" && capability != "subscriptions.rules.history") {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件页面只能调用已授权的只读查询")
 		}
 		if err := a.pluginViewCurrent(ctx, installation, config.Revision); err != nil {
 			return nil, err
+		}
+		if capability == "subscriptions.rules.history" {
+			if installation.PluginID != "SubscribeGroup" || !pluginStrictJSON(raw, &struct{}{}) {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "订阅规则页面只能查询自己的历史")
+			}
+			a.pluginMu.Lock()
+			defer a.pluginMu.Unlock()
+			if err := a.pluginViewCurrent(ctx, installation, config.Revision); err != nil {
+				return nil, err
+			}
+			history, err := a.pluginStore.Data(ctx, installation.InstanceID, "history")
+			if missingPluginValue(err) {
+				return json.RawMessage(`null`), nil
+			}
+			if err != nil {
+				hostErrorCode = "PLUGIN_HISTORY_READ_FAILED"
+				hostErrorMessage = "读取订阅规则历史失败，请重试"
+				return nil, err
+			}
+			// The current protocol has a 1 MiB frame limit, including identity
+			// and envelope. Do not truncate the source's full history or report
+			// an empty page; chunked large-history transport remains required.
+			if len(history.Value) > (1<<20)-(4<<10) {
+				hostErrorCode = "PLUGIN_HISTORY_TOO_LARGE"
+				hostErrorMessage = "历史数据过大，无法通过当前插件通道完整加载"
+				return nil, bad(hostErrorCode, hostErrorMessage)
+			}
+			return history.Value, nil
 		}
 		if capability == "site.statistics.read" {
 			if installation.PluginID != "SiteStatistic" || string(raw) != "{}" {
@@ -79,7 +108,7 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 	})
 	if err != nil {
 		if hostErrorCode != "" {
-			return nil, bad(hostErrorCode, "读取当前容器进程失败，请重试")
+			return nil, bad(hostErrorCode, hostErrorMessage)
 		}
 		return nil, bad("PLUGIN_VIEW_FAILED", "加载插件页面失败，请重试")
 	}

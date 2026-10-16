@@ -15,24 +15,25 @@ import (
 // committed facts only, never arbitrary payloads, paths or private metainfo.
 // No plugin is started or granted authority by producing or reading an event.
 type DomainEvent struct {
-	Sequence       int64  `json:"sequence,omitempty"`
-	SchemaVersion  int    `json:"schema_version"`
-	EventID        string `json:"event_id"`
-	Type           string `json:"event_type"`
-	OccurredAt     string `json:"occurred_at"`
-	WorkflowID     string `json:"workflow_id"`
-	JobID          string `json:"job_id,omitempty"`
-	MediaID        string `json:"media_id"`
-	IntentID       string `json:"intent_id,omitempty"`
-	AssetID        string `json:"asset_id,omitempty"`
-	SiteID         string `json:"site_id,omitempty"`
-	SubscriptionID string `json:"subscription_id,omitempty"`
-	Purpose        string `json:"purpose"`
-	SubjectID      string `json:"subject_id"`
-	SubjectKind    string `json:"subject_kind"`
-	CausationID    string `json:"causation_id,omitempty"`
-	ParentJobID    string `json:"parent_job_id,omitempty"`
-	Origin         string `json:"origin"`
+	Sequence         int64  `json:"sequence,omitempty"`
+	SchemaVersion    int    `json:"schema_version"`
+	EventID          string `json:"event_id"`
+	Type             string `json:"event_type"`
+	OccurredAt       string `json:"occurred_at"`
+	WorkflowID       string `json:"workflow_id"`
+	JobID            string `json:"job_id,omitempty"`
+	MediaID          string `json:"media_id"`
+	IntentID         string `json:"intent_id,omitempty"`
+	NativeDownloadID string `json:"native_download_id,omitempty"`
+	AssetID          string `json:"asset_id,omitempty"`
+	SiteID           string `json:"site_id,omitempty"`
+	SubscriptionID   string `json:"subscription_id,omitempty"`
+	Purpose          string `json:"purpose"`
+	SubjectID        string `json:"subject_id"`
+	SubjectKind      string `json:"subject_kind"`
+	CausationID      string `json:"causation_id,omitempty"`
+	ParentJobID      string `json:"parent_job_id,omitempty"`
+	Origin           string `json:"origin"`
 }
 type DomainEventPage struct {
 	Events     []DomainEvent `json:"events"`
@@ -60,7 +61,7 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	if in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || (in.JobID == "" && in.Type != "download.completed" && in.Type != "site.refreshed" && in.Type != "subscription.added") || (in.JobID != "" && !domainReferencePattern.MatchString(in.JobID)) {
 		return invalid()
 	}
-	for _, value := range []string{in.IntentID, in.AssetID, in.WorkflowID, in.CausationID, in.ParentJobID, in.SubscriptionID} {
+	for _, value := range []string{in.IntentID, in.NativeDownloadID, in.AssetID, in.WorkflowID, in.CausationID, in.ParentJobID, in.SubscriptionID} {
 		if value != "" && !domainReferencePattern.MatchString(value) {
 			return invalid()
 		}
@@ -87,13 +88,19 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	if in.Origin != "core" {
 		return invalid()
 	}
+	if in.NativeDownloadID != "" && (in.Type != "download.accepted" || in.IntentID != "" || in.AssetID != "" || in.SiteID != "" || in.SubscriptionID != "" || in.Purpose != "core_download") {
+		return invalid()
+	}
 	subject, kind := "", ""
 	switch in.Type {
 	case "download.accepted", "download.completed":
-		if in.IntentID == "" {
+		if in.NativeDownloadID != "" {
+			subject, kind = in.NativeDownloadID, "native_download"
+		} else if in.IntentID == "" {
 			return invalid()
+		} else {
+			subject, kind = in.IntentID, "intent"
 		}
-		subject, kind = in.IntentID, "intent"
 	case "import.completed", "scrape.completed", "library.visible":
 		if in.AssetID == "" {
 			return invalid()
@@ -114,7 +121,7 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	default:
 		return invalid()
 	}
-	if in.Type != "job.failed" && in.Type != "site.refreshed" && in.Type != "subscription.added" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
+	if in.Type != "job.failed" && in.Type != "site.refreshed" && in.Type != "subscription.added" && in.NativeDownloadID == "" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
 		return invalid()
 	}
 	if in.MediaID != "" && !domainMediaPattern.MatchString(in.MediaID) {

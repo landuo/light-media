@@ -11,6 +11,7 @@ import (
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/schedule"
+	"light-media/internal/plugins/subscribegroup"
 )
 
 type pluginCard struct {
@@ -48,6 +49,12 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "SubscribeGroup" {
+					var rulesConfig subscribegroup.Configuration
+					if json.Unmarshal(config.Value, &rulesConfig) == nil {
+						state = rulesConfig.Enabled || rulesConfig.Category
+					}
+				}
 				if installation.PluginID == "MergeSiteSwitch" {
 					var controls builtin.SiteControls
 					ids := []string{}
@@ -219,7 +226,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -312,6 +319,22 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "SubscribeGroup":
+		var config subscribegroup.Configuration
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if config.UpdateConfs != nil && len(*config.UpdateConfs) > 256<<10 || len(config.UpdateDetails) > 1000 {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "订阅规则配置超过大小上限")
+		}
+		// Preserve unknown/duplicate selected strings and rule whitespace: the
+		// original uses direct membership and sequential '#' / ':' splitting.
+		for _, detail := range config.UpdateDetails {
+			if len(detail) > 64<<10 {
+				return nil, bad("INVALID_PLUGIN_CONFIG", "订阅规则填充字段超过大小上限")
+			}
+		}
+		return config, nil
 	case "SiteStatistic":
 		var config builtin.SiteStatisticConfiguration
 		if err := decode(&config); err != nil {

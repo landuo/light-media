@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -14,9 +15,8 @@ import (
 	"light-media/internal/torrentfilter"
 )
 
-// These host operations are intentionally not published in the SDK/catalog
-// until the DownloadAdded metadata producer and remaining plugin UI exist.
-// They accept only a real persisted invocation, never worker-provided patches.
+// These private host operations accept only a real persisted invocation,
+// never worker-provided metadata, subscription identities or field patches.
 func (a *App) subscribeGroupInvocation(ctx context.Context, run PluginRun, actions ...string) (PluginRun, subscribegroup.Configuration, error) {
 	var config subscribegroup.Configuration
 	installation, err := a.pluginStore.Installation(ctx, run.InstanceID)
@@ -204,9 +204,11 @@ func (a *App) configureSubscribeGroup(ctx context.Context, run *PluginRun) (json
 			return nil, err
 		}
 	}
-	// Category and download switches are independent. DownloadAdded will have
-	// its own scoped consumer once its frozen source metadata is implemented.
+	// Category and download switches independently scope their consumers.
 	if err = a.pluginStore.configureEventSubscriptionTx(ctx, tx, updated, "added", []string{"subscription.added"}, 0, config.Category); err != nil {
+		return nil, err
+	}
+	if err = a.pluginStore.configureEventSubscriptionTx(ctx, tx, updated, "downloaded", []string{"download.accepted"}, 0, config.Enabled && len(config.UpdateDetails) > 0); err != nil {
 		return nil, err
 	}
 	result, _ := json.Marshal(map[string]any{"configured": true, "history_cleared": config.Clear, "handled_cleared": config.ClearHandle})
@@ -238,12 +240,24 @@ func (p *PluginStore) subscribeGroupHistoryTx(ctx context.Context, tx *sql.Tx, i
 		return nil, 0, err
 	}
 	var value any
-	if json.Unmarshal(raw, &value) != nil {
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	if decoder.Decode(&value) != nil {
 		return nil, 0, bad("INVALID_PLUGIN_DATA", "订阅规则历史不是有效JSON")
 	}
-	falsey := value == nil || value == false || value == float64(0) || value == ""
-	if values, ok := value.(map[string]any); ok && len(values) == 0 {
-		falsey = true
+	falsey := value == nil
+	switch v := value.(type) {
+	case bool:
+		falsey = !v
+	case string:
+		falsey = v == ""
+	case json.Number:
+		n, parseErr := strconv.ParseFloat(string(v), 64)
+		falsey = parseErr == nil && n == 0
+	case map[string]any:
+		falsey = len(v) == 0
+	case []any:
+		falsey = len(v) == 0
 	}
 	if falsey {
 		return []json.RawMessage{}, revision, nil
@@ -331,6 +345,19 @@ func applySubscribeGroupFields(sub *Subscription, fields map[string]any) error {
 	return nil
 }
 
+// The caller holds downloadMu then subMu and persists the changed subscription
+// in this transaction. These internally applied fields do not revoke choices
+// already selected at the exact current revision; a prior user edit still does.
+func advanceSubscribeGroupRevisionTx(ctx context.Context, tx *sql.Tx, sub *Subscription) error {
+	previousRevision := sub.Revision
+	sub.Revision++
+	if _, err := tx.ExecContext(ctx, `UPDATE records SET payload=json_set(payload,'$.subscription_revision',?),updated_at=? WHERE kind='intent' AND json_extract(payload,'$.subscription_id')=? AND json_extract(payload,'$.subscription_revision')=? AND json_extract(payload,'$.state') IN ('planned','submitting','reconcile_pending')`, sub.Revision, now(), sub.ID, previousRevision); err != nil {
+		return err
+	}
+	_, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), sub.ID)
+	return err
+}
+
 func (a *App) applySubscribeGroupAdded(ctx context.Context, run PluginRun, batchID string) (json.RawMessage, error) {
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
@@ -380,9 +407,11 @@ func (a *App) applySubscribeGroupAdded(ctx context.Context, run PluginRun, batch
 			return nil, err
 		}
 	}
-	// Metadata resolution is read-only. Read and update the current row under
-	// the same core subscription lock; later user edits are never overwritten
-	// using an earlier planned copy of the subscription.
+	// Resolve metadata before waiting for a selected download. Once it finishes,
+	// read the current subscription and preserve its selected choices together;
+	// never overwrite a live submit context or an earlier user-edited revision.
+	a.downloadMu.Lock()
+	defer a.downloadMu.Unlock()
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
@@ -422,8 +451,7 @@ func (a *App) applySubscribeGroupAdded(ctx context.Context, run PluginRun, batch
 		}
 		after, _ := json.Marshal(current)
 		if !reflect.DeepEqual(before, after) {
-			current.Revision++
-			if _, err = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), current.ID); err != nil {
+			if err = advanceSubscribeGroupRevisionTx(ctx, tx, &current); err != nil {
 				return nil, err
 			}
 		}

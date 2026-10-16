@@ -70,6 +70,9 @@ func (a *App) commitRecognitionWords(ctx context.Context, revision int64, rules 
 	if err != nil {
 		return err
 	}
+	if len(raw) > pluginDataValueLimit {
+		return bad("INVALID_RECOGNITION_WORDS", "识别词超过允许范围")
+	}
 	sealed, err := a.pluginStore.seal("core_words", "system", "CustomIdentifiers", raw)
 	if err != nil {
 		return err

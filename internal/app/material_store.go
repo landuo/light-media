@@ -246,6 +246,10 @@ func (a *App) resolveMaterial(ctx context.Context, ref, purpose string) ([]byte,
 }
 
 func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
+	source, e := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
+	if e != nil {
+		return e
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return e
@@ -254,7 +258,9 @@ func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
 	if e = txPut(ctx, tx, "intent", in.ID, in); e != nil {
 		return e
 	}
-	if e = recordDomainEventTx(ctx, tx, DomainEvent{SchemaVersion: 1, EventID: domainEventID("download.accepted", in.ID), Type: "download.accepted", OccurredAt: now(), WorkflowID: in.WorkflowID, JobID: j.ID, MediaID: mediaKey(in.Media), IntentID: in.ID, Purpose: in.Purpose}); e != nil {
+	event := DomainEvent{SchemaVersion: 1, EventID: domainEventID("download.accepted", in.ID), Type: "download.accepted", OccurredAt: now(), WorkflowID: in.WorkflowID, JobID: j.ID, MediaID: mediaKey(in.Media), IntentID: in.ID, Purpose: in.Purpose}
+	snapshot := downloadAddedSnapshot{DownloadID: in.ID, DownloadKind: "intent", Hash: in.Hash, SiteID: in.SiteID, MediaType: in.Media.MediaType, TMDBID: in.Media.ID, HasContext: source != nil, HasHistory: true, Context: source}
+	if e = a.recordDownloadAddedTx(ctx, tx, event, snapshot); e != nil {
 		return e
 	}
 	return tx.Commit()

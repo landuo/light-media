@@ -502,7 +502,22 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		return p, e
 	}
 	p.MaterialState = "archived"
-	if e = a.Store.Put(ctx, "download_preview", p.ID, p); e != nil {
+	sourceContext, e := a.prepareDownloadContext(ctx, "download_preview", p.ID, p.Hash, fresh)
+	if e != nil {
+		return p, e
+	}
+	previewTx, e := a.Store.DB.BeginTx(ctx, nil)
+	if e != nil {
+		return p, e
+	}
+	defer previewTx.Rollback()
+	if e = txPut(ctx, previewTx, "download_preview", p.ID, p); e != nil {
+		return p, e
+	}
+	if e = a.saveDownloadContextTx(ctx, previewTx, sourceContext); e != nil {
+		return p, e
+	}
+	if e = previewTx.Commit(); e != nil {
 		return p, e
 	}
 	a.materialMu.Lock()
@@ -562,11 +577,28 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	intent.DirectoryID, intent.DownloadPath, intent.DirectorySnapshot = p.DirectoryID, p.DownloadPath, p.DirectorySnapshot
 	intent.DownloaderSnapshot = p.DownloaderSnapshot
 	intent.MaterialRef, intent.MaterialState, intent.Purpose = p.MaterialRef, p.MaterialState, materialPurpose
+	sourceContext, e := a.loadDownloadContext(ctx, "download_preview", p.ID, p.Hash)
+	if e != nil {
+		return intent, e
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return intent, e
 	}
 	defer tx.Rollback()
+	if p.SubscriptionID != "" {
+		// A plugin fill or user edit can commit after the preliminary read but
+		// before this transaction. Never create an obsolete selected intent or
+		// leave its reservation outside the subscription revision boundary.
+		var raw []byte
+		if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription' AND id=?`, p.SubscriptionID).Scan(&raw); e != nil {
+			return intent, e
+		}
+		var current Subscription
+		if json.Unmarshal(raw, &current) != nil || current.ID != p.SubscriptionID || current.State != "active" || current.Revision != p.Revision {
+			return intent, bad("SUBSCRIPTION_CHANGED", "订阅已修改或暂停，请重新检查")
+		}
+	}
 	if e = pinMaterialTx(ctx, tx, p.MaterialRef, p.Hash); e != nil {
 		return intent, e
 	}
@@ -575,6 +607,12 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	}
 	if e = txPut(ctx, tx, "intent", intent.ID, intent); e != nil {
 		return intent, e
+	}
+	if sourceContext != nil {
+		sourceContext.DownloadKind, sourceContext.DownloadID = "intent", intent.ID
+		if e = a.saveDownloadContextTx(ctx, tx, *sourceContext); e != nil {
+			return intent, e
+		}
 	}
 	if _, e = enqueueTx(ctx, tx, "download", map[string]string{"id": intent.ID}, intent.WorkflowID); e != nil {
 		return intent, e
@@ -588,7 +626,9 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e := a.Store.Get(ctx, "intent", key, &in); e != nil {
 		return e
 	}
-	if in.State == "imported" || in.State == "cancelled" {
+	if in.State == "accepted" || in.State == "downloading" || in.State == "downloaded" || in.State == "imported" || in.State == "cancelled" {
+		// Acceptance and its event commit with the intent. A retried submission
+		// job must not recheck a later subscription revision or replay the event.
 		return nil
 	}
 	if in.SubscriptionID != "" {
@@ -695,6 +735,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e != nil {
 		return e
 	}
+	var sourceResource sites.Resource
 	e = a.withSite(ctx, site, in.Auto, func(c *sites.Client) error {
 		query := request.Query
 		if query == "" {
@@ -714,6 +755,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			}
 			return bad("REVIEW_RESOURCE_CHANGED", "提交前未能重新确认资源，请重新预览")
 		}
+		sourceResource = *fresh
 		if err != nil {
 			a.log("WARN", "sites", "partial_recheck", "同页其他资源解析不完整；当前资源已独立重新确认", in.WorkflowID, j.ID)
 		}
@@ -775,6 +817,10 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e = a.guardDownloaderSnapshot(ctx, in); e != nil {
 		return e
 	}
+	sourceContext, e := a.prepareDownloadContext(ctx, "intent", in.ID, in.Hash, sourceResource)
+	if e != nil {
+		return e
+	}
 	release, e := a.beginWrite()
 	if e != nil {
 		return e
@@ -782,7 +828,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	defer release()
 	in.State = "submitting"
 	in.UpdatedAt = now()
-	if e = a.Store.Put(ctx, "intent", in.ID, in); e != nil {
+	if e = a.stageIntentDownload(ctx, in, sourceContext); e != nil {
 		return e
 	}
 	result, e := client.Add(ctx, download.AddRequest{Torrent: torrent, SavePath: effectiveIntentDownloadPath(in, d), Tags: []string{"light-media"}})

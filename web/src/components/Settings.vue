@@ -5,6 +5,9 @@ import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
 import ApiTokenSettings from './ApiTokenSettings.vue';
 const RuleManager = defineAsyncComponent(() => import('./RuleManager.vue'));
+const ResourceMetadataSettings = defineAsyncComponent(
+  () => import('./ResourceMetadataSettings.vue'),
+);
 const emit = defineEmits<{ organize: [paths: string[]] }>();
 function routeTab() {
   const value = new URLSearchParams(location.hash.split('?')[1] || '').get('tab');
@@ -217,6 +220,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     </div>
     <div v-if="visitedTabs.has('rule')" v-show="tab === 'rule'">
       <RuleManager />
+      <ResourceMetadataSettings />
     </div>
     <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'" class="settings-page">
       <section v-if="logging" class="panel">

@@ -6,8 +6,8 @@ import (
 	"slices"
 )
 
-// Source form is retained for the native handler's eventual platform wiring;
-// exposing this value does not register an executable plugin/catalog entry.
+// Source form, including original labels and option shapes, is returned by the
+// native handler without inventing a second configuration UI.
 //
 //go:embed form.json
 var sourceForm json.RawMessage

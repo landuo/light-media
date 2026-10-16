@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS plugin_site_control_watchers(instance_id TEXT PRIMARY
 CREATE TABLE IF NOT EXISTS plugin_site_control_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_site_statistic_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_subscribe_group_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL,FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
+CREATE TABLE IF NOT EXISTS resource_metadata_settings(id TEXT PRIMARY KEY,revision INTEGER NOT NULL,sealed BLOB NOT NULL,updated_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_api_calls(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,scope BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_installations(
  instance_id TEXT PRIMARY KEY,plugin_id TEXT NOT NULL,version TEXT NOT NULL,manifest_schema INTEGER NOT NULL,
@@ -228,7 +229,7 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 		return nil, err
 	}
 	limit := pluginValueLimit
-	if kind == "data" {
+	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" {
 		limit = pluginDataValueLimit
 	}
 	if len(sealed) < aead.NonceSize()+aead.Overhead() || len(sealed) > limit+aead.NonceSize()+aead.Overhead() {

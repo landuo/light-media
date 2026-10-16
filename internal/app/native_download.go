@@ -82,7 +82,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 			return out, bad("DIRECTORY_OVERLAP", "资源目录不能与媒体库目录相同或互相包含")
 		}
 	}
-	if in.TMDBID != 0 && !validMedia(in.MediaType, in.TMDBID) {
+	if in.TMDBID != 0 && (!validMedia(in.MediaType, in.TMDBID) || !domainMediaPattern.MatchString(in.MediaType+":"+strconv.FormatInt(in.TMDBID, 10))) {
 		return out, bad("INVALID_MEDIA", "高级选项中的影视类型或TMDB ID无效")
 	}
 	// Site browsing preserves its explicit query (including an empty recent
@@ -170,6 +170,10 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 			out.Media = &catalog.Media{ID: cached.Data.ID, MediaType: cached.Data.MediaType, Title: cached.Data.Title, Year: cached.Data.Year, PosterPath: cached.Data.PosterPath, BackdropPath: cached.Data.BackdropPath}
 		}
 	}
+	sourceContext, err := a.prepareDownloadContext(ctx, "native_download", out.ID, out.Hash, resource)
+	if err != nil {
+		return out, err
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return out, err
@@ -188,6 +192,9 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 		return out, err
 	}
 	if err = txPut(ctx, tx, "native_download", out.ID, out); err != nil {
+		return out, err
+	}
+	if err = a.saveDownloadContextTx(ctx, tx, sourceContext); err != nil {
 		return out, err
 	}
 	if _, err = enqueueTx(ctx, tx, "native_download", map[string]string{"id": out.ID}, out.WorkflowID); err != nil {
@@ -273,7 +280,7 @@ func (a *App) runNativeDownload(ctx context.Context, job Job, key string) (resul
 	in.Error = ""
 	in.UpdatedAt = now()
 	a.event(ctx, job, "INFO", "downloads", "accepted", "下载器已接收资源，目录监听负责后续识别整理")
-	return a.Store.Put(ctx, "native_download", in.ID, in)
+	return a.acceptNativeDownload(ctx, in, job)
 }
 
 func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, action string) error {

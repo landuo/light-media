@@ -232,6 +232,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == "site.statistics.refresh_domain" {
 		return a.pluginSiteStatisticAPIHost(ctx, installation, run, raw)
 	}
+	if method == "subscriptions.rules.configure" || method == "subscriptions.rules.apply" {
+		return a.pluginSubscribeGroupHost(ctx, installation, run, method, raw)
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	if err := a.validatePluginHostRun(ctx, installation, run, method); err != nil {
