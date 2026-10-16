@@ -18,7 +18,7 @@ type SystemProcessConfiguration struct {
 	DashboardWidgetRefresh json.RawMessage `json:"dashboard_widget_refresh,omitempty"`
 }
 
-func processConfigNumber(raw json.RawMessage, fallback float64) (float64, error) {
+func pluginConfigNumber(raw json.RawMessage, fallback float64) (float64, error) {
 	if len(raw) == 0 || string(raw) == "null" || string(raw) == `""` {
 		return fallback, nil
 	}
@@ -38,11 +38,11 @@ func processConfigNumber(raw json.RawMessage, fallback float64) (float64, error)
 }
 
 func (c SystemProcessConfiguration) Display() (int, float64, error) {
-	size, err := processConfigNumber(c.DashboardWidgetSize, 8)
+	size, err := pluginConfigNumber(c.DashboardWidgetSize, 8)
 	if err != nil || (size != 4 && size != 6 && size != 8 && size != 12) {
 		return 0, 0, errors.New("invalid dashboard size")
 	}
-	refresh, err := processConfigNumber(c.DashboardWidgetRefresh, 0)
+	refresh, err := pluginConfigNumber(c.DashboardWidgetRefresh, 0)
 	if err != nil || refresh < 0 || refresh > 86400 {
 		return 0, 0, errors.New("invalid dashboard refresh")
 	}

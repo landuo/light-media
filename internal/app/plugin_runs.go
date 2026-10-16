@@ -109,6 +109,12 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=1,updated_at=? WHERE instance_id=?`, now(), instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	run, err := p.enqueueRunTx(ctx, tx, instanceID, "init", nil)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -359,6 +365,12 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 		if _, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,input=?,updated_at=? WHERE id=?`, value.Revision, pendingSealed, now(), pendingID); err != nil {
 			return err
 		}
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+		return err
 	}
 	if err := tx.Commit(); err != nil {
 		return err

@@ -63,6 +63,8 @@ func (e *ServiceError) Error() string {
 		return "连接飞牛影视超时，请检查地址、端口和网络"
 	case "connection_refused":
 		return "飞牛影视端口拒绝连接，请确认端口正确且服务已启动"
+	case "scan_rejected":
+		return "飞牛影视未接受媒体库刷新请求"
 	default:
 		return "飞牛影视暂时不可用，请稍后重试"
 	}
@@ -95,6 +97,10 @@ type serviceSession struct {
 	requests int
 }
 
+// The original refresh endpoints use POST with an empty body, signed as an
+// empty payload. This is distinct from POSTing a JSON empty object.
+type serviceEmptyPost struct{}
+
 func (*serviceSession) String() string   { return "fnOS Media session [redacted]" }
 func (*serviceSession) GoString() string { return "fnos.serviceSession{[redacted]}" }
 
@@ -112,7 +118,9 @@ func (s *serviceSession) call(ctx context.Context, endpoint string, body any, qu
 	var payload []byte
 	if body != nil {
 		var err error
-		payload, err = json.Marshal(body)
+		if _, empty := body.(serviceEmptyPost); !empty {
+			payload, err = json.Marshal(body)
+		}
 		if err != nil || query != "" {
 			return &ServiceError{Code: "invalid_input"}
 		}
@@ -219,6 +227,10 @@ func (s *Service) session(ctx context.Context) (*serviceSession, error) {
 }
 
 func (s *serviceSession) libraries(ctx context.Context) ([]ServiceLibrary, error) {
+	return s.readLibraries(ctx, true)
+}
+
+func (s *serviceSession) readLibraries(ctx context.Context, sortByName bool) ([]ServiceLibrary, error) {
 	endpoint := "/mediadb/list"
 	if s.admin {
 		endpoint = "/mdb/list"
@@ -254,7 +266,9 @@ func (s *serviceSession) libraries(ctx context.Context) ([]ServiceLibrary, error
 		}
 		result = append(result, lib)
 	}
-	sort.SliceStable(result, func(i, j int) bool { return result[i].Name < result[j].Name })
+	if sortByName {
+		sort.SliceStable(result, func(i, j int) bool { return result[i].Name < result[j].Name })
+	}
 	return result, nil
 }
 

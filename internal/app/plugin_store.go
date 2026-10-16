@@ -127,8 +127,25 @@ CREATE TABLE IF NOT EXISTS plugin_runs(
  input BLOB NOT NULL,result BLOB,error_code TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL,updated_at TEXT NOT NULL,
  FOREIGN KEY(instance_id) REFERENCES plugin_installations(instance_id));
 CREATE INDEX IF NOT EXISTS plugin_runs_pending ON plugin_runs(state,created_at,id);
+CREATE TABLE IF NOT EXISTS plugin_event_subscriptions(
+ instance_id TEXT NOT NULL,handler_key TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,
+ event_types TEXT NOT NULL,delay_ms INTEGER NOT NULL,active INTEGER NOT NULL,cursor INTEGER NOT NULL,
+ PRIMARY KEY(instance_id,handler_key),FOREIGN KEY(instance_id) REFERENCES plugin_installations(instance_id));
+CREATE TABLE IF NOT EXISTS plugin_event_batches(
+ id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,handler_key TEXT NOT NULL,generation INTEGER NOT NULL,
+ config_revision INTEGER NOT NULL,due_at INTEGER NOT NULL,run_id TEXT UNIQUE,created_at TEXT NOT NULL,state TEXT NOT NULL DEFAULT 'collecting',item_count INTEGER NOT NULL DEFAULT 0,
+ FOREIGN KEY(instance_id) REFERENCES plugin_installations(instance_id));
+CREATE INDEX IF NOT EXISTS plugin_event_batches_due ON plugin_event_batches(run_id,due_at);
+CREATE INDEX IF NOT EXISTS plugin_event_batches_owner ON plugin_event_batches(instance_id,handler_key,generation,config_revision,state,run_id);
+CREATE TABLE IF NOT EXISTS plugin_event_deliveries(
+ instance_id TEXT NOT NULL,handler_key TEXT NOT NULL,event_id TEXT NOT NULL,event_seq INTEGER NOT NULL,batch_id TEXT NOT NULL,
+ PRIMARY KEY(instance_id,handler_key,event_id),FOREIGN KEY(batch_id) REFERENCES plugin_event_batches(id));
+CREATE INDEX IF NOT EXISTS plugin_event_deliveries_batch ON plugin_event_deliveries(batch_id,event_seq);
 INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
+		return nil, err
+	}
+	if _, err = tx.ExecContext(ctx, domainEventSchema); err != nil {
 		return nil, err
 	}
 	if err = tx.Commit(); err != nil {
@@ -341,14 +358,25 @@ func (p *PluginStore) SaveData(ctx context.Context, instanceID, key string, expe
 // Uninstall keeps all config/data and migration receipts. Reset removes only
 // this instance's config/KV; it does not delete its package or migration audit.
 func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
-	result, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=?`, now(), instanceID)
+	tx, err := p.store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	result, err := tx.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=?`, now(), instanceID)
 	if err != nil {
 		return err
 	}
 	if changed, _ := result.RowsAffected(); changed == 0 {
 		return sql.ErrNoRows
 	}
-	return nil
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
+		return err
+	}
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
@@ -365,6 +393,12 @@ func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 		return sql.ErrNoRows
 	}
 	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, instanceID); err != nil {
+		return err
+	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
+		return err
+	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return err
 	}
 	return tx.Commit()
