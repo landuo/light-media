@@ -1,6 +1,6 @@
 # 纯 Go 插件运行与 MoviePilot 插件迁移方案
 
-状态：代码审计与逐插件实现阶段，2026-10-16；不是完整平台或插件迁移完成报告。本文件不包含原始凭据或插件配置值，原 MoviePilot 保持只读。
+状态：代码审计与逐插件实现阶段，2026-10-17；不是完整平台或插件迁移完成报告。本文件不包含原始凭据或插件配置值，原 MoviePilot 保持只读。
 
 ## 交付含义
 
@@ -153,7 +153,8 @@ A/B 之后立即接实际插件切片，不等待通用市场、通用脚本引�
 - HTTP 已接安装目录、已安装列表、表单、CAS 保存、重载、重置、保留数据卸载、执行元数据、只读详情和仪表板数据；经过现有管理员认证和同源检查，页面查询与执行共用单进程限额。新增 `PluginUnInstall 2.2` 已接真实宿主卸载、原版非强制清理 guard、自卸载加密收据及崩溃恢复，详见 `plugin-uninstall-go-port.md`。现有 v1 事实已接持久投递，定时计算/队列已接共享识别词及站点统计的一次性刷新；其他原版事件、其他定时业务及服务管理界面、专属 API/命令、完整迁移工具、另外 13 个插件业务及正式服务切换均未完成。十个已有不同程度 Go 行为的处理器不能代替各自剩余的平台交互、迁移和上线验收。
 - `MPServerStatus 1.4` 已接真实 Go SDK、固定公共探针、按实例易失采样及 DNS/TLS 正负缓存，配置/重载/卸载主动取消旧探针。原表单、12 卡详情和两表、六卡仪表板数据及移动布局已有隔离浏览器证据；完整个性化仪表板与正式迁移仍未交付。源网络语义、平台边界及验证见 `plugin-server-status-go-port.md`。
 - 完整 MetaInfo/MetaBase 标题对象、修改器、状态保存和拼音依赖已在正式 `internal/releasemeta` 实现；现有普通下载消费者保持既有入口，完整RSS对象纯包也已落地，110个实际原链路参考和复制/状态语义已验证，但App消费者接线尚未完成，见 `metainfo-go-port.md` 与 `rss-context-full-go-port.md`。RemoveLink 2.17 的正式纯包及连续本地宿主已通过真实临时文件/native inotify验证，修后正式NAS包28项零跳过；App配置发布屏障、显式reload、SQL/核心Effects与生产注册仍未接通，见 `plugin-remove-link-go-port.md` 与 `plugin-remove-link-host-go-port.md`。ScrapeFileClean 1.0.7另有独立正式纯包和NAS10项验证，其Stop丢弃队列等算法不与RemoveLink合并，见 `plugin-scrape-file-clean-go-port.md`。
-- PL-37–40 文件夹/排序已接加密CAS快照、原新旧格式、原外观选项、实际拖入/混排/组内小数排序及卸载清成员；正常/竞态/全量、134项前端、实际浏览器与NAS隔离验证通过。原用户布局未迁移，raw管理API别名和分身入组仍未接通，见 `plugin-organization-go-port.md`。
+- PL-37–40 文件夹/排序已接加密CAS快照、原新旧格式、原外观选项、实际拖入/混排/组内小数排序及卸载清成员；正常/竞态/全量、134项前端、实际浏览器与NAS隔离验证通过。补齐folders和PluginOrder原raw管理响应/别名、未设置顺序presence与20条实际ASGI参考，联合NAS34目标全部通过。原用户布局未迁移，分身入组、其他完整管理API仍待接通，见 `plugin-organization-go-port.md`。
+- RemoveLink私有SQL journal已落地，密文分行保存全部当前Durable，支持同事务updateTx、精确原JSON/整数、完整集合校验、并发/回滚/重启隔离与NAS验证。App配置切换屏障、原显式reload和核心Effects仍需接线；不能因该适配器实现而登记可安装，见 `plugin-remove-link-journal-go-port.md`。
 - PL-30 插件日志已新增具体实例的历史、实时流、纯文本新窗口和完整保留日志 ZIP，以及原版弹窗的筛选/暂停/跟随操作。结构化日志投影与原文件轮转包的差异、限制和分层证据见 `plugin-logs-go-port.md`；旧 Python 日志尚未导入，此入口不增加已迁移插件数。
 
 验证包含本地测试/浏览器隔离实例与 NAS 独占容器，尚未部署正式服务、迁移正式插件或停止原版服务。整体目标保持“完整原版插件平台与全部 23 个已安装插件”。

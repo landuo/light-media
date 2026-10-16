@@ -96,7 +96,7 @@ func (a *App) handler() http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
 		w.Header().Set("X-Frame-Options", "DENY")
-		if a.servePluginCustomAPI(w, r) {
+		if a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) {
 			return
 		}
 		if strings.HasPrefix(r.URL.Path, "/api/") {

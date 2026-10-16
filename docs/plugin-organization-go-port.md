@@ -19,7 +19,13 @@
 
 新表`plugin_organization`加密保存两个独立源值和revision。当前应用只有admin.id=1，原全局分组/当前用户顺序在一个owner1快照中提交；若未来增加多用户，必须拆分全局分组与各用户顺序，不能将owner1当通用多用户模型。文件夹字段与日志/普通Settings分离，不属于任何插件KV。整个JSON沿用1MiB插件值上限。
 
-前端通过管理员/同源保护的`GET/PUT /api/plugins/organization`提交完整快照；CAS避免另一个页面的旧快照覆盖新成员，失败不报成功。原`/api/v1/plugin/folders`等raw管理路由尚未提供兼容别名，不能据此声称所有原外部API均已兼容。正常卸载与PluginUnInstall批量卸载在原事务内移除相应成员，保留外观、其他成员、PluginOrder以及原卸载配置/KV语义。持久化失败回滚整个卸载。
+前端通过管理员/同源保护的`GET/PUT /api/plugins/organization`提交完整快照；CAS避免另一个页面的旧快照覆盖新成员，失败不报成功。正常卸载与PluginUnInstall批量卸载在原事务内移除相应成员，保留外观、其他成员、PluginOrder以及原卸载配置/KV语义。持久化失败回滚整个卸载。
+
+原管理兼容路由已补`GET/POST /api/v1/plugin/folders`、`POST/DELETE /api/v1/plugin/folders/{name}`、`PUT /api/v1/plugin/folders/{name}/plugins`以及`GET/POST /api/v1/user/config/PluginOrder`，另提供v2别名。响应使用原直接字典或`success/message/message_i18n/data`，不套本应用data/request_id包装。重复创建和删除不存在分组仍返回HTTP200但success=false。原PUT members会把新对象替换成旧列表，完整外观编辑沿用POST folders，不擅自合并这个旧接口的行为。
+
+兼容路由每次在一个短SQL事务内读取/更新其拥有的源字段，文件夹写入不覆盖PluginOrder。加密快照增加私有order_present，保留原未设置PluginOrder返回null、明确保存空列表返回[]的区别；native UI继续总是收到列表。旧版本加密行均来自完整native快照，缺少该标记时按已明确保存处理。卸载清成员保留此状态。只接受本应用管理员会话与同源写入，不接受插件API key或旧MoviePilot登录态。
+
+明确平台边界：有效PluginOrder保持列表及既有成员/嵌套/ID校验，不照通用原user/config接口接收任何标量；坏存储返回503，不按原GET folders异常分支冒充空字典。原响应的中文message_i18n在当前中文界面与message一致，其他语言翻译未接入。原任意大小/任意结构输入不属于兼容承诺，仍保留现有大小与路径检查。
 
 背景只在浏览器显示用户设置的无userinfo HTTP(S) URL，不由宿主请求；javascript/data/带凭据URL不渲染。图标/颜色/渐变显示限定原预设，未知字段仍保存。这些是明确渲染边界，不是原任意CSS/脚本运行能力。
 
@@ -30,3 +36,7 @@
 真实浏览器连接独占Go App/SDK与SQLite，已操作新建、重命名、外观保存、原生拖入新/旧分组、根混排、组内排序、移出、删除组后插件保留及刷新保留。桌面1280×720与手机390×844检查无横向溢出；样式公共部分独立于配置弹窗加载，避免先开文件夹时关闭按钮/输入样式缺失。截图保存在本次Codex工作区outputs，未作为用户数据导入。
 
 NAS两个CGO0 linux/amd64二进制在alpine:3.22、UID1000:GID1001、256MiB内存/GOMEMLIMIT64MiB、只读/无网络/无capability容器执行：App所选23顶层用例、rsscontext4顶层用例全部通过、零跳过，退出0且无OOM。后者完整保留110个实际原RSS源码参考，应用RSS消费者仍未接入。二进制本地/远端SHA一致；容器和owner标记临时目录已清理，正式三个服务启动时间/重启数不变，见[隔离证据](plugin-organization-nas-verification.json)。NAS此轮为后端/纯包证据，浏览器UI验证使用本机实际构建。
+
+2026-10-17兼容接口增量：只读执行实际安装版的五个folder函数、两个user/config函数及原Response模型AST，使用实际FastAPI/Pydantic和合成内存配置/管理员，未import原应用或读取用户配置。20个顺序ASGI参考覆盖完整响应、业务false、v2读取、未知外观字段、旧PUT替换语义、独立顺序保留和422/405；Go真实Handler逐项对比响应与完整文件夹状态。参考与离线脚本为`testdata/plugins/plugin-organization-api-original-reference.json`、`plugin-organization-api-reference.py`。额外测试覆盖会话/Origin、SQL失败整批回滚及脱敏、并发创建保留其他分组/顺序、未设置顺序重启和旧加密行兼容；本增量尚未更改前端或迁移实际布局。
+
+该增量与私有清理journal一起通过全仓普通测试（App 88.253s）、modernconly全量App（90.434s）、相关目标竞态（48.928s）、vet和模块校验。新CGO0 Linux/amd64 App二进制SHA-256为`65e3ddf5d3bdc1713ffc412b54e09222d4956830be248a83ecb2b98c0009316a`，本地/NAS相同。NAS新建隔离容器实际通过34个顶层测试：organization7、journal8、store7、uninstall12，零失败/零跳过、退出0且无OOM；沿用只读、无网络、普通UID及256MiB限制，并核对swap和进程上限。临时容器及owner目录已清理，三项正式服务状态未变，见[本轮NAS收据](plugin-organization-journal-nas-verification.json)。这不代替前文的浏览器UI证据，也不计为正式布局或插件迁移。

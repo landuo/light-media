@@ -7,7 +7,7 @@
 | CategoryEditor | 二级分类策略 | 1.3 | 停用 | 0 | Go 执行及分类引擎已验证；支持通用 TMDB 条件、范围、YAML 别名/合并；待正式配置迁移 |
 | TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 418 | 待实现、待迁移、待验证 |
 | SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | Go 快照统计、原版表单/卡片/饼图/明细、一次性刷新、持久站内通知及按域名刷新 API 已接入；通知通道、完整账户字段/域名别名、历史/配置正式迁移和仪表板布局仍待完成 |
-| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 原算法、原表单及 Go SDK 纯包已验证；正式连续本地宿主含 native inotify、真实删除与恢复回归，NAS 28项通过。App配置切换屏障、SQL/核心Effects及正式迁移未接入，不在可安装目录 |
+| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 原算法、原表单及 Go SDK 纯包已验证；正式连续本地宿主含 native inotify、真实删除与恢复回归，NAS 28项通过；私有加密SQL journal亦已实现并实机隔离验证。App配置切换屏障、核心Effects及正式迁移未接入，不在可安装目录 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 待实现、待迁移、待验证 |
@@ -53,6 +53,8 @@
 服务监控的完整原树、固定网络适配、缓存/配置并发和页面验证见 [plugin-server-status-go-port.md](plugin-server-status-go-port.md)。清理媒体文件的已移植纯算法与尚待接入的生产副作用边界见 [plugin-remove-link-go-port.md](plugin-remove-link-go-port.md)。
 
 RemoveLink 连续本地宿主及修复后的正常关闭恢复、Linux 原生事件、文件身份和逐动作收据见 [plugin-remove-link-host-go-port.md](plugin-remove-link-host-go-port.md)。这些包验证尚不等于 App 已具备生产接线；配置切换与显式 reload 是独立的必要步骤。
+
+私有SQL journal的字段、分行加密、同事务updateTx和恢复验证见 [plugin-remove-link-journal-go-port.md](plugin-remove-link-journal-go-port.md)。文件夹管理的原raw响应/路由兼容、20条实际ASGI参考与新NAS联合证据见文件夹专文；用户布局、全部23个插件配置及文件的正式迁移数量仍为0。
 
 插件文件夹/排序的现有可操作交互与原数据格式、额外平台限制和分层验证见 [plugin-organization-go-port.md](plugin-organization-go-port.md)。原用户布局仍未迁移，不能增加已迁移插件数。
 

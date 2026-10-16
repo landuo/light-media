@@ -57,3 +57,5 @@ Config 与 Effect.Payload 使用密文内的 opaque byte 槽保存，保留原�
 新增 host Durable 字段时，必须同时扩展本文件中的编码/解码和全字段测试；不能把当前显式字段映射当作对未来字段的自动兼容。
 
 本次窄目标验证：`go test ./internal/app -run '^TestPluginRemoveLinkJournal' -count=1` 通过（0.940s）；相同目标 `-race` 通过（4.587s）；`go vet ./internal/app` 退出 0。未运行全仓测试，也未进行 NAS 或真实媒体操作。
+
+后续与文件夹原管理接口增量联合验证：全仓普通测试、modernconly全量App、相关竞态、vet/模块校验全部通过。正式CGO0 Linux App测试二进制在NAS独占隔离容器执行34个顶层目标，其中本journal为8个；零跳过、零失败、无OOM，校验值与精确清理结果见[联合NAS收据](plugin-organization-journal-nas-verification.json)。只使用合成SQLite/SDK及自建临时文件，没有启动生产清理监听或导入用户配置。

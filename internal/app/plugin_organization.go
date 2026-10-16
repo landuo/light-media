@@ -19,6 +19,10 @@ type PluginOrganization struct {
 	Revision int64                      `json:"revision"`
 	Folders  map[string]json.RawMessage `json:"folders"`
 	Order    json.RawMessage            `json:"order"`
+	// The original user configuration distinguishes an unset PluginOrder
+	// (null) from an explicitly saved empty list. Keep that private metadata
+	// while the native UI always receives a usable list.
+	orderPresent bool
 }
 
 const pluginOrganizationSchema = `CREATE TABLE IF NOT EXISTS plugin_organization(
@@ -43,9 +47,17 @@ func (p *PluginStore) organization(ctx context.Context, db pluginOrganizationRea
 		return out, err
 	}
 	revision := out.Revision
-	if err := json.Unmarshal(raw, &out); err != nil {
+	var stored struct {
+		PluginOrganization
+		OrderPresent *bool `json:"order_present"`
+	}
+	if err := json.Unmarshal(raw, &stored); err != nil {
 		return out, err
 	}
+	out = stored.PluginOrganization
+	// All rows created before this field were written by the native complete
+	// organization endpoint, which always explicitly saved Order.
+	out.orderPresent = stored.OrderPresent == nil || *stored.OrderPresent
 	out.Revision = revision
 	return out, nil
 }
@@ -167,7 +179,10 @@ func (p *PluginStore) saveOrganizationTx(ctx context.Context, tx *sql.Tx, in Plu
 		return PluginOrganization{}, bad("PLUGIN_REVISION_CONFLICT", "插件文件夹或顺序已在其他页面更改，请刷新后重试")
 	}
 	in.Revision++
-	raw, err := pluginJSON(in, true)
+	raw, err := pluginJSON(struct {
+		PluginOrganization
+		OrderPresent bool `json:"order_present"`
+	}{in, in.orderPresent}, true)
 	if err != nil {
 		return PluginOrganization{}, err
 	}
@@ -180,6 +195,7 @@ func (p *PluginStore) saveOrganizationTx(ctx context.Context, tx *sql.Tx, in Plu
 }
 
 func (p *PluginStore) SaveOrganization(ctx context.Context, in PluginOrganization) (PluginOrganization, error) {
+	in.orderPresent = true
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return PluginOrganization{}, err

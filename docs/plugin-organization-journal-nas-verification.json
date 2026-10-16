@@ -1,0 +1,46 @@
+{
+  "id": "7c679bbb-c0c0-4521-bf76-0ad47389f623",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "modernconly",
+  "test_regex": "^TestPlugin(Organization|RemoveLinkJournal|Uninstall|Store)",
+  "sha256": "65e3ddf5d3bdc1713ffc412b54e09222d4956830be248a83ecb2b98c0009316a",
+  "remote_sha256": "65e3ddf5d3bdc1713ffc412b54e09222d4956830be248a83ecb2b98c0009316a",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 34,
+    "top_level_skips": 0,
+    "top_level_failures": 0,
+    "groups": {
+      "organization": 7,
+      "journal": 8,
+      "store": 7,
+      "uninstall": 12
+    }
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal organization raw management aliases, encrypted SQL journal, uninstall/store regression; synthetic owned SQLite/SDK fixtures only; no user layout/config/plugin migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}
