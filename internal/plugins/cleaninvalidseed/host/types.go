@@ -141,6 +141,11 @@ type Core interface {
 	Notice(context.Context, *sql.Tx, Invocation, Notice) error
 }
 type Options struct {
+	// BeforeRun is trusted native admission, called only after the internal
+	// action gate is held. It refreshes clients/roots while retaining the live
+	// source object. release retains the actual Core action lease through finish;
+	// worker JSON can neither provide the callback nor construct its lease.
+	BeforeRun   func(context.Context, Invocation) (Options, func(), error)
 	Binding     Binding
 	Journal     Journal
 	Core        Core

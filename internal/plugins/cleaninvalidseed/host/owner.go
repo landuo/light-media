@@ -43,6 +43,7 @@ type execution struct {
 	configReceipt   string
 	pins            map[string]Pin
 	readable        map[string]bool
+	releaseAction   func()
 }
 
 func Open(opts Options) (*Owner, error) {
@@ -95,13 +96,32 @@ func (o *Owner) enter(ctx context.Context, inv Invocation, config json.RawMessag
 		return nil, ctx.Err()
 	}
 	ok := false
+	var releaseAction func()
 	defer func() {
 		if !ok {
+			if releaseAction != nil {
+				releaseAction()
+			}
 			<-o.gate
 		}
 	}()
 	if inv.Binding.InstanceID != o.opts.Binding.InstanceID || inv.Binding.Generation != o.opts.Binding.Generation || inv.RunID == "" || inv.InputSHA == "" {
 		return nil, ErrUnsafe
+	}
+	if o.opts.BeforeRun != nil {
+		next, release, err := o.opts.BeforeRun(ctx, inv)
+		releaseAction = release
+		if err != nil {
+			return nil, err
+		}
+		if release == nil || next.BeforeRun == nil || next.Binding != inv.Binding || !sameControlBackend(next.Core, o.opts.Core) || !sameControlBackend(next.Journal, o.opts.Journal) {
+			return nil, ErrUnsafe
+		}
+		validated, err := Open(next)
+		if err != nil {
+			return nil, err
+		}
+		o.opts = validated.opts
 	}
 	proof, release, err := o.opts.Core.Guard(ctx, inv, Effect{Kind: "begin", Binding: inv.Binding, Authority: inv.Binding, Args: config})
 	_ = proof
@@ -141,7 +161,7 @@ func (o *Owner) enter(ctx context.Context, inv Invocation, config json.RawMessag
 		return nil, err
 	}
 	child, cancel := context.WithCancel(ctx)
-	e := &execution{o: o, inv: inv, effective: inv.Binding, ctx: child, cancel: cancel, selected: map[string]Downloader{}, lists: map[string]bool{}, pins: map[string]Pin{}, readable: map[string]bool{}}
+	e := &execution{o: o, inv: inv, effective: inv.Binding, ctx: child, cancel: cancel, selected: map[string]Downloader{}, lists: map[string]bool{}, pins: map[string]Pin{}, readable: map[string]bool{}, releaseAction: releaseAction}
 	e.proofs = map[string]json.RawMessage{}
 	e.nativeSnapshots = map[string]map[string]json.RawMessage{}
 	e.machine = seed.New(e)
@@ -173,6 +193,9 @@ func (e *execution) finish(sourceErr error) error {
 	e.o.runtimeConfig = raw(e.machine.Config)
 	defer e.cancel()
 	defer func() { <-e.o.gate }()
+	if e.releaseAction != nil {
+		defer e.releaseAction()
+	}
 	e.mu.Lock()
 	hostErr := e.hostErr
 	e.mu.Unlock()
@@ -328,6 +351,13 @@ func (o *Owner) Execute(ctx context.Context, inv Invocation) error {
 		return e.finish(ErrUnsafe)
 	}
 	switch t.Kind {
+	case "manual_service":
+		// The trusted platform's manual service action calls the same source
+		// function directly. It is not a date/cron job and has no misfire grace.
+		if t.Action != "clean_invalid_seed" || t.OccurrenceID == "" {
+			return e.finish(ErrUnsafe)
+		}
+		err = e.machine.Clean(e.ctx)
 	case "once", "service":
 		if o.opts.Now().Before(t.Due) {
 			return e.finish(ErrUnsafe)

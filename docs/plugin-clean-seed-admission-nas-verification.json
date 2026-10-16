@@ -1,0 +1,45 @@
+{
+  "id": "2a86d4a3-532f-4675-8130-0979faef0b80",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "packages": [
+    {
+      "id": "host",
+      "pkg": "./internal/plugins/cleaninvalidseed/host",
+      "expected_tests": 29,
+      "sha256": "f65e77c55649d26128ba5081fabed4f91a16b54126961c3274bec21807bd3963",
+      "remote_sha256": "f65e77c55649d26128ba5081fabed4f91a16b54126961c3274bec21807bd3963"
+    }
+  ],
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 29,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "Formal pure Go CleanInvalidSeed host/control interfaces, pinned source/failure-prefix provenance, per-effect recovery and owned filesystem/native transport fixtures. App journal is tested separately; This batch includes the additive BeforeRun admission lease and distinct manual-service triggers; actual App owner/Core/lifecycle tests are collected separately. Registration and original user migration are excluded. No existing torrents, media, source configuration or real notifications modified.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

@@ -22,7 +22,7 @@ func TestFormalHostSourceAndInstalledFailurePrefixProvenance(t *testing.T) {
 		Files         map[string]string `json:"files"`
 		Fixtures      map[string]string `json:"fixture_files"`
 	}
-	if json.Unmarshal(body, &manifest) != nil || manifest.Source != "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda" || manifest.AST != "0e8b6823865834f207ba1480bf2f73b91c46a2b7f51ac41c934f3cb7333af40a" || manifest.ProductionSQL || len(manifest.Files) != 11 {
+	if json.Unmarshal(body, &manifest) != nil || manifest.Source != "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda" || manifest.AST != "0e8b6823865834f207ba1480bf2f73b91c46a2b7f51ac41c934f3cb7333af40a" || manifest.ProductionSQL || len(manifest.Files) != 12 {
 		t.Fatal("invalid host provenance")
 	}
 	for _, files := range []map[string]string{manifest.Files, manifest.Fixtures} {

@@ -23,3 +23,9 @@ NAS linux/amd64、CGO_ENABLED=0 的同 26 项全部通过，0 跳过、0 失败�
 实际 App journal 的 4 项测试和私有上限的 1 项测试另在 [统一 24 项 NAS 记录](plugin-auto-transition-clean-journal-nas-verification.json) 中通过；其余 19 项是 AutoSignIn SQL/transition。这两份报告不覆盖随后编写的 BeforeRun lease、App owner/Core/barrier 或真实插件注册。
 
 后续仍须把真实下载器/目录的租约、共享 scheduler/队列、已确证失败与未知结果的终态、通知消费者、HTTP 操作、停止与重载 barrier 接入 App，并在原系统只读的前提下迁移配置、数据和引用。纯包测试、空配置安装和原 JSON 复制都不算迁移完成。
+
+## 后续原生 admission 扩展
+
+宿主现支持可信 `BeforeRun` 回调：先取得内部 action gate，再刷新真实下载器和目录权限；回调保留的 action 租约直到最终 checkpoint 完成才释放，所有 admission 失败路径也释放。只允许延续相同 Core/Journal，worker 不能传入回调或构造租约。新增手动服务 trigger 直接执行原 Clean，没有自动 date/cron 的一秒过期限制，也不消耗原单次日期计划。
+
+更新后的 host 清单 SHA256 为 `e4366611818dda698107b5730f149b297b3fe70dab13515683162818fb24d3fe`。NAS 以相同隔离条件通过全部 **29 项**、零失败/跳过且无 OOM；远端二进制 SHA256 与本机一致，容器和临时目录已清理，原服务不变，见 [admission NAS 记录](plugin-clean-seed-admission-nas-verification.json)。上文26项报告保留为首次迁入证据；这份29项报告仍不代替 App 生命周期、正式配置迁移或实际用户种子验证。

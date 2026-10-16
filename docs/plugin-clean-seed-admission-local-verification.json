@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-17",
+  "scope": "Additive trusted host BeforeRun lease and distinct manual-service invocation. App lifecycle/runtime proof is recorded separately.",
+  "formal_host_manifest_sha256": "e4366611818dda698107b5730f149b297b3fe70dab13515683162818fb24d3fe",
+  "normal": {
+    "package": "./internal/plugins/cleaninvalidseed/host",
+    "top_level_tests": 29,
+    "seconds": 2.331,
+    "exit_code": 0,
+    "evidence": "work/clean-host-manual-normal.log"
+  },
+  "race": {
+    "command": "go test -race -json ./internal/plugins/cleaninvalidseed/host ./internal/plugins/builtin -count=1 -timeout 120s",
+    "exit_code": 0,
+    "passed_top_level_tests": 42,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "packages": {
+      "light-media/internal/plugins/cleaninvalidseed/host": {"top_level_tests": 29, "seconds": 13.287},
+      "light-media/internal/plugins/builtin": {"top_level_tests": 13, "seconds": 2.291}
+    },
+    "evidence": "work/plugin-clean-admission-builtin-race.jsonl"
+  },
+  "vet": {
+    "command": "go vet ./internal/plugins/cleaninvalidseed/host ./internal/plugins/builtin",
+    "exit_code": 0,
+    "evidence": "work/plugin-clean-admission-builtin-vet.txt"
+  },
+  "nas_report": "docs/plugin-clean-seed-admission-nas-verification.json",
+  "not_claimed": ["App lifecycle integration", "Trusted external command ingress", "External notification delivery", "User data migration", "Production deployment"]
+}
