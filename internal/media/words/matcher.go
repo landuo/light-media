@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/dlclark/regexp2/v2"
+	"light-media/internal/pyregex"
 )
 
 const MaxBytes = 8 << 20
@@ -53,46 +54,6 @@ func New(rules []string) (*Matcher, error) {
 
 // Python named captures use the default Unicode classes, dollar boundary and
 // source capture order. RE2 mode would silently change these semantics.
-func pythonPattern(pattern string) string {
-	var out strings.Builder
-	class := false
-	for i := 0; i < len(pattern); {
-		if pattern[i] == '\\' && i+1 < len(pattern) {
-			// Python regex accepts an escaped underscore as a literal; the .NET
-			// parser rejects it. Current shared lists use this in language tags.
-			if pattern[i+1] == '_' {
-				out.WriteByte('_')
-				i += 2
-				continue
-			}
-			out.WriteString(pattern[i : i+2])
-			i += 2
-			continue
-		}
-		if pattern[i] == '[' {
-			class = true
-		}
-		if pattern[i] == ']' {
-			class = false
-		}
-		if !class && strings.HasPrefix(pattern[i:], "(?P<") {
-			out.WriteString("(?<")
-			i += 4
-			continue
-		}
-		if !class && strings.HasPrefix(pattern[i:], "(?P=") {
-			if end := strings.IndexByte(pattern[i+4:], ')'); end >= 0 {
-				out.WriteString(`\k<` + pattern[i+4:i+4+end] + ">")
-				i += 5 + end
-				continue
-			}
-		}
-		out.WriteByte(pattern[i])
-		i++
-	}
-	return out.String()
-}
-
 func (m *Matcher) compile(pattern string) (*regexp2.Regexp, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -101,10 +62,7 @@ func (m *Matcher) compile(pattern string) (*regexp2.Regexp, error) {
 		c := hit.Value.(cached)
 		return c.re, c.err
 	}
-	re, err := regexp2.Compile(pythonPattern(pattern), regexp2.OptionMaintainCaptureOrder())
-	if err == nil {
-		re.MatchTimeout = 50 * time.Millisecond
-	}
+	re, err := pyregex.Compile(pattern, false)
 	m.cache[pattern] = m.lru.PushFront(cached{pattern, re, err})
 	if m.lru.Len() > 1024 {
 		tail := m.lru.Back()

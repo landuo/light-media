@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"light-media/internal/decision"
+	"light-media/internal/priorityrules"
 	"light-media/internal/sites"
 )
 
@@ -23,6 +24,10 @@ type siteSearchOutput struct {
 // particular configured site and enforces its shared budget and cooldown.
 // Only the collector calls the progress callback / writes the HTTP stream.
 func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutput, run func(context.Context, SiteConfig) siteSearchOutput) (SearchOutput, error) {
+	filter, err := a.preparePriorityFilter(ctx, in)
+	if err != nil {
+		return out, err
+	}
 	selected := map[string]bool{}
 	selectedIDs := in.SiteIDs
 	settings := a.Settings()
@@ -104,13 +109,26 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			emitSearchProgress(ctx, out)
 		}
 	}
-	return out, ctx.Err()
+	if err := ctx.Err(); err != nil {
+		return out, err
+	}
+	out, err = filter.apply(ctx, a, out)
+	if err != nil {
+		emitSearchProgress(ctx, out)
+		return out, err
+	}
+	sortSearchCandidates(out.Candidates, in.Policy)
+	emitSearchProgress(ctx, out)
+	return out, nil
 }
 
 func sortSearchCandidates(candidates []Candidate, policy Policy) {
 	sort.SliceStable(candidates, func(i, j int) bool {
 		if candidates[i].Accepted != candidates[j].Accepted {
 			return candidates[i].Accepted
+		}
+		if left, right := priorityrules.PriorityKey(candidates[i].Resource.PriorityOrder), priorityrules.PriorityKey(candidates[j].Resource.PriorityOrder); left != right {
+			return left > right
 		}
 		left, right := decision.Rank(candidates[i].Resource, decisionPolicy(policy)), decision.Rank(candidates[j].Resource, decisionPolicy(policy))
 		if left != right {

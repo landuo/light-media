@@ -20,19 +20,21 @@ import (
 )
 
 type SearchRequest struct {
-	VerifiedSeasonPack bool                `json:"verified_season_pack,omitempty"`
-	WorkflowID         string              `json:"workflow_id"`
-	Query              string              `json:"query,omitempty"`
-	MediaType          string              `json:"media_type"`
-	TMDBID             int64               `json:"tmdb_id"`
-	Season             int                 `json:"season"`
-	Episodes           []int               `json:"episodes"`
-	Policy             Policy              `json:"policy"`
-	SiteIDs            []string            `json:"site_ids"`
-	Page               int                 `json:"page"`
-	Mappings           []media.MappingRule `json:"mappings"`
-	AllowEarly         []int               `json:"allow_early"`
-	EpisodeDates       map[int]string      `json:"episode_dates"`
+	priorityMedia        *catalog.Media
+	prioritySubscription bool
+	VerifiedSeasonPack   bool                `json:"verified_season_pack,omitempty"`
+	WorkflowID           string              `json:"workflow_id"`
+	Query                string              `json:"query,omitempty"`
+	MediaType            string              `json:"media_type"`
+	TMDBID               int64               `json:"tmdb_id"`
+	Season               int                 `json:"season"`
+	Episodes             []int               `json:"episodes"`
+	Policy               Policy              `json:"policy"`
+	SiteIDs              []string            `json:"site_ids"`
+	Page                 int                 `json:"page"`
+	Mappings             []media.MappingRule `json:"mappings"`
+	AllowEarly           []int               `json:"allow_early"`
+	EpisodeDates         map[int]string      `json:"episode_dates"`
 }
 type PreviewRequest struct {
 	DirectoryID  string `json:"directory_id"`
@@ -265,6 +267,8 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	if e != nil {
 		return SearchOutput{}, e
 	}
+	in.priorityMedia = &t.Media
+	in.prioritySubscription = auto
 	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), CachedAt: now()}
 	out, e = a.searchSites(ctx, in, out, func(siteCtx context.Context, s SiteConfig) siteSearchOutput {
 		var result sites.SearchResult

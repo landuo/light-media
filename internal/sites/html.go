@@ -407,6 +407,9 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL, columns *nexusColumn
 			labels = append(labels, label)
 		}
 	}
+	sourceSubtitle := r.Subtitle
+	r.SourceSubtitle = &sourceSubtitle
+	r.Labels = append([]string{}, labels...)
 	r.Subtitle = subtitleWithLabels(r.Subtitle, labels)
 	classify(&r)
 	return r, true, nil

@@ -112,6 +112,9 @@ func (c *Client) parseMTeam(b []byte, page int) (SearchResult, error) {
 		if len(labels) == 0 {
 			labels = strings.Fields(map[string]string{"1": "DIY", "2": "国配", "3": "DIY 国配", "4": "中字", "5": "DIY 中字", "6": "国配 中字", "7": "DIY 国配 中字"}[stringValue(row["labels"])])
 		}
+		sourceSubtitle := r.Subtitle
+		r.SourceSubtitle = &sourceSubtitle
+		r.Labels = append([]string{}, labels...)
 		r.Subtitle = subtitleWithLabels(r.Subtitle, labels)
 		for key, dest := range map[string]*int{"seeders": &r.Seeders, "leechers": &r.Leechers} {
 			if status[key] == nil {

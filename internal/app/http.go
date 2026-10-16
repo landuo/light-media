@@ -19,6 +19,7 @@ import (
 	"light-media/internal/download"
 	"light-media/internal/fnos"
 	"light-media/internal/integrations"
+	"light-media/internal/priorityrules"
 )
 
 func decodeBody(w http.ResponseWriter, r *http.Request, v any) error {
@@ -561,6 +562,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	c.IndexerSites = a.Settings().IndexerSites
 	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
+	if c.PriorityRules == nil {
+		c.PriorityRules = old.PriorityRules
+	}
 	if c.APIToken == "" {
 		c.APIToken = old.APIToken
 	}
@@ -629,6 +633,11 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 }
 func validateSettings(c Settings) error {
+	if c.PriorityRules != nil {
+		if err := priorityrules.ValidateConfiguration(*c.PriorityRules); err != nil {
+			return bad("INVALID_PRIORITY_RULES", "优先级规则配置无效或超过资源上限")
+		}
+	}
 	if c.APIToken != "" && (len(c.APIToken) < 16 || len(c.APIToken) > 512 || invalidSiteImportText(c.APIToken, 512)) {
 		return bad("INVALID_API_TOKEN", "API令牌长度须为16到512字节，不能包含控制字符")
 	}

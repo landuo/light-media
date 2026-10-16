@@ -86,6 +86,14 @@ func subscriptionNumbers(values []int) ([]int, error) {
 	return out, nil
 }
 func validateSubscriptionPolicy(p Policy) error {
+	if len(p.FilterGroups) > 1000 {
+		return bad("INVALID_POLICY", "优先级规则组数量超出上限")
+	}
+	for _, name := range p.FilterGroups {
+		if len(name) > 512 || strings.ContainsAny(name, "\x00\r\n") {
+			return bad("INVALID_POLICY", "优先级规则组名称无效")
+		}
+	}
 	if p.MinSeeders < 0 || p.MinBytes < 0 || p.MaxBytes < 0 || (p.MaxBytes > 0 && p.MinBytes > p.MaxBytes) {
 		return bad("INVALID_POLICY", "做种人数或体积范围无效")
 	}

@@ -31,23 +31,26 @@ type Config struct {
 }
 
 type Resource struct {
-	ID             string  `json:"id"`
-	SiteID         string  `json:"site_id"`
-	Title          string  `json:"title"`
-	Subtitle       string  `json:"subtitle"`
-	Size           int64   `json:"size"`
-	Seeders        int     `json:"seeders"`
-	Leechers       int     `json:"leechers"`
-	PublishedAt    string  `json:"published_at"`
-	DownloadFactor float64 `json:"download_factor"`
-	UploadFactor   float64 `json:"upload_factor"`
-	PromotionEnd   string  `json:"promotion_end"`
-	Free           bool    `json:"free"`
-	DetailsURL     string  `json:"details_url"`
-	Hash           string  `json:"hash,omitempty"`
-	Resolution     string  `json:"resolution"`
-	Codec          string  `json:"codec"`
-	Source         string  `json:"source"`
+	Labels         []string `json:"labels,omitempty"`
+	SourceSubtitle *string  `json:"source_subtitle,omitempty"`
+	PriorityOrder  int      `json:"pri_order,omitempty"`
+	ID             string   `json:"id"`
+	SiteID         string   `json:"site_id"`
+	Title          string   `json:"title"`
+	Subtitle       string   `json:"subtitle"`
+	Size           int64    `json:"size"`
+	Seeders        int      `json:"seeders"`
+	Leechers       int      `json:"leechers"`
+	PublishedAt    string   `json:"published_at"`
+	DownloadFactor float64  `json:"download_factor"`
+	UploadFactor   float64  `json:"upload_factor"`
+	PromotionEnd   string   `json:"promotion_end"`
+	Free           bool     `json:"free"`
+	DetailsURL     string   `json:"details_url"`
+	Hash           string   `json:"hash,omitempty"`
+	Resolution     string   `json:"resolution"`
+	Codec          string   `json:"codec"`
+	Source         string   `json:"source"`
 }
 
 type SearchResult struct {
