@@ -1,0 +1,10 @@
+class NotificationType(Enum):
+    Download = '资源下载'
+    Organize = '整理入库'
+    Subscribe = '订阅'
+    SiteMessage = '站点'
+    MediaServer = '媒体服务器'
+    Manual = '手动处理'
+    Plugin = '插件'
+    Agent = '智能体'
+    Other = '其它'

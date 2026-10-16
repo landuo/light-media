@@ -1,0 +1,52 @@
+{
+  "id": "eb8f9db8-2faf-4d82-a972-ee5a2f41565f",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "packages": [
+    {
+      "id": "core",
+      "pkg": "./internal/plugins/mergemessagenotify",
+      "expected_tests": 14,
+      "sha256": "3687b35d08a38e33420cc157787228ea31ff38ff554f4bf95c55e3a55c452146",
+      "remote_sha256": "3687b35d08a38e33420cc157787228ea31ff38ff554f4bf95c55e3a55c452146"
+    },
+    {
+      "id": "smtp",
+      "pkg": "./internal/plugins/mergemessagenotify/smtp",
+      "expected_tests": 14,
+      "sha256": "01d3dfc721dcf9eb79bb84b67abbd4f4fc30ba89d43c0c3fc2e5001b117bbb1f",
+      "remote_sha256": "01d3dfc721dcf9eb79bb84b67abbd4f4fc30ba89d43c0c3fc2e5001b117bbb1f"
+    }
+  ],
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 28,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal pure-Go MergeMessageNotify core, 17 source channel builders/dispatch, SDK and concrete SMTP dependency. Original AST, exact MIME/address/header/base64 and 44 actual owned SMTP/TLS wire corpora. Full Mako/Apprise and App durable owner/HTTP grants are unfinished. No real notification delivery, registration, source config/data migration or deployment.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

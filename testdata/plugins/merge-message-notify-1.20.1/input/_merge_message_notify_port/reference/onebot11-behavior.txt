@@ -1,0 +1,78 @@
+comp_key: str = f'{CustomChannel.comp_key}.onebot-11'
+comp_name: str = 'OneBot-11'
+comp_order: int = CustomChannel.comp_order * 100 + 51
+config_default: Dict[str, Any] = {'message_template': '% if image:\n[CQ:image,file=${image}]\n% endif\n% if title:\n${title}\n% endif\n% if text:\n${text}\n% endif'}
+def __check_config(self) -> bool:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/') if server_url else None
+    if not server_url:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 服务器地址无效')
+        return False
+    if not self.get_config_item(config_key='user_ids') and (not self.get_config_item(config_key='group_ids')):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 目标用户与目标群组不允许同时为空')
+        return False
+    return True
+def __build_url(self) -> str:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/')
+    return f'{server_url}/send_msg'
+@classmethod
+def __split_multstr(cls, raw_str: str) -> List[str]:
+    return list(set([item.strip() for item in raw_str.split(',') if item and item.strip()])) if raw_str else []
+def __build_json(self, user_id: Union[int, str], group_id: Union[int, str], message: str) -> dict:
+    json = {'message': message}
+    if user_id:
+        json['user_id'] = user_id
+    if group_id:
+        json['group_id'] = group_id
+    return json
+def __send_msg(self, url: str, user_id: Union[int, str], group_id: Union[int, str], message: str, type: NotificationType=None, proxies: bool=False) -> bool:
+    type_str = type.value if type else None
+    json = self.__build_json(user_id=user_id, group_id=group_id, message=message)
+    res = requests.post(url=url, json=json, proxies=proxies)
+    res_json = res.json() or {}
+    if res.ok:
+        code = res_json.get('retcode')
+        message = res_json.get('msg')
+        if code == 0 or code == 1:
+            logger.info(f'发送消息成功: channel = {self.comp_name}, type = {type_str}, user_id = {user_id}, group_id = {group_id}')
+            return True
+        else:
+            logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, user_id = {user_id}, group_id = {group_id}, code = {code}, message = {message}')
+            return False
+    else:
+        logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, user_id = {user_id}, group_id = {group_id}, status_code = {res.status_code}, reason = {res.reason}')
+        return False
+def send_message(self, title: str, text: str, type: NotificationType=None, ext_info: dict={}) -> bool:
+    type_str = type.value if type else None
+    enable_notify_types: List[str] = self.get_config_item('enable_notify_types')
+    if type and enable_notify_types and (type.name not in enable_notify_types):
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息类型不受支持')
+        return False
+    if not self.__check_config():
+        return False
+    template_variables = self.build_template_variables(title=title, text=text, type=type, ext_info=ext_info)
+    logger.info(f'>>> 全部模板变量: {template_variables}')
+    send_url = self.__build_url()
+    message_template = self.get_config_item(config_key='message_template')
+    message = self.render_template(text=message_template, variables=template_variables)
+    proxies = settings.PROXY if self.get_config_item(config_key='enable_proxy') else None
+    success_count = 0
+    fail_count = 0
+    user_ids = self.get_config_item('user_ids')
+    user_ids = self.__split_multstr(raw_str=user_ids)
+    for user_id in user_ids:
+        success = self.__send_msg(url=send_url, user_id=user_id, group_id=None, message=message, type=type, proxies=proxies)
+        if success:
+            success_count += 1
+        else:
+            fail_count += 1
+    group_ids = self.get_config_item('group_ids')
+    group_ids = self.__split_multstr(raw_str=group_ids)
+    for group_id in group_ids:
+        success = self.__send_msg(url=send_url, user_id=None, group_id=group_id, message=message, type=type, proxies=proxies)
+        if success:
+            success_count += 1
+        else:
+            fail_count += 1
+    return fail_count == 0

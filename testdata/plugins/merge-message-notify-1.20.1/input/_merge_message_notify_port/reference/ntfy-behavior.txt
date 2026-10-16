@@ -1,0 +1,86 @@
+comp_key: str = f'{CustomChannel.comp_key}.ntfy'
+comp_name: str = 'Ntfy'
+comp_order: int = CustomChannel.comp_order * 100 + 4
+config_default: Dict[str, Any] = {'server_url': 'https://ntfy.sh', 'topic': 'MoviePilot', 'enable_md': True}
+def __check_config(self) -> bool:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/') if server_url else None
+    if not server_url:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 服务器地址无效')
+        return False
+    if not self.get_config_item(config_key='topic'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 主题无效')
+        return False
+    token = self.get_config_item(config_key='token')
+    username = self.get_config_item(config_key='username')
+    password = self.get_config_item(config_key='password')
+    if not token and (not username or not password):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 访问令牌或用户名密码无效')
+        return False
+    return True
+def __build_url(self) -> str:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/')
+    topic = self.get_config_item(config_key='topic')
+    topic = quote(topic)
+    return f'{server_url}/{topic}'
+@classmethod
+def __base64_encode(cls, raw_str: str) -> str:
+    return str(base64.b64encode(raw_str.encode('utf-8')), 'utf-8') if raw_str else None
+def __build_basic_auth_value(cls, username: str, password: str) -> str:
+    raw_str = f"{username or ''}:{password or ''}"
+    return cls.__base64_encode(raw_str=raw_str)
+def __build_headers(self, title: str, type: NotificationType, image: str=None) -> dict:
+    headers = {}
+    if self.get_config_item(config_key='enable_md'):
+        headers['X-Markdown'] = 'true'
+    if title:
+        headers['X-Title'] = title.encode(encoding='utf-8')
+    if type:
+        headers['X-Tags'] = type.value.encode(encoding='utf-8')
+    if image and (not self.get_config_item(config_key='enable_md')):
+        headers['X-Attach'] = image
+    token = self.get_config_item(config_key='token')
+    if token:
+        headers['Authorization'] = f'Bearer {token}'
+    else:
+        username = self.get_config_item(config_key='username')
+        password = self.get_config_item(config_key='password')
+        if username and password:
+            basic_auth_value = self.__build_basic_auth_value(username=username, password=password)
+            headers['Authorization'] = f'Basic {basic_auth_value}'
+    return headers
+def __build_data(self, title: str, text: str, ext_info: dict={}) -> bytes:
+    ext_info = ext_info or {}
+    data = text or title
+    image = ext_info.get('image')
+    if image:
+        if self.get_config_item(config_key='enable_md'):
+            data += f'\n\n![]({image})'
+    return data.encode(encoding='utf-8')
+def send_message(self, title: str, text: str, type: NotificationType=None, ext_info: dict={}) -> bool:
+    type_str = type.value if type else None
+    enable_notify_types: List[str] = self.get_config_item('enable_notify_types')
+    if type and enable_notify_types and (type.name not in enable_notify_types):
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息类型不受支持')
+        return False
+    if not self.__check_config():
+        return False
+    send_url = self.__build_url()
+    headers = self.__build_headers(title=title, type=type, image=ext_info.get('image'))
+    data = self.__build_data(title=title, text=text, ext_info=ext_info)
+    proxies = settings.PROXY if self.get_config_item(config_key='enable_proxy') else None
+    res = requests.post(url=send_url, headers=headers, data=data, proxies=proxies)
+    res_json = res.json() or {}
+    if res.ok or res_json:
+        code = res_json.get('code')
+        message = res_json.get('error')
+        if not code:
+            logger.info(f'发送消息成功: channel = {self.comp_name}, type = {type_str}')
+            return True
+        else:
+            logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, code = {code}, message = {message}')
+            return False
+    else:
+        logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, status_code = {res.status_code}, reason = {res.reason}')
+        return False

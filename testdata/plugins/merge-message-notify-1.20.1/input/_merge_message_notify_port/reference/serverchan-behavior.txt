@@ -1,0 +1,57 @@
+def __init__(self, code: int, name_: str):
+    self.code = code
+    self.name_ = name_
+comp_key: str = f'{CustomChannel.comp_key}.serverchan'
+comp_name: str = 'Server酱'
+comp_order: int = CustomChannel.comp_order * 100 + 7
+config_default: Dict[str, Any] = {}
+def __check_config(self) -> bool:
+    if not self.get_config_item(config_key='send_key'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, SendKey无效')
+        return False
+    return True
+def __build_url(self) -> str:
+    send_key = self.get_config_item(config_key='send_key')
+    return f'https://sctapi.ftqq.com/{send_key}.send'
+def __build_json(self, title: str, text: str, ext_info: dict={}) -> dict:
+    ext_info = ext_info or {}
+    json = {'title': title, 'noip': self.get_config_item(config_key='noip') or False}
+    desp = text or title
+    image = ext_info.get('image')
+    if image:
+        desp += f'\n\n![]({image})'
+    json['desp'] = desp
+    channels = self.get_config_item(config_key='channel')
+    if channels:
+        channels = channels[0:2]
+        channels = [str(channel) for channel in channels]
+        channel = '|'.join(channels)
+        json['channel'] = channel
+    return json
+def send_message(self, title: str, text: str, type: NotificationType=None, ext_info: dict={}) -> bool:
+    type_str = type.value if type else None
+    enable_notify_types: List[str] = self.get_config_item('enable_notify_types')
+    if type and enable_notify_types and (type.name not in enable_notify_types):
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息类型不受支持')
+        return False
+    if not title:
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息标题为空')
+        return False
+    if not self.__check_config():
+        return
+    send_url = self.__build_url()
+    json = self.__build_json(title=title, text=text, ext_info=ext_info)
+    res = requests.post(url=send_url, json=json)
+    res_json = res.json() or {}
+    if res.ok or res_json:
+        code = res_json.get('code')
+        message = res_json.get('message')
+        if code == 0:
+            logger.info(f'发送消息成功: channel = {self.comp_name}, type = {type_str}')
+            return True
+        else:
+            logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, code = {code}, message = {message}')
+            return False
+    else:
+        logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, status_code = {res.status_code}, reason = {res.reason}')
+        return False

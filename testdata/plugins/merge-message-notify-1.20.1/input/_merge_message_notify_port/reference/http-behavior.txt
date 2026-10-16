@@ -1,0 +1,111 @@
+comp_key: str = f'{CustomChannel.comp_key}.http'
+comp_name: str = 'HTTP请求'
+comp_order: int = CustomChannel.comp_order * 100 + 99
+config_default: Dict[str, Any] = {'method': 'get'}
+def __check_config(self) -> bool:
+    if not self.get_config_item(config_key='method'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 请求方法无效')
+        return False
+    if not self.get_config_item(config_key='url'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 请求URL无效')
+        return False
+    return True
+@classmethod
+def __is_json(cls, s: str) -> bool:
+    try:
+        json.loads(s=s)
+        return True
+    except ValueError as e:
+        return False
+@classmethod
+def __str_to_dict(cls, s: str) -> dict:
+    if not s:
+        return {}
+    if cls.__is_json(s=s):
+        return json.loads(s=s)
+    result = {}
+    for line in s.splitlines():
+        if not line:
+            continue
+        if ':' not in line:
+            continue
+        key, value = line.split(':')
+        if not key:
+            continue
+        result[key] = value
+    return result
+def build_template_variables(self, title: str, text: str, type: NotificationType, ext_info: dict) -> dict:
+    template_variables = super().build_template_variables(title=title, text=text, type=type, ext_info=ext_info)
+    custom_template_variables = self.get_config_item(config_key='template_variables')
+    custom_template_variables = self.__str_to_dict(s=custom_template_variables) or {}
+    template_variables.update(custom_template_variables)
+    return template_variables
+@classmethod
+def __get_dict_value_ignorecase(cls, data: Dict[str, any], key: str) -> any:
+    if not data or not key:
+        return None
+    for k, v in data.items():
+        if k and k.lower() == key.lower():
+            return v
+    return None
+def send_message(self, title: str, text: str, type: NotificationType=None, ext_info: dict={}) -> bool:
+    type_str = type.value if type else None
+    enable_notify_types: List[str] = self.get_config_item('enable_notify_types')
+    if type and enable_notify_types and (type.name not in enable_notify_types):
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息类型不受支持')
+        return False
+    if not self.__check_config():
+        return False
+    template_variables = self.build_template_variables(title=title, text=text, type=type, ext_info=ext_info)
+    logger.info(f'HTTP请求 >>> 全部模板变量: {template_variables}')
+    method = self.get_config_item(config_key='method')
+    logger.info(f'HTTP请求 >>> 请求方法: {method}')
+    url = self.get_config_item(config_key='url')
+    url = self.render_template(text=url, variables=template_variables, url_encode=True)
+    logger.info(f'HTTP请求 >>> 请求URL: {url}')
+    headers = self.get_config_item(config_key='headers')
+    headers = self.render_template(text=headers, variables=template_variables)
+    headers = self.__str_to_dict(s=headers)
+    logger.info(f'HTTP请求 >>> 请求头: {headers}')
+    params = self.get_config_item(config_key='params')
+    params = self.render_template(text=params, variables=template_variables)
+    params = self.__str_to_dict(s=params)
+    logger.info(f'HTTP请求 >>> 请求参数: {params}')
+    body = self.get_config_item(config_key='body')
+    content_type = self.__get_dict_value_ignorecase(data=headers, key='Content-Type')
+    if content_type == 'application/json' and body:
+        escaped_vars = {}
+        for k, v in template_variables.items():
+            if isinstance(v, str):
+                escaped_vars[k] = json.dumps(v, ensure_ascii=False)[1:-1]
+            elif v is None:
+                escaped_vars[k] = 'null'
+            elif isinstance(v, bool):
+                escaped_vars[k] = 'true' if v else 'false'
+            elif isinstance(v, (int, float)):
+                escaped_vars[k] = v
+            else:
+                escaped_vars[k] = json.dumps(str(v), ensure_ascii=False)[1:-1]
+        body = self.render_template(text=body, variables=escaped_vars)
+    else:
+        body = self.render_template(text=body, variables=template_variables)
+    logger.info(f'HTTP请求 >>> 请求体: {body}')
+    is_json = self.__is_json(s=body)
+    if is_json and content_type == 'application/json':
+        body = json.dumps(json.loads(body))
+    elif is_json and content_type == 'application/x-www-form-urlencoded':
+        body = json.loads(body)
+    elif not body:
+        body = None
+    proxies = settings.PROXY if self.get_config_item(config_key='enable_proxy') else None
+    res = requests.request(method=method, url=url, headers=headers, params=params, data=body, proxies=proxies)
+    if res:
+        if res.ok:
+            logger.info(f'发送消息成功: channel = {self.comp_name}, type = {type_str}, text = {res.text}')
+            return True
+        else:
+            logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, status_code = {res.status_code}, reason = {res.reason}')
+            return False
+    else:
+        logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, 响应为空')
+        return False

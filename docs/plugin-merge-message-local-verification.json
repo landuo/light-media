@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-17",
+  "plugin": "MergeMessageNotify",
+  "original_version": "1.20.1",
+  "formal_manifest_sha256": "d33d9a3b5f271c011496b4fcb25a3a86ba29450d9e4290c4d5471f7ecb015c2b",
+  "packages": [
+    {"path": "./internal/plugins/mergemessagenotify", "top_level_tests": 14, "normal_seconds": 1.570, "race_seconds": 7.221},
+    {"path": "./internal/plugins/mergemessagenotify/smtp", "top_level_tests": 14, "normal_seconds": 1.330, "race_seconds": 4.369}
+  ],
+  "vet_exit_code": 0,
+  "build_exit_code": 0,
+  "source_comparison": {
+    "dispatch": 192,
+    "concrete_channels": 4720,
+    "lifecycle": 8,
+    "test_once_origin": 102,
+    "smtp_finally_paths": 18,
+    "mako_equivalent": 6,
+    "mako_explicit_unsupported": 13,
+    "mime_exact_raw_messages": 356,
+    "mime_original_header_errors": 8,
+    "header_stages": 216,
+    "strict_address_and_quoteaddr": 6237,
+    "binascii_base64": 8651,
+    "owned_smtp_tls_wire": 44
+  },
+  "scope": "Formal pure Go core and SMTP packages; synthetic inputs and owned loopback servers only. The 13 unsupported Mako probes are not equivalent cases. Full Mako, Apprise, HTTP grants, App durable owner/event integration and form renderer remain unfinished.",
+  "source_config_data_files_migrated": 0,
+  "production_registered": false,
+  "deployed": false,
+  "real_notifications_sent": false
+}

@@ -1,0 +1,1378 @@
+{
+  "plugin_id": "MergeMessageNotify",
+  "version": "1.20.1",
+  "counts": {
+    "core": 192,
+    "channels": 4720,
+    "lifecycle": 8,
+    "test_once": 102,
+    "smtp_errors": 18,
+    "templates": 19
+  },
+  "files": {
+    "LICENSE-GPL-3.0.txt": {
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    "NOTICE": {
+      "sha256": "6064599ddcebd2570ca5e5a5739c8c02775eb636d9fef2167d4885cb2e5671a5",
+      "bytes": 572
+    },
+    "bark.go": {
+      "sha256": "113fe0059d69024b0c79afa3a6752c83cd22a7b133d6fc9709920f0599b0461f",
+      "bytes": 7556
+    },
+    "channels.go": {
+      "sha256": "e922e31f226639ed81748603de8acd7b545f7f6d5697011c9c2ba201242214b7",
+      "bytes": 14377
+    },
+    "dependency_test.go": {
+      "sha256": "9a5d4c81e91a15c517414e3227420374eac1dd95a6f5d60fb82205ca97d987e2",
+      "bytes": 1669
+    },
+    "email.go": {
+      "sha256": "dfe765005656667dea49b81c96789b479c4ad533b68c7c1e56950a1bedcf565d",
+      "bytes": 1660
+    },
+    "forms.json": {
+      "sha256": "561f48d1a11e258bcb1221fa53b4e58266fc827d86cc753975f56b9aa60d09ba",
+      "bytes": 349662
+    },
+    "go.mod": {
+      "sha256": "f63c09b15bf4d7238bef8756d0ea8142ef2177e2614300272d44eb20cf17691b",
+      "bytes": 111
+    },
+    "lifecycle_test.go": {
+      "sha256": "36d54cead76ef1f44ea58a641d47d4afbdeed1a84e2eebcc0b4b7a9407c77219",
+      "bytes": 2586
+    },
+    "oracle_test.go": {
+      "sha256": "9b3cc06e6aeb73d99359601167b130bfe943c25c6a3e9741dc50a75f5dac194b",
+      "bytes": 4898
+    },
+    "plugin.go": {
+      "sha256": "2cdc76cbf6a5abb84b2d840a61a89acb0a4b6ebe358da534d43a921927d4cba3",
+      "bytes": 9445
+    },
+    "provenance_test.go": {
+      "sha256": "5a846a132313715badceca97f1cafb13d95c536082ade4e08def6254a08e4232",
+      "bytes": 885
+    },
+    "reference/EventType.py": {
+      "sha256": "9edabb42be99cac2c4cff8dfa425bbd890d42e12fe8e4d539b311ff38273bac3",
+      "bytes": 1289
+    },
+    "reference/NotificationType.py": {
+      "sha256": "137b26fe1d3e6932bc0bb9e3df24f30b86066ec5e4b12d30919eb5af67862b44",
+      "bytes": 273
+    },
+    "reference/checksums.py": {
+      "sha256": "ccc326514407c076da46facf8d3bb2a8ad57685f184d6eac7dcdd9637542e16f",
+      "bytes": 879
+    },
+    "reference/dependencies.py": {
+      "sha256": "4b5ccc0443d42bf301591f0be32665d225a4a3c9a0a5f9f1cdca6190af1639f0",
+      "bytes": 1976
+    },
+    "reference/dependencies/apprise/apprise-1.9.9.dist-info/licenses/LICENSE": {
+      "sha256": "9ac007e806bd7199cf3158adff83a16351ae85c46373c3533a98b961975103f2",
+      "bytes": 1343
+    },
+    "reference/dependencies/apprise/apprise/__init__.py": {
+      "sha256": "31175d644759d59663205d7449b70e1b165aa36d3d929afaed6d5f8cdf4e37b1",
+      "bytes": 3851
+    },
+    "reference/dependencies/apprise/apprise/apprise.py": {
+      "sha256": "096ad346f8ccad1f14612542a11f492b1e098d4e8727732ffa3c51b2345f317e",
+      "bytes": 37527
+    },
+    "reference/dependencies/apprise/apprise/apprise_attachment.py": {
+      "sha256": "3d4bec56416b16876d618e4a2960291b057346e713248712b118f2d180c4ef13",
+      "bytes": 13642
+    },
+    "reference/dependencies/apprise/apprise/apprise_config.py": {
+      "sha256": "7cf893092e30106d91f883976d57b727377f7498283a42d5ad89dd1643053436",
+      "bytes": 17964
+    },
+    "reference/dependencies/apprise/apprise/asset.py": {
+      "sha256": "d84a60d749e27992ade7214482ad90abf6d3a628e22028da1cada8786bffb667",
+      "bytes": 17701
+    },
+    "reference/dependencies/apprise/apprise/attachment/__init__.py": {
+      "sha256": "1d58faddc1966c7950ad4cbc59e75a0c5b6f49130f2ac0136fc96f2977d1fba0",
+      "bytes": 1654
+    },
+    "reference/dependencies/apprise/apprise/attachment/base.py": {
+      "sha256": "a0007805d7e87fbb44806b4952a3ed151f483443c67ef58ec2e5dfe2c01137fb",
+      "bytes": 16463
+    },
+    "reference/dependencies/apprise/apprise/attachment/file.py": {
+      "sha256": "275e0b1f29680ce56ad6b5e5a88797ee991bf4c0811fb0b60c012a34b131786c",
+      "bytes": 4953
+    },
+    "reference/dependencies/apprise/apprise/attachment/http.py": {
+      "sha256": "afbb29861e2d6fd251719f25d814497f2184acf7884435a8fbe01efc5b8560e8",
+      "bytes": 13843
+    },
+    "reference/dependencies/apprise/apprise/attachment/memory.py": {
+      "sha256": "57c551f18577519776e9c4b795cd6337022729925f17d2bd4c47e2ca24d73c56",
+      "bytes": 6911
+    },
+    "reference/dependencies/apprise/apprise/cli.py": {
+      "sha256": "bbf0da466c250e4f35b4e69ae37559ffa9c141a20dc450a1d8cc5cfbd0786161",
+      "bytes": 37773
+    },
+    "reference/dependencies/apprise/apprise/common.py": {
+      "sha256": "035e757f0358f3bcd4d22353a10bc950205bae697bbe3e239f3838c0ce18349f",
+      "bytes": 7022
+    },
+    "reference/dependencies/apprise/apprise/compat.py": {
+      "sha256": "86368c4b3c0271da1d2bbf5b679e3fbf18613bf2a17227487a7fad2701343504",
+      "bytes": 2043
+    },
+    "reference/dependencies/apprise/apprise/config/__init__.py": {
+      "sha256": "06b900294f4d67f74df0aba2530063601f54ee0535c155bde6e92c4bdac06e62",
+      "bytes": 1655
+    },
+    "reference/dependencies/apprise/apprise/config/base.py": {
+      "sha256": "b768036fcf8e00620d2a8fda65fc6f66c24850f537c597974fd33b4836bd723b",
+      "bytes": 55848
+    },
+    "reference/dependencies/apprise/apprise/config/file.py": {
+      "sha256": "fb2e6809d9f59bd4aff337cb496c1cc348d78f99f00cfbf6af58be792fe348e1",
+      "bytes": 6119
+    },
+    "reference/dependencies/apprise/apprise/config/http.py": {
+      "sha256": "57653dde989697de2e99f283203b26eba7ac4789409b1f952cfbd23f5f3b11df",
+      "bytes": 9445
+    },
+    "reference/dependencies/apprise/apprise/config/memory.py": {
+      "sha256": "278f5c0783050ef2400e09d95425f51a6352c2b426fb09c5b22ea8d67636daf8",
+      "bytes": 2733
+    },
+    "reference/dependencies/apprise/apprise/conversion.py": {
+      "sha256": "3be3e3a6bb47d6c30dd73f7fb23e80317b0077d8ef6e4bbc86f45da1287f1a08",
+      "bytes": 6393
+    },
+    "reference/dependencies/apprise/apprise/decorators/__init__.py": {
+      "sha256": "509be0ec9520ce3e74cabfee42a65dd59db2e8ccbe4fda1e4762ee7359d40c9c",
+      "bytes": 1456
+    },
+    "reference/dependencies/apprise/apprise/decorators/base.py": {
+      "sha256": "a1719ff41c871b91d9f1632a6704ca4e606f52ad51047159e502258c1b6a86f4",
+      "bytes": 7879
+    },
+    "reference/dependencies/apprise/apprise/decorators/notify.py": {
+      "sha256": "c8db5b677cc80fa7189d1e9bf944ee67420b999113c0f3b41cad99ce3a6f3942",
+      "bytes": 5066
+    },
+    "reference/dependencies/apprise/apprise/emojis.py": {
+      "sha256": "fc8474e8336c4cc016a58ce46529bfcea54fd0c28bb660af9564bd8efd3b904e",
+      "bytes": 87630
+    },
+    "reference/dependencies/apprise/apprise/exception.py": {
+      "sha256": "f66394ac65f12f3c1da4ca3b5c493888c51a103e45254e908927fdab9f8d41d9",
+      "bytes": 2512
+    },
+    "reference/dependencies/apprise/apprise/i18n/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "reference/dependencies/apprise/apprise/locale.py": {
+      "sha256": "420d09af8f5c3d041cb4daf3092bb3ad6776ed83068281bbb21ac0b7a91ea495",
+      "bytes": 8983
+    },
+    "reference/dependencies/apprise/apprise/logger.py": {
+      "sha256": "d35a84afc68bd91ac69e5ec335a6b011b04b9c666bd22ce7f6f6fa7b87bdef85",
+      "bytes": 6715
+    },
+    "reference/dependencies/apprise/apprise/manager.py": {
+      "sha256": "9a65cf1cc585c44a4538f8f7ae974e39851072c5cdc25d1e1fbff68c618757b8",
+      "bytes": 29624
+    },
+    "reference/dependencies/apprise/apprise/manager_attachment.py": {
+      "sha256": "66aaaae97fa6d6abc829b6ea757bc2baec1f6f313b917481983563283fd592f8",
+      "bytes": 2134
+    },
+    "reference/dependencies/apprise/apprise/manager_config.py": {
+      "sha256": "ed2c3c69bfc9872c640951659127c495809a700abb8a698bacee91c9e3907bed",
+      "bytes": 2139
+    },
+    "reference/dependencies/apprise/apprise/manager_plugins.py": {
+      "sha256": "2ff83e9f1affab2a19f86c98bceb242b634b5f23816d12421c520b39581b6bf1",
+      "bytes": 2137
+    },
+    "reference/dependencies/apprise/apprise/persistent_store.py": {
+      "sha256": "da60d10f01c3f2247b47a632315ec493813e2f49ec73171c7ba7e53cb4705f17",
+      "bytes": 60934
+    },
+    "reference/dependencies/apprise/apprise/plugins/__init__.py": {
+      "sha256": "b6b6ed65e9a0a9119dc069b8f775026918d357de0bf23ce1471822fbb28442e4",
+      "bytes": 18665
+    },
+    "reference/dependencies/apprise/apprise/plugins/africas_talking.py": {
+      "sha256": "47d534c1763759feacdff1ddff30f1aefbd0248e2bd3810dc9cae97edd7c5c56",
+      "bytes": 16658
+    },
+    "reference/dependencies/apprise/apprise/plugins/apprise_api.py": {
+      "sha256": "14f12b4f55089599e22eaa53e3dab23571b2560b3b9494ed796a99cd6b4ffad9",
+      "bytes": 18134
+    },
+    "reference/dependencies/apprise/apprise/plugins/aprs.py": {
+      "sha256": "ed59afbf5a478d95a28e9123ae08ee1a301bddd424a3f9063be6a1e08160f48a",
+      "bytes": 25117
+    },
+    "reference/dependencies/apprise/apprise/plugins/bark.py": {
+      "sha256": "07ea6b9509005f67f2a584d9f40887f8058c25f5c79631b723af55fa632d9b46",
+      "bytes": 19003
+    },
+    "reference/dependencies/apprise/apprise/plugins/base.py": {
+      "sha256": "ddee0ee98b4a73f827ba597d069efb9e74c71089be6bff954b6ed09e5629d0fe",
+      "bytes": 37080
+    },
+    "reference/dependencies/apprise/apprise/plugins/bluesky.py": {
+      "sha256": "968b7f28a621bd5770b7a84601465d4d12c6836a0b1e4cfd6c92e9c7c2c5eaee",
+      "bytes": 23303
+    },
+    "reference/dependencies/apprise/apprise/plugins/brevo.py": {
+      "sha256": "a84ed39a8c9e036f8cab62f8cc5ee903e92226e65f93c642f2472cbc1a5367f4",
+      "bytes": 19388
+    },
+    "reference/dependencies/apprise/apprise/plugins/bulksms.py": {
+      "sha256": "97251536c8e801b97218ff2dd49e934e4c84fb8b90e169754a686e32637e7fe0",
+      "bytes": 17036
+    },
+    "reference/dependencies/apprise/apprise/plugins/bulkvs.py": {
+      "sha256": "b75750945a7eb687bbbd0319c3c871cfa42700a6fdc8ac62298875711fed4c19",
+      "bytes": 13922
+    },
+    "reference/dependencies/apprise/apprise/plugins/burstsms.py": {
+      "sha256": "75d5ea760eec9f98ef95f96926dfad6241d5757036e4af4d4e602e1696dddc53",
+      "bytes": 16149
+    },
+    "reference/dependencies/apprise/apprise/plugins/chanify.py": {
+      "sha256": "95404cecc5d6be304934bdff21222836f66702b4c5a4412704f25c181856716c",
+      "bytes": 6887
+    },
+    "reference/dependencies/apprise/apprise/plugins/clickatell.py": {
+      "sha256": "477a1cdd992c8a4258815fa200ca5cd769728e4bdabdac947ed1fa4db281e0ae",
+      "bytes": 10367
+    },
+    "reference/dependencies/apprise/apprise/plugins/clicksend.py": {
+      "sha256": "c18fa2e8b0dd13d3763db36df261f141ce937f81026819911998c4c8a66f2bb1",
+      "bytes": 12014
+    },
+    "reference/dependencies/apprise/apprise/plugins/custom_form.py": {
+      "sha256": "2835ac8dd26a20ed7c0206166e769fc6a0070538b151311b802a71d0cc48a099",
+      "bytes": 18926
+    },
+    "reference/dependencies/apprise/apprise/plugins/custom_json.py": {
+      "sha256": "bb17123533acff1e948cb409db3177ecee80b3468db64e6a8c6b94730e830170",
+      "bytes": 14659
+    },
+    "reference/dependencies/apprise/apprise/plugins/custom_xml.py": {
+      "sha256": "395a8226c6aae9608deb25ce9df5471647647aa74bea09f435d6c16f5325863c",
+      "bytes": 18088
+    },
+    "reference/dependencies/apprise/apprise/plugins/d7networks.py": {
+      "sha256": "b50e806c206396df726a4505eb80f1ea36fa3f8d390aad1f6ca3761be02c39c4",
+      "bytes": 15494
+    },
+    "reference/dependencies/apprise/apprise/plugins/dapnet.py": {
+      "sha256": "a43c95da554d91e4c023dacb96c65e3a1099e33cdcb4f2ea94ee4526e44b2771",
+      "bytes": 13855
+    },
+    "reference/dependencies/apprise/apprise/plugins/dbus.py": {
+      "sha256": "48dbfe9d095c150211807353700affb5f56a73282a7e7de4dab9d43ce1b3e6a0",
+      "bytes": 14495
+    },
+    "reference/dependencies/apprise/apprise/plugins/dingtalk.py": {
+      "sha256": "85dd8b1c10da3c0cb6e35f8d5edbe0ae6a5e82fa4f3c42a4116ac56bce327d97",
+      "bytes": 12343
+    },
+    "reference/dependencies/apprise/apprise/plugins/discord.py": {
+      "sha256": "e28790c06e5daa23539b7a2a9e2f6c6e27e08c3f030635cec9f475c780ddfaab",
+      "bytes": 30928
+    },
+    "reference/dependencies/apprise/apprise/plugins/dot.py": {
+      "sha256": "edcadb6c0a9bc57a5d5158f2b80a0ecae607e8c646c777b519e705a0f9ed53ef",
+      "bytes": 20700
+    },
+    "reference/dependencies/apprise/apprise/plugins/email/__init__.py": {
+      "sha256": "9130f0f3c274c793150090bb5085c8f91a621a0ce85c8d186a7057bef722ca51",
+      "bytes": 1917
+    },
+    "reference/dependencies/apprise/apprise/plugins/email/base.py": {
+      "sha256": "4edb0014b13c5590f8e4dcdda4719e75a9224db5647304917bdfec84461df079",
+      "bytes": 41169
+    },
+    "reference/dependencies/apprise/apprise/plugins/email/common.py": {
+      "sha256": "a0988637618a8976836e2889234092077d8521ff1da8bb95aab240ef928b789c",
+      "bytes": 2527
+    },
+    "reference/dependencies/apprise/apprise/plugins/email/templates.py": {
+      "sha256": "b40c5139fc3643b5cd9964a08202e7417b6d19f63470624742aa5e093f61b1c9",
+      "bytes": 10353
+    },
+    "reference/dependencies/apprise/apprise/plugins/emby.py": {
+      "sha256": "1e9478580729f2bc1b82fc17a52437989de5136a653c1910437fee750d749d89",
+      "bytes": 22567
+    },
+    "reference/dependencies/apprise/apprise/plugins/enigma2.py": {
+      "sha256": "be1f2a0069a5755e259f563dcf3601de061f865d3bcd19200670d5e8444fe56d",
+      "bytes": 12109
+    },
+    "reference/dependencies/apprise/apprise/plugins/fcm/__init__.py": {
+      "sha256": "ebda8370cc6d7e1f2d64e63c833669d2814af5f5f635b3163e21030bed7d6c6c",
+      "bytes": 22158
+    },
+    "reference/dependencies/apprise/apprise/plugins/fcm/color.py": {
+      "sha256": "aea49eabd05cea09b0280a8e30b36f4890c55002880700cfe650f1a587750a50",
+      "bytes": 4609
+    },
+    "reference/dependencies/apprise/apprise/plugins/fcm/common.py": {
+      "sha256": "c9a11ce653ab12be54147776e022a134d656dfd3ca0ea47a5316bc2305d504fd",
+      "bytes": 1687
+    },
+    "reference/dependencies/apprise/apprise/plugins/fcm/oauth.py": {
+      "sha256": "8aab390d1a91f1d4d623c12296dce50809fc69697e80f662eecb7b004aced011",
+      "bytes": 11147
+    },
+    "reference/dependencies/apprise/apprise/plugins/fcm/priority.py": {
+      "sha256": "f32d44d621cf087df8b1ab35b068397c59b2a3f9534297b4a38ef785436343fd",
+      "bytes": 6904
+    },
+    "reference/dependencies/apprise/apprise/plugins/feishu.py": {
+      "sha256": "92a3e38adc2651fd9c6badaefcd2ad89117c155150fb3c9e26406b8df6b88d84",
+      "bytes": 7497
+    },
+    "reference/dependencies/apprise/apprise/plugins/flock.py": {
+      "sha256": "decff173dd49befb28e23f08cef9664825ff62411740960e51c8d350cce905d9",
+      "bytes": 13092
+    },
+    "reference/dependencies/apprise/apprise/plugins/fluxer.py": {
+      "sha256": "203c0d4f58d825d9ac254210bfea2f62dab0c1834e556c6cf2a83fc0c940b90c",
+      "bytes": 36207
+    },
+    "reference/dependencies/apprise/apprise/plugins/fortysixelks.py": {
+      "sha256": "e663ba51880edf5f40d477d3fc0bfc8dd6d77e384be6a64b0193117ed6b04203",
+      "bytes": 11937
+    },
+    "reference/dependencies/apprise/apprise/plugins/freemobile.py": {
+      "sha256": "447647ae9c1d409607afc286ced7a2a4d37e6d92ecbc4586a850183b570adaa7",
+      "bytes": 6910
+    },
+    "reference/dependencies/apprise/apprise/plugins/glib.py": {
+      "sha256": "ad0575847ee51d18a8d5bd9916f6493530d5e48c1afc5ff9776b92f3723c8791",
+      "bytes": 12920
+    },
+    "reference/dependencies/apprise/apprise/plugins/gnome.py": {
+      "sha256": "d9893391d9dc7f451f238a24fa1648ba1402dfffeed74535d8f05419b8ef5955",
+      "bytes": 9295
+    },
+    "reference/dependencies/apprise/apprise/plugins/google_chat.py": {
+      "sha256": "2c923514b1d645c5f7823b299c5df1542aae5adeced15dc9483b7421c7cb8cf5",
+      "bytes": 13588
+    },
+    "reference/dependencies/apprise/apprise/plugins/gotify.py": {
+      "sha256": "5e04ccd856654d0c115c3e307ccbd861c22e8cff1d704a983397038678f480de",
+      "bytes": 11162
+    },
+    "reference/dependencies/apprise/apprise/plugins/growl.py": {
+      "sha256": "03d51800aac4a81810cd2665c7089150df2cec22d1c7733c428c0b4d8fbf2a00",
+      "bytes": 14947
+    },
+    "reference/dependencies/apprise/apprise/plugins/guilded.py": {
+      "sha256": "0116f1f68b4b34e32879834a7ed2d3bbcbae0e7926b7dd6393ad73b7d1dd80df",
+      "bytes": 3801
+    },
+    "reference/dependencies/apprise/apprise/plugins/home_assistant.py": {
+      "sha256": "0a33957a3b08f7909d9070e34f0dfc4b1148a33e41c69896263d7fd69ee05d89",
+      "bytes": 11669
+    },
+    "reference/dependencies/apprise/apprise/plugins/httpsms.py": {
+      "sha256": "9c80bb9e87ac3072f03173bdbc2fbddb3271f3fbf63c5ca1ea3b22bf0051e68c",
+      "bytes": 11457
+    },
+    "reference/dependencies/apprise/apprise/plugins/ifttt.py": {
+      "sha256": "3d4b2f6a97d702b79663228a4c08c314b1cfd4eb3dbeef553873dc30a1d59da0",
+      "bytes": 13899
+    },
+    "reference/dependencies/apprise/apprise/plugins/irc/__init__.py": {
+      "sha256": "16796709ebd7ec7c5cf3379aeabdf2a8e262988b9c2cd33a60c0d2b5c7de6cbf",
+      "bytes": 1493
+    },
+    "reference/dependencies/apprise/apprise/plugins/irc/base.py": {
+      "sha256": "dec6750497acc13a6bb2e70b37d5964d4fa8189584c35d596489eb3fdfb93793",
+      "bytes": 16894
+    },
+    "reference/dependencies/apprise/apprise/plugins/irc/client.py": {
+      "sha256": "e2eb1fb83ee414045797655dbe22ae1b7b50d438a796b5c1a1a2026cce909c48",
+      "bytes": 12788
+    },
+    "reference/dependencies/apprise/apprise/plugins/irc/protocol.py": {
+      "sha256": "e234deb48f85ba0b9a475476741484a07a1f614c3bf90ea23014c551d0deeb36",
+      "bytes": 6539
+    },
+    "reference/dependencies/apprise/apprise/plugins/irc/state.py": {
+      "sha256": "1c8e19474c1765488ce6af50eeb0155b4c6942eeff5889660401db44fd0bf4a1",
+      "bytes": 7301
+    },
+    "reference/dependencies/apprise/apprise/plugins/irc/templates.py": {
+      "sha256": "b5baf89d9f4d47f465a995cc35f366b63fc5e69c5c1a45a7b177f178c2de0d80",
+      "bytes": 2709
+    },
+    "reference/dependencies/apprise/apprise/plugins/jellyfin.py": {
+      "sha256": "42caadab4a0f5d07d98197a4ca493a7794ef241158eebac11d1a6e94445cce14",
+      "bytes": 2155
+    },
+    "reference/dependencies/apprise/apprise/plugins/join.py": {
+      "sha256": "19783aa7173578a59a7a8186ca6bc23130a60bfc726f36a723e80e9e4a813014",
+      "bytes": 14201
+    },
+    "reference/dependencies/apprise/apprise/plugins/kavenegar.py": {
+      "sha256": "a277a4845023587fb7bddd4837148ee29f7f54798a8bed7d87bc9d19d0e48ca2",
+      "bytes": 12937
+    },
+    "reference/dependencies/apprise/apprise/plugins/kodi.py": {
+      "sha256": "e4dc7b96cb66a889652f786021a79aa8d15367cbb9246ead744deec98754cace",
+      "bytes": 13071
+    },
+    "reference/dependencies/apprise/apprise/plugins/kumulos.py": {
+      "sha256": "2f47f931d367da069ef3e243cb7c0359536426a27d68bca84db3de0159355c68",
+      "bytes": 8464
+    },
+    "reference/dependencies/apprise/apprise/plugins/lametric.py": {
+      "sha256": "16386e8228dca1d5388ff4a0c46b8981b2982dfa79aec3dd9bd9ac7890434ede",
+      "bytes": 40183
+    },
+    "reference/dependencies/apprise/apprise/plugins/lark.py": {
+      "sha256": "25d014e18a5e5cad9b42dbd7d4141da8b27d0eeb5eb1abdde144934e18b09b2f",
+      "bytes": 6424
+    },
+    "reference/dependencies/apprise/apprise/plugins/line.py": {
+      "sha256": "fd1838c782e13c1d361d669527dce716884ea8032b3af1ffd5778ea0d7f90df7",
+      "bytes": 10972
+    },
+    "reference/dependencies/apprise/apprise/plugins/macosx.py": {
+      "sha256": "c79144f1c70e1e0dc7eebe90f50d8ddb85e91e409456c939c5b111d4e8fb77d4",
+      "bytes": 8365
+    },
+    "reference/dependencies/apprise/apprise/plugins/mailgun.py": {
+      "sha256": "7fb97502f60ff01788bd7c6962687da25cf2742133dbf9476b7b3492fd67fc44",
+      "bytes": 26591
+    },
+    "reference/dependencies/apprise/apprise/plugins/mastodon.py": {
+      "sha256": "0179ee350cbeb5683cf5530701b8e63c44e12c748b939072e706f4857d0fc954",
+      "bytes": 36655
+    },
+    "reference/dependencies/apprise/apprise/plugins/matrix.py": {
+      "sha256": "02aeca506dfd2533ceca741207f1a7e9a8f81a8fdf4ac0dbef3c31fad2317dab",
+      "bytes": 65501
+    },
+    "reference/dependencies/apprise/apprise/plugins/mattermost.py": {
+      "sha256": "1d2959a51bfb7c34717fe64898fd89871eea456568c44e147f6d1ba344765bca",
+      "bytes": 25346
+    },
+    "reference/dependencies/apprise/apprise/plugins/messagebird.py": {
+      "sha256": "732770044e910f8d075e624fd45c647755decaf68bd852aa6ab79ce14133bfeb",
+      "bytes": 12569
+    },
+    "reference/dependencies/apprise/apprise/plugins/misskey.py": {
+      "sha256": "98dcb645ab2954d3b10bd01fa4d2ccdf4bd31e30c09d9abea31016fc9b4afdd2",
+      "bytes": 10055
+    },
+    "reference/dependencies/apprise/apprise/plugins/mqtt.py": {
+      "sha256": "e58b8a937214a48f95c331265d5cfdbf6fa9f5cf579a5b3b30efdf87f0f3f0d8",
+      "bytes": 21556
+    },
+    "reference/dependencies/apprise/apprise/plugins/msg91.py": {
+      "sha256": "35e861b688bf24cdab70ff858458224f8d22bd8801dc3a2f47641b07a782a131",
+      "bytes": 13153
+    },
+    "reference/dependencies/apprise/apprise/plugins/msteams.py": {
+      "sha256": "ad3f554d07738190f050dda4b75233225322af3d344a3cb0ebc27e5c63c116b7",
+      "bytes": 27533
+    },
+    "reference/dependencies/apprise/apprise/plugins/nextcloud.py": {
+      "sha256": "926eacef7ce0800aa7b09e6494c7e0c56d30d1e56c9d4351b20e89374ff77772",
+      "bytes": 20174
+    },
+    "reference/dependencies/apprise/apprise/plugins/nextcloudtalk.py": {
+      "sha256": "7f5f1858484d0a48cecf85e315e5f7a1e83e251eeefa622d29f5e6e185efdf21",
+      "bytes": 11667
+    },
+    "reference/dependencies/apprise/apprise/plugins/notica.py": {
+      "sha256": "76f425431d9006fa73bc87034551d178fdfa122b970255e040e0bc8695253b27",
+      "bytes": 13541
+    },
+    "reference/dependencies/apprise/apprise/plugins/notifiarr.py": {
+      "sha256": "52c725b8c5fb5895cdc7be00347d35dce6fcdd130121f3d3b4699e67059d44f2",
+      "bytes": 15829
+    },
+    "reference/dependencies/apprise/apprise/plugins/notificationapi.py": {
+      "sha256": "e7f37ac7a319691eef61bdcccc2e2d1b7f27372ec291ec9847b2c35cea72be06",
+      "bytes": 33874
+    },
+    "reference/dependencies/apprise/apprise/plugins/notifico.py": {
+      "sha256": "28f13b008375e88364a05c42c70f379cc4f39138ea1be8d8269707519329cf4d",
+      "bytes": 12619
+    },
+    "reference/dependencies/apprise/apprise/plugins/ntfy.py": {
+      "sha256": "9db4fe5c7985f0f198a833317618c5681fcd7f6077257644772df679a1fd3f4c",
+      "bytes": 32547
+    },
+    "reference/dependencies/apprise/apprise/plugins/office365.py": {
+      "sha256": "1eefb388a45c0f75ad09f35301b251a44b07dfec12c9e6d275b482b03c11cbd7",
+      "bytes": 38391
+    },
+    "reference/dependencies/apprise/apprise/plugins/one_signal.py": {
+      "sha256": "327862c7418950fdabb50b9a8cd67f4b3acbc13299b80ed578ee4bd34fee2d81",
+      "bytes": 23941
+    },
+    "reference/dependencies/apprise/apprise/plugins/opsgenie.py": {
+      "sha256": "e60cf589ab3e3b119f574cf9fc87d5a807b327c6f223736c6d86a203ae0c835c",
+      "bytes": 29465
+    },
+    "reference/dependencies/apprise/apprise/plugins/pagerduty.py": {
+      "sha256": "4fe41a293188fc7c3c62fe7d2f99bf23297f222985d29eb8f18a31c1c9217d00",
+      "bytes": 18843
+    },
+    "reference/dependencies/apprise/apprise/plugins/pagertree.py": {
+      "sha256": "6cf757dfb0f8dcf9dfa63086792591182bd4c78800786536a3d48ffcc5019e5d",
+      "bytes": 14225
+    },
+    "reference/dependencies/apprise/apprise/plugins/parseplatform.py": {
+      "sha256": "20d9effd14df41e62a3a2f4ad8fca699af159ea6df6ef2da8e4b61850a1b5ffb",
+      "bytes": 11087
+    },
+    "reference/dependencies/apprise/apprise/plugins/plivo.py": {
+      "sha256": "770a3c2bf020629d1bbcf287653421ab42106715d99f762a163f6547dfecfd7d",
+      "bytes": 14124
+    },
+    "reference/dependencies/apprise/apprise/plugins/popcorn_notify.py": {
+      "sha256": "0e002dd2c03d3f8a88110510290d69af3ec3c8ec99178ff68e835f5c30646823",
+      "bytes": 11091
+    },
+    "reference/dependencies/apprise/apprise/plugins/prowl.py": {
+      "sha256": "892668cba5478cb9e4ef368e2012739ccb5dd1ca04dc62a5d42331135de4895d",
+      "bytes": 10242
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushbullet.py": {
+      "sha256": "3c173a4453db8bc3a1bfc3ab6546516a6e6bbe3f3eedf274d3fb70a630d752b0",
+      "bytes": 16236
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushdeer.py": {
+      "sha256": "029dd1d885637dcc95cd28292c2e6d6329b453848da1a953b5b3a0b35eb298be",
+      "bytes": 7246
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushed.py": {
+      "sha256": "3ec4d400840b8da4b7bc78589a72d9e3b3f5f3afdd49e08a6cdec96763512e35",
+      "bytes": 12638
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushjet.py": {
+      "sha256": "b520f92f29872bc12e5eb5a2c58042ddee62773dc1457db2cec629aceb206365",
+      "bytes": 9591
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushme.py": {
+      "sha256": "85f9cafbd0d0ce0ac2707b43c6e6318c8ecdd7f660b50a595a750492311a23f1",
+      "bytes": 7415
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushover.py": {
+      "sha256": "75d8164357e714a4d27209ee9bb7ace132c4db9d363a4178b5bfac302aedea8c",
+      "bytes": 22163
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushplus.py": {
+      "sha256": "8870129d7710d7176b7fc3a9cf4340d03271b0e4a5548ad49faba09e5a6eb6d6",
+      "bytes": 5683
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushsafer.py": {
+      "sha256": "43d1ca62da6a09a8ee85b963899cd9d357a1a3dfd8534bca51e9444d45b03b31",
+      "bytes": 28301
+    },
+    "reference/dependencies/apprise/apprise/plugins/pushy.py": {
+      "sha256": "8c53c286217d53598754f62cadb89c7564a0191de43eb32040620901fee3420a",
+      "bytes": 12837
+    },
+    "reference/dependencies/apprise/apprise/plugins/qq.py": {
+      "sha256": "45c504730823ad7f9d3637c1e24ed71d6b220b51ee29426231cc2e5cddf6fe93",
+      "bytes": 5655
+    },
+    "reference/dependencies/apprise/apprise/plugins/reddit.py": {
+      "sha256": "2cb7d1cfe26a5a597b7d88b8cbfa97571f8b273deb2c4f7cbc2597b90391b5b6",
+      "bytes": 26183
+    },
+    "reference/dependencies/apprise/apprise/plugins/resend.py": {
+      "sha256": "acb47ae34a121f055825456c759f5f863a4246f4a7eb22d83931b989f1aaa98e",
+      "bytes": 20362
+    },
+    "reference/dependencies/apprise/apprise/plugins/revolt.py": {
+      "sha256": "4dda214ad618f8a961badeeedfdc25d42c19b0a221ad1087f681c968fa137dac",
+      "bytes": 14934
+    },
+    "reference/dependencies/apprise/apprise/plugins/rocketchat.py": {
+      "sha256": "41ca5b774eb2a39e3c4650d99c9352a5a79be09ef6f0ec74e010ee89a8a65adb",
+      "bytes": 26677
+    },
+    "reference/dependencies/apprise/apprise/plugins/rsyslog.py": {
+      "sha256": "9594674e0964f9d33cedd45dd6132b9cb058bc25b0616304885df3ac03d407b3",
+      "bytes": 12516
+    },
+    "reference/dependencies/apprise/apprise/plugins/ryver.py": {
+      "sha256": "36cf9fcba0ce6e857272b0862a2831d24483cd26b03d14c2c71e58c4fd536680",
+      "bytes": 12249
+    },
+    "reference/dependencies/apprise/apprise/plugins/sendgrid.py": {
+      "sha256": "9a8ab1705db873404889177481b95431691669fc634de1cad08226fef92ed94d",
+      "bytes": 19228
+    },
+    "reference/dependencies/apprise/apprise/plugins/sendpulse.py": {
+      "sha256": "87d95cb68922b5012250dd0612b55a85ac776268c6833cd1c20489bf0b8bd1bc",
+      "bytes": 27459
+    },
+    "reference/dependencies/apprise/apprise/plugins/serverchan.py": {
+      "sha256": "556b605bc02020f1ea06d26efd48698ddf1949a3c2924165a1b64fe592cb0e4c",
+      "bytes": 6026
+    },
+    "reference/dependencies/apprise/apprise/plugins/ses.py": {
+      "sha256": "667468cf2bd1403c626f54333b0ae2613b5351f1d0bd30b42eaa7babc6e127ee",
+      "bytes": 34848
+    },
+    "reference/dependencies/apprise/apprise/plugins/seven.py": {
+      "sha256": "b56bc163c3e166d45683b2a4bf7f13c6a02e50a91f3eb3f23bb15c45dc2be1f9",
+      "bytes": 12485
+    },
+    "reference/dependencies/apprise/apprise/plugins/sfr.py": {
+      "sha256": "51335dc2f60d67f0a88cb0b4a8dc19053f45d46650b182020f56742caed0573c",
+      "bytes": 15185
+    },
+    "reference/dependencies/apprise/apprise/plugins/signal_api.py": {
+      "sha256": "ae127412ac04a54275df467ec28d4719992650af6aaf09e29e7c57bfa8026402",
+      "bytes": 18656
+    },
+    "reference/dependencies/apprise/apprise/plugins/signl4.py": {
+      "sha256": "7fbc58bbd6ec7a84f78ae7d0bc3ec69a14cf44c3132dd396b1f5df5cf43abb7c",
+      "bytes": 11260
+    },
+    "reference/dependencies/apprise/apprise/plugins/simplepush.py": {
+      "sha256": "f63d15a80436bfcb6febefac652ff63a7e4234c2bf5012c94651c3c31eb38b4c",
+      "bytes": 12137
+    },
+    "reference/dependencies/apprise/apprise/plugins/sinch.py": {
+      "sha256": "14ce7a5bcb2e203808d07d983915c2f5db4e63e77cfa246a5cc007fb75a35858",
+      "bytes": 17456
+    },
+    "reference/dependencies/apprise/apprise/plugins/slack.py": {
+      "sha256": "e52509ad487214e66e54705c4a50834a7e636d1819cca68c0dba8a1d55fbfed2",
+      "bytes": 48725
+    },
+    "reference/dependencies/apprise/apprise/plugins/smpp.py": {
+      "sha256": "11b58c167b77002580b47cf18d92d64a6ad0e6425b50bdb72e97ce37a9af3aed",
+      "bytes": 11759
+    },
+    "reference/dependencies/apprise/apprise/plugins/smseagle.py": {
+      "sha256": "fd668f47dc22e40a9a6f864cdd2db779996ad8f4d18815ebf197e631e389b9a7",
+      "bytes": 26241
+    },
+    "reference/dependencies/apprise/apprise/plugins/smsmanager.py": {
+      "sha256": "4c9da07dd8dbd7c2557e8d1ec58b8c1c1a3ed878b54081d0b08e98cc89d2590c",
+      "bytes": 14706
+    },
+    "reference/dependencies/apprise/apprise/plugins/smtp2go.py": {
+      "sha256": "201232f2540f8088158a87920d56c84c60aaf3b423080605b62d4cd398fa77bf",
+      "bytes": 20956
+    },
+    "reference/dependencies/apprise/apprise/plugins/sns.py": {
+      "sha256": "1c07c2e954bfdce7fb102703aa1c31232d2bd8e6a205a40136c8b9dec1c8643d",
+      "bytes": 24519
+    },
+    "reference/dependencies/apprise/apprise/plugins/sparkpost.py": {
+      "sha256": "a8a62e6a809a389e7d4fac2711adfe6c653e8a1a674a0f1a74aba50ee6283694",
+      "bytes": 28205
+    },
+    "reference/dependencies/apprise/apprise/plugins/spike.py": {
+      "sha256": "3ca49842f8cd08a33d54de5549af81088479595ca29c7a0a2f6ac254123725ce",
+      "bytes": 5963
+    },
+    "reference/dependencies/apprise/apprise/plugins/splunk.py": {
+      "sha256": "1de060e8510cd716ee5c736fd9748a919ef8ae96857145734de51e802e711872",
+      "bytes": 17182
+    },
+    "reference/dependencies/apprise/apprise/plugins/spugpush.py": {
+      "sha256": "ab8a5dec6ed3050da161dff7a99e5b01d47efa7b9f10d6d776d8c4a6454ae287",
+      "bytes": 5616
+    },
+    "reference/dependencies/apprise/apprise/plugins/streamlabs.py": {
+      "sha256": "cacee39d110af5a168c18deb2a3cf62bfd2e7dacf6b3365ccc75025dc652afb9",
+      "bytes": 16622
+    },
+    "reference/dependencies/apprise/apprise/plugins/synology.py": {
+      "sha256": "d9b80e09630fe22eee527f07a71cfce5efccb081124b5236dca1cb278e4dd1e9",
+      "bytes": 11857
+    },
+    "reference/dependencies/apprise/apprise/plugins/syslog.py": {
+      "sha256": "d3e13ca897a228908495629cb11424a855bbe3252617b993ebdf6c15a6cd1d37",
+      "bytes": 10799
+    },
+    "reference/dependencies/apprise/apprise/plugins/techuluspush.py": {
+      "sha256": "6a18bfe2c058dd548408274fce10cbd6c9ee374a0212a54cc62e4ebf1bd76c01",
+      "bytes": 7412
+    },
+    "reference/dependencies/apprise/apprise/plugins/telegram.py": {
+      "sha256": "f5d0a5a8fc1214b529604b6787d57695d6498980dc77728cbd255113d8e836d4",
+      "bytes": 40952
+    },
+    "reference/dependencies/apprise/apprise/plugins/threema.py": {
+      "sha256": "2f3f34a6ba3efc78364bea34c9464b600b0c1c5f28cdcc90f644516029e663c0",
+      "bytes": 12287
+    },
+    "reference/dependencies/apprise/apprise/plugins/twilio.py": {
+      "sha256": "b9bf0e346715f0ce2b390d8cebcc8bdf8a3f8f06fdc6f0818ac14ab3f65b0f81",
+      "bytes": 21752
+    },
+    "reference/dependencies/apprise/apprise/plugins/twist.py": {
+      "sha256": "44cef94d16e2a0df4f3c6be4298e74df5201d6e4014d5693320c849a30779993",
+      "bytes": 26944
+    },
+    "reference/dependencies/apprise/apprise/plugins/twitter.py": {
+      "sha256": "000a702db1dfbde3c98a71cc4e8a2fa7f1124c9d255bc7cd72ed159d569316ab",
+      "bytes": 31870
+    },
+    "reference/dependencies/apprise/apprise/plugins/vapid/__init__.py": {
+      "sha256": "b60c5a647f900d74b04c96b918fc3d7235b799cd17d431b4541ff3d8b95a71de",
+      "bytes": 20545
+    },
+    "reference/dependencies/apprise/apprise/plugins/vapid/subscription.py": {
+      "sha256": "bfa216148ca27f14c70acdd8fa536e11c15439e67c43fb17b8f5998437aeb1c2",
+      "bytes": 13139
+    },
+    "reference/dependencies/apprise/apprise/plugins/viber.py": {
+      "sha256": "a83ecbfc93ac4ee58632eaa83300e7d51abafd2ff7ffa3765de079e3ec1b3ccf",
+      "bytes": 11541
+    },
+    "reference/dependencies/apprise/apprise/plugins/voipms.py": {
+      "sha256": "bbfe527c14c7df3c3cf13195571afb7ebaad4cb7cad2e8c32a58ddf11dc71b3a",
+      "bytes": 13369
+    },
+    "reference/dependencies/apprise/apprise/plugins/vonage.py": {
+      "sha256": "8d97c7b6afa92fe7166a0ef6d54345b5817c34e56ac7f7e4846aa7dae53a07ca",
+      "bytes": 13752
+    },
+    "reference/dependencies/apprise/apprise/plugins/webexteams.py": {
+      "sha256": "b046ed321f98cb10b234d3e32e98983e9578c02b9dcc93aa628941cd2987e2c6",
+      "bytes": 9886
+    },
+    "reference/dependencies/apprise/apprise/plugins/wecombot.py": {
+      "sha256": "1b5801338240ce52121e6ad106e2360d2a1d2613cba594a8de5e5435cc28ef2c",
+      "bytes": 9159
+    },
+    "reference/dependencies/apprise/apprise/plugins/whatsapp.py": {
+      "sha256": "5fb9e80a6f67268c64ae98c7fc6d97fc757e7dca7051342b6911985216628611",
+      "bytes": 20880
+    },
+    "reference/dependencies/apprise/apprise/plugins/windows.py": {
+      "sha256": "a332a7f1ceb6d245ae7f146b816d06e312052ab8033f89343cdb9f0386f75854",
+      "bytes": 9289
+    },
+    "reference/dependencies/apprise/apprise/plugins/workflows.py": {
+      "sha256": "0f8c25e50197e30440dffd8e963be485dc7c249322709a478cf0dfd0964fd5a8",
+      "bytes": 22918
+    },
+    "reference/dependencies/apprise/apprise/plugins/wxpusher.py": {
+      "sha256": "623f9b87a7fb231788099ef68c306d4f74222c704bed937995d4a7ba127b5162",
+      "bytes": 13153
+    },
+    "reference/dependencies/apprise/apprise/plugins/xmpp/__init__.py": {
+      "sha256": "3071e41d792e01c71099de787dde632dda454eb203edf6ba5ed9ea290c7f494a",
+      "bytes": 1496
+    },
+    "reference/dependencies/apprise/apprise/plugins/xmpp/adapter.py": {
+      "sha256": "d4b44cc50b680dcf1e6219eccecbc57dfd946f8bdecd9481193061551f4e504e",
+      "bytes": 34299
+    },
+    "reference/dependencies/apprise/apprise/plugins/xmpp/base.py": {
+      "sha256": "eea29fdcdc5e70a19436c380c4b8b41aa2530584edd58eaa18f1c0902fe73b4a",
+      "bytes": 16307
+    },
+    "reference/dependencies/apprise/apprise/plugins/xmpp/common.py": {
+      "sha256": "3f8fdeb12bd1ce050935b241e0535f1bf11ce3691fe9a9cfaf78d6abbef04902",
+      "bytes": 2106
+    },
+    "reference/dependencies/apprise/apprise/plugins/zulip.py": {
+      "sha256": "a6cc435d7f25ba8a2d1ea88495256dbcc445610f3f5d92cca464b90987bed830",
+      "bytes": 14531
+    },
+    "reference/dependencies/apprise/apprise/url.py": {
+      "sha256": "3524bd3f059b8f679dc4f096167159bdcf259e5384d1d03e622fdce32b32aa16",
+      "bytes": 35434
+    },
+    "reference/dependencies/apprise/apprise/utils/__init__.py": {
+      "sha256": "f975501b6de093fcd4e8117fba06c06a7f0285f266c9c9ae23e80354b7b15bcf",
+      "bytes": 1406
+    },
+    "reference/dependencies/apprise/apprise/utils/base64.py": {
+      "sha256": "a11cd1b3bf038b61a1f2738f570f640d7920b4f6f73bbe237e643f3b89467d74",
+      "bytes": 3771
+    },
+    "reference/dependencies/apprise/apprise/utils/cwe312.py": {
+      "sha256": "e8f862319aaf71684ef64f1c3c5d00628f6405b997e5610ff50c781c7136bd38",
+      "bytes": 7767
+    },
+    "reference/dependencies/apprise/apprise/utils/disk.py": {
+      "sha256": "84a28603a28c22286ab24f4f5b8b320ad6db3806c2c25ada57c666b9bed22513",
+      "bytes": 5659
+    },
+    "reference/dependencies/apprise/apprise/utils/format.py": {
+      "sha256": "1712c3eb205c4753de2804ff6b5493a38af9a0dbf58546f40d84065a965b8349",
+      "bytes": 6916
+    },
+    "reference/dependencies/apprise/apprise/utils/json.py": {
+      "sha256": "435c8b2158983a335315dceb30ab9ba44a0d66a9a717dcf33f16f1ffd8750389",
+      "bytes": 2222
+    },
+    "reference/dependencies/apprise/apprise/utils/logic.py": {
+      "sha256": "7de4428f5b6d46e6400e0e7fbe2f484dca1f915f50bb158e3fb041de60aea398",
+      "bytes": 4578
+    },
+    "reference/dependencies/apprise/apprise/utils/module.py": {
+      "sha256": "0d852fa5b99c1dcd068a6a41230ab00dab4fccd6151dd2a5febf67093d8a0dc4",
+      "bytes": 2054
+    },
+    "reference/dependencies/apprise/apprise/utils/parse.py": {
+      "sha256": "416b0d749dfd1b21e9e135d8662524fad28caac605d91a8b2e846a89240f84f0",
+      "bytes": 39926
+    },
+    "reference/dependencies/apprise/apprise/utils/pem.py": {
+      "sha256": "15f06323e23f82323d38df8ada521dfb780242b53b2f40b1eb6512983f2b74e9",
+      "bytes": 28025
+    },
+    "reference/dependencies/apprise/apprise/utils/pgp.py": {
+      "sha256": "aa5a583afc85a19ef945e2c324daa0b81793dcadabad564f1870671d49df8636",
+      "bytes": 11607
+    },
+    "reference/dependencies/apprise/apprise/utils/sanitize.py": {
+      "sha256": "d92a0dadd957f9900542bcb1806422c48516ad63befe5c08dcced94d832c27c2",
+      "bytes": 9532
+    },
+    "reference/dependencies/apprise/apprise/utils/singleton.py": {
+      "sha256": "394485e02e72cc8426f30344917b52c3fa5310a56e7977e068b74e7be7e239ee",
+      "bytes": 1795
+    },
+    "reference/dependencies/apprise/apprise/utils/socket.py": {
+      "sha256": "4078d66ea778215db07139796b7199783f042240ac0365aaf840633e99ab2341",
+      "bytes": 21903
+    },
+    "reference/dependencies/apprise/apprise/utils/templates.py": {
+      "sha256": "eadd5d266c76977a6a88910564b1595879293f3d964bdda68d10841b81d23060",
+      "bytes": 3245
+    },
+    "reference/dependencies/apprise/apprise/utils/time.py": {
+      "sha256": "5b7ff2df7f21a5a02b26a36bd942071a33e29c43a2da8781885da147796f17d3",
+      "bytes": 2877
+    },
+    "reference/dependencies/mako/mako-1.4.1.dist-info/licenses/LICENSE": {
+      "sha256": "8c1d171bc5d341ad9cd33d5e2c39b96a82c7bd49b3ae89a470c37e5822232054",
+      "bytes": 1098
+    },
+    "reference/dependencies/mako/mako/__init__.py": {
+      "sha256": "2eef700259e0b682a32fcabd635b6c3212df2b140ee1cafc4f9874f62336991d",
+      "bytes": 242
+    },
+    "reference/dependencies/mako/mako/_ast_util.py": {
+      "sha256": "494c5c7ba0f196cc8ede536261e094e935ea8f4ced9b4415093e40a07f207bc7",
+      "bytes": 19847
+    },
+    "reference/dependencies/mako/mako/ast.py": {
+      "sha256": "f0248c12c8827349ea6d1b7d88dcf325743c589d04d50fcde63e982a5e44395b",
+      "bytes": 7408
+    },
+    "reference/dependencies/mako/mako/cache.py": {
+      "sha256": "0e7a30b905b44dc9c06b9bb9b4d37b0ffaaf5a3a9f3ca72c4c80a202a7038e83",
+      "bytes": 7678
+    },
+    "reference/dependencies/mako/mako/cmd.py": {
+      "sha256": "31fa4c68eee96d5158633cd268e97bbdbdea73208876a05b44b9a1478bf91d18",
+      "bytes": 2813
+    },
+    "reference/dependencies/mako/mako/codegen.py": {
+      "sha256": "f271c29d3ec96cbaa76724beb38cea2e6dded99e428ce9a2163493c2024a7ae1",
+      "bytes": 47733
+    },
+    "reference/dependencies/mako/mako/compat.py": {
+      "sha256": "134e6d20e349a7c9955c1ae709c1be777d9e0e1728ec5a931fd4fee07e6f6f0f",
+      "bytes": 1820
+    },
+    "reference/dependencies/mako/mako/exceptions.py": {
+      "sha256": "85a18498d52e8047871b80443ddc0446c3aff96144e197142bf66507e8942ffe",
+      "bytes": 12511
+    },
+    "reference/dependencies/mako/mako/ext/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "reference/dependencies/mako/mako/ext/autohandler.py": {
+      "sha256": "fb73f1eb1650bf5b388bba00fd755cf5ced725a86f84922c390f3ed0abb6f28b",
+      "bytes": 1885
+    },
+    "reference/dependencies/mako/mako/ext/babelplugin.py": {
+      "sha256": "104d05bbfdd47623e97be8de361ee6dd329a17b8e5af79e551ff9d7b2ede171a",
+      "bytes": 2092
+    },
+    "reference/dependencies/mako/mako/ext/beaker_cache.py": {
+      "sha256": "4ca18af1570ca3eb29c257039f004dfc6ea6856a93b12c0e9916e18c3315d93e",
+      "bytes": 2577
+    },
+    "reference/dependencies/mako/mako/ext/extract.py": {
+      "sha256": "b42db339e98cc39e43d45a09c7b3a941b4e8ea3f1754f3e35f44892cf077f05f",
+      "bytes": 4659
+    },
+    "reference/dependencies/mako/mako/ext/linguaplugin.py": {
+      "sha256": "58096c98a033702602d06e07267d73069c51c77d2c1315d4713dd84d7f4754dd",
+      "bytes": 1935
+    },
+    "reference/dependencies/mako/mako/ext/preprocessors.py": {
+      "sha256": "6085d5d55a912ac2524f24282fddc722ac79bd125503d0ce47adfc2676cf3ff8",
+      "bytes": 576
+    },
+    "reference/dependencies/mako/mako/ext/pygmentplugin.py": {
+      "sha256": "6debc5e8ff46b7aa8ec87253e84c6d1a05054b0d07fa42abf37a992fd076afca",
+      "bytes": 4753
+    },
+    "reference/dependencies/mako/mako/ext/turbogears.py": {
+      "sha256": "aec91370e5d31bf3a552375c45ca4853951110740686c32016bc6e2a6b5c74f3",
+      "bytes": 2140
+    },
+    "reference/dependencies/mako/mako/filters.py": {
+      "sha256": "130e1fd9427461e525ee816c7d0a50b6d86c18f14bbc62629fff55880f0e5843",
+      "bytes": 4658
+    },
+    "reference/dependencies/mako/mako/lexer.py": {
+      "sha256": "abb60094a1471624a1738fb6c888e64b7b1ce885eb590949aa97d1dfd2adf808",
+      "bytes": 16809
+    },
+    "reference/dependencies/mako/mako/lookup.py": {
+      "sha256": "ce623f36bb75acb6800cc9b3db4c62a6f0a0b3f6d849dac35c02d6eee96b85e9",
+      "bytes": 12445
+    },
+    "reference/dependencies/mako/mako/parsetree.py": {
+      "sha256": "c8518e095b1bd74c62192889d942a7f08ed7b524b9a89fc0dd67651278feff57",
+      "bytes": 19018
+    },
+    "reference/dependencies/mako/mako/pygen.py": {
+      "sha256": "c80dd53c0e5015cfc1a61c8d050dec71a06c054077a3dbbc8a9cfe7e041d3106",
+      "bytes": 10414
+    },
+    "reference/dependencies/mako/mako/pyparser.py": {
+      "sha256": "6c0319ab7a64674b58c3be700396c4ad5f0a9df91f6e679b0264a0642df3db66",
+      "bytes": 8418
+    },
+    "reference/dependencies/mako/mako/runtime.py": {
+      "sha256": "f70786b1e414652845d04b6780e7b4fada2c16bac83c4f0a87ac9d7096bc9c46",
+      "bytes": 27791
+    },
+    "reference/dependencies/mako/mako/template.py": {
+      "sha256": "869cb055b2aa13f173626bb2ee86768c8d3eb7ad081a374f09cdde554341424d",
+      "bytes": 28869
+    },
+    "reference/dependencies/mako/mako/testing/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "reference/dependencies/mako/mako/testing/_config.py": {
+      "sha256": "93eaa99ec9db5d4a0dfb290c379051a60f388b5c74a7a52c01d74a427ac8cad5",
+      "bytes": 3566
+    },
+    "reference/dependencies/mako/mako/testing/assertions.py": {
+      "sha256": "a5f6c697ce10956ed0586837fe5a37c0ff179c1015a3d023ccda766a39a7ec50",
+      "bytes": 5161
+    },
+    "reference/dependencies/mako/mako/testing/config.py": {
+      "sha256": "c2661565fcc6bce2b7989519a739a03bcfa2220bda087e355a88b8c83a71aba1",
+      "bytes": 323
+    },
+    "reference/dependencies/mako/mako/testing/exclusions.py": {
+      "sha256": "0069858251838d3f14cb6a3a089e9408e81d8b931a7f3c89e713b882c0d390bc",
+      "bytes": 1552
+    },
+    "reference/dependencies/mako/mako/testing/fixtures.py": {
+      "sha256": "9c4a7bc13bac7fb1349f743e047256dacfedd6fc74281f69a1a750d419882731",
+      "bytes": 3044
+    },
+    "reference/dependencies/mako/mako/testing/helpers.py": {
+      "sha256": "8bee87f6c8a53a027202634de8ac81e65b623e87990283fce76aa8b4f9fc266b",
+      "bytes": 1601
+    },
+    "reference/dependencies/mako/mako/util.py": {
+      "sha256": "3b9e00050ed1898ed77de1ae3f24a50b7339f2a358788750a32d1495cfc5d1ab",
+      "bytes": 8230
+    },
+    "reference/dependencies/manifest.json": {
+      "sha256": "0af74ba1f32dea57d3a2a02ca076e62feab5bb6f9422b1c0d841689f449c0f9b",
+      "bytes": 46946
+    },
+    "reference/dependencies/stdlib/email/__init__.py": {
+      "sha256": "e4f46e3414c4602c9abb8b404a45e84412fc49dbe38a3d163f9575132dc7c93e",
+      "bytes": 1764
+    },
+    "reference/dependencies/stdlib/email/_encoded_words.py": {
+      "sha256": "4178321600c0a19ca04cfe8542ce44487f339d15d89a473b58cea63c0b230217",
+      "bytes": 8541
+    },
+    "reference/dependencies/stdlib/email/_header_value_parser.py": {
+      "sha256": "fde2476258d76ae53259f377778cdacdbaca421c2424acada1ef5a94245892cb",
+      "bytes": 111685
+    },
+    "reference/dependencies/stdlib/email/_parseaddr.py": {
+      "sha256": "4308932872acbf4a674312a45a49b870e48026e3dfedc878ee2f512ddf2f30ba",
+      "bytes": 17821
+    },
+    "reference/dependencies/stdlib/email/_policybase.py": {
+      "sha256": "284be073d7fe99d1021958e6dbeefe4c98a6c00021ea465d01aac71338d1579f",
+      "bytes": 15535
+    },
+    "reference/dependencies/stdlib/email/base64mime.py": {
+      "sha256": "e2b4b87a5f42a8c5780e343f675513bbcc6abdd23fa14f8f1a7d4f7d72304770",
+      "bytes": 3551
+    },
+    "reference/dependencies/stdlib/email/charset.py": {
+      "sha256": "a90653f13a4dc5eb3205079dda1d62561a8bf9a7b45585f5dbf90aa31a966680",
+      "bytes": 17063
+    },
+    "reference/dependencies/stdlib/email/contentmanager.py": {
+      "sha256": "2d81026aef17e4786b15d9ec0629304987e3f275a0fd0a421a81b4ed87234b2c",
+      "bytes": 10588
+    },
+    "reference/dependencies/stdlib/email/encoders.py": {
+      "sha256": "690b275529788cc48e8f541a2aef321dc31e92f75764ac7924896db72d8a9555",
+      "bytes": 1778
+    },
+    "reference/dependencies/stdlib/email/errors.py": {
+      "sha256": "dbfb4bbfc85e9d556d3385dc6356518846d8a122bc643b171ea61b6e8dc42c8b",
+      "bytes": 3814
+    },
+    "reference/dependencies/stdlib/email/feedparser.py": {
+      "sha256": "6046239fcdd6977d1c25841581cabedaeec8046cc5fedcb8ff2d6450a36442bd",
+      "bytes": 22796
+    },
+    "reference/dependencies/stdlib/email/generator.py": {
+      "sha256": "1cf088e6632b61b7c428caa8b5007b18e405fba68055716a11bd3ceb55c0d4c7",
+      "bytes": 21403
+    },
+    "reference/dependencies/stdlib/email/header.py": {
+      "sha256": "4d9baa908ad5288dd8fad8cf20b3802ffac77ba1642727804a633b201c56e5ca",
+      "bytes": 24092
+    },
+    "reference/dependencies/stdlib/email/headerregistry.py": {
+      "sha256": "fada56c25b6a457c6a62af43f9f929bbc29424103ce65f40f114adb4fdf3d39f",
+      "bytes": 20819
+    },
+    "reference/dependencies/stdlib/email/iterators.py": {
+      "sha256": "1080a2d03779176d6d45f6ecd976dbe69f5579f7e4e83b75224c3f92fd258102",
+      "bytes": 2129
+    },
+    "reference/dependencies/stdlib/email/message.py": {
+      "sha256": "ba32efea2602ea52e73028a2817afddccccacc4385b9800896556d5c22db2b90",
+      "bytes": 48396
+    },
+    "reference/dependencies/stdlib/email/mime/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "reference/dependencies/stdlib/email/mime/application.py": {
+      "sha256": "b82a944ccba03e7e7eec46232e50ffe4ce2c32f4b0e26662e6bde30d533584ae",
+      "bytes": 1321
+    },
+    "reference/dependencies/stdlib/email/mime/audio.py": {
+      "sha256": "856263b25a3384a7450a1a0b9869fb897b84f893b2e7147c7e045ae50d132cd3",
+      "bytes": 3094
+    },
+    "reference/dependencies/stdlib/email/mime/base.py": {
+      "sha256": "9a7b36653b5657525a0aeeaa72d4a0b09f598e6edc29c139c2dc2612b7d29fb8",
+      "bytes": 914
+    },
+    "reference/dependencies/stdlib/email/mime/image.py": {
+      "sha256": "460be5b50cfcaab8e72a73f24f14ab062cedf1a40a775b8b0d80c13aed44bb5e",
+      "bytes": 3726
+    },
+    "reference/dependencies/stdlib/email/mime/message.py": {
+      "sha256": "30fccea73b874b5ddaccbd3c64936833749ff039f08d40524c1b0b25b8e8e2b8",
+      "bytes": 1315
+    },
+    "reference/dependencies/stdlib/email/mime/multipart.py": {
+      "sha256": "8bf2beca6de95d66f12968380a428d3bb0a28a8a6ea2078da521511e1ed80a38",
+      "bytes": 1619
+    },
+    "reference/dependencies/stdlib/email/mime/nonmultipart.py": {
+      "sha256": "4eb9ad32603d66fc9d55aebcc4d3cf759edd9e95a591d38690659afb2e57b050",
+      "bytes": 689
+    },
+    "reference/dependencies/stdlib/email/mime/text.py": {
+      "sha256": "71c56a41675a36801259c9946f7b7bf838e6c29c453ba8c34d89401f2b972d6c",
+      "bytes": 1394
+    },
+    "reference/dependencies/stdlib/email/parser.py": {
+      "sha256": "88890ea9994c55ff7d6c1fd570fece2785f51ed407ee95df4aff946e250bcd66",
+      "bytes": 4975
+    },
+    "reference/dependencies/stdlib/email/policy.py": {
+      "sha256": "35fcbece24fac56fdefe15c93351eefda47c3440204746b8519e71d4633b0f3e",
+      "bytes": 10614
+    },
+    "reference/dependencies/stdlib/email/quoprimime.py": {
+      "sha256": "77b454bd3ba3b5e3776be28ae3a0fd8de5d1e50d5b8ee10dd539c37c2bd68082",
+      "bytes": 9864
+    },
+    "reference/dependencies/stdlib/email/utils.py": {
+      "sha256": "65d259aded3b7d29609d320decdb59cb0a0f7f0e5c453e1d3c380e8a4a5d61c9",
+      "bytes": 16071
+    },
+    "reference/dependencies/stdlib/smtplib.py": {
+      "sha256": "f19369e751e199f5dfc05882e2f77b6a692719cebd8a18c84552544a0b93e963",
+      "bytes": 43532
+    },
+    "reference/frozen-source-manifest.json": {
+      "sha256": "f77a13bd59ae7de21d96906f51453411eb6081a1ccbfe7d53ed34ce3091b0345",
+      "bytes": 4734
+    },
+    "reference/installed-reference.json": {
+      "sha256": "ed6e63b3cf188c639b284485d73e9388f55a6d4b23921e396013c47f7ca3f9c7",
+      "bytes": 11933
+    },
+    "reference/oracle.py": {
+      "sha256": "e065478954f7e00602b0762806446023a984bed248714eabf063743e87bff305",
+      "bytes": 18595
+    },
+    "reference/portable/__init__.py": {
+      "sha256": "7a254ea0bf59ba698a1590c0554c12fab363b1d1ba9a48dceae3d74ffb9489cc",
+      "bytes": 13781
+    },
+    "reference/portable/channel/__init__.py": {
+      "sha256": "fe36d42e6e516ecd4e209e4c50c32799d56ea2c3cef681c3afe5747616edd6c2",
+      "bytes": 3822
+    },
+    "reference/portable/channel/custom/__init__.py": {
+      "sha256": "6d5add3f87af91e9dfa2d8e48b1dc8efd30fdbde78332842ca96084ff9f28444",
+      "bytes": 2670
+    },
+    "reference/portable/channel/custom/apprise.py": {
+      "sha256": "99becfe6d79ea2f37a3977a3242ee2cb19999a6157b946e8b1cd3f4907d4a288",
+      "bytes": 3076
+    },
+    "reference/portable/channel/custom/bark.py": {
+      "sha256": "22fd544891c5d754d62a5eaf8e9ba5d7e7775fb60be4fd5d919a3ada92dd20b8",
+      "bytes": 17171
+    },
+    "reference/portable/channel/custom/chanify.py": {
+      "sha256": "6b7d8c3660619d118a187b8e31c17c30c3ce5810c7f606d75c78dbe42a433e53",
+      "bytes": 3219
+    },
+    "reference/portable/channel/custom/dingtalkrobot.py": {
+      "sha256": "609baef23e127f68855ab1bedf7d31c1270fb601d1c4692a44b89794015611a6",
+      "bytes": 6513
+    },
+    "reference/portable/channel/custom/email.py": {
+      "sha256": "428d10b749717511fde3de8b7157c91dafe5c35deca633ffe5297d1895e475a8",
+      "bytes": 7938
+    },
+    "reference/portable/channel/custom/feishubot.py": {
+      "sha256": "0648f1f2697051e0a647f9b9146e590202a0298f0a2552e487613dde505b455e",
+      "bytes": 6653
+    },
+    "reference/portable/channel/custom/gotify.py": {
+      "sha256": "e07c367ca9b1586c5e3c83f93882c6bc3c9962ab9ac2966cf258bf1c13598bae",
+      "bytes": 4600
+    },
+    "reference/portable/channel/custom/http.py": {
+      "sha256": "31db551ef6e52d590f9adcd815b80e2efd87a41c547f4b20be9da9dd039caf83",
+      "bytes": 9434
+    },
+    "reference/portable/channel/custom/iyuu.py": {
+      "sha256": "368531ef2085b394a28038f8f221c769b72560de0458d7f02b8f6cffda6edda5",
+      "bytes": 3196
+    },
+    "reference/portable/channel/custom/ntfy.py": {
+      "sha256": "c2f1dee2cdbdbaa5c2d8c79646e5d6662e1efdf3c79f7d2268be002784f564b3",
+      "bytes": 7551
+    },
+    "reference/portable/channel/custom/onebot11.py": {
+      "sha256": "8bbea4a2a6c1cc3f60976625a18ea80bd2d4ed413daaee57c49c1e467df7ab11",
+      "bytes": 7992
+    },
+    "reference/portable/channel/custom/pushdeer.py": {
+      "sha256": "80139b0edb40644e0c21f9fb5e865037c0bd1f1db09ac973a54631381e25129c",
+      "bytes": 4570
+    },
+    "reference/portable/channel/custom/pushme.py": {
+      "sha256": "88c7b8836d74c21aa758e4acae8eb322b07b81476e18dee8ed48c93a5e515b3d",
+      "bytes": 5979
+    },
+    "reference/portable/channel/custom/pushover.py": {
+      "sha256": "1cbcad5907c2a76be6695b469ebd02f6c282dc4f09b8d6efb4c8c5404dd3e914",
+      "bytes": 7684
+    },
+    "reference/portable/channel/custom/pushplus.py": {
+      "sha256": "a4d12ecacd7c9f2a564fad47a8a7c53daa73d479f3637d38e491ba62ba6824bf",
+      "bytes": 4051
+    },
+    "reference/portable/channel/custom/qiyeweixinbot.py": {
+      "sha256": "86cb5a0191d2afd1ef3c81be5cea52ac7f6eff312bdcb135496a2dfa9867dc5a",
+      "bytes": 5531
+    },
+    "reference/portable/channel/custom/serverchan.py": {
+      "sha256": "78861ba309638f1b0ddce6a56ef9a7b3eba894b136d01618fc1f49e780ccc37e",
+      "bytes": 4792
+    },
+    "reference/portable/module.py": {
+      "sha256": "ba3051b4f4e14c23e46454ed6b8318ef45133da0c41e7aa9348174318f504f24",
+      "bytes": 357
+    },
+    "reference/portable/util.py": {
+      "sha256": "20e24dc8a5659384cca646977f0a171d009d5cf8f7ae2fe01cf6dad96caa62b4",
+      "bytes": 497
+    },
+    "reference/source/__init__.py": {
+      "sha256": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68",
+      "bytes": 19805
+    },
+    "reference/source/channel/__init__.py": {
+      "sha256": "7af2e408176c9ad0ddb36e612273d8f0996a38893f1a7b7e6033fb0a4b3da786",
+      "bytes": 5288
+    },
+    "reference/source/channel/custom/__init__.py": {
+      "sha256": "a75f952e969211e2eb8e4ef08fce79dca2c6ea6a360191776f7838d56d701200",
+      "bytes": 3559
+    },
+    "reference/source/channel/custom/apprise.py": {
+      "sha256": "6402ae7e95765340a1001191d8c0f3120f1283eb1d4cf7305e96b28b82c6f409",
+      "bytes": 4157
+    },
+    "reference/source/channel/custom/bark.py": {
+      "sha256": "b0acbfff184ccbc59ace73ac0ac68d3740d59b49d1c88b82328153fca20b5182",
+      "bytes": 25359
+    },
+    "reference/source/channel/custom/chanify.py": {
+      "sha256": "984709b8b40e9b5f0fd9b2ec05a3844deb202c7e5e068f75d847c75b36bbf2db",
+      "bytes": 4363
+    },
+    "reference/source/channel/custom/dingtalkrobot.py": {
+      "sha256": "dbdb5877b9b9924aa7c3dc46aa3df1143eb85d8fa73cebcfcdeab8deab415119",
+      "bytes": 9197
+    },
+    "reference/source/channel/custom/email.py": {
+      "sha256": "dd10781fe8cf50d243a5c35c150b34c627bbeedd5348002b7ce4379b9608a079",
+      "bytes": 10904
+    },
+    "reference/source/channel/custom/feishubot.py": {
+      "sha256": "2c43e28fb204c4efc73a79edde7414b61ea67995fc21626182009daee3bb463f",
+      "bytes": 9188
+    },
+    "reference/source/channel/custom/gotify.py": {
+      "sha256": "aab017f3fc443e6437ed32eea055ea16378d41e2599c7119ec90c7a7fd004bb5",
+      "bytes": 6349
+    },
+    "reference/source/channel/custom/http.py": {
+      "sha256": "7044472eb88a47e9e702ada4e779b97a31dc7353a247f5a758b8bcac2886db08",
+      "bytes": 14066
+    },
+    "reference/source/channel/custom/iyuu.py": {
+      "sha256": "8111e9ebfb36976a3cca405a533df2d8d4fc2b58093976ef71845b9d1087b371",
+      "bytes": 4087
+    },
+    "reference/source/channel/custom/ntfy.py": {
+      "sha256": "91e5c3cae2c2fa463c29f8deccdf9380a9e8a1c0a3bb028abff666242a1d5aa3",
+      "bytes": 10455
+    },
+    "reference/source/channel/custom/onebot11.py": {
+      "sha256": "bd934d5435c58138d5edf5f69e181d43e94c2463cb227cdc7a392d014640ad70",
+      "bytes": 12267
+    },
+    "reference/source/channel/custom/pushdeer.py": {
+      "sha256": "5fea750dc7a830a41d87be2fd65f604042fcfd2960af34db182f8eb9fe7ff5e1",
+      "bytes": 6115
+    },
+    "reference/source/channel/custom/pushme.py": {
+      "sha256": "2360359561eee9b6ddede5e27b995359f66cf5bbb4d9888c2f5b3143183beb65",
+      "bytes": 8558
+    },
+    "reference/source/channel/custom/pushover.py": {
+      "sha256": "936a067840ced5d54bbcc7f87ebf7c78345df17fdb8ccebfbb15abdb558d0e9d",
+      "bytes": 10577
+    },
+    "reference/source/channel/custom/pushplus.py": {
+      "sha256": "1aab9addfdb5e48536b5babf2b1ec84de2634daa9f5f0998b2cb15d7e378eb40",
+      "bytes": 5681
+    },
+    "reference/source/channel/custom/qiyeweixinbot.py": {
+      "sha256": "b3127509a677081d93cfaa5c90c2f22dac64127d647d1e8d9776b4a582cff2bb",
+      "bytes": 7530
+    },
+    "reference/source/channel/custom/serverchan.py": {
+      "sha256": "0e5180e3375d77760045b1cf6ed3006c1db966ed114500577db67253686b906d",
+      "bytes": 6468
+    },
+    "reference/source/module.py": {
+      "sha256": "70aabde52e8b579555c551966a8e095cefc038a1a3b69b0291e6160cb3ccc2f1",
+      "bytes": 398
+    },
+    "reference/source/util.py": {
+      "sha256": "071405330d6c90fd87d1dceccd4111aeafad896347e73dcc2b10459af8c47981",
+      "bytes": 664
+    },
+    "reference/verify_installed.py": {
+      "sha256": "d4a2382bd3e4ccf7345feedb52c2b32a02b79534b3b472a63e66210f147fcc52",
+      "bytes": 2829
+    },
+    "sdk.go": {
+      "sha256": "b478ade4d7960c470ad2f88cf4d9db0e17a5a44ef2e7dab00f91ff335bc62ced",
+      "bytes": 2187
+    },
+    "sdk_test.go": {
+      "sha256": "2e95bfff6a2f580c69661adac77da033749c02b0d087258e1d119881d24e6ada",
+      "bytes": 3945
+    },
+    "smtp_test.go": {
+      "sha256": "aef1da9b32d4153452a57009b8300be269681d76b271aea4c653df0fa105e40a",
+      "bytes": 3463
+    },
+    "template_basic.go": {
+      "sha256": "7b2dd4a9485a170edf7d050e4e43d24356098fc4791ffbc3cb09d83f4fc9e05a",
+      "bytes": 2540
+    },
+    "templates.go": {
+      "sha256": "e0df56ca77831d9e9d286a734fecce5ad7845696cc8d7a7a516b9e9051483154",
+      "bytes": 5308
+    },
+    "testdata/installed-channels.jsonl.gz": {
+      "sha256": "d6c98f22e9cfffce65d6ae32d10b8aa62842db7761eaab59ade087be3a5e0e14",
+      "bytes": 51492
+    },
+    "testdata/installed-core.jsonl.gz": {
+      "sha256": "2bac0ea09421bb64fdde636e6e8c9b5bee0d4f018920e15257b4665d3ae0b513",
+      "bytes": 1569
+    },
+    "testdata/installed-lifecycle.jsonl.gz": {
+      "sha256": "4f2efcbe98bcb32ff6a909841e7f149bda82e6026e2d6cd6effff1d221493da6",
+      "bytes": 50233
+    },
+    "testdata/installed-smtp_errors.jsonl.gz": {
+      "sha256": "b78966bef9a75dac7d10ad4bbce66fb380514b67491255c590d82dbee6b9e070",
+      "bytes": 725
+    },
+    "testdata/installed-templates.jsonl.gz": {
+      "sha256": "ba23ac23c72686e93d0bd804c7ebedd94f6d34d3360daa1ca3d378084d358e84",
+      "bytes": 527
+    },
+    "testdata/installed-test_once.jsonl.gz": {
+      "sha256": "5fa0e8b52c2f51fc26723998af139d9e91f2f0f1f26437ba82879989a817b6ba",
+      "bytes": 1808
+    },
+    "types.go": {
+      "sha256": "2c48770619bf44f1e279d7c7c62f302b6442fe00ab8a1427a8b473d37f964a03",
+      "bytes": 3472
+    },
+    "value.go": {
+      "sha256": "75f20afd18df57eb1781f25aef28a756c44028d97fca8e61b51bb62d7ef72cc2",
+      "bytes": 7498
+    }
+  }
+}

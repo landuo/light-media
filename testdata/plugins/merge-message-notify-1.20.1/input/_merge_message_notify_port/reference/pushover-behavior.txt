@@ -1,0 +1,75 @@
+def __init__(self, code: str, title: str):
+    self.code = code
+    self.title = title
+def __init__(self, code: int, title: str):
+    self.code = code
+    self.title = title
+comp_key: str = f'{CustomChannel.comp_key}.pushover'
+comp_name: str = 'Pushover'
+comp_order: int = CustomChannel.comp_order * 100 + 10
+config_default: Dict[str, Any] = {'server_url': 'https://api.pushover.net'}
+def __check_config(self) -> bool:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/') if server_url else None
+    if not server_url:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 服务器地址无效')
+        return False
+    if not self.get_config_item(config_key='user_key'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 用户Key无效')
+        return False
+    if not self.get_config_item(config_key='api_token'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, API Token 无效')
+        return False
+    return True
+def __build_url(self) -> str:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/')
+    return f'{server_url}/1/messages.json'
+def __build_json(self, title: str, text: str, ext_info: dict=None) -> dict:
+    ext_info = ext_info or {}
+    json = {'user': self.get_config_item(config_key='user_key'), 'token': self.get_config_item(config_key='api_token')}
+    json.update({'title': title, 'message': text or title})
+    sound = self.get_config_item(config_key='sound')
+    if sound:
+        json['sound'] = sound
+    priority = self.get_config_item(config_key='priority')
+    if priority is not None:
+        json['priority'] = priority
+        if priority == Priority.Emergency.code:
+            json.update({'retry': 60, 'expire': 1800})
+    image = ext_info.get('image')
+    if image:
+        json['attachment_base64'] = self.__download_image_to_base64(image_url=image)
+    link = ext_info.get('link')
+    if link:
+        json.update({'url': link, 'url_title': link})
+    return json
+def __download_image_to_base64(self, image_url) -> Optional[str]:
+    try:
+        res = requests.get(url=image_url, stream=True, timeout=5)
+        res.raise_for_status()
+        return base64.b64encode(res.content).decode('utf-8').strip()
+    except Exception as e:
+        logger.warn('下载图片数据并转Base64异常')
+        return None
+def send_message(self, title: str, text: str, type: NotificationType=None, ext_info: dict=None) -> bool:
+    type_str = type.value if type else None
+    enable_notify_types: List[str] = self.get_config_item('enable_notify_types')
+    if type and enable_notify_types and (type.name not in enable_notify_types):
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息类型不受支持')
+        return False
+    if not self.__check_config():
+        return False
+    url = self.__build_url()
+    json = self.__build_json(title=title, text=text, ext_info=ext_info)
+    proxies = settings.PROXY if self.get_config_item(config_key='enable_proxy') else None
+    res = requests.post(url=url, json=json, proxies=proxies)
+    res_json: dict = res.json() or {}
+    request_id = res_json.get('request')
+    if res_json.get('status') == 1:
+        logger.info(f'发送消息成功: channel = {self.comp_name}, type = {type_str}, request_id = {request_id}')
+        return True
+    else:
+        errors = res_json.get('errors')
+        logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, request_id = {request_id}, errors = {json_lib.dumps(errors)}')
+        return False

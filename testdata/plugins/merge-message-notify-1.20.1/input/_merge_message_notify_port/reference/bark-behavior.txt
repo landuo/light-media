@@ -1,0 +1,167 @@
+def __init__(self, second: float):
+    self.second = second
+comp_key: str = f'{CustomChannel.comp_key}.bark'
+comp_name: str = 'Bark'
+comp_order: int = CustomChannel.comp_order * 100 + 2
+config_default: Dict[str, Any] = {'server_url': 'https://api.day.app', 'cipher_algorithm': 'AES256', 'cipher_mode': 'GCM', 'cipher_padding': 'noPadding', 'group': 'MoviePilot', 'level': 'active', 'isArchive': True}
+def __check_config(self) -> bool:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/') if server_url else None
+    if not server_url:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 服务器地址无效')
+        return False
+    if not self.get_config_item(config_key='push_key'):
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 推送密钥无效')
+        return False
+    return self.__check_cipher_config()
+def __check_cipher_config(self) -> bool:
+    if not self.get_config_item(config_key='cipher_enable'):
+        return True
+    cipher_algorithm: str = self.get_config_item(config_key='cipher_algorithm')
+    if not cipher_algorithm or cipher_algorithm not in self.support_cipher_algorithms:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密算法无效: {cipher_algorithm}')
+        return False
+    cipher_mode: str = self.get_config_item(config_key='cipher_mode')
+    if not cipher_mode or cipher_mode not in self.support_cipher_modes:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密模式无效: {cipher_mode}')
+        return False
+    cipher_padding: str = self.get_config_item(config_key='cipher_padding')
+    if not cipher_padding or cipher_padding not in self.support_cipher_paddings:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密填充无效: {cipher_padding}')
+        return False
+    cipher_key: str = self.get_config_item(config_key='cipher_key')
+    if not cipher_key:
+        logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密密钥（Key）无效: {cipher_key}')
+        return False
+    cipher_key_bytes = cipher_key.encode('utf-8')
+    cipher_key_bytes_len = len(cipher_key_bytes)
+    if cipher_algorithm == 'AES128':
+        if cipher_key_bytes_len != 16:
+            logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密密钥（Key）不是16位')
+            return False
+    elif cipher_algorithm == 'AES192':
+        if cipher_key_bytes_len != 24:
+            logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密密钥（Key）不是24位')
+            return False
+    elif cipher_algorithm == 'AES256':
+        if cipher_key_bytes_len != 32:
+            logger.warn(f'配置检查不通过: channel = {self.comp_name}, 加密密钥（Key）不是32位')
+            return False
+    return True
+def __build_url(self) -> str:
+    server_url: str = self.get_config_item(config_key='server_url')
+    server_url = server_url.rstrip('/')
+    push_key = self.get_config_item(config_key='push_key')
+    return f'{server_url}/{push_key}'
+def __build_json(self, title: str, text: str, ext_info: dict={}) -> dict:
+    ext_info = ext_info or {}
+    json = {'title': title, 'body': text or title}
+    sound = self.get_config_item(config_key='sound')
+    if sound:
+        json['sound'] = sound
+    image = ext_info.get('image')
+    if image:
+        json['icon'] = image
+    group = self.get_config_item(config_key='group')
+    if group:
+        json['group'] = group
+    link = ext_info.get('link')
+    if link:
+        json['url'] = link
+    level = self.get_config_item(config_key='level')
+    if level:
+        json['level'] = level
+    isArchive = self.get_config_item(config_key='isArchive')
+    if isArchive:
+        json['isArchive'] = 1
+    autoCopy = self.get_config_item(config_key='autoCopy')
+    if autoCopy:
+        json['autoCopy'] = 1
+    more_json: str = self.get_config_item(config_key='more_json')
+    if more_json:
+        try:
+            more_json_obj = lib_json.loads(more_json)
+            json.update(more_json_obj)
+        except Exception as e:
+            logger.error(f'更多参数解析异常: {str(e)}', exc_info=True)
+    return json
+def __cipher_text(self, plaintext: str, algorithm: str, mode: str, padding: str, key: str) -> Tuple[Optional[str], Optional[str]]:
+    plaintext = plaintext or ''
+    plaintext_bytes = plaintext.encode('utf-8')
+    key = key or ''
+    key_bytes = key.encode('utf-8')
+    if mode in ['CBC', 'ECB']:
+        padder = lib_padding.PKCS7(128).padder()
+        padded_plaintext_bytes = padder.update(plaintext_bytes) + padder.finalize()
+    else:
+        padded_plaintext_bytes = plaintext_bytes
+    backend = default_backend()
+    try:
+        if mode == 'ECB':
+            cipher = Cipher(algorithm=algorithms.AES(key_bytes), mode=modes.ECB(), backend=backend)
+            encryptor = cipher.encryptor()
+            ciphertext_bytes = encryptor.update(padded_plaintext_bytes) + encryptor.finalize()
+            ciphertext = base64.b64encode(ciphertext_bytes).decode('utf-8')
+            return (ciphertext, None)
+        elif mode == 'CBC':
+            cipher_iv = str(uuid.uuid4()).replace('-', '')[:16]
+            iv_bytes = cipher_iv.encode('utf-8')
+            cipher = Cipher(algorithm=algorithms.AES(key_bytes), mode=modes.CBC(iv_bytes), backend=backend)
+            encryptor = cipher.encryptor()
+            ciphertext_bytes = encryptor.update(padded_plaintext_bytes) + encryptor.finalize()
+            ciphertext = base64.b64encode(ciphertext_bytes).decode('utf-8')
+            return (ciphertext, cipher_iv)
+        elif mode == 'GCM':
+            cipher_iv = str(uuid.uuid4()).replace('-', '')[:12]
+            iv_bytes = cipher_iv.encode('utf-8')
+            cipher = Cipher(algorithm=algorithms.AES(key_bytes), mode=modes.GCM(iv_bytes), backend=backend)
+            encryptor = cipher.encryptor()
+            ciphertext_bytes = encryptor.update(padded_plaintext_bytes) + encryptor.finalize() + encryptor.tag
+            ciphertext = base64.b64encode(ciphertext_bytes).decode('utf-8')
+            return (ciphertext, cipher_iv)
+        else:
+            return (None, None)
+    except InvalidTag:
+        raise InvalidTag('GCM模式加密失败: 认证标签生成异常')
+    except Exception as e:
+        raise ValueError(f'AES加密失败: {str(e)}')
+def __cipher_json(self, json: dict) -> tuple[str, str]:
+    if not self.__check_cipher_config():
+        raise ValueError('加密配置有误')
+    return self.__cipher_text(plaintext=lib_json.dumps(json or {}), algorithm=self.get_config_item(config_key='cipher_algorithm'), mode=self.get_config_item(config_key='cipher_mode'), padding=self.get_config_item(config_key='cipher_padding'), key=self.get_config_item(config_key='cipher_key'))
+def __build_req_data(self, title: str, text: str, ext_info: dict={}) -> dict:
+    json = self.__build_json(title=title, text=text, ext_info=ext_info)
+    if not self.get_config_item(config_key='cipher_enable'):
+        return json
+    else:
+        try:
+            ciphertext, cipher_iv = self.__cipher_json(json)
+            return {'ciphertext': ciphertext, 'iv': cipher_iv}
+        except Exception as e:
+            logger.error(f'加密异常，已降级为非加密方式: {str(e)}', exc_info=True)
+            return json
+def send_message(self, title: str, text: str, type: NotificationType=None, ext_info: dict={}) -> bool:
+    type_str = type.value if type else None
+    enable_notify_types: List[str] = self.get_config_item('enable_notify_types')
+    if type and enable_notify_types and (type.name not in enable_notify_types):
+        logger.warn(f'发送消息中止: channel = {self.comp_name}, type = {type_str}, 消息类型不受支持')
+        return False
+    if not self.__check_config():
+        return False
+    send_url = self.__build_url()
+    json = self.__build_req_data(title=title, text=text, ext_info=ext_info)
+    proxies = settings.PROXY if self.get_config_item(config_key='enable_proxy') else None
+    res = requests.post(url=send_url, json=json, proxies=proxies)
+    res_json = res.json() or {}
+    if res.ok or res_json:
+        code = res_json.get('code')
+        message = res_json.get('message')
+        if code == 200:
+            logger.info(f'发送消息成功: channel = {self.comp_name}, type = {type_str}')
+            return True
+        else:
+            logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, code = {code}, message = {message}')
+            return False
+    else:
+        logger.warn(f'发送消息失败: channel = {self.comp_name}, type = {type_str}, status_code = {res.status_code}, reason = {res.reason}')
+        return False

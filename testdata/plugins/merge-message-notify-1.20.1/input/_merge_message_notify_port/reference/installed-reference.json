@@ -1,0 +1,406 @@
+{
+  "files": [
+    {
+      "path": "__init__.py",
+      "sha256": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68",
+      "bytes": 19805,
+      "ast_sha256": "675e7db346c40cdca880039dd56cf8e0830431a409c4c61a761cf56b55de474a",
+      "classes": {
+        "MergeMessageNotify": [
+          "init_plugin",
+          "get_state",
+          "get_command",
+          "get_api",
+          "get_form",
+          "get_page",
+          "get_service",
+          "stop_service",
+          "__fix_config",
+          "__get_config_item",
+          "get_comp_config",
+          "update_comp_config",
+          "__filter_comp_type",
+          "__register_comp",
+          "__wrapper_comp_form_model",
+          "__get_comp_form_data",
+          "__build_comp_form_element",
+          "__build_comp_form_tab_value",
+          "__build_comp_form_tabs_element",
+          "__build_comp_form_window_element",
+          "__get_comp_form_elements",
+          "__wrapper_comp_form_elements",
+          "__gc",
+          "__save_default_config",
+          "listen_notice_message_event"
+        ]
+      }
+    },
+    {
+      "path": "module.py",
+      "sha256": "70aabde52e8b579555c551966a8e095cefc038a1a3b69b0291e6160cb3ccc2f1",
+      "bytes": 398,
+      "ast_sha256": "10625db05153064f6ef79fea4bfb61a23089266d0bbb2bd700a60de477ee29ba",
+      "classes": {
+        "ChannelStrategy": [
+          "__init__"
+        ]
+      }
+    },
+    {
+      "path": "util.py",
+      "sha256": "071405330d6c90fd87d1dceccd4111aeafad896347e73dcc2b10459af8c47981",
+      "bytes": 664,
+      "ast_sha256": "d423a22743e6d8cd38ca353b311c0d030c45461bb22cf092487cfdda57f38fba",
+      "classes": {
+        "TemplateUtil": [
+          "render_text"
+        ]
+      }
+    },
+    {
+      "path": "channel/__init__.py",
+      "sha256": "7af2e408176c9ad0ddb36e612273d8f0996a38893f1a7b7e6033fb0a4b3da786",
+      "bytes": 5288,
+      "ast_sha256": "beff9576ae4a5192e1e1752d1e83ad350daa91497ff32e810f905bf8ef4df227",
+      "classes": {
+        "Channel": [
+          "__init__",
+          "get_config",
+          "update_config",
+          "get_config_item",
+          "__build_notify_type_select_element",
+          "__build_notify_type_select_col_element",
+          "build_notify_type_select_row_element",
+          "check_stack_contain_method",
+          "check_stack_contain_save_config_request",
+          "save_default_config",
+          "init_comp",
+          "get_form",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/bark.py",
+      "sha256": "b0acbfff184ccbc59ace73ac0ac68d3740d59b49d1c88b82328153fca20b5182",
+      "bytes": 25359,
+      "ast_sha256": "c5f55d2e9dcc8edddd2014170986e2e9aa7bffdd3afd69e16678cb0b2fffebf3",
+      "classes": {
+        "Sound": [
+          "__init__"
+        ],
+        "BarkChannel": [
+          "get_form",
+          "__check_config",
+          "__check_cipher_config",
+          "__build_url",
+          "__build_json",
+          "__cipher_text",
+          "__cipher_json",
+          "__build_req_data",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/onebot11.py",
+      "sha256": "bd934d5435c58138d5edf5f69e181d43e94c2463cb227cdc7a392d014640ad70",
+      "bytes": 12267,
+      "ast_sha256": "310d900e4a2588922b4d5dc1305694f1bc72154c86b65154a5bb57fd7ebe62d5",
+      "classes": {
+        "OneBot11Channel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__split_multstr",
+          "__build_json",
+          "__send_msg",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/pushdeer.py",
+      "sha256": "5fea750dc7a830a41d87be2fd65f604042fcfd2960af34db182f8eb9fe7ff5e1",
+      "bytes": 6115,
+      "ast_sha256": "3f64b3e2f09ee6d2a7d992142527b7797a694ba4c91c8dae546dfd9aaf56d260",
+      "classes": {
+        "PushDeerChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/pushme.py",
+      "sha256": "2360359561eee9b6ddede5e27b995359f66cf5bbb4d9888c2f5b3143183beb65",
+      "bytes": 8558,
+      "ast_sha256": "ef7f5b5a454a7afe00578c028de4cbed41dcbcc2d9d315d2a4e70025d4d54a0b",
+      "classes": {
+        "ApiKeyType": [],
+        "MessageTopic": [
+          "__init__"
+        ],
+        "PushMeChannel": [
+          "get_form",
+          "__check_config",
+          "__build_data",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/gotify.py",
+      "sha256": "aab017f3fc443e6437ed32eea055ea16378d41e2599c7119ec90c7a7fd004bb5",
+      "bytes": 6349,
+      "ast_sha256": "3ca269c20356b9c2de68106ff5136a01f52f7200e4a8cc42c794699209d9d7e3",
+      "classes": {
+        "GotifyChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/chanify.py",
+      "sha256": "984709b8b40e9b5f0fd9b2ec05a3844deb202c7e5e068f75d847c75b36bbf2db",
+      "bytes": 4363,
+      "ast_sha256": "1eef720b6a642754e84806768b42d4f416e3706815872604d1703ff72a470af8",
+      "classes": {
+        "ChanifyChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/qiyeweixinbot.py",
+      "sha256": "b3127509a677081d93cfaa5c90c2f22dac64127d647d1e8d9776b4a582cff2bb",
+      "bytes": 7530,
+      "ast_sha256": "f95d52a83f672cf52b5508d2408c328f25ae435423c766c3900d193ab4d37af1",
+      "classes": {
+        "QiyeWeixinBotChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_message_content",
+          "__build_message",
+          "__split_multstr",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/ntfy.py",
+      "sha256": "91e5c3cae2c2fa463c29f8deccdf9380a9e8a1c0a3bb028abff666242a1d5aa3",
+      "bytes": 10455,
+      "ast_sha256": "d558c79870206f57a00d3f7fb76f5a96d3c996282b1078ecc64a7294ff8b73ec",
+      "classes": {
+        "NtfyChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__base64_encode",
+          "__build_basic_auth_value",
+          "__build_headers",
+          "__build_data",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/email.py",
+      "sha256": "dd10781fe8cf50d243a5c35c150b34c627bbeedd5348002b7ce4379b9608a079",
+      "bytes": 10904,
+      "ast_sha256": "3c27b510a8489ed20584b0caf7585b35402a335696d5d322ed02a413fcb096ab",
+      "classes": {
+        "SmtpEncryptType": [],
+        "EmailChannel": [
+          "get_form",
+          "__check_config",
+          "__build_message",
+          "__split_multstr",
+          "__connect_smtp",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/http.py",
+      "sha256": "7044472eb88a47e9e702ada4e779b97a31dc7353a247f5a758b8bcac2886db08",
+      "bytes": 14066,
+      "ast_sha256": "b6090b89464b5f36828827bd4445ddcd54b2bb623de30e581b06f235771066bd",
+      "classes": {
+        "HttpChannel": [
+          "get_form",
+          "__check_config",
+          "__is_json",
+          "__str_to_dict",
+          "build_template_variables",
+          "__get_dict_value_ignorecase",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/pushplus.py",
+      "sha256": "1aab9addfdb5e48536b5babf2b1ec84de2634daa9f5f0998b2cb15d7e378eb40",
+      "bytes": 5681,
+      "ast_sha256": "f78cd824360d3a13f7bef28ee81d5aeec1e11c59ba159056391441bb635b6335",
+      "classes": {
+        "SendChannel": [],
+        "PushPlusChannel": [
+          "get_form",
+          "__check_config",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/__init__.py",
+      "sha256": "a75f952e969211e2eb8e4ef08fce79dca2c6ea6a360191776f7838d56d701200",
+      "bytes": 3559,
+      "ast_sha256": "a994d5b9feb84c04c648e8442a65e35a9a5edb772791d54b1f17ebb202e2e8e4",
+      "classes": {
+        "CustomChannel": [
+          "__build_test_once_switch_element",
+          "__build_test_once_switch_col_element",
+          "build_test_once_switch_row_element",
+          "__test_once",
+          "build_template_variables",
+          "__url_encode_dict_value",
+          "render_template",
+          "init_comp"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/dingtalkrobot.py",
+      "sha256": "dbdb5877b9b9924aa7c3dc46aa3df1143eb85d8fa73cebcfcdeab8deab415119",
+      "bytes": 9197,
+      "ast_sha256": "6085f63881e82aa4c9a3a6e5a6a82ea1596820e07e73a54e9906f5fb243b999d",
+      "classes": {
+        "DingtalkRobotChannel": [
+          "get_form",
+          "__check_config",
+          "__sign",
+          "__build_query",
+          "__build_url",
+          "__build_message",
+          "__split_multstr",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/feishubot.py",
+      "sha256": "2c43e28fb204c4efc73a79edde7414b61ea67995fc21626182009daee3bb463f",
+      "bytes": 9188,
+      "ast_sha256": "841cb73e024e2f030dc17501a409572a3f4322b947ff0215a24aaf1443a09b21",
+      "classes": {
+        "FeishuBotChannel": [
+          "get_form",
+          "__check_config",
+          "__sign",
+          "__build_url",
+          "__build_text_at_user",
+          "__build_text_at_all",
+          "__build_message",
+          "__split_multstr",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/iyuu.py",
+      "sha256": "8111e9ebfb36976a3cca405a533df2d8d4fc2b58093976ef71845b9d1087b371",
+      "bytes": 4087,
+      "ast_sha256": "e45be8810c0e92b343d494a9a3c68d2740141d6ac6825c38d11ec54accd8e6d8",
+      "classes": {
+        "IYUUChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_params",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/apprise.py",
+      "sha256": "6402ae7e95765340a1001191d8c0f3120f1283eb1d4cf7305e96b28b82c6f409",
+      "bytes": 4157,
+      "ast_sha256": "8a52398f9de793b7f1e7a2677b05570a1e35042a865907131d4b8c71ef6c3c60",
+      "classes": {
+        "AppriseChannel": [
+          "get_form",
+          "__check_config",
+          "__extract_service_url_lines",
+          "__build_apprise",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/pushover.py",
+      "sha256": "936a067840ced5d54bbcc7f87ebf7c78345df17fdb8ccebfbb15abdb558d0e9d",
+      "bytes": 10577,
+      "ast_sha256": "1c50ba7d010644356a7e2e29bbde0fe38f70adf1b1dafbe55a8b0ba7ea2a2145",
+      "classes": {
+        "Sound": [
+          "__init__"
+        ],
+        "Priority": [
+          "__init__"
+        ],
+        "PushoverChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_json",
+          "__download_image_to_base64",
+          "send_message"
+        ]
+      }
+    },
+    {
+      "path": "channel/custom/serverchan.py",
+      "sha256": "0e5180e3375d77760045b1cf6ed3006c1db966ed114500577db67253686b906d",
+      "bytes": 6468,
+      "ast_sha256": "19e388f18e0e681483580811f256530a61dade21b4aaa13d62c68b36dff22be5",
+      "classes": {
+        "SendChannel": [
+          "__init__"
+        ],
+        "ServerChanChannel": [
+          "get_form",
+          "__check_config",
+          "__build_url",
+          "__build_json",
+          "send_message"
+        ]
+      }
+    }
+  ],
+  "types_source_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+  "versions": {
+    "mako": "1.4.1",
+    "apprise": "1.9.9",
+    "requests": "2.34.2",
+    "cryptography": "49.0.0",
+    "pytz": "2026.3.post1"
+  }
+}
