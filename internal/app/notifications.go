@@ -13,6 +13,8 @@ type Notification struct {
 	WorkflowID string `json:"workflow_id"`
 	Title      string `json:"title"`
 	Message    string `json:"message"`
+	MType      string `json:"mtype,omitempty"`
+	Link       string `json:"link,omitempty"`
 	CreatedAt  string `json:"created_at"`
 	Read       bool   `json:"read"`
 }

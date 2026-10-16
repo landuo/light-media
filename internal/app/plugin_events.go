@@ -38,7 +38,7 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "subscription.added"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "subscription.added"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true
@@ -307,6 +307,13 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 func (a *App) dispatchPluginEvents(ctx context.Context, at time.Time) error {
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
+	// Transfer only previously committed effects. No filesystem/downloader or
+	// external notification operation runs in this short transaction path.
+	nextAudit, outboxError := a.auditRemoveLinkHandoffs(ctx, a.pluginCleanupOutboxAudit, 200)
+	if outboxError == nil {
+		a.pluginCleanupOutboxAudit = nextAudit
+		outboxError = a.dispatchRemoveLinkOutboxes(ctx, 200)
+	}
 	consumers, err := a.pluginStore.activeEventSubscriptions(ctx)
 	if err != nil {
 		return err
@@ -322,6 +329,9 @@ func (a *App) dispatchPluginEvents(ctx context.Context, at time.Time) error {
 	// Even if collection hits capacity, due batches must still drain. Otherwise
 	// a full collection queue can permanently prevent its own space being freed.
 	queueError := a.pluginStore.enqueueDuePluginEvents(ctx, at)
+	if outboxError != nil {
+		return outboxError
+	}
 	if collectionError != nil {
 		return collectionError
 	}

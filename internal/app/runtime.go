@@ -68,6 +68,8 @@ type App struct {
 	pluginRemoveLink        pluginRemoveLinkRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
+
+	pluginCleanupOutboxAudit pluginCleanupAuditCursor // pluginMu; bounded integrity audit, never an execution cursor.
 }
 
 type subscribeGroupCache struct {

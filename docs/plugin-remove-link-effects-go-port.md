@@ -1,6 +1,6 @@
 # RemoveLink 2.17：核心副作用适配器
 
-本切片提供 `internal/app/plugin_remove_link_effects.go`，供后续 RemoveLink 原生 owner 接线使用。没有注册 catalog、worker RPC、生命周期 owner 或后台消费者，因此这不是“插件已安装可用”的交付。已有纯算法、连续 watcher、transition 和 SQL journal 的来源与验证，分别见 `plugin-remove-link-go-port.md`、`plugin-remove-link-host-go-port.md`；本文不覆盖其旧 SHA 或 NAS 证据。
+本文记录初始Effects切片；后续正式owner与本地outbox转交分别见plugin-remove-link-owner-go-port.md、plugin-remove-link-outbox-go-port.md。原切片提供 `internal/app/plugin_remove_link_effects.go`，供后续 RemoveLink 原生 owner 接线使用。没有注册 catalog、worker RPC、生命周期 owner 或后台消费者，因此这不是“插件已安装可用”的交付。已有纯算法、连续 watcher、transition 和 SQL journal 的来源与验证，分别见 `plugin-remove-link-go-port.md`、`plugin-remove-link-host-go-port.md`；本文不覆盖其旧 SHA 或 NAS 证据。
 
 ## 原行为与核心数据模型
 
@@ -22,7 +22,7 @@
 
 单 effect 的完整身份编码限额为现有 1 MiB，超额明确拒绝，不截断路径、通知或 payload。外层密文 envelope 使用既有 16 MiB 私有 journal 解封额度，不能把普通插件配置或公开 API 限额随之放宽。
 
-`download_file_deleted` 与 `notification` 只落入私有 pending outbox，**没有外部消费者，也没有发送、投递完成或下载器已删种子的承诺**。没有扩展公开 `DomainEvent` 的引用契约，没有通过普通 notification record 伪造送达。SQL commit 结果不确定时返回 `ErrUncertain`；后续恢复应核查收据，不能把错误当作安全重试信号。
+初始Effects切片的 `download_file_deleted` 与 `notification` 只落入私有 pending outbox，**没有外部消费者，也没有发送、投递完成或下载器已删种子的承诺**。当时没有扩展公开 `DomainEvent` 的引用契约，没有通过普通 notification record 伪造送达；后续本地事件发布/站内历史转交见plugin-remove-link-outbox-go-port.md，仍不表示外发或删种成功。SQL commit 结果不确定时返回 `ErrUncertain`；后续恢复应核查收据，不能把错误当作安全重试信号。
 
 ## 授权与最小接线契约
 

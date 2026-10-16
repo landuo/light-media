@@ -3,7 +3,7 @@
 This slice connects a trusted native owner to the existing plugin run queue; it
 is not a second job system. Registration, HTTP/runtime and terminal deferred RPC are now connected in the
 compiled catalog. Production deployment and original data/config migration remain
-pending; the private outbox still has no delivery consumer.
+pending. The later outbox slice publishes the exact src-only source event and saves local notice history; NoticeMessage routing and external delivery remain pending (see plugin-remove-link-outbox-go-port.md).
 
 The SDK may request only a terminal `cleanup.configure {}` or
 `cleanup.apply {event_id}`. The Runner must exit successfully with the exact

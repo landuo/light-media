@@ -1,0 +1,748 @@
+{
+  "execution": "actual installed cached function AST; recording-only dependencies; no original app import/DB/network/notification; Notification constructor/render and message sender are stubs, not external delivery proofs",
+  "source_sha256": {
+    "plugins/__init__.py": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+    "chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "core/event.py": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+    "schemas/message.py": "e5b2f504e2c5d470b74a33756e577e19ce3f9b5284f9a0e1e2d522d1e3955597",
+    "schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "helper/message.py": "c2b3626b9efb4de5e698a67ebd4624d8f684f8618a29a925d8c8d5001f052e89",
+    "core/message.py": null,
+    "db/downloadhistory_oper.py": "5a2f6bb7a5dd141553d6bedf3c1bc2a87bedd644062162567d90aa8a78dea1f7",
+    "db/models/downloadhistory.py": "b9a886916c8427296c7c09ce39736211324f6d01439ac0c34a81489e419252bc",
+    "db/message_oper.py": "2c6873b12949d28973b87749e6b7f62bdfa7950e7d5d32b3055d703b50ad729a",
+    "plugins/larkmessager/__init__.py": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+    "plugins/mediasyncdel/__init__.py": "a5b044cadd23e207ef764fde5846646ad57dd0d8e02ac78b17e2661672f0e644",
+    "plugins/mergemessagenotify/__init__.py": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68"
+  },
+  "download_cases": [
+    {
+      "name": "no-event",
+      "input": {
+        "event": null,
+        "torrents": [],
+        "remove_result": true
+      },
+      "trace": []
+    },
+    {
+      "name": "src-only-file",
+      "input": {
+        "event": {
+          "src": "/synthetic/movie.mkv"
+        },
+        "torrents": [],
+        "remove_result": true
+      },
+      "trace": []
+    },
+    {
+      "name": "src-only-directory",
+      "input": {
+        "event": {
+          "src": "/synthetic"
+        },
+        "torrents": [],
+        "remove_result": true
+      },
+      "trace": []
+    },
+    {
+      "name": "empty-hash-with-src",
+      "input": {
+        "event": {
+          "src": "/synthetic/movie.mkv",
+          "hash": ""
+        },
+        "torrents": [],
+        "remove_result": true
+      },
+      "trace": []
+    },
+    {
+      "name": "hash-no-torrent",
+      "input": {
+        "event": {
+          "hash": "synthetic-hash"
+        },
+        "torrents": [],
+        "remove_result": true
+      },
+      "trace": [
+        {
+          "op": "list_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hash-one-torrent",
+      "input": {
+        "event": {
+          "hash": "synthetic-hash"
+        },
+        "torrents": [
+          {
+            "hash": "synthetic-hash",
+            "downloader": "fixture-qb"
+          }
+        ],
+        "remove_result": true
+      },
+      "trace": [
+        {
+          "op": "list_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ]
+        },
+        {
+          "op": "remove_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ],
+          "delete_file": false
+        },
+        {
+          "op": "event",
+          "kind": "download.deleted",
+          "data": {
+            "hash": "synthetic-hash",
+            "torrents": [
+              {
+                "hash": "synthetic-hash",
+                "downloader": "fixture-qb"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hash-remove-false-still-event",
+      "input": {
+        "event": {
+          "hash": "synthetic-hash",
+          "src": "/synthetic/movie.mkv"
+        },
+        "torrents": [
+          {
+            "hash": "synthetic-hash"
+          }
+        ],
+        "remove_result": false
+      },
+      "trace": [
+        {
+          "op": "list_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ]
+        },
+        {
+          "op": "remove_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ],
+          "delete_file": false
+        },
+        {
+          "op": "event",
+          "kind": "download.deleted",
+          "data": {
+            "hash": "synthetic-hash",
+            "torrents": [
+              {
+                "hash": "synthetic-hash"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hash-multiple-torrents",
+      "input": {
+        "event": {
+          "hash": "synthetic-hash"
+        },
+        "torrents": [
+          {
+            "hash": "synthetic-hash",
+            "downloader": "fixture-qb"
+          },
+          {
+            "hash": "synthetic-hash",
+            "downloader": "fixture-tr"
+          }
+        ],
+        "remove_result": true
+      },
+      "trace": [
+        {
+          "op": "list_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ]
+        },
+        {
+          "op": "remove_torrents",
+          "hashs": [
+            "synthetic-hash"
+          ],
+          "delete_file": false
+        },
+        {
+          "op": "event",
+          "kind": "download.deleted",
+          "data": {
+            "hash": "synthetic-hash",
+            "torrents": [
+              {
+                "hash": "synthetic-hash",
+                "downloader": "fixture-qb"
+              },
+              {
+                "hash": "synthetic-hash",
+                "downloader": "fixture-tr"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "notification_cases": [
+    {
+      "name": "default",
+      "trace": [
+        {
+          "op": "render"
+        },
+        {
+          "op": "history",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        },
+        {
+          "op": "event",
+          "kind": "notice.message",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "type": "站点"
+          }
+        },
+        {
+          "op": "send_interface",
+          "method": "post_message",
+          "immediately": false,
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "history-failure",
+      "trace": [
+        {
+          "op": "render"
+        }
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic history failure"
+      }
+    },
+    {
+      "name": "event-failure",
+      "trace": [
+        {
+          "op": "render"
+        },
+        {
+          "op": "history",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        }
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic event insertion failure"
+      }
+    },
+    {
+      "name": "queue-call-failure",
+      "trace": [
+        {
+          "op": "render"
+        },
+        {
+          "op": "history",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        },
+        {
+          "op": "event",
+          "kind": "notice.message",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "type": "站点"
+          }
+        }
+      ],
+      "error": {
+        "class": "ValueError",
+        "message": "synthetic send interface failure"
+      }
+    },
+    {
+      "name": "history-disabled",
+      "trace": [
+        {
+          "op": "render"
+        },
+        {
+          "op": "event",
+          "kind": "notice.message",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "type": "站点"
+          }
+        },
+        {
+          "op": "send_interface",
+          "method": "post_message",
+          "immediately": false,
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": false
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "admin-route",
+      "trace": [
+        {
+          "op": "render"
+        },
+        {
+          "op": "history",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        },
+        {
+          "op": "event",
+          "kind": "notice.message",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": {
+              "fixture": "synthetic-admin-target"
+            },
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "type": "站点"
+          }
+        },
+        {
+          "op": "send_interface",
+          "method": "post_message",
+          "immediately": false,
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": null,
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": {
+              "fixture": "synthetic-admin-target"
+            },
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "explicit-user",
+      "trace": [
+        {
+          "op": "render"
+        },
+        {
+          "op": "history",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": "synthetic-user",
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        },
+        {
+          "op": "event",
+          "kind": "notice.message",
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": "synthetic-user",
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "type": "站点"
+          }
+        },
+        {
+          "op": "send_interface",
+          "method": "post_message",
+          "immediately": true,
+          "data": {
+            "channel": null,
+            "source": null,
+            "mtype": "站点",
+            "ctype": null,
+            "title": "🧹 媒体文件清理",
+            "text": "synthetic-only",
+            "image": null,
+            "voice_path": null,
+            "file_path": null,
+            "file_name": null,
+            "voice_caption": null,
+            "link": null,
+            "userid": "synthetic-user",
+            "username": null,
+            "date": null,
+            "action": 1,
+            "targets": null,
+            "buttons": null,
+            "force_reply": false,
+            "original_message_id": null,
+            "original_chat_id": null,
+            "disable_web_page_preview": null,
+            "parse_mode": null,
+            "save_history": true
+          }
+        }
+      ],
+      "error": null
+    }
+  ],
+  "plugin_notification_defaults": {
+    "channel": null,
+    "source": null,
+    "mtype": "站点",
+    "ctype": null,
+    "title": "synthetic-title",
+    "text": "synthetic-text",
+    "image": null,
+    "voice_path": null,
+    "file_path": null,
+    "file_name": null,
+    "voice_caption": null,
+    "link": "https://synthetic.invalid/#/plugins?tab=installed&id=RemoveLink",
+    "userid": null,
+    "username": null,
+    "date": null,
+    "action": 1,
+    "targets": null,
+    "buttons": null,
+    "force_reply": false,
+    "original_message_id": null,
+    "original_chat_id": null,
+    "disable_web_page_preview": null,
+    "parse_mode": null,
+    "save_history": true
+  },
+  "broadcast_enqueue": {
+    "return": null,
+    "queued": 1,
+    "priority": 10,
+    "handlers_called_inline": 0
+  }
+}

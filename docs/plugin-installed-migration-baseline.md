@@ -7,10 +7,10 @@
 | CategoryEditor | 二级分类策略 | 1.3 | 停用 | 0 | Go 执行及分类引擎已验证；支持通用 TMDB 条件、范围、YAML 别名/合并；待正式配置迁移 |
 | TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 418 | 待实现、待迁移、待验证 |
 | SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | Go 快照统计、原版表单/卡片/饼图/明细、一次性刷新、持久站内通知及按域名刷新 API 已接入；通知通道、完整账户字段/域名别名、历史/配置正式迁移和仪表板布局仍待完成 |
-| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。下载事件/通知仅私有pending outbox，消费者、正式迁移和部署未完成 |
+| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；NoticeMessage路由与外发、正式迁移和部署未完成 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
-| AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类站点算法及真实SDK/受控HTTP已在独立Go候选对照；正式图片依赖已过588原始模式、160 PNG/GIF、8比较、1449 JPEG原参考。持久化宿主候选仍在验证，生产Browser/OCR、注册、正式迁移与实机验收未完成 |
+| AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类站点算法及真实SDK/受控HTTP已在独立Go候选对照；正式图片依赖已过588原始模式、160 PNG/GIF、8比较、1449 JPEG原参考。持久化宿主独立候选已过逐效果恢复/unknown/有序outbox验证，正式SQL/调度器与生产Browser/OCR、注册、迁移和实机验收未完成 |
 | MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 分发、17渠道构造、原表单/配置/Stop及真实SDK已在独立Go候选对照；完整Mako/Apprise、SMTP wire、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
 | IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 待实现、待迁移、待验证 |
 | SystemProcess | 系统进程 | 1.1 | 启用 | 0 | Go 进程采样、配置/详情页及仪表板数据已验证；仪表板布局待接入，待正式迁移 |
@@ -64,6 +64,6 @@ AutoSignIn 的 Tjupt 图像处理参考与纯Go依赖边界见 [plugin-auto-sign
 
 清理无效做种的完整原执行参考、原生属性/包装器、Go SDK与未接宿主边界见 [plugin-clean-invalid-seed-go-port.md](plugin-clean-invalid-seed-go-port.md)。源消息中的“已删除”计数不等于下载器实际成功收据，迁入纯包不表示已清理任何用户种子。
 
-RemoveLink 已接入的原操作、连续owner、deferred终态RPC、身份/生命周期/恢复与NAS证据见 [owner接线](plugin-remove-link-owner-go-port.md)、[终态执行与恢复](plugin-deferred-owner-execution.md)。原配置、数据、文件尚未导入或部署，私有outbox仍未提供真实下载联动/通知送达。
+RemoveLink 已接入的原操作、连续owner、deferred终态RPC、身份/生命周期/恢复与NAS证据见 [owner接线](plugin-remove-link-owner-go-port.md)、[终态执行与恢复](plugin-deferred-owner-execution.md)。原配置、数据、文件尚未导入或部署。后续精确无hash事件发布/站内history_saved见[原事件转交](plugin-remove-link-outbox-go-port.md)，NoticeMessage路由与外发仍未完成；不能声称已删种或外发已送达。
 
 CleanInvalidSeed 原生完整对象、7固定调用所需的正式下载器协议扩展与边界见 [下载器依赖](plugin-clean-invalid-seed-native-download.md)。它没有扩展主下载管理展示范围，也不是已清理任何实际种子的证据。

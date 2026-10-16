@@ -18,4 +18,4 @@ App 全包 normal 通过（85.267s）；RemoveLink / Deferred / Uninstall 合并
 
 恢复仅从不可变 sealed lifecycle/event 完成收据及核心文件索引收据认定；后续正常 shutdown 可以覆盖 current Transition，但不能抹去旧 RunID 的完整已确认收据。即使最后 run 已落 failed，也只有完整已确认结果或真实业务完成证明可以修复成功；prepared 与无证明的未知结果不自动重放。保存配置前的只读路径 preflight 失败会恢复旧监听，保留原 revision、配置及任务，允许直接纠正后再保存。
 
-RemoveLink 的下载文件删除事件与通知目前仍只进入私有 pending outbox，尚无实际消费者；这不是已删种子或通知已送达的证明。23个插件的配置/KV/文件仍未正式迁入，连续 owner 接线不等于完整1:1迁移交付。
+后续[原事件与站内历史转交](plugin-remove-link-outbox-go-port.md)已接 downloadfile.deleted 的无hash事件发布和本地 history_saved；实际安装核心对此src载荷无操作。NoticeMessage路由/外发仍待接，不能声称已删种或通知已送达。23个插件的配置/KV/文件仍未正式迁入，连续 owner 接线不等于完整1:1迁移交付。

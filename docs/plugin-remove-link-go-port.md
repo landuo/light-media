@@ -34,7 +34,7 @@
 - STRM成功后按开关清本地刮削→远端刮削→远端空目录→dest history→通知；不发DownloadFileDeleted、不使用硬链延迟队列、不清除本地file_state残留。
 - 远端刮削额外删除poster.jpg/backdrop.jpg/fanart.jpg/banner.jpg/logo.png（lower后精确匹配）。空目录清理可删除只含刮削的目录；遇任何子目录停止；逐层通过父list拿真实fileid。
 - Alist/OpenList空目录删除将条目复制为type=file走精确remove，保留真实fileid/未知属性，不能误用父目录扫描接口。
-- 种子操作仅发送DownloadFileDeleted{src}，真正删除由另一个“下载器助手”监听；不能冒称已直接删除下载器任务。通知原文可能声明已联动，须区分事件投递与业务确认。
+- 种子操作仅发送DownloadFileDeleted{src}；实际安装核心只读取hash，对该src载荷直接返回，不会删任务或数据。磁盘可选MediaSyncDel有另一套路径消费者，但不在已确认的23个安装ID中，不能默认启用。通知原文可能声明已联动，须区分事件发布与业务确认；新转交边界见plugin-remove-link-outbox-go-port.md。
 
 ## 正式宿主后续要求
 

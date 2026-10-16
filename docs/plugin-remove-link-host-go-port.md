@@ -96,7 +96,7 @@ Guard 签名 `func(context.Context, Binding, action string) (release func(), err
 | Kind | App 实际责任 |
 | --- | --- |
 | history_src / history_dest | 按 Path/Role 和 Expected Pin 核对原实体及归属后变更对应整理历史；同事务处理资产、managed-file、plan/source 引用。原记录不存在可合法返回 false；不能删除同路径的新记录。 |
-| download_file_deleted | 精确 `{src}` 事件持久 outbox 和幂等收据，消费者按当前下载器归属/做种保护决定动作；false 必须错误。 |
+| download_file_deleted | 精确 `{src}` 事件持久 outbox 和幂等收据；实际安装核心只读取hash，对此载荷无操作。其他可选消费者须另行实现/启用，不默认删种；false 必须错误。 |
 | notification | 按可信宿主收件范围写 `{title,text}` 通知 outbox 和幂等收据；false 必须错误，未知结果返回 ErrUncertain。 |
 
 unlink/rmdir/observed_delete 的文件收据由宿主 Journal 自行管理，不能误映射成核心 Effect 直接重删。源文件与媒体文件分别收据；文件系统和 SQL 没有共同原子事务。外部动作完成但确认未落盘、Active/pending 捕获恢复、root/parent身份变化等情形需要专门对账，不能清空标记重新运行。本切片不提供此对账 UI/API。

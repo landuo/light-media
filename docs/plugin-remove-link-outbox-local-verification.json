@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-17",
+  "base_commit": "e3c694a",
+  "source_frozen": true,
+  "checks": [
+    {
+      "command": "go test ./internal/app -count=1",
+      "exit_code": 0,
+      "output": "ok light-media/internal/app 86.903s"
+    },
+    {
+      "command": "go test -race ./internal/app -run '^(TestPluginRemoveLink|TestDownloadFileDomain|TestDomainEvent|TestPluginEvents|TestPluginDeferred|TestPluginUninstall)' -count=1",
+      "exit_code": 0,
+      "output": "ok light-media/internal/app 163.251s"
+    },
+    {
+      "command": "go vet ./internal/app",
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "internal/app/plugin_cleanup_outbox.go": "13bc24603e9db606acdd00afd230a2926dc29be93b8cb14c8b8bd5842bd97d15",
+    "internal/app/plugin_cleanup_outbox_test.go": "3fd430c761d98b748b49123e92cd9908219b1ed338a65b8bfe273ca82e097e2a",
+    "internal/app/extension_contract.go": "f8a09af556d6b62978ac13bb1762bc2a6f3f916f4ceddbf23ef6242dd8b69c93",
+    "internal/app/notifications.go": "3dc297ca1937bb9a7ab3ad2571cc48d138590802fc02f7e56180ef889d9db21a",
+    "internal/app/plugin_events.go": "25cf519893ca3d3e6bf45b84a459a9db5dfd523fb79690aee8e9343684e28a2d",
+    "internal/app/plugin_store.go": "8542689924f9d9e24a07b8c9d5ea68633aae83edf47b6977b5c80d8001653f0c",
+    "internal/app/runtime.go": "f137384b1fc4acfa9abbfc7434666b93c97957520e9fc54cfe91ac6c984effa3"
+  },
+  "scope": "Exact src-only downloadfile.deleted durable publication and local history_saved only. No invented hash, task/data deletion, NoticeMessage route, external delivery, production deployment or original config/KV/file migration. Test-owned SQLite, files, loopback and real Go SDK/owner only. Python files are offline original AST reference generators, not runtime dependencies.",
+  "nas_report": "plugin-remove-link-outbox-nas-verification.json"
+}
