@@ -106,6 +106,10 @@ func (a *App) downloadFiles(ctx context.Context, key string) (downloadReviewFile
 	if err := a.Store.Get(ctx, "intent", key, &out.Intent); err != nil {
 		return out, err
 	}
+	ctx, recognitionErr := a.intentRecognitionContext(ctx, out.Intent)
+	if recognitionErr != nil {
+		return out, recognitionErr
+	}
 	d, err := a.downloader(out.Intent.DownloaderID)
 	if err != nil {
 		return out, err
@@ -136,7 +140,7 @@ func (a *App) downloadFiles(ctx context.Context, key string) (downloadReviewFile
 	}
 	out.Files = []downloadReviewFile{}
 	for _, file := range files {
-		entry := downloadReviewFile{File: file, Video: isVideo(file.Path), Parsed: a.parseMediaName(filepath.Base(file.Path))}
+		entry := downloadReviewFile{File: file, Video: isVideo(file.Path), Parsed: a.parseMediaNameContext(ctx, filepath.Base(file.Path))}
 		entry.ApplicationPath, err = mapDownloaderPath(a.Settings(), d, filepath.Join(out.Task.DownloadDir, filepath.FromSlash(file.Path)))
 		if err != nil {
 			entry.MappingError = a.clean(err.Error())
@@ -171,6 +175,10 @@ func (a *App) previewDownloadReview(ctx context.Context, key string, request Dow
 		return out, err
 	}
 	in := files.Intent
+	ctx, err = a.intentRecognitionContext(ctx, in)
+	if err != nil {
+		return out, err
+	}
 	if in.State == "cancelled" || in.State == "imported" || files.Task.Progress < 1 {
 		return out, bad("REVIEW_DOWNLOAD_NOT_READY", "仅可为未取消且已完成的下载生成纠错预览")
 	}

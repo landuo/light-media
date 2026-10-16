@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, useId } from 'vue';
+import { VTextarea } from 'vuetify/components/VTextarea';
 import {
   api,
   action,
@@ -241,6 +242,7 @@ function begin(s?: any) {
         total_episodes: 0,
         site_ids: [],
         keyword: '',
+        custom_words: '',
         excluded: [],
         episode_dates: {},
         allow_early: [],
@@ -260,6 +262,7 @@ function begin(s?: any) {
   editing.value.start_episode ||= 1;
   editing.value.download_path ||= '';
   editing.value.site_ids ||= [];
+  editing.value.custom_words ??= '';
   editing.value.total_episodes ??=
     editing.value.media?.seasons?.find(
       (season: any) => season.season_number === editing.value.season,
@@ -1033,6 +1036,16 @@ watch(() => props.view, applyView);
               <span>仅免费资源</span>
             </label>
             <p class="hint">硬性要求用于筛选资源；优先条件只影响排序，不会自动升级已入库作品。</p>
+            <VTextarea
+              v-model="editing.custom_words"
+              class="subscription-custom-words"
+              label="自定义识别词"
+              aria-label="自定义识别词"
+              hint="只对该订阅使用的识别词"
+              persistent-hint
+              placeholder="屏蔽词&#10;被替换词 => 替换词&#10;前定位词 <> 后定位词 >> 集偏移量（EP）&#10;被替换词 => 替换词 && 前定位词 <> 后定位词 >> 集偏移量（EP）"
+              prepend-inner-icon="mdi-text"
+            />
             <h3>更新时间与检查周期</h3>
             <Schedule :model="editing.schedule" />
             <template v-if="editing.media.media_type === 'tv'">
@@ -1739,6 +1752,24 @@ watch(() => props.view, applyView);
 }
 .subscription-advanced > .subscription-edit-grid + .subscription-edit-grid {
   margin-top: 24px;
+}
+.subscription-custom-words {
+  margin-top: 24px;
+}
+.subscription-custom-words :deep(.v-field textarea) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: var(--v-field-input-padding-top) var(--v-field-padding-end)
+    var(--v-field-input-padding-bottom) var(--v-field-padding-start);
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1.5;
+}
+.subscription-custom-words :deep(.v-label) {
+  flex-direction: row;
+  gap: 0;
 }
 .subscription-dialog-footer {
   display: flex;

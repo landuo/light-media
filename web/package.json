@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vue-tsc --noEmit && vite build",
-    "check": "vue-tsc --noEmit",
+    "build": "node scripts/build-icons.mjs && vue-tsc --noEmit && vite build",
+    "check": "node scripts/build-icons.mjs && vue-tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --experimental-transform-types --disable-warning=ExperimentalWarning --test tests/*.test.mjs",
-    "format": "prettier --write src tests vite.config.ts",
-    "format:check": "prettier --check src tests vite.config.ts"
+    "format": "prettier --write src tests scripts vite.config.ts",
+    "format:check": "prettier --check src tests scripts vite.config.ts"
   },
   "dependencies": {
+    "@iconify/vue": "4.3.0",
     "ace-builds": "1.37.4",
     "apexcharts": "4.7.0",
     "vue": "3.5.44",
@@ -22,6 +23,7 @@
     "vuetify": "3.7.3"
   },
   "devDependencies": {
+    "@iconify-json/mdi": "1.2.3",
     "@vitejs/plugin-vue": "6.0.10",
     "prettier": "3.9.10",
     "typescript": "6.0.3",

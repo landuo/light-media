@@ -263,6 +263,10 @@ func decisionPolicy(p Policy) decision.Policy {
 	return decision.Policy{FilterParams: p.FilterParams, Source: p.Source, HDR: p.HDR, Languages: p.Languages, Subtitles: p.Subtitles, PreferredGroups: p.PreferredGroups, PreferredResolutions: p.PreferredResolutions, MinSeeders: p.MinSeeders, FreeOnly: p.FreeOnly, Resolution: p.Resolution, Codec: p.Codec, MinBytes: p.MinBytes, MaxBytes: p.MaxBytes, Include: p.Include, Exclude: p.Exclude}
 }
 func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOutput, error) {
+	ctx, e := a.ensureResourceRecognition(ctx)
+	if e != nil {
+		return SearchOutput{}, e
+	}
 	in.Policy.FilterParams = snapshotAdditionalFilter(in.Policy.FilterParams).params
 	t, e := a.target(ctx, in, auto)
 	if e != nil {
@@ -325,6 +329,15 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	return out, nil
 }
 func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool) (DownloadPreview, error) {
+	var e error
+	if _, scoped := ctx.Value(resourceRecognitionKey{}).(resourceRecognition); !scoped && auto && in.SubscriptionID != "" {
+		ctx, e = a.subscriptionRecognitionContext(ctx, in.SubscriptionID, in.Revision)
+	} else {
+		ctx, e = a.ensureResourceRecognition(ctx)
+	}
+	if e != nil {
+		return DownloadPreview{}, e
+	}
 	in.VerifiedSeasonPack = false // Never accept a client assertion of material validation.
 	t, e := a.target(ctx, in.SearchRequest, auto)
 	if e != nil {
@@ -387,7 +400,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		return DownloadPreview{}, e
 	}
 	choice := a.evaluateResourceContext(ctx, fresh, t, decisionPolicy(in.Policy))
-	verifiedPack := auto && in.automaticSeasonPack && a.eligibleAutomaticSeasonPack(fresh, t, in.Policy)
+	verifiedPack := auto && in.automaticSeasonPack && a.eligibleAutomaticSeasonPackContext(ctx, fresh, t, in.Policy)
 	if !choice.Accepted && !verifiedPack {
 		return DownloadPreview{}, bad("RESOURCE_REJECTED", strings.Join(choice.Reasons, "；"))
 	}
@@ -435,7 +448,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 			p.NeedsConfirmation = true
 		}
 		if t.Media.MediaType == "tv" {
-			parsed := a.parseMediaName(filepath.Base(f.Path))
+			parsed := a.parseMediaNameContext(ctx, filepath.Base(f.Path))
 			if parsed.Status != media.Parsed || parsed.Original == nil {
 				p.ExtraFiles = true
 				continue
@@ -631,6 +644,10 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		// job must not recheck a later subscription revision or replay the event.
 		return nil
 	}
+	ctx, recognitionErr := a.intentRecognitionContext(ctx, in)
+	if recognitionErr != nil {
+		return recognitionErr
+	}
 	if in.SubscriptionID != "" {
 		ctx = subscriptionContext(ctx, in.SubscriptionID, in.SubscriptionRevision)
 	}
@@ -761,7 +778,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		}
 		err = nil
 		choice := a.evaluateResourceContext(ctx, *fresh, target, decisionPolicy(preview.Policy))
-		if in.Auto && request.VerifiedSeasonPack && a.eligibleAutomaticSeasonPack(*fresh, target, preview.Policy) {
+		if in.Auto && request.VerifiedSeasonPack && a.eligibleAutomaticSeasonPackContext(ctx, *fresh, target, preview.Policy) {
 			choice.Accepted, choice.NeedsConfirmation, choice.Reasons = true, false, []string{}
 		}
 		newReason := false
@@ -796,7 +813,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		return e
 	}
 	if in.Auto && request.VerifiedSeasonPack {
-		if e = a.validateAutomaticSeasonPackFiles(material, target, in.SiteID); e != nil {
+		if e = a.validateAutomaticSeasonPackFilesContext(ctx, material, target, in.SiteID); e != nil {
 			return e
 		}
 	}
@@ -1061,6 +1078,10 @@ func (a *App) pollDownloads(ctx context.Context) error {
 	return nil
 }
 func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d DownloaderConfig, in *Intent, task download.Task) error {
+	ctx, recognitionErr := a.intentRecognitionContext(ctx, *in)
+	if recognitionErr != nil {
+		return recognitionErr
+	}
 	if e := a.guardDownloaderSnapshot(ctx, *in); e != nil {
 		return e
 	}
@@ -1109,7 +1130,7 @@ func (a *App) planCompletedDownload(ctx context.Context, c *download.Client, d D
 		if f.Size <= 0 || stamp.Size != f.Size {
 			return bad("DOWNLOAD_FILE_NOT_READY", "下载文件大小与下载器记录不一致，等待重新检查")
 		}
-		parsed := a.parseMediaName(filepath.Base(f.Path))
+		parsed := a.parseMediaNameContext(ctx, filepath.Base(f.Path))
 		entry := ImportFileRequest{Path: full}
 		if in.Media.MediaType == "tv" {
 			if parsed.Original == nil {

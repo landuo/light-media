@@ -49,6 +49,14 @@ type NativeDownload struct {
 
 func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (NativeDownload, error) {
 	var out NativeDownload
+	options, err := a.globalRecognitionOptions(ctx)
+	if err != nil {
+		return out, err
+	}
+	ctx, err = withResourceRecognition(ctx, options)
+	if err != nil {
+		return out, err
+	}
 	if in.Browse {
 		ctx = allowDisabledSiteRequests(ctx)
 	}

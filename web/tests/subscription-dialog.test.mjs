@@ -39,6 +39,7 @@ function subscription() {
     episodes: [],
     site_ids: ['one'],
     keyword: '原搜索关键词',
+    custom_words: ' 原始词 => 原始目标 \n\n',
     state: 'active',
     downloader_id: 'qb',
     download_path: '/data/downloads',
@@ -136,6 +137,8 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
       if (dependency === '../features/subscription-filters') return subscriptionFilters;
       if (dependency === '../features/subscription-calendar') return calendar;
       if (dependency === '../features/download-directories') return directories;
+      if (dependency === 'vuetify/components/VTextarea')
+        return { VTextarea: { name: 'VTextarea' } };
       if (dependency.endsWith('.vue'))
         return { name: dependency.split('/').at(-1).replace('.vue', '') };
       throw new Error('Unexpected dependency ' + dependency);
@@ -235,6 +238,8 @@ test('editing across tabs preserves subscription details and saves an isolated d
   await app.update('季', 2);
   await app.update('包含', 'Synthetic');
   await app.update('排除', 'CAM');
+  const words = '\n 局部词 => 替换词 \n\nE <> . >> EP+1\n';
+  await app.update('自定义识别词', words);
   const schedule = app.component('Schedule').props.model;
   const mappings = app.component('MappingRules').props.model;
   assert.deepEqual(schedule.exceptions, app.fixture.before[0].schedule.exceptions);
@@ -285,6 +290,7 @@ test('editing across tabs preserves subscription details and saves an isolated d
   assert.equal(saved.body.policy.resolution, '');
   assert.equal(saved.body.policy.hdr, '');
   assert.equal(saved.body.policy.include, '');
+  assert.equal(saved.body.custom_words, words);
   assert.equal(saved.body.policy.exclude, '');
   assert.deepEqual(saved.body.policy.preferred_groups, ['SyntheticGroup']);
   assert.equal(saved.body.schedule.source, 'custom');
@@ -301,6 +307,18 @@ test('editing across tabs preserves subscription details and saves an isolated d
     'editing must not mutate the original subscription',
   );
   assert.equal(app.dialog(), undefined);
+});
+
+test('clearing subscription recognition words sends an explicit empty string', async (t) => {
+  const app = await mount(t);
+  await app.click('编辑订阅 合成剧集');
+  await app.click('进阶');
+  assert.equal(app.label('自定义识别词').props.modelValue, app.fixture.before[0].custom_words);
+  await app.update('自定义识别词', '');
+  await app.click('保存');
+  const saved = app.fixture.requests.find((request) => request.method === 'PUT');
+  assert.ok(saved);
+  assert.equal(saved.body.custom_words, '');
 });
 
 test('closing discards edits while canceling a subscription requires confirmation before DELETE', async (t) => {

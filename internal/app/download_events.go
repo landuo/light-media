@@ -43,11 +43,7 @@ type downloadAddedSnapshot struct {
 }
 
 func (a *App) prepareDownloadContext(ctx context.Context, kind, key, hash string, resource sites.Resource) (downloadContextSnapshot, error) {
-	_, words, err := a.recognitionWords(ctx)
-	if err != nil {
-		return downloadContextSnapshot{}, err
-	}
-	_, config, err := a.resourceMetadataSettings(ctx)
+	ctx, err := a.ensureResourceRecognition(ctx)
 	if err != nil {
 		return downloadContextSnapshot{}, err
 	}
@@ -60,7 +56,7 @@ func (a *App) prepareDownloadContext(ctx context.Context, kind, key, hash string
 		text := *subtitle
 		subtitle = &text
 	}
-	options := releasemeta.Options{SourceMode: config.SourceMode, CustomWords: words, ReleaseGroups: config.ReleaseGroups, Customization: config.Customization}
+	options := ctx.Value(resourceRecognitionKey{}).(resourceRecognition).options
 	parsed, err := releasemeta.Parse(resource.Title, subtitle, options)
 	if err != nil {
 		return downloadContextSnapshot{}, bad("RESOURCE_METADATA_FAILED", "下载资源元数据解析失败，请检查资源识别配置")

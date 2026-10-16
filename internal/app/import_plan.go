@@ -178,6 +178,10 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
 	var prepareErr error
+	ctx, prepareErr = a.ensureResourceRecognition(ctx)
+	if prepareErr != nil {
+		return ImportPlan{}, prepareErr
+	}
 	request, prepareErr = a.prepareManualImport(ctx, request)
 	if prepareErr != nil {
 		return ImportPlan{}, prepareErr
@@ -315,7 +319,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					nfoEpisodeID = inferred.EpisodeID
 				}
 			}
-			parsed := a.parseManualImportFile(requested)
+			parsed := a.parseManualImportFileContext(ctx, requested)
 			if explicitSeason && len(file.Episodes) == 0 && parsed.Original != nil && len(parsed.Original.Episodes) == 1 && len(request.Mappings) == 0 {
 				// An explicit season override (including 0) changes the season,
 				// never the episode number or the video's actual file contents.

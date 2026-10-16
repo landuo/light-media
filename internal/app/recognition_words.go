@@ -147,7 +147,14 @@ func (a *App) replaceRemoteIdentifiersBound(ctx context.Context, run *PluginRun,
 }
 
 func (a *App) prepareRecognitionTitle(title string) string {
-	result := a.recognitionMatcher.Load().Prepare(title)
+	return a.prepareRecognitionTitleContext(context.Background(), title)
+}
+func (a *App) prepareRecognitionTitleContext(ctx context.Context, title string) string {
+	matcher := a.recognitionMatcher.Load()
+	if scope, ok := ctx.Value(resourceRecognitionKey{}).(resourceRecognition); ok {
+		matcher = scope.matcher
+	}
+	result := matcher.Prepare(title)
 	if result.Limited {
 		// Incomplete preprocessing must not silently download or file a
 		// different episode using the unadjusted name. Physical paths stay intact.
@@ -156,10 +163,16 @@ func (a *App) prepareRecognitionTitle(title string) string {
 	return result.Title
 }
 func (a *App) parseMediaName(name string) media.ParseResult {
-	return media.Parse(a.prepareRecognitionTitle(name))
+	return a.parseMediaNameContext(context.Background(), name)
+}
+func (a *App) parseMediaNameContext(ctx context.Context, name string) media.ParseResult {
+	return media.Parse(a.prepareRecognitionTitleContext(ctx, name))
 }
 func (a *App) parseManualImportFile(file ImportFileRequest) media.ParseResult {
-	return parseManualImportName(file, a.prepareRecognitionTitle(filepath.Base(file.Path)))
+	return a.parseManualImportFileContext(context.Background(), file)
+}
+func (a *App) parseManualImportFileContext(ctx context.Context, file ImportFileRequest) media.ParseResult {
+	return parseManualImportName(file, a.prepareRecognitionTitleContext(ctx, filepath.Base(file.Path)))
 }
 func (a *App) evaluateResource(resource sites.Resource, target decision.Target, policy decision.Policy) decision.Decision {
 	return a.evaluateResourceContext(context.Background(), resource, target, policy)
@@ -167,20 +180,31 @@ func (a *App) evaluateResource(resource sites.Resource, target decision.Target, 
 func (a *App) evaluateResourceContext(ctx context.Context, resource sites.Resource, target decision.Target, policy decision.Policy) decision.Decision {
 	original := resource
 	policy.FilterResource = &original
-	resource.Title = a.prepareRecognitionTitle(resource.Title)
+	resource.Title = a.prepareRecognitionTitleContext(ctx, resource.Title)
 	return decision.EvaluateContext(ctx, resource, target, policy)
 }
 func (a *App) resourceNumberingSuggestion(title string) (int, []int) {
-	return resourceNumberingSuggestion(a.prepareRecognitionTitle(title))
+	return a.resourceNumberingSuggestionContext(context.Background(), title)
+}
+func (a *App) resourceNumberingSuggestionContext(ctx context.Context, title string) (int, []int) {
+	return resourceNumberingSuggestion(a.prepareRecognitionTitleContext(ctx, title))
 }
 
 func (a *App) eligibleAutomaticSeasonPack(resource sites.Resource, target decision.Target, policy Policy) bool {
+	return a.eligibleAutomaticSeasonPackContext(context.Background(), resource, target, policy)
+}
+func (a *App) eligibleAutomaticSeasonPackContext(ctx context.Context, resource sites.Resource, target decision.Target, policy Policy) bool {
 	original := resource
 	filters := decisionPolicy(policy)
 	filters.FilterResource = &original
-	resource.Title = a.prepareRecognitionTitle(resource.Title)
+	resource.Title = a.prepareRecognitionTitleContext(ctx, resource.Title)
 	return eligibleAutomaticSeasonPackPolicy(resource, target, filters)
 }
 func (a *App) validateAutomaticSeasonPackFiles(material metainfo.Material, target decision.Target, siteID string) error {
-	return validateAutomaticSeasonPackFilesWithWords(material, target, siteID, a.prepareRecognitionTitle)
+	return a.validateAutomaticSeasonPackFilesContext(context.Background(), material, target, siteID)
+}
+func (a *App) validateAutomaticSeasonPackFilesContext(ctx context.Context, material metainfo.Material, target decision.Target, siteID string) error {
+	return validateAutomaticSeasonPackFilesWithWords(material, target, siteID, func(name string) string {
+		return a.prepareRecognitionTitleContext(ctx, name)
+	})
 }

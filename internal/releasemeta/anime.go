@@ -15,19 +15,16 @@ var (
 	animePrefix = regexp.MustCompile(`.*番.|.*[日美国][漫剧].`)
 	// Generated from installed zhconv-rs over the CJK ranges recorded in the
 	// reference fixture. Inverse-map SHA256: 8867f0f21b2d2b33eb2c30a0675a364b001ac04a4770bf7ce63f535fd5aca597.
-	animeLegacyCategory      = regexp.MustCompile(`(?i)[中亚亞働剧劇动動华原台外大录影日枱檯洲海清港漫片电画畫畵盘盤眎眡紀綜續纪续综美臺艺華藝視视語语连連錄録陆陸集電韓韩颱高]{2,}|TV|Animation|Movie|Documentar|Anime`)
-	animeCategory            = regexp.MustCompile(`(?i)[动漫画纪录片电影视连续剧集日美韩中港台海外亚洲华语大陆综艺原盘高清]{2,}|TV|Animation|Movie|Documentar|Anime`)
-	animeLeadingBracket      = regexp.MustCompile(`^[^]]*]`)
-	animeFileSize            = regexp.MustCompile(`(?i)[0-9.]+\s*[MGT]i?B`)
-	animeTVBracket           = regexp.MustCompile(`(?i)\[TV\s+(\d{1,4})`)
-	animeFourKBracket        = regexp.MustCompile(`(?i)\[4k]`)
-	animeNumericBracket      = regexp.MustCompile(`\[\d+`)
-	animeMixedChinese        = regexp.MustCompile(`[\d|#:：\-()（）\x{4e00}-\x{9fff}]`)
-	animeLegacySeasonRange   = regexp.MustCompile(`(?i)\bS\d{1,2}-S?\d{1,2}\b`)
-	animeResolutionTokens    = regexp.MustCompile(`(?i)\b(?:\d{3,4}[pi]|\d{3,4}x\d{3,4}|[248]k)\b`)
-	animeRustSeasonTokens    = regexp.MustCompile(`(?i)\bS(\d+)(?:E\d+)?\b`)
-	animeRustExplicitEpisode = regexp.MustCompile(`(?i)\b(?:S?\d{1,2}(?:-S?\d{1,2})?[xE]\d{1,4}(?:-E?\d{1,4})?|EP?\d{1,4}|\d{1,4}v\d|\d{1,4}[-~&+]\d{1,4}|\d+[ABC]|\d+話)\b|#\d{1,4}`)
-	animeRustDecimal         = regexp.MustCompile(`\b(\d+)\.(\d+)\b`)
+	animeLegacyCategory    = regexp.MustCompile(`(?i)[中亚亞働剧劇动動华原台外大录影日枱檯洲海清港漫片电画畫畵盘盤眎眡紀綜續纪续综美臺艺華藝視视語语连連錄録陆陸集電韓韩颱高]{2,}|TV|Animation|Movie|Documentar|Anime`)
+	animeCategory          = regexp.MustCompile(`(?i)[动漫画纪录片电影视连续剧集日美韩中港台海外亚洲华语大陆综艺原盘高清]{2,}|TV|Animation|Movie|Documentar|Anime`)
+	animeLeadingBracket    = regexp.MustCompile(`^[^]]*]`)
+	animeFileSize          = regexp.MustCompile(`(?i)[0-9.]+\s*[MGT]i?B`)
+	animeTVBracket         = regexp.MustCompile(`(?i)\[TV\s+(\d{1,4})`)
+	animeFourKBracket      = regexp.MustCompile(`(?i)\[4k]`)
+	animeNumericBracket    = regexp.MustCompile(`\[\d+`)
+	animeMixedChinese      = regexp.MustCompile(`[\d|#:：\-()（）\x{4e00}-\x{9fff}]`)
+	animeLegacySeasonRange = regexp.MustCompile(`(?i)\bS\d{1,2}-S?\d{1,2}\b`)
+	animeResolutionTokens  = regexp.MustCompile(`(?i)\b(?:\d{3,4}[pi]|\d{3,4}x\d{3,4}|[248]k)\b`)
 )
 
 func animeContainsChinese(value string) bool {
@@ -64,7 +61,7 @@ func prepareAnimeTitle(title string, legacy bool) string {
 			title = animePrefix.ReplaceAllString(title, "")
 		} else if i := strings.LastIndex(title, "["); i >= 0 {
 			title = title[:i]
-		} else if len(title) > 0 {
+		} else if legacy && len(title) > 0 {
 			_, n := utf8.DecodeLastRuneInString(title)
 			title = title[:len(title)-n]
 		}
@@ -106,7 +103,7 @@ func prepareAnimeTitle(title string, legacy bool) string {
 					if !animeNumericBracket.MatchString(name) {
 						name = strings.TrimSpace(animeMixedChinese.ReplaceAllString(name, ""))
 					}
-					if name == "" || animeDigits(strings.TrimSpace(name)) {
+					if name == "" || legacy && animeDigits(strings.TrimSpace(name)) || !legacy && digits(strings.TrimSpace(name)) {
 						continue
 					}
 				}
@@ -246,76 +243,18 @@ func animeBracketChunks(title string) []string {
 	return result
 }
 
-// Anitomy-pure 0.1.0 splits hyphens before its prefix pass. This records
-// seasons from both S01-S03 and S01E01-S03E12, including zero and reversed
-// intervals. Its wrapper retains insertion order rather than sorting seasons.
-func animeRustSeasons(title string, begin, end *int) (*int, *int) {
-	var values []string
-	for _, m := range animeRustSeasonTokens.FindAllStringSubmatch(title, -1) {
-		values = append(values, m[1])
-	}
-	if len(values) > 1 {
-		return animeRange(values)
-	}
-	return begin, end
-}
-
-// The anitomy-pure numeric-range pass runs across all bracket chunks before
-// its bare-episode pass. A decimal at the start of an unbracketed chunk can
-// therefore become the first episode even when an earlier chunk has "- 01".
-// The MoviePilot wrapper then discards that fractional value when parsing i64.
-func animeRustFractionalEpisode(title string) bool {
-	if animeRustExplicitEpisode.MatchString(title) {
-		return false
-	}
-	closing := rune(0)
-	start := 0
-	opens := map[rune]rune{'(': ')', '[': ']', '{': '}', '「': '」', '『': '』', '【': '】', '（': '）'}
-	chunks := []string{}
-	for at, r := range title {
-		if closing == 0 {
-			if close, ok := opens[r]; ok {
-				if at > start {
-					chunks = append(chunks, title[start:at])
-				}
-				closing = close
-			}
-		}
-		if closing != 0 && r == closing {
-			closing = 0
-			start = at + utf8.RuneLen(r)
-		}
-	}
-	if closing == 0 && start < len(title) {
-		chunks = append(chunks, title[start:])
-	}
-	for _, chunk := range chunks {
-		for _, m := range animeRustDecimal.FindAllStringSubmatchIndex(chunk, -1) {
-			decimal := chunk[m[2]:m[5]]
-			// 5.1 is consumed by the preceding audio-keyword pass.
-			if decimal == "5.1" {
-				continue
-			}
-			before := strings.Trim(strings.ReplaceAll(chunk[:m[2]], "5.1", ""), " _.-&+,|")
-			after := strings.Trim(strings.ReplaceAll(chunk[m[5]:], "5.1", ""), " _.-&+,|")
-			if before == "" || after == "" || strings.HasSuffix(strings.TrimSpace(chunk[:m[2]]), "-") {
-				return true
-			}
-		}
-	}
-	return false
-}
-
+// Rust uses its own complete parser and wrapper; this path retains the legacy
+// adapter until the independent Anitopy state machine is ported.
 func parseAnime(title string, subtitle *string, options Options) (Metadata, error) {
+	if options.SourceMode == "rust" {
+		return parseRustAnime(title, subtitle, options)
+	}
 	result := Metadata{Kind: "anime", Type: "未知"}
 	if title == "" {
 		return result, nil
 	}
 	prepared := prepareAnimeTitle(title, options.SourceMode == "legacy")
 	if prepared == "" {
-		if options.SourceMode == "rust" {
-			result.Type = "电视剧" // Rust's final unknown/no-name default after Parser::parse fails.
-		}
 		return result, nil
 	}
 	original := anitogo.Parse(title, anitogo.DefaultOptions)
@@ -327,40 +266,13 @@ func parseAnime(title string, subtitle *string, options Options) (Metadata, erro
 		parseTitle = animeLegacySeasonRange.ReplaceAllString(parseTitle, "")
 	}
 	parsed := anitogo.Parse(parseTitle, anitogo.DefaultOptions)
-	rustCorrupt := options.SourceMode == "rust" && strings.Contains(parseTitle, "[") && !strings.Contains(parseTitle, "]")
-	if rustCorrupt {
-		parsed = &anitogo.Elements{} // anitomy-pure returns only FileName/Ext before tokenization.
-	}
-	if options.SourceMode == "rust" && strings.Contains(title, "[") && !strings.Contains(title, "]") {
-		original = &anitogo.Elements{}
-	}
 	result.Name = strings.TrimSpace(parsed.AnimeTitle)
 	result.BeginSeason, result.EndSeason = animeRange(parsed.AnimeSeason)
 	result.BeginEpisode, result.EndEpisode = animeRange(parsed.EpisodeNumber)
-	if options.SourceMode != "legacy" && !rustCorrupt {
-		result.BeginSeason, result.EndSeason = animeRustSeasons(parseTitle, result.BeginSeason, result.EndSeason)
-		if animeRustFractionalEpisode(parseTitle) {
-			result.BeginEpisode = nil
-			result.EndEpisode = nil
-		}
-	}
 	if result.BeginSeason != nil || result.BeginEpisode != nil {
 		result.Type = "电视剧"
 	}
-	if options.SourceMode != "legacy" && result.Type == "未知" {
-		if len(parsed.AnimeType) > 0 && strings.EqualFold(parsed.AnimeType[0], "TV") {
-			result.Type = "电视剧"
-		} else if len(parsed.Source) == 0 || !strings.EqualFold(parsed.Source[0], "WEBRip") {
-			result.Type = "电影"
-		}
-	}
 	resolution := animeResolution(prepared, parsed.VideoResolution, options.SourceMode == "legacy")
-	if options.SourceMode == "rust" {
-		resolution = rustAnimeResolution(prepared)
-	}
-	if rustCorrupt {
-		resolution = ""
-	}
 	result.Resolution = normalizeAnimeResolution(resolution)
 	team, err := matchTeam(title, options)
 	if err != nil {
@@ -376,9 +288,6 @@ func parseAnime(title string, subtitle *string, options Options) (Metadata, erro
 	}
 	if !applySubtitle(&result, title) && subtitle != nil {
 		applySubtitle(&result, *subtitle)
-	}
-	if options.SourceMode != "legacy" && result.Type == "未知" && result.Name == "" {
-		result.Type = "电视剧"
 	}
 	return result, nil
 }

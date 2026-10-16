@@ -19,6 +19,7 @@ import (
 )
 
 type SubscriptionRequest struct {
+	CustomWords   json.RawMessage     `json:"custom_words,omitempty"`
 	Keyword       string              `json:"keyword"`
 	SiteIDs       []string            `json:"site_ids"`
 	TotalEpisodes int                 `json:"total_episodes"`
@@ -121,6 +122,10 @@ func validateSubscriptionPolicy(p Policy) error {
 	return nil
 }
 func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionRequest) (Subscription, error) {
+	customWords, wordsErr := subscriptionWordsInput(in.CustomWords)
+	if wordsErr != nil {
+		return Subscription{}, wordsErr
+	}
 	var snapshot Subscription
 	if key != "" {
 		if e := a.Store.Get(ctx, "subscription", key, &snapshot); e != nil {
@@ -379,6 +384,9 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if e = txPut(ctx, tx, "subscription", key, s); e != nil {
 		return s, e
 	}
+	if e = a.saveSubscriptionWordsTx(ctx, tx, key, customWords); e != nil {
+		return s, e
+	}
 	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), key); e != nil {
 		return s, e
 	}
@@ -594,8 +602,10 @@ func (a *App) subscriptionList(ctx context.Context) (any, error) {
 		if e != nil {
 			return nil, e
 		}
-		entry := map[string]any{}
-		_ = json.Unmarshal(b, &entry)
+		entry, e := a.subscriptionEditorValue(ctx, s)
+		if e != nil {
+			return nil, e
+		}
 		cb, _ := json.Marshal(coverage)
 		_ = json.Unmarshal(cb, &entry)
 		items = append(items, entry)
@@ -669,6 +679,10 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	var s Subscription
 	if e := a.Store.Get(ctx, "subscription", key, &s); e != nil {
 		return e
+	}
+	ctx, recognitionErr := a.subscriptionRecognitionContext(ctx, key, revision)
+	if recognitionErr != nil {
+		return recognitionErr
 	}
 	known := []int{}
 	available := map[int]bool{}

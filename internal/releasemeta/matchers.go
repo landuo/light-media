@@ -9,8 +9,18 @@ import (
 )
 
 func matchTeam(title string, options Options) (string, error) {
+	value, err := matchTeamOption(title, options)
+	if value == nil {
+		return "", err
+	}
+	return *value, err
+}
+
+// Rust Option<String> distinguishes a nullable-expression match Some("") from
+// no match. Its anime wrapper uses Option::or, not a string-truthiness fallback.
+func matchTeamOption(title string, options Options) (*string, error) {
 	if title == "" {
-		return "", nil
+		return nil, nil
 	}
 	groups := builtinGroups
 	for _, value := range options.ReleaseGroups {
@@ -21,9 +31,9 @@ func matchTeam(title string, options Options) (string, error) {
 	re, err := pyregex.Compile(`(?<=[-@\[￡【&])(?:(?:`+groups+`))(?=$|[@.\s\]\[】&])`, true)
 	if err != nil {
 		if options.SourceMode == "rust" {
-			return "", nil
+			return nil, nil
 		}
-		return "", errors.New("release_meta_release_groups_invalid")
+		return nil, errors.New("release_meta_release_groups_invalid")
 	}
 	unique := []string{}
 	for m, err := re.FindStringMatch(title + " "); m != nil && err == nil; m, err = re.FindNextMatch(m) {
@@ -39,7 +49,11 @@ func matchTeam(title string, options Options) (string, error) {
 			unique = append(unique, value)
 		}
 	}
-	return strings.Join(unique, "@"), nil
+	if len(unique) == 0 {
+		return nil, nil
+	}
+	value := strings.Join(unique, "@")
+	return &value, nil
 }
 
 func matchCustomization(title string, options Options) (string, error) {

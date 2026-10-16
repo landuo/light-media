@@ -1,0 +1,343 @@
+package app
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"os"
+	"reflect"
+	"strings"
+	"sync"
+	"testing"
+
+	"light-media/internal/catalog"
+	"light-media/internal/decision"
+	"light-media/internal/download"
+	"light-media/internal/metainfo"
+	"light-media/internal/priorityrules"
+	"light-media/internal/releasemeta"
+	"light-media/internal/sites"
+)
+
+func TestSubscriptionRecognitionRawReplacementAndConcurrentIsolation(t *testing.T) {
+	a, ctx := subscriptionTestApp(t), context.Background()
+	if err := a.saveRecognitionWords(ctx, 0, []string{"Raw.Show => Global.Show"}); err != nil {
+		t.Fatal(err)
+	}
+	request := subscriptionRequest(t)
+	var sub Subscription
+	for _, raw := range []string{"Raw.Show => Local.Show\n\n  ", " ", "\n", ""} {
+		request.Revision, request.CustomWords = sub.Revision, subscriptionWordsRaw(t, raw)
+		var err error
+		sub, err = a.saveSubscription(ctx, sub.ID, request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		scoped, err := a.subscriptionRecognitionContext(ctx, sub.ID, sub.Revision)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := strings.Split(raw, "\n")
+		if raw == "" {
+			want = []string{"Raw.Show => Global.Show"}
+		}
+		actual := scoped.Value(resourceRecognitionKey{}).(resourceRecognition)
+		if !reflect.DeepEqual(actual.options.CustomWords, want) {
+			t.Fatal("raw local words were trimmed, merged or filtered")
+		}
+		prepared := a.prepareRecognitionTitleContext(scoped, "Raw.Show.S04E01")
+		if raw == "" && prepared != "Global.Show.S04E01" || raw == "Raw.Show => Local.Show\n\n  " && prepared != "Local.Show.S04E01" || (raw == " " || raw == "\n") && prepared != "Raw.Show.S04E01" {
+			t.Fatal("source nonempty replacement/fallback semantics changed", prepared)
+		}
+	}
+	left, err := withResourceRecognition(ctx, releasemeta.Options{CustomWords: []string{"Raw.Show => Left.Show"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	right, err := withResourceRecognition(ctx, releasemeta.Options{CustomWords: []string{"Raw.Show => Right.Show"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var workers sync.WaitGroup
+	for _, item := range []struct {
+		ctx  context.Context
+		want string
+	}{{left, "Left.Show.S04E01"}, {right, "Right.Show.S04E01"}, {ctx, "Global.Show.S04E01"}} {
+		workers.Add(1)
+		go func() {
+			defer workers.Done()
+			for range 40 {
+				if got := a.prepareRecognitionTitleContext(item.ctx, "Raw.Show.S04E01"); got != item.want {
+					t.Error("one subscription replaced another's matcher", got)
+					return
+				}
+			}
+		}()
+	}
+	workers.Wait()
+	if _, err := a.subscriptionRecognitionContext(ctx, sub.ID, sub.Revision-1); pluginErrorCode(err) != "REVIEW_SUBSCRIPTION_CHANGED" {
+		t.Fatal("local words escaped subscription revision guard", err)
+	}
+}
+
+func TestSubscriptionRecognitionPriorityFilterUsesGlobalsWhileSortAndPackUseLocalScope(t *testing.T) {
+	a, ctx := subscriptionTestApp(t), context.Background()
+	if err := a.saveRecognitionWords(ctx, 0, []string{"S04E01-E04 => S04E01-E03"}); err != nil {
+		t.Fatal(err)
+	}
+	options := releasemeta.Options{SourceMode: "rust", CustomWords: []string{"Alias => Jade.Dynasty", "S04E01-E04 => S04E01-E02"}}
+	ctx, err := withResourceRecognition(ctx, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	identity := catalog.Media{ID: 206484, MediaType: "tv", Title: "诛仙", OriginalTitle: "Jade Dynasty", Year: 2022}
+	resource := sites.Resource{ID: "four", Title: "Alias.S04E01-E04.2160p.WEB-DL", Size: 4 << 30}
+	positive := sites.Resource{ID: "two", Title: "Alias.S04E01-E02.2160p.WEB-DL", Size: 4 << 30}
+	globalCount, globalErr := a.priorityEpisodeCount(resource)
+	localCount, localErr := a.priorityEpisodeCountContext(ctx, resource)
+	if globalErr != nil || localErr != nil || globalCount != 3 || localCount != 2 {
+		t.Fatal("fixture must distinguish global filter count from local candidate count", globalCount, localCount, globalErr, localErr)
+	}
+	settings := a.Settings()
+	settings.PriorityRules = &priorityrules.Configuration{Mode: priorityrules.Rust, Groups: []priorityrules.Group{{Name: "scope", RuleString: priorityText("ScopeSize")}}, CustomRules: []priorityrules.Definition{{"id": "ScopeSize", "name": "scope", "include": "Alias", "size_range": ">1500"}}}
+	in := SearchRequest{priorityMedia: &identity, Policy: Policy{FilterGroups: []string{"scope"}}}
+	filter, err := a.preparePriorityFilter(ctx, in, settings)
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, err := filter.apply(ctx, a, SearchOutput{Candidates: []Candidate{{Resource: resource, Accepted: true}, {Resource: positive, Accepted: true}}})
+	if err != nil || len(out.Candidates) != 1 || out.Candidates[0].Resource.ID != "two" || out.Candidates[0].Resource.Title != positive.Title {
+		t.Fatal("priority size resolver inherited local words or changed raw include text", err)
+	}
+	out, err = filter.apply(context.Background(), a, SearchOutput{Candidates: []Candidate{{Resource: resource, Accepted: true}, {Resource: positive, Accepted: true}}})
+	if err != nil || len(out.Candidates) != 1 || out.Candidates[0].Resource.ID != "two" {
+		t.Fatal("priority filtering did not use the same global scope with and without a local candidate context", err)
+	}
+	sorter, err := a.preparePrioritySorter(ctx, in, settings)
+	if err != nil {
+		t.Fatal(err)
+	}
+	candidates := []Candidate{{Resource: resource, Accepted: true}, {Resource: sites.Resource{ID: "three", Title: "Jade.Dynasty.S04E01-E03"}, Accepted: true}}
+	sorter.sort(a, candidates, Policy{})
+	if candidates[0].Resource.ID != "three" {
+		t.Fatal("priority sorter reparsed with the global matcher")
+	}
+	target := decision.Target{Media: identity, Season: 4, Episodes: []int{1, 2}, KnownEpisodes: []int{1, 2}, AiredEpisodes: []int{1, 2}, Auto: true}
+	pack := sites.Resource{Title: "Alias.S04.2160p.WEB-DL", Size: 1 << 30}
+	if !a.eligibleAutomaticSeasonPackContext(ctx, pack, target, Policy{}) || a.eligibleAutomaticSeasonPack(pack, target, Policy{}) {
+		t.Fatal("automatic pack eligibility lost its selection scope")
+	}
+	material := metainfo.Material{Files: []metainfo.File{{Path: "Alias.S04E01.mkv", Size: 1024}, {Path: "Alias.S04E02.mkv", Size: 1024}}}
+	if err = a.validateAutomaticSeasonPackFilesContext(ctx, material, target, "scope"); err != nil {
+		t.Fatal("actual pack files ignored local recognition", err)
+	}
+	if err = a.validateAutomaticSeasonPackFiles(material, target, "scope"); err == nil {
+		t.Fatal("pack fixture no longer distinguishes local recognition")
+	}
+}
+
+func TestSubscriptionRecognitionActualSelectionContextSurvivesRestartAndRecheck(t *testing.T) {
+	for _, existingHash := range []bool{false, true} {
+		t.Run(map[bool]string{false: "new_add", true: "existing_hash"}[existingHash], func(t *testing.T) {
+			ctx := context.Background()
+			// Use a no-op local list to suppress a global episode-changing rule.
+			// The complete original titles/files must pass real automatic checks.
+			local := "# synthetic-private-selected-word\nJade[.]Dynasty => Jade.Dynasty\n\n "
+			f := subscribeContinuationConfigFixture(t, subscribeDownloadConfig(), func(f *subscribeContinuation) {
+				f.request.CustomWords = subscriptionWordsRaw(t, local)
+				if err := f.app.saveRecognitionWords(ctx, 0, []string{"S04E0[12] => S04E01-E04"}); err != nil {
+					t.Fatal(err)
+				}
+				// Source FilterModule size_range independently parses global words:
+				// 1.5 GiB / 4 is below 500 MiB. Local candidate words keep one
+				// actual episode, whose 1.5 GiB would reject both selections if
+				// that local Context were incorrectly reused for the denominator.
+				settings := f.app.Settings()
+				settings.PriorityRules = &priorityrules.Configuration{Mode: priorityrules.Rust, Groups: []priorityrules.Group{{Name: "global-size", RuleString: priorityText("GlobalSize")}}, CustomRules: []priorityrules.Definition{{"id": "GlobalSize", "name": "global size denominator", "include": "Jade.Dynasty", "size_range": "<500"}}}
+				if err := f.app.saveSettings(ctx, settings); err != nil {
+					t.Fatal(err)
+				}
+				f.request.Policy.FilterGroups = []string{"global-size"}
+				if _, err := f.app.saveResourceMetadataSettings(ctx, 1, resourceMetadataConfiguration{SourceMode: "rust", ReleaseGroups: []string{"FixtureTeam"}, Customization: []string{"FrozenMarker"}}); err != nil {
+					t.Fatal(err)
+				}
+			})
+			a := f.app
+			selected, err := a.Store.List(ctx, "intent", 10, 0)
+			if err != nil || len(selected) != 2 {
+				t.Fatal("actual subscription did not select both episodes with local words", err)
+			}
+			original := map[string]downloadContextSnapshot{}
+			for _, raw := range selected {
+				var in Intent
+				if json.Unmarshal(raw, &in) != nil {
+					t.Fatal("bad selected intent")
+				}
+				source, err := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
+				if err != nil || source == nil || !reflect.DeepEqual(source.Options.CustomWords, strings.Split(local, "\n")) || source.Options.SourceMode != "rust" || !reflect.DeepEqual(source.Options.ReleaseGroups, []string{"FixtureTeam"}) || !reflect.DeepEqual(source.Options.Customization, []string{"FrozenMarker"}) {
+					t.Fatal("check/search/preview/confirm did not freeze complete selected options", err)
+				}
+				original[in.ID] = *source
+				var preview DownloadPreview
+				if err := a.Store.Get(ctx, "download_preview", in.PreviewID, &preview); err != nil {
+					t.Fatal(err)
+				}
+				public, _ := json.Marshal(preview)
+				if bytes.Contains(raw, []byte("synthetic-private-selected-word")) || bytes.Contains(public, []byte("synthetic-private-selected-word")) || bytes.Contains(raw, []byte("custom_words")) || bytes.Contains(public, []byte("custom_words")) {
+					t.Fatal("private selected word list leaked into ordinary intent or preview/request")
+				}
+			}
+			if err := a.saveRecognitionWords(ctx, 1, []string{"S04E0[12] => S04E99"}); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := a.saveResourceMetadataSettings(ctx, 2, resourceMetadataConfiguration{SourceMode: "legacy", ReleaseGroups: []string{"ChangedTeam"}, Customization: []string{"ChangedMarker"}}); err != nil {
+				t.Fatal(err)
+			}
+			f.listing.Store(strings.ReplaceAll(f.listing.Load().(string), ".HDR10-", ".HDR10.FrozenMarker-"))
+			dir := a.Dir
+			if err := a.Close(); err != nil {
+				t.Fatal(err)
+			}
+			a, err = New(Options{DataDir: dir})
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(func() { _ = a.Close() })
+			f.app = a
+			useBuiltInPluginProcess(t, a)
+			firstJob, first := subscribeContinuationClaim(t, f)
+			if existingHash {
+				f.seedTask(first, 0)
+			}
+			subscribeContinuationRun(t, f, firstJob)
+			run, _ := subscribeContinuationEvent(t, a)
+			subscribeSDKExecute(t, a, run)
+			secondJob, second := subscribeContinuationClaim(t, f)
+			subscribeContinuationRun(t, f, secondJob)
+			wantAdds := int32(2)
+			if existingHash {
+				wantAdds = 1
+			}
+			if f.adds.Load() != wantAdds {
+				t.Fatal("restart/recheck did not preserve unique selected downloads", f.adds.Load())
+			}
+			page, err := a.domainEvents(ctx, 0, 100)
+			if err != nil {
+				t.Fatal(err)
+			}
+			facts := 0
+			for _, event := range page.Events {
+				if event.Type != "download.accepted" {
+					continue
+				}
+				snapshot, err := a.downloadAddedSnapshot(ctx, event)
+				if err != nil || snapshot.Context == nil || !reflect.DeepEqual(snapshot.Context.Options, original[event.IntentID].Options) {
+					t.Fatal("accepted fact lost complete chosen options", err)
+				}
+				wantTitle := original[event.IntentID].Title
+				if event.IntentID != first.ID || !existingHash {
+					wantTitle = strings.ReplaceAll(wantTitle, ".HDR10-", ".HDR10.FrozenMarker-")
+				}
+				if snapshot.Context.Title != wantTitle {
+					t.Fatal("fresh source title or existing-hash snapshot was replaced")
+				}
+				facts++
+			}
+			if facts != 2 {
+				t.Fatal("both actual accepted facts were not committed", facts)
+			}
+			// Completed file parsing also follows the selected snapshot, after
+			// the live subscription's internal revision and global words changed.
+			if err := a.Store.Get(ctx, "intent", second.ID, &second); err != nil {
+				t.Fatal(err)
+			}
+			f.seedTask(second, 1)
+			files, err := a.downloadFiles(ctx, second.ID)
+			if err != nil || len(files.Files) != 1 || files.Files[0].Parsed.Original == nil || !reflect.DeepEqual(files.Files[0].Parsed.Original.Episodes, second.Episodes) {
+				t.Fatal("downloaded file review reverted to current global numbering", err)
+			}
+			renaming, scraping := true, false
+			if _, err := a.saveManagedDirectory(ctx, DirectoryRule{Name: "owned fixture", SourcePath: second.DownloadPath, RootID: a.Settings().Roots[0].ID, MediaType: "tv", Mode: "hardlink", MonitorType: "monitor", Enabled: true, Renaming: &renaming, Scraping: &scraping}); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(files.Files[0].ApplicationPath, make([]byte, 1024), 0600); err != nil {
+				t.Fatal(err)
+			}
+			d, err := a.downloader(second.DownloaderID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			client, err := download.New(d.Config)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = a.planCompletedDownload(ctx, client, d, &second, files.Task); err != nil {
+				t.Fatal("completed download could not plan selected local numbering", err)
+			}
+			var plan ImportPlan
+			if err = a.Store.Get(ctx, "import_plan", second.ImportPlanID, &plan); err != nil || len(plan.Files) != 1 || !reflect.DeepEqual(plan.Files[0].Episodes, second.Episodes) {
+				t.Fatal("import plan lost selected local numbering", err)
+			}
+			// A manual/native request with the same TMDB ID owns current global
+			// words, even while the stored subscription still has local words.
+			manual := PreviewRequest{SearchRequest: SearchRequest{Query: "Jade Dynasty", MediaType: "tv", TMDBID: f.sub.Media.ID, Season: 4, Episodes: []int{3}, AllowEarly: []int{3}}, SiteID: "continuation-site", ResourceID: "103", DownloaderID: second.DownloaderID, DownloadPath: second.DownloadPath}
+			globalRev, _, err := a.recognitionWords(ctx)
+			if err != nil || a.saveRecognitionWords(ctx, globalRev, []string{"S04E03 => S04E99"}) != nil {
+				t.Fatal("could not set distinct manual global words", err)
+			}
+			// Manual previews allow a numbering-review decision to reach actual
+			// file coverage. Current globals rewrite E03 to E99 there; borrowing
+			// this subscription's no-op list would incorrectly make it succeed.
+			if _, err = a.previewDownload(ctx, manual, false); pluginErrorCode(err) != "REVIEW_TORRENT_COVERAGE" {
+				t.Fatal("manual preview borrowed local subscription words", err)
+			}
+			native, err := a.addNativeDownload(ctx, NativeDownloadRequest{SiteID: manual.SiteID, ResourceID: manual.ResourceID, Query: manual.Query, DownloaderID: manual.DownloaderID, DownloadPath: manual.DownloadPath, MediaType: "tv", TMDBID: manual.TMDBID})
+			if err != nil {
+				t.Fatal("native request could not use its own current globals", err)
+			}
+			nativeContext, err := a.loadDownloadContext(ctx, "native_download", native.ID, native.Hash)
+			if err != nil || nativeContext == nil || !reflect.DeepEqual(nativeContext.Options.CustomWords, []string{"S04E03 => S04E99"}) || nativeContext.Options.SourceMode != "legacy" || !reflect.DeepEqual(nativeContext.Options.ReleaseGroups, []string{"ChangedTeam"}) {
+				t.Fatal("native request inherited a matching subscription's context", err)
+			}
+		})
+	}
+}
+
+func TestIntentRecognitionPreservesExplicitEmptyExtensionsAndLegacyGlobalFallback(t *testing.T) {
+	a, ctx := subscriptionTestApp(t), context.Background()
+	options := releasemeta.Options{SourceMode: "rust", CustomWords: []string{"Raw => Frozen"}, ReleaseGroups: []string{"FrozenTeam"}, Customization: []string{"FrozenMarker"}, MediaExts: []string{}}
+	scoped, err := withResourceRecognition(ctx, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, hash := workflowTorrent("Raw.S04E01.mkv")
+	source, err := a.prepareDownloadContext(scoped, "intent", "scope-fixture", hash, sites.Resource{Title: "Raw.S04E01.mkv"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	if err = a.saveDownloadContextTx(ctx, tx, source); err != nil {
+		t.Fatal(err)
+	}
+	if err = tx.Commit(); err != nil {
+		t.Fatal(err)
+	}
+	loaded, err := a.intentRecognitionContext(ctx, Intent{ID: source.DownloadID, Hash: hash})
+	if err != nil || !reflect.DeepEqual(loaded.Value(resourceRecognitionKey{}).(resourceRecognition).options, options) {
+		t.Fatal("private context changed nil versus explicit empty options", err)
+	}
+	if err = a.saveRecognitionWords(ctx, 0, []string{"Raw => CurrentGlobal"}); err != nil {
+		t.Fatal(err)
+	}
+	legacy, err := a.intentRecognitionContext(ctx, Intent{ID: "pre-producer", Hash: hash})
+	if err != nil || a.prepareRecognitionTitleContext(legacy, "Raw.S04E01") != "CurrentGlobal.S04E01" {
+		t.Fatal("legacy intent did not retain documented global fallback", err)
+	}
+	if _, err = a.intentRecognitionContext(ctx, Intent{ID: source.DownloadID, Hash: strings.Repeat("b", 40)}); err == nil {
+		t.Fatal("selected context could be rebound to another hash")
+	}
+}

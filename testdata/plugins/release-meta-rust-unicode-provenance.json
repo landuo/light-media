@@ -1,0 +1,90 @@
+{
+  "source": "Read-only installed extension compiler marker; pinned official compiler source; exhaustive Unicode scalar verification; synthetic installed-wheel wrapper references",
+  "extension": {
+    "distribution": "moviepilot-rust",
+    "version": "0.2.6",
+    "filename": "moviepilot_rust.abi3.so",
+    "bytes": 6451096,
+    "sha256": "ab27c023a3863ac20a8221317e3b609d2fb18de8669527c81b1997cdf086c729",
+    "compiler_marker_pattern": "/rustc/<40-hex-commit>/",
+    "compiler_commits": [
+      "8bab26f4f68e0e26f0bb7960be334d5b520ea452"
+    ]
+  },
+  "compiler": {
+    "version": "1.97.1",
+    "commit": "8bab26f4f68e0e26f0bb7960be334d5b520ea452"
+  },
+  "source_files": {
+    "src/version": {
+      "url": "https://raw.githubusercontent.com/rust-lang/rust/8bab26f4f68e0e26f0bb7960be334d5b520ea452/src/version",
+      "sha256": "ddf93c2b5a907811af43f301345fce8f5eb8a96fa60f3e8f2c17e1b3904e6181"
+    },
+    "library/core/src/unicode/unicode_data.rs": {
+      "url": "https://raw.githubusercontent.com/rust-lang/rust/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/unicode/unicode_data.rs",
+      "sha256": "4438831f7c584a35457022c4016ab8a295f242ff809b81a5c81b9bb14dc5e166"
+    },
+    "library/core/src/char/methods.rs": {
+      "url": "https://raw.githubusercontent.com/rust-lang/rust/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/char/methods.rs",
+      "sha256": "6794677490411e762ee66df96438a112fb6ca5bdc0a1ae11a9933e93eee77909"
+    },
+    "library/alloc/src/str.rs": {
+      "url": "https://raw.githubusercontent.com/rust-lang/rust/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/alloc/src/str.rs",
+      "sha256": "ef6974342cf6a89eb7ce00d32a7fa49bfa88a4e9058bbfe4ca6bee2436bad8bf"
+    }
+  },
+  "unicode": {
+    "version": "17.0.0",
+    "scalar_count": 1112064,
+    "compared": [
+      "char::is_alphabetic",
+      "char::is_numeric",
+      "char::is_uppercase",
+      "char::to_uppercase",
+      "char::to_lowercase"
+    ],
+    "difference_count": 0,
+    "reference_rows_sha256": "ce00fe872143a58108354429e951d063b1d54684fdab6242975e8100eaafbc04",
+    "formal_go_sha256": "0a24a15b086961d57d6833cab20d0bffe9bf381e1beb084ce94ef68274ee0cc1",
+    "formal_go_file": "internal/releasemeta/rustanime/unicode_data.go"
+  },
+  "reference_instrumentation": [
+    "The original compiler Unicode source is unchanged except two crate::intrinsics::assume calls are replaced by ordinary assertions, checked for every scalar.",
+    "Public std::ops and std::cmp are re-exported at the verification crate root.",
+    "The exact char method ASCII fast paths from the pinned methods.rs are applied around the original lookup functions.",
+    "Each emitted property flag and full char case mapping is compared with the actual Go table ranges/mappings, without using Python Unicode properties."
+  ],
+  "observable_dependencies": {
+    "Alphabetic": "Anime title and release group unknown-span eligibility; bracket and preceding-token checks.",
+    "Numeric": "contains_digit episode candidate scan and alphanumeric title eligibility; source ASCII numeric conversion remains separate.",
+    "Uppercase": "Hyphen-joined title word boundaries.",
+    "UppercaseMapping": "Keyword lookup normalization and first-letter name casing.",
+    "LowercaseMapping": "Per-character MoviePilot-Rust name casing."
+  },
+  "installed_wheel_reference": {
+    "additional_cases": 39,
+    "codepoints": [
+      "1C89",
+      "1C8A",
+      "11DB0",
+      "1E5D0",
+      "10940",
+      "16EA0",
+      "1CCF0",
+      "1E5F1",
+      "0345",
+      "2163",
+      "00DF",
+      "0130",
+      "FB03"
+    ],
+    "fixture": "testdata/plugins/release-meta-rust-anime-wrapper-oracle.json",
+    "total_cases": 139,
+    "sha256": "c3e92edebfc82411adbd1f8024ab10b7956bb2c80017be346d649fa4a6e03ea0"
+  },
+  "limits": [
+    "The exhaustive comparison covers the listed scalar predicates and mappings, not all stdlib, regex engine semantics or arbitrary complete MetaInfo inputs.",
+    "Installed wheel wrapper cases exercise observable parser effects but are a finite synthetic sample.",
+    "Legacy Anitopy 2.1.1 remains an independent unfinished port."
+  ]
+}

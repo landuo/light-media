@@ -1,0 +1,1100 @@
+{
+  "scope": "Actual original RSS/Search AST control flow with synthetic recording MetaInfo; actual Python WordsMatcher and Rust option collector; NOT an end-to-end MetaInfo or media-recognition oracle",
+  "source_root": "Installed MoviePilot /app; read-only named Python source extraction; no application imports or user configuration",
+  "source_sha256": {
+    "app/chain/subscribe.py": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/torrents.py": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+    "app/core/metainfo.py": "7c76f962f792a480615e0aa0ffd84fae16eecf62cae0ed3d8a0261f7283d59a9",
+    "app/core/meta/words.py": "798759c94919636c94b690786b9d68a8b7f2f2815be611b04f7c857491d40277",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/utils/rust_accel.py": "6c4c890639c0830d41a75d2e865eb3b3c3f3915b234d72976ea58bfbe5dc9dfc",
+    "app/core/meta/metabase.py": "0156c105bf92991332a8742b9a4af4e1f3a74cf4b6f08107e0ed6de9d546f292",
+    "app/modules/filter/__init__.py": "78f7741b8782ed23a8ef94a18afc14038366b832d9a0907cce9274664052abe8",
+    "app/helper/torrent.py": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5"
+  },
+  "distributions": {
+    "regex": "2026.5.9",
+    "cn2an": "0.5.24"
+  },
+  "rss_cases": [
+    {
+      "name": "none",
+      "local_words": null,
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": null,
+      "rss_probe_apply_words": null,
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": null
+        }
+      ]
+    },
+    {
+      "name": "none",
+      "local_words": null,
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": null,
+      "rss_probe_apply_words": null,
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": null
+        }
+      ]
+    },
+    {
+      "name": "direct_empty_list",
+      "local_words": [],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": null,
+      "rss_probe_apply_words": null,
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": []
+        }
+      ]
+    },
+    {
+      "name": "direct_empty_list",
+      "local_words": [],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": null,
+      "rss_probe_apply_words": null,
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": []
+        }
+      ]
+    },
+    {
+      "name": "empty_string_list",
+      "local_words": [
+        ""
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty_string_list",
+      "local_words": [
+        ""
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "two_empty_lines",
+      "local_words": [
+        "",
+        ""
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "",
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "two_empty_lines",
+      "local_words": [
+        "",
+        ""
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "",
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "space_only",
+      "local_words": [
+        " "
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            " "
+          ]
+        }
+      ]
+    },
+    {
+      "name": "space_only",
+      "local_words": [
+        " "
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            " "
+          ]
+        }
+      ]
+    },
+    {
+      "name": "comment_only",
+      "local_words": [
+        "# Raw => Local"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "# Raw => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "comment_only",
+      "local_words": [
+        "# Raw => Local"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "# Raw => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid_regex",
+      "local_words": [
+        "["
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "["
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid_regex",
+      "local_words": [
+        "["
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "["
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unmatched_local",
+      "local_words": [
+        "Unmatched => Local"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Unmatched => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unmatched_local",
+      "local_words": [
+        "Unmatched => Local"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Unmatched => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "raw_only_rule",
+      "local_words": [
+        "Raw => Local"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Raw => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "raw_only_rule",
+      "local_words": [
+        "Raw => Local"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Raw => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cached_only_rule",
+      "local_words": [
+        "Cached => Local"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Local.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "Cached => Local"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Local"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cached_only_rule",
+      "local_words": [
+        "Cached => Local"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Local.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "Cached => Local"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Local"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": false,
+      "rss_match_source": "new-id-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Local"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "same_value_match",
+      "local_words": [
+        "Cached => Cached"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "Cached => Cached"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "same_value_match",
+      "local_words": [
+        "Cached => Cached"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "Cached => Cached"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": false,
+      "rss_match_source": "new-id-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "combined_replace_but_failed_offset",
+      "local_words": [
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Local.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Local && MISSING <> E >> EP+1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "combined_replace_but_failed_offset",
+      "local_words": [
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Local.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [],
+      "rss_rebuilt": false,
+      "rss_parser_calls": [],
+      "rss_kept_meta_identity": true,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Local && MISSING <> E >> EP+1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "successful_rule_then_failed_combined",
+      "local_words": [
+        "Cached => Cached",
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Local.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "Cached => Cached"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached",
+            "Cached => Local && MISSING <> E >> EP+1"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached",
+            "Cached => Local && MISSING <> E >> EP+1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "successful_rule_then_failed_combined",
+      "local_words": [
+        "Cached => Cached",
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Local.S01E01.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "Cached => Cached"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached",
+            "Cached => Local && MISSING <> E >> EP+1"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": false,
+      "rss_match_source": "new-id-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "Cached => Cached",
+            "Cached => Local && MISSING <> E >> EP+1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "raw_offset_once",
+      "local_words": [
+        "E <> .1080p >> EP+1"
+      ],
+      "recognize_success": false,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E02.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "E <> .1080p >> EP+1"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "E <> .1080p >> EP+1"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": true,
+      "rss_match_source": "cached-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "E <> .1080p >> EP+1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "raw_offset_once",
+      "local_words": [
+        "E <> .1080p >> EP+1"
+      ],
+      "recognize_success": true,
+      "cached_org_string": "Cached.S01E01.1080p.WEB-DL",
+      "rss_prepared_probe": "Cached.S01E02.1080p.WEB-DL",
+      "rss_probe_apply_words": [
+        "E <> .1080p >> EP+1"
+      ],
+      "rss_rebuilt": true,
+      "rss_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "E <> .1080p >> EP+1"
+          ]
+        }
+      ],
+      "rss_kept_meta_identity": false,
+      "rss_kept_media_identity": false,
+      "rss_match_source": "new-id-match",
+      "rss_candidate_recognized": true,
+      "rss_media_info_is_target": false,
+      "rss_original_cached_context_unchanged": true,
+      "rss_context_allowed_episodes_shared": true,
+      "search_parser_calls": [
+        {
+          "title": "Raw.S01E01.1080p.WEB-DL",
+          "subtitle": "synthetic description",
+          "custom_words": [
+            "E <> .1080p >> EP+1"
+          ]
+        }
+      ]
+    }
+  ],
+  "source_mode_option_cases": [
+    {
+      "name": "none",
+      "local_words": null,
+      "legacy_actual_words_result": {
+        "title": "Cached.S01E01.1080p.WEB-DL",
+        "applied": [
+          "Raw => Cached"
+        ]
+      },
+      "rust_actual_option_words": [
+        "Raw => Cached"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "direct_empty_list",
+      "local_words": [],
+      "legacy_actual_words_result": {
+        "title": "Cached.S01E01.1080p.WEB-DL",
+        "applied": [
+          "Raw => Cached"
+        ]
+      },
+      "rust_actual_option_words": [],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "empty_string_list",
+      "local_words": [
+        ""
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        ""
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "two_empty_lines",
+      "local_words": [
+        "",
+        ""
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "",
+        ""
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "space_only",
+      "local_words": [
+        " "
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        " "
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "comment_only",
+      "local_words": [
+        "# Raw => Local"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "# Raw => Local"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "invalid_regex",
+      "local_words": [
+        "["
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "["
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "unmatched_local",
+      "local_words": [
+        "Unmatched => Local"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "Unmatched => Local"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "raw_only_rule",
+      "local_words": [
+        "Raw => Local"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Local.S01E01.1080p.WEB-DL",
+        "applied": [
+          "Raw => Local"
+        ]
+      },
+      "rust_actual_option_words": [
+        "Raw => Local"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "cached_only_rule",
+      "local_words": [
+        "Cached => Local"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "Cached => Local"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "same_value_match",
+      "local_words": [
+        "Cached => Cached"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "Cached => Cached"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "combined_replace_but_failed_offset",
+      "local_words": [
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "successful_rule_then_failed_combined",
+      "local_words": [
+        "Cached => Cached",
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E01.1080p.WEB-DL",
+        "applied": []
+      },
+      "rust_actual_option_words": [
+        "Cached => Cached",
+        "Cached => Local && MISSING <> E >> EP+1"
+      ],
+      "rust_preserves_other_option_fields": true
+    },
+    {
+      "name": "raw_offset_once",
+      "local_words": [
+        "E <> .1080p >> EP+1"
+      ],
+      "legacy_actual_words_result": {
+        "title": "Raw.S01E02.1080p.WEB-DL",
+        "applied": [
+          "E <> .1080p >> EP+1"
+        ]
+      },
+      "rust_actual_option_words": [
+        "E <> .1080p >> EP+1"
+      ],
+      "rust_preserves_other_option_fields": true
+    }
+  ],
+  "priority_scope": {
+    "legacy_meta_calls": [
+      {
+        "title": "Raw.S04E01-E04.1080p.WEB-DL",
+        "subtitle": "synthetic raw description"
+      }
+    ],
+    "synthetic_total_episode": 2,
+    "synthetic_size_range": ">1500",
+    "synthetic_size_bytes": 4294967296,
+    "rust_filter_option_words": [
+      "Raw => Cached"
+    ],
+    "raw_rule_fields": "TorrentInfo.title/description; no local Context passed",
+    "sort_scope": "helper/torrent.py:301 uses existing Context.meta_info, no reparse"
+  }
+}

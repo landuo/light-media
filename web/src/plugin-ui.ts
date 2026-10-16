@@ -1,11 +1,29 @@
 import { createVuetify } from 'vuetify';
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
+import { aliases } from 'vuetify/iconsets/mdi';
+import { h } from 'vue';
+import { Icon, addCollection } from '@iconify/vue/offline';
+import mdiIcons from './assets/material-design-icons.json';
+
+// Original forms supply icon names, rather than SVG path data. Bundle the
+// original MDI shapes locally so every declared field icon works offline.
+addCollection(mdiIcons);
+addCollection(mdiIcons, 'mdi-');
 
 // Match the original project's component version, theme and form defaults.
 // Import component styles as needed, without applying Vuetify's global reset
 // to the application's existing pages.
 export const pluginUI = createVuetify({
-  icons: { defaultSet: 'mdi', aliases, sets: { mdi } },
+  icons: {
+    defaultSet: 'iconify',
+    aliases: {
+      ...aliases,
+      success: 'mdi-check-circle-outline',
+      info: 'mdi-information-outline',
+      warning: 'mdi-alert-outline',
+      error: 'mdi-alert-circle-outline',
+    },
+    sets: { iconify: { component: (props: any) => h(Icon, props) } },
+  },
   theme: {
     defaultTheme: 'light',
     themes: {

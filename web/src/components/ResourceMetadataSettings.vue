@@ -129,8 +129,12 @@ onMounted(load);
   border: 0;
   border-radius: 0;
   background: transparent;
-  padding: 0;
+  padding: var(--v-field-input-padding-top) var(--v-field-padding-end)
+    var(--v-field-input-padding-bottom) var(--v-field-padding-start);
   box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1.5;
 }
 .resource-metadata-settings :deep(.v-label) {
   flex-direction: row;

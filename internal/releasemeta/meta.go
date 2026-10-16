@@ -40,6 +40,7 @@ type Metadata struct {
 
 // Parse 按已安装版本的 Rust 0.2.6 或 legacy 分支解析标题与副标题。
 func Parse(title string, subtitle *string, options Options) (result Metadata, parseErr error) {
+	originalTitle := title
 	defer func() {
 		if recover() != nil {
 			result, parseErr = Metadata{}, errors.New("release_meta_parser_failed")
@@ -100,6 +101,10 @@ func Parse(title string, subtitle *string, options Options) (result Metadata, pa
 		meta, err = parseVideo(title, subtitle, isfile, options)
 	}
 	if err != nil {
+		if errors.Is(err, errRustFallback) && options.SourceMode == "rust" {
+			options.SourceMode = "legacy"
+			return Parse(originalTitle, subtitle, options)
+		}
 		return Metadata{}, err
 	}
 	if explicit.begin != nil {

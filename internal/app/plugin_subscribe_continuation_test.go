@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
@@ -31,6 +32,8 @@ type subscribeContinuation struct {
 	release   chan struct{}
 	enterOnce sync.Once
 	freeOnce  sync.Once
+	listing   atomic.Value
+	seedTask  func(Intent, float64)
 }
 
 func subscribeContinuationFixture(t *testing.T) *subscribeContinuation {
@@ -38,7 +41,7 @@ func subscribeContinuationFixture(t *testing.T) *subscribeContinuation {
 	return subscribeContinuationConfigFixture(t, subscribeDownloadConfig())
 }
 
-func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Configuration) *subscribeContinuation {
+func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Configuration, configure ...func(*subscribeContinuation)) *subscribeContinuation {
 	t.Helper()
 	f := &subscribeContinuation{app: subscriptionTestApp(t), entered: make(chan struct{}), release: make(chan struct{})}
 	a, ctx := f.app, context.Background()
@@ -53,6 +56,13 @@ func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Conf
 	}
 	var tasksMu sync.Mutex
 	tasks := map[string]map[string]any{}
+	f.seedTask = func(in Intent, progress float64) {
+		tasksMu.Lock()
+		defer tasksMu.Unlock()
+		task := workflowTask(in.Hash, progress)
+		task["save_path"], task["name"] = in.DownloadPath, in.ResourceTitle+".mkv"
+		tasks[in.Hash] = task
+	}
 	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/api/v2/torrents/info":
@@ -91,16 +101,25 @@ func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Conf
 			}
 			task := workflowTask(material.Hash, 0)
 			task["save_path"] = r.FormValue("savepath")
+			task["name"] = material.Name
 			tasks[material.Hash] = task
 			tasksMu.Unlock()
 			f.adds.Add(1)
 			io.WriteString(w, "Ok.")
+		case "/api/v2/torrents/files":
+			tasksMu.Lock()
+			defer tasksMu.Unlock()
+			if task := tasks[r.URL.Query().Get("hash")]; task != nil {
+				workflowJSON(w, []any{map[string]any{"index": 0, "name": task["name"], "size": 1024, "progress": task["progress"], "priority": 1}})
+			} else {
+				workflowJSON(w, []any{})
+			}
 		default:
 			http.NotFound(w, r)
 		}
 	}))
 	t.Cleanup(qb.Close)
-	listing := keywordFixtureListing(fragments...)
+	f.listing.Store(keywordFixtureListing(fragments...))
 	site := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/torrents.php":
@@ -112,7 +131,7 @@ func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Conf
 					return
 				}
 			}
-			io.WriteString(w, listing)
+			io.WriteString(w, f.listing.Load().(string))
 		case "/download.php":
 			if raw := materials[r.URL.Query().Get("id")]; raw != nil {
 				w.Write(raw)
@@ -127,7 +146,17 @@ func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Conf
 	t.Cleanup(func() { f.freeOnce.Do(func() { close(f.release) }) })
 	settings := a.Settings()
 	settings.Downloaders[0].BaseURL = qb.URL
-	settings.AllowedRoots = []string{t.TempDir()}
+	source, pathErr := filepath.EvalSymlinks(t.TempDir())
+	if pathErr != nil {
+		t.Fatal(pathErr)
+	}
+	settings.AllowedRoots = []string{source}
+	for i := range settings.Roots {
+		settings.Roots[i].Path, pathErr = filepath.EvalSymlinks(settings.Roots[i].Path)
+		if pathErr != nil {
+			t.Fatal(pathErr)
+		}
+	}
 	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "continuation-site", Name: "合成站点", Kind: "jiayuan", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true, DailyBudget: 10000}}
 	settings.RSSSites = []string{"continuation-site"}
 	if err := a.saveSettings(ctx, settings); err != nil {
@@ -155,6 +184,9 @@ func subscribeContinuationConfigFixture(t *testing.T, config subscribegroup.Conf
 		if err := a.Store.Put(ctx, "cache", "media:tv:206484", map[string]any{"at": time.Now(), "data": media}); err != nil {
 			t.Fatal(err)
 		}
+	}
+	for _, setup := range configure {
+		setup(f)
 	}
 	var err error
 	f.sub, err = a.saveSubscription(ctx, "", f.request)

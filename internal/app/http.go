@@ -23,7 +23,20 @@ import (
 )
 
 func decodeBody(w http.ResponseWriter, r *http.Request, v any) error {
-	r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
+	return decodeBodyWithLimit(w, r, v, 2<<20)
+}
+
+// A local word list may occupy 16 MiB after JSON escaping. Keep the existing
+// 2 MiB allowance for the rest of the subscription form, without increasing
+// the body limit of any other endpoint.
+const subscriptionBodyLimit = pluginDataValueLimit + (2 << 20)
+
+func decodeSubscriptionBody(w http.ResponseWriter, r *http.Request, in *SubscriptionRequest) error {
+	return decodeBodyWithLimit(w, r, in, subscriptionBodyLimit)
+}
+
+func decodeBodyWithLimit(w http.ResponseWriter, r *http.Request, v any, limit int64) error {
+	r.Body = http.MaxBytesReader(w, r.Body, limit)
 	d := json.NewDecoder(r.Body)
 	if e := d.Decode(v); e != nil {
 		return bad("INVALID_JSON", "请求内容无效或过大")
@@ -321,9 +334,13 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out, e = a.subscriptionList(ctx)
 	case p == "subscriptions" && method == "POST":
 		var in SubscriptionRequest
-		e = decodeBody(w, r, &in)
+		e = decodeSubscriptionBody(w, r, &in)
 		if e == nil {
-			out, e = a.saveSubscription(ctx, "", in)
+			var saved Subscription
+			saved, e = a.saveSubscription(ctx, "", in)
+			if e == nil {
+				out, e = a.subscriptionEditorValue(ctx, saved)
+			}
 		}
 	case strings.HasPrefix(p, "subscriptions/"):
 		key := strings.TrimPrefix(p, "subscriptions/")
@@ -336,9 +353,13 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			}
 		} else if method == "PUT" {
 			var in SubscriptionRequest
-			e = decodeBody(w, r, &in)
+			e = decodeSubscriptionBody(w, r, &in)
 			if e == nil {
-				out, e = a.saveSubscription(ctx, key, in)
+				var saved Subscription
+				saved, e = a.saveSubscription(ctx, key, in)
+				if e == nil {
+					out, e = a.subscriptionEditorValue(ctx, saved)
+				}
 			}
 		} else if method == "DELETE" {
 			e = a.cancelSubscription(ctx, key)

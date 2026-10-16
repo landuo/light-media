@@ -12,6 +12,7 @@ import (
 )
 
 type prioritySorter struct {
+	ctx        context.Context
 	media      *catalog.Media
 	priorities []string
 	orders     map[string]int
@@ -20,7 +21,7 @@ type prioritySorter struct {
 }
 
 func (a *App) preparePrioritySorter(ctx context.Context, in SearchRequest, config Settings) (prioritySorter, error) {
-	s := prioritySorter{media: in.priorityMedia, orders: map[string]int{}, names: map[string]string{}, uploads: map[string]int64{}}
+	s := prioritySorter{ctx: ctx, media: in.priorityMedia, orders: map[string]int{}, names: map[string]string{}, uploads: map[string]int64{}}
 	if s.media == nil {
 		return s, nil
 	}
@@ -63,7 +64,11 @@ func (s prioritySorter) sort(a *App, candidates []Candidate, policy Policy) {
 		if filepath.Ext(name) != ".mkv" {
 			name += ".mkv"
 		}
-		parsed := a.parseMediaName(name)
+		ctx := s.ctx
+		if ctx == nil {
+			ctx = context.Background()
+		}
+		parsed := a.parseMediaNameContext(ctx, name)
 		seasons, episodes := 0, 0
 		if s.media.MediaType == "tv" {
 			seasons = 1

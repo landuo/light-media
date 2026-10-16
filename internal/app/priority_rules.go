@@ -123,6 +123,9 @@ func (filter priorityFilter) apply(ctx context.Context, a *App, out SearchOutput
 		} else if at, err := time.ParseInLocation("2006-01-02 15:04:05", resource.PublishedAt, shanghai()); err == nil {
 			age = math.Floor(time.Since(at).Minutes())
 		}
+		// The original filter's size_range reparses raw TorrentInfo with global
+		// words, independently of the candidate's local MetaInfo. Sorting below
+		// uses that selected local context; these are deliberately separate scopes.
 		torrents[i] = priorityrules.Torrent{Title: resource.Title, Description: description, Labels: resource.Labels, Size: resource.Size, Seeders: resource.Seeders, DownloadFactor: resource.DownloadFactor, AgeMinutes: age, Priority: resource.PriorityOrder, SiteName: filter.siteNames[resource.SiteID], EpisodeResolver: func() (int, error) { return a.priorityEpisodeCount(resource) }}
 	}
 	matches, err := filter.engine.Filter(ctx, filter.names, torrents, filter.media)
@@ -153,13 +156,16 @@ func (filter priorityFilter) apply(ctx context.Context, a *App, out SearchOutput
 var priorityEpisodeHint = regexp.MustCompile(`(?i)(?:S[0-9]{1,2}E|(?:^|[^A-Za-z])EP?\s*[0-9]+|第[^\s]{1,12}[集话])`)
 
 func (a *App) priorityEpisodeCount(resource sites.Resource) (int, error) {
+	return a.priorityEpisodeCountContext(context.Background(), resource)
+}
+func (a *App) priorityEpisodeCountContext(ctx context.Context, resource sites.Resource) (int, error) {
 	name := resource.Title
 	switch strings.ToLower(filepath.Ext(name)) {
 	case ".mkv", ".mp4", ".avi", ".m4v", ".ts", ".mov":
 	default:
 		name += ".mkv"
 	}
-	parsed := a.parseMediaName(name)
+	parsed := a.parseMediaNameContext(ctx, name)
 	if parsed.Status == media.Parsed && parsed.Original != nil {
 		if n := len(parsed.Original.Episodes); n > 0 {
 			return n, nil

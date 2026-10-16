@@ -14,6 +14,10 @@ import (
 // Keyword search applies resource filters without inventing a TMDB identity.
 // Directory organization performs the separate media recognition step.
 func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutput, error) {
+	ctx, err := a.ensureResourceRecognition(ctx)
+	if err != nil {
+		return SearchOutput{}, err
+	}
 	in.Policy.FilterParams = snapshotAdditionalFilter(in.Policy.FilterParams).params
 	in.Query = strings.TrimSpace(in.Query)
 	if in.Query == "" || len([]rune(in.Query)) > 200 || strings.ContainsAny(in.Query, "\x00\r\n") {
@@ -29,7 +33,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		return SearchOutput{}, err
 	}
 	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, catalog.Media{}), CachedAt: now()}
-	out, err := a.searchSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
+	out, err = a.searchSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
 		var result sites.SearchResult
 		err := a.withSite(siteCtx, config, false, func(client *sites.Client) error {
 			var err error
@@ -38,7 +42,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		})
 		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
-			season, episodes := a.resourceNumberingSuggestion(resource.Title)
+			season, episodes := a.resourceNumberingSuggestionContext(siteCtx, resource.Title)
 			choice := decision.EvaluateResourceContext(siteCtx, resource, decision.NativePolicy(decisionPolicy(in.Policy)))
 			if choice.Accepted {
 				choice.Reasons = append(choice.Reasons, "media_identity_required")
@@ -57,6 +61,10 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 // The site card opens that site's recent torrents. Empty queries are allowed
 // only here, with one explicit site, rather than as an unbounded global search.
 func (a *App) browseManagedSiteResources(ctx context.Context, key, query string, page int) (any, error) {
+	ctx, err := a.ensureResourceRecognition(ctx)
+	if err != nil {
+		return nil, err
+	}
 	query = strings.TrimSpace(query)
 	if len([]rune(query)) > 200 || strings.ContainsAny(query, "\x00\r\n") {
 		return nil, bad("INVALID_QUERY", "资源关键词不能超过200字或包含控制字符")
@@ -86,7 +94,7 @@ func (a *App) browseManagedSiteResources(ctx context.Context, key, query string,
 	out.HasMore = result.HasMore
 	out.Sites = append(out.Sites, a.searchStatus(ctx, key, len(result.Resources), err, 0))
 	for _, resource := range result.Resources {
-		season, episodes := a.resourceNumberingSuggestion(resource.Title)
+		season, episodes := a.resourceNumberingSuggestionContext(ctx, resource.Title)
 		choice := decision.EvaluateResource(resource, decision.Policy{})
 		if choice.Accepted {
 			choice.Reasons = append(choice.Reasons, "media_identity_required")
