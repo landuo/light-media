@@ -87,6 +87,13 @@
         "transition.go"
       ],
       "description": "Trusted optional AfterAction callback under exact Guard before clearing Active or confirming event/lifecycle. Failure preserves actual confirmed FS receipts and active selection, blocks observer/timer and prevents retirement publication. App owners must supply nonnil callback. New formal target verification is separate from older transition NAS evidence."
+    },
+    {
+      "name": "trusted-authority-root-expansion",
+      "runtime_files": [
+        "roots.go"
+      ],
+      "description": "Serialized trusted published ticket/RunID operation appends disjoint validated capabilities after durable CAS, retaining old stamps/order, pins, queue, capture map and ordinary init owner. Unknown publication stays paused and blocked pending reconciliation. No worker path RPC; App Guard validates actual current config-derived plan."
     }
   ],
   "formal_validation_evidence": {
@@ -112,5 +119,12 @@
   },
   "after_action_go_files": {
     "after_action_test.go": "35cbe1b71b157dbd66679649ca1e4b55f061dc116b38499b2cb29e370e0fbad6"
+  },
+  "root_expansion_go_files": {
+    "roots.go": "ec5021430f21ab07b2b747b03fc8510430751375c202b737fbfe470ff9b2ccd6",
+    "roots_test.go": "a67b08d4915a07be8200dbdd74d9c3147e9474948d73185f4ab91f7681a2ea67"
+  },
+  "owner_reference_files": {
+    "installed-media-extensions.json": "de1f85676005345efaac84709e3b41a4b9d096962698021b616b387bae4cb517"
   }
 }

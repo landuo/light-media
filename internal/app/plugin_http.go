@@ -10,6 +10,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/schedule"
 	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/subscribegroup"
@@ -51,6 +52,12 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "RemoveLink" {
+					cleanup := removelink.NewConfig()
+					if cleanup.Apply(config.Value) == nil {
+						state = removelink.Truth(cleanup.Enabled)
+					}
+				}
 				if installation.PluginID == "SubscribeGroup" {
 					var rulesConfig subscribegroup.Configuration
 					if json.Unmarshal(config.Value, &rulesConfig) == nil {
@@ -179,6 +186,12 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 }
 
 func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	if parts := strings.Split(path, "/"); len(parts) == 2 && parts[1] == "retry" && r.Method == "POST" {
+		return a.pluginDeferredRetryHTTP(w, r, parts[0])
+	}
+	if a.removeLinkLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginRemoveLinkLifecycleHTTP(w, r, path)
+	}
 	if r.Method != "GET" {
 		a.pluginLifecycleMu.Lock()
 		defer a.pluginLifecycleMu.Unlock()
@@ -252,7 +265,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "form" && r.Method == "GET":
 		return a.pluginForm(ctx, installation)
 	case parts[1] == "runs" && r.Method == "GET":
-		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
+		return a.pluginRunHistory(ctx, installation.InstanceID)
 	case parts[1] == "config" && r.Method == "PUT":
 		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
@@ -359,6 +372,12 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "RemoveLink":
+		config := removelink.NewConfig()
+		if config.Apply(raw) != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "清理媒体文件配置格式无效")
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "MPServerStatus":
 		machine := serverstatus.New(nil, nil)
 		if !json.Valid(raw) || machine.Init(raw) != nil {

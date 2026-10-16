@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -13,6 +14,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/uninstall"
 )
 
@@ -57,6 +59,16 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+		if installation.PluginID == "RemoveLink" {
+			initialize, err := a.shouldInitializeRemoveLink(ctx, installation, config)
+			if err != nil {
+				a.log("ERROR", "plugins", "cleanup_initialize_pending", "文件清理存在待核对状态，未重新初始化；其他插件继续启动", "", "")
+				continue
+			}
+			if !initialize {
+				continue
+			}
+		}
 		if installation.PluginID == "CategoryEditor" {
 			var state struct {
 				Enabled bool `json:"enabled"`
@@ -69,7 +81,17 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		// A fresh startup init must not replay an init/reload whose worker ran
 		// but whose result could not be persisted. A later explicit config save
 		// has a new revision and can initialize normally after user review.
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs r WHERE instance_id=? AND generation=? AND config_revision=? AND (state IN ('pending','running') OR (state='failed' AND action IN ('init','reload') AND (error_code IN ('PLUGIN_RESULT_SAVE_FAILED','PLUGIN_RESULT_TOO_LARGE','INVALID_PLUGIN_RESULT') OR EXISTS(SELECT 1 FROM plugin_run_startup_blocks b WHERE b.run_id=r.id))))`, installation.InstanceID, installation.Generation, config.Revision).Scan(&existing); err != nil {
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs r
+WHERE instance_id=? AND generation=? AND config_revision=? AND (
+ state IN ('pending','running','reconcile_pending') OR (
+  state='failed' AND (
+   (action IN ('init','reload') AND (
+    error_code IN ('PLUGIN_RESULT_SAVE_FAILED','PLUGIN_RESULT_TOO_LARGE','INVALID_PLUGIN_RESULT') OR
+    EXISTS(SELECT 1 FROM plugin_run_startup_blocks b WHERE b.run_id=r.id)
+   )) OR EXISTS(SELECT 1 FROM plugin_deferred_operations d WHERE d.run_id=r.id)
+  )
+ )
+)`, installation.InstanceID, installation.Generation, config.Revision).Scan(&existing); err != nil {
 			return err
 		}
 		if existing > 0 {
@@ -112,16 +134,19 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	}
 	ctx, cancelRun := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancelRun()
-	ctx, releaseLifecycle := a.pluginUninstallExecutionContext(ctx, run)
-	defer releaseLifecycle()
-	if !pluginUninstallDrainActive(ctx, run.InstanceID) {
-		select {
-		case a.pluginProcess <- struct{}{}:
-			defer func() { <-a.pluginProcess }()
-		case <-ctx.Done():
-			// Leave the running claim for restart reconciliation; no worker started.
-			return
+	processHeld := false
+	releaseProcess := func() {
+		if processHeld {
+			<-a.pluginProcess
+			processHeld = false
 		}
+	}
+	defer releaseProcess()
+	select {
+	case a.pluginProcess <- struct{}{}:
+		processHeld = true
+	case <-ctx.Done():
+		return
 	}
 	installation, err := a.pluginStore.Installation(ctx, run.InstanceID)
 	var manifest plugins.Manifest
@@ -148,11 +173,21 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	} else if err == nil {
 		err = bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "当前版本没有该插件的可执行实现")
 	}
+	var deferred *pluginDeferredCall
+	if err == nil {
+		deferred, err = a.preparePluginDeferred(ctx, installation, run)
+	}
 	result := plugins.RunResult{}
 	hostErrorCode := ""
 	if err == nil {
 		result, err = (plugins.Runner{Timeout: 2 * time.Minute}).Run(ctx, command, manifest, installation.InstanceID, "invoke", run.Input, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
-			value, hostErr := a.pluginHostCall(ctx, installation, &run, identity, method, raw)
+			var value json.RawMessage
+			var hostErr error
+			if deferred != nil {
+				value, hostErr = deferred.handshake(ctx, identity, method, raw)
+			} else {
+				value, hostErr = a.pluginHostCall(ctx, installation, &run, identity, method, raw)
+			}
 			if hostErr != nil {
 				var api *APIError
 				if errors.As(hostErr, &api) {
@@ -163,6 +198,18 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			}
 			return value, hostErr
 		})
+	}
+	// Runner has exited and cleanup completed. Actual terminal owner operations
+	// must never hold the worker process slot or an outer lifecycle lock.
+	releaseProcess()
+	if deferred != nil {
+		if err == nil {
+			err = deferred.ready(result)
+		}
+		result.Result = nil // A private handshake is never a business result.
+		if err == nil {
+			result.Result, err = deferred.execute(ctx, &run)
+		}
 	}
 	state, errorCode := "succeeded", ""
 	if err != nil {
@@ -192,11 +239,21 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			result.Result, err, state, errorCode = committed, nil, "succeeded", ""
 		}
 	}
+	if err != nil && deferred != nil {
+		stored, _, receiptErr := a.pluginStore.readDeferred(finishCtx, a.Store.DB, deferred.run)
+		if receiptErr != nil {
+			state, errorCode = "reconcile_pending", "PLUGIN_DEFERRED_RECEIPT_FAILED"
+		} else if stored.Phase == "confirmed" && deferredSameRun(stored, deferred.installation, deferred.run) && stored.Method == deferred.record.Method && bytes.Equal(stored.Ack, deferred.record.Ack) && bytes.Equal(stored.Raw, deferred.record.Raw) {
+			result.Result, err, state, errorCode = stored.Result, nil, "succeeded", ""
+		} else if stored.Phase == "started" || stored.Phase == "uncertain" {
+			state = "reconcile_pending"
+		}
+	}
 	// A failed response after a reverse host call may follow a real operation.
 	// Preserve its diagnostic code while preventing a fresh startup init from
 	// repeating that exact generation/configuration. Cancellation recovery keeps
 	// using each plugin's existing reconciliation path.
-	blockStartup := err != nil && state == "failed" && result.HostCalls > 0
+	blockStartup := err != nil && state == "failed" && (result.HostCalls > 0 || deferred != nil)
 	if finishErr := a.pluginStore.finishRun(finishCtx, run.ID, state, errorCode, result.Result, blockStartup); finishErr != nil {
 		code := pluginResultFailureCode(finishErr)
 		fallbackCtx, fallbackCancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -264,7 +321,15 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == "subscriptions.rules.configure" || method == "subscriptions.rules.apply" {
 		return a.pluginSubscribeGroupHost(ctx, installation, run, method, raw)
 	}
+	if method == removelink.ConfigureCapability || method == removelink.ApplyCapability {
+		return a.pluginRemoveLinkHost(ctx, installation, run, method, raw)
+	}
 	if method == uninstall.OptionsCapability || method == uninstall.ApplyCapability {
+		if method == uninstall.ApplyCapability {
+			if err := a.requireDeferredExecution(ctx, run, method); err != nil {
+				return nil, err
+			}
+		}
 		return a.pluginUninstallHost(ctx, installation, run, method, raw)
 	}
 	if method == "server.status.configure" {

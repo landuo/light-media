@@ -439,7 +439,8 @@ func TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPin
 }
 
 // This is a real child-process SDK peer. It receives a successful host reply,
-// then exits before emitting the invoke result. No application or user config
+// then exits before emitting the terminal invoke result. Deferred operations
+// have not started at this boundary. No application or user config
 // is loaded by the child; the parent fixture owns the bound synthetic store.
 func TestPluginUninstallReplyLossFixture(t *testing.T) {
 	for i, arg := range os.Args {
@@ -460,7 +461,7 @@ func TestPluginUninstallReplyLossFixture(t *testing.T) {
 	}
 }
 
-func TestPluginUninstallRealSDKCommittedSelfReceiptWinsWorkerReplyLoss(t *testing.T) {
+func TestPluginUninstallRealSDKFailureBeforeTerminalCompletionCannotUninstall(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
 	uninstallInstall(t, a, "CategoryEditor", builtin.CategoryEditorManifest(), map[string]any{"enabled": false}, false)
@@ -477,22 +478,22 @@ func TestPluginUninstallRealSDKCommittedSelfReceiptWinsWorkerReplyLoss(t *testin
 	}
 	a.executePluginRun(ctx, run)
 	saved, err := a.pluginStore.Run(ctx, run.ID)
-	if err != nil || saved.State != "succeeded" || saved.ErrorCode != "" || !bytes.Contains(saved.Result, []byte(`"own_config_reset":true`)) || saved.ConfigRevision != 2 {
-		t.Fatal("committed reverse-call receipt lost to child EOF", saved.State, saved.ErrorCode, saved.ConfigRevision, err)
+	if err != nil || saved.State != "failed" || saved.ConfigRevision != 1 {
+		t.Fatal("incomplete SDK worker was allowed to start uninstall", saved.State, saved.ErrorCode, saved.ConfigRevision, err)
 	}
 	for _, instance := range []string{"CategoryEditor", "PluginUnInstall"} {
 		installation, err := a.pluginStore.Installation(ctx, instance)
-		if err != nil || installation.Installed || installation.Generation != 2 {
-			t.Fatal("SDK EOF masked an incomplete uninstall", instance, installation.Installed, installation.Generation, err)
+		if err != nil || !installation.Installed || installation.Generation != 1 {
+			t.Fatal("SDK EOF performed an unauthorized uninstall", instance, installation.Installed, installation.Generation, err)
 		}
 	}
 	var receipts int
-	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_uninstall_operations WHERE run_id=?`, run.ID).Scan(&receipts); err != nil || receipts != 1 {
-		t.Fatal("actual receipt was not committed exactly once", receipts, err)
+	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_uninstall_operations WHERE run_id=?`, run.ID).Scan(&receipts); err != nil || receipts != 0 {
+		t.Fatal("failed terminal handshake committed an uninstall receipt", receipts, err)
 	}
 }
 
-func TestPluginUninstallRealSDKDrainsRefreshWithoutGivingOtherWorkersTheSemaphore(t *testing.T) {
+func TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot(t *testing.T) {
 	f := newRefreshFixture(t, 3600)
 	a := f.app
 	f.importMovie(t)
@@ -500,7 +501,8 @@ func TestPluginUninstallRealSDKDrainsRefreshWithoutGivingOtherWorkersTheSemaphor
 		t.Fatal(err)
 	}
 	// A fixture-only reverse proxy pauses the real refresh HTTP operation so
-	// the outer worker's held semaphore and the nested child are observable.
+	// the nested refresh child's process slot is observable. The uninstall SDK
+	// process has already exited; no extra worker bypasses the global cap.
 	upstream, err := url.Parse(a.config.FNOS.Host)
 	if err != nil {
 		t.Fatal(err)
@@ -537,7 +539,7 @@ func TestPluginUninstallRealSDKDrainsRefreshWithoutGivingOtherWorkersTheSemaphor
 		t.Fatal("nested refresh deadlocked on outer worker semaphore")
 	}
 	if len(a.pluginProcess) != 1 || cap(a.pluginProcess) != 1 {
-		t.Fatal("outer worker did not retain global process exclusion")
+		t.Fatal("nested refresh did not retain global process exclusion")
 	}
 	installation, _ := a.pluginStore.Installation(context.Background(), "MediaServerRefresh")
 	busyCtx, busyCancel := context.WithTimeout(context.Background(), 20*time.Millisecond)
@@ -545,9 +547,6 @@ func TestPluginUninstallRealSDKDrainsRefreshWithoutGivingOtherWorkersTheSemaphor
 	busyCancel()
 	if busyErr == nil {
 		t.Fatal("another worker/form bypassed the process semaphore")
-	}
-	if pluginUninstallDrainActive(pluginUninstallDrainContext(ctx, "MediaServerRefresh"), "SystemProcess") {
-		t.Fatal("drain reentry was not bound to exact selected target")
 	}
 	releaseOnce.Do(func() { close(release) })
 	select {

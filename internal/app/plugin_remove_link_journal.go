@@ -244,7 +244,7 @@ func (j *pluginRemoveLinkJournal) validate(s *cleanuphost.Durable) error {
 		if err := j.binding(t.From); err != nil {
 			return err
 		}
-		if t.From.InstanceID == "" || t.From.Revision < 1 {
+		if t.From.InstanceID == "" || t.From.Revision < 0 {
 			return cleanupJournalScope()
 		}
 		if t.To != (cleanuphost.Binding{}) {

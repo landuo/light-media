@@ -9,6 +9,7 @@ import (
 	"slices"
 	"time"
 
+	cleanuphost "light-media/internal/plugins/removelink/host"
 	"light-media/internal/plugins/uninstall"
 )
 
@@ -23,42 +24,6 @@ FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
 CREATE TABLE IF NOT EXISTS plugin_uninstall_drains(
 run_id TEXT NOT NULL,instance_id TEXT NOT NULL,handler_key TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,
 PRIMARY KEY(run_id,instance_id,handler_key),FOREIGN KEY(run_id) REFERENCES plugin_runs(id));`
-
-type pluginUninstallDrainKey struct{}
-type pluginUninstallLifecycleKey struct{}
-type pluginUninstallLifecycleOwner struct {
-	run, instance string
-}
-
-// executePluginRun calls this before acquiring pluginProcess. HTTP lifecycle
-// mutations take the same order (lifecycle -> process during a refresh drain).
-// The bound callback may reuse that lock while its outer worker waits for it.
-func (a *App) pluginUninstallExecutionContext(ctx context.Context, run PluginRun) (context.Context, func()) {
-	var plugin string
-	if run.Version != "2.2" || (run.Action != "init" && run.Action != "reload") || a.Store.DB.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, run.InstanceID).Scan(&plugin) != nil || plugin != "PluginUnInstall" {
-		return ctx, func() {}
-	}
-	a.pluginLifecycleMu.Lock()
-	owner := pluginUninstallLifecycleOwner{run.ID, run.InstanceID}
-	return context.WithValue(ctx, pluginUninstallLifecycleKey{}, owner), a.pluginLifecycleMu.Unlock
-}
-
-func pluginUninstallOwnsLifecycle(ctx context.Context, run PluginRun) bool {
-	owner, ok := ctx.Value(pluginUninstallLifecycleKey{}).(pluginUninstallLifecycleOwner)
-	return ok && owner.run == run.ID && owner.instance == run.InstanceID
-}
-
-// Only the validated host constructs this context, while the outer uninstall
-// worker synchronously waits and keeps the process semaphore occupied. Reentry
-// is limited to this exact MediaServerRefresh instance, never a worker argument.
-func pluginUninstallDrainContext(ctx context.Context, instance string) context.Context {
-	return context.WithValue(ctx, pluginUninstallDrainKey{}, instance)
-}
-
-func pluginUninstallDrainActive(ctx context.Context, instance string) bool {
-	bound, _ := ctx.Value(pluginUninstallDrainKey{}).(string)
-	return bound != "" && bound == instance
-}
 
 // These are original installed class metadata, not mutable market metadata.
 // New ports without original ordering use the source's fallback of 1000.
@@ -399,10 +364,84 @@ func (o *uninstallDatabaseOperations) SaveOwnConfig(ctx context.Context, raw jso
 }
 
 func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.RawMessage, error) {
-	if !pluginUninstallOwnsLifecycle(ctx, *run) {
-		a.pluginLifecycleMu.Lock()
-		defer a.pluginLifecycleMu.Unlock()
+	selected, err := a.removeLinkUninstallTargets(ctx, run)
+	if err != nil {
+		return nil, err
 	}
+	prepared, err := a.prepareRemoveLinkTransitions(ctx, selected, "uninstall")
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		for i := len(prepared) - 1; i >= 0; i-- {
+			prepared[i].release()
+		}
+	}()
+	for _, p := range prepared {
+		if err = p.drain(ctx); err != nil {
+			for _, paused := range prepared {
+				_ = resolveRemoveLinkPrepared(paused, false)
+			}
+			return nil, err
+		}
+	}
+	result, operationErr := a.applyPluginUninstallSQL(ctx, run, prepared)
+	// The SQL helper has released lifecycle and pluginMu before an owner wait.
+	var resolveErr error
+	for _, p := range prepared {
+		if err := resolveRemoveLinkPrepared(p, operationErr == nil); err != nil && resolveErr == nil {
+			resolveErr = err
+		}
+	}
+	if operationErr != nil {
+		return nil, operationErr
+	}
+	if resolveErr != nil {
+		return nil, resolveErr
+	}
+	return result, nil
+}
+
+func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([]PluginInstallation, error) {
+	a.pluginMu.Lock()
+	defer a.pluginMu.Unlock()
+	actual, err := a.pluginStore.Run(ctx, run.ID)
+	if err != nil || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || actual.State != "running" {
+		return nil, bad("PLUGIN_RUN_SCOPE_DENIED", "卸载执行身份已变化")
+	}
+	// Existing committed self/target receipts have no work left to pause.
+	if _, err = a.pluginStore.uninstallReceipt(ctx, actual); err == nil {
+		return nil, nil
+	} else if !errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+	config, err := a.pluginStore.Config(ctx, run.InstanceID)
+	if err != nil {
+		return nil, err
+	}
+	inventory, err := a.pluginStore.uninstallInventory(ctx)
+	if err != nil {
+		return nil, err
+	}
+	plan := &uninstallPlanOperations{installed: []string{}, removed: map[string]bool{}}
+	for _, in := range inventory {
+		plan.installed = append(plan.installed, in.InstanceID)
+	}
+	if _, err = uninstall.Run(ctx, config.Value, plan); err != nil {
+		return nil, bad("INVALID_PLUGIN_CONFIG", "卸载插件选择不是原版支持的格式")
+	}
+	selected := []PluginInstallation{}
+	for _, in := range inventory {
+		if plan.removed[in.InstanceID] && in.PluginID == "RemoveLink" {
+			selected = append(selected, in)
+		}
+	}
+	return selected, nil
+}
+
+func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepared []*pluginRemoveLinkPrepared) (json.RawMessage, error) {
+	a.pluginLifecycleMu.Lock()
+	defer a.pluginLifecycleMu.Unlock()
 	a.pluginMu.Lock()
 	actual, err := a.pluginStore.Run(ctx, run.ID)
 	if err != nil || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || actual.State != "running" || (actual.Action != "init" && actual.Action != "reload") {
@@ -448,6 +487,21 @@ func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.Ra
 		a.pluginMu.Unlock()
 		return json.RawMessage(`null`), nil
 	}
+	for _, instance := range planned.Removed {
+		if target := targets[instance]; target.PluginID == "RemoveLink" {
+			matched := false
+			for _, p := range prepared {
+				if p.from.InstanceID == instance && p.from.Generation == target.Generation {
+					matched = true
+					break
+				}
+			}
+			if !matched {
+				a.pluginMu.Unlock()
+				return nil, bad("PLUGIN_SNAPSHOT_STALE", "待卸载的清理插件发生变化，请重试")
+			}
+		}
+	}
 	// uninstall_result uses the store's explicit 1 MiB value limit. Check the
 	// complete receipt before a drain or destructive SQL, and again before its
 	// final seal, so no committed receipt can exceed its own read-back limit.
@@ -481,7 +535,7 @@ func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.Ra
 	for _, instance := range planned.Removed {
 		target := targets[instance]
 		if target.PluginID == "MediaServerRefresh" && target.Installed && target.DesiredEnabled {
-			if err := a.drainMediaRefresh(pluginUninstallDrainContext(ctx, instance), target); err != nil {
+			if err := a.drainMediaRefresh(ctx, target); err != nil {
 				return nil, err
 			}
 		}
@@ -496,11 +550,30 @@ func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.Ra
 	if err = a.pluginStore.guardUninstallRunTx(ctx, tx, actual); err != nil {
 		return nil, err
 	}
+	for _, p := range prepared {
+		var generation, revision int64
+		var installed bool
+		if err := tx.QueryRowContext(ctx, `SELECT i.generation,i.installed,COALESCE(v.revision,0) FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id='RemoveLink' AND i.version='2.17'`, p.from.InstanceID).Scan(&generation, &installed, &revision); err != nil {
+			return nil, err
+		}
+		if !installed || generation != p.from.Generation || revision != p.from.Revision {
+			return nil, bad("PLUGIN_SNAPSHOT_STALE", "清理插件配置已变化，卸载未提交")
+		}
+	}
 	updated := actual
 	ops := &uninstallDatabaseOperations{uninstallPlanOperations: &uninstallPlanOperations{installed: plan.installed, removed: map[string]bool{}}, p: a.pluginStore, tx: tx, run: &updated, targets: targets}
 	result, err := uninstall.Run(ctx, config.Value, ops)
 	if err != nil {
 		return nil, err
+	}
+	for _, p := range prepared {
+		if !plan.removed[p.from.InstanceID] {
+			return nil, bad("PLUGIN_SNAPSHOT_STALE", "卸载目标已变化")
+		}
+		to := cleanuphost.Binding{InstanceID: p.from.InstanceID, Generation: p.from.Generation + 1, Revision: 0}
+		if err := p.publishTx(ctx, tx, to, ""); err != nil {
+			return nil, err
+		}
 	}
 	raw, err := pluginJSON(result, true)
 	if err != nil {
@@ -535,7 +608,7 @@ func (p *PluginStore) recoverUninstallRuns(ctx context.Context) error {
 	if err := p.restoreUninstallDrains(ctx, ""); err != nil {
 		return err
 	}
-	rows, err := p.store.DB.QueryContext(ctx, `SELECT r.id,r.instance_id,r.version,r.generation,r.config_revision,r.action FROM plugin_runs r JOIN plugin_installations i ON i.instance_id=r.instance_id WHERE i.plugin_id='PluginUnInstall' AND r.version='2.2' AND r.action IN ('init','reload') AND r.state='reconcile_pending'`)
+	rows, err := p.store.DB.QueryContext(ctx, `SELECT r.id,r.instance_id,r.version,r.generation,r.config_revision,r.action FROM plugin_runs r JOIN plugin_installations i ON i.instance_id=r.instance_id WHERE i.plugin_id='PluginUnInstall' AND r.version='2.2' AND r.action IN ('init','reload') AND (r.state='reconcile_pending' OR (r.state='failed' AND r.error_code IN ('PLUGIN_RESULT_SAVE_FAILED','PLUGIN_RESULT_TOO_LARGE','INVALID_PLUGIN_RESULT')))`)
 	if err != nil {
 		return err
 	}
@@ -569,7 +642,7 @@ func (p *PluginStore) recoverUninstallRuns(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='succeeded',result=?,error_code='',updated_at=? WHERE id=? AND state='reconcile_pending'`, sealed, now(), run.ID); err != nil {
+		if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='succeeded',result=?,error_code='',updated_at=? WHERE id=? AND (state='reconcile_pending' OR (state='failed' AND error_code IN ('PLUGIN_RESULT_SAVE_FAILED','PLUGIN_RESULT_TOO_LARGE','INVALID_PLUGIN_RESULT')))`, sealed, now(), run.ID); err != nil {
 			return err
 		}
 	}

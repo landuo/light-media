@@ -7,11 +7,11 @@
 | CategoryEditor | 二级分类策略 | 1.3 | 停用 | 0 | Go 执行及分类引擎已验证；支持通用 TMDB 条件、范围、YAML 别名/合并；待正式配置迁移 |
 | TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 418 | 待实现、待迁移、待验证 |
 | SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | Go 快照统计、原版表单/卡片/饼图/明细、一次性刷新、持久站内通知及按域名刷新 API 已接入；通知通道、完整账户字段/域名别名、历史/配置正式迁移和仪表板布局仍待完成 |
-| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 原算法、原表单及Go SDK纯包已验证；连续宿主含native inotify、真实删除/恢复、配置切换屏障与原reload语义，正式NAS41项通过；加密SQL journal和配置/run同事务切换已验证，联合NAS37项通过。App管理入口、Guard/核心Effects及正式迁移未接入，不在可安装目录 |
+| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。下载事件/通知仅私有pending outbox，消费者、正式迁移和部署未完成 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
-| AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程及站点适配正在独立候选对照；正式Go图片依赖已通过588原始模式、160 PNG/GIF、8比较和1449 JPEG原机参考，已接入受控JPEG解码/内存检查，仍有明确未覆盖格式。完整宿主、注册、正式迁移与实机验收未完成 |
-| MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 待实现、待迁移、待验证 |
+| AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类站点算法及真实SDK/受控HTTP已在独立Go候选对照；正式图片依赖已过588原始模式、160 PNG/GIF、8比较、1449 JPEG原参考。持久化宿主候选仍在验证，生产Browser/OCR、注册、正式迁移与实机验收未完成 |
+| MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 分发、17渠道构造、原表单/配置/Stop及真实SDK已在独立Go候选对照；完整Mako/Apprise、SMTP wire、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
 | IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 待实现、待迁移、待验证 |
 | SystemProcess | 系统进程 | 1.1 | 启用 | 0 | Go 进程采样、配置/详情页及仪表板数据已验证；仪表板布局待接入，待正式迁移 |
 | MediaServerRefresh | 媒体库服务器刷新 | 1.3.3 | 启用 | 0 | 已接 Go 子进程、持久批次、飞牛刷新、停用/重载/卸载/关闭收尾及核心核对交接；已有独占测试库实机证据，正式配置引用映射和迁移尚未执行 |
@@ -23,7 +23,7 @@
 | TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 待实现、待迁移、待验证 |
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
 | LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 待实现、待迁移、待验证 |
-| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 原算法/表单/五命令、原生下载器对象与真实Go SDK纯包已迁入；85业务/52工具/32原wrapper/14安全getter参考已验证。实际RPC、文件删除Host、调度/通知、App注册和正式迁移未接入 |
+| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 原算法/表单/五命令、原生下载器对象与真实Go SDK纯包已迁入；85业务/52工具/32原wrapper/14安全getter参考已验证。原生下载器RPC依赖已迁入并通过受控HTTP验证；实际绑定/持久收据、文件删除Host、调度/通知、App注册和正式迁移未接入 |
 | SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 待实现、待迁移、待验证 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 待实现、待迁移、待验证 |
 | CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | Go 写入/停用恢复及实际域名连接已在 NAS 隔离容器验证；待正式可写挂载和配置迁移 |
@@ -32,7 +32,7 @@
 
 每项完成须同时取得：对应原版行为对照、实际可执行实现、配置/数据/文件迁移收据、引用映射核验、适当的协议/合成与实机证据。平台界面出现卡片不构成该插件已迁移。
 
-当前原版配置、KV 与文件均未导入正式新服务；10 个可安装处理器已有不同程度的实际 Go 行为，不能表述为“10/23 已迁移”。其余 13 个的完整业务尚未接入，其中 RemoveLink、ScrapeFileClean、CleanInvalidSeed 已有尚未注册的纯 Go 包，AutoSignIn 的图片处理依赖已移入正式包。完整业务及平台完整交互继续保留在交付范围内。定时触发器和持久队列已接共享识别词及站点统计的一次性刷新；其他具体业务插件注册、公共服务界面和逐项迁移仍需完成，不能因此增加已迁移插件数量。
+当前原版配置、KV 与文件均未导入正式新服务；11 个可安装处理器已有不同程度的实际 Go 行为，不能表述为“11/23 已迁移”。其余 12 个的完整业务尚未接入，其中 ScrapeFileClean、CleanInvalidSeed 已有尚未注册的纯 Go 包，AutoSignIn 的图片处理依赖已移入正式包。完整业务及平台完整交互继续保留在交付范围内。定时触发器和持久队列已接共享识别词及站点统计的一次性刷新；其他具体业务插件注册、公共服务界面和逐项迁移仍需完成，不能因此增加已迁移插件数量。
 
 同日只读核查原版 `/config/plugins/<原插件ID>` 的文件元数据：AutoBackup 有 7 个文件、51,658,600 字节，最大单文件 7,414,774 字节；CloudflareSpeedTest 有 12 个文件、15,871,166 字节，最大单文件 7,930,040 字节。两处均无符号链接或特殊文件，其余 21 个已装 ID 未发现对应数据目录。本次没有读取/导出文件正文，也没有把备份包放入 Git。后续迁移须分别保留这些文件的内容和校验收据，密文落盘；不得把旧可执行文件复制后直接运行，也不能因 KV 为 0 就漏掉文件迁移。
 
@@ -63,3 +63,7 @@ RemoveLink 连续本地宿主、正常关闭恢复、Linux原生事件、文件�
 AutoSignIn 的 Tjupt 图像处理参考与纯Go依赖边界见 [plugin-auto-signin-image-hash-go-port.md](plugin-auto-signin-image-hash-go-port.md)、[plugin-auto-signin-jpeg-go-port.md](plugin-auto-signin-jpeg-go-port.md)。已验证JPEG现走专用纯Go解码，明确未覆盖格式仍失败，不以缩放样本或其他格式通过替代整个签到插件完成。
 
 清理无效做种的完整原执行参考、原生属性/包装器、Go SDK与未接宿主边界见 [plugin-clean-invalid-seed-go-port.md](plugin-clean-invalid-seed-go-port.md)。源消息中的“已删除”计数不等于下载器实际成功收据，迁入纯包不表示已清理任何用户种子。
+
+RemoveLink 已接入的原操作、连续owner、deferred终态RPC、身份/生命周期/恢复与NAS证据见 [owner接线](plugin-remove-link-owner-go-port.md)、[终态执行与恢复](plugin-deferred-owner-execution.md)。原配置、数据、文件尚未导入或部署，私有outbox仍未提供真实下载联动/通知送达。
+
+CleanInvalidSeed 原生完整对象、7固定调用所需的正式下载器协议扩展与边界见 [下载器依赖](plugin-clean-invalid-seed-native-download.md)。它没有扩展主下载管理展示范围，也不是已清理任何实际种子的证据。

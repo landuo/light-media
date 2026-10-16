@@ -70,7 +70,9 @@ const loading = ref(true),
   selected = ref<PluginCard>();
 const confirmation = ref<{ plugin: PluginCard; action: 'reset' | 'uninstall' }>();
 const history = ref<any[] | null>(null),
-  historyName = ref('');
+  historyName = ref(''),
+  historyInstance = ref(''),
+  retryingRun = ref('');
 const visible = computed(() =>
   (tab.value === 'installed' ? items.value : market.value).filter((item) =>
     (item.name + ' ' + item.description + ' ' + item.author)
@@ -344,8 +346,25 @@ async function showRuns(plugin: PluginCard) {
   try {
     history.value = await api('/plugins/' + encodeURIComponent(plugin.instance_id) + '/runs');
     historyName.value = plugin.name;
+    historyInstance.value = plugin.instance_id;
   } catch (e) {
     error.value = errorText(e);
+  }
+}
+
+async function retryRun(runId: string) {
+  if (!historyInstance.value || retryingRun.value) return;
+  retryingRun.value = runId;
+  try {
+    await api('/plugins/' + encodeURIComponent(historyInstance.value) + '/retry', {
+      run_id: runId,
+    });
+    history.value = await api('/plugins/' + encodeURIComponent(historyInstance.value) + '/runs');
+    toast('已重试该执行');
+  } catch (e) {
+    toast(errorText(e));
+  } finally {
+    retryingRun.value = '';
   }
 }
 const states: Record<string, string> = {
@@ -663,6 +682,15 @@ onUnmounted(() => clearInterval(timer));
               ><span>{{ states[run.state] || run.state }}</span
               ><time>{{ new Date(run.created_at).toLocaleString() }}</time
               ><code v-if="run.error_code">{{ run.error_code }}</code>
+              <VBtn
+                v-if="run.retryable"
+                size="small"
+                variant="text"
+                :loading="retryingRun === run.id"
+                :disabled="!!retryingRun"
+                @click="retryRun(run.id)"
+                >重试</VBtn
+              >
             </li>
           </ul></VCardText
         ></VCard

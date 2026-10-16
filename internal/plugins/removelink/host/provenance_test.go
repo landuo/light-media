@@ -27,11 +27,13 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		TransitionFiles    map[string]string `json:"transition_go_files"`
 		TransitionEvidence map[string]string `json:"transition_evidence_files"`
 		AfterActionFiles   map[string]string `json:"after_action_go_files"`
+		RootExpansionFiles map[string]string `json:"root_expansion_go_files"`
+		OwnerReferences    map[string]string `json:"owner_reference_files"`
 	}
 	if err = json.Unmarshal(raw, &manifest); err != nil {
 		t.Fatal(err)
 	}
-	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 {
+	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 {
 		t.Fatal("missing installed source/candidate/evidence provenance")
 	}
 	verify := func(path, expected string) {
@@ -73,7 +75,13 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		}
 		verify(name, sum)
 	}
-	for _, evidence := range []map[string]string{manifest.FormalEvidence, manifest.TransitionEvidence} {
+	for name, sum := range manifest.RootExpansionFiles {
+		if filepath.Base(name) != name {
+			t.Fatal("invalid root expansion filename")
+		}
+		verify(name, sum)
+	}
+	for _, evidence := range []map[string]string{manifest.FormalEvidence, manifest.TransitionEvidence, manifest.OwnerReferences} {
 		for name, sum := range evidence {
 			if filepath.Base(name) != name {
 				t.Fatal("invalid formal/transition evidence filename")

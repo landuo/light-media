@@ -171,6 +171,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, pluginUninstallSchema); err != nil {
 		return nil, err
 	}

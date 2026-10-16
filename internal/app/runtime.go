@@ -65,6 +65,7 @@ type App struct {
 	pluginHostsFile         string // Test seam; production always uses the container's /etc/hosts.
 	pluginProcessStats      pluginProcessSnapshotter
 	pluginServerStatus      pluginServerStatusRuntime
+	pluginRemoveLink        pluginRemoveLinkRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 }
@@ -153,6 +154,9 @@ func New(opts Options) (*App, error) {
 func (a *App) Start(parent context.Context) {
 	ctx, cancel := context.WithCancel(parent)
 	a.cancel = cancel
+	if err := a.restoreRemoveLinkOwners(ctx); err != nil {
+		a.log("ERROR", "plugins", "cleanup_restore_pending", "文件清理监听尚未恢复，已保留执行状态，请核对插件记录", "", "")
+	}
 	if err := a.initializeNativePlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
 	}
@@ -179,6 +183,7 @@ func (a *App) Close() error {
 		a.cancel()
 	}
 	a.wg.Wait()
+	a.stopRemoveLinkPlugins()
 	if a.cancel != nil {
 		a.stopMediaRefreshPlugins()
 	}

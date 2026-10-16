@@ -1,0 +1,40 @@
+{
+  "id": "1da68d8b-ffaf-40e6-8c7f-8912217ed0d6",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "",
+  "test_regex": "^Test",
+  "sha256": "6ee3b9f30b3adbc80d01add7c27f452952a5c42e31e7e765f672886b9b001f6f",
+  "remote_sha256": "6ee3b9f30b3adbc80d01add7c27f452952a5c42e31e7e765f672886b9b001f6f",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 44,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal continuous RemoveLink host all 44 Linux tests, including trusted append-only ExpandRoots, AfterAction completion barriers, native owned filesystem/inotify, transition failure and recovery; synthetic owned references only; no real media, deployed service change or configuration migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

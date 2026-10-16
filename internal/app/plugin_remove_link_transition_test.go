@@ -282,3 +282,72 @@ func TestPluginRemoveLinkJournalRealOwnerAppliesOnlyPublishedConfig(t *testing.T
 		t.Fatal("SQL checkpoint cannot recover a cleanly stopped owner", err)
 	}
 }
+
+func TestPluginRemoveLinkJournalResetRevisionZeroPublishesFirstConfigAtomically(t *testing.T) {
+	_, p, first := removeLinkJournalFixture(t, "cleanup.reset-first-save", 1)
+	ctx := context.Background()
+	removeLinkTransitionInstallation(t, p, first.instance, map[string]any{"enabled": false})
+	if err := p.Reset(ctx, first.instance); err != nil {
+		t.Fatal(err)
+	}
+	installation, err := p.Installation(ctx, first.instance)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if installation.Generation != 2 || installation.DesiredEnabled {
+		t.Fatal("reset scope", installation.Generation, installation.DesiredEnabled)
+	}
+	j, err := newPluginRemoveLinkJournal(ctx, p, first.instance, installation.Generation)
+	if err != nil {
+		t.Fatal(err)
+	}
+	from := cleanuphost.Binding{InstanceID: first.instance, Generation: 2, Revision: 0}
+	ticket := cleanuphost.TransitionTicket{ID: "first-save-after-reset", Kind: "init", From: from}
+	if err = j.Update(ctx, func(s *cleanuphost.Durable) error {
+		s.Binding = from
+		s.Transition = &cleanuphost.Transition{ID: ticket.ID, Kind: ticket.Kind, From: from, Phase: "prepared"}
+		return nil
+	}); err != nil {
+		t.Fatal("revision-zero transition rejected", err)
+	}
+	tx, err := p.store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	raw := json.RawMessage(`{"enabled":false,"monitor_dirs":""}`)
+	config, err := p.saveValueTx(ctx, tx, first.instance, "config", "main", 0, raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = tx.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=1 WHERE instance_id=?`, first.instance); err != nil {
+		t.Fatal(err)
+	}
+	run, err := p.enqueueRunTx(ctx, tx, first.instance, "init", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	to := from
+	to.Revision = config.Revision
+	if err = j.updateTx(ctx, tx, func(s *cleanuphost.Durable) error { return cleanuphost.PublishTransition(s, ticket, to, run.ID) }); err != nil {
+		t.Fatal(err)
+	}
+	if err = tx.Commit(); err != nil {
+		t.Fatal(err)
+	}
+	saved, err := p.Config(ctx, first.instance)
+	if err != nil || saved.Revision != 1 || !bytes.Equal(saved.Value, raw) {
+		t.Fatal(saved.Revision, err)
+	}
+	state := removeLinkJournalRead(t, j)
+	if state.Binding != from || state.Transition.Phase != "published" || state.Transition.To != to || state.Transition.RunID != run.ID {
+		t.Fatal("first config/run/journal not published together", state.Transition)
+	}
+	before := removeLinkJournalSealed(t, p.store, j.instance, j.generation)
+	if err = j.Update(ctx, func(s *cleanuphost.Durable) error { s.Transition.From.Revision = -1; return nil }); err == nil {
+		t.Fatal("negative revision accepted")
+	}
+	if !reflect.DeepEqual(before, removeLinkJournalSealed(t, p.store, j.instance, j.generation)) {
+		t.Fatal("invalid negative revision changed journal")
+	}
+}

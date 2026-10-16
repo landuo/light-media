@@ -12,6 +12,7 @@ import (
 // PluginRun's public projection is metadata only. Config snapshots, input and
 // worker results may contain secrets and are never marshaled by list APIs.
 type PluginRun struct {
+	Retryable      bool            `json:"retryable,omitempty"`
 	RequestID      string          `json:"request_id,omitempty"`
 	ID             string          `json:"id"`
 	InstanceID     string          `json:"instance_id"`
@@ -432,6 +433,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 	}
 	if err == nil {
 		err = p.recoverUninstallRuns(ctx)
+	}
+	if err == nil {
+		err = p.recoverDeferredRuns(ctx)
 	}
 	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)
