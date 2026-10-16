@@ -12,6 +12,8 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 		return CustomHostsManifest(), HandleCustomHosts, true
 	case "SystemProcess":
 		return SystemProcessManifest(), HandleSystemProcess, true
+	case "MergeSiteSwitch":
+		return MergeSiteSwitchManifest(), HandleMergeSiteSwitch, true
 	case "RemoteIdentifiers":
 		return RemoteIdentifiersManifest(), HandleRemoteIdentifiers, true
 	case "MediaServerRefresh":
@@ -22,5 +24,5 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest()}
+	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest()}
 }

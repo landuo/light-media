@@ -24,11 +24,16 @@ type siteSearchOutput struct {
 // Only the collector calls the progress callback / writes the HTTP stream.
 func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutput, run func(context.Context, SiteConfig) siteSearchOutput) (SearchOutput, error) {
 	selected := map[string]bool{}
-	for _, key := range in.SiteIDs {
+	selectedIDs := in.SiteIDs
+	settings := a.Settings()
+	if len(selectedIDs) == 0 {
+		selectedIDs = settings.IndexerSites
+	}
+	for _, key := range selectedIDs {
 		selected[key] = true
 	}
 	configs := []SiteConfig{}
-	for _, config := range a.Settings().Sites {
+	for _, config := range settings.Sites {
 		if config.Enabled && (len(selected) == 0 || selected[config.ID]) {
 			configs = append(configs, config)
 		}

@@ -185,6 +185,26 @@ func (a *App) pluginExecutionLog(installation PluginInstallation, run PluginRun,
 // Every write rechecks installation, generation and config revision while
 // sharing pluginMu with configuration/reset/uninstall. Workers cannot choose
 // another instance, an arbitrary path, SQL, command or URL.
+func (a *App) validatePluginHostRun(ctx context.Context, installation PluginInstallation, run *PluginRun, method string) error {
+	if run != nil {
+		current, err := a.pluginStore.Installation(ctx, installation.InstanceID)
+		if err != nil || !current.Installed || !current.DesiredEnabled || current.Version != run.Version || current.Generation != run.Generation {
+			return bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
+		}
+		config, err := a.pluginStore.Config(ctx, run.InstanceID)
+		if err != nil || config.Revision != run.ConfigRevision {
+			return bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
+		}
+		persisted, err := a.pluginStore.Run(ctx, run.ID)
+		if err != nil || persisted.State != "running" {
+			return bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
+		}
+	} else if method != "category.read" && method != "media.servers" && method != "sites.controls.read" {
+		return bad("PLUGIN_CAPABILITY_DENIED", "插件表单只能调用获授权的只读接口")
+	}
+	return nil
+}
+
 func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallation, run *PluginRun, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 	if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version {
 		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
@@ -194,23 +214,13 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if !exists || !slices.Contains(trusted.Capabilities, method) {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "该插件未获授权调用此操作")
 	}
+	if method == "sites.controls.read" || method == "sites.controls.configure" {
+		return a.pluginSiteControlsHost(ctx, installation, run, method, raw)
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
-	if run != nil {
-		current, err := a.pluginStore.Installation(ctx, installation.InstanceID)
-		if err != nil || !current.Installed || !current.DesiredEnabled || current.Version != run.Version || current.Generation != run.Generation {
-			return nil, bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
-		}
-		config, err := a.pluginStore.Config(ctx, run.InstanceID)
-		if err != nil || config.Revision != run.ConfigRevision {
-			return nil, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
-		}
-		persisted, err := a.pluginStore.Run(ctx, run.ID)
-		if err != nil || persisted.State != "running" {
-			return nil, bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
-		}
-	} else if method != "category.read" && method != "media.servers" {
-		return nil, bad("PLUGIN_CAPABILITY_DENIED", "配置表单只能读取默认分类策略")
+	if err := a.validatePluginHostRun(ctx, installation, run, method); err != nil {
+		return nil, err
 	}
 	switch method {
 	case "identifiers.configure", "identifiers.refresh":

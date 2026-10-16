@@ -22,6 +22,29 @@ const loading = ref(true),
   error = ref('');
 const issues = computed(() => pluginFormIssues(nodes.value));
 const base = '/plugins/' + encodeURIComponent(props.plugin.instance_id);
+function pointerControl(event: MouseEvent): HTMLElement | null {
+  if (!(event.target instanceof Element)) return null;
+  const control = event.target.closest('button, input[type="checkbox"]');
+  if (control instanceof HTMLElement) return control;
+  const label = event.target.closest('label');
+  return label instanceof HTMLLabelElement &&
+    label.control instanceof HTMLInputElement &&
+    label.control.type === 'checkbox'
+    ? label.control
+    : null;
+}
+function keepPointerTarget(event: MouseEvent) {
+  // Focus-only hints resize centered dialogs. Keep the pressed control in
+  // place until click dispatch, then restore the same normal focus behavior.
+  if (event.button === 0 && pointerControl(event)) event.preventDefault();
+}
+function focusAfterClick(event: MouseEvent) {
+  if (event.detail === 0) return;
+  const control = pointerControl(event);
+  requestAnimationFrame(() => {
+    if (control?.isConnected) control.focus({ preventScroll: true });
+  });
+}
 async function load() {
   try {
     const form = await api(base + '/form');
@@ -83,6 +106,8 @@ onMounted(load);
     :persistent="saving"
     content-class="plugin-dialog-surface"
     @update:model-value="!saving && emit('close')"
+    @mousedown.capture="keepPointerTarget"
+    @click.capture="focusAfterClick"
   >
     <VCard class="plugin-config-card">
       <VCardTitle class="plugin-dialog-title"

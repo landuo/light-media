@@ -1,0 +1,4301 @@
+{
+  "source_sha256": "52d798421eabe57a88f3d0fc448289309fdfc8ecd6ea50d98cd5436d93289ab0",
+  "cases": [
+    {
+      "config": {},
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [],
+      "state": false,
+      "normalized": {},
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {},
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": null,
+          "login_sites": null
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": null
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": null
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": null
+        }
+      },
+      "enabled": [],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "search_sites": [
+          "s1"
+        ],
+        "rss_sites": []
+      },
+      "installed": [],
+      "events": [],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "search_sites": [
+          "s1"
+        ],
+        "rss_sites": []
+      },
+      "system": {
+        "installed": [],
+        "search": [
+          "s1"
+        ],
+        "rss": []
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "search_sites": [
+            "s1"
+          ],
+          "rss_sites": []
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "search_follow_enable_sites": true,
+        "rss_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "search_follow_enable_sites": true,
+        "rss_follow_enable_sites": true,
+        "search_sites": [
+          "s2"
+        ],
+        "rss_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [],
+        "search": [
+          "s2"
+        ],
+        "rss": [
+          "s2"
+        ]
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "search_follow_enable_sites": true,
+          "rss_follow_enable_sites": true,
+          "search_sites": [
+            "s2"
+          ],
+          "rss_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "search_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "search_follow_enable_sites": true,
+        "search_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": [],
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "search_follow_enable_sites": true,
+          "search_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "search_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "search_follow_enable_sites": true,
+        "search_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [],
+        "search": [],
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "search_follow_enable_sites": true,
+          "search_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "search_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "search_follow_enable_sites": true,
+        "search_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": [],
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "search_follow_enable_sites": true,
+          "search_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "rss_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "rss_follow_enable_sites": true,
+        "rss_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": []
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "rss_follow_enable_sites": true,
+          "rss_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "rss_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "rss_follow_enable_sites": true,
+        "rss_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": []
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "rss_follow_enable_sites": true,
+          "rss_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "rss_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "rss_follow_enable_sites": true,
+        "rss_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": []
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "rss_follow_enable_sites": true,
+          "rss_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "signin_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s2",
+          "c1"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "signin_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s2",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "signin_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "AutoSignIn",
+        "AutoSignIn",
+        "AutoSignIn"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "signin_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s2"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "signin_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s2"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "signin_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "signin_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s2"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "signin_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s2"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "signin_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "login_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "s2",
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "login_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "s2",
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "login_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "AutoSignIn",
+        "AutoSignIn",
+        "AutoSignIn"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "login_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "s2"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "login_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "s2"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "login_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "login_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "s2"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "login_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "s2"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "login_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "statistic_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "s2",
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "statistic_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "s2",
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "statistic_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "SiteStatistic",
+        "SiteStatistic",
+        "SiteStatistic"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "statistic_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "s2"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "statistic_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "s2"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "statistic_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "statistic_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "s2"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "statistic_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "s2"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "statistic_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "iyuu_seed_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "s2",
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "iyuu_seed_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "s2",
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "iyuu_seed_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "IYUUAutoSeed",
+        "IYUUAutoSeed",
+        "IYUUAutoSeed"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "iyuu_seed_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "s2"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "iyuu_seed_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "s2"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "iyuu_seed_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "iyuu_seed_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "s2"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "iyuu_seed_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "s2"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "iyuu_seed_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "brush_flow_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "brush_flow_follow_enable_sites": true,
+        "brush_flow_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "brush_flow_follow_enable_sites": true,
+          "brush_flow_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": []
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "BrushFlow",
+        "BrushFlow",
+        "BrushFlow"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "brush_flow_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "brush_flow_follow_enable_sites": true,
+        "brush_flow_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "brush_flow_follow_enable_sites": true,
+          "brush_flow_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "brush_flow_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "brush_flow_follow_enable_sites": true,
+        "brush_flow_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "c1"
+          ],
+          "brush_flow_follow_enable_sites": true,
+          "brush_flow_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_follow_enable_sites": true
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "s2",
+          "c1"
+        ],
+        "cross_seed_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "s2",
+            "c1"
+          ],
+          "cross_seed_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": null
+        },
+        "CrossSeed": {
+          "sites": [
+            "s2",
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed"
+      ]
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_follow_enable_sites": true
+      },
+      "installed": [],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "s2"
+        ],
+        "cross_seed_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "s2"
+          ],
+          "cross_seed_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_follow_enable_sites": true
+      },
+      "installed": [
+        "BrushFlowLanduo"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s1",
+          "enabled": false
+        }
+      ],
+      "state": false,
+      "normalized": {
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s1",
+          "c1",
+          "missing"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "s2"
+        ],
+        "cross_seed_follow_enable_sites": true
+      },
+      "system": {
+        "installed": [
+          "BrushFlowLanduo"
+        ],
+        "search": null,
+        "rss": null
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s1",
+            "c1",
+            "missing"
+          ],
+          "login_sites": [
+            "c1"
+          ],
+          "statistic_sites": [
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "s2"
+          ],
+          "cross_seed_follow_enable_sites": true
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "s1",
+            "c1"
+          ],
+          "login_sites": [
+            "c1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": []
+    },
+    {
+      "config": {
+        "search_follow_enable_sites": true,
+        "rss_follow_enable_sites": true,
+        "signin_follow_enable_sites": true,
+        "login_follow_enable_sites": true,
+        "statistic_follow_enable_sites": true,
+        "iyuu_seed_follow_enable_sites": true,
+        "brush_flow_follow_enable_sites": true,
+        "cross_seed_follow_enable_sites": true,
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "c1"
+        ],
+        "login_sites": [
+          "c1"
+        ],
+        "statistic_sites": [
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "c1"
+        ]
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s1",
+          "enabled": true
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "search_follow_enable_sites": true,
+        "rss_follow_enable_sites": true,
+        "signin_follow_enable_sites": true,
+        "login_follow_enable_sites": true,
+        "statistic_follow_enable_sites": true,
+        "iyuu_seed_follow_enable_sites": true,
+        "brush_flow_follow_enable_sites": true,
+        "cross_seed_follow_enable_sites": true,
+        "enable_sites": [
+          "s2"
+        ],
+        "signin_sites": [
+          "s2",
+          "c1"
+        ],
+        "login_sites": [
+          "s2",
+          "c1"
+        ],
+        "statistic_sites": [
+          "s2",
+          "c1"
+        ],
+        "iyuu_seed_sites": [
+          "s2",
+          "c1"
+        ],
+        "cross_seed_sites": [
+          "s2",
+          "c1"
+        ],
+        "search_sites": [
+          "s2"
+        ],
+        "rss_sites": [
+          "s2"
+        ],
+        "brush_flow_sites": [
+          "s2"
+        ]
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": [
+          "s1"
+        ],
+        "rss": [
+          "s1"
+        ]
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "search_follow_enable_sites": true,
+          "rss_follow_enable_sites": true,
+          "signin_follow_enable_sites": true,
+          "login_follow_enable_sites": true,
+          "statistic_follow_enable_sites": true,
+          "iyuu_seed_follow_enable_sites": true,
+          "brush_flow_follow_enable_sites": true,
+          "cross_seed_follow_enable_sites": true,
+          "enable_sites": [
+            "s2"
+          ],
+          "signin_sites": [
+            "s2",
+            "c1"
+          ],
+          "login_sites": [
+            "s2",
+            "c1"
+          ],
+          "statistic_sites": [
+            "s2",
+            "c1"
+          ],
+          "iyuu_seed_sites": [
+            "s2",
+            "c1"
+          ],
+          "cross_seed_sites": [
+            "s2",
+            "c1"
+          ],
+          "search_sites": [
+            "s2"
+          ],
+          "rss_sites": [
+            "s2"
+          ],
+          "brush_flow_sites": [
+            "s2"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "c1",
+            "s1"
+          ],
+          "login_sites": [
+            "c1",
+            "s1"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "c1",
+            "s1"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "c1",
+            "s1"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "s1"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "c1",
+            "s1"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed"
+      ]
+    },
+    {
+      "config": {
+        "search_follow_enable_sites": true,
+        "rss_follow_enable_sites": true,
+        "signin_follow_enable_sites": true,
+        "login_follow_enable_sites": true,
+        "statistic_follow_enable_sites": true,
+        "iyuu_seed_follow_enable_sites": true,
+        "brush_flow_follow_enable_sites": true,
+        "cross_seed_follow_enable_sites": true,
+        "enable_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "signin_sites": [
+          "c1",
+          "c1"
+        ]
+      },
+      "installed": [
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "CustomSites"
+      ],
+      "events": [
+        {
+          "site_id": "s2",
+          "enabled": false
+        },
+        {
+          "site_id": "s2",
+          "enabled": false
+        }
+      ],
+      "state": true,
+      "normalized": {
+        "search_follow_enable_sites": true,
+        "rss_follow_enable_sites": true,
+        "signin_follow_enable_sites": true,
+        "login_follow_enable_sites": true,
+        "statistic_follow_enable_sites": true,
+        "iyuu_seed_follow_enable_sites": true,
+        "brush_flow_follow_enable_sites": true,
+        "cross_seed_follow_enable_sites": true,
+        "enable_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "signin_sites": [
+          "s2",
+          "s2",
+          "missing",
+          "c1",
+          "c1"
+        ],
+        "search_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "rss_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "login_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "statistic_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "iyuu_seed_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "brush_flow_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ],
+        "cross_seed_sites": [
+          "s2",
+          "s2",
+          "missing"
+        ]
+      },
+      "system": {
+        "installed": [
+          "AutoSignIn",
+          "SiteStatistic",
+          "IYUUAutoSeed",
+          "BrushFlow",
+          "CrossSeed",
+          "CustomSites"
+        ],
+        "search": [
+          "missing"
+        ],
+        "rss": [
+          "missing"
+        ]
+      },
+      "plugins": {
+        "MergeSiteSwitch": {
+          "search_follow_enable_sites": true,
+          "rss_follow_enable_sites": true,
+          "signin_follow_enable_sites": true,
+          "login_follow_enable_sites": true,
+          "statistic_follow_enable_sites": true,
+          "iyuu_seed_follow_enable_sites": true,
+          "brush_flow_follow_enable_sites": true,
+          "cross_seed_follow_enable_sites": true,
+          "enable_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "signin_sites": [
+            "s2",
+            "s2",
+            "missing",
+            "c1",
+            "c1"
+          ],
+          "search_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "rss_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "login_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "statistic_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "iyuu_seed_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "brush_flow_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ],
+          "cross_seed_sites": [
+            "s2",
+            "s2",
+            "missing"
+          ]
+        },
+        "CustomSites": {
+          "enabled": true,
+          "sites": [
+            {
+              "id": "c1",
+              "name": "自定义一"
+            }
+          ]
+        },
+        "AutoSignIn": {
+          "enabled": true,
+          "sign_sites": [
+            "missing",
+            "c1",
+            "c1"
+          ],
+          "login_sites": [
+            "missing"
+          ]
+        },
+        "SiteStatistic": {
+          "enabled": true,
+          "statistic_sites": [
+            "missing"
+          ]
+        },
+        "IYUUAutoSeed": {
+          "enabled": true,
+          "sites": [
+            "missing"
+          ]
+        },
+        "BrushFlow": {
+          "brushsites": [
+            "missing"
+          ]
+        },
+        "CrossSeed": {
+          "sites": [
+            "missing"
+          ]
+        }
+      },
+      "enabled": [
+        "s2"
+      ],
+      "reloads": [
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed",
+        "AutoSignIn",
+        "AutoSignIn",
+        "SiteStatistic",
+        "IYUUAutoSeed",
+        "BrushFlow",
+        "CrossSeed"
+      ]
+    }
+  ]
+}

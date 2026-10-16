@@ -103,6 +103,8 @@ func NewPluginStore(ctx context.Context, store *Store) (*PluginStore, error) {
 		return nil, errors.New("unsupported plugin storage schema")
 	}
 	_, err = tx.ExecContext(ctx, `
+CREATE TABLE IF NOT EXISTS plugin_site_control_watchers(instance_id TEXT PRIMARY KEY,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,config BLOB NOT NULL,updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS plugin_site_control_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_installations(
  instance_id TEXT PRIMARY KEY,plugin_id TEXT NOT NULL,version TEXT NOT NULL,manifest_schema INTEGER NOT NULL,
  manifest BLOB NOT NULL,desired_enabled INTEGER NOT NULL DEFAULT 0,installed INTEGER NOT NULL DEFAULT 1,generation INTEGER NOT NULL DEFAULT 1,

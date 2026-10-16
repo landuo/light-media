@@ -25,44 +25,45 @@ import (
 )
 
 type App struct {
-	recognitionMu      sync.Mutex
-	recognitionMatcher atomic.Pointer[words.Matcher]
-	directoryFileMu    sync.Mutex
-	RestartRequested   chan struct{}
-	logs               *runtimeLogger
-	logError           string
-	catMu              sync.Mutex
-	catClient          *catalog.Client
-	catCreds           TMDBConfig
-	Store              *Store
-	Dir                string
-	web                http.Handler
-	cfgMu              sync.RWMutex
-	settingsMu         sync.Mutex
-	config             Settings
-	controlMu          sync.Mutex
-	control            string
-	activeWrites       int
-	logMu              sync.Mutex
-	authMu             sync.Mutex
-	authAttempts       map[string][]time.Time
-	jobWake            chan struct{}
-	wg                 sync.WaitGroup
-	importMu           sync.Mutex
-	subMu              sync.Mutex
-	downloadMu         sync.Mutex
-	materialMu         sync.Mutex
-	materials          map[string][]byte
-	siteLocks          sync.Map
-	cancel             context.CancelFunc
-	pluginMu           sync.Mutex
-	pluginLifecycleMu  sync.Mutex
-	pluginStore        *PluginStore
-	pluginWake         chan struct{}
-	pluginProcess      chan struct{}
-	pluginCommand      func(string) (plugins.Command, error)
-	pluginHostsFile    string // Test seam; production always uses the container's /etc/hosts.
-	pluginProcessStats pluginProcessSnapshotter
+	recognitionMu           sync.Mutex
+	recognitionMatcher      atomic.Pointer[words.Matcher]
+	directoryFileMu         sync.Mutex
+	RestartRequested        chan struct{}
+	logs                    *runtimeLogger
+	logError                string
+	catMu                   sync.Mutex
+	catClient               *catalog.Client
+	catCreds                TMDBConfig
+	Store                   *Store
+	Dir                     string
+	web                     http.Handler
+	cfgMu                   sync.RWMutex
+	settingsMu              sync.Mutex
+	config                  Settings
+	controlMu               sync.Mutex
+	control                 string
+	activeWrites            int
+	logMu                   sync.Mutex
+	authMu                  sync.Mutex
+	authAttempts            map[string][]time.Time
+	jobWake                 chan struct{}
+	wg                      sync.WaitGroup
+	importMu                sync.Mutex
+	subMu                   sync.Mutex
+	downloadMu              sync.Mutex
+	materialMu              sync.Mutex
+	materials               map[string][]byte
+	siteLocks               sync.Map
+	cancel                  context.CancelFunc
+	pluginMu                sync.Mutex
+	pluginLifecycleMu       sync.Mutex
+	pluginStore             *PluginStore
+	pluginWake              chan struct{}
+	pluginProcess           chan struct{}
+	pluginCommand           func(string) (plugins.Command, error)
+	pluginHostsFile         string // Test seam; production always uses the container's /etc/hosts.
+	pluginProcessStats      pluginProcessSnapshotter
+	pluginSitePeerAvailable func(string, string) bool // Protocol-test seam; production uses the compiled catalog.
 }
 type Options struct {
 	DataDir string
@@ -186,8 +187,41 @@ func (a *App) Settings() Settings {
 	return c
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
-	c.DebugUntil = ""             // Use process-local, expiring module/site overrides.
-	c.AutoImportMode = "hardlink" // Ignore obsolete global overrides from older clients.
+	a.pluginMu.Lock()
+	defer a.pluginMu.Unlock()
+	return a.saveSettingsWithEffect(ctx, c, nil)
+}
+
+// Callers hold settingsMu. The existing download/import lock order also binds
+// plugin site changes to the same publication boundary as all other settings.
+func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect func(context.Context, *sql.Tx, *Settings) error) error {
+	c.DebugUntil = ""
+	c.AutoImportMode = "hardlink"
+	a.downloadMu.Lock()
+	defer a.downloadMu.Unlock()
+	a.importMu.Lock()
+	defer a.importMu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	previous := a.Settings()
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if effect != nil {
+		if err := effect(ctx, tx, &c); err != nil {
+			return err
+		}
+	} else {
+		if err := a.followSiteControlsTx(ctx, tx, previous, &c); err != nil {
+			return err
+		}
+	}
+	if err := a.pruneDeletedSiteSubscriptionsTx(ctx, tx, previous, c); err != nil {
+		return err
+	}
 	for i := range c.Sites {
 		if c.Sites[i].Enabled {
 			if err := normalizeManagedSite(&c.Sites[i]); err != nil {
@@ -195,44 +229,36 @@ func (a *App) saveSettings(ctx context.Context, c Settings) error {
 			}
 		}
 	}
-	if e := validateSettings(c); e != nil {
-		return e
+	if err := validateSettings(c); err != nil {
+		return err
 	}
-	sealed, e := a.Store.Seal(c)
-	if e != nil {
-		return e
+	sealed, err := a.Store.Seal(c)
+	if err != nil {
+		return err
 	}
-	// Callers serialize read-modify-write with settingsMu. Publish destination
-	// changes in the same lock order as download submission and file import:
-	// a successful save cannot race an Add that already passed its snapshot
-	// check, nor an import publishing to a previously reviewed root.
-	// Validation and encryption above perform no network requests; site data
-	// refresh never takes these locks.
-	a.downloadMu.Lock()
-	defer a.downloadMu.Unlock()
-	a.importMu.Lock()
-	defer a.importMu.Unlock()
-	if e = ctx.Err(); e != nil {
-		return e
+	if _, err := tx.ExecContext(ctx, `INSERT INTO records VALUES('config','main',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, sealed, now()); err != nil {
+		return err
 	}
-	previous := a.Settings()
-	_, e = a.Store.DB.ExecContext(ctx, `INSERT INTO records VALUES('config','main',?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, sealed, now())
-	if e != nil {
-		return e
+	for _, site := range c.Sites {
+		for _, old := range previous.Sites {
+			if old.ID == site.ID && a.managedSiteKey(old) != a.managedSiteKey(site) {
+				if _, err := tx.ExecContext(ctx, `DELETE FROM records WHERE kind='site_cooldown' AND id=?`, site.ID); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		return err
 	}
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()
-	for _, site := range c.Sites {
-		for _, old := range previous.Sites {
-			if old.ID == site.ID && a.managedSiteKey(old) != a.managedSiteKey(site) {
-				_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='site_cooldown' AND id=?`, site.ID)
-			}
-		}
-	}
+	a.wakePlugins()
 	a.log("INFO", "settings", "updated", "连接和路径设置已更新", "", "")
 	return nil
 }
+
 func (a *App) paused() bool {
 	a.controlMu.Lock()
 	defer a.controlMu.Unlock()

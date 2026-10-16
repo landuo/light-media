@@ -48,6 +48,16 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "MergeSiteSwitch" {
+					var controls builtin.SiteControls
+					ids := []string{}
+					for _, entry := range installed {
+						ids = append(ids, entry.PluginID)
+					}
+					if json.Unmarshal(config.Value, &controls) == nil {
+						state = controls.AnyFollow(ids)
+					}
+				}
 				if installation.PluginID == "SystemProcess" || installation.PluginID == "RemoteIdentifiers" {
 					state = flags.Enable
 				}
@@ -99,8 +109,9 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		return nil, bad("PLUGIN_FORM_FAILED", "加载插件配置表单失败")
 	}
 	var form struct {
-		Conf  json.RawMessage            `json:"conf"`
-		Model map[string]json.RawMessage `json:"model"`
+		Conf             json.RawMessage            `json:"conf"`
+		Model            map[string]json.RawMessage `json:"model"`
+		SnapshotRevision *int64                     `json:"revision"`
 	}
 	if json.Unmarshal(result.Result, &form) != nil || form.Model == nil || !json.Valid(form.Conf) {
 		return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回格式无效")
@@ -109,7 +120,7 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 	if err != nil && !missingPluginValue(err) {
 		return nil, err
 	}
-	if err == nil {
+	if err == nil && installation.PluginID != "MergeSiteSwitch" {
 		// Private subscription sources remain encrypted and are projected below.
 		var config map[string]json.RawMessage
 		if json.Unmarshal(stored.Value, &config) != nil {
@@ -126,6 +137,9 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		if json.Unmarshal(form.Model["file_urls"], &value) == nil && remoteIdentifiersPrivate(value) {
 			form.Model["file_urls"], _ = json.Marshal(privateIdentifiersURLs)
 		}
+	}
+	if installation.PluginID == "MergeSiteSwitch" && form.SnapshotRevision != nil {
+		stored.Revision = *form.SnapshotRevision
 	}
 	return map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}, nil
 }
@@ -198,7 +212,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -291,6 +305,15 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "MergeSiteSwitch":
+		var config builtin.SiteControls
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if config.Validate() != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "聚合站点开关字段或站点引用无效")
+		}
+		return config, nil
 	case "RemoteIdentifiers":
 		var config builtin.RemoteIdentifiersConfiguration
 		if err := decode(&config); err != nil {

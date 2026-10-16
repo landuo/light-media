@@ -123,6 +123,13 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
+	var pluginID string
+	if err := tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&pluginID); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
+	if pluginID == "MergeSiteSwitch" {
+		activation = json.RawMessage(`{"config_saved":true}`)
+	}
 	run, err := p.enqueueRunTx(ctx, tx, instanceID, "init", activation)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -387,6 +394,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 	}
 	if err == nil {
 		err = p.recoverIdentifiersRuns(ctx)
+	}
+	if err == nil {
+		err = p.recoverSiteControlRuns(ctx)
 	}
 	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)

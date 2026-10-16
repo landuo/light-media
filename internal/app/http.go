@@ -550,6 +550,10 @@ func validateFNOSCredentialChange(incoming, previous FNConfig) error {
 }
 
 func (a *App) preserveSecrets(c *Settings) {
+	// The system settings form does not edit these controls. Its cached full
+	// snapshot must not overwrite newer changes made in the plugin/site flow.
+	c.IndexerSites = a.Settings().IndexerSites
+	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
 	if c.Roots == nil {
 		c.Roots = old.Roots
@@ -616,6 +620,16 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 }
 func validateSettings(c Settings) error {
+	for _, list := range [][]string{c.IndexerSites, c.RSSSites} {
+		if len(list) > 1024 {
+			return bad("CONFIG_LIMIT", "站点选择数量超出上限")
+		}
+		for _, id := range list {
+			if id == "" || len(id) > 256 || strings.ContainsAny(id, "\x00\r\n") {
+				return bad("INVALID_SITES", "站点引用无效")
+			}
+		}
+	}
 	if e := validateDirectoryRules(c); e != nil {
 		return e
 	}

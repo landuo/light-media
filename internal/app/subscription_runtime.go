@@ -705,9 +705,11 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if _, e := a.downloader(s.DownloaderID); e != nil {
 		return e
 	}
+	settings := a.Settings()
+	selectedSiteIDs := subscriptionSiteControls(settings.RSSSites, s.SiteIDs)
 	enabledSites := 0
-	for _, site := range a.Settings().Sites {
-		if site.Enabled && (len(s.SiteIDs) == 0 || slices.Contains(s.SiteIDs, site.ID)) {
+	for _, site := range settings.Sites {
+		if site.Enabled && (len(selectedSiteIDs) == 0 || slices.Contains(selectedSiteIDs, site.ID)) {
 			enabledSites++
 		}
 	}
@@ -735,7 +737,7 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			if created >= 4 {
 				break
 			}
-			if !site.Enabled || len(s.SiteIDs) > 0 && !slices.Contains(s.SiteIDs, site.ID) {
+			if !site.Enabled || len(selectedSiteIDs) > 0 && !slices.Contains(selectedSiteIDs, site.ID) {
 				continue
 			}
 			if e := a.guardSubscriptionContext(ctx); e != nil {
