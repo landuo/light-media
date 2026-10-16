@@ -136,7 +136,7 @@ func (a *App) downloadFiles(ctx context.Context, key string) (downloadReviewFile
 	}
 	out.Files = []downloadReviewFile{}
 	for _, file := range files {
-		entry := downloadReviewFile{File: file, Video: isVideo(file.Path), Parsed: media.Parse(filepath.Base(file.Path))}
+		entry := downloadReviewFile{File: file, Video: isVideo(file.Path), Parsed: a.parseMediaName(filepath.Base(file.Path))}
 		entry.ApplicationPath, err = mapDownloaderPath(a.Settings(), d, filepath.Join(out.Task.DownloadDir, filepath.FromSlash(file.Path)))
 		if err != nil {
 			entry.MappingError = a.clean(err.Error())

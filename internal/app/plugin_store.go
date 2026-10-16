@@ -92,7 +92,7 @@ func NewPluginStore(ctx context.Context, store *Store) (*PluginStore, error) {
 		return nil, err
 	}
 	defer tx.Rollback()
-	if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS plugin_storage_schema(version INTEGER PRIMARY KEY CHECK(version>0))`); err != nil {
+	if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS recognition_word_updates(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,word_revision INTEGER NOT NULL,total_count INTEGER NOT NULL,remote_count INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS recognition_words(id TEXT PRIMARY KEY CHECK(id='CustomIdentifiers'),revision INTEGER NOT NULL CHECK(revision>0),sealed BLOB NOT NULL,updated_at TEXT NOT NULL); CREATE TABLE IF NOT EXISTS plugin_storage_schema(version INTEGER PRIMARY KEY CHECK(version>0))`); err != nil {
 		return nil, err
 	}
 	var count, version int

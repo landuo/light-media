@@ -23,6 +23,10 @@ func automaticPackCandidate(candidate Candidate, season int) bool {
 }
 
 func validateAutomaticSeasonPackFiles(material metainfo.Material, target decision.Target, siteID string) error {
+	return validateAutomaticSeasonPackFilesWithWords(material, target, siteID, func(s string) string { return s })
+}
+
+func validateAutomaticSeasonPackFilesWithWords(material metainfo.Material, target decision.Target, siteID string, prepare func(string) string) error {
 	target.Auto, target.AllowEarly = true, nil
 	covered := map[int]bool{}
 	known := []media.Episode{}
@@ -33,12 +37,12 @@ func validateAutomaticSeasonPackFiles(material metainfo.Material, target decisio
 		if !isVideo(file.Path) {
 			continue
 		}
-		resource := sites.Resource{Title: filepath.Base(file.Path), Size: file.Size, Seeders: 0, SiteID: siteID}
+		resource := sites.Resource{Title: prepare(filepath.Base(file.Path)), Size: file.Size, Seeders: 0, SiteID: siteID}
 		choice := decision.Evaluate(resource, target, decision.Policy{})
 		if !choice.Accepted || choice.NeedsConfirmation {
 			return bad("REVIEW_SEASON_PACK", "整季包实际文件的影视身份、已播日期或目标范围已变化，请人工核对")
 		}
-		parsed := media.Parse(filepath.Base(file.Path))
+		parsed := media.Parse(prepare(filepath.Base(file.Path)))
 		if parsed.Status != media.Parsed || parsed.Original == nil {
 			return bad("REVIEW_SEASON_PACK", "整季包含未知文件，无法自动获取")
 		}

@@ -386,6 +386,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 		err = p.recoverMediaRefreshRuns(ctx)
 	}
 	if err == nil {
+		err = p.recoverIdentifiersRuns(ctx)
+	}
+	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)
 	}
 	return err
@@ -405,6 +408,18 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 		return err
 	}
 	defer tx.Rollback()
+	updated := *run
+	if err := p.patchRunConfigTx(ctx, tx, &updated, patch); err != nil {
+		return err
+	}
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	*run = updated
+	return nil
+}
+
+func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, patch map[string]json.RawMessage) error {
 	var revision int64
 	var sealed []byte
 	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, run.InstanceID).Scan(&revision, &sealed); err != nil {
@@ -483,9 +498,6 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
-		return err
-	}
-	if err := tx.Commit(); err != nil {
 		return err
 	}
 	run.ConfigRevision = value.Revision

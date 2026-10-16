@@ -96,6 +96,12 @@ const states: Record<string, string> = {
   canceled: '已取消',
   reconcile_pending: '待核对',
 };
+const actions: Record<string, string> = {
+  init: '应用配置',
+  reload: '重新加载',
+  service: '定时执行',
+  event: '事件处理',
+};
 onMounted(() => {
   load();
   timer = setInterval(load, 5000);
@@ -236,13 +242,7 @@ onUnmounted(() => clearInterval(timer));
           ><p v-if="!history?.length">暂无执行记录</p>
           <ul v-else class="plugin-run-list">
             <li v-for="run in history" :key="run.id">
-              <span>{{
-                run.action === 'init'
-                  ? '应用配置'
-                  : run.action === 'reload'
-                    ? '重新加载'
-                    : run.action
-              }}</span
+              <span>{{ actions[run.action] || '插件执行' }}</span
               ><span>{{ states[run.state] || run.state }}</span
               ><time>{{ new Date(run.created_at).toLocaleString() }}</time
               ><code v-if="run.error_code">{{ run.error_code }}</code>

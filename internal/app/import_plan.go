@@ -78,7 +78,10 @@ type importInferredMedia struct {
 }
 
 func parseManualImportFile(file ImportFileRequest) media.ParseResult {
-	name := filepath.Base(file.Path)
+	return parseManualImportName(file, filepath.Base(file.Path))
+}
+
+func parseManualImportName(file ImportFileRequest, name string) media.ParseResult {
 	parsed := media.Parse(name)
 	if file.SeasonExplicit && file.Season == 0 && parsed.Original == nil {
 		// Keep global S00 recognition conservative. Once a user explicitly
@@ -150,7 +153,7 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 					if err != nil {
 						return err
 					}
-					file := importScanFile{Path: name, Size: locked.Size, Parsed: media.Parse(entry.Name())}
+					file := importScanFile{Path: name, Size: locked.Size, Parsed: a.parseMediaName(entry.Name())}
 					file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(name)
 					if file.InferredMedia != nil {
 						file.IdentitySource = "nfo"
@@ -312,7 +315,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					nfoEpisodeID = inferred.EpisodeID
 				}
 			}
-			parsed := parseManualImportFile(requested)
+			parsed := a.parseManualImportFile(requested)
 			if explicitSeason && len(file.Episodes) == 0 && parsed.Original != nil && len(parsed.Original.Episodes) == 1 && len(request.Mappings) == 0 {
 				// An explicit season override (including 0) changes the season,
 				// never the episode number or the video's actual file contents.

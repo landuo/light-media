@@ -10,6 +10,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/schedule"
 )
 
 type pluginCard struct {
@@ -47,7 +48,7 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
-				if installation.PluginID == "SystemProcess" {
+				if installation.PluginID == "SystemProcess" || installation.PluginID == "RemoteIdentifiers" {
 					state = flags.Enable
 				}
 			}
@@ -109,8 +110,7 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		return nil, err
 	}
 	if err == nil {
-		// The current catalog has no credential fields. Credentialed schemas must
-		// define secret projections before joining this catalog.
+		// Private subscription sources remain encrypted and are projected below.
 		var config map[string]json.RawMessage
 		if json.Unmarshal(stored.Value, &config) != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "插件配置无效")
@@ -119,6 +119,12 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 			if value, exists := config[key]; exists {
 				form.Model[key] = value
 			}
+		}
+	}
+	if installation.PluginID == "RemoteIdentifiers" {
+		var value string
+		if json.Unmarshal(form.Model["file_urls"], &value) == nil && remoteIdentifiersPrivate(value) {
+			form.Model["file_urls"], _ = json.Marshal(privateIdentifiersURLs)
 		}
 	}
 	return map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}, nil
@@ -192,7 +198,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -209,6 +215,17 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		stored, err := a.pluginStore.Config(ctx, installation.InstanceID)
 		if err != nil && !missingPluginValue(err) {
 			return nil, err
+		}
+		if installation.PluginID == "RemoteIdentifiers" {
+			config := configValue.(builtin.RemoteIdentifiersConfiguration)
+			if config.FileURLs == privateIdentifiersURLs {
+				var previous builtin.RemoteIdentifiersConfiguration
+				if missingPluginValue(err) || json.Unmarshal(stored.Value, &previous) != nil {
+					return nil, bad("INVALID_IDENTIFIERS_URL", "没有可保留的订阅地址")
+				}
+				config.FileURLs = previous.FileURLs
+				configValue = config
+			}
 		}
 		if stored.Revision != in.Revision {
 			return nil, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，请重新打开配置")
@@ -274,6 +291,34 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "RemoteIdentifiers":
+		var config builtin.RemoteIdentifiersConfiguration
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if len(config.FileURLs) > 64<<10 || len(strings.Split(config.FileURLs, "\n")) > 128 {
+			return nil, bad("INVALID_IDENTIFIERS_URL", "远程词表地址过多或过长")
+		}
+		if config.FileURLs != privateIdentifiersURLs {
+			for _, raw := range strings.Split(config.FileURLs, "\n") {
+				if strings.TrimSpace(raw) != "" {
+					if _, err := identifiersURL(strings.TrimSpace(raw)); err != nil {
+						return nil, err
+					}
+				}
+			}
+		}
+		cron := config.Cron
+		if cron == "" {
+			cron = builtin.RemoteIdentifiersCron
+		}
+		if config.Enable {
+			if _, err := schedule.New(schedule.Spec{Kind: "cron", Timezone: identifiersTimezone(), Cron: cron}, time.Now()); err != nil {
+				return nil, bad("INVALID_PLUGIN_SCHEDULE", "识别词定时任务周期无效")
+			}
+		}
+		return config, nil
+
 	case "CategoryEditor":
 		var config struct {
 			Enabled bool   `json:"enabled"`

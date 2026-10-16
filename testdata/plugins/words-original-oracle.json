@@ -1,0 +1,1263 @@
+{
+  "source": "MoviePilot app/core/meta/words.py, read-only AST execution; regex 2026.5.9",
+  "source_sha256": "798759c94919636c94b690786b9d68a8b7f2f2815be611b04f7c857491d40277",
+  "cases": [
+    {
+      "title": "Example.S01E03.mkv",
+      "words": [
+        "#comment",
+        "",
+        "  ",
+        "Example => 测试"
+      ],
+      "result": "测试.S01E03.mkv",
+      "applied": [
+        "Example => 测试"
+      ]
+    },
+    {
+      "title": "AAA BBC",
+      "words": [
+        "A+",
+        "B => $literal"
+      ],
+      "result": " $literal$literalC",
+      "applied": [
+        "A+",
+        "B => $literal"
+      ]
+    },
+    {
+      "title": "Show 12",
+      "words": [
+        "(Show) (\\d+) => \\2-\\1"
+      ],
+      "result": "12-Show",
+      "applied": [
+        "(Show) (\\d+) => \\2-\\1"
+      ]
+    },
+    {
+      "title": "Show 12",
+      "words": [
+        "(?P<name>Show) (?P<num>\\d+) => \\g<num>-\\g<name>"
+      ],
+      "result": "12-Show",
+      "applied": [
+        "(?P<name>Show) (?P<num>\\d+) => \\g<num>-\\g<name>"
+      ]
+    },
+    {
+      "title": "Show Show",
+      "words": [
+        "(?P<x>Show) (?P=x) => \\g<x>"
+      ],
+      "result": "Show",
+      "applied": [
+        "(?P<x>Show) (?P=x) => \\g<x>"
+      ]
+    },
+    {
+      "title": "Show Show",
+      "words": [
+        "(Show) \\1 => Same"
+      ],
+      "result": "Same",
+      "applied": [
+        "(Show) \\1 => Same"
+      ]
+    },
+    {
+      "title": "中文 3",
+      "words": [
+        "(\\w+) (\\d+) => \\1-\\2"
+      ],
+      "result": "中文-3",
+      "applied": [
+        "(\\w+) (\\d+) => \\1-\\2"
+      ]
+    },
+    {
+      "title": "Show\n",
+      "words": [
+        "Show$ => X"
+      ],
+      "result": "X\n",
+      "applied": [
+        "Show$ => X"
+      ]
+    },
+    {
+      "title": "Show 12",
+      "words": [
+        "(Show) => \\9",
+        "12 => X"
+      ],
+      "result": "Show X",
+      "applied": [
+        "12 => X"
+      ]
+    },
+    {
+      "title": "Show 12",
+      "words": [
+        "(Show) => \\g<missing>",
+        "12 => X"
+      ],
+      "result": "Show X",
+      "applied": [
+        "12 => X"
+      ]
+    },
+    {
+      "title": "Show 12",
+      "words": [
+        "Show => \\q",
+        "12 => X"
+      ],
+      "result": "Show X",
+      "applied": [
+        "12 => X"
+      ]
+    },
+    {
+      "title": "Show",
+      "words": [
+        "Show => $1\\\\text\\n"
+      ],
+      "result": "$1\\text\n",
+      "applied": [
+        "Show => $1\\\\text\\n"
+      ]
+    },
+    {
+      "title": "a",
+      "words": [
+        "a => b => c"
+      ],
+      "result": "b",
+      "applied": [
+        "a => b => c"
+      ]
+    },
+    {
+      "title": "a",
+      "words": [
+        "a => a"
+      ],
+      "result": "a",
+      "applied": [
+        "a => a"
+      ]
+    },
+    {
+      "title": "ab",
+      "words": [
+        "(?=b) => X"
+      ],
+      "result": "aXb",
+      "applied": [
+        "(?=b) => X"
+      ]
+    },
+    {
+      "title": "a\nb",
+      "words": [
+        "(?s)a.*b => X"
+      ],
+      "result": "X",
+      "applied": [
+        "(?s)a.*b => X"
+      ]
+    },
+    {
+      "title": "a\nb",
+      "words": [
+        "a.*b => X"
+      ],
+      "result": "a\nb",
+      "applied": []
+    },
+    {
+      "title": "Ａ１２",
+      "words": [
+        "\\d => X"
+      ],
+      "result": "ＡXX",
+      "applied": [
+        "\\d => X"
+      ]
+    },
+    {
+      "title": "abc",
+      "words": [
+        "[ => X",
+        "b => B"
+      ],
+      "result": "aBc",
+      "applied": [
+        "b => B"
+      ]
+    },
+    {
+      "title": "Show 第01集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第00集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第01集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第03集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第01集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第-01集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第01集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第00集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第01集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第00集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第001集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第000集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第001集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第003集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第001集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第-001集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第001集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第000集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第001集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第000集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第09集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第08集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第09集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第11集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第09集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第-09集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第09集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第04集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第09集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第04集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第10集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第9集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第10集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第12集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第10集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第-10集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第10集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第5集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第10集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第5集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第2集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第1集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第2集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第4集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第2集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第-2集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第2集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第1集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第2集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第1集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第十二集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第十一集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第十二集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第十四集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第十二集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第负十二集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第十二集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第六集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第十二集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第六集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第二十一集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第二十集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第二十一集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第二十三集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第二十一集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第负二十一集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第二十一集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第十集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第二十一集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第十集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第一二集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第十一集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第一二集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第十四集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第一二集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第负十二集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第一二集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第六集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第一二集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第六集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第2十1集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第二十集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第2十1集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第二十三集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第2十1集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第负二十一集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第2十1集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第十集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第2十1集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第十集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第十2集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第十一集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第十2集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第十四集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第十2集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第负十二集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第十2集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第六集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第十2集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第六集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第一十集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第九集",
+      "applied": [
+        "第 <> 集 >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第一十集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第十二集",
+      "applied": [
+        "第 <> 集 >> EP+2"
+      ]
+    },
+    {
+      "title": "Show 第一十集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第负十集",
+      "applied": [
+        "第 <> 集 >> -EP"
+      ]
+    },
+    {
+      "title": "Show 第一十集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第五集",
+      "applied": [
+        "第 <> 集 >> EP//2"
+      ]
+    },
+    {
+      "title": "Show 第一十集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第五集",
+      "applied": [
+        "第 <> 集 >> EP/2"
+      ]
+    },
+    {
+      "title": "Show 第零集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第零集",
+      "applied": []
+    },
+    {
+      "title": "Show 第零集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第零集",
+      "applied": []
+    },
+    {
+      "title": "Show 第零集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第零集",
+      "applied": []
+    },
+    {
+      "title": "Show 第零集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第零集",
+      "applied": []
+    },
+    {
+      "title": "Show 第零集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第零集",
+      "applied": []
+    },
+    {
+      "title": "Show 第百集",
+      "words": [
+        "第 <> 集 >> EP-1"
+      ],
+      "result": "Show 第百集",
+      "applied": []
+    },
+    {
+      "title": "Show 第百集",
+      "words": [
+        "第 <> 集 >> EP+2"
+      ],
+      "result": "Show 第百集",
+      "applied": []
+    },
+    {
+      "title": "Show 第百集",
+      "words": [
+        "第 <> 集 >> -EP"
+      ],
+      "result": "Show 第百集",
+      "applied": []
+    },
+    {
+      "title": "Show 第百集",
+      "words": [
+        "第 <> 集 >> EP//2"
+      ],
+      "result": "Show 第百集",
+      "applied": []
+    },
+    {
+      "title": "Show 第百集",
+      "words": [
+        "第 <> 集 >> EP/2"
+      ],
+      "result": "Show 第百集",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> (EP+3)*2"
+      ],
+      "result": "Show EP12 END",
+      "applied": [
+        "EP <> END >> (EP+3)*2"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP%3"
+      ],
+      "result": "Show EP00 END",
+      "applied": [
+        "EP <> END >> EP%3"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> -EP//2"
+      ],
+      "result": "Show EP-02 END",
+      "applied": [
+        "EP <> END >> -EP//2"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> -EP%2"
+      ],
+      "result": "Show EP01 END",
+      "applied": [
+        "EP <> END >> -EP%2"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP/0"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> 2**EP"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP+0.5"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> __import__(\"os\")"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> 2EP"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP(2)"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EPISODE+1"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP + EP"
+      ],
+      "result": "Show EP06 END",
+      "applied": [
+        "EP <> END >> EP + EP"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> True+EP"
+      ],
+      "result": "Show EP04 END",
+      "applied": [
+        "EP <> END >> True+EP"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> 0x10+EP"
+      ],
+      "result": "Show EP19 END",
+      "applied": [
+        "EP <> END >> 0x10+EP"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> 1_000+EP"
+      ],
+      "result": "Show EP1003 END",
+      "applied": [
+        "EP <> END >> 1_000+EP"
+      ]
+    },
+    {
+      "title": "Old S01E09.mkv",
+      "words": [
+        "Old => New && E <> \\.mkv >> EP-2"
+      ],
+      "result": "New S01E07.mkv",
+      "applied": [
+        "Old => New && E <> \\.mkv >> EP-2"
+      ]
+    },
+    {
+      "title": "Old S01E09.mkv",
+      "words": [
+        "  Old  =>  New  &&  E  <>  \\.mkv  >>  EP+1  "
+      ],
+      "result": "New S01E10.mkv",
+      "applied": [
+        "  Old  =>  New  &&  E  <>  \\.mkv  >>  EP+1  "
+      ]
+    },
+    {
+      "title": "Old S01E09.mkv",
+      "words": [
+        "Other => New && E <> \\.mkv >> EP+1"
+      ],
+      "result": "Old S01E09.mkv",
+      "applied": []
+    },
+    {
+      "title": "Old S01E09.mkv",
+      "words": [
+        "Old => New && E <> \\.mkv >> EP/0"
+      ],
+      "result": "New S01E09.mkv",
+      "applied": []
+    },
+    {
+      "title": "Show EP9 EP10 END",
+      "words": [
+        "EP <> END >> EP+1"
+      ],
+      "result": "Show EP10 EP11 END",
+      "applied": [
+        "EP <> END >> EP+1"
+      ]
+    },
+    {
+      "title": "Show EP9 EP10 END",
+      "words": [
+        "EP <> END >> EP-1"
+      ],
+      "result": "Show EP8 EP9 END",
+      "applied": [
+        "EP <> END >> EP-1"
+      ]
+    },
+    {
+      "title": "Show EP09 EP10 END",
+      "words": [
+        "EP <> END >> EP-1"
+      ],
+      "result": "Show EP08 EP9 END",
+      "applied": [
+        "EP <> END >> EP-1"
+      ]
+    },
+    {
+      "title": "Show 第九集 第十集",
+      "words": [
+        "第 <> 集 >> EP+1"
+      ],
+      "result": "Show 第十集 第十一集",
+      "applied": [
+        "第 <> 集 >> EP+1"
+      ]
+    },
+    {
+      "title": "Show EP01 END",
+      "words": [
+        "EP <> END >> EP-2"
+      ],
+      "result": "Show EP-01 END",
+      "applied": [
+        "EP <> END >> EP-2"
+      ]
+    },
+    {
+      "title": "Show EP01 END",
+      "words": [
+        "MISSING <> END >> EP+1"
+      ],
+      "result": "Show EP01 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP01 END",
+      "words": [
+        "EP <> MISSING >> EP+1"
+      ],
+      "result": "Show EP01 END",
+      "applied": []
+    },
+    {
+      "title": "Show 1 2 3",
+      "words": [
+        " <>  >> EP+1"
+      ],
+      "result": "Show 2 3 4",
+      "applied": [
+        " <>  >> EP+1"
+      ]
+    },
+    {
+      "title": "Show 12END",
+      "words": [
+        "(?<=Show.*?)\\d+(?=END) => 01"
+      ],
+      "result": "Show 01END",
+      "applied": [
+        "(?<=Show.*?)\\d+(?=END) => 01"
+      ]
+    },
+    {
+      "title": "ab12cd",
+      "words": [
+        "(?<=(ab))\\d+(?=(cd)) => \\1-\\2"
+      ],
+      "result": "abab-cdcd",
+      "applied": [
+        "(?<=(ab))\\d+(?=(cd)) => \\1-\\2"
+      ]
+    },
+    {
+      "title": "[CHS_CHT_JP](a1b2c3d4)Show.S01E01.mkv",
+      "words": [
+        "\\[CHS\\_CHT\\_JP\\]\\(\\w{8}\\)"
+      ],
+      "result": "Show.S01E01.mkv",
+      "applied": [
+        "\\[CHS\\_CHT\\_JP\\]\\(\\w{8}\\)"
+      ]
+    },
+    {
+      "title": "under_score",
+      "words": [
+        "under\\_score => X"
+      ],
+      "result": "X",
+      "applied": [
+        "under\\_score => X"
+      ]
+    },
+    {
+      "title": "中文123",
+      "words": [
+        "(?P<title>中文)(123) => \\2-\\1"
+      ],
+      "result": "123-中文",
+      "applied": [
+        "(?P<title>中文)(123) => \\2-\\1"
+      ]
+    },
+    {
+      "title": "第十二集",
+      "words": [
+        "第 <> 集 >> EP+10000"
+      ],
+      "result": "第一万零一十二集",
+      "applied": [
+        "第 <> 集 >> EP+10000"
+      ]
+    },
+    {
+      "title": "第十二集",
+      "words": [
+        "第 <> 集 >> EP+10001"
+      ],
+      "result": "第一万零一十三集",
+      "applied": [
+        "第 <> 集 >> EP+10001"
+      ]
+    },
+    {
+      "title": "第十二集",
+      "words": [
+        "第 <> 集 >> EP*100000"
+      ],
+      "result": "第一百二十万集",
+      "applied": [
+        "第 <> 集 >> EP*100000"
+      ]
+    },
+    {
+      "title": "第十二集",
+      "words": [
+        "第 <> 集 >> EP+100000001"
+      ],
+      "result": "第一亿零一十三集",
+      "applied": [
+        "第 <> 集 >> EP+100000001"
+      ]
+    },
+    {
+      "title": "第十二集",
+      "words": [
+        "第 <> 集 >> EP+1000000000000"
+      ],
+      "result": "第一万亿零一十二集",
+      "applied": [
+        "第 <> 集 >> EP+1000000000000"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >>  EP+1"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> \tEP+1"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP+1 "
+      ],
+      "result": "Show EP04 END",
+      "applied": [
+        "EP <> END >> EP+1 "
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP+010"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP+0_0"
+      ],
+      "result": "Show EP03 END",
+      "applied": [
+        "EP <> END >> EP+0_0"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP+1 #comment"
+      ],
+      "result": "Show EP04 END",
+      "applied": [
+        "EP <> END >> EP+1 #comment"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> (EP +\n2)"
+      ],
+      "result": "Show EP05 END",
+      "applied": [
+        "EP <> END >> (EP +\n2)"
+      ]
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP +\n2"
+      ],
+      "result": "Show EP03 END",
+      "applied": []
+    },
+    {
+      "title": "Show EP03 END",
+      "words": [
+        "EP <> END >> EP +\\\n2"
+      ],
+      "result": "Show EP05 END",
+      "applied": [
+        "EP <> END >> EP +\\\n2"
+      ]
+    }
+  ]
+}

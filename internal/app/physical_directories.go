@@ -138,7 +138,7 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 				return request, bad("INVALID_SOURCE", "请选择容器媒体目录内的视频文件")
 			}
 			hint, numbering, reason := a.importNFOEvidence(file.Path)
-			scanned := importScanFile{Path: file.Path, Parsed: parseManualImportFile(file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
+			scanned := importScanFile{Path: file.Path, Parsed: a.parseManualImportFile(file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
 			inferred, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
 			if err != nil {
 				return request, err

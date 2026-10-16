@@ -17,7 +17,6 @@ import (
 	"time"
 
 	"light-media/internal/download"
-	"light-media/internal/media"
 
 	"golang.org/x/sys/unix"
 )
@@ -340,7 +339,7 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 			}
 		} else if isVideo(path) && !seen[path] {
 			seen[path] = true
-			f := importScanFile{Path: path, Size: stamp.Size, Parsed: media.Parse(filepath.Base(path))}
+			f := importScanFile{Path: path, Size: stamp.Size, Parsed: a.parseMediaName(filepath.Base(path))}
 			f.InferredMedia, f.Numbering, f.IdentityReason = a.importNFOEvidence(path)
 			if f.InferredMedia != nil {
 				f.IdentitySource = "nfo"
@@ -400,7 +399,7 @@ func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bo
 				if e != nil {
 					return e
 				}
-				file := importScanFile{Path: name, Size: stamp.Size, Parsed: media.Parse(entry.Name())}
+				file := importScanFile{Path: name, Size: stamp.Size, Parsed: a.parseMediaName(entry.Name())}
 				file.InferredMedia, file.Numbering, file.IdentityReason = a.importNFOEvidence(name)
 				if file.InferredMedia != nil {
 					file.IdentitySource = "nfo"

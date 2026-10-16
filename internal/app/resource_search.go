@@ -37,7 +37,7 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		})
 		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
-			season, episodes := resourceNumberingSuggestion(resource.Title)
+			season, episodes := a.resourceNumberingSuggestion(resource.Title)
 			choice := decision.EvaluateResource(resource, decisionPolicy(in.Policy))
 			if choice.Accepted {
 				choice.Reasons = append(choice.Reasons, "media_identity_required")
@@ -85,7 +85,7 @@ func (a *App) browseManagedSiteResources(ctx context.Context, key, query string,
 	out.HasMore = result.HasMore
 	out.Sites = append(out.Sites, a.searchStatus(ctx, key, len(result.Resources), err, 0))
 	for _, resource := range result.Resources {
-		season, episodes := resourceNumberingSuggestion(resource.Title)
+		season, episodes := a.resourceNumberingSuggestion(resource.Title)
 		choice := decision.EvaluateResource(resource, decision.Policy{})
 		if choice.Accepted {
 			choice.Reasons = append(choice.Reasons, "media_identity_required")

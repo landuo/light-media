@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"light-media/internal/media/words"
 	"net"
 	"net/http"
 	"os"
@@ -15,6 +16,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -23,6 +25,8 @@ import (
 )
 
 type App struct {
+	recognitionMu      sync.Mutex
+	recognitionMatcher atomic.Pointer[words.Matcher]
 	directoryFileMu    sync.Mutex
 	RestartRequested   chan struct{}
 	logs               *runtimeLogger
@@ -96,6 +100,9 @@ func New(opts Options) (*App, error) {
 	a.pluginStore, e = NewPluginStore(context.Background(), s)
 	if e == nil {
 		e = a.pluginStore.recoverPluginRuns(context.Background())
+		if e == nil {
+			e = a.loadRecognitionWords(context.Background())
+		}
 	}
 	if e != nil {
 		s.Close()

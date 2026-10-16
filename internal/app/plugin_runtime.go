@@ -213,6 +213,8 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "配置表单只能读取默认分类策略")
 	}
 	switch method {
+	case "identifiers.configure", "identifiers.refresh":
+		return a.pluginIdentifiersHost(ctx, installation, run, method, raw)
 	case "media.servers", "events.configure", "media.refresh":
 		return a.pluginMediaHost(ctx, installation, run, method, raw)
 	case "hosts.read":

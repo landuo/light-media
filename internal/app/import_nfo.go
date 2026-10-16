@@ -34,7 +34,7 @@ func (a *App) importNFOEvidence(video string) (*importInferredMedia, *media.Numb
 			season := *nfo.Season
 			return &importInferredMedia{Type: "tv", MediaType: "tv", ID: seriesID, Title: series.Title, Year: series.Year, EpisodeID: identifier}, &media.Numbering{Season: &season, Episodes: []int{*nfo.Episode}, Form: "nfo_episode"}, ""
 		case "tvshow":
-			return &importInferredMedia{Type: "tv", MediaType: "tv", ID: identifier, Title: nfo.Title, Year: nfo.Year}, media.Parse(filepath.Base(video)).Original, ""
+			return &importInferredMedia{Type: "tv", MediaType: "tv", ID: identifier, Title: nfo.Title, Year: nfo.Year}, a.parseMediaName(filepath.Base(video)).Original, ""
 		default:
 			return nil, nil, "unsupported_nfo_type"
 		}
@@ -43,7 +43,7 @@ func (a *App) importNFOEvidence(video string) (*importInferredMedia, *media.Numb
 		return nil, nil, "invalid_or_conflicting_nfo"
 	}
 	if series, seriesID, found := a.importSeriesNFO(video); found {
-		return &importInferredMedia{Type: "tv", MediaType: "tv", ID: seriesID, Title: series.Title, Year: series.Year}, media.Parse(filepath.Base(video)).Original, ""
+		return &importInferredMedia{Type: "tv", MediaType: "tv", ID: seriesID, Title: series.Title, Year: series.Year}, a.parseMediaName(filepath.Base(video)).Original, ""
 	}
 	return nil, nil, ""
 }

@@ -25,6 +25,10 @@ type pluginScheduleDefinition struct {
 }
 
 func (p *PluginStore) configurePluginSchedules(ctx context.Context, run PluginRun, group string, definitions []pluginScheduleDefinition, at time.Time) error {
+	return p.configurePluginSchedulesAndPatch(ctx, &run, group, definitions, at, nil)
+}
+
+func (p *PluginStore) configurePluginSchedulesAndPatch(ctx context.Context, run *PluginRun, group string, definitions []pluginScheduleDefinition, at time.Time, patch map[string]json.RawMessage) error {
 	if !pluginStorageID.MatchString(group) || len(definitions) > 1000 || at.IsZero() {
 		return bad("INVALID_PLUGIN_SCHEDULE", "插件定时服务声明无效")
 	}
@@ -140,7 +144,17 @@ func (p *PluginStore) configurePluginSchedules(ctx context.Context, run PluginRu
 	if total > 10000 {
 		return bad("PLUGIN_SCHEDULE_CAPACITY", "插件定时服务数量已达上限，注册未提交")
 	}
-	return tx.Commit()
+	updated := *run
+	if len(patch) > 0 {
+		if err := p.patchRunConfigTx(ctx, tx, &updated, patch); err != nil {
+			return err
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	*run = updated
+	return nil
 }
 
 // Coalesce long outages without iterating every missed second/minute. First is
