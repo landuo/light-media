@@ -67,6 +67,11 @@ THE SOFTWARE.
   margin-top: 16px !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mb-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mb-2) {
+  margin-bottom: 8px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mb-3),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mb-3) {
   margin-bottom: 12px !important;
@@ -85,6 +90,11 @@ THE SOFTWARE.
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.me-3),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.me-3) {
   margin-inline-end: 12px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.pa-0),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.pa-0) {
+  padding: 0px !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ps-4),

@@ -174,6 +174,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, pluginUninstallSchema); err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, pluginOrganizationSchema); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS plugin_run_startup_blocks(run_id TEXT PRIMARY KEY,FOREIGN KEY(run_id) REFERENCES plugin_runs(id))`); err != nil {
 		return nil, err
 	}
@@ -412,6 +415,9 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 		return err
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
+		return err
+	}
+	if err := p.removeOrganizationMemberTx(ctx, tx, instanceID); err != nil {
 		return err
 	}
 	return tx.Commit()

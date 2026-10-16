@@ -362,6 +362,9 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if _, err = o.tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state='canceled' WHERE instance_id=? AND (run_id IS NULL OR run_id<>?) AND state IN ('pending','queued','running','reconcile_pending')`, instance, o.run.ID); err != nil {
 		return err
 	}
+	if err := o.p.removeOrganizationMemberTx(ctx, o.tx, instance); err != nil {
+		return err
+	}
 	return o.uninstallPlanOperations.RemovePlugin(ctx, instance)
 }
 

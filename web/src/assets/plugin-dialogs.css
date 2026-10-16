@@ -1,0 +1,60 @@
+.plugin-dialog-surface {
+  color: var(--text);
+  font-family: inherit;
+}
+.plugin-dialog-surface .plugin-config-card {
+  border-radius: 8px;
+}
+.plugin-dialog-surface .plugin-dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px !important;
+  font-size: 20px !important;
+}
+.plugin-dialog-content {
+  padding: 24px !important;
+}
+.plugin-dialog-content .v-row + .v-row {
+  margin-top: 12px;
+}
+.plugin-dialog-surface .v-label {
+  flex-direction: row;
+  gap: 0;
+}
+.plugin-dialog-surface .v-field input,
+.plugin-dialog-surface .v-field textarea {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  min-width: 0;
+}
+.plugin-dialog-surface .v-field__input > input {
+  padding: 0;
+}
+.plugin-dialog-surface .v-field textarea {
+  resize: none;
+}
+.plugin-dialog-actions {
+  padding: 16px 24px !important;
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+}
+.plugin-dialog-actions .v-btn {
+  min-width: 100px;
+}
+.plugin-dialog-actions .app-icon {
+  margin-right: 8px;
+}
+.plugin-form-error {
+  margin-bottom: 16px;
+}
+.plugin-dialog-surface .ace_text-input {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}

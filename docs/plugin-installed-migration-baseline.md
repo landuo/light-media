@@ -48,6 +48,8 @@
 
 订阅局部识别词、原文保存和自动 Intent 的完整识别配置冻结见 [subscription-recognition-scope.md](subscription-recognition-scope.md)。Rust 与 legacy 两套单标题动漫流水线均已由 Go 执行；两套引擎、实际 wrapper、源错误及字符表证据见资源元数据专文。这些结论不能扩大为完整普通视频身份识别、RSS缓存上下文或原生下载目录监听始终恢复选择快照。
 
-完整 MetaInfo / MetaBase 标题对象、修改方法、保存格式及拼音依赖已移入正式 Go 包，来源、2682 个完整标题参考、源异常和边界见 [metainfo-go-port.md](metainfo-go-port.md)；尚未接入 RSS/App 消费者。路径识别与 RSS 缓存的剩余边界、实际安装版差异和逐项验收顺序见 [rss-context-go-plan.md](rss-context-go-plan.md)。RSS 标题重建不依赖 MetaInfoPath，二者分别推进和计证。
+完整 MetaInfo / MetaBase 标题对象、修改方法、保存格式及拼音依赖已移入正式 Go 包，来源、2682 个完整标题参考、源异常和边界见 [metainfo-go-port.md](metainfo-go-port.md)；完整RSS对象纯包已接同一真实入口，110条原链路参考通过，见 [rss-context-full-go-port.md](rss-context-full-go-port.md)；尚未接入 App 消费者。路径识别与 RSS 缓存的剩余边界、实际安装版差异和逐项验收顺序见 [rss-context-go-plan.md](rss-context-go-plan.md)。RSS 标题重建不依赖 MetaInfoPath，二者分别推进和计证。
 
 服务监控的完整原树、固定网络适配、缓存/配置并发和页面验证见 [plugin-server-status-go-port.md](plugin-server-status-go-port.md)。清理媒体文件的已移植纯算法与尚待接入的生产副作用边界见 [plugin-remove-link-go-port.md](plugin-remove-link-go-port.md)。
+
+插件文件夹/排序的现有可操作交互与原数据格式、额外平台限制和分层验证见 [plugin-organization-go-port.md](plugin-organization-go-port.md)。原用户布局仍未迁移，不能增加已迁移插件数。

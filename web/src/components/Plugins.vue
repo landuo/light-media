@@ -1,15 +1,36 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { VThemeProvider } from 'vuetify/components/VThemeProvider';
 import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VTabs, VTab } from 'vuetify/components/VTabs';
 import { VMenu } from 'vuetify/components/VMenu';
-import { VList, VListItem } from 'vuetify/components/VList';
+import { VIcon } from 'vuetify/components/VIcon';
+import { VAlert } from 'vuetify/components/VAlert';
+import Draggable from 'vuedraggable';
 import { VDialog } from 'vuetify/components/VDialog';
 import { api, errorText, toast } from '../api';
 import type { PluginCard } from '../features/plugin-forms';
 import AppIcon from './AppIcon.vue';
+import PluginManageCard from './PluginManageCard.vue';
+import PluginFolderCard from './PluginFolderCard.vue';
+import {
+  organizationGrid,
+  copyOrganization,
+  folderAppearance,
+  folderMembers,
+  replaceMembers,
+  normalizedPluginOrder,
+  moveToFolder,
+  folderIcons,
+  folderColors,
+  folderGradients,
+  type PluginOrganization,
+  type PluginGridItem,
+  type FolderConfig,
+} from '../features/plugin-organization';
+const PluginFolderDialog = defineAsyncComponent(() => import('./PluginFolderDialog.vue'));
+
 const PluginConfigDialog = defineAsyncComponent(() => import('./PluginConfigDialog.vue'));
 const PluginDataDialog = defineAsyncComponent(() => import('./PluginDataDialog.vue'));
 const PluginLogDialog = defineAsyncComponent(() => import('./PluginLogDialog.vue'));
@@ -39,15 +60,223 @@ const visible = computed(() =>
       .includes(query.value.toLowerCase()),
   ),
 );
+const organization = ref<PluginOrganization>({ revision: 0, folders: {}, order: [] });
+const currentFolder = ref(''),
+  sortMode = ref(false),
+  dragging = ref(false),
+  organizing = ref(false);
+const grid = ref<PluginGridItem[]>([]);
+const folderEditor = ref<{
+  mode: 'create' | 'rename' | 'appearance';
+  name: string;
+  config?: FolderConfig;
+}>();
+const folderError = ref(''),
+  deleteFolder = ref('');
+let dragged: PluginGridItem | undefined,
+  droppedIntoFolder = false,
+  loadSerial = 0;
 let timer: ReturnType<typeof setInterval>;
+function rebuildGrid() {
+  if (!dragging.value)
+    grid.value = organizationGrid(
+      organization.value,
+      items.value,
+      currentFolder.value,
+      query.value,
+    );
+}
+watch([organization, items, currentFolder, query], rebuildGrid, { deep: true });
+watch(tab, () => {
+  sortMode.value = false;
+  currentFolder.value = '';
+  load();
+});
 async function load() {
+  if (organizing.value || sortMode.value || dragging.value) return;
+  const serial = ++loadSerial;
   try {
-    [items.value, market.value] = await Promise.all([api('/plugins'), api('/plugins/market')]);
+    const [installed, groups] = await Promise.all([api('/plugins'), api('/plugins/organization')]);
+    if (serial !== loadSerial || organizing.value || sortMode.value || dragging.value) return;
+    items.value = installed;
+    if (groups.revision >= organization.value.revision) organization.value = groups;
+    if (currentFolder.value && !Object.hasOwn(groups.folders, currentFolder.value))
+      currentFolder.value = '';
+    if (tab.value === 'market') market.value = await api('/plugins/market');
     error.value = '';
   } catch (e) {
     error.value = errorText(e);
   } finally {
     loading.value = false;
+  }
+}
+async function persistOrganization(next: PluginOrganization): Promise<boolean> {
+  if (organizing.value) return false;
+  organizing.value = true;
+  folderError.value = '';
+  error.value = '';
+  ++loadSerial;
+  try {
+    organization.value = await api('/plugins/organization', next, 'PUT');
+    return true;
+  } catch (e) {
+    error.value = folderError.value = errorText(e);
+    return false;
+  } finally {
+    organizing.value = false;
+    rebuildGrid();
+  }
+}
+function editFolder(mode: 'create' | 'rename' | 'appearance', name = '') {
+  folderError.value = '';
+  folderEditor.value = { mode, name, config: folderAppearance(organization.value.folders[name]) };
+}
+async function saveFolder(value: { name: string; config: FolderConfig }) {
+  const editor = folderEditor.value;
+  if (!editor || organizing.value) return;
+  const next = copyOrganization(organization.value);
+  if (editor.mode !== 'appearance') {
+    if (!value.name.trim()) {
+      folderError.value = '文件夹名称不能为空';
+      return;
+    }
+    if (value.name !== editor.name && Object.hasOwn(next.folders, value.name)) {
+      folderError.value = '文件夹已存在';
+      return;
+    }
+    if (editor.mode === 'rename' && value.name === editor.name) {
+      folderEditor.value = undefined;
+      return;
+    }
+    const folder =
+      editor.mode === 'create'
+        ? {
+            plugins: [],
+            order: Object.keys(next.folders).length,
+            icon: folderIcons[0],
+            color: folderColors[0],
+            gradient: folderGradients[0],
+            background: '',
+            showIcon: true,
+          }
+        : next.folders[editor.name];
+    if (editor.mode === 'rename') delete next.folders[editor.name];
+    next.folders = { ...next.folders, [value.name]: folder };
+  } else
+    next.folders = {
+      ...next.folders,
+      [editor.name]: {
+        ...folderAppearance(next.folders[editor.name]),
+        ...value.config,
+        plugins: [...folderMembers(next.folders[editor.name])],
+      },
+    };
+  if (await persistOrganization(next)) {
+    if (currentFolder.value === editor.name && editor.mode === 'rename')
+      currentFolder.value = value.name;
+    folderEditor.value = undefined;
+    toast(
+      editor.mode === 'create'
+        ? '文件夹创建成功'
+        : editor.mode === 'rename'
+          ? '文件夹重命名成功'
+          : '文件夹设置已保存',
+    );
+  }
+}
+async function confirmDeleteFolder() {
+  if (!deleteFolder.value || organizing.value) return;
+  const name = deleteFolder.value,
+    next = copyOrganization(organization.value);
+  delete next.folders[name];
+
+  if (await persistOrganization(next)) {
+    if (currentFolder.value === name) currentFolder.value = '';
+    deleteFolder.value = '';
+    toast('文件夹已删除');
+  }
+}
+function startSort(event: { oldIndex?: number }) {
+  dragging.value = true;
+  droppedIntoFolder = false;
+  dragged = grid.value[event.oldIndex ?? -1];
+}
+async function endSort() {
+  dragging.value = false;
+  if (droppedIntoFolder) {
+    dragged = undefined;
+    rebuildGrid();
+    return;
+  }
+  const next = copyOrganization(organization.value);
+  if (currentFolder.value) {
+    const current = folderMembers(next.folders[currentFolder.value]);
+    const sorted = grid.value.filter((item) => item.type === 'plugin').map((item) => item.id);
+    next.folders[currentFolder.value] = replaceMembers(next.folders[currentFolder.value], [
+      ...sorted,
+      ...current.filter((id) => !sorted.includes(id)),
+    ]);
+    const order = normalizedPluginOrder(next);
+    const folderOrder =
+      order.find((item) => item.type === 'folder' && item.id === currentFolder.value)?.order ?? 999;
+    sorted.forEach((id, index) => {
+      const item = order.find((item) => item.type === 'plugin' && item.id === id);
+      if (item) item.order = folderOrder + 0.1 + index * 0.01;
+      else order.push({ id, type: 'plugin', order: folderOrder + 0.1 + index * 0.01 });
+    });
+    next.order = order;
+  } else {
+    const sorted = grid.value.map((item, index) => ({
+      type: item.type,
+      id: item.id,
+      order: index,
+    }));
+    const keys = new Set(sorted.map((item) => item.type + ':' + item.id));
+    next.order = [
+      ...sorted,
+      ...normalizedPluginOrder(next)
+        .filter((item) => !keys.has(item.type + ':' + item.id))
+        .map((item, index) => ({ ...item, order: sorted.length + index })),
+    ];
+    sorted.forEach((item) => {
+      if (item.type === 'folder')
+        next.folders[item.id] = {
+          ...folderAppearance(next.folders[item.id]),
+          plugins: [...folderMembers(next.folders[item.id])],
+          order: item.order,
+        };
+    });
+  }
+  dragged = undefined;
+  await persistOrganization(next);
+}
+async function dropToFolder(name: string) {
+  if (!sortMode.value || dragged?.type !== 'plugin' || organizing.value) return;
+  droppedIntoFolder = true;
+  try {
+    const next = moveToFolder(organization.value, dragged.id, name);
+    if (await persistOrganization(next)) toast('插件已移动到文件夹');
+  } catch (e) {
+    error.value = errorText(e);
+  }
+}
+async function cardAction(action: string, plugin: PluginCard) {
+  if (sortMode.value || organizing.value) return;
+  if (action === 'open') openPlugin(plugin);
+  else if (action === 'detail') detail.value = plugin;
+  else if (action === 'settings') selected.value = plugin;
+  else if (action === 'reset' || action === 'uninstall') confirmation.value = { plugin, action };
+  else if (action === 'runs') await showRuns(plugin);
+  else if (action === 'logs') logPlugin.value = plugin;
+  else if (action === 'install') await install(plugin);
+  else if (action === 'remove-folder' && currentFolder.value) {
+    const next = copyOrganization(organization.value),
+      name = currentFolder.value;
+    next.folders[name] = replaceMembers(
+      next.folders[name],
+      folderMembers(next.folders[name]).filter((id) => id !== plugin.instance_id),
+    );
+    if (await persistOrganization(next)) toast('插件已移出文件夹');
   }
 }
 async function install(plugin: PluginCard) {
@@ -122,71 +351,142 @@ onUnmounted(() => clearInterval(timer));
           variant="text"
           icon
           aria-label="刷新插件"
+          :disabled="sortMode || organizing"
           @click="load"
           ><AppIcon name="refresh"
         /></VBtn>
+        <VBtn
+          v-if="tab === 'installed'"
+          variant="text"
+          icon
+          aria-label="排序插件"
+          :disabled="organizing"
+          :active="sortMode"
+          @click="sortMode = !sortMode"
+          ><VIcon icon="mdi-sort"
+        /></VBtn>
       </div>
     </div>
+    <div v-if="tab === 'installed' && currentFolder" class="plugin-folder-breadcrumb">
+      <VBtn
+        variant="text"
+        prepend-icon="mdi-arrow-left"
+        :disabled="organizing || dragging"
+        @click="currentFolder = ''"
+        >返回</VBtn
+      ><span>{{ currentFolder }}</span>
+    </div>
+    <VAlert
+      v-if="sortMode && tab === 'installed'"
+      color="warning"
+      variant="tonal"
+      class="plugin-sort-notice"
+      ><span>拖动卡片调整顺序，可将插件拖入文件夹</span
+      ><VBtn
+        variant="tonal"
+        color="error"
+        :disabled="organizing || dragging"
+        @click="sortMode = false"
+        >退出</VBtn
+      ></VAlert
+    >
     <p v-if="error" role="alert" class="error">{{ error }}</p>
     <p v-if="loading" role="status">正在加载插件…</p>
-    <div v-else-if="!visible.length" class="empty">
-      {{ tab === 'installed' ? '尚未安装插件' : '没有匹配的可安装插件' }}
-    </div>
+    <template v-else-if="tab === 'installed'">
+      <div v-if="!grid.length" class="empty">
+        {{ query ? '没有匹配的插件' : currentFolder ? '文件夹中没有插件' : '尚未安装插件' }}
+      </div>
+      <Draggable
+        v-else
+        v-model="grid"
+        :item-key="(item: PluginGridItem) => item.type + ':' + item.id"
+        tag="div"
+        class="plugin-grid"
+        :disabled="!sortMode || organizing"
+        :animation="150"
+        group="plugins"
+        @start="startSort"
+        @end="endSort"
+      >
+        <template #item="{ element }"
+          ><div
+            :data-plugin-id="element.id"
+            :data-folder-id="element.type === 'folder' ? element.id : undefined"
+            class="plugin-grid-item"
+            @dragover="sortMode && element.type === 'folder' && $event.preventDefault()"
+            @drop="element.type === 'folder' && dropToFolder(element.id)"
+          >
+            <PluginFolderCard
+              v-if="element.type === 'folder'"
+              :name="element.id"
+              :count="element.count"
+              :config="element.config"
+              :sortable="sortMode"
+              @open="currentFolder = element.id"
+              @rename="editFolder('rename', element.id)"
+              @appearance="editFolder('appearance', element.id)"
+              @delete="deleteFolder = element.id"
+            />
+            <PluginManageCard
+              v-else
+              :plugin="element.plugin"
+              :busy="busy || organizing"
+              :sortable="sortMode"
+              :in-folder="!!currentFolder"
+              @action="cardAction"
+            /></div
+        ></template>
+      </Draggable>
+    </template>
+    <div v-else-if="!visible.length" class="empty">没有匹配的可安装插件</div>
     <div v-else class="plugin-grid">
-      <VCard
+      <PluginManageCard
         v-for="plugin in visible"
         :key="plugin.instance_id"
-        class="plugin-card"
-        @click="openPlugin(plugin)"
-      >
-        <div class="plugin-card-cover">
-          <VCardTitle class="plugin-card-title"
-            ><span class="plugin-state-dot" :class="{ active: plugin.state }"></span>{{ plugin.name
-            }}<span class="plugin-version">v{{ plugin.version }}</span></VCardTitle
-          >
-          <div class="plugin-card-description">
-            <span>{{ plugin.description }}</span>
-            <div class="plugin-card-icon"><AppIcon name="plugin" /></div>
-          </div>
-        </div>
-        <VCardText class="plugin-card-footer">
-          <a :href="plugin.author_url" target="_blank" rel="noopener noreferrer" @click.stop>{{
-            plugin.author
-          }}</a>
-          <VBtn
-            v-if="!plugin.installed"
-            size="small"
-            variant="text"
-            :disabled="busy"
-            @click.stop="install(plugin)"
-            >安装</VBtn
-          >
-          <VMenu v-else location="bottom end" :transition="false">
-            <template #activator="{ props: menuProps }"
-              ><VBtn
-                v-bind="menuProps"
-                variant="text"
-                icon
-                size="small"
-                :aria-label="plugin.name + '操作'"
-                @click.stop
-                ><AppIcon name="more" /></VBtn
-            ></template>
-            <VList class="plugin-menu"
-              ><VListItem v-if="plugin.has_page" title="详情" @click="detail = plugin" /><VListItem
-                title="设置"
-                @click="selected = plugin" /><VListItem
-                title="重置"
-                @click="confirmation = { plugin, action: 'reset' }" /><VListItem
-                title="卸载"
-                @click="confirmation = { plugin, action: 'uninstall' }" /><VListItem
-                title="执行记录"
-                @click="showRuns(plugin)" /><VListItem title="查看日志" @click="logPlugin = plugin"
-            /></VList>
-          </VMenu>
-        </VCardText>
-      </VCard>
+        :plugin="plugin"
+        :busy="busy"
+        @action="cardAction"
+      />
     </div>
+    <div v-if="tab === 'installed' && !currentFolder && !sortMode" class="plugin-folder-fab">
+      <VBtn
+        icon
+        color="success"
+        variant="tonal"
+        aria-label="新建文件夹"
+        :disabled="organizing || busy || loading"
+        @click="editFolder('create')"
+        ><VIcon icon="mdi-folder-plus"
+      /></VBtn>
+    </div>
+    <PluginFolderDialog
+      v-if="folderEditor"
+      :key="folderEditor.mode + folderEditor.name"
+      v-bind="folderEditor"
+      :busy="organizing"
+      :error="folderError"
+      @close="folderEditor = undefined"
+      @save="saveFolder"
+    />
+    <VDialog
+      :model-value="!!deleteFolder"
+      max-width="460"
+      content-class="plugin-dialog-surface"
+      :persistent="organizing"
+      @update:model-value="!organizing && (deleteFolder = '')"
+      ><VCard
+        ><VCardTitle class="plugin-dialog-title">确认删除文件夹</VCardTitle
+        ><VCardText class="plugin-dialog-content"
+          >确定删除文件夹“{{ deleteFolder }}”？其中的插件将返回主列表。</VCardText
+        >
+        <div class="plugin-confirm-actions">
+          <VBtn variant="text" :disabled="organizing" @click="deleteFolder = ''">取消</VBtn
+          ><VBtn color="error" variant="flat" :loading="organizing" @click="confirmDeleteFolder"
+            >确认</VBtn
+          >
+        </div></VCard
+      ></VDialog
+    >
     <PluginLogDialog
       v-if="logPlugin"
       :key="logPlugin.instance_id"
@@ -287,72 +587,40 @@ onUnmounted(() => clearInterval(timer));
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 16px;
 }
-.plugin-card {
-  cursor: pointer;
-  border: 1px solid var(--surface-border);
-  overflow: hidden;
+.plugin-grid-item {
+  height: 100%;
+  min-width: 0;
 }
-.plugin-card-cover {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), #28a9e1;
-  min-height: 108px;
-  color: #fff;
-}
-.plugin-card-title {
-  padding: 12px 16px 4px;
-  font-size: 18px;
+.plugin-folder-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.plugin-state-dot {
-  height: 8px;
-  width: 8px;
-  background: #8a8d93;
-  border-radius: 50%;
-  flex: none;
-}
-.plugin-state-dot.active {
-  background: #56ca00;
-}
-.plugin-version {
-  font-size: 13px;
-  opacity: 0.8;
-}
-.plugin-card-description {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 16px 12px;
   gap: 12px;
-  font-size: 14px;
+  margin-bottom: 16px;
 }
-.plugin-card-description > span {
-  line-height: 1.5;
-  min-height: 42px;
+.plugin-sort-notice {
+  margin-bottom: 16px;
 }
-.plugin-card-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #ffffff21;
-  flex: none;
-}
-.plugin-card-icon .app-icon {
-  width: 28px;
-  height: 28px;
-}
-.plugin-card-footer {
+.plugin-sort-notice :deep(.v-alert__content) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px 8px 2px 16px !important;
-  height: 40px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.plugin-card-footer a {
-  font-size: 14px;
+.plugin-folder-fab {
+  position: fixed;
+  inset-inline-end: 24px;
+  inset-block-end: 24px;
+  z-index: 10;
+}
+.sortable-chosen {
+  opacity: 0.5;
+}
+.sortable-ghost {
+  border: 2px dashed #2196f3;
+  border-radius: 8px;
+  background: #2196f31a;
+  opacity: 0.3;
 }
 .plugin-confirm-actions {
   display: flex;

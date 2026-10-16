@@ -1,0 +1,52 @@
+{
+  "id": "436cf008-0e03-4928-b773-c58da4ca824e",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "app_tags": "modernconly",
+  "app_test_regex": "^TestPlugin(Organization|Uninstall|Store)",
+  "sha256": {
+    "app": "26b7a0d20be50863afc83df5d55ddec45cc2cf97a943b1e43bc0917972d48522",
+    "rsscontext": "24af527f4bf5fd7fd55965a4d0225ca167c1d1b02d0e088fc0d09efad54457f6"
+  },
+  "remote_sha256": {
+    "app": "26b7a0d20be50863afc83df5d55ddec45cc2cf97a943b1e43bc0917972d48522",
+    "rsscontext": "24af527f4bf5fd7fd55965a4d0225ca167c1d1b02d0e088fc0d09efad54457f6"
+  },
+  "results": {
+    "app": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 23,
+      "top_level_skips": 0
+    },
+    "rsscontext": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 4,
+      "top_level_skips": 0
+    }
+  },
+  "container_exit_code": 0,
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  },
+  "date": "2026-10-16",
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "GOMEMLIMIT": "64MiB"
+  },
+  "scope": "synthetic owned fixtures only; no user organization or RSS cache migration"
+}

@@ -184,6 +184,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		defer a.pluginLifecycleMu.Unlock()
 	}
 	ctx := r.Context()
+	if path == "organization" {
+		return a.pluginOrganizationHTTP(w, r)
+	}
 	if path == "" && r.Method == "GET" {
 		return a.pluginCards(ctx, false)
 	}
