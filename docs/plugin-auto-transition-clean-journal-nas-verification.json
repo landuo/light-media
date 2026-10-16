@@ -1,0 +1,40 @@
+{
+  "id": "b8a239f4-41e5-43f8-bb7f-d9b27b9345f6",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "modernconly",
+  "test_regex": "^TestPlugin(AutoSignIn(SQL|Transition)|CleanInvalidSeed(Journal|PrivateJournalLimit))",
+  "sha256": "2ed260e66a8e0d1a26b9999b8cdc6844d5f7e59fb3bd187e9e0ad3f80e1f73e1",
+  "remote_sha256": "2ed260e66a8e0d1a26b9999b8cdc6844d5f7e59fb3bd187e9e0ad3f80e1f73e1",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 24,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal App encrypted SQL/transition and management/store regression; synthetic owned SQLite/files/SDK fixtures only; no production plugin registration or migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

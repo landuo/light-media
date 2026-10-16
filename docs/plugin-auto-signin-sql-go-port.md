@@ -27,6 +27,6 @@ NAS linux/amd64、CGO_ENABLED=0、modernconly 同 13 项 **全部通过，0 跳�
 
 StateBackend 当前会重组实例当前状态。增量写不等于常量内存或常量读取成本；256 MiB 是准入上限，隔离测试通过也不是原用户全部负载的 RSS/CPU 达标证明。按需加载历史响应、完成 run 的保留与容量回收、真实长期负载仍需实现及验证，不能把未决 intent/收据直接删除以腾空间。
 
-管理员保存新配置时，旧 owner 当前正确返回 Stale；完整流程还需实际 drain、停止旧触发器、保存旧 admission 的不可变归档及通知交接，再在新 Scope 上保留原普通 init 的 runtime 窗口。不能直接改旧 Run.Scope 或清空审计冒充切换完成。namespace transition 正在独立文件中开发。
+管理员保存新配置时，旧 owner 返回 Stale。随后独立文件已补原生 namespace transition：核对真实 drain、完整归档旧 admission、原子转交文件锁并保留普通 init 窗口，见 [配置切换记录](plugin-auto-signin-transition.md)。Manager 仍须实际停止/等待旧触发器并替换 owner，历史通知交接也未完成；不能直接改旧 Run.Scope 或清空审计冒充切换完成。
 
 原 History/Cache/Stats 已持久化在该 journal，原插件 KV 和核心 SiteOper 的实际投影仍未完成；只有配置投影已接原核心表。Manager owner map/关闭、实际 SDK 终态反向调用、定时器和事件 barrier、不可变站点能力、Browser/OCR、通知消费者、注册、原配置/KV/文件/引用迁移和正式部署仍在范围内。
