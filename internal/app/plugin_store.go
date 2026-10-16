@@ -241,7 +241,7 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 		return nil, err
 	}
 	limit := pluginValueLimit
-	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" {
+	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" {
 		limit = pluginDataValueLimit
 	}
 	if len(sealed) < aead.NonceSize()+aead.Overhead() || len(sealed) > limit+aead.NonceSize()+aead.Overhead() {
