@@ -64,6 +64,7 @@ type App struct {
 	pluginCommand           func(string) (plugins.Command, error)
 	pluginHostsFile         string // Test seam; production always uses the container's /etc/hosts.
 	pluginProcessStats      pluginProcessSnapshotter
+	pluginServerStatus      pluginServerStatusRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 }

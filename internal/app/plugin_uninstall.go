@@ -520,6 +520,7 @@ func (a *App) applyPluginUninstall(ctx context.Context, run *PluginRun) (json.Ra
 	*run = updated
 	for _, instance := range result.Removed {
 		delete(a.subscribeGroupCaches, instance)
+		a.pluginServerStatus.invalidate(instance)
 	}
 	return raw, nil
 }

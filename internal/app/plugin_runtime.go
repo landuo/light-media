@@ -267,6 +267,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == uninstall.OptionsCapability || method == uninstall.ApplyCapability {
 		return a.pluginUninstallHost(ctx, installation, run, method, raw)
 	}
+	if method == "server.status.configure" {
+		return a.pluginServerStatusConfigure(ctx, installation, run, raw)
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	if err := a.validatePluginHostRun(ctx, installation, run, method); err != nil {

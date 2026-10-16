@@ -3,6 +3,7 @@ import { aliases } from 'vuetify/iconsets/mdi';
 import { h } from 'vue';
 import { Icon, addCollection } from '@iconify/vue/offline';
 import mdiIcons from './assets/material-design-icons.json';
+import './assets/plugin-utilities.css';
 
 // Original forms supply icon names, rather than SVG path data. Bundle the
 // original MDI shapes locally so every declared field icon works offline.

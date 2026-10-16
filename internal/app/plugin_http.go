@@ -11,6 +11,7 @@ import (
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/schedule"
+	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/subscribegroup"
 	"light-media/internal/plugins/uninstall"
 )
@@ -71,6 +72,12 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				if installation.PluginID == "PluginUnInstall" {
 					state = uninstall.State()
+				}
+				if installation.PluginID == "MPServerStatus" {
+					machine := serverstatus.New(nil, nil)
+					if machine.Init(config.Value) == nil {
+						state = machine.State()
+					}
 				}
 			}
 			items = append(items, pluginCard{Manifest: manifest, InstanceID: installation.InstanceID, Installed: true, State: state})
@@ -142,6 +149,15 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 				form.Model[key] = value
 			}
 		}
+		if installation.PluginID == "MPServerStatus" {
+			machine := serverstatus.New(nil, nil)
+			if err := machine.Init(stored.Value); err != nil {
+				return nil, bad("INVALID_PLUGIN_CONFIG", "服务监控插件配置格式无效")
+			}
+			// The source's get_form uses the normalized in-memory bool while
+			// stored config retains the original value and all unknown fields.
+			form.Model["enable"], _ = json.Marshal(machine.State())
+		}
 		if installation.PluginID == "SiteStatistic" {
 			for _, key := range []string{"notify_type", "statistic_sites"} {
 				if value, exists := config[key]; exists {
@@ -196,6 +212,11 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		a.pluginMu.Lock()
 		run, err := a.pluginStore.InstallAndQueue(ctx, installation, form["model"])
+		if err == nil {
+			if installation.PluginID == "MPServerStatus" {
+				a.pluginServerStatus.invalidate(installation.InstanceID)
+			}
+		}
 		a.pluginMu.Unlock()
 		if err == nil {
 			a.wakePlugins()
@@ -230,7 +251,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -267,6 +288,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		a.pluginMu.Lock()
 		config, run, err := a.pluginStore.SaveConfigAndQueue(ctx, installation.InstanceID, in.Revision, configValue)
+		if err == nil && installation.PluginID == "MPServerStatus" {
+			a.pluginServerStatus.invalidate(installation.InstanceID)
+		}
 		a.pluginMu.Unlock()
 		if err == nil {
 			a.wakePlugins()
@@ -281,6 +305,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		a.pluginMu.Lock()
 		run, err := a.pluginStore.EnqueueRun(ctx, installation.InstanceID, "reload", nil)
+		if err == nil && installation.PluginID == "MPServerStatus" {
+			a.pluginServerStatus.invalidate(installation.InstanceID)
+		}
 		a.pluginMu.Unlock()
 		if err == nil {
 			a.wakePlugins()
@@ -292,6 +319,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		a.pluginMu.Lock()
 		err := a.pluginStore.Reset(ctx, installation.InstanceID)
+		if err == nil {
+			a.pluginServerStatus.invalidate(installation.InstanceID)
+		}
 		a.pluginMu.Unlock()
 		if err != nil {
 			return nil, err
@@ -303,6 +333,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		a.pluginMu.Lock()
 		err := a.pluginStore.Uninstall(ctx, installation.InstanceID)
+		if err == nil {
+			a.pluginServerStatus.invalidate(installation.InstanceID)
+		}
 		a.pluginMu.Unlock()
 		return map[string]bool{"uninstalled": err == nil, "data_retained": true}, err
 	default:
@@ -323,6 +356,12 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "MPServerStatus":
+		machine := serverstatus.New(nil, nil)
+		if !json.Valid(raw) || machine.Init(raw) != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "服务监控插件配置格式无效")
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "PluginUnInstall":
 		if _, err := uninstall.ParseConfiguration(raw); err != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "卸载插件配置不是原版支持的格式")

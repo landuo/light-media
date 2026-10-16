@@ -4,6 +4,7 @@ package builtin
 
 import (
 	"light-media/internal/plugins"
+	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/uninstall"
 )
 
@@ -27,11 +28,13 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 		return MediaServerRefreshManifest(), HandleMediaServerRefresh, true
 	case "PluginUnInstall":
 		return uninstall.Manifest(), uninstall.Handle, true
+	case "MPServerStatus":
+		return serverstatus.Manifest(), serverstatus.Handle, true
 	default:
 		return plugins.Manifest{}, nil, false
 	}
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest()}
+	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest()}
 }

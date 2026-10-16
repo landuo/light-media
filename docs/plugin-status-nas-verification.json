@@ -1,0 +1,92 @@
+{
+  "id": "c3db8b77-e73f-441c-98a9-7f2857ab77ab",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "app_tags": "modernconly",
+  "app_test_regex": "^Test(Plugin|Logging|ProxyMount|Recognition|Subscription|ResourceMetadata)",
+  "sha256": {
+    "app": "e0ab6459d9d9c704e724f6681864249e6c02cb051a5583c704dbb6a18caffe04",
+    "releasemeta": "847ddc908b947155f413bd894d574d4deb6fb25de249649588395fe108dc9ffc",
+    "pinyin": "7a19fe2fc05c1316e358503ebb381766c680ed719b6296167d4297014acd6ba8",
+    "legacyanime": "f10b52211f94718bf653e4e743de2e0aa165f046dc679995bec03405d446b474",
+    "rustanime": "08a858f1ed965141edc501c43e6a3224ab783f3f072a6587cb110ab064681f25",
+    "serverstatus": "4cc4c60540bc707bb169fc95657ec513f68d7eeea40f9b48b82292e10639745f",
+    "removelink": "ed7175996c61c299145bf3675a00057bf603292f04f5d58a64abe8fcb4b254a3"
+  },
+  "remote_sha256": {
+    "app": "e0ab6459d9d9c704e724f6681864249e6c02cb051a5583c704dbb6a18caffe04",
+    "legacyanime": "f10b52211f94718bf653e4e743de2e0aa165f046dc679995bec03405d446b474",
+    "pinyin": "7a19fe2fc05c1316e358503ebb381766c680ed719b6296167d4297014acd6ba8",
+    "releasemeta": "847ddc908b947155f413bd894d574d4deb6fb25de249649588395fe108dc9ffc",
+    "removelink": "ed7175996c61c299145bf3675a00057bf603292f04f5d58a64abe8fcb4b254a3",
+    "rustanime": "08a858f1ed965141edc501c43e6a3224ab783f3f072a6587cb110ab064681f25",
+    "serverstatus": "4cc4c60540bc707bb169fc95657ec513f68d7eeea40f9b48b82292e10639745f"
+  },
+  "results": {
+    "app": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 154,
+      "top_level_skips": 0
+    },
+    "releasemeta": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 17,
+      "top_level_skips": 0
+    },
+    "pinyin": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 4,
+      "top_level_skips": 0
+    },
+    "legacyanime": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 2,
+      "top_level_skips": 0
+    },
+    "rustanime": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 8,
+      "top_level_skips": 0
+    },
+    "serverstatus": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 8,
+      "top_level_skips": 0
+    },
+    "removelink": {
+      "passed": true,
+      "exit_code": 0,
+      "top_level_passes": 10,
+      "top_level_skips": 0
+    }
+  },
+  "container_exit_code": 0,
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  },
+  "date": "2026-10-16",
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "GOMEMLIMIT": "64MiB"
+  },
+  "scope": "synthetic owned fixtures only; no production configuration, metadata provider, notification or media operations"
+}

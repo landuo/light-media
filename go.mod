@@ -3,7 +3,9 @@ module light-media
 go 1.26.0
 
 require (
+	github.com/andybalholm/brotli v1.2.6
 	github.com/dlclark/regexp2/v2 v2.9.0
+	github.com/klauspost/compress v1.20.3
 	github.com/mattn/go-sqlite3 v1.14.52
 	github.com/shirou/gopsutil/v4 v4.26.9
 	go.yaml.in/yaml/v3 v3.0.5

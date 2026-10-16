@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/build-icons.mjs && vue-tsc --noEmit && vite build",
-    "check": "node scripts/build-icons.mjs && vue-tsc --noEmit",
+    "build": "node scripts/build-icons.mjs && node scripts/build-plugin-utilities.mjs && vue-tsc --noEmit && vite build",
+    "check": "node scripts/build-icons.mjs && node scripts/build-plugin-utilities.mjs && vue-tsc --noEmit",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --experimental-transform-types --disable-warning=ExperimentalWarning --test tests/*.test.mjs",
     "format": "prettier --write src tests scripts vite.config.ts",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@iconify-json/mdi": "1.2.3",
     "@vitejs/plugin-vue": "6.0.10",
+    "postcss": "8.5.30",
     "prettier": "3.9.10",
     "typescript": "6.0.3",
     "vite": "8.3.4",

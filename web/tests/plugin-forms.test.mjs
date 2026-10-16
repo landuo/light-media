@@ -68,6 +68,32 @@ test('all installed SiteStatistic reference pages and charts render through the 
     assert.notDeepEqual(pluginPageIssues([{ component: 'VImg', props: { src } }]), []);
 });
 
+test('all actual MPServerStatus forms and complete reference pages use supported original components', () => {
+  const fixture = JSON.parse(
+    readFileSync(
+      new URL('../../testdata/plugins/server-status-original-oracle.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  let nodeTrees = 0;
+  const visit = (value) => {
+    if (!value || typeof value !== 'object') return;
+    if (Array.isArray(value)) {
+      if (value.length && value.every((item) => typeof item?.component === 'string')) {
+        assert.deepEqual(pluginPageIssues(value), []);
+        nodeTrees++;
+      }
+      for (const item of value) visit(item);
+    } else {
+      for (const item of Object.values(value)) visit(item);
+    }
+  };
+  for (const item of fixture.cases) visit(item.expected);
+  assert.ok(nodeTrees > 100, 'complete original render trees were not exercised');
+  for (const item of fixture.cases.filter((item) => item.kind === 'form' && item.expected?.conf))
+    assert.deepEqual(pluginFormIssues(item.expected.conf), []);
+});
+
 test('plugin data tables support actual process lists and reject executable HTML', () => {
   const table = [
     {

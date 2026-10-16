@@ -21,21 +21,14 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 	if (method != "page" && method != "dashboard") || (method == "page" && !manifest.HasPage) || (method == "dashboard" && !slices.Contains(manifest.Dashboards, key)) {
 		return nil, &APIError{"NOT_FOUND", "插件未提供此页面或仪表板", 404}
 	}
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	budget := pluginViewBudget(installation.PluginID)
+	ctx, cancel := context.WithTimeout(ctx, budget)
 	defer cancel()
-	select {
-	case a.pluginProcess <- struct{}{}:
-		defer func() { <-a.pluginProcess }()
-	case <-ctx.Done():
-		return nil, bad("PLUGIN_BUSY", "插件正在执行，请稍后重试")
-	}
-	config, err := a.pluginStore.Config(ctx, installation.InstanceID)
-	if err != nil && !missingPluginValue(err) {
+	config, release, err := a.acquirePluginViewSnapshot(ctx, installation)
+	if err != nil {
 		return nil, err
 	}
-	if len(config.Value) == 0 {
-		config.Value = json.RawMessage(`{}`)
-	}
+	defer release()
 	input, _ := json.Marshal(map[string]string{"key": key})
 	payload, _ := json.Marshal(plugins.Invocation{Action: method, Config: config.Value, Input: input})
 	command, err := a.pluginExecutable(installation.PluginID)
@@ -44,12 +37,15 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 	}
 	hostErrorCode := ""
 	hostErrorMessage := "读取当前容器进程失败，请重试"
-	result, err := (plugins.Runner{Timeout: 10 * time.Second}).Run(ctx, command, manifest, installation.InstanceID, method, payload, func(ctx context.Context, identity plugins.Identity, capability string, raw json.RawMessage) (json.RawMessage, error) {
-		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read" && capability != "subscriptions.rules.history") {
+	result, err := (plugins.Runner{Timeout: budget}).Run(ctx, command, manifest, installation.InstanceID, method, payload, func(ctx context.Context, identity plugins.Identity, capability string, raw json.RawMessage) (json.RawMessage, error) {
+		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read" && capability != "subscriptions.rules.history" && capability != "server.status.snapshot") {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件页面只能调用已授权的只读查询")
 		}
 		if err := a.pluginViewCurrent(ctx, installation, config.Revision); err != nil {
 			return nil, err
+		}
+		if capability == "server.status.snapshot" {
+			return a.pluginServerStatusSnapshot(ctx, installation, config.Revision, config.Value, method, raw)
 		}
 		if capability == "subscriptions.rules.history" {
 			if installation.PluginID != "SubscribeGroup" || !pluginStrictJSON(raw, &struct{}{}) {
@@ -120,6 +116,47 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 		return nil, bad("PLUGIN_VIEW_FAILED", "插件页面返回格式无效")
 	}
 	return result.Result, nil
+}
+
+func (a *App) acquirePluginViewSnapshot(ctx context.Context, installation PluginInstallation) (PluginStoredValue, func(), error) {
+	for {
+		select {
+		case a.pluginProcess <- struct{}{}:
+		case <-ctx.Done():
+			return PluginStoredValue{}, nil, bad("PLUGIN_BUSY", "插件正在执行，请稍后重试")
+		}
+		release := func() { <-a.pluginProcess }
+		config, err := a.pluginStore.Config(ctx, installation.InstanceID)
+		if err != nil && !missingPluginValue(err) {
+			release()
+			return PluginStoredValue{}, nil, err
+		}
+		if len(config.Value) == 0 {
+			config.Value = json.RawMessage(`{}`)
+		}
+		var pending int
+		if installation.PluginID == "MPServerStatus" {
+			err = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND action IN ('init','reload') AND state IN ('pending','running')`, installation.InstanceID, installation.Generation, config.Revision).Scan(&pending)
+		}
+		if err != nil && !missingPluginValue(err) {
+			release()
+			return PluginStoredValue{}, nil, err
+		}
+		if pending == 0 {
+			return config, release, nil
+		}
+		// The initialization worker needs this same semaphore. Never wait for
+		// its completion while retaining it, or publish a pre-init sample that
+		// its later reset would erase.
+		release()
+		timer := time.NewTimer(20 * time.Millisecond)
+		select {
+		case <-timer.C:
+		case <-ctx.Done():
+			timer.Stop()
+			return PluginStoredValue{}, nil, bad("PLUGIN_BUSY", "插件配置仍在应用，请稍后重试")
+		}
+	}
 }
 
 func (a *App) pluginViewCurrent(ctx context.Context, installation PluginInstallation, revision int64) error {

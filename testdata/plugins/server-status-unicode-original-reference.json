@@ -1,0 +1,83 @@
+{
+  "provenance": {
+    "source_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+    "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "unicode": "15.0.0",
+    "regex_module": "stdlib re",
+    "execution": "actual installed parser AST; stdlib only; no app imports/config/network probes"
+  },
+  "cases": [
+    {
+      "name": "ascii",
+      "input": "Active connections: 12\nserver accepts handled requests\n1000 995 12345\nReading: 2 Writing: 3 Waiting: 7\n",
+      "expected": {
+        "active_connections": 12,
+        "accepts": 1000,
+        "handled": 995,
+        "requests": 12345,
+        "reading": 2,
+        "writing": 3,
+        "waiting": 7
+      }
+    },
+    {
+      "name": "python-special-case",
+      "input": "Actİve connectıonſ: 12\nserver accepts handled requests\n1000 995 12345\nReadİng: 2 Wrıtİng: 3 Waİtıng: 7\n",
+      "expected": {
+        "active_connections": 12,
+        "accepts": 1000,
+        "handled": 995,
+        "requests": 12345,
+        "reading": 2,
+        "writing": 3,
+        "waiting": 7
+      }
+    },
+    {
+      "name": "unicode15-decimal",
+      "input": "Active connections: 𞓱𞓲\nserver accepts handled requests\n𞓱𞓰𞓰𞓰 𞓹𞓹𞓵 𞓱𞓲𞓳𞓴𞓵\nReading: 𞓲 Writing: 𞓳 Waiting: 𞓷\n",
+      "expected": {
+        "active_connections": 12,
+        "accepts": 1000,
+        "handled": 995,
+        "requests": 12345,
+        "reading": 2,
+        "writing": 3,
+        "waiting": 7
+      }
+    },
+    {
+      "name": "unicode16-decimal",
+      "input": "Active connections: 𐵁𐵂\nserver accepts handled requests\n𐵁𐵀𐵀𐵀 𐵉𐵉𐵅 𐵁𐵂𐵃𐵄𐵅\nReading: 𐵂 Writing: 𐵃 Waiting: 𐵇\n",
+      "error": "缺少活跃连接数据"
+    },
+    {
+      "name": "superscript-digit",
+      "input": "Active connections: ¹²\nserver accepts handled requests\n1000 995 ¹²345\nReading: 2 Writing: 3 Waiting: 7\n",
+      "error": "缺少活跃连接数据"
+    },
+    {
+      "name": "circled-digit",
+      "input": "Active connections: ①②\nserver accepts handled requests\n1000 995 ①②345\nReading: 2 Writing: 3 Waiting: 7\n",
+      "error": "缺少活跃连接数据"
+    },
+    {
+      "name": "python-extra-whitespace",
+      "input": "Active connections:\u001f12\nserver accepts handled requests\n1000 995 12345\nReading:\u001f2 Writing:\u001f3 Waiting:\u001f7\n",
+      "expected": {
+        "active_connections": 12,
+        "accepts": 1000,
+        "handled": 995,
+        "requests": 12345,
+        "reading": 2,
+        "writing": 3,
+        "waiting": 7
+      }
+    },
+    {
+      "name": "not-python-whitespace",
+      "input": "Active connections:᠎12\nserver accepts handled requests\n1000 995 12345\nReading:᠎2 Writing:᠎3 Waiting:᠎7\n",
+      "error": "缺少活跃连接数据"
+    }
+  ]
+}

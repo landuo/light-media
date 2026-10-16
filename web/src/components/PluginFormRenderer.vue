@@ -8,7 +8,8 @@ import { VTextField } from 'vuetify/components/VTextField';
 import { VTextarea } from 'vuetify/components/VTextarea';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTable } from 'vuetify/components/VTable';
-import { VCard, VCardText } from 'vuetify/components/VCard';
+import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
+import { VIcon } from 'vuetify/components/VIcon';
 import { VAvatar } from 'vuetify/components/VAvatar';
 import { VImg } from 'vuetify/components/VImg';
 import { VAceEditor } from 'vue3-ace-editor';
@@ -29,7 +30,9 @@ const components: Record<string, Component | string> = {
   VAceEditor,
   VTable,
   VCard,
+  VCardTitle,
   VCardText,
+  VIcon,
   VAvatar,
   VImg,
   VApexChart: defineAsyncComponent(() => import('./PluginPieChart.vue')),
