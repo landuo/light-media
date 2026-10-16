@@ -223,6 +223,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return bad("INVALID_JOB", "任务参数无效")
 	}
 	switch j.Kind {
+	case "site_refresh":
+		return a.runSiteRefresh(ctx, j)
 	case "native_download":
 		return a.runNativeDownload(ctx, j, p.ID)
 	case "download":
@@ -357,6 +359,9 @@ func (a *App) scheduler(ctx context.Context) {
 		}
 		if a.paused() {
 			continue
+		}
+		if err := a.scheduleSiteDataRefresh(ctx, time.Now()); err != nil {
+			a.log("ERROR", "site", "refresh_schedule_failed", "站点数据刷新调度失败，已保留原调度状态", "", "")
 		}
 		raw, e := a.Store.List(ctx, "subscription", 500, 0)
 		if e != nil {

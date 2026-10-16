@@ -620,6 +620,9 @@ func (a *App) preserveSecrets(c *Settings) {
 	}
 }
 func validateSettings(c Settings) error {
+	if c.SiteDataRefreshHours != nil && (*c.SiteDataRefreshHours < 0 || *c.SiteDataRefreshHours > 8760) {
+		return bad("INVALID_SITE_INTERVAL", "站点数据刷新间隔须为0到8760小时")
+	}
 	for _, list := range [][]string{c.IndexerSites, c.RSSSites} {
 		if len(list) > 1024 {
 			return bad("CONFIG_LIMIT", "站点选择数量超出上限")

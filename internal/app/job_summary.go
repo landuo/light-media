@@ -39,6 +39,7 @@ var jobTypeLabels = map[string]string{
 	"import": "整理文件", "reorganize_cleanup": "清理旧整理文件",
 	"scrape": "刮削元数据", "fnos_sync": "飞牛入库核对",
 	"subscription": "检查订阅", "library_scan": "核对媒体目录", "asset_check": "检查媒体文件",
+	"site_refresh": "刷新站点数据",
 }
 
 func (a *App) jobViews(ctx context.Context, jobs []Job) ([]jobView, error) {
@@ -87,6 +88,8 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 	}
 	if json.Unmarshal(job.Payload, &payload) == nil {
 		switch job.Kind {
+		case "site_refresh":
+			s.Subject = "所有启用站点"
 		case "download":
 			var item Intent
 			if err := read("intent", payload.ID, &item); err != nil {

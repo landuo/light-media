@@ -2,7 +2,7 @@ export type PluginFormNode = {
   component: string;
   props?: Record<string, any>;
   content?: PluginFormNode[];
-  text?: string | number;
+  text?: string | number | null;
 };
 
 const supported = new Set([
@@ -16,7 +16,21 @@ const supported = new Set([
   'VTextarea',
   'VSelect',
 ]);
-const tableElements = new Set(['VTable', 'thead', 'tbody', 'tr', 'th', 'td']);
+const tableElements = new Set([
+  'VTable',
+  'thead',
+  'tbody',
+  'tr',
+  'th',
+  'td',
+  'div',
+  'span',
+  'VCard',
+  'VCardText',
+  'VAvatar',
+  'VImg',
+  'VApexChart',
+]);
 const modelKey = /^[A-Za-z][A-Za-z0-9_]*$/;
 
 function validModelKey(value: any): value is string {
@@ -67,9 +81,62 @@ function pluginRenderIssues(
       }
     }
     if ('html' in node || 'slots' in node) issues.push('此插件的富文本或插槽行为尚未移植');
+    if (
+      node.component === 'VImg' &&
+      !/^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(node.props?.src || '')
+    )
+      issues.push('插件图片地址无效');
+    if (node.component === 'VApexChart' && !validPluginPieChart(node.props || {}))
+      issues.push('插件图表结构无效或尚未移植');
     if (node.content) issues.push(...pluginRenderIssues(node.content, page, depth + 1, budget));
   }
   return [...new Set(issues)];
+}
+
+export function validPluginPieChart(props: Record<string, any>): boolean {
+  const keys = (value: any, allowed: string[]) =>
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).every((key) => allowed.includes(key));
+  const o = props.options;
+  return !!(
+    keys(props, ['height', 'options', 'series']) &&
+    Number.isFinite(props.height) &&
+    props.height >= 100 &&
+    props.height <= 600 &&
+    keys(o, ['chart', 'labels', 'title', 'legend', 'plotOptions', 'noData']) &&
+    keys(o.chart, ['type']) &&
+    o.chart.type === 'pie' &&
+    Array.isArray(o.labels) &&
+    o.labels.length <= 2048 &&
+    o.labels.every((label: any) => typeof label === 'string' && label.length <= 256) &&
+    Array.isArray(props.series) &&
+    props.series.length === o.labels.length &&
+    props.series.every(
+      (value: any) => typeof value === 'number' && Number.isFinite(value) && value >= 0,
+    ) &&
+    keys(o.title, ['text']) &&
+    typeof o.title.text === 'string' &&
+    o.title.text.length <= 512 &&
+    keys(o.legend, ['show']) &&
+    typeof o.legend.show === 'boolean' &&
+    keys(o.plotOptions, ['pie']) &&
+    keys(o.plotOptions.pie, ['expandOnClick']) &&
+    typeof o.plotOptions.pie.expandOnClick === 'boolean' &&
+    keys(o.noData, ['text']) &&
+    typeof o.noData.text === 'string' &&
+    o.noData.text.length <= 256
+  );
+}
+
+export function pluginChartHTML(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 export function pluginFieldProps(props: Record<string, any>, model: Record<string, any>) {

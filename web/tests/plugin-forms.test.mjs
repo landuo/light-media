@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   pluginFormIssues,
   pluginPageIssues,
   pluginFieldProps,
+  validPluginPieChart,
+  pluginChartHTML,
 } from '../src/features/plugin-forms.ts';
 
 test('original switch and Ace model bindings save the current independent draft', () => {
@@ -22,6 +25,47 @@ test('original switch and Ace model bindings save the current independent draft'
   editorProps['onUpdate:value']('movie:\n  华语电影:\n');
   assert.deepEqual(model, { enabled: true, content: 'movie:\n  华语电影:\n' });
   assert.equal(editorProps.theme, 'monokai');
+});
+
+test('all installed SiteStatistic reference pages and charts render through the whitelist', () => {
+  const fixture = JSON.parse(
+    readFileSync(
+      new URL('../../testdata/plugins/site-statistic-original-oracle.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  assert.deepEqual(pluginFormIssues(fixture.form), []);
+  for (const item of fixture.cases) {
+    assert.deepEqual(pluginPageIssues(item.page), [], item.name);
+    for (const [mode, dashboard] of Object.entries(item.dashboards))
+      assert.deepEqual(pluginPageIssues(dashboard.elements), [], item.name + ':' + mode);
+  }
+  const chart = fixture.cases.find((item) => item.name === 'rounded-chart-values').dashboards.today
+    .elements[0].content[0].content[0];
+  assert.equal(validPluginPieChart(chart.props), true);
+  for (const mutation of [
+    {
+      ...chart.props,
+      options: { ...chart.props.options, tooltip: { custom: '<script>bad</script>' } },
+    },
+    {
+      ...chart.props,
+      options: { ...chart.props.options, chart: { type: 'pie', events: { click: 'bad()' } } },
+    },
+    { ...chart.props, series: [Infinity] },
+    { ...chart.props, series: [-1] },
+  ])
+    assert.equal(validPluginPieChart(mutation), false);
+  assert.equal(
+    pluginChartHTML('<img src=x onerror="bad()"> & site'),
+    '&lt;img src=x onerror=&quot;bad()&quot;&gt; &amp; site',
+  );
+  for (const src of [
+    'https://other.invalid/logo.png',
+    '/plugin_icon/../../evil.png',
+    'data:text/html,<script>bad()</script>',
+  ])
+    assert.notDeepEqual(pluginPageIssues([{ component: 'VImg', props: { src } }]), []);
 });
 
 test('plugin data tables support actual process lists and reject executable HTML', () => {

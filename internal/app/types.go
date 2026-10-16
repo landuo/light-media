@@ -70,25 +70,26 @@ type TMDBConfig struct {
 	AccessToken string `json:"access_token"`
 }
 type Settings struct {
-	IndexerSites      []string           `json:"indexer_sites"`
-	RSSSites          []string           `json:"rss_sites"`
-	Directories       []DirectoryRule    `json:"directories"`
-	MaterialMaxMiB    int                `json:"material_max_mib"`
-	AutoImportMode    string             `json:"auto_import_mode"`
-	LogLevel          string             `json:"log_level"`
-	LogMaxMiB         int                `json:"log_max_mib"`
-	LogRetainFiles    int                `json:"log_retain_files"`
-	LogRetainDays     int                `json:"log_retain_days"`
-	LogTotalMiB       int                `json:"log_total_mib"`
-	TMDB              TMDBConfig         `json:"tmdb"`
-	Sites             []SiteConfig       `json:"sites"`
-	Downloaders       []DownloaderConfig `json:"downloaders"`
-	Roots             []Root             `json:"roots"`
-	AllowedRoots      []string           `json:"allowed_roots"`
-	FNOS              FNConfig           `json:"fnos"`
-	DefaultDownloader string             `json:"default_downloader"`
-	DefaultRoot       string             `json:"default_root"`
-	DebugUntil        string             `json:"debug_until"`
+	SiteDataRefreshHours *int               `json:"site_data_refresh_hours"`
+	IndexerSites         []string           `json:"indexer_sites"`
+	RSSSites             []string           `json:"rss_sites"`
+	Directories          []DirectoryRule    `json:"directories"`
+	MaterialMaxMiB       int                `json:"material_max_mib"`
+	AutoImportMode       string             `json:"auto_import_mode"`
+	LogLevel             string             `json:"log_level"`
+	LogMaxMiB            int                `json:"log_max_mib"`
+	LogRetainFiles       int                `json:"log_retain_files"`
+	LogRetainDays        int                `json:"log_retain_days"`
+	LogTotalMiB          int                `json:"log_total_mib"`
+	TMDB                 TMDBConfig         `json:"tmdb"`
+	Sites                []SiteConfig       `json:"sites"`
+	Downloaders          []DownloaderConfig `json:"downloaders"`
+	Roots                []Root             `json:"roots"`
+	AllowedRoots         []string           `json:"allowed_roots"`
+	FNOS                 FNConfig           `json:"fnos"`
+	DefaultDownloader    string             `json:"default_downloader"`
+	DefaultRoot          string             `json:"default_root"`
+	DebugUntil           string             `json:"debug_until"`
 }
 type Policy struct {
 	Source               string   `json:"source"`

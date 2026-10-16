@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"net/url"
@@ -23,6 +24,9 @@ type managedConnection struct {
 }
 type siteSnapshot struct {
 	SiteID     string            `json:"site_id"`
+	Name       string            `json:"name,omitempty"`
+	Domain     string            `json:"domain,omitempty"`
+	Day        string            `json:"updated_day,omitempty"`
 	ConfigKey  string            `json:"config_key,omitempty"`
 	Connection managedConnection `json:"connection"`
 	Stats      *sites.UserStats  `json:"stats"`
@@ -250,14 +254,24 @@ func (a *App) deleteManagedSite(ctx context.Context, key string) (any, error) {
 
 func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 	ctx = allowDisabledSiteRequests(ctx)
+	if _, err := a.collectManagedSite(ctx, key, "", nil); err != nil {
+		return nil, err
+	}
+	return a.managedSites(ctx)
+}
+
+// Site HTTP requests happen outside settings/plugin locks. The observation,
+// daily history and outbox fact publish together after checking the current
+// connection and optional owning job. A failed response never replaces data.
+func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, guard func(*sql.Tx) error) (siteSnapshot, error) {
 	s, e := a.siteForRequest(ctx, key)
 	if e != nil {
-		return nil, e
+		return siteSnapshot{}, e
 	}
 	started := time.Now()
-	snapshot := siteSnapshot{SiteID: key, ConfigKey: a.managedSiteKey(s)}
+	snapshot := siteSnapshot{SiteID: key, Name: s.Name, Domain: siteStatisticDomain(s), ConfigKey: a.managedSiteKey(s)}
 	var observed sites.UserStats
-	e = a.withSite(ctx, s, false, func(client *sites.Client) error { var err error; observed, err = client.UserStats(ctx); return err })
+	e = a.withSite(ctx, s, guard != nil, func(client *sites.Client) error { var err error; observed, err = client.UserStats(ctx); return err })
 	snapshot.Connection = managedConnection{Status: "ok", CheckedAt: now(), DurationMS: time.Since(started).Milliseconds()}
 	if e != nil {
 		snapshot.Connection.Status = "failed"
@@ -265,24 +279,48 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 	} else {
 		snapshot.Stats = &observed
 	}
+	snapshot.Day = time.Now().In(shanghai()).Format("2006-01-02")
+	a.settingsMu.Lock()
+	defer a.settingsMu.Unlock()
 	current, err := a.siteForRequest(ctx, key)
 	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey {
-		return nil, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
+		return siteSnapshot{}, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
 	}
-	if err = a.Store.Put(ctx, "site_connection", key, snapshot); err != nil {
-		return nil, err
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return siteSnapshot{}, err
+	}
+	defer tx.Rollback()
+	if guard != nil {
+		if err = guard(tx); err != nil {
+			return siteSnapshot{}, err
+		}
+	}
+	if err = txPut(ctx, tx, "site_connection", key, snapshot); err != nil {
+		return siteSnapshot{}, err
 	}
 	if e == nil {
-		if err = a.Store.Put(ctx, "site_stats_latest", key, snapshot); err != nil {
-			return nil, err
+		if err = txPut(ctx, tx, "site_stats_latest", key, snapshot); err != nil {
+			return siteSnapshot{}, err
 		}
-		if err = a.Store.Put(ctx, "site_stats_history", key+":"+time.Now().In(shanghai()).Format("2006-01-02"), snapshot); err != nil {
-			return nil, err
+		if err = txPut(ctx, tx, "site_stats_history", key+":"+snapshot.Day, snapshot); err != nil {
+			return siteSnapshot{}, err
 		}
-		_, _ = a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE kind='site_stats_history' AND updated_at<?`, time.Now().Add(-90*24*time.Hour).UTC().Format(time.RFC3339Nano))
+		if eventKey == "" {
+			eventKey = id("site_refresh_")
+		}
+		if err = recordDomainEventTx(ctx, tx, DomainEvent{EventID: domainEventID("site.refreshed", eventKey), Type: "site.refreshed", SiteID: key}); err != nil {
+			return siteSnapshot{}, err
+		}
+		if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='site_stats_history' AND updated_at<?`, time.Now().Add(-90*24*time.Hour).UTC().Format(time.RFC3339Nano)); err != nil {
+			return siteSnapshot{}, err
+		}
+	}
+	if err = tx.Commit(); err != nil {
+		return siteSnapshot{}, err
 	}
 	a.log("INFO", "site", "userdata_refreshed", "站点用户数据刷新完成："+snapshot.Connection.Status, "", "")
-	return a.managedSites(ctx)
+	return snapshot, nil
 }
 
 func (a *App) managedSiteHistory(ctx context.Context, key string) (any, error) {

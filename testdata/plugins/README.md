@@ -13,3 +13,5 @@
 
 
 `merge-sites-original-oracle.json` 与 `merge-sites-original-forms.json` 通过只读 AST 提取原安装 MergeSiteSwitch 1.2 的函数/类，使用完全合成的站点、配置操作器、插件管理器与调度器计算。原源码摘要已与 NAS 原文件核对；参考计算未导入应用、未调用原数据库或后台服务。29 组行为样本覆盖跟随、自定义引用、重复值、插件缺席和原版身份/状态边界；八组表单包含不同已安装插件组合的完整组件/属性输出。Go 测试不使用 Python。内置 `merge_site_switch_form.json` 是同源全行表单模板，选项由宿主的当前授权站点替换，未携带用户配置。
+
+`site-statistic-original-oracle.json` 通过只读 AST 提取原安装 SiteStatistic 1.9.7 的类，用合成快照、站点操作器、固定时间及消息/KV 接收器计算 24 组完整页面、三种仪表板、通知/指纹、历史选择和格式结果。源摘要 `763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d` 已与 NAS 核对；不导入原应用，不读取原用户数据，不执行初始化/定时任务。覆盖上传/下载各自零基线、七天回溯、错误回退、混合日期、PB 格点/偏离/不变/回退、重复名称及原格式边界。内置 `site_statistic_form.json` 为原函数完整元数据，Go 与前端白名单均用固定结果核对。测试运行没有 Python 依赖。

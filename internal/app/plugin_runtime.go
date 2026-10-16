@@ -223,6 +223,8 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return nil, err
 	}
 	switch method {
+	case "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify":
+		return a.pluginSiteStatisticHost(ctx, installation, run, method, raw)
 	case "identifiers.configure", "identifiers.refresh":
 		return a.pluginIdentifiersHost(ctx, installation, run, method, raw)
 	case "media.servers", "events.configure", "media.refresh":

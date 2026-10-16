@@ -399,6 +399,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 		err = p.recoverSiteControlRuns(ctx)
 	}
 	if err == nil {
+		err = p.recoverSiteStatisticRuns(ctx)
+	}
+	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)
 	}
 	return err

@@ -1,0 +1,109 @@
+[
+  {
+    "component": "VForm",
+    "content": [
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 4
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "enabled",
+                  "label": "启用插件"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 4
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "onlyonce",
+                  "label": "立即运行一次"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "dashboard_type",
+                  "label": "仪表板组件",
+                  "items": [
+                    {
+                      "title": "今日数据",
+                      "value": "today"
+                    },
+                    {
+                      "title": "汇总数据",
+                      "value": "total"
+                    },
+                    {
+                      "title": "所有数据",
+                      "value": "all"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "notify_type",
+                  "label": "数据刷新时发送通知",
+                  "items": [
+                    {
+                      "title": "不发送",
+                      "value": ""
+                    },
+                    {
+                      "title": "今日增量数据",
+                      "value": "inc"
+                    },
+                    {
+                      "title": "累计全量数据",
+                      "value": "all"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -25,6 +25,7 @@ type DomainEvent struct {
 	MediaID       string `json:"media_id"`
 	IntentID      string `json:"intent_id,omitempty"`
 	AssetID       string `json:"asset_id,omitempty"`
+	SiteID        string `json:"site_id,omitempty"`
 	Purpose       string `json:"purpose"`
 	SubjectID     string `json:"subject_id"`
 	SubjectKind   string `json:"subject_kind"`
@@ -55,7 +56,7 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	if in.SchemaVersion == 0 {
 		in.SchemaVersion = 1
 	}
-	if in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || (in.JobID == "" && in.Type != "download.completed") || (in.JobID != "" && !domainReferencePattern.MatchString(in.JobID)) {
+	if in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || (in.JobID == "" && in.Type != "download.completed" && in.Type != "site.refreshed") || (in.JobID != "" && !domainReferencePattern.MatchString(in.JobID)) {
 		return invalid()
 	}
 	for _, value := range []string{in.IntentID, in.AssetID, in.WorkflowID, in.CausationID, in.ParentJobID} {
@@ -65,8 +66,11 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	}
 	if in.Purpose == "" {
 		in.Purpose = "core_download"
+		if in.Type == "site.refreshed" {
+			in.Purpose = "site_statistics"
+		}
 	}
-	if in.Purpose != "core_download" {
+	if (in.Type == "site.refreshed" && in.Purpose != "site_statistics") || (in.Type != "site.refreshed" && (in.Purpose != "core_download" || in.SiteID != "")) {
 		return invalid()
 	}
 	if in.Origin == "" {
@@ -89,10 +93,15 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 		subject, kind = in.AssetID, "asset"
 	case "job.failed":
 		subject, kind = in.JobID, "job"
+	case "site.refreshed":
+		if (in.SiteID != "*" && !domainReferencePattern.MatchString(in.SiteID)) || in.MediaID != "" || in.AssetID != "" || in.IntentID != "" {
+			return invalid()
+		}
+		subject, kind = in.SiteID, "site"
 	default:
 		return invalid()
 	}
-	if in.Type != "job.failed" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
+	if in.Type != "job.failed" && in.Type != "site.refreshed" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
 		return invalid()
 	}
 	if in.MediaID != "" && !domainMediaPattern.MatchString(in.MediaID) {

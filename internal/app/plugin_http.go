@@ -131,6 +131,13 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 				form.Model[key] = value
 			}
 		}
+		if installation.PluginID == "SiteStatistic" {
+			for _, key := range []string{"notify_type", "statistic_sites"} {
+				if value, exists := config[key]; exists {
+					form.Model[key] = value
+				}
+			}
+		}
 	}
 	if installation.PluginID == "RemoteIdentifiers" {
 		var value string
@@ -212,7 +219,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -305,6 +312,15 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "SiteStatistic":
+		var config builtin.SiteStatisticConfiguration
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if config.Validate() != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "站点统计显示或通知选项无效")
+		}
+		return config, nil
 	case "MergeSiteSwitch":
 		var config builtin.SiteControls
 		if err := decode(&config); err != nil {

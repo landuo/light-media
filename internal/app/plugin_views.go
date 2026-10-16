@@ -44,11 +44,27 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 	}
 	hostErrorCode := ""
 	result, err := (plugins.Runner{Timeout: 10 * time.Second}).Run(ctx, command, manifest, installation.InstanceID, method, payload, func(ctx context.Context, identity plugins.Identity, capability string, raw json.RawMessage) (json.RawMessage, error) {
-		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || capability != "process.list" {
+		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read") {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件页面只能调用已授权的只读查询")
 		}
 		if err := a.pluginViewCurrent(ctx, installation, config.Revision); err != nil {
 			return nil, err
+		}
+		if capability == "site.statistics.read" {
+			if installation.PluginID != "SiteStatistic" || string(raw) != "{}" {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "站点统计只能查询宿主快照")
+			}
+			a.pluginMu.Lock()
+			defer a.pluginMu.Unlock()
+			if err := a.pluginViewCurrent(ctx, installation, config.Revision); err != nil {
+				return nil, err
+			}
+			snapshot, err := a.siteStatisticsSnapshot(ctx)
+			if err != nil {
+				hostErrorCode = "SITE_STATISTICS_READ_FAILED"
+				return nil, err
+			}
+			return json.Marshal(snapshot)
 		}
 		items, err := a.pluginProcessStats.snapshot(ctx)
 		if err != nil {

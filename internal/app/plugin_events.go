@@ -21,21 +21,28 @@ type pluginEventSubscription struct {
 }
 
 func (p *PluginStore) configureEventSubscription(ctx context.Context, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
-	if !pluginStorageID.MatchString(handler) || len(types) == 0 || len(types) > 6 || delay < 0 {
-		return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件订阅参数无效")
-	}
-	seen := map[string]bool{}
-	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "import.completed", "scrape.completed", "library.visible", "job.failed"}, eventType) || seen[eventType] {
-			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
-		}
-		seen[eventType] = true
-	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+	if err = p.configureEventSubscriptionTx(ctx, tx, run, handler, types, delay, active); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.Tx, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
+	if !pluginStorageID.MatchString(handler) || len(types) == 0 || len(types) > 7 || delay < 0 {
+		return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件订阅参数无效")
+	}
+	seen := map[string]bool{}
+	for _, eventType := range types {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed"}, eventType) || seen[eventType] {
+			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
+		}
+		seen[eventType] = true
+	}
 	var current int
 	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=? AND i.version=? AND v.revision=? AND EXISTS(SELECT 1 FROM plugin_runs r WHERE r.id=? AND r.instance_id=i.instance_id AND r.generation=i.generation AND r.config_revision=v.revision AND r.state='running')`, run.InstanceID, run.Generation, run.Version, run.ConfigRevision, run.ID).Scan(&current); err != nil {
 		return err
@@ -49,7 +56,7 @@ func (p *PluginStore) configureEventSubscription(ctx context.Context, run Plugin
 	}
 	var generation, revision, cursor int64
 	var wasActive bool
-	err = tx.QueryRowContext(ctx, `SELECT generation,config_revision,active,cursor FROM plugin_event_subscriptions WHERE instance_id=? AND handler_key=?`, run.InstanceID, handler).Scan(&generation, &revision, &wasActive, &cursor)
+	err := tx.QueryRowContext(ctx, `SELECT generation,config_revision,active,cursor FROM plugin_event_subscriptions WHERE instance_id=? AND handler_key=?`, run.InstanceID, handler).Scan(&generation, &revision, &wasActive, &cursor)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
@@ -77,7 +84,7 @@ func (p *PluginStore) configureEventSubscription(ctx context.Context, run Plugin
 	if err != nil {
 		return err
 	}
-	return tx.Commit()
+	return nil
 }
 
 func (p *PluginStore) activeEventSubscriptions(ctx context.Context) ([]pluginEventSubscription, error) {

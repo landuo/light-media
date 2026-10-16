@@ -118,4 +118,41 @@ onUnmounted(() => {
 .plugin-data-content :deep(.text-center) {
   text-align: center;
 }
+.plugin-data-content :deep(.d-flex) {
+  display: flex;
+}
+.plugin-data-content :deep(.align-center) {
+  align-items: center;
+}
+.plugin-data-content :deep(.flex-wrap) {
+  flex-wrap: wrap;
+}
+.plugin-data-content :deep(.me-3) {
+  margin-inline-end: 12px;
+}
+.plugin-data-content :deep(.text-caption) {
+  font-size: 12px;
+  line-height: 20px;
+}
+.plugin-data-content :deep(.text-h6) {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+}
+.plugin-data-content :deep(.text-break) {
+  overflow-wrap: anywhere;
+}
+.plugin-data-content :deep(.text-success) {
+  color: rgb(var(--v-theme-success));
+}
+.plugin-data-content :deep(.text-error) {
+  color: rgb(var(--v-theme-error));
+}
+.plugin-data-content :deep(.break-keep) {
+  word-break: keep-all;
+}
+.plugin-data-content :deep(.v-avatar .v-img) {
+  width: 40px;
+  height: 40px;
+}
 </style>

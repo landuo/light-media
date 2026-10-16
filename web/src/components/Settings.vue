@@ -30,9 +30,10 @@ async function load() {
   form.value = JSON.parse(JSON.stringify(await refreshSettings()));
   form.value.tmdb ||= { api_key: '', access_token: '' };
   form.value.fnos ||= { host: '', username: '', password: '', enabled: false };
+  form.value.site_data_refresh_hours ??= 6;
   logging.value = await api('/settings/logging');
 }
-async function save(section: 'tmdb' | 'fnos') {
+async function save(section: 'tmdb' | 'fnos' | 'site') {
   saving.value = true;
   try {
     // Downloaders and directories have their own save actions. Read current
@@ -41,6 +42,7 @@ async function save(section: 'tmdb' | 'fnos') {
     const c = JSON.parse(JSON.stringify(current));
     delete c.secret_state;
     if (section === 'tmdb') c.tmdb = form.value.tmdb;
+    if (section === 'site') c.site_data_refresh_hours = form.value.site_data_refresh_hours;
     if (section === 'fnos')
       c.fnos = {
         ...c.fnos,
@@ -55,6 +57,8 @@ async function save(section: 'tmdb' | 'fnos') {
       form.value.secret_state = result.secret_state;
       if (section === 'tmdb') form.value.tmdb = result.tmdb;
       if (section === 'fnos') form.value.fnos = result.fnos;
+      if (section === 'site')
+        form.value.site_data_refresh_hours = result.site_data_refresh_hours ?? 6;
       return true;
     }
     return false;
@@ -160,6 +164,24 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         </div>
       </section>
       <section class="panel"><DownloaderManager /></section>
+      <section class="panel">
+        <header class="section-heading"><h2>站点选项</h2></header>
+        <div class="form-grid">
+          <label
+            >站点数据刷新间隔<select v-model="form.site_data_refresh_hours">
+              <option :value="1">每小时</option>
+              <option :value="6">每 6 小时</option>
+              <option :value="12">每 12 小时</option>
+              <option :value="24">每天</option>
+              <option :value="168">每周</option>
+              <option :value="0">从不</option>
+            </select></label
+          >
+        </div>
+        <div class="button-row">
+          <button class="primary" :disabled="saving" @click="save('site')">保存</button>
+        </div>
+      </section>
       <section class="panel">
         <header class="section-heading"><h2>媒体服务器</h2></header>
         <div class="form-grid">
