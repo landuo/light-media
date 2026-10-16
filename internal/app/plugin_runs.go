@@ -28,6 +28,7 @@ type PluginRun struct {
 }
 
 const pluginRunColumns = `id,instance_id,version,generation,config_revision,action,state,input,result,error_code,created_at,updated_at`
+const pluginRunListColumns = `id,instance_id,version,generation,config_revision,action,state,input,NULL,error_code,created_at,updated_at`
 
 func (p *PluginStore) InstallAndQueue(ctx context.Context, in PluginInstallation, defaults any) (PluginRun, error) {
 	in, err := validatePluginInstallation(in)
@@ -285,7 +286,10 @@ func (p *PluginStore) Runs(ctx context.Context, instanceID string, limit int) ([
 	if limit < 1 || limit > 100 {
 		return nil, bad("INVALID_PLUGIN_RUN", "插件执行记录每页为1到100条")
 	}
-	rows, err := p.store.DB.QueryContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE instance_id=? ORDER BY created_at DESC,id DESC LIMIT ?`, instanceID, limit)
+	// List APIs expose metadata only. Never load/decrypt up to 100 large private
+	// results just to omit them during JSON encoding. Input is read for the API
+	// trace ID and then released instead of accumulating configuration snapshots.
+	rows, err := p.store.DB.QueryContext(ctx, `SELECT `+pluginRunListColumns+` FROM plugin_runs WHERE instance_id=? ORDER BY created_at DESC,id DESC LIMIT ?`, instanceID, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -296,6 +300,7 @@ func (p *PluginStore) Runs(ctx context.Context, instanceID string, limit int) ([
 		if err != nil {
 			return nil, err
 		}
+		run.Input = nil
 		out = append(out, run)
 	}
 	return out, rows.Err()
@@ -360,6 +365,10 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 }
 
 func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode string, result json.RawMessage) error {
+	return p.finishRun(ctx, runID, state, errorCode, result, false)
+}
+
+func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode string, result json.RawMessage, blockStartup bool) error {
 	if state != "succeeded" && state != "failed" && state != "reconcile_pending" || (errorCode != "" && !pluginStorageID.MatchString(errorCode)) || (state == "succeeded" && errorCode != "") {
 		return bad("INVALID_PLUGIN_RUN", "插件执行终态无效")
 	}
@@ -370,7 +379,7 @@ func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode str
 	if len(result) == 0 {
 		result = json.RawMessage(`null`)
 	}
-	raw, err := pluginJSON(result, false)
+	raw, err := pluginResultJSON(result)
 	if err != nil {
 		return err
 	}
@@ -389,6 +398,11 @@ func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode str
 	}
 	if n, _ := changed.RowsAffected(); n != 1 {
 		return bad("PLUGIN_RUN_TERMINAL", "插件执行已结束或不在执行状态")
+	}
+	if blockStartup && state == "failed" && (run.Action == "init" || run.Action == "reload") {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO plugin_run_startup_blocks(run_id) VALUES(?)`, runID); err != nil {
+			return err
+		}
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=? WHERE run_id=? AND state='running'`, state, runID); err != nil {
 		return err
@@ -415,6 +429,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 	}
 	if err == nil {
 		err = p.recoverSubscribeGroupRuns(ctx)
+	}
+	if err == nil {
+		err = p.recoverUninstallRuns(ctx)
 	}
 	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)

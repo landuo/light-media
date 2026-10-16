@@ -14,6 +14,8 @@ import (
 	"io"
 	"regexp"
 	"strings"
+
+	"light-media/internal/plugins"
 )
 
 // PluginInstallation is prepared package metadata, not evidence of a running
@@ -73,7 +75,7 @@ type PluginImport struct {
 type PluginStore struct{ store *Store }
 
 const pluginValueLimit = 1 << 20
-const pluginDataValueLimit = 16 << 20
+const pluginDataValueLimit = plugins.MaxPayloadBytes
 const pluginImportLimit = 64 << 20
 
 var pluginStorageID = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_.-]{0,95}$`)
@@ -169,6 +171,12 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, pluginUninstallSchema); err != nil {
+		return nil, err
+	}
+	if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS plugin_run_startup_blocks(run_id TEXT PRIMARY KEY,FOREIGN KEY(run_id) REFERENCES plugin_runs(id))`); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, domainEventSchema); err != nil {
 		return nil, err
 	}
@@ -230,7 +238,7 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 		return nil, err
 	}
 	limit := pluginValueLimit
-	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" {
+	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" {
 		limit = pluginDataValueLimit
 	}
 	if len(sealed) < aead.NonceSize()+aead.Overhead() || len(sealed) > limit+aead.NonceSize()+aead.Overhead() {

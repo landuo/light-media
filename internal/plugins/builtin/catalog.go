@@ -2,7 +2,10 @@
 // plugins. A catalog entry is added only when executable behavior exists.
 package builtin
 
-import "light-media/internal/plugins"
+import (
+	"light-media/internal/plugins"
+	"light-media/internal/plugins/uninstall"
+)
 
 func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 	switch pluginID {
@@ -22,11 +25,13 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 		return RemoteIdentifiersManifest(), HandleRemoteIdentifiers, true
 	case "MediaServerRefresh":
 		return MediaServerRefreshManifest(), HandleMediaServerRefresh, true
+	case "PluginUnInstall":
+		return uninstall.Manifest(), uninstall.Handle, true
 	default:
 		return plugins.Manifest{}, nil, false
 	}
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest()}
+	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest()}
 }

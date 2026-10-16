@@ -8,7 +8,6 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"io"
 	"os"
 	"os/exec"
@@ -16,6 +15,8 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -89,6 +90,11 @@ func (m Manifest) Validate() error {
 			seen[value] = true
 		}
 	}
+	for _, method := range m.Methods {
+		if strings.HasPrefix(method, "transport.") {
+			return failure("invalid_manifest")
+		}
+	}
 	if !slices.Contains(m.Methods, "stop") {
 		return failure("invalid_manifest")
 	}
@@ -122,12 +128,13 @@ type Frame struct {
 }
 
 type Handshake struct {
-	Protocol     int      `json:"protocol"`
-	PluginID     string   `json:"plugin_id"`
-	Version      string   `json:"version"`
-	HostAPI      int      `json:"host_api"`
-	Methods      []string `json:"methods"`
-	Capabilities []string `json:"capabilities"`
+	Protocol     int                     `json:"protocol"`
+	PluginID     string                  `json:"plugin_id"`
+	Version      string                  `json:"version"`
+	HostAPI      int                     `json:"host_api"`
+	Methods      []string                `json:"methods"`
+	Capabilities []string                `json:"capabilities"`
+	Transport    *transportAdvertisement `json:"transport,omitempty"`
 }
 
 // Error deliberately contains only a local code. Worker output, command paths,
@@ -148,17 +155,26 @@ type Command struct {
 }
 
 type Runner struct {
-	MaxFrameBytes  int
-	MaxOutputBytes int
-	MaxStderrBytes int
-	MaxHostCalls   int
-	Timeout        time.Duration
+	MaxInputBytes    int
+	MaxMessageBytes  int
+	MaxChunkBytes    int
+	MaxMessageChunks int
+	MaxSessionChunks int
+	MaxFrameBytes    int
+	MaxOutputBytes   int
+	MaxStderrBytes   int
+	MaxHostCalls     int
+	Timeout          time.Duration
 }
 
 type RunResult struct {
-	Result      json.RawMessage
-	HostCalls   int
-	StderrBytes int64
+	SentWireBytes int
+	ReadWireBytes int
+	SentChunks    int
+	ReadChunks    int
+	Result        json.RawMessage
+	HostCalls     int
+	StderrBytes   int64
 }
 
 // Run starts one short-lived worker, handshakes before sending the invocation,
@@ -169,15 +185,31 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	}
 	if ctx == nil || !identityPattern.MatchString(instanceID) ||
 		!filepath.IsAbs(command.Path) || (command.Dir != "" && !filepath.IsAbs(command.Dir)) ||
-		!methodPattern.MatchString(method) || method == "handshake" || method == "stop" || !slices.Contains(manifest.Methods, method) ||
-		(len(payload) > 0 && !json.Valid(payload)) {
+		!methodPattern.MatchString(method) || method == "handshake" || method == "stop" || strings.HasPrefix(method, "transport.") || !slices.Contains(manifest.Methods, method) ||
+		(len(payload) > MaxLogicalMessageBytes || len(payload) > 0 && !json.Valid(payload)) {
 		return out, failure("invalid_invocation")
 	}
 	if runner.MaxFrameBytes == 0 {
 		runner.MaxFrameBytes = 1 << 20
 	}
+	explicitOutput := runner.MaxOutputBytes != 0
 	if runner.MaxOutputBytes == 0 {
-		runner.MaxOutputBytes = 8 << 20
+		runner.MaxOutputBytes = defaultWireBytes
+	}
+	if runner.MaxInputBytes == 0 {
+		runner.MaxInputBytes = defaultWireBytes
+	}
+	if runner.MaxMessageBytes == 0 {
+		runner.MaxMessageBytes = defaultLogicalBytes
+	}
+	if runner.MaxChunkBytes == 0 {
+		runner.MaxChunkBytes = defaultChunkBytes
+	}
+	if runner.MaxMessageChunks == 0 {
+		runner.MaxMessageChunks = 16384
+	}
+	if runner.MaxSessionChunks == 0 {
+		runner.MaxSessionChunks = 32768
 	}
 	if runner.MaxHostCalls == 0 {
 		runner.MaxHostCalls = 64
@@ -188,7 +220,7 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	if runner.Timeout == 0 {
 		runner.Timeout = 2 * time.Minute
 	}
-	if runner.MaxFrameBytes < 256 || runner.MaxFrameBytes > 4<<20 || runner.MaxOutputBytes < runner.MaxFrameBytes || runner.MaxOutputBytes > 32<<20 || runner.MaxStderrBytes < 256 || runner.MaxStderrBytes > 8<<20 || runner.MaxHostCalls < 1 || runner.MaxHostCalls > 256 || runner.Timeout < time.Millisecond || runner.Timeout > 30*time.Minute {
+	if runner.MaxFrameBytes < 256 || runner.MaxFrameBytes > 4<<20 || runner.MaxOutputBytes < runner.MaxFrameBytes || runner.MaxOutputBytes > defaultWireBytes || runner.MaxInputBytes < runner.MaxFrameBytes || runner.MaxInputBytes > defaultWireBytes || runner.MaxMessageBytes < runner.MaxFrameBytes || runner.MaxMessageBytes > defaultLogicalBytes || runner.MaxChunkBytes < 1 || runner.MaxChunkBytes > defaultChunkBytes || runner.MaxMessageChunks < 1 || runner.MaxMessageChunks > 32768 || runner.MaxSessionChunks < 1 || runner.MaxSessionChunks > 65536 || runner.MaxStderrBytes < 256 || runner.MaxStderrBytes > 8<<20 || runner.MaxHostCalls < 1 || runner.MaxHostCalls > 256 || runner.Timeout < time.Millisecond || runner.Timeout > 30*time.Minute {
 		return out, failure("invalid_limits")
 	}
 	ctx, cancel := context.WithTimeout(ctx, runner.Timeout)
@@ -233,7 +265,16 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		}
 	}()
 	identity := Identity{PluginID: manifest.PluginID, InstanceID: instanceID, Version: manifest.Version}
-	session := wireSession{reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, host: host, ctx: ctx}
+	session := wireSession{maxInput: runner.MaxInputBytes, role: "host", closeIO: func() { stdin.Close(); stdout.Close() }, reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, host: host, ctx: ctx}
+	stopIO := context.AfterFunc(ctx, session.abort)
+	defer stopIO()
+	defer func() {
+		out.HostCalls = session.hostCalls
+		out.SentWireBytes = session.inputBytes
+		out.ReadWireBytes = session.outputBytes
+		out.SentChunks = session.sentChunks
+		out.ReadChunks = session.readChunks
+	}()
 	hello, _ := json.Marshal(map[string]int{"protocol": ProtocolVersion, "host_api": HostAPIVersion})
 	raw, err := session.exchange("handshake", hello)
 	if err != nil {
@@ -242,6 +283,24 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	var agreed Handshake
 	if json.Unmarshal(raw, &agreed) != nil || agreed.Protocol != ProtocolVersion || agreed.HostAPI != HostAPIVersion || agreed.PluginID != manifest.PluginID || agreed.Version != manifest.Version || !sameSet(agreed.Methods, manifest.Methods) || !sameSet(agreed.Capabilities, manifest.Capabilities) {
 		return out, failure("handshake_mismatch")
+	}
+	if agreed.Transport != nil {
+		if agreed.Transport.Version != 1 {
+			return out, failure("transport_mismatch")
+		}
+		limits := transportLimits{Version: 1, FrameBytes: min(runner.MaxFrameBytes, 1<<20), LogicalBytes: runner.MaxMessageBytes, HostSendBytes: runner.MaxInputBytes, HostReadBytes: runner.MaxOutputBytes, ChunkBytes: runner.MaxChunkBytes, MessageChunks: runner.MaxMessageChunks, SessionChunks: runner.MaxSessionChunks, Transfers: runner.MaxHostCalls + 4}
+		proposal, _ := json.Marshal(limits)
+		answer, negotiateErr := session.exchange("transport.negotiate", proposal)
+		var accepted transportLimits
+		if negotiateErr != nil {
+			return out, negotiateErr
+		}
+		if strictJSON(answer, &accepted) != nil || accepted != limits || limits.valid() != nil {
+			return out, failure("transport_mismatch")
+		}
+		session.enable(limits)
+	} else if !explicitOutput {
+		session.maxOutput = 8 << 20
 	}
 	result, err := session.exchange(method, payload)
 	if err != nil {
@@ -300,6 +359,16 @@ type wireSession struct {
 	identity                                                  Identity
 	ctx                                                       context.Context
 	maxFrame, maxOutput, maxHostCalls, outputBytes, hostCalls int
+	maxInput, inputBytes                                      int
+	role                                                      string
+	enabled                                                   bool
+	limits                                                    transportLimits
+	assembly                                                  *chunkAssembly
+	seenTransfers                                             map[string]bool
+	sentChunks, readChunks                                    int
+	closeIO                                                   func()
+	abortOnce                                                 sync.Once
+	aborted                                                   atomic.Bool
 	host                                                      HostHandler
 }
 
@@ -322,13 +391,13 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 		}
 		if frame.Type == "host_call" {
 			// The initial handshake cannot request configuration or other host data.
-			if method == "handshake" || !methodPattern.MatchString(frame.Method) || frame.Result != nil || frame.Error != nil {
+			if method == "handshake" || method == "transport.negotiate" || !methodPattern.MatchString(frame.Method) || strings.HasPrefix(frame.Method, "transport.") || frame.Result != nil || frame.Error != nil {
 				return nil, failure("invalid_host_call")
 			}
-			s.hostCalls++
-			if s.hostCalls > s.maxHostCalls {
+			if s.hostCalls >= s.maxHostCalls {
 				return nil, failure("host_call_limit")
 			}
+			s.hostCalls++
 			reply := Frame{Protocol: ProtocolVersion, ID: frame.ID, Type: "host_result", Identity: s.identity}
 			if s.host == nil {
 				reply.Error = &ReplyError{Code: "HOST_DENIED"}
@@ -350,54 +419,11 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 			return nil, failure("invalid_reply")
 		}
 		if frame.Error != nil {
-			return nil, failure("plugin_operation_failed")
+			return nil, workerReplyFailure(frame.Error.Code)
 		}
 		if !json.Valid(frame.Result) {
 			return nil, failure("invalid_reply")
 		}
 		return frame.Result, nil
 	}
-}
-
-func (s *wireSession) write(frame Frame) error {
-	raw, err := json.Marshal(frame)
-	if err != nil || len(raw)+1 > s.maxFrame {
-		return failure("frame_limit")
-	}
-	raw = append(raw, '\n')
-	n, err := s.writer.Write(raw)
-	if err != nil || n != len(raw) {
-		return failure("worker_io_failed")
-	}
-	return nil
-}
-
-func (s *wireSession) read() (Frame, error) {
-	var frame Frame
-	var raw []byte
-	for {
-		part, err := s.reader.ReadSlice('\n')
-		s.outputBytes += len(part)
-		if len(raw)+len(part) > s.maxFrame || s.outputBytes > s.maxOutput {
-			return frame, failure("output_limit")
-		}
-		raw = append(raw, part...)
-		if errors.Is(err, bufio.ErrBufferFull) {
-			continue
-		}
-		if err != nil {
-			return frame, failure("worker_io_failed")
-		}
-		break
-	}
-	decoder := json.NewDecoder(strings.NewReader(string(raw)))
-	decoder.DisallowUnknownFields()
-	if decoder.Decode(&frame) != nil {
-		return frame, failure("invalid_frame")
-	}
-	var extra any
-	if decoder.Decode(&extra) != io.EOF {
-		return frame, failure("invalid_frame")
-	}
-	return frame, nil
 }

@@ -123,3 +123,41 @@ test('unsupported original UI behavior is reported before save, not silently dis
     1,
   );
 });
+
+test('complete large plugin histories retain every row with bounded page rendering', () => {
+  const history = (count) => [
+    {
+      component: 'VTable',
+      content: [
+        {
+          component: 'tbody',
+          content: Array.from({ length: count }, (_, i) => ({
+            component: 'tr',
+            content: ['name', 'type', 'content', 'time'].map((field) => ({
+              component: 'td',
+              text: `${field} ${i}`,
+            })),
+          })),
+        },
+      ],
+    },
+  ];
+  assert.deepEqual(pluginPageIssues(history(4500)), []);
+  assert.deepEqual(pluginPageIssues(history(14000)), ['插件页面结构无效或超过显示限制']);
+  assert.notDeepEqual(pluginFormIssues(history(4500)), []);
+  const nested = { component: 'div' };
+  let parent = nested;
+  for (let i = 0; i < 18; i++) {
+    const child = { component: 'div' };
+    parent.content = [child];
+    parent = child;
+  }
+  assert.notDeepEqual(pluginPageIssues([nested]), []);
+});
+
+test('original uninstall switches and installed-plugin multiselect use supported controls', () => {
+  const form = JSON.parse(
+    readFileSync(new URL('../../internal/plugins/uninstall/form.json', import.meta.url), 'utf8'),
+  );
+  assert.deepEqual(pluginFormIssues(form.conf), []);
+});

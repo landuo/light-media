@@ -9,7 +9,7 @@ import (
 
 // This supplemental installed-wrapper oracle also asserts the name/type/episode
 // dependencies consumed by Rust's default-season decision. It does not turn the
-// legacy adapter or ordinary-video identity parser into a proven full port.
+// ordinary-video identity parser into a proven full port.
 func TestInstalledRustAnimeFullPipelineWrapper(t *testing.T) {
 	data, err := os.ReadFile("../../testdata/plugins/release-meta-rust-anime-wrapper-oracle.json")
 	if err != nil {

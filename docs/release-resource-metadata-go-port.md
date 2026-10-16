@@ -26,7 +26,13 @@ Rust 动漫由 `internal/releasemeta/rustanime/` 中的纯 Go 状态机执行，
 
 `anime_rust.go` 消费真正的有序元素，独立解析 prepared、original 和必要的 `[ANIME]` 名称候选。重试只替换名称，资源、季和集始终读取第一次 prepared 的结果；发布组兜底读取 original。原引擎 panic 经原 wrapper 的 fallback 规则重新执行 legacy，包括重新应用原始输入的识别词。空解析错误仍按源 `.ok()` 处理。
 
-legacy 仍使用 [nssteinbrenner/anitogo 提交 260d546](https://github.com/nssteinbrenner/anitogo/tree/260d546976961245b80ae7bd02f0c0b52a3ecc44) 的独立适配路径，源码与 MPL-2.0 保留在 `internal/releasemeta/anitogo/`。它不是安装版 Anitopy 2.1.1 完整状态机的已完成移植。不能把 Rust 引擎的进展当成 legacy 全部等效。
+legacy 动漫现在由 `internal/releasemeta/legacyanime/` 的独立纯 Go Anitopy 2.1.1 引擎执行，已移除 Anitogo 过渡包。来源是实际安装的九个 Python 文件，SHA 清单保存在 `release-meta-legacy-python-provenance.json`。完整单标题流水线保留初始化/后缀/忽略字符串、7 种括号、preidentified 关键词与相交区间、token 分类和身份、分隔符校验、关键词、独立数字、各类季集/卷号、别名集号、标题/发布组/集标题及校验，包含原 `find_previous` 在索引零的切片行为。176 个关键词、29 个后缀及每项标志均取自实际安装包。
+
+legacy 采用独立 Python 3.12.13 / Unicode 15 数据：`isdigit`、`isalnum`、Unicode 名称/LATIN 名称、NFKD 去除 combining 类别后完整大写、十进制值、大小写和 title 映射、Cased/CaseIgnorable；没有复用 Rust Unicode 17 表。全标量提取脚本已在实际环境重跑，所有捕获数据对象完全一致。Go 测试逐个核对生成范围/映射与关键词。Python 的任意精度整数及安装环境 4,300 位十进制转换上限独立实现；超出 Go `int` 的季号仍用精确十进制字符串生成 `season`，`*int` 诊断字段仅表示可装入本机整数的值。
+
+`anime_legacy.go` 按实际 MetaAnime 的赋值顺序消费原始、预处理和 `[ANIME]` 重试字典；重试替换整份字典，名称先拆中英文，Python `str.title` 保留数字词首及 final Sigma 语义。UNKNOWN 枚举为真值，不套用 Rust 默认电影规则。`StringUtils.get_keyword` 的 cn2an 校验异常、原始解析为空、matcher 异常均保留前序字段并跳过后续赋值。中文数字使用 cn2an 0.5.24 的必要完整捕获字母表与 smart/normal/口语校验，未把“十十”误算为 20；该依赖带 MIT 许可证。legacy 字幕处理独立，Rust 仍沿用自己的规则。MetaInfo 入口则使用实际安装第三方 regex 2026.5.9：其 `\d` 包括 Garay/Tolong 等新数字，而 Anitopy 自身不包括。路由的 `\d`、`\s` 和涉及字母的 IGNORECASE 集合已在实际 extension 上逐标量提取并独立固定，不能用 Python15 表或 Go 默认正则替代。
+
+原 Anitopy 的集标题遍历存在可证明不改变状态的死循环：`end is None`、候选为单个连字符且 `continue` 后再次选到同一 token。七个实际 wrapper 合成输入已在隔离子进程中超时核实。Go 在该重复状态返回明确 `source_non_terminating`，不会挂住宿主或静默返回空 metadata；这是明确记录的源行为差异。
 
 ## 必须保留的源差异
 
@@ -48,13 +54,17 @@ legacy 仍使用 [nssteinbrenner/anitogo 提交 260d546](https://github.com/nsst
 
 新引擎的 `release-meta-rust-anitomy-oracle.json.gz` 保留 10,103 个实际 Rust 执行的最终有序元素/错误和 779 个代表输入的逐阶段状态；SHA-256 为 `5f8ae52c93cea740e680a2b2e96ea2db710a35967150300943c2d66489ef2b3b`。fixture 包括 43 个源错误，保留错误语义而非静默空值。实际安装 wrapper 的新增 139 个动漫参考（其中 12 个保留 nullable 制作组的 Some("")/None 区别，39 个来自实际安装 wheel 的 Unicode 字母/数字/大小写行为）进一步断言名称/类型/季集/资源，SHA-256 为 `c3e92edebfc82411adbd1f8024ab10b7956bb2c80017be346d649fa4a6e03ea0`。离线重建和来源说明见 `testdata/plugins/releasemeta-rust-reference/README.md`。
 
-本切片在上述最终 fixture 上通过本机普通及 race 测试、全仓普通与 modernconly 检查；元数据包和独立 Rust 动漫 Go 包又分别在 NAS Alpine 3.22 隔离容器终态 PASS，包含 Unicode 全标量摘要核验。容器使用 UID 1000/GID 1001、无外网、只读挂载、256 MiB 内存及 128 MiB 临时目录，未挂载真实媒体或原版配置。两个最终 NAS 测试程序 SHA 分别为 `6bed9aaaf05a3a6d57f7b511787edbd9a15238b7ae4cc1b73f0fa7a699605cf2`、`3d4a6dc079f886ac742d2e95bfc702f3a1e1e71427528cad30fa5dbbd9227a5d`，与本机一致。
+新增 legacy 参考包括 10,271 个实际原执行的每阶段状态/最终字典/错误（10,215 正常、51 AttributeError、4 ValueError、1 re.error）、461 个实际安装完整 MetaInfo/MetaAnime wrapper 参考（含 7 个源非终止输入）和 1,073 个实际 cn2an 转换参考。另保存实际 `is_anime` 的四条完整表达式/flags 及 10,864 个路由结果，覆盖源语料和括号/破折号/季集结构、长度、分隔符、Unicode 组合；Go 逐项比较完整路由决策。引擎测试用 gzip + json.Decoder 逐 case 读取，避免展开约 140 MB 的完整源阶段 JSON。来源、离线脚本与数据表核对见 `testdata/plugins/releasemeta-legacy-reference/README.md`。
+
+本轮最终全仓普通和 modernconly 通过；`releasemeta`、`legacyanime`、`rustanime` 竞态分别通过 16.998/32.217/11.539 秒。三个最终 CGO0 linux/amd64 测试程序均在 NAS Alpine 3.22 的 UID 1000/GID 1001、无外网、只读挂载、cap-drop=ALL/no-new-privileges、256 MiB 内存、128 MiB tmpfs、GOMEMLIMIT=64MiB 条件下执行各自全集，终态 PASS/exit0、无跳过和 OOM。其本机/NAS SHA-256 分别为 `800191b92c6a3dc47b2073ff21b00f1d9b499327833d95bc83c05d71c17d0f1e`、`f10b52211f94718bf653e4e743de2e0aa165f046dc679995bec03405d446b474`、`08a858f1ed965141edc501c43e6a3224ab783f3f072a6587cb110ab064681f25`。独占容器/目录已清理；未挂载真实媒体或原版配置。
+
+此前 Rust 检查点在上述 fixture 上通过本机普通及 race 测试、全仓普通与 modernconly 检查；元数据包和独立 Rust 动漫 Go 包又分别在 NAS Alpine 3.22 隔离容器终态 PASS，包含 Unicode 全标量摘要核验。容器使用 UID 1000/GID 1001、无外网、只读挂载、256 MiB 内存及 128 MiB 临时目录，未挂载真实媒体或原版配置。两个最终 NAS 测试程序 SHA 分别为 `6bed9aaaf05a3a6d57f7b511787edbd9a15238b7ae4cc1b73f0fa7a699605cf2`、`3d4a6dc079f886ac742d2e95bfc702f3a1e1e71427528cad30fa5dbbd9227a5d`，与本机一致。
 
 这些证据不构成完整 MetaInfo 或全部插件已迁移的证明。五资源字段和 `season` 在全部原支持输入上的 1:1 仍不能用当前样本通过替代。仍需推进：
 
-1. legacy 仍需移植安装版 Anitopy 2.1.1 的完整 tokenizer、preidentified keyword 和后续数字/名称遍历状态。当前适配不能代替那套独立算法。Rust 引擎已按完整单标题算法移植，但有限语料通过不等于任意输入都已穷举证明；已通过实际安装扩展的 `/rustc/<commit>/` 标记核实编译器为 Rust 1.97.1、Unicode 17，并从该精确提交的官方原表穷举全部 1,112,064 个 Unicode 标量；三个谓词与逐字符大小写映射对正式 Go 表的差异为零。证据及范围保存在 `release-meta-rust-unicode-provenance.json`。此核对没有扩大为所有正则表达式、全部 stdlib 或任意 MetaInfo 输入已等效。
+1. Rust 与 legacy 的完整单标题引擎已分别按固定来源移植，但有限语料通过不等于任意输入都已穷举证明。Rust 的实际编译器为 1.97.1 / Unicode 17，精确官方原表与 Go 全 1,112,064 个标量核对差异为零；legacy 独立采用实际 CPython 3.12.13 / Unicode 15 全标量提取和逐表核对。此证据没有扩大为所有正则表达式、全部 stdlib 或任意 MetaInfo 输入已等效。
 2. Python `regex`、标准库 `re`、Rust `fancy_regex` 与 Go 所用正则引擎的通用 Unicode casefold、全部表达式语法尚未全量等效。编译不了的 legacy 配置返回明确错误；不能将受限表达式未验证称作匹配器等效。
-3. `Name`、`Kind`、`Type` 及集号在此接口中是解析过程上下文，不能用于替代原版身份识别。新增 Rust 动漫 wrapper 参考覆盖这些依赖字段；既有普通视频与 legacy 参考仍以资源与季投影为断言，不能扩大为它们完整身份识别已验证。legacy 名称重试会替换整个 Anitopy 结果，尚需随 legacy 算法完成；Rust 名称重试只替换名称，已按独立结果接线。
+3. `Name`、`Kind`、`Type` 及集号在此接口中是解析过程上下文，不能用于替代原版身份识别。新增 Rust 与 legacy 动漫 wrapper 参考覆盖这些依赖字段；既有普通视频参考仍以资源与季投影为断言，不能扩大为其完整身份识别已验证。legacy 名称重试替换整个 Anitopy 结果，Rust 名称重试只替换名称，两者按各自源码接线。
 4. `MetaInfoPath` 的父目录、祖父目录合并不在这个标题入口中，尚未实现。
 5. 合成配置测试没有完成真实数据库配置、历史字符串、文件和引用的迁移验证。
 

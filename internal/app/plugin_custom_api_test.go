@@ -282,7 +282,11 @@ func TestPluginHTTPOriginalASGIContractActualSDKAndCollection(t *testing.T) {
 		t.Fatal("public run metadata disclosed credentials")
 	}
 	for _, run := range runs {
-		if run.Action == "api" && strings.Contains(string(run.Input), syntheticPluginAPIKey) {
+		private, err := a.pluginStore.Run(context.Background(), run.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if run.Action == "api" && strings.Contains(string(private.Input), syntheticPluginAPIKey) {
 			t.Fatal("global API key crossed into worker input")
 		}
 	}

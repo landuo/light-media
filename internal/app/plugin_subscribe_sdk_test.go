@@ -137,12 +137,12 @@ func TestSubscribeGroupAPIRealWorkerInitializesClearsAndProcessesDownload(t *tes
 		t.Fatal(err)
 	}
 	page = callTest(t, a.Handler(), "GET", "/api/plugins/SubscribeGroup/page", "", cookie, "")
-	if page.Code == 200 || !strings.Contains(page.Body.String(), "PLUGIN_HISTORY_TOO_LARGE") || strings.Contains(page.Body.String(), "暂无数据") {
-		t.Fatal("large full history was hidden/truncated or reported as success", page.Code, page.Body.String())
+	if page.Code != 200 || !strings.Contains(page.Body.String(), large[0]["content"]) || !strings.Contains(page.Body.String(), "large-valid-history") {
+		t.Fatal("large full history was hidden or truncated", page.Code, page.Body.Len())
 	}
 	kept, err := a.pluginStore.Data(ctx, "SubscribeGroup", "history")
 	if err != nil || kept.Revision != largeStored.Revision || string(kept.Value) != string(largeStored.Value) {
-		t.Fatal("failed large-history view altered stored history", err)
+		t.Fatal("large-history view altered stored history", err)
 	}
 }
 

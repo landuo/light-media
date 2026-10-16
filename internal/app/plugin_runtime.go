@@ -13,6 +13,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/uninstall"
 )
 
 func (a *App) pluginExecutable(pluginID string) (plugins.Command, error) {
@@ -65,7 +66,10 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 			}
 		}
 		var existing int
-		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state IN ('pending','running')`, installation.InstanceID, installation.Generation, config.Revision).Scan(&existing); err != nil {
+		// A fresh startup init must not replay an init/reload whose worker ran
+		// but whose result could not be persisted. A later explicit config save
+		// has a new revision and can initialize normally after user review.
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs r WHERE instance_id=? AND generation=? AND config_revision=? AND (state IN ('pending','running') OR (state='failed' AND action IN ('init','reload') AND (error_code IN ('PLUGIN_RESULT_SAVE_FAILED','PLUGIN_RESULT_TOO_LARGE','INVALID_PLUGIN_RESULT') OR EXISTS(SELECT 1 FROM plugin_run_startup_blocks b WHERE b.run_id=r.id))))`, installation.InstanceID, installation.Generation, config.Revision).Scan(&existing); err != nil {
 			return err
 		}
 		if existing > 0 {
@@ -108,12 +112,16 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	}
 	ctx, cancelRun := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancelRun()
-	select {
-	case a.pluginProcess <- struct{}{}:
-		defer func() { <-a.pluginProcess }()
-	case <-ctx.Done():
-		// Leave the running claim for restart reconciliation; no worker started.
-		return
+	ctx, releaseLifecycle := a.pluginUninstallExecutionContext(ctx, run)
+	defer releaseLifecycle()
+	if !pluginUninstallDrainActive(ctx, run.InstanceID) {
+		select {
+		case a.pluginProcess <- struct{}{}:
+			defer func() { <-a.pluginProcess }()
+		case <-ctx.Done():
+			// Leave the running claim for restart reconciliation; no worker started.
+			return
+		}
 	}
 	installation, err := a.pluginStore.Installation(ctx, run.InstanceID)
 	var manifest plugins.Manifest
@@ -176,8 +184,29 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	}
 	finishCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	if finishErr := a.pluginStore.FinishRun(finishCtx, run.ID, state, errorCode, result.Result); finishErr != nil {
-		a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，需要对账", "PLUGIN_FINISH_FAILED")
+	if installation.PluginID == "PluginUnInstall" && installation.Version == "2.2" {
+		committed, found, receiptErr := a.pluginStore.committedUninstallResult(finishCtx, &run)
+		if receiptErr != nil {
+			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_UNINSTALL_RECEIPT_FAILED"
+		} else if found {
+			result.Result, err, state, errorCode = committed, nil, "succeeded", ""
+		}
+	}
+	// A failed response after a reverse host call may follow a real operation.
+	// Preserve its diagnostic code while preventing a fresh startup init from
+	// repeating that exact generation/configuration. Cancellation recovery keeps
+	// using each plugin's existing reconciliation path.
+	blockStartup := err != nil && state == "failed" && result.HostCalls > 0
+	if finishErr := a.pluginStore.finishRun(finishCtx, run.ID, state, errorCode, result.Result, blockStartup); finishErr != nil {
+		code := pluginResultFailureCode(finishErr)
+		fallbackCtx, fallbackCancel := context.WithTimeout(context.Background(), 3*time.Second)
+		fallbackErr := a.pluginStore.failPluginResult(fallbackCtx, run.ID, code)
+		fallbackCancel()
+		if fallbackErr != nil {
+			a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "插件结果及失败状态均无法保存，请检查存储并核对实际操作", "PLUGIN_FINISH_FAILED")
+			return
+		}
+		a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，已阻止本次执行自动重放，请核对实际操作", code)
 		return
 	}
 	if installation.PluginID == "MediaServerRefresh" {
@@ -234,6 +263,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == "subscriptions.rules.configure" || method == "subscriptions.rules.apply" {
 		return a.pluginSubscribeGroupHost(ctx, installation, run, method, raw)
+	}
+	if method == uninstall.OptionsCapability || method == uninstall.ApplyCapability {
+		return a.pluginUninstallHost(ctx, installation, run, method, raw)
 	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()

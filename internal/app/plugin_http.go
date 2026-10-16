@@ -12,6 +12,7 @@ import (
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/schedule"
 	"light-media/internal/plugins/subscribegroup"
+	"light-media/internal/plugins/uninstall"
 )
 
 type pluginCard struct {
@@ -67,6 +68,9 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				if installation.PluginID == "SystemProcess" || installation.PluginID == "RemoteIdentifiers" {
 					state = flags.Enable
+				}
+				if installation.PluginID == "PluginUnInstall" {
+					state = uninstall.State()
 				}
 			}
 			items = append(items, pluginCard{Manifest: manifest, InstanceID: installation.InstanceID, Installed: true, State: state})
@@ -226,7 +230,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -319,6 +323,13 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "PluginUnInstall":
+		if _, err := uninstall.ParseConfiguration(raw); err != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "卸载插件配置不是原版支持的格式")
+		}
+		// The original reset preserves missing/null flags and drops unknown
+		// fields only after execution. Do not normalize those distinctions here.
+		return append(json.RawMessage(nil), raw...), nil
 	case "SubscribeGroup":
 		var config subscribegroup.Configuration
 		if err := decode(&config); err != nil {

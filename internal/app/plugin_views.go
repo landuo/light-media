@@ -69,14 +69,8 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 				hostErrorMessage = "读取订阅规则历史失败，请重试"
 				return nil, err
 			}
-			// The current protocol has a 1 MiB frame limit, including identity
-			// and envelope. Do not truncate the source's full history or report
-			// an empty page; chunked large-history transport remains required.
-			if len(history.Value) > (1<<20)-(4<<10) {
-				hostErrorCode = "PLUGIN_HISTORY_TOO_LARGE"
-				hostErrorMessage = "历史数据过大，无法通过当前插件通道完整加载"
-				return nil, bad(hostErrorCode, hostErrorMessage)
-			}
+			// Data() already verifies the complete encrypted KV value bound.
+			// Transport handles fragmentation; never truncate history here.
 			return history.Value, nil
 		}
 		if capability == "site.statistics.read" {
@@ -109,6 +103,13 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 	if err != nil {
 		if hostErrorCode != "" {
 			return nil, bad(hostErrorCode, hostErrorMessage)
+		}
+		var protocol *plugins.Error
+		if errors.As(err, &protocol) {
+			switch protocol.Code {
+			case "message_limit", "frame_limit", "input_limit", "output_limit", "transport_chunk_limit":
+				return nil, bad("PLUGIN_VIEW_TOO_LARGE", "插件页面超过允许大小或传输额度，未截断加载")
+			}
 		}
 		return nil, bad("PLUGIN_VIEW_FAILED", "加载插件页面失败，请重试")
 	}

@@ -23,19 +23,23 @@ type Options struct {
 
 // Metadata 保存资源属性及原版下载历史使用的季范围；空资源字符串对应 None。
 type Metadata struct {
-	Resolution    string `json:"resource_pix"`
-	Quality       string `json:"resource_type"`
-	Effect        string `json:"resource_effect"`
-	Team          string `json:"resource_team"`
-	Customization string `json:"customization"`
-	Season        string `json:"season"`
-	BeginSeason   *int   `json:"begin_season"`
-	EndSeason     *int   `json:"end_season"`
-	BeginEpisode  *int   `json:"begin_episode,omitempty"`
-	EndEpisode    *int   `json:"end_episode,omitempty"`
-	Type          string `json:"type"`
-	Kind          string `json:"kind"`
-	Name          string `json:"name"`
+	Resolution         string `json:"resource_pix"`
+	Quality            string `json:"resource_type"`
+	Effect             string `json:"resource_effect"`
+	Team               string `json:"resource_team"`
+	Customization      string `json:"customization"`
+	Season             string `json:"season"`
+	BeginSeason        *int   `json:"begin_season"`
+	EndSeason          *int   `json:"end_season"`
+	BeginEpisode       *int   `json:"begin_episode,omitempty"`
+	EndEpisode         *int   `json:"end_episode,omitempty"`
+	Type               string `json:"type"`
+	Kind               string `json:"kind"`
+	Name               string `json:"name"`
+	legacyBeginSeason  string
+	legacyEndSeason    string
+	legacyBeginEpisode string
+	legacyEndEpisode   string
 }
 
 // Parse 按已安装版本的 Rust 0.2.6 或 legacy 分支解析标题与副标题。
@@ -95,7 +99,11 @@ func Parse(title string, subtitle *string, options Options) (result Metadata, pa
 		title = strings.TrimSuffix(filepath.Base(title), filepath.Ext(title))
 	}
 	var meta Metadata
-	if isAnime(title) {
+	anime := isAnime(title)
+	if options.SourceMode == "legacy" {
+		anime = isLegacyAnime(title)
+	}
+	if anime {
 		meta, err = parseAnime(title, subtitle, options)
 	} else {
 		meta, err = parseVideo(title, subtitle, isfile, options)
@@ -109,9 +117,11 @@ func Parse(title string, subtitle *string, options Options) (result Metadata, pa
 	}
 	if explicit.begin != nil {
 		meta.BeginSeason = explicit.begin
+		meta.legacyBeginSeason = ""
 	}
 	if explicit.end != nil {
 		meta.EndSeason = explicit.end
+		meta.legacyEndSeason = ""
 	}
 	if explicit.typ != "" {
 		meta.Type = explicit.typ
@@ -121,6 +131,16 @@ func Parse(title string, subtitle *string, options Options) (result Metadata, pa
 }
 
 func seasonString(meta Metadata) string {
+	if meta.legacyBeginSeason != "" {
+		end := meta.legacyEndSeason
+		if meta.EndSeason != nil {
+			end = strconv.Itoa(*meta.EndSeason)
+		}
+		return legacySeasonLabel(meta.legacyBeginSeason, end)
+	}
+	if meta.BeginSeason != nil && meta.legacyEndSeason != "" {
+		return legacySeasonLabel(strconv.Itoa(*meta.BeginSeason), meta.legacyEndSeason)
+	}
 	if meta.BeginSeason != nil {
 		if meta.EndSeason != nil {
 			return fmt.Sprintf("S%02d-S%02d", *meta.BeginSeason, *meta.EndSeason)

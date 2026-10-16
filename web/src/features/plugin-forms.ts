@@ -46,7 +46,7 @@ export function pluginFormIssues(nodes: PluginFormNode[], depth = 0): string[] {
 }
 
 export function pluginPageIssues(nodes: PluginFormNode[]): string[] {
-  return pluginRenderIssues(nodes, true, 0, { remaining: 16384 });
+  return pluginRenderIssues(nodes, true, 0, { remaining: 65536 });
 }
 
 function pluginRenderIssues(
@@ -58,10 +58,10 @@ function pluginRenderIssues(
   if (
     !Array.isArray(nodes) ||
     depth > 16 ||
-    nodes.length > (page ? 2048 : 256) ||
+    nodes.length > (page ? 16384 : 256) ||
     (budget.remaining -= nodes.length) < 0
   )
-    return ['插件表单结构无效或超过限制'];
+    return [page ? '插件页面结构无效或超过显示限制' : '插件表单结构无效或超过限制'];
   const issues: string[] = [];
   for (const node of nodes) {
     if (!node || (!supported.has(node.component) && !(page && tableElements.has(node.component)))) {
