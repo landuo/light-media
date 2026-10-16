@@ -105,22 +105,28 @@ func replaceRustWord(title, pattern, replacement string) (string, bool) {
 }
 
 func offsetRustWord(title, front, back, arithmetic string) (string, bool) {
+	result, _, fallback := offsetRustWordWithState(title, front, back, arithmetic)
+	return result, fallback
+}
+
+func offsetRustWordWithState(title, front, back, arithmetic string) (string, bool, bool) {
 	for _, condition := range []string{front, back} {
 		if condition != "" {
 			re, err := pyregex.Compile(condition, false)
 			if err != nil {
-				return title, false
+				return title, false, false
 			}
 			if matched, err := re.MatchString(title); err != nil || !matched {
-				return title, false
+				return title, false, false
 			}
 		}
 	}
 	re, err := pyregex.Compile(`(?<=`+front+`.*?)[0-9一二三四五六七八九十]+(?=.*?`+back+`)`, false)
 	if err != nil {
-		return title, false
+		return title, false, false
 	}
 	fallback := false
+	applied := false
 	result, err := re.ReplaceFunc(title, func(match regexp2.Match) string {
 		original := match.String()
 		number, valid := rustChineseNumber(original)
@@ -133,6 +139,7 @@ func offsetRustWord(title, front, back, arithmetic string) (string, bool) {
 		if !ok || parser.at != len(parser.text) {
 			return original
 		}
+		applied = true
 		if strings.ContainsAny(original, "一二三四五六七八九十") {
 			if n < 0 {
 				fallback = true // The source wrapper retries Python after this Rust panic.
@@ -150,9 +157,9 @@ func offsetRustWord(title, front, back, arithmetic string) (string, bool) {
 		return strconv.FormatInt(n, 10)
 	}, -1, -1)
 	if err != nil {
-		return title, false
+		return title, false, false
 	}
-	return result, fallback
+	return result, applied, fallback
 }
 
 type rustArithmetic struct {
