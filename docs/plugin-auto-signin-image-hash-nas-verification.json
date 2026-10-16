@@ -1,0 +1,40 @@
+{
+  "id": "0576b417-8c27-485e-b707-eb5919325b23",
+  "date": "2026-10-17",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "",
+  "test_regex": "^Test",
+  "sha256": "97f311f67e78bd1c2c3e19a4c7a26f70e1a2d48cad68c01d7e4cb7e1db8ca401",
+  "remote_sha256": "97f311f67e78bd1c2c3e19a4c7a26f70e1a2d48cad68c01d7e4cb7e1db8ca401",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 8,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "formal Go imagehash package: installed Tjupt/Pillow AST synthetic pixel, PNG/GIF and comparison references; JPEG stdlib mismatch rejection, malformed/cancel-free bounded decode and concurrent immutable inputs; no real images, network or production plugin registration/migration",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}
