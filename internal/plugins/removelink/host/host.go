@@ -29,6 +29,8 @@ type Host struct {
 	done     chan struct{}
 	closing  bool
 	running  bool
+	paused   bool
+	captures map[string]bool
 }
 
 func Open(opts Options) (*Host, error) {
@@ -46,7 +48,7 @@ func Open(opts Options) (*Host, error) {
 	if opts.Watch == nil {
 		opts.Watch = NativeWatch
 	}
-	h := &Host{opts: opts, binding: opts.Binding, commands: make(chan request), done: make(chan struct{})}
+	h := &Host{opts: opts, binding: opts.Binding, config: json.RawMessage(`{}`), commands: make(chan request), done: make(chan struct{}), captures: map[string]bool{}}
 	var e error
 	h.ops, e = newLocal(h, opts.Roots)
 	if e != nil {
@@ -85,6 +87,7 @@ func Open(opts Options) (*Host, error) {
 			}
 		}
 	}
+	h.paused = activeTransition(saved.Transition)
 	go h.loop()
 	return h, nil
 }
@@ -122,7 +125,7 @@ func (h *Host) loop() {
 			events = h.watcher.Events()
 			failures = h.watcher.Errors()
 		}
-		if h.running && h.machine.TimerDue != nil && h.blocked == "" {
+		if h.running && !h.paused && h.machine.TimerDue != nil && h.blocked == "" {
 			d := h.machine.TimerDue.Sub(h.opts.Now())
 			if d < 0 {
 				d = 0
@@ -142,7 +145,12 @@ func (h *Host) loop() {
 				h.block("watch channel closed unexpectedly")
 			} else {
 				ctx, cancel := context.WithTimeout(context.Background(), h.opts.AsyncTimeout)
-				err := h.process(ctx, e, false)
+				var err error
+				if h.paused {
+					err = h.captureTransitionEvent(ctx, e)
+				} else {
+					err = h.process(ctx, e, false)
+				}
 				cancel()
 				if err != nil {
 					h.block(err.Error())
@@ -175,17 +183,20 @@ func (h *Host) guard(ctx context.Context, action string) (func(), error) {
 	return release, e
 }
 func (h *Host) checkpoint(ctx context.Context, active *Event) error { return h.save(ctx, active, nil) }
+func (h *Host) writeState(s *Durable, active *Event) {
+	s.Binding = h.binding
+	s.Roots = h.ops.roots
+	s.Config = h.config
+	s.Machine = MachineState{h.machine.State, h.machine.Queue, h.machine.TimerDue, h.machine.Watches}
+	s.Pins = h.ops.pins
+	s.Frozen = h.ops.frozen
+	s.Serial = h.ops.serial
+	s.Active = active
+	s.Blocked = h.blocked
+}
 func (h *Host) save(ctx context.Context, active *Event, extra func(*Durable)) error {
 	return h.opts.Journal.Update(ctx, func(s *Durable) error {
-		s.Binding = h.binding
-		s.Roots = h.ops.roots
-		s.Config = h.config
-		s.Machine = MachineState{h.machine.State, h.machine.Queue, h.machine.TimerDue, h.machine.Watches}
-		s.Pins = h.ops.pins
-		s.Frozen = h.ops.frozen
-		s.Serial = h.ops.serial
-		s.Active = active
-		s.Blocked = h.blocked
+		h.writeState(s, active)
 		if extra != nil {
 			extra(s)
 		}
@@ -275,87 +286,105 @@ func (h *Host) closeWatch(ctx context.Context, drain bool) error {
 // installed invocation; a worker can only request configure with {}.
 func (h *Host) Configure(ctx context.Context, binding Binding, raw json.RawMessage) error {
 	return h.call(ctx, func() error {
-		if h.blocked != "" {
-			return ErrUncertain
+		if h.paused {
+			return ErrTransition
 		}
-		if binding.InstanceID != h.binding.InstanceID || binding.Generation != h.binding.Generation || binding.Revision < h.binding.Revision {
-			return ErrUnsafe
-		}
-		old := h.binding
-		h.binding = binding
-		release, e := h.guard(ctx, "configure")
-		if e != nil {
-			h.binding = old
-			return e
-		}
-		defer release()
-		specs, e := h.watchSpecs(raw)
-		if e != nil {
-			h.binding = old
-			return e
-		}
-		if e = h.machine.Config.Apply(raw); e != nil {
-			return e
-		}
-		h.config = append(json.RawMessage(nil), raw...)
-		h.running = false
-		if e = h.drainPending(ctx); e != nil {
-			h.block(e.Error())
-			return e
-		}
-		if e = h.closeWatch(ctx, true); e != nil {
-			h.block(e.Error())
-			return e
-		}
-		if e = h.drainPending(ctx); e != nil {
-			h.block(e.Error())
-			return e
-		}
-		event := Event{ID: "configure:" + digest([]any{binding, string(raw)}), Kind: "configure", At: h.opts.Now()}
-		h.ops.ctx = ctx
-		h.ops.scope = event.ID
-		h.ops.errors = nil
-		if e = h.checkpoint(ctx, &event); e != nil {
-			return e
-		}
-		if len(specs) > 0 {
-			h.watcher, e = h.opts.Watch(context.Background(), specs, h.ops.openWatchDir)
-			if e != nil {
-				h.block(e.Error())
-				return e
-			}
-		}
-		// Watches exist before initial scan. Their bounded event channel retains
-		// changes while the serial owner builds the baseline.
-		before := len(h.machine.Errors)
-		e = h.machine.Init(raw)
-		if e == nil && len(h.machine.Errors) > before {
-			e = h.machine.Errors[before]
-		}
-		if e == nil && len(h.ops.errors) > 0 {
-			e = h.ops.errors[0]
-		}
-		if e != nil {
-			_ = h.closeWatch(ctx, false)
-			h.block(e.Error())
-			return e
-		}
-		if len(h.machine.Queue) == 0 {
-			h.ops.frozen = map[string]Pin{}
-		}
-		if err := h.checkpoint(ctx, nil); err != nil {
-			h.block(err.Error())
-			return err
-		}
-		h.running = removelink.Truth(h.machine.Config.Enabled)
-		return nil
+		return h.configureOwner(ctx, binding, raw, nil)
 	})
+}
+func (h *Host) configureOwner(ctx context.Context, binding Binding, raw json.RawMessage, finish func(context.Context) error) error {
+	if h.blocked != "" {
+		return ErrUncertain
+	}
+	if binding.InstanceID != h.binding.InstanceID || binding.Generation != h.binding.Generation || binding.Revision < h.binding.Revision {
+		return ErrUnsafe
+	}
+	old := h.binding
+	h.binding = binding
+	release, e := h.guard(ctx, "configure")
+	if e != nil {
+		h.binding = old
+		return e
+	}
+	defer release()
+	specs, e := h.watchSpecs(raw)
+	if e != nil {
+		h.binding = old
+		return e
+	}
+	if e = h.machine.Config.Apply(raw); e != nil {
+		return e
+	}
+	value, _ := removelink.Decode(raw)
+	if removelink.Truth(value) {
+		h.config = append(json.RawMessage(nil), raw...)
+	} else if len(h.config) == 0 {
+		h.config = json.RawMessage(`{}`)
+	}
+	h.running = false
+	if e = h.drainPending(ctx); e != nil {
+		h.block(e.Error())
+		return e
+	}
+	if e = h.closeWatch(ctx, true); e != nil {
+		h.block(e.Error())
+		return e
+	}
+	if e = h.drainPending(ctx); e != nil {
+		h.block(e.Error())
+		return e
+	}
+	event := Event{ID: "configure:" + digest([]any{binding, string(raw)}), Kind: "configure", At: h.opts.Now()}
+	h.ops.ctx = ctx
+	h.ops.scope = event.ID
+	h.ops.errors = nil
+	if e = h.checkpoint(ctx, &event); e != nil {
+		return e
+	}
+	if len(specs) > 0 {
+		h.watcher, e = h.opts.Watch(context.Background(), specs, h.ops.openWatchDir)
+		if e != nil {
+			h.block(e.Error())
+			return e
+		}
+	}
+	// Watches exist before initial scan. Their bounded event channel retains
+	// changes while the serial owner builds the baseline.
+	before := len(h.machine.Errors)
+	e = h.machine.Init(raw)
+	if e == nil && len(h.machine.Errors) > before {
+		e = h.machine.Errors[before]
+	}
+	if e == nil && len(h.ops.errors) > 0 {
+		e = h.ops.errors[0]
+	}
+	if e != nil {
+		_ = h.closeWatch(ctx, false)
+		h.block(e.Error())
+		return e
+	}
+	if len(h.machine.Queue) == 0 {
+		h.ops.frozen = map[string]Pin{}
+	}
+	checkpoint := h.checkpoint
+	if finish != nil {
+		checkpoint = func(ctx context.Context, _ *Event) error { return finish(ctx) }
+	}
+	if err := checkpoint(ctx, nil); err != nil {
+		h.block(err.Error())
+		return err
+	}
+	h.running = removelink.Truth(h.machine.Config.Enabled)
+	return nil
 }
 
 // Recover restores persisted deadlines without source Init, which would
 // immediately drain them. Interrupted effects fail closed pending reconciliation.
 func (h *Host) Recover(ctx context.Context, binding Binding) error {
 	return h.call(ctx, func() error {
+		if h.paused {
+			return ErrTransition
+		}
 		if binding != h.binding || h.blocked != "" {
 			return ErrUncertain
 		}
@@ -476,6 +505,9 @@ func (h *Host) process(ctx context.Context, event Event, guarded bool) (err erro
 		return ErrUncertain
 	}
 	if !guarded {
+		if h.paused {
+			return ErrTransition
+		}
 		if !h.running {
 			return ErrUnsafe
 		}
@@ -515,6 +547,9 @@ func (h *Host) process(ctx context.Context, event Event, guarded bool) (err erro
 			return nil
 		}
 		if old.State != "pending" {
+			return ErrUncertain
+		}
+		if !h.captures[event.ID] {
 			return ErrUncertain
 		}
 		if old.Binding.InstanceID != h.binding.InstanceID || old.Binding.Generation != h.binding.Generation || (!guarded && old.Binding != h.binding) {
@@ -607,6 +642,7 @@ func (h *Host) process(ctx context.Context, event Event, guarded bool) (err erro
 		h.blocked = e.Error()
 		return e
 	}
+	delete(h.captures, event.ID)
 	return err
 }
 
@@ -616,6 +652,9 @@ func (h *Host) Observe(ctx context.Context, e Event) error {
 	return h.call(ctx, func() error { return h.process(ctx, e, false) })
 }
 func (h *Host) tick(ctx context.Context, guarded bool) error {
+	if h.paused && !guarded {
+		return ErrTransition
+	}
 	if h.blocked != "" {
 		return ErrUncertain
 	}
@@ -663,51 +702,62 @@ func (h *Host) Tick(ctx context.Context) error {
 }
 func (h *Host) Stop(ctx context.Context, reason string) error {
 	return h.call(ctx, func() error {
-		release, e := h.guard(ctx, "stop:"+reason)
-		if e != nil {
-			return e
+		if h.paused {
+			return ErrTransition
 		}
-		defer release()
-		h.running = false
-		if h.blocked == "" {
-			if e = h.drainPending(ctx); e != nil {
-				h.block(e.Error())
-				return e
-			}
-		}
-		if e = h.closeWatch(ctx, h.blocked == ""); e != nil {
-			return e
-		}
-		if h.blocked != "" {
-			return ErrUncertain
-		}
-		event := Event{ID: "stop:" + digest([]any{h.binding, reason, h.machine.Queue}), Kind: "stop", At: h.opts.Now()}
-		if e = h.checkpoint(ctx, &event); e != nil {
-			return e
-		}
-		h.ops.ctx = ctx
-		h.ops.scope = event.ID
-		h.ops.errors = nil
-		before := len(h.machine.Errors)
-		h.machine.Stop()
-		if len(h.machine.Errors) > before {
-			e = h.machine.Errors[before]
-		}
-		if e == nil && len(h.ops.errors) > 0 {
-			e = h.ops.errors[0]
-		}
-		if e != nil {
-			h.blocked = e.Error()
-		}
-		if e == nil {
-			h.ops.frozen = map[string]Pin{}
-		}
-		save := h.checkpoint(ctx, nil)
-		if save != nil {
-			return save
-		}
-		return e
+		return h.stopOwner(ctx, reason, nil)
 	})
+}
+func (h *Host) stopOwner(ctx context.Context, reason string, finish func(context.Context) error) error {
+	release, e := h.guard(ctx, "stop:"+reason)
+	if e != nil {
+		return e
+	}
+	defer release()
+	h.running = false
+	if h.blocked == "" {
+		if e = h.drainPending(ctx); e != nil {
+			h.block(e.Error())
+			return e
+		}
+	}
+	if e = h.closeWatch(ctx, h.blocked == ""); e != nil {
+		return e
+	}
+	if h.blocked != "" {
+		return ErrUncertain
+	}
+	event := Event{ID: "stop:" + digest([]any{h.binding, reason, h.machine.Queue}), Kind: "stop", At: h.opts.Now()}
+	if e = h.checkpoint(ctx, &event); e != nil {
+		return e
+	}
+	h.ops.ctx = ctx
+	h.ops.scope = event.ID
+	h.ops.errors = nil
+	before := len(h.machine.Errors)
+	h.machine.Stop()
+	if len(h.machine.Errors) > before {
+		e = h.machine.Errors[before]
+	}
+	if e == nil && len(h.ops.errors) > 0 {
+		e = h.ops.errors[0]
+	}
+	if e != nil {
+		h.blocked = e.Error()
+	}
+	if e == nil {
+		h.ops.frozen = map[string]Pin{}
+	}
+	var save error
+	if e == nil && finish != nil {
+		save = finish(ctx)
+	} else {
+		save = h.checkpoint(ctx, nil)
+	}
+	if save != nil {
+		return save
+	}
+	return e
 }
 func (h *Host) WorkerStop(context.Context) error { return nil }
 
@@ -715,11 +765,6 @@ func (h *Host) WorkerStop(context.Context) error { return nil }
 // without source stop_service or a fake successful drain.
 func (h *Host) Suspend(ctx context.Context) error {
 	return h.call(ctx, func() error { e := h.closeWatch(ctx, false); h.closing = true; return e })
-}
-func (h *Host) Close(ctx context.Context) error {
-	e := h.Stop(ctx, "shutdown")
-	_ = h.Suspend(ctx)
-	return e
 }
 
 func sameEvent(a, b Event) bool {
@@ -730,6 +775,9 @@ func sameEvent(a, b Event) bool {
 // RecordEvent is host-only; the SDK bridge may only submit the recorded ID.
 func (h *Host) RecordEvent(ctx context.Context, e Event) error {
 	return h.call(ctx, func() error {
+		if h.paused {
+			return ErrTransition
+		}
 		release, err := h.guard(ctx, "record")
 		if err != nil {
 			return err
@@ -744,10 +792,13 @@ func (h *Host) RecordEvent(ctx context.Context, e Event) error {
 		if _, err = h.ops.root(e.Path); err != nil {
 			return err
 		}
-		return h.opts.Journal.Update(ctx, func(s *Durable) error {
+		err = h.opts.Journal.Update(ctx, func(s *Durable) error {
 			if old, ok := s.Events[e.ID]; ok {
 				if !sameEvent(old.Event, e) {
 					return ErrUnsafe
+				}
+				if old.State != "confirmed" && (old.State != "pending" || !h.captures[e.ID]) {
+					return ErrUncertain
 				}
 				return nil
 			}
@@ -755,10 +806,17 @@ func (h *Host) RecordEvent(ctx context.Context, e Event) error {
 			s.Events[e.ID] = EventReceipt{Event: e, Binding: h.binding, Sequence: s.EventSerial, State: "pending"}
 			return nil
 		})
+		if err == nil {
+			h.captures[e.ID] = true
+		}
+		return err
 	})
 }
 func (h *Host) Apply(ctx context.Context, binding Binding, eventID string) error {
 	return h.call(ctx, func() error {
+		if h.paused {
+			return ErrTransition
+		}
 		if !h.running || binding != h.binding {
 			return ErrUnsafe
 		}

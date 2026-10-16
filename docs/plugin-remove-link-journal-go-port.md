@@ -42,7 +42,9 @@ updateTx(context.Context, *sql.Tx, func(*cleanuphost.Durable) error) error
 
 ## 数据契约
 
-完整保存当前 `cleanuphost.Durable` 的 Binding、Roots、Config、Machine 的 State/Queue/TimerDue/Watches、Pins、Frozen、Serial、EventSerial、Events、Effects、Active 和 Blocked。
+完整保存当前 `cleanuphost.Durable` 的 Binding、Roots、Config、Machine 的 State/Queue/TimerDue/Watches、Pins、Frozen、Serial、EventSerial、Events、Effects、Active、Blocked 和 Transition。
+
+Transition 保存 ID、Kind、Phase、RunID、From/To 和 WasRunning，使用可空指针及 `omitempty`。旧版本元信息没有该字段；nil 时不改变规范 JSON，因此原 MAC 无需重签即可读取。From 必须属于当前 journal；普通 init/reload/shutdown 的 To 保持同代次，reset/uninstall 可引用下一代次，但旧 header 与 Effect.Binding 仍属于原代次，不能让退休收据迁入新实例。
 
 Config 与 Effect.Payload 使用密文内的 opaque byte 槽保存，保留原始 JSON 字节、空白、大整数/指数数字、未知配置属性，以及 nil、空 byte slice、JSON `null` 的区别；它们不经 float64 解码。其余宿主字段按精确 Go 整数类型反序列化。所有空集合初始化为非 nil 空集合。每次读取均新建 maps、slices、任务指针、时间指针和原始 byte slice；修改读到的对象或提交后保留的 callback 对象，不能修改已经持久化的状态。
 
@@ -59,3 +61,13 @@ Config 与 Effect.Payload 使用密文内的 opaque byte 槽保存，保留原�
 本次窄目标验证：`go test ./internal/app -run '^TestPluginRemoveLinkJournal' -count=1` 通过（0.940s）；相同目标 `-race` 通过（4.587s）；`go vet ./internal/app` 退出 0。未运行全仓测试，也未进行 NAS 或真实媒体操作。
 
 后续与文件夹原管理接口增量联合验证：全仓普通测试、modernconly全量App、相关竞态、vet/模块校验全部通过。正式CGO0 Linux App测试二进制在NAS独占隔离容器执行34个顶层目标，其中本journal为8个；零跳过、零失败、无OOM，校验值与精确清理结果见[联合NAS收据](plugin-organization-journal-nas-verification.json)。只使用合成SQLite/SDK及自建临时文件，没有启动生产清理监听或导入用户配置。
+
+## 配置切换的 SQL 适配验证
+
+连续宿主的 BeginTransition、暂停捕获、PublishTransition、绑定运行的 ApplyTransition、Abort、显式 reload 和退休语义见[宿主专文](plugin-remove-link-host-go-port.md)。发布函数只修改已有 Durable，不另建业务任务；调用方必须把它与实际配置、既有 PluginRun 放在同一个 SQLite 事务中。
+
+新增三个顶层测试覆盖旧字段集合及同一 MAC 兼容、完整切换字段/指针隔离、退休下一代次及跨实例拒绝；使用真实 `saveValueTx` 和 `enqueueRunTx`，验证 journal 后段 SQL 失败回滚配置与运行记录，成功则共同提交，旧 revision CAS 不改变切换标记。
+
+真实连续宿主另接本 SQL journal，在自建目录与真实硬链接上保留旧延期任务，先提交新配置/运行/切换标记，再由匹配运行应用新 flags 并实际删除目标，最终生命周期与文件收据保留；停止、重新打开宿主并从 SQL 检查点恢复监控成功。该测试使用注入 watcher 及仅核对 SQL 修订的测试 Guard，核心 Effects 明确禁用；不是实际 App HTTP/SDK/写租约接线证明。SQL 本身的关闭/重启由完整字段测试覆盖；Linux 原生事件由正式 host 包单独验证。
+
+此版本目标 normal 1.799s、journal/store竞态7.197s、完整App normal88.493s和modernconly88.466s全部通过，vet及模块校验通过。新正式CGO0 Linux App二进制SHA-256为`33f63505ed6797df93a393f148678b3469448f8ade936113c4950e4e967ac8ec`，本地/NAS一致。独占NAS容器37个顶层目标全部通过、零跳过、零失败、无OOM；容器及owner目录已清理，三项原服务启动状态不变，详见[切换SQL隔离收据](plugin-remove-link-transition-sql-nas-verification.json)。App管理入口、实际Guard/核心Effects及工作器回复丢失恢复的最终桥接仍待接入，不能因此将RemoveLink登记为可安装。

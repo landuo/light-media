@@ -1,0 +1,165 @@
+=== RUN   TestNativeInotifyRenameDeleteAndDurableBoundEffects
+--- PASS: TestNativeInotifyRenameDeleteAndDurableBoundEffects (0.04s)
+=== RUN   TestNativeInotifyCleanCloseRecoverStillDeletes
+--- PASS: TestNativeInotifyCleanCloseRecoverStillDeletes (0.04s)
+=== RUN   TestNativeInotifyRecursiveMovePreservesEntityAndStopsOutsideScope
+--- PASS: TestNativeInotifyRecursiveMovePreservesEntityAndStopsOutsideScope (0.57s)
+=== RUN   TestNativeInotifyContinuousDeadlineActuallyFires
+--- PASS: TestNativeInotifyContinuousDeadlineActuallyFires (10.04s)
+=== RUN   TestNativeTrickplayMovesArePairedBeforeSourceFilter
+=== RUN   TestNativeTrickplayMovesArePairedBeforeSourceFilter/into
+=== RUN   TestNativeTrickplayMovesArePairedBeforeSourceFilter/out-of
+--- PASS: TestNativeTrickplayMovesArePairedBeforeSourceFilter (0.06s)
+    --- PASS: TestNativeTrickplayMovesArePairedBeforeSourceFilter/into (0.02s)
+    --- PASS: TestNativeTrickplayMovesArePairedBeforeSourceFilter/out-of (0.04s)
+=== RUN   TestNativeUnpairedMoveOrderAndInstalledWatchdogGrace
+--- PASS: TestNativeUnpairedMoveOrderAndInstalledWatchdogGrace (0.57s)
+=== RUN   TestNativeOverlappingHardlinkAndSTRMWatchesBothExecute
+--- PASS: TestNativeOverlappingHardlinkAndSTRMWatchesBothExecute (0.04s)
+=== RUN   TestRealLocalLinksBoundApplyAndSeparateReceipts
+--- PASS: TestRealLocalLinksBoundApplyAndSeparateReceipts (0.03s)
+=== RUN   TestDelayedQueueDedupRestartAndWorkerStopDoesNotDrain
+--- PASS: TestDelayedQueueDedupRestartAndWorkerStopDoesNotDrain (0.03s)
+=== RUN   TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate
+=== RUN   TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/stop
+=== RUN   TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/reload
+--- PASS: TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate (0.04s)
+    --- PASS: TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/stop (0.03s)
+    --- PASS: TestReloadUsesNewFlagsToDrainOldQueueAndStopIsImmediate/reload (0.01s)
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/leaf-before-delay
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/size-before-delay
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/mtime-before-delay
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/leaf-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/symlink-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/parent-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/root-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/parent-missing-during-rename
+=== RUN   TestReplacementSizeMtimeParentAndRootCAS/root-missing-during-rename
+--- PASS: TestReplacementSizeMtimeParentAndRootCAS (0.13s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/leaf-before-delay (0.02s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/size-before-delay (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/mtime-before-delay (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/leaf-during-rename (0.02s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/symlink-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/parent-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/root-during-rename (0.02s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/parent-missing-during-rename (0.01s)
+    --- PASS: TestReplacementSizeMtimeParentAndRootCAS/root-missing-during-rename (0.01s)
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-stage
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-unlink
+=== RUN   TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/external-uncertain
+--- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart (0.04s)
+    --- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-stage (0.01s)
+    --- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/after-unlink (0.02s)
+    --- PASS: TestUnlinkCommitGapAndUnknownEffectsNeverReplayOnRestart/external-uncertain (0.01s)
+=== RUN   TestLocalSTRMStorageAndUnknownReferences
+--- PASS: TestLocalSTRMStorageAndUnknownReferences (0.01s)
+=== RUN   TestAuthorityRejectsTraversalSymlinksMissingRootsAndRevokedGuard
+--- PASS: TestAuthorityRejectsTraversalSymlinksMissingRootsAndRevokedGuard (0.01s)
+=== RUN   TestInterruptedJournalAndCanceledCallPreservePendingWork
+--- PASS: TestInterruptedJournalAndCanceledCallPreservePendingWork (0.01s)
+=== RUN   TestConcurrentSameEventHasSingleOutcome
+--- PASS: TestConcurrentSameEventHasSingleOutcome (0.05s)
+=== RUN   TestOpenDoesNotRunExpiredQueueBeforeExplicitRecover
+--- PASS: TestOpenDoesNotRunExpiredQueueBeforeExplicitRecover (0.12s)
+=== RUN   TestMediaOriginAndSourceFollowerHaveSeparateDeletionReceipts
+--- PASS: TestMediaOriginAndSourceFollowerHaveSeparateDeletionReceipts (0.01s)
+=== RUN   TestStorageAndRecursiveScrapSafetyDoNotInventSuccess
+--- PASS: TestStorageAndRecursiveScrapSafetyDoNotInventSuccess (0.01s)
+=== RUN   TestCapturedEventsRequireOrderAndReloadDrainsPendingUnderNewFlags
+--- PASS: TestCapturedEventsRequireOrderAndReloadDrainsPendingUnderNewFlags (0.02s)
+=== RUN   TestCanceledAtSelectionCannotMoveOrUnlink
+--- PASS: TestCanceledAtSelectionCannotMoveOrUnlink (0.01s)
+=== RUN   TestMovedDestinationSymlinkCannotAuthorizeFallbackCleanup
+--- PASS: TestMovedDestinationSymlinkCannotAuthorizeFallbackCleanup (0.00s)
+=== RUN   TestStopDrainsCapturedEventsAndRevokesFurtherDelivery
+--- PASS: TestStopDrainsCapturedEventsAndRevokesFurtherDelivery (0.01s)
+=== RUN   TestCleanCloseRecoverRestoresMonitoring
+--- PASS: TestCleanCloseRecoverRestoresMonitoring (0.01s)
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-independent-entity
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-same-entity-protects-queue
+=== RUN   TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/changed-existing-target
+--- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets (0.03s)
+    --- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-independent-entity (0.01s)
+    --- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/new-same-entity-protects-queue (0.01s)
+    --- PASS: TestRecoverScansOfflineFilesWithoutResettingQueueOrFrozenTargets/changed-existing-target (0.01s)
+=== RUN   TestCapturedEventCannotBorrowGlobalAuthorityOutsideMonitorScope
+--- PASS: TestCapturedEventCannotBorrowGlobalAuthorityOutsideMonitorScope (0.00s)
+=== RUN   TestCapturedButUnappliedEventAfterCrashRequiresReview
+--- PASS: TestCapturedButUnappliedEventAfterCrashRequiresReview (0.00s)
+=== RUN   TestFrozenCandidateSourceAndEvidence
+--- PASS: TestFrozenCandidateSourceAndEvidence (0.00s)
+=== RUN   TestNativeTransitionPublicationGapCapturesWithoutStaleGuardOrTimer
+--- PASS: TestNativeTransitionPublicationGapCapturesWithoutStaleGuardOrTimer (10.58s)
+=== RUN   TestTransitionCommitPausesOldTimerAndOrdinaryInitUsesNewFlags
+--- PASS: TestTransitionCommitPausesOldTimerAndOrdinaryInitUsesNewFlags (0.01s)
+=== RUN   TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback
+=== RUN   TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback/rejected
+=== RUN   TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback/committed_reply_lost
+=== RUN   TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback/read_unknown
+--- PASS: TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback (0.04s)
+    --- PASS: TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback/rejected (0.02s)
+    --- PASS: TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback/committed_reply_lost (0.01s)
+    --- PASS: TestTransitionCASFailureAndUnknownPublicationNeverGuessRollback/read_unknown (0.00s)
+=== RUN   TestTransitionLiveCapturedEventsCheckedAndDrainedWithNewFlags
+--- PASS: TestTransitionLiveCapturedEventsCheckedAndDrainedWithNewFlags (0.01s)
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/pending
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/planned
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/active
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/blocked
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/wrong_binding
+=== RUN   TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/duplicate_sequence
+--- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState (0.02s)
+    --- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/pending (0.00s)
+    --- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/planned (0.00s)
+    --- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/active (0.00s)
+    --- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/blocked (0.00s)
+    --- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/wrong_binding (0.00s)
+    --- PASS: TestTransitionDoesNotBlessFabricatedOrRestoredPendingState/duplicate_sequence (0.00s)
+=== RUN   TestTransitionExplicitReloadStopsOldFlagsThenStartsFreshObject
+=== RUN   TestTransitionExplicitReloadStopsOldFlagsThenStartsFreshObject/init
+=== RUN   TestTransitionExplicitReloadStopsOldFlagsThenStartsFreshObject/reload
+--- PASS: TestTransitionExplicitReloadStopsOldFlagsThenStartsFreshObject (0.02s)
+    --- PASS: TestTransitionExplicitReloadStopsOldFlagsThenStartsFreshObject/init (0.01s)
+    --- PASS: TestTransitionExplicitReloadStopsOldFlagsThenStartsFreshObject/reload (0.02s)
+=== RUN   TestTransitionFalseyInitPersistsEffectiveConfigButReloadUsesDefaults
+=== RUN   TestTransitionFalseyInitPersistsEffectiveConfigButReloadUsesDefaults/init
+=== RUN   TestTransitionFalseyInitPersistsEffectiveConfigButReloadUsesDefaults/reload
+--- PASS: TestTransitionFalseyInitPersistsEffectiveConfigButReloadUsesDefaults (0.03s)
+    --- PASS: TestTransitionFalseyInitPersistsEffectiveConfigButReloadUsesDefaults/init (0.02s)
+    --- PASS: TestTransitionFalseyInitPersistsEffectiveConfigButReloadUsesDefaults/reload (0.01s)
+=== RUN   TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure
+=== RUN   TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/reset/commit
+=== RUN   TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/reset/cas_failed
+=== RUN   TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/uninstall/commit
+=== RUN   TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/uninstall/cas_failed
+--- PASS: TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure (0.13s)
+    --- PASS: TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/reset/commit (0.03s)
+    --- PASS: TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/reset/cas_failed (0.04s)
+    --- PASS: TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/uninstall/commit (0.02s)
+    --- PASS: TestTransitionRetirementDrainBeforeGenerationChangeAndAbortAfterCASFailure/uninstall/cas_failed (0.03s)
+=== RUN   TestTransitionFinalReceiptFailurePreservesEffectsAndBlocksReplay
+--- PASS: TestTransitionFinalReceiptFailurePreservesEffectsAndBlocksReplay (0.02s)
+=== RUN   TestTransitionPublishedRestartAndCapturedRestartHaveDifferentEvidence
+=== RUN   TestTransitionPublishedRestartAndCapturedRestartHaveDifferentEvidence/clean_published
+=== RUN   TestTransitionPublishedRestartAndCapturedRestartHaveDifferentEvidence/unapplied_capture
+--- PASS: TestTransitionPublishedRestartAndCapturedRestartHaveDifferentEvidence (0.02s)
+    --- PASS: TestTransitionPublishedRestartAndCapturedRestartHaveDifferentEvidence/clean_published (0.01s)
+    --- PASS: TestTransitionPublishedRestartAndCapturedRestartHaveDifferentEvidence/unapplied_capture (0.01s)
+=== RUN   TestTransitionRunAuthorizationAndPriorReceiptSurviveLaterSave
+--- PASS: TestTransitionRunAuthorizationAndPriorReceiptSurviveLaterSave (0.01s)
+=== RUN   TestTransitionPublicationCannotReuseAnAppliedRun
+--- PASS: TestTransitionPublicationCannotReuseAnAppliedRun (0.00s)
+=== RUN   TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome
+=== RUN   TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome/binding
+=== RUN   TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome/result
+=== RUN   TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome/id
+--- PASS: TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome (0.01s)
+    --- PASS: TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome/binding (0.00s)
+    --- PASS: TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome/result (0.00s)
+    --- PASS: TestTransitionAppliedReceiptRequiresMatchingIdentityAndOutcome/id (0.00s)
+PASS

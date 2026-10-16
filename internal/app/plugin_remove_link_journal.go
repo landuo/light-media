@@ -55,6 +55,7 @@ type pluginRemoveLinkJournalMeta struct {
 	Active      *cleanuphost.Event                      `json:"active"`
 	Blocked     string                                  `json:"blocked"`
 	Collections map[string]pluginRemoveLinkJournalStats `json:"collections"`
+	Transition  *cleanuphost.Transition                 `json:"transition,omitempty"`
 }
 type pluginRemoveLinkJournalRow struct {
 	Version    int     `json:"version"`
@@ -239,6 +240,23 @@ func (j *pluginRemoveLinkJournal) validate(s *cleanuphost.Durable) error {
 	if err := j.binding(s.Binding); err != nil {
 		return err
 	}
+	if t := s.Transition; t != nil {
+		if err := j.binding(t.From); err != nil {
+			return err
+		}
+		if t.From.InstanceID == "" || t.From.Revision < 1 {
+			return cleanupJournalScope()
+		}
+		if t.To != (cleanuphost.Binding{}) {
+			generation := j.generation
+			if t.Kind == "reset" || t.Kind == "uninstall" {
+				generation++
+			}
+			if t.To.InstanceID != j.instance || t.To.Generation < 1 || t.To.Generation != generation || t.To.Revision < 0 {
+				return cleanupJournalScope()
+			}
+		}
+	}
 	if len(s.Config) > 0 && !json.Valid(s.Config) {
 		return cleanupJournalCorrupt()
 	}
@@ -338,6 +356,7 @@ func (j *pluginRemoveLinkJournal) read(ctx context.Context, db pluginRemoveLinkJ
 	state.EventSerial = meta.EventSerial
 	state.Active = meta.Active
 	state.Blocked = meta.Blocked
+	state.Transition = meta.Transition
 	if len(meta.TimerDue) == 0 || cleanupJournalStrict(meta.TimerDue, &state.Machine.TimerDue) != nil {
 		return state, nil, nil, cleanupJournalCorrupt()
 	}
@@ -638,7 +657,12 @@ func (j *pluginRemoveLinkJournal) updateTx(ctx context.Context, tx *sql.Tx, fn f
 	if err != nil {
 		return err
 	}
-	meta := pluginRemoveLinkJournalMeta{pluginRemoveLinkJournalVersion, j.instance, j.generation, state.Binding, []byte(state.Config), timer, state.Serial, state.EventSerial, state.Active, state.Blocked, j.stats(entries)}
+	meta := pluginRemoveLinkJournalMeta{
+		Version: pluginRemoveLinkJournalVersion, Instance: j.instance, Generation: j.generation,
+		Binding: state.Binding, Config: []byte(state.Config), TimerDue: timer,
+		Serial: state.Serial, EventSerial: state.EventSerial, Active: state.Active,
+		Blocked: state.Blocked, Collections: j.stats(entries), Transition: state.Transition,
+	}
 	raw, err := cleanupJournalJSON(meta)
 	if err != nil {
 		return err

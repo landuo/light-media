@@ -1,0 +1,113 @@
+{
+  "state": "isolated candidate frozen; not App integration",
+  "formal_files_changed": [
+    {
+      "file": "host.go",
+      "sha256": "1d641e76f603176b990f45123c2c25c99fd6a0b52776770aa72c59937bbab16c",
+      "formal_base_sha256": "3133aa6db5d96b3dbf4c9877e01c3149f6ebc2de24aebf65207090561f002dd0"
+    },
+    {
+      "file": "types.go",
+      "sha256": "20bb81061fba44866149661bde1dbf09a748382b4c674c51a6cf8387426dd855",
+      "formal_base_sha256": "2723a8e8458692a3acf8ffe69954531a16ab8c307221ffa05d3cbe233e73c79f"
+    }
+  ],
+  "formal_files_to_add": [
+    {
+      "file": "transition.go",
+      "sha256": "0928177b8984f36de2f8ec4abc1625333b6f4b43b824bd1ab951b90b0ca2661c"
+    },
+    {
+      "file": "transition_linux_test.go",
+      "sha256": "61d8d3650455aa20d8ee2eb3507be56eb7c7ce0bd23248612351458f26f1a1e4"
+    },
+    {
+      "file": "transition_test.go",
+      "sha256": "569ac906dd223d4a889aa40649f44ee5257280b010b94bbc689c1209e5a446af"
+    }
+  ],
+  "unchanged_mirror_files": [
+    "doc.go",
+    "fixture_journal_test.go",
+    "host_linux_test.go",
+    "host_test.go",
+    "local.go",
+    "rename_darwin.go",
+    "rename_linux.go",
+    "watch_linux.go",
+    "watch_other.go"
+  ],
+  "excluded_exact_hash_test": "provenance_test.go",
+  "formal_go_mod_changes": false,
+  "API": {
+    "Transition_fields": [
+      "ID string",
+      "Kind string",
+      "Phase string",
+      "RunID string",
+      "From Binding",
+      "To Binding",
+      "WasRunning bool"
+    ],
+    "TransitionTicket_fields": [
+      "ID string",
+      "Kind string",
+      "From Binding"
+    ],
+    "methods": [
+      "BeginTransition(context.Context, Binding, opID string, kind string) (TransitionTicket,error)",
+      "PublishTransition(*Durable, TransitionTicket, Binding, runID string) error [pure mutation inside App SQL tx]",
+      "ApplyTransition(context.Context, TransitionTicket, runID string, json.RawMessage) error",
+      "DrainTransition(context.Context, TransitionTicket) error",
+      "AbortTransition(context.Context, TransitionTicket) error",
+      "Close(context.Context) error"
+    ],
+    "phases": [
+      "prepared",
+      "published",
+      "drained",
+      "published_drained",
+      "applied"
+    ]
+  },
+  "validation": {
+    "normal": {
+      "exit": 0,
+      "seconds": 10.153,
+      "log": "final-normal.log"
+    },
+    "race": {
+      "exit": 0,
+      "seconds": 11.903,
+      "log": "final-race.log"
+    },
+    "vet": {
+      "exit": 0,
+      "log": "final-vet.log"
+    },
+    "linux_build": {
+      "exit": 0,
+      "CGO_ENABLED": "0",
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "sha256": "147ed28588e1d2c257c7b3b4804a1e7dde3ed66c7be20650b3b4851777526ac5"
+    },
+    "NAS": {
+      "evidence": "nas-final/result.json",
+      "tests": "nas-final/tests.log",
+      "top_level_pass": 40,
+      "skip": 0,
+      "fail": 0,
+      "exit": 0,
+      "OOMKilled": false,
+      "container_removed": true,
+      "stage_removed": true
+    }
+  },
+  "remaining": [
+    "SQL meta codec/MAC compatibility has not been proved by FileJournal fixtures",
+    "App actual config/run transaction and real SDK binding not integrated",
+    "App lifecycle/file write lock orchestration and root registry migration not integrated",
+    "no registration or user media activation"
+  ]
+}

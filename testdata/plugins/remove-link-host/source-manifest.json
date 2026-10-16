@@ -13,7 +13,8 @@
     "host.go": {
       "candidate_file": "host.go",
       "sha256": "577b5a2566bcb3555bbb251a3c6695c214fa43ccff4d2082f21c6b3f8b29fc8a",
-      "formal_sha256": "3133aa6db5d96b3dbf4c9877e01c3149f6ebc2de24aebf65207090561f002dd0"
+      "formal_sha256": "1d641e76f603176b990f45123c2c25c99fd6a0b52776770aa72c59937bbab16c",
+      "pre_transition_formal_sha256": "3133aa6db5d96b3dbf4c9877e01c3149f6ebc2de24aebf65207090561f002dd0"
     },
     "host_linux_test.go": {
       "candidate_file": "host_linux_test.go",
@@ -43,7 +44,9 @@
     },
     "types.go": {
       "candidate_file": "types.go",
-      "sha256": "2723a8e8458692a3acf8ffe69954531a16ab8c307221ffa05d3cbe233e73c79f"
+      "sha256": "2723a8e8458692a3acf8ffe69954531a16ab8c307221ffa05d3cbe233e73c79f",
+      "pre_transition_formal_sha256": "2723a8e8458692a3acf8ffe69954531a16ab8c307221ffa05d3cbe233e73c79f",
+      "formal_sha256": "20bb81061fba44866149661bde1dbf09a748382b4c674c51a6cf8387426dd855"
     },
     "watch_linux.go": {
       "candidate_file": "watch_linux.go",
@@ -64,10 +67,33 @@
       "name": "clean-close-recover-watches",
       "runtime_file": "host.go",
       "description": "Restore Machine.Watches from validated recover specs before checkpoint/activation. Preserve original stopped checkpoint, queue deadlines, state identity merge and frozen deletion pins. New common/native Linux tests prove actual deletion after clean Close/Open/Recover."
+    },
+    {
+      "name": "lifecycle-transition",
+      "runtime_files": [
+        "host.go",
+        "types.go",
+        "transition.go"
+      ],
+      "description": "Byte-identical copy of frozen isolated lifecycle-transition candidate, preserving earlier clean-recover fix and all source deletion choices. Paused capture, config/run publication marker, RunID binding, ordinary init versus old-object-stop/fresh-object reload, retirement From-generation receipts and effective falsey config persistence. Formal host normal/race/vet/CGO0 build and 41 top-level NAS tests passed; actual App registry/hosthandler is not connected."
     }
   ],
   "formal_validation_evidence": {
     "formal-clean-recover-nas-result.json": "380680c8e49bf434f3945449952d845566cac66ad8458b2eb70cf059c1a004f3",
     "formal-clean-recover-nas-tests.log": "066415bdc4618edc8fec124e4bd043d48cbdf07863b39cdf1ca7d4acf1348636"
+  },
+  "transition_go_files": {
+    "transition.go": "0928177b8984f36de2f8ec4abc1625333b6f4b43b824bd1ab951b90b0ca2661c",
+    "transition_linux_test.go": "61d8d3650455aa20d8ee2eb3507be56eb7c7ce0bd23248612351458f26f1a1e4",
+    "transition_test.go": "569ac906dd223d4a889aa40649f44ee5257280b010b94bbc689c1209e5a446af"
+  },
+  "transition_evidence_files": {
+    "transition-migration.json": "e85a49a4ac3d3dc2cbe1017a0660a913f7349aeb1b8f4900e924b0fba360500d",
+    "transition-candidate-nas-result.json": "25766612b869db6a5d6c57aa45e5d3999a79bb32295a52dac412ecdfab70679d",
+    "transition-candidate-nas-tests.log": "00d353e2fa9cd179fe1c5e453a4c64c0d55feaf8fdc5bef67cb5429740e869bc"
+  },
+  "transition_formal_validation_evidence": {
+    "formal-transition-nas-result.json": "a5afb76dee03340e03ba814dc9b9eb724467602c7520b43d55d7b4e315c533f0",
+    "formal-transition-nas-tests.log": "c736e9fb472ecbdbc94c617ec74378626c77935eefc9f3030d1e803e7df99e0b"
   }
 }

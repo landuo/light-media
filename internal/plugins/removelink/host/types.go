@@ -16,6 +16,7 @@ var (
 	ErrUnsupported = errors.New("cleanup storage or watcher is not implemented")
 	ErrClosed      = errors.New("cleanup host is closed")
 	ErrOrder       = errors.New("older cleanup event must commit first")
+	ErrTransition  = errors.New("cleanup lifecycle transition is pending")
 )
 
 type Binding struct {
@@ -76,6 +77,7 @@ type Durable struct {
 	Effects     map[string]Effect
 	Active      *Event
 	Blocked     string
+	Transition  *Transition
 }
 
 // Update must atomically preserve machine state and receipts. Implementations

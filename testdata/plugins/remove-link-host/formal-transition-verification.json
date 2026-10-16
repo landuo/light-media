@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-17",
+  "phase": "formal transition host package; actual formal validation",
+  "status": "PASS_formal_host_only",
+  "static_checks": {
+    "candidate_source_byte_equal": 5,
+    "original_transition_sources_and_frozen_evidence_verified_by_formal_provenance": true
+  },
+  "formal_checks": {
+    "normal": {
+      "exit": 0,
+      "seconds": 13.511,
+      "log": "work/remove-link-host-transition-formal-normal.log"
+    },
+    "race": {
+      "exit": 0,
+      "seconds": 16.052,
+      "log": "work/remove-link-host-transition-formal-race.log"
+    },
+    "vet": {
+      "exit": 0,
+      "log": "work/remove-link-host-transition-formal-vet.log"
+    },
+    "CGO0_linux_build": {
+      "exit": 0,
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0",
+      "sha256": "17780a4ee7e9b23d68ae14429d463328b9da1647c46d168f9caa4c273f567f02",
+      "binary_committed": false,
+      "log": "work/remove-link-host-transition-formal-linux-build.log"
+    },
+    "NAS": {
+      "exit": 0,
+      "top_level_pass": 41,
+      "skip": 0,
+      "fail": 0,
+      "OOMKilled": false,
+      "result": "formal-transition-nas-result.json",
+      "tests": "formal-transition-nas-tests.log"
+    }
+  },
+  "candidate_evidence": "transition-candidate-nas-result.json",
+  "candidate_evidence_is_formal": false,
+  "App_registry_hosthandler_Guard_Effects": "not connected",
+  "App_SQL_codec_and_config_run_transaction_tests": "separate parent slice; FileJournal does not establish SQL compatibility",
+  "files": {
+    "docs/plugin-remove-link-host-go-port.md": "6afc12771238e55c023da43c37af596b9d479491410d702fa4dbc5c78d6ff83c",
+    "internal/plugins/removelink/host/doc.go": "6a03714b3f9e7b3f88ae7c19e942418c5001388555a1ffe46898bbfd2698e05c",
+    "internal/plugins/removelink/host/fixture_journal_test.go": "e91d3da25ed9655b16ad2194f81a413e07955cb3e55f59e6a00ea4dabf75aff3",
+    "internal/plugins/removelink/host/host.go": "1d641e76f603176b990f45123c2c25c99fd6a0b52776770aa72c59937bbab16c",
+    "internal/plugins/removelink/host/host_linux_test.go": "4d870bc980dd01a10d6a887b021c21c90a6fa22cc11bb6eab3dd4955b3268ce5",
+    "internal/plugins/removelink/host/host_test.go": "e7b6fe86f1bae3f889120dd8bebdf0e75d98723cead2a8dab949e464d0613a85",
+    "internal/plugins/removelink/host/local.go": "62e060addce759f49c11c78b77a5c744680608e23cb68717020f3d6bf292af64",
+    "internal/plugins/removelink/host/provenance_test.go": "fbdeb95fce3e8b58b3f66132e53cbc56a2af78561d45542252a72cc40d604f23",
+    "internal/plugins/removelink/host/rename_darwin.go": "4927ae333466f23f0a6be4bf5297704539a7b83b3d499c5c374c60b560dbaf1f",
+    "internal/plugins/removelink/host/rename_linux.go": "22c9db38c066a6746bc987e088ad8837ffc07236507fe7ebbd57fe926abfebf1",
+    "internal/plugins/removelink/host/transition.go": "0928177b8984f36de2f8ec4abc1625333b6f4b43b824bd1ab951b90b0ca2661c",
+    "internal/plugins/removelink/host/transition_linux_test.go": "61d8d3650455aa20d8ee2eb3507be56eb7c7ce0bd23248612351458f26f1a1e4",
+    "internal/plugins/removelink/host/transition_test.go": "569ac906dd223d4a889aa40649f44ee5257280b010b94bbc689c1209e5a446af",
+    "internal/plugins/removelink/host/types.go": "20bb81061fba44866149661bde1dbf09a748382b4c674c51a6cf8387426dd855",
+    "internal/plugins/removelink/host/watch_linux.go": "58a722c729f69e2359f001facab613b108b51a695ca8f5244f96a0571ac04379",
+    "internal/plugins/removelink/host/watch_other.go": "6108efef62137ad196e3ee3f79eb1380276bf4cef6138f86e4fa5a12763a922b",
+    "testdata/plugins/remove-link-host/formal-transition-nas-result.json": "a5afb76dee03340e03ba814dc9b9eb724467602c7520b43d55d7b4e315c533f0",
+    "testdata/plugins/remove-link-host/formal-transition-nas-tests.log": "c736e9fb472ecbdbc94c617ec74378626c77935eefc9f3030d1e803e7df99e0b",
+    "testdata/plugins/remove-link-host/source-manifest.json": "e85337a242df3101379de9baf7f1a7e553f02e80f4adb927a3aa3d54d3ecf988",
+    "testdata/plugins/remove-link-host/transition-migration.json": "e85a49a4ac3d3dc2cbe1017a0660a913f7349aeb1b8f4900e924b0fba360500d"
+  }
+}
