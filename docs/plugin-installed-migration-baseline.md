@@ -22,7 +22,7 @@
 | MergeSiteSwitch | 聚合站点开关 | 1.2 | 停用 | 0 | Go 核心站点范围、原版动态表单、持久跟随及关联配置事务已接入；关联插件实际业务联动、正式配置和引用迁移仍未完成 |
 | TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 待实现、待迁移、待验证 |
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
-| LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 待实现、待迁移、待验证 |
+| LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 主流程、13个消息模块、API/回调与受控HTTP已迁入正式Go包；1,376条原执行及28项NAS隔离测试通过。实际App持久宿主、可信消息入口、完整动态输入及配置/KV迁移未完成，不在可安装目录 |
 | CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 原算法/表单/五命令、原生下载器对象及Go SDK已迁入；85业务/52工具/32原wrapper/14安全getter参考已验证。正式host逐效果恢复/文件快照/控制接口26项NAS通过，实际App加密journal另有5项NAS证据；真实owner/Core/barrier/调度/通知、注册及正式迁移未接入 |
 | SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 待实现、待迁移、待验证 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 待实现、待迁移、待验证 |
@@ -83,3 +83,5 @@ CleanInvalidSeed 的正式宿主、实际 App journal 和两份 NAS 验证范围
 Lark 原 App Secret 显隐已映射为固定原生动作并验证 password→text→password 与一次保存保留原值，见 [表单交互](plugin-lark-password-ui.md)。原对象 rules 的 warning 如实保留，不声明前端 required 验证完成；整个 Lark 业务及配置迁移仍未完成。
 
 AutoSignIn 新增可选的逐条收据、缓存与运行头读取接口，保留旧完整 State 兼容路径；本地99项与NAS80项纯包检查通过，见 [读取接口与验证边界](plugin-auto-signin-typed-read-go-port.txt)。这一批不包含仍在审阅的实际 App typed SQL 接线，也不证明完整运行内存、资源回收、站点签到或数据迁移完成。
+
+Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验证见 [Go核心迁入记录](plugin-lark-go-port.txt)。跨执行的持久owner、可信回调授权和消息生产者仍待接入，不能把受控HTTP或SDK通过表述为已发送真实消息或已完成迁移。

@@ -1,0 +1,41 @@
+{
+  "id": "c5c64f77-499c-46dd-93b7-b81dba7620d7",
+  "date": "2026-10-16",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "pkg": "./internal/plugins/larkmessager",
+  "formal_manifest_sha256": "ed055f57fb4fc80c15ab001b35a14bc52fbb55e9352e81c64102bed4ce2e14db",
+  "binary_sha256": "ce4e0f2a7e431092de0fb26942d27428da2a6a4643c93c430fd04671fa6c339e",
+  "remote_binary_sha256": "ce4e0f2a7e431092de0fb26942d27428da2a6a4643c93c430fd04671fa6c339e",
+  "results": {
+    "exit_code": 0,
+    "expected_top_level_tests": 28,
+    "top_level_passes": 28,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "alpine:3.22",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "Formal pure Go LarkMessager leaf, fixed-source AST and owned loopback HTTP/SDK only. No App integration, real Lark delivery, source config/data migration, registration or deployment.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

@@ -1,0 +1,1640 @@
+{
+  "__init__.py": {
+    "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+    "classes": [
+      {
+        "name": "LarkMessager",
+        "methods": [
+          {
+            "name": "get_module",
+            "line": 70,
+            "end_line": 96,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "logger.debug",
+              "bool"
+            ]
+          },
+          {
+            "name": "on_message_action",
+            "line": 103,
+            "end_line": 142,
+            "async": false,
+            "signature": "self, event: Event",
+            "calls": [
+              "eventmanager.register",
+              "event_data.get",
+              "logger.info",
+              "self._client.reply_message",
+              "logger.error"
+            ]
+          },
+          {
+            "name": "message_parser",
+            "line": 148,
+            "end_line": 247,
+            "async": false,
+            "signature": "self, source: str, body: Any, form: Any, args: Any",
+            "calls": [
+              "self._resolve_username",
+              "(message.get('text') or '').strip",
+              "CommingMessage.MessageImage.normalize_list",
+              "isinstance",
+              "CommingMessage",
+              "message.get",
+              "sender.get",
+              "text.startswith",
+              "self._should_reject_admin_command",
+              "json.loads",
+              "str(callback_data).strip().startswith",
+              "self._client.send_text",
+              "str(item).strip",
+              "item.get",
+              "normalized_files.append",
+              "str(callback_data).strip",
+              "CommingMessage.MessageAttachment",
+              "str"
+            ]
+          },
+          {
+            "name": "post_message",
+            "line": 252,
+            "end_line": 364,
+            "async": false,
+            "signature": "self, message: Notification, **kwargs",
+            "calls": [
+              "logger.info",
+              "self._resolve_message_target",
+              "logger.debug",
+              "str",
+              "logger.warning",
+              "self._client.send_notification",
+              "self._client.send_file",
+              "bool",
+              "message.model_copy",
+              "self._client.send_voice"
+            ]
+          },
+          {
+            "name": "post_medias_message",
+            "line": 369,
+            "end_line": 417,
+            "async": false,
+            "signature": "self, message: Notification, medias: List[MediaInfo]",
+            "calls": [
+              "self._resolve_message_target",
+              "enumerate",
+              "Notification",
+              "self._client.send_notification",
+              "logger.warning",
+              "self._extract_poster",
+              "getattr",
+              "image_items.append"
+            ]
+          },
+          {
+            "name": "post_torrents_message",
+            "line": 422,
+            "end_line": 471,
+            "async": false,
+            "signature": "self, message: Notification, torrents: List[Context]",
+            "calls": [
+              "self._resolve_message_target",
+              "enumerate",
+              "Notification",
+              "self._client.send_notification",
+              "logger.warning",
+              "getattr",
+              "self._extract_poster",
+              "image_items.append"
+            ]
+          },
+          {
+            "name": "edit_message",
+            "line": 476,
+            "end_line": 498,
+            "async": false,
+            "signature": "self, channel: MessageChannel, source: str, message_id: Union[str, int], chat_id: Union[str, int], text: str, title: Optional[str]=None, buttons: Optional[List[List[dict]]]=None, metadata: Optional[dict]=None",
+            "calls": [
+              "self._client.edit_message",
+              "str"
+            ]
+          },
+          {
+            "name": "send_direct_message",
+            "line": 503,
+            "end_line": 587,
+            "async": false,
+            "signature": "self, message: Notification",
+            "calls": [
+              "self._resolve_message_target",
+              "str",
+              "self._client.send_notification",
+              "result.get",
+              "MessageResponse",
+              "self._client.send_file",
+              "message.model_copy",
+              "self._client.send_voice"
+            ]
+          },
+          {
+            "name": "finalize_message",
+            "line": 592,
+            "end_line": 604,
+            "async": false,
+            "signature": "self, response: MessageResponse",
+            "calls": [
+              "str(stream_meta.get('card_id') or '').strip",
+              "self._client.close_streaming_card",
+              "response.metadata.get",
+              "int",
+              "isinstance",
+              "str",
+              "stream_meta.get"
+            ]
+          },
+          {
+            "name": "mark_message_processing_started",
+            "line": 609,
+            "end_line": 640,
+            "async": false,
+            "signature": "self, channel: MessageChannel, source: str, userid: Optional[Union[str, int]]=None, message_id: Optional[Union[str, int]]=None, chat_id: Optional[Union[str, int]]=None, text: Optional[str]=None",
+            "calls": [
+              "self.add_feishu_message_reaction",
+              "str(text).startswith",
+              "str"
+            ]
+          },
+          {
+            "name": "mark_message_processing_finished",
+            "line": 645,
+            "end_line": 665,
+            "async": false,
+            "signature": "self, channel: MessageChannel, source: str, userid: Optional[Union[str, int]]=None, message_id: Optional[Union[str, int]]=None, chat_id: Optional[Union[str, int]]=None, status: Optional[dict]=None",
+            "calls": [
+              "metadata.get",
+              "self.delete_feishu_message_reaction",
+              "(status or {}).get",
+              "str"
+            ]
+          },
+          {
+            "name": "download_feishu_image_to_data_url",
+            "line": 670,
+            "end_line": 700,
+            "async": false,
+            "signature": "self, image_ref: str, source: str",
+            "calls": [
+              "image_ref.replace",
+              "resource_path.split",
+              "image_key.strip",
+              "self._client.download_message_resource_bytes",
+              "self._client.download_image_bytes",
+              "image_ref.startswith",
+              "message_id.strip",
+              "base64.b64encode(content).decode",
+              "base64.b64encode"
+            ]
+          },
+          {
+            "name": "download_feishu_file_bytes",
+            "line": 705,
+            "end_line": 739,
+            "async": false,
+            "signature": "self, file_ref: str, source: str",
+            "calls": [
+              "part.strip",
+              "parts[0].startswith",
+              "self._client.download_message_resource_bytes",
+              "self._client.download_file_bytes",
+              "file_ref.startswith",
+              "file_ref.replace('feishu://file/', '', 1).split",
+              "len",
+              "file_ref.replace"
+            ]
+          },
+          {
+            "name": "add_feishu_message_reaction",
+            "line": 744,
+            "end_line": 751,
+            "async": false,
+            "signature": "self, message_id: str, emoji_type: str, source: str",
+            "calls": [
+              "self._client.add_message_reaction"
+            ]
+          },
+          {
+            "name": "delete_feishu_message_reaction",
+            "line": 756,
+            "end_line": 763,
+            "async": false,
+            "signature": "self, message_id: str, reaction_id: str, source: str",
+            "calls": [
+              "self._client.delete_message_reaction"
+            ]
+          },
+          {
+            "name": "_forward_to_message_chain",
+            "line": 768,
+            "end_line": 779,
+            "async": false,
+            "signature": "self, payload: dict",
+            "calls": [
+              "threading.Thread(target=_run, daemon=True).start",
+              "RequestUtils(timeout=15).post_res",
+              "threading.Thread",
+              "logger.error",
+              "RequestUtils"
+            ]
+          },
+          {
+            "name": "_resolve_message_target",
+            "line": 785,
+            "end_line": 805,
+            "async": false,
+            "signature": "message: Notification",
+            "calls": [
+              "str(message.userid).strip",
+              "str(targets.get('feishu_openid') or '').strip",
+              "str(targets.get('feishu_userid') or '').strip",
+              "str(targets.get('feishu_chat_id') or '').strip",
+              "str",
+              "targets.get"
+            ]
+          },
+          {
+            "name": "_extract_poster",
+            "line": 811,
+            "end_line": 827,
+            "async": false,
+            "signature": "obj",
+            "calls": [
+              "getattr",
+              "callable",
+              "get_img",
+              "str"
+            ]
+          },
+          {
+            "name": "_resolve_username",
+            "line": 833,
+            "end_line": 851,
+            "async": false,
+            "signature": "open_id: Optional[str], user_id: Optional[str], fallback: Optional[str]",
+            "calls": [
+              "UserOper().get_name",
+              "logger.debug",
+              "UserOper"
+            ]
+          },
+          {
+            "name": "_should_reject_admin_command",
+            "line": 856,
+            "end_line": 872,
+            "async": false,
+            "signature": "self, *user_ids: Optional[Union[str, int]]",
+            "calls": [
+              "any",
+              "str(uid).strip",
+              "self._is_admin",
+              "str"
+            ]
+          },
+          {
+            "name": "init_plugin",
+            "line": 877,
+            "end_line": 949,
+            "async": false,
+            "signature": "self, config: dict=None",
+            "calls": [
+              "bool",
+              "(config.get('app_id') or '').strip",
+              "(config.get('app_secret') or '').strip",
+              "(config.get('chat_id') or '').strip",
+              "(config.get('FEISHU_OPEN_ID') or config.get('user_id') or '').strip",
+              "(config.get('verification_token') or '').strip",
+              "(config.get('encrypt_key') or '').strip",
+              "list",
+              "self._start_admin_sync",
+              "config.get",
+              "u.strip",
+              "(config.get('admin_emails') or '').split",
+              "(config.get('admin_mobiles') or '').split",
+              "_legacy.strip",
+              "dict.fromkeys",
+              "missing.append",
+              "logger.warning",
+              "LarkClient",
+              "logger.info",
+              "(config.get('FEISHU_ADMINS') or config.get('admin_users') or '').split",
+              "_admin_raw.append",
+              "u.startswith",
+              "'、'.join",
+              "LarkCrypto"
+            ]
+          },
+          {
+            "name": "get_state",
+            "line": 951,
+            "end_line": 952,
+            "async": false,
+            "signature": "self",
+            "calls": []
+          },
+          {
+            "name": "stop_service",
+            "line": 954,
+            "end_line": 958,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "logger.info"
+            ]
+          },
+          {
+            "name": "get_form",
+            "line": 963,
+            "end_line": 1204,
+            "async": false,
+            "signature": "self",
+            "calls": []
+          },
+          {
+            "name": "get_page",
+            "line": 1209,
+            "end_line": 1620,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "bool",
+              "self.get_data",
+              "last_result.get",
+              "components.append",
+              "self.save_data",
+              "last_chats.get"
+            ]
+          },
+          {
+            "name": "get_api",
+            "line": 1625,
+            "end_line": 1659,
+            "async": false,
+            "signature": "self",
+            "calls": []
+          },
+          {
+            "name": "_webhook_endpoint",
+            "line": 1664,
+            "end_line": 1799,
+            "async": true,
+            "signature": "self, request: Request",
+            "calls": [
+              "raw_body[:200].decode",
+              "logger.info",
+              "JSONResponse",
+              "request.body",
+              "LarkCrypto",
+              "json.loads",
+              "isinstance",
+              "body.get",
+              "request.query_params.get",
+              "LarkWebhookEvent",
+              "request.headers.items",
+              "k.lower().startswith",
+              "raw_body.decode",
+              "logger.error",
+              "self._crypto.decrypt",
+              "logger.warning",
+              "self._handle_message_receive",
+              "(body.get('header') or {}).get",
+              "request.headers.get",
+              "self._handle_card_action",
+              "logger.debug",
+              "k.lower",
+              "self._crypto.verify_signature",
+              "json.dumps"
+            ]
+          },
+          {
+            "name": "_handle_message_receive",
+            "line": 1805,
+            "end_line": 1921,
+            "async": true,
+            "signature": "self, event: LarkWebhookEvent, raw_body: dict=None",
+            "calls": [
+              "isinstance",
+              "message.get",
+              "self._forward_to_message_chain",
+              "logger.info",
+              "evt.get",
+              "sender.get",
+              "sender_id_obj.get",
+              "str",
+              "self._client.remember_user_id_type",
+              "self._client.remember_target",
+              "json.loads",
+              "content.get('text', '').strip",
+              "str(content.get('image_key') or '').strip",
+              "content.get",
+              "str(content.get('file_key') or '').strip",
+              "str(content.get('file_name') or '').strip",
+              "self._parse_post_content"
+            ]
+          },
+          {
+            "name": "_parse_post_content",
+            "line": 1927,
+            "end_line": 2016,
+            "async": false,
+            "signature": "content: dict, message_id: str=''",
+            "calls": [
+              "isinstance",
+              "str(post_body.get('title') or '').strip",
+              "post_body.get",
+              "'\\n'.join(lines).strip",
+              "content.get",
+              "lines.append",
+              "post.get",
+              "post.values",
+              "str",
+              "''.join(row_parts).strip",
+              "'\\n'.join",
+              "str(element.get('tag') or '').strip",
+              "str(element.get('image_key') or '').strip",
+              "row_parts.append",
+              "''.join",
+              "images.append",
+              "str(element.get('text') or '').strip",
+              "str(element.get('href') or element.get('url') or '').strip",
+              "str(element.get('user_name') or element.get('name') or '').strip",
+              "str(element.get('user_id') or '').strip",
+              "element.get",
+              "str(element.get('text') or element.get('content') or '').strip",
+              "str(element.get('language') or '').strip"
+            ]
+          },
+          {
+            "name": "_handle_card_action",
+            "line": 2022,
+            "end_line": 2122,
+            "async": true,
+            "signature": "self, event: LarkWebhookEvent, raw_body: dict=None",
+            "calls": [
+              "isinstance",
+              "logger.info",
+              "self._forward_to_message_chain",
+              "(event.event or {}).get",
+              "message_obj.get",
+              "raw_body.get",
+              "action.get",
+              "LarkClient.extract_card_callback_data",
+              "self._client.remember_user_id_type",
+              "self._client.remember_target",
+              "evt.get",
+              "evt['context'].get",
+              "evt['message'].get",
+              "raw_evt.get",
+              "raw_evt['context'].get",
+              "raw_evt['message'].get",
+              "(raw_body['event'].get('context') or {}).get",
+              "raw_body['event'].get",
+              "operator.get",
+              "operator_id_obj.get",
+              "self._client.reply_message",
+              "logger.error"
+            ]
+          },
+          {
+            "name": "_resolve_targets",
+            "line": 2127,
+            "end_line": 2185,
+            "async": false,
+            "signature": "self, userid: str=''",
+            "calls": [
+              "set",
+              "_add",
+              "self._user_id.strip",
+              "uid.startswith",
+              "seen.add",
+              "targets.append",
+              "'；'.join",
+              "warn_parts.append",
+              "userid.startswith",
+              "self._client.batch_get_id",
+              "uid.isdigit",
+              "result.get",
+              "str"
+            ]
+          },
+          {
+            "name": "_test_endpoint",
+            "line": 2190,
+            "end_line": 2371,
+            "async": false,
+            "signature": "self, request: Request",
+            "calls": [
+              "self._resolve_targets",
+              "self.save_data",
+              "JSONResponse",
+              "datetime.now().strftime",
+              "logger.info",
+              "time.strftime",
+              "_store",
+              "self._client.send_card",
+              "sent_ids.append",
+              "len",
+              "logger.error",
+              "datetime.now"
+            ]
+          },
+          {
+            "name": "_status_endpoint",
+            "line": 2376,
+            "end_line": 2388,
+            "async": false,
+            "signature": "self, request: Request",
+            "calls": [
+              "self.del_data",
+              "JSONResponse",
+              "len"
+            ]
+          },
+          {
+            "name": "_fetch_chats_endpoint",
+            "line": 2393,
+            "end_line": 2455,
+            "async": false,
+            "signature": "self, request: Request",
+            "calls": [
+              "datetime.datetime.now().strftime",
+              "self.save_data",
+              "JSONResponse",
+              "LarkClient",
+              "requests.get",
+              "resp.json",
+              "datetime.datetime.now",
+              "data.get",
+              "logger.error",
+              "client._headers",
+              "(data.get('data') or {}).get",
+              "it.get",
+              "'\\n'.join",
+              "c.get",
+              "len"
+            ]
+          },
+          {
+            "name": "_start_admin_sync",
+            "line": 2460,
+            "end_line": 2471,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "threading.Thread",
+              "worker.start",
+              "logger.debug"
+            ]
+          },
+          {
+            "name": "_admin_sync_worker",
+            "line": 2473,
+            "end_line": 2495,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "self._resolve_admin_identifiers",
+              "self._sync_admin_to_notification_config",
+              "time.sleep",
+              "logger.error"
+            ]
+          },
+          {
+            "name": "_resolve_single",
+            "line": 2497,
+            "end_line": 2520,
+            "async": false,
+            "signature": "self, identifier: str",
+            "calls": [
+              "identifier.strip",
+              "identifier.startswith",
+              "self._client.batch_get_id",
+              "(result or {}).get",
+              "logger.warning"
+            ]
+          },
+          {
+            "name": "_resolve_admin_identifiers",
+            "line": 2522,
+            "end_line": 2555,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "uid.startswith",
+              "self._resolve_single",
+              "self._user_id_raw.startswith",
+              "list",
+              "admin_ids.append",
+              "dict.fromkeys"
+            ]
+          },
+          {
+            "name": "_sync_admin_to_notification_config",
+            "line": 2557,
+            "end_line": 2626,
+            "async": false,
+            "signature": "self, admin_openids: List[str], default_open_id: str",
+            "calls": [
+              "self.systemconfig.get",
+              "self.systemconfig.set",
+              "logger.info",
+              "isinstance",
+              "','.join",
+              "target.get",
+              "configs.append",
+              "len",
+              "logger.error",
+              "sorted",
+              "c.get",
+              "set",
+              "target['config'].get",
+              "cfg.get"
+            ]
+          },
+          {
+            "name": "_is_admin",
+            "line": 2631,
+            "end_line": 2657,
+            "async": false,
+            "signature": "self, open_id: str",
+            "calls": [
+              "identifier.startswith",
+              "result.get",
+              "self._client.batch_get_id",
+              "logger.warning"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "client.py": {
+    "sha256": "28ac4a3dae4879a86bba956f493b60121948fb2ca5e631d81c4868c604468654",
+    "classes": [
+      {
+        "name": "LarkClient",
+        "methods": [
+          {
+            "name": "__init__",
+            "line": 36,
+            "end_line": 44,
+            "async": false,
+            "signature": "self, app_id: str, app_secret: str",
+            "calls": []
+          },
+          {
+            "name": "_get_tenant_access_token",
+            "line": 49,
+            "end_line": 62,
+            "async": false,
+            "signature": "self, force: bool=False",
+            "calls": [
+              "int",
+              "requests.post",
+              "resp.raise_for_status",
+              "resp.json",
+              "__import__('time').time",
+              "data.get",
+              "RuntimeError",
+              "__import__"
+            ]
+          },
+          {
+            "name": "_headers",
+            "line": 64,
+            "end_line": 69,
+            "async": false,
+            "signature": "self, content_type: str='application/json'",
+            "calls": [
+              "self._get_tenant_access_token"
+            ]
+          },
+          {
+            "name": "remember_target",
+            "line": 74,
+            "end_line": 80,
+            "async": false,
+            "signature": "self, userid: Optional[str], chat_id: Optional[str]",
+            "calls": [
+              "(userid or '').strip",
+              "(chat_id or '').strip"
+            ]
+          },
+          {
+            "name": "remember_user_id_type",
+            "line": 82,
+            "end_line": 88,
+            "async": false,
+            "signature": "self, open_id: Optional[str]=None, user_id: Optional[str]=None",
+            "calls": [
+              "open_id.strip",
+              "user_id.strip"
+            ]
+          },
+          {
+            "name": "resolve_target",
+            "line": 93,
+            "end_line": 119,
+            "async": false,
+            "signature": "self, userid: Optional[str]=None, chat_id: Optional[str]=None, receive_id_type: Optional[str]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None",
+            "calls": [
+              "ValueError",
+              "(userid or '').strip",
+              "(chat_id or '').strip",
+              "(receive_id_type or '').strip",
+              "self._user_receive_id_type_mapping.get"
+            ]
+          },
+          {
+            "name": "_send_message",
+            "line": 124,
+            "end_line": 147,
+            "async": false,
+            "signature": "self, receive_id: str, receive_id_type: str, msg_type: str, content: dict",
+            "calls": [
+              "requests.post",
+              "resp.json",
+              "data.get",
+              "json.dumps",
+              "str",
+              "logger.error",
+              "msg_data.get",
+              "uuid.uuid4",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "_reply_message",
+            "line": 149,
+            "end_line": 179,
+            "async": false,
+            "signature": "self, message_id: str, msg_type: str, content: dict, reply_in_thread: bool=False",
+            "calls": [
+              "requests.post",
+              "resp.json",
+              "data.get",
+              "RuntimeError",
+              "json.dumps",
+              "str",
+              "logger.error",
+              "msg_data.get",
+              "uuid.uuid4",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "send_text",
+            "line": 184,
+            "end_line": 216,
+            "async": false,
+            "signature": "self, text: str, userid: Optional[str]=None, chat_id: Optional[str]=None, receive_id_type: Optional[str]=None, original_message_id: Optional[str]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None",
+            "calls": [
+              "result.get",
+              "self._user_chat_mapping.get",
+              "self._reply_message",
+              "self.resolve_target",
+              "self._send_message",
+              "logger.error"
+            ]
+          },
+          {
+            "name": "send_file",
+            "line": 218,
+            "end_line": 286,
+            "async": false,
+            "signature": "self, file_path: str, userid: Optional[str]=None, chat_id: Optional[str]=None, title: Optional[str]=None, text: Optional[str]=None, file_name: Optional[str]=None, receive_id_type: Optional[str]=None, original_message_id: Optional[str]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None",
+            "calls": [
+              "Path",
+              "local_file.suffix.lower",
+              "logger.error",
+              "result.get",
+              "self._user_chat_mapping.get",
+              "local_file.exists",
+              "local_file.is_file",
+              "self.upload_image",
+              "self.build_card_v2",
+              "self.upload_file",
+              "self.send_text",
+              "str",
+              "self._reply_message",
+              "self.resolve_target",
+              "self._send_message",
+              "self._build_message_text"
+            ]
+          },
+          {
+            "name": "send_voice",
+            "line": 288,
+            "end_line": 333,
+            "async": false,
+            "signature": "self, voice_path: str, userid: Optional[str]=None, chat_id: Optional[str]=None, caption: Optional[str]=None, receive_id_type: Optional[str]=None, original_message_id: Optional[str]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None",
+            "calls": [
+              "Path",
+              "logger.error",
+              "self.upload_file",
+              "result.get",
+              "self._user_chat_mapping.get",
+              "local_file.exists",
+              "local_file.is_file",
+              "str",
+              "self._reply_message",
+              "self.resolve_target",
+              "self._send_message",
+              "self.send_text"
+            ]
+          },
+          {
+            "name": "send_notification",
+            "line": 335,
+            "end_line": 432,
+            "async": false,
+            "signature": "self, message, userid: Optional[str]=None, chat_id: Optional[str]=None, receive_id_type: Optional[str]=None, original_message_id: Optional[str]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None, image_items: Optional[List[Dict[str, Any]]]=None",
+            "calls": [
+              "self._header_template_for_mtype",
+              "self.build_card_v2",
+              "self._send_agent_streaming_images",
+              "result.get('metadata', {}).get",
+              "isinstance",
+              "self._upload_remote_image",
+              "result.get",
+              "self._user_chat_mapping.get",
+              "self._is_external_image_url",
+              "stream_image_urls.extend",
+              "self._send_streaming_card_message",
+              "item.get",
+              "built_items.append",
+              "self._reply_message",
+              "self.resolve_target",
+              "self._send_message",
+              "logger.error",
+              "stream_image_urls.append",
+              "self._extract_markdown_image_urls",
+              "logger.warning"
+            ]
+          },
+          {
+            "name": "edit_message",
+            "line": 437,
+            "end_line": 489,
+            "async": false,
+            "signature": "self, message_id: str, title: Optional[str]=None, text: Optional[str]=None, buttons: Optional[List[List[dict]]]=None, metadata: Optional[dict]=None, chat_id: Optional[str]=None",
+            "calls": [
+              "self.build_card_v2",
+              "isinstance",
+              "(metadata or {}).get",
+              "str(stream_meta.get('card_id') or '').strip",
+              "str(stream_meta.get('element_id') or self.STREAM_CARD_BODY_ELEMENT_ID).strip",
+              "requests.patch",
+              "resp.json",
+              "logger.error",
+              "int",
+              "self._escape_card_text(self._strip_streaming_markdown_images(text)).strip",
+              "self._update_streaming_card_content",
+              "data.get",
+              "str",
+              "self._extract_markdown_image_urls",
+              "self._send_agent_streaming_images",
+              "self._headers",
+              "stream_meta.get",
+              "self._escape_card_text",
+              "json.dumps",
+              "self._strip_streaming_markdown_images"
+            ]
+          },
+          {
+            "name": "add_message_reaction",
+            "line": 494,
+            "end_line": 510,
+            "async": false,
+            "signature": "self, message_id: str, emoji_type: str",
+            "calls": [
+              "requests.post",
+              "resp.json",
+              "data.get('data', {}).get",
+              "data.get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "delete_message_reaction",
+            "line": 512,
+            "end_line": 526,
+            "async": false,
+            "signature": "self, message_id: str, reaction_id: str",
+            "calls": [
+              "requests.delete",
+              "resp.json",
+              "logger.error",
+              "data.get",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "download_image_bytes",
+            "line": 531,
+            "end_line": 544,
+            "async": false,
+            "signature": "self, image_key: str",
+            "calls": [
+              "requests.get",
+              "resp.headers.get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "download_file_bytes",
+            "line": 546,
+            "end_line": 559,
+            "async": false,
+            "signature": "self, file_key: str",
+            "calls": [
+              "requests.get",
+              "resp.headers.get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "download_message_resource_bytes",
+            "line": 561,
+            "end_line": 577,
+            "async": false,
+            "signature": "self, message_id: str, file_key: str, resource_type: str",
+            "calls": [
+              "requests.get",
+              "resp.headers.get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "_escape_card_text",
+            "line": 583,
+            "end_line": 590,
+            "async": false,
+            "signature": "text: Optional[str]",
+            "calls": [
+              "str",
+              "{'\\\\': '&#92;', '<': '&#60;', '>': '&#62;'}.items",
+              "escaped.replace"
+            ]
+          },
+          {
+            "name": "_build_message_text",
+            "line": 593,
+            "end_line": 604,
+            "async": false,
+            "signature": "title: Optional[str], text: Optional[str], link: Optional[str]=None",
+            "calls": [
+              "'\\n\\n'.join",
+              "parts.append",
+              "LarkClient._escape_card_text(text).strip",
+              "LarkClient._escape_card_text(title).strip",
+              "LarkClient._escape_card_text",
+              "link.strip"
+            ]
+          },
+          {
+            "name": "_build_markdown_section",
+            "line": 607,
+            "end_line": 616,
+            "async": false,
+            "signature": "cls, text: Optional[str], text_size: str='normal', margin: Optional[str]=None",
+            "calls": [
+              "cls._escape_card_text(text).strip",
+              "cls._escape_card_text"
+            ]
+          },
+          {
+            "name": "_card_actions",
+            "line": 619,
+            "end_line": 667,
+            "async": false,
+            "signature": "buttons: Optional[List[List[dict]]], margin: Optional[str]=None",
+            "calls": [
+              "(button or {}).get",
+              "columns.append",
+              "card_rows.append",
+              "behaviors.append",
+              "str"
+            ]
+          },
+          {
+            "name": "_header_template_for_mtype",
+            "line": 683,
+            "end_line": 687,
+            "async": false,
+            "signature": "cls, mtype: Optional[str]",
+            "calls": [
+              "cls._MTYPE_COLOR_MAP.get",
+              "str"
+            ]
+          },
+          {
+            "name": "build_card_v2",
+            "line": 690,
+            "end_line": 813,
+            "async": false,
+            "signature": "cls, title: Optional[str], text: Optional[str], link: Optional[str], buttons: Optional[List[List[dict]]], image_key: Optional[str]=None, header_template: Optional[str]=None, image_items: Optional[List[Dict[str, Any]]]=None",
+            "calls": [
+              "bool",
+              "cls._build_message_text",
+              "cls._card_actions",
+              "elements.extend",
+              "cls._build_markdown_section",
+              "elements.append",
+              "item.get",
+              "elements.pop",
+              "elements[-1].get"
+            ]
+          },
+          {
+            "name": "build_card",
+            "line": 819,
+            "end_line": 845,
+            "async": false,
+            "signature": "title: str, content: str, buttons: Optional[List[Dict[str, Any]]]=None, color: str='blue', img_key: Optional[str]=None, link: Optional[str]=None",
+            "calls": [
+              "LarkClient.build_card_v2",
+              "v2_buttons.append",
+              "btn.get"
+            ]
+          },
+          {
+            "name": "build_button",
+            "line": 848,
+            "end_line": 858,
+            "async": false,
+            "signature": "text: str, action_id: str, value: str='', button_type: str='default'",
+            "calls": []
+          },
+          {
+            "name": "build_interactive_card",
+            "line": 860,
+            "end_line": 872,
+            "async": false,
+            "signature": "self, title: str, body_elements: List[Dict[str, Any]], actions: Optional[List[Dict[str, Any]]]=None, color: str='blue'",
+            "calls": [
+              "list",
+              "elements.append"
+            ]
+          },
+          {
+            "name": "_build_streaming_card_payload",
+            "line": 878,
+            "end_line": 915,
+            "async": false,
+            "signature": "cls, title: Optional[str], text: Optional[str]",
+            "calls": [
+              "cls._escape_card_text(cls._strip_streaming_markdown_images(text)).strip",
+              "elements.append",
+              "cls._escape_card_text(title).strip",
+              "cls._escape_card_text",
+              "cls._strip_streaming_markdown_images"
+            ]
+          },
+          {
+            "name": "_create_streaming_card",
+            "line": 917,
+            "end_line": 933,
+            "async": false,
+            "signature": "self, title: Optional[str], text: Optional[str]",
+            "calls": [
+              "self._build_streaming_card_payload",
+              "json.dumps",
+              "requests.post",
+              "resp.json",
+              "logger.warning",
+              "data.get",
+              "data.get('data', {}).get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "_send_streaming_card_message",
+            "line": 935,
+            "end_line": 994,
+            "async": false,
+            "signature": "self, title: Optional[str], text: Optional[str], userid: Optional[str]=None, chat_id: Optional[str]=None, receive_id_type: Optional[str]=None, original_message_id: Optional[str]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None",
+            "calls": [
+              "self._create_streaming_card",
+              "logger.warning",
+              "self.build_card_v2",
+              "self.resolve_target",
+              "self._send_message",
+              "self._reply_message",
+              "self._header_template_for_mtype"
+            ]
+          },
+          {
+            "name": "_safe_parse_cardkit",
+            "line": 997,
+            "end_line": 1026,
+            "async": false,
+            "signature": "resp",
+            "calls": [
+              "''.join",
+              "isinstance",
+              "getattr",
+              "cleaned.strip",
+              "json.loads",
+              "logger.warning"
+            ]
+          },
+          {
+            "name": "_cardkit_ok",
+            "line": 1029,
+            "end_line": 1038,
+            "async": false,
+            "signature": "resp, data: dict",
+            "calls": [
+              "isinstance",
+              "data.get"
+            ]
+          },
+          {
+            "name": "_update_streaming_card_content",
+            "line": 1040,
+            "end_line": 1062,
+            "async": false,
+            "signature": "self, card_id: str, element_id: str, content: str, sequence: int",
+            "calls": [
+              "str",
+              "requests.put",
+              "self._safe_parse_cardkit",
+              "self._cardkit_ok",
+              "logger.warning",
+              "uuid.uuid4",
+              "logger.debug",
+              "data.get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "close_streaming_card",
+            "line": 1064,
+            "end_line": 1085,
+            "async": false,
+            "signature": "self, card_id: str, sequence: int",
+            "calls": [
+              "json.dumps",
+              "str",
+              "requests.patch",
+              "self._safe_parse_cardkit",
+              "self._cardkit_ok",
+              "logger.warning",
+              "uuid.uuid4",
+              "data.get",
+              "logger.error",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "_strip_streaming_markdown_images",
+            "line": 1091,
+            "end_line": 1104,
+            "async": false,
+            "signature": "cls, text: Optional[str]",
+            "calls": [
+              "cls._strip_trailing_incomplete_markdown_image",
+              "cls.MARKDOWN_IMAGE_PATTERN.finditer",
+              "parts.append",
+              "''.join",
+              "str",
+              "(match.group('alt') or '').strip",
+              "match.end",
+              "match.start",
+              "match.group"
+            ]
+          },
+          {
+            "name": "_strip_trailing_incomplete_markdown_image",
+            "line": 1107,
+            "end_line": 1118,
+            "async": false,
+            "signature": "cls, text: str",
+            "calls": [
+              "text.rfind",
+              "cls.MARKDOWN_IMAGE_PATTERN.fullmatch",
+              "text[:start].rstrip"
+            ]
+          },
+          {
+            "name": "_extract_markdown_image_urls",
+            "line": 1121,
+            "end_line": 1129,
+            "async": false,
+            "signature": "cls, text: Optional[str]",
+            "calls": [
+              "cls.MARKDOWN_IMAGE_PATTERN.finditer",
+              "str",
+              "(match.group('target') or '').strip",
+              "cls._is_external_image_url",
+              "urls.append",
+              "match.group"
+            ]
+          },
+          {
+            "name": "_is_external_image_url",
+            "line": 1132,
+            "end_line": 1134,
+            "async": false,
+            "signature": "image_url: str",
+            "calls": [
+              "(image_url or '').strip().lower",
+              "normalized_url.startswith",
+              "(image_url or '').strip"
+            ]
+          },
+          {
+            "name": "_dedupe_image_urls",
+            "line": 1137,
+            "end_line": 1146,
+            "async": false,
+            "signature": "image_urls: List[str]",
+            "calls": [
+              "set",
+              "(image_url or '').strip",
+              "seen.add",
+              "deduped.append"
+            ]
+          },
+          {
+            "name": "_send_agent_streaming_images",
+            "line": 1148,
+            "end_line": 1179,
+            "async": false,
+            "signature": "self, image_urls: List[str], userid: Optional[str]=None, chat_id: Optional[str]=None, receive_id_type: Optional[str]=None, sent_image_urls: Optional[List[str]]=None, default_open_id: Optional[str]=None, default_chat_id: Optional[str]=None",
+            "calls": [
+              "list",
+              "self._upload_remote_image",
+              "self.build_card_v2",
+              "self._dedupe_image_urls",
+              "self.resolve_target",
+              "self._send_message",
+              "sent_images.append",
+              "logger.error"
+            ]
+          },
+          {
+            "name": "_upload_remote_image",
+            "line": 1184,
+            "end_line": 1224,
+            "async": false,
+            "signature": "self, image_url: Optional[str]",
+            "calls": [
+              "(image_url or '').strip",
+              "image_url.startswith",
+              "image_url.replace",
+              "requests.get",
+              "resp.headers.get",
+              "resource_path.rsplit('/', 1)[-1].strip",
+              "logger.warning",
+              "tempfile.NamedTemporaryFile",
+              "fp.write",
+              "self.upload_image",
+              "logger.error",
+              "Path(temp_path).unlink",
+              "resource_path.rsplit",
+              "Path(urlparse(image_url).path).suffix.lower",
+              "Path",
+              "urlparse"
+            ]
+          },
+          {
+            "name": "extract_card_callback_data",
+            "line": 1230,
+            "end_line": 1239,
+            "async": false,
+            "signature": "value: Any, name: Optional[str]=None",
+            "calls": [
+              "isinstance",
+              "str(callback_data).strip",
+              "value.get",
+              "str"
+            ]
+          },
+          {
+            "name": "upload_image",
+            "line": 1244,
+            "end_line": 1259,
+            "async": false,
+            "signature": "self, image_path: str, image_type: str='message'",
+            "calls": [
+              "mimetypes.guess_type",
+              "resp.json",
+              "open",
+              "requests.post",
+              "data.get",
+              "RuntimeError",
+              "mime_type.startswith",
+              "Path",
+              "self._get_tenant_access_token"
+            ]
+          },
+          {
+            "name": "upload_file",
+            "line": 1261,
+            "end_line": 1273,
+            "async": false,
+            "signature": "self, file_path: str, file_name: str='', file_type: str='stream'",
+            "calls": [
+              "resp.json",
+              "open",
+              "requests.post",
+              "data.get",
+              "RuntimeError",
+              "Path",
+              "self._get_tenant_access_token"
+            ]
+          },
+          {
+            "name": "download_image",
+            "line": 1275,
+            "end_line": 1284,
+            "async": false,
+            "signature": "self, image_key: str",
+            "calls": [
+              "requests.get",
+              "resp.raise_for_status",
+              "resp.headers.get('Content-Type', '').startswith",
+              "resp.json",
+              "self._headers",
+              "resp.headers.get",
+              "data.get",
+              "RuntimeError"
+            ]
+          },
+          {
+            "name": "_guess_image_ext",
+            "line": 1287,
+            "end_line": 1298,
+            "async": false,
+            "signature": "img_bytes: bytes",
+            "calls": [
+              "img_bytes.startswith"
+            ]
+          },
+          {
+            "name": "download_image_to_data_url",
+            "line": 1300,
+            "end_line": 1305,
+            "async": false,
+            "signature": "self, image_key: str",
+            "calls": [
+              "self.download_image",
+              "self._guess_image_ext",
+              "base64.b64encode(img_bytes).decode",
+              "base64.b64encode"
+            ]
+          },
+          {
+            "name": "download_file_bytes_raw",
+            "line": 1307,
+            "end_line": 1312,
+            "async": false,
+            "signature": "self, file_key: str",
+            "calls": [
+              "requests.get",
+              "resp.raise_for_status",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "get_user_info",
+            "line": 1317,
+            "end_line": 1326,
+            "async": false,
+            "signature": "self, open_id: str",
+            "calls": [
+              "requests.get",
+              "resp.json",
+              "data.get('data', {}).get",
+              "data.get",
+              "logger.warning",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "batch_get_id",
+            "line": 1328,
+            "end_line": 1360,
+            "async": false,
+            "signature": "self, emails: Optional[List[str]]=None, mobiles: Optional[List[str]]=None, employee_ids: Optional[List[str]]=None",
+            "calls": [
+              "requests.post",
+              "resp.json",
+              "data.get",
+              "RuntimeError",
+              "(data.get('data') or {}).get",
+              "it.get",
+              "self._headers"
+            ]
+          },
+          {
+            "name": "send_card",
+            "line": 1365,
+            "end_line": 1372,
+            "async": false,
+            "signature": "self, receive_id: str, card: Dict[str, Any], receive_id_type: str='open_id'",
+            "calls": [
+              "self._send_message",
+              "RuntimeError",
+              "result.get"
+            ]
+          },
+          {
+            "name": "send_image_msg",
+            "line": 1374,
+            "end_line": 1381,
+            "async": false,
+            "signature": "self, receive_id: str, image_key: str, receive_id_type: str='open_id'",
+            "calls": [
+              "self._send_message",
+              "RuntimeError",
+              "result.get"
+            ]
+          },
+          {
+            "name": "send_file_msg",
+            "line": 1383,
+            "end_line": 1390,
+            "async": false,
+            "signature": "self, receive_id: str, file_key: str, receive_id_type: str='open_id'",
+            "calls": [
+              "self._send_message",
+              "RuntimeError",
+              "result.get"
+            ]
+          },
+          {
+            "name": "reply_message",
+            "line": 1392,
+            "end_line": 1423,
+            "async": false,
+            "signature": "self, message_id: str, content: str, msg_type: str='text'",
+            "calls": [
+              "self._reply_message",
+              "RuntimeError",
+              "isinstance",
+              "result.get",
+              "json.loads",
+              "str"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "crypto.py": {
+    "sha256": "8867ad8e0f7fedd59cc0c3b64058d8d76b1e851459188688dbd35904b11e9529",
+    "classes": [
+      {
+        "name": "LarkCrypto",
+        "methods": [
+          {
+            "name": "__init__",
+            "line": 20,
+            "end_line": 29,
+            "async": false,
+            "signature": "self, encrypt_key: str='', app_secret: str=''",
+            "calls": [
+              "hashlib.sha256(encrypt_key.encode('utf-8')).digest",
+              "hashlib.sha256",
+              "encrypt_key.encode"
+            ]
+          },
+          {
+            "name": "verify_signature",
+            "line": 31,
+            "end_line": 55,
+            "async": false,
+            "signature": "self, signature_header: str, raw_body: bytes, timestamp: str='', nonce: str=''",
+            "calls": [
+              "logger.warning",
+              "raw_body.decode",
+              "hashlib.sha256(sign_string.encode('utf-8')).hexdigest().lower",
+              "hmac.compare_digest",
+              "signature_header.lower",
+              "logger.error",
+              "hashlib.sha256(sign_string.encode('utf-8')).hexdigest",
+              "hashlib.sha256",
+              "sign_string.encode"
+            ]
+          },
+          {
+            "name": "decrypt",
+            "line": 57,
+            "end_line": 81,
+            "async": false,
+            "signature": "self, encrypted_data: str",
+            "calls": [
+              "base64.b64decode",
+              "AES.new",
+              "cipher.decrypt",
+              "plaintext.decode",
+              "ValueError",
+              "len"
+            ]
+          },
+          {
+            "name": "encrypt",
+            "line": 83,
+            "end_line": 99,
+            "async": false,
+            "signature": "self, plaintext: str",
+            "calls": [
+              "os.urandom",
+              "AES.new",
+              "plaintext.encode",
+              "cipher.encrypt",
+              "base64.b64encode(iv + encrypted).decode",
+              "ValueError",
+              "bytes",
+              "len",
+              "base64.b64encode"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "schemas.py": {
+    "sha256": "701b1bda58ea5ccc4eda6e71b173813c9e3b340716748086f68abfd0bd5234c4",
+    "classes": [
+      {
+        "name": "LarkMessage",
+        "methods": []
+      },
+      {
+        "name": "LarkCardElement",
+        "methods": []
+      },
+      {
+        "name": "LarkCardHeader",
+        "methods": []
+      },
+      {
+        "name": "LarkInteractiveCard",
+        "methods": []
+      },
+      {
+        "name": "LarkWebhookEvent",
+        "methods": [
+          {
+            "name": "event_type",
+            "line": 53,
+            "end_line": 56,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "self.header.get"
+            ]
+          },
+          {
+            "name": "event_id",
+            "line": 59,
+            "end_line": 62,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "self.header.get"
+            ]
+          },
+          {
+            "name": "app_id",
+            "line": 65,
+            "end_line": 68,
+            "async": false,
+            "signature": "self",
+            "calls": [
+              "self.header.get"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "LarkUserMessage",
+        "methods": []
+      },
+      {
+        "name": "LarkButtonAction",
+        "methods": []
+      }
+    ]
+  }
+}

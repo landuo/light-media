@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "plugin_name": "Lark 应用消息通知",
+    "plugin_desc": "基于国际版飞书 Lark 开放平台应用的通知与消息交互插件，支持文本、卡片消息发送及消息回调交互。",
+    "plugin_icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/main/icons/FeiShu_A.png",
+    "plugin_version": "0.9.1",
+    "plugin_author": "ui-beam-9",
+    "author_url": "https://github.com/ui-beam-9",
+    "plugin_config_prefix": "larkmessager_",
+    "plugin_order": 50,
+    "auth_level": 1
+  },
+  "apis": [
+    {
+      "path": "/webhook",
+      "endpoint": "_webhook_endpoint",
+      "methods": [
+        "POST",
+        "GET"
+      ],
+      "allow_anonymous": true,
+      "summary": "Lark事件回调 Webhook",
+      "description": "接收Lark开放平台推送的事件，包括消息、按钮回调等。"
+    },
+    {
+      "path": "/test",
+      "endpoint": "_test_endpoint",
+      "methods": [
+        "GET"
+      ],
+      "auth": "bear",
+      "summary": "测试Lark连接",
+      "description": "验证 App ID / App Secret 是否能正常获取 Token。"
+    },
+    {
+      "path": "/status",
+      "endpoint": "_status_endpoint",
+      "methods": [
+        "GET"
+      ],
+      "auth": "bear",
+      "summary": "查询插件运行状态",
+      "description": "返回当前插件启用状态、App ID、连接状态等。"
+    },
+    {
+      "path": "/fetch_chats",
+      "endpoint": "_fetch_chats_endpoint",
+      "methods": [
+        "GET"
+      ],
+      "auth": "bear",
+      "summary": "调 Lark API 列出本应用已加入的群聊",
+      "description": "返回群聊列表（Chat ID + 名字）。需要已配置 App ID / App Secret。"
+    }
+  ],
+  "get_command_override": false,
+  "get_service_override": false,
+  "base_defaults": {
+    "get_command": null,
+    "get_service": null
+  },
+  "modules": [
+    "message_parser",
+    "post_message",
+    "post_medias_message",
+    "post_torrents_message",
+    "edit_message",
+    "send_direct_message",
+    "finalize_message",
+    "mark_message_processing_started",
+    "mark_message_processing_finished",
+    "download_feishu_image_to_data_url",
+    "download_feishu_file_bytes",
+    "add_feishu_message_reaction",
+    "delete_feishu_message_reaction"
+  ]
+}

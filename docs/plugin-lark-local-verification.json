@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-17",
+  "plugin": "LarkMessager",
+  "original_version": "0.9.1",
+  "formal_manifest_sha256": "ed055f57fb4fc80c15ab001b35a14bc52fbb55e9352e81c64102bed4ce2e14db",
+  "package": "./internal/plugins/larkmessager",
+  "top_level_tests_discovered": 28,
+  "checks": {
+    "normal": {
+      "command": "go test ./internal/plugins/larkmessager -count=1",
+      "exit_code": 0,
+      "seconds": 1.419
+    },
+    "race": {
+      "command": "go test -race ./internal/plugins/larkmessager -count=1",
+      "exit_code": 0,
+      "seconds": 6.107
+    },
+    "vet": {
+      "command": "go vet ./internal/plugins/larkmessager",
+      "exit_code": 0
+    },
+    "CGO_disabled": {
+      "command": "CGO_ENABLED=0 go test ./internal/plugins/larkmessager -count=1",
+      "exit_code": 0,
+      "seconds": 1.361
+    },
+    "linux_amd64_test_binary": {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go test -c -o <owned-stage>/bin/lark.test ./internal/plugins/larkmessager",
+      "exit_code": 0,
+      "sha256": "ce4e0f2a7e431092de0fb26942d27428da2a6a4643c93c430fd04671fa6c339e"
+    },
+    "frozen_candidate_reference_checksums": {
+      "exit_code": 0,
+      "candidate_go_files": 31,
+      "reference_files": 89,
+      "candidate_snapshot_files": 126,
+      "source_case_count": 1376
+    }
+  },
+  "formal_promotion": {
+    "formal_files": 41,
+    "frozen_input_files": 126,
+    "candidate_copy_byte_identical": true,
+    "adapted_go_files": [
+      "client_oracle_test.go",
+      "endpoint_oracle_test.go",
+      "module_oracle_test.go",
+      "multi_oracle_test.go",
+      "oracle_test.go",
+      "scalar_table_test.go",
+      "sdk.go"
+    ],
+    "allowed_changes": [
+      "six test fixture path wrappers",
+      "SDK nil HostCaller returns ErrDependency except stop; no other algorithm changes"
+    ],
+    "embed_json_files_byte_identical": 5,
+    "formal_hash_provenance_tests": 4
+  },
+  "source_comparison": {
+    "admin_work": 36,
+    "attachment_model": 29,
+    "callback": 19,
+    "card": 251,
+    "card_action": 3,
+    "cardkit": 67,
+    "client_calls": 15,
+    "crypto": 12,
+    "crypto_decrypt": 20,
+    "crypto_signature": 27,
+    "endpoint_calls": 48,
+    "form": 1,
+    "init": 5,
+    "legacy_button": 3,
+    "legacy_card": 4,
+    "legacy_reply": 16,
+    "message_parser": 20,
+    "mime_guess": 480,
+    "module_calls": 26,
+    "module_response_ids": 6,
+    "multi_calls": 40,
+    "page": 6,
+    "page_template": 8,
+    "python_value": 29,
+    "receive": 42,
+    "remote_image": 49,
+    "resolve_permission": 3,
+    "stream_helpers": 10,
+    "sync_config": 22,
+    "target": 30,
+    "test_card": 1,
+    "webhook": 48
+  },
+  "source_case_total": 1376,
+  "comparison_limits": [
+    "Actual installed class AST, synthetic controlled dependency inputs, real Pydantic/AES and owned loopback HTTP/SDK only.",
+    "Python exception branches compare non-success facts, not exact Python exception classes or tracebacks.",
+    "HTTP JSON trees/MIME/media bytes and methods are compared, not arbitrary requests-versus-Go raw JSON or multipart boundary bytes.",
+    "MediaInfo/Context inputs are explicit consumed property views, not full metadata identity/network recognition."
+  ],
+  "nas_preparation": {
+    "helper": "work/verify-plugin-lark-nas.mjs",
+    "local_stage": "/Users/accidia/projects/light-media/work/plugin-lark-leaf-nas.29ME1t",
+    "stage_owner_id": "c5c64f77-499c-46dd-93b7-b81dba7620d7",
+    "nas_started": false,
+    "expected_top_level_tests": 28,
+    "binary_sha256": "ce4e0f2a7e431092de0fb26942d27428da2a6a4643c93c430fd04671fa6c339e",
+    "platform": "linux/amd64",
+    "CGO_ENABLED": "0",
+    "planned_isolation": {
+      "image": "alpine:3.22",
+      "pull": "never",
+      "network": "none",
+      "user": "1000:1001",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "no_new_privileges": true,
+      "memory_bytes": 268435456,
+      "memory_swap_bytes": 268435456,
+      "tmpfs_bytes": 134217728,
+      "pids_limit": 256,
+      "GOMEMLIMIT": "64MiB"
+    },
+    "remote_run_authorization": "pending root explicit run; preparation performed locally only",
+    "status_at_local_capture": "not_started; completed later by root, see nas_validation"
+  },
+  "remaining": [
+    "App durable owner/envelope/encrypted Journal and two KV, config/Notifications commit-time CAS",
+    "real MessageChain and user binding integration, all module/notification producers and MediaInfo/Context snapshot production",
+    "trusted ingress authentication/grants/dedup, owner retirement and cross-invocation unknown barrier",
+    "configuration UI and original config/data migration, real Lark delivery validation",
+    "full Python non-finite/surrogate/arbitrary dynamic input semantics and unconsumed models",
+    "independent original third-party plugin license provenance remains unconfirmed"
+  ],
+  "scope": "Formal pure-Go leaf promotion and local tests only; not a completed plugin migration or App delivery. Candidate README/MIGRATION/VERIFICATION and full source/license evidence retained intact.",
+  "source_config_data_files_migrated": 0,
+  "production_registered": false,
+  "deployed": false,
+  "real_notifications_sent": false,
+  "main_go_mod_changed": false,
+  "App_or_shared_UI_changed": false,
+  "nas_validation": {
+    "report": "docs/plugin-lark-nas-verification.json",
+    "top_level_passes": 28,
+    "top_level_skips": 0,
+    "top_level_failures": 0,
+    "exit_code": 0,
+    "container_oom_killed": false,
+    "owned_resources_cleaned": true,
+    "services_unchanged": true,
+    "scope": "Pure formal leaf and owned loopback only; no App/registration/user migration/real Lark delivery"
+  }
+}
