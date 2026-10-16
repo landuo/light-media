@@ -16,6 +16,14 @@ const supported = new Set([
   'VCronField',
   'VTextarea',
   'VSelect',
+  'VCard',
+  'VTabs',
+  'VTab',
+  'VWindow',
+  'VWindowItem',
+  'VDialog',
+  'VDialogCloseBtn',
+  'a',
 ]);
 const tableElements = new Set([
   'VTable',
@@ -34,14 +42,24 @@ const tableElements = new Set([
   'VImg',
   'VApexChart',
 ]);
-const modelKey = /^[A-Za-z][A-Za-z0-9_]*$/;
+const modelKey = /^[A-Za-z_][A-Za-z0-9_.-]{0,255}$/;
 
 function validModelKey(value: any): value is string {
   return (
     typeof value === 'string' &&
     modelKey.test(value) &&
-    !['constructor', 'prototype'].includes(value)
+    !value.split('.').some((key) => ['__proto__', 'constructor', 'prototype'].includes(key))
   );
+}
+
+export function validPluginLink(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^https?:\/\//.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return !!url.hostname && !url.username && !url.password;
+  } catch {
+    return false;
+  }
 }
 
 export function pluginFormIssues(nodes: PluginFormNode[], depth = 0): string[] {
@@ -84,6 +102,8 @@ function pluginRenderIssues(
       }
     }
     if ('html' in node || 'slots' in node) issues.push('此插件的富文本或插槽行为尚未移植');
+    if (node.component === 'a' && !validPluginLink(node.props?.href))
+      issues.push('插件链接地址无效');
     if (
       node.component === 'VImg' &&
       !/^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(node.props?.src || '')
@@ -148,13 +168,17 @@ export function pluginFieldProps(props: Record<string, any>, model: Record<strin
     if (['model', 'modelvalue', 'v-model'].includes(key)) {
       if (!validModelKey(value)) continue;
       const name = key === 'modelvalue' ? 'value' : 'modelValue';
-      bound[name] = model[value];
+      // Original dotted names are literal dictionary keys, never property
+      // traversal. A missing key must not resolve an inherited object member.
+      const current = model[value]; // Track missing reactive keys before the own-key check.
+      bound[name] = Object.hasOwn(model, value) ? current : undefined;
       bound['onUpdate:' + name] = (updated: any) => {
         model[value] = updated;
       };
     } else if (
       !key.startsWith('on') &&
       !key.includes('show') &&
+      (key !== 'href' || validPluginLink(value)) &&
       !['innerHTML', 'outerHTML', 'srcdoc'].includes(key)
     ) {
       bound[key] = value;

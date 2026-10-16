@@ -1,13 +1,106 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { reactive, effect, stop } from 'vue';
 import {
   pluginFormIssues,
   pluginPageIssues,
   pluginFieldProps,
   validPluginPieChart,
   pluginChartHTML,
+  validPluginLink,
 } from '../src/features/plugin-forms.ts';
+
+test('full original MergeMessageNotify forms retain literal dotted keys, tabs and nested dialogs', () => {
+  const forms = JSON.parse(
+    readFileSync(
+      new URL('../../internal/plugins/mergemessagenotify/forms.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  let count = 0;
+  const visit = (nodes) => {
+    for (const node of nodes) {
+      count++;
+      if (node.content) visit(node.content);
+    }
+  };
+  for (const form of Object.values(forms)) {
+    assert.deepEqual(pluginFormIssues(form.elements), []);
+    visit(form.elements);
+  }
+  assert.equal(count, 655);
+  const draft = { ...forms.plugin.data, 'custom.onebot-11.message_template': 'saved' };
+  for (const [key, value] of [
+    ['_tabs', '_tab.custom.email'],
+    ['custom.bark._config_cipher_dialog_closed', true],
+    ['custom.onebot-11.message_template', 'edited'],
+  ]) {
+    const field = pluginFieldProps({ model: key }, draft);
+    field['onUpdate:modelValue'](value);
+    assert.equal(draft[key], value);
+  }
+  const close = pluginFieldProps({ model: 'custom.bark._config_cipher_dialog_closed' }, draft);
+  close['onUpdate:modelValue'](false);
+  assert.equal(draft['custom.bark._config_cipher_dialog_closed'], false);
+  assert.equal(draft['custom.onebot-11.message_template'], 'edited');
+  assert.equal(draft.custom, undefined, 'literal dotted keys became a nested config');
+  assert.equal(draft['custom.email.from_name'], 'MoviePilot');
+});
+
+test('plugin literal model binding cannot access prototypes and links cannot execute scripts', () => {
+  for (const key of [
+    '__proto__',
+    'constructor',
+    'prototype',
+    'custom.__proto__.value',
+    'custom.constructor',
+    'custom[password]',
+  ]) {
+    assert.notDeepEqual(pluginFormIssues([{ component: 'VTextField', props: { model: key } }]), []);
+    assert.equal(Object.hasOwn(pluginFieldProps({ model: key }, {}), 'modelValue'), false);
+  }
+  const inherited = Object.create({ upstream: 'not-an-own-value' });
+  assert.equal(pluginFieldProps({ model: 'upstream' }, inherited).modelValue, undefined);
+  for (const href of [
+    'javascript:alert(1)',
+    'data:text/html,hi',
+    '//third.invalid',
+    'https://user:password@example.invalid',
+    '/local/file',
+  ]) {
+    assert.equal(validPluginLink(href), false);
+    assert.notDeepEqual(pluginFormIssues([{ component: 'a', props: { href } }]), []);
+    assert.equal(Object.hasOwn(pluginFieldProps({ href }, {}), 'href'), false);
+  }
+  assert.equal(validPluginLink('https://github.com/botuniverse/onebot-11'), true);
+  assert.deepEqual(
+    pluginFormIssues([
+      {
+        component: 'a',
+        props: { href: 'https://github.com/botuniverse/onebot-11', target: '_blank' },
+      },
+    ]),
+    [],
+  );
+});
+
+test('a newly introduced tab or nested dialog key remains reactive on its first edit', () => {
+  for (const key of ['_tabs', 'custom.bark._config_cipher_dialog_closed']) {
+    const model = reactive({});
+    let rendered;
+    const watcher = effect(() => {
+      rendered = pluginFieldProps({ model: key }, model).modelValue;
+    });
+    assert.equal(rendered, undefined);
+    const field = pluginFieldProps({ model: key }, model);
+    field['onUpdate:modelValue'](true);
+    assert.equal(rendered, true);
+    field['onUpdate:modelValue'](false);
+    assert.equal(rendered, false);
+    stop(watcher);
+  }
+});
 
 test('original switch and Ace model bindings save the current independent draft', () => {
   const model = { enabled: false, content: 'movie:\n' };

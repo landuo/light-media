@@ -11,7 +11,7 @@
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类适配、原表单/详情及逐效果StateJournal已迁入正式Go包；实际SQLite分行/owner、内部配置CAS与旧admission归档切换已有NAS证据。实际Manager/调度/消息及Browser/OCR接线、资源按需加载/回收、注册、配置/KV迁移和实机验收未完成 |
-| MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 分发、17渠道构造、原表单/配置/Stop、真实SDK及SMTP依赖已迁入正式Go包；28项NAS隔离测试通过，含实际回环SMTP命令与MIME字节。完整Mako/Apprise、表单渲染、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
+| MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 主流程/17渠道构造/SDK及SMTP依赖已迁入正式Go包，28项NAS隔离测试通过。原表单页签/子弹窗/点号键已用实际ConfigDialog验证；完整Mako/Apprise、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
 | IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 待实现、待迁移、待验证 |
 | SystemProcess | 系统进程 | 1.1 | 启用 | 0 | Go 进程采样、配置/详情页及仪表板数据已验证；仪表板布局待接入，待正式迁移 |
 | MediaServerRefresh | 媒体库服务器刷新 | 1.3.3 | 启用 | 0 | 已接 Go 子进程、持久批次、飞牛刷新、停用/重载/卸载/关闭收尾及核心核对交接；已有独占测试库实机证据，正式配置引用映射和迁移尚未执行 |
@@ -77,3 +77,5 @@ MergeMessageNotify 正式主流程和 SMTP 依赖的原始对照、28项NAS证�
 AutoSignIn 原生配置切换已保存旧 admission 原 Scope/配置链/未投递通知，并在真实 drain 证明后原子转交 owner 文件锁；统一24项NAS测试包含6个切换目标，详见 [配置切换记录](plugin-auto-signin-transition.md)。Manager/barrier/历史handoff尚待实际接线，不能据此增加正式迁移数量。
 
 CleanInvalidSeed 的正式宿主、实际 App journal 和两份 NAS 验证范围见 [宿主与 journal](plugin-clean-invalid-seed-host.md)。真实文件/下载器租约、Core/barrier、注册及迁移仍待接入，没有操作用户种子或媒体。
+
+聚合通知原表单需要的页签、子弹窗、完整字面键和链接已补，655节点检查及跨渠道编辑/一次保存的浏览器证据见 [原版表单交互](plugin-merge-message-form-ui.md)。这不是正式安装、账户发送或完整模板依赖的证据。

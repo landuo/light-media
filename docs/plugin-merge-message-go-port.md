@@ -10,7 +10,7 @@
 
 17 个渠道为 IYUU、Bark、Chanify、Ntfy、PushDeer、PushPlus、ServerChan、Gotify、PushMe、Pushover、DingTalk、Qiyeweixin、Feishu、OneBot-11、Apprise、SMTP 邮件及自定义 HTTP。保留原版 Gotify 参数遗漏、钉钉双重转义、Bark AES 模式及加密失败降级、部分 dict.update 后失败等可观察行为。来自 Python set 的收件人顺序采用首次出现顺序去重，不能宣称复现特定 Python 进程的随机集合顺序。
 
-原表单由实际 get_form 生成，含 655 个节点。**保留完整表单 JSON 不等于前端已可用**：现有安全表单渲染器尚未支持全部页签、窗口、对话框及链接组件，仍需补齐并在浏览器验证。
+原表单由实际 get_form 生成，18 份结果共 655 个节点。随后已补齐这些原表单所需的页签、窗口、子弹窗、字面点号键与链接，并用实际 PluginConfigDialog 验证切换、子弹窗和一次保存，见 [表单交互记录](plugin-merge-message-form-ui.md)。插件尚未注册或迁移，不能据表单夹具通过宣称可安装使用。
 
 SMTP 包使用可信宿主冻结的连接、账号、发件人及收件人集合；逐次发送校验请求与绑定一致。它实现原版 MIME 编码/头部/地址解析、AUTH CRAM-MD5→PLAIN→LOGIN、EHLO/HELO、SSL/STARTTLS、MAIL/RCPT/DATA/RSET/SIZE、点转义及 QUIT 的异常边界。取消会关闭本次连接，不自动重试不确定的投递。错误仅包含固定类别、阶段和数值状态，不含服务器正文、账号、消息或密码。Go 时区数据随二进制嵌入，不依赖容器的时区文件。
 
@@ -41,7 +41,7 @@ NAS linux/amd64、CGO_ENABLED=0 同 **28 项全部通过，0 跳过、0 失败�
 - **完整 Mako 1.4.1**：当前 RenderBasic 仅覆盖默认模板使用的简单替换和 if。调用/运算/过滤器/循环/defs/注释转义、Python 语句及对象表示、继承/include/namespace/cache 等仍待 Go 实现；未知语法明确失败，不发送猜测文本。
 - **完整 Apprise 1.9.9**：当前保留提取 URL、添加顺序及 notify 契约；URL 解析、全部通知后端、附件和协议响应仍待实现，不能用一个通用 webhook 替代。
 - **动态类型边界**：NaN/Infinity、大整数限制、任意对象 repr 及非表单类型的 Python 错误顺序尚未全量实现。SMTP 的类型化请求丢失部分原非字符串输入，不能据正常表单样本宣称全部类型等价。
-- **宿主与平台接线**：实际 HTTP 能力授权、通知事件生产者、加密消息封套、持久效果收据/恢复、配置 CAS、owner 吊销、循环防护、完整表单渲染、注册及正式数据迁移尚未完成。
+- **宿主与平台接线**：实际 HTTP 能力授权、通知事件生产者、加密消息封套、持久效果收据/恢复、配置 CAS、owner 吊销、循环防护、注册及正式数据迁移尚未完成。原表单需要的控件已另批验证，但正式实例及配置生命周期仍需联调。
 - **环境差异**：SMTP 主机仅接受 ASCII/数值地址和正整数端口；IDNA/服务名端口未实现。地址解析超过 400 层明确拒绝。默认 EHLO 依赖容器解析环境，时区数据不等于完整 pytz。原版 SMTP 默认不校验证书；Go 使用系统或可信宿主 CA 校验，不允许关闭校验，也不扩展飞牛的局部证书例外。
 
 原插件 hotlcc / MoviePilot-Plugins-Third 的 GPL-3.0 及依赖许可证均保留。输入材料中的旧 README 描述冻结候选当时状态；本文件及正式验证清单描述迁入后的范围。

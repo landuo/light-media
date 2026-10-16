@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-17",
+  "scope": "Actual PluginConfigDialog and formal full original MergeMessageNotify form, isolated Vite page with in-memory fetch adapter; no production registration/configuration/message delivery",
+  "observed": {
+    "default_tab": "爱语飞飞",
+    "tabs_switched": [
+      "Bark",
+      "邮件",
+      "OneBot-11",
+      "Bark"
+    ],
+    "nested_dialogs": [
+      "配置推送加密",
+      "配置消息模板"
+    ],
+    "nested_close_preserves_draft": true,
+    "save": {
+      "posts": [
+        {
+          "revision": 7,
+          "config": {
+            "channel_strategy": "ALL_SELECTED",
+            "custom.bark.server_url": "https://api.day.app",
+            "custom.bark.cipher_algorithm": "AES256",
+            "custom.bark.cipher_mode": "CBC",
+            "custom.bark.cipher_padding": "noPadding",
+            "custom.bark.group": "Owned UI Group",
+            "custom.bark.level": "active",
+            "custom.bark.isArchive": true,
+            "custom.ntfy.server_url": "https://ntfy.sh",
+            "custom.ntfy.topic": "MoviePilot",
+            "custom.ntfy.enable_md": true,
+            "custom.pushdeer.server_url": "https://api2.pushdeer.com",
+            "custom.pushplus.channel": "wechat",
+            "custom.pushme.key_type": "push_key",
+            "custom.pushover.server_url": "https://api.pushover.net",
+            "custom.onebot-11.message_template": "${title}\n${text}\nOwned UI Template",
+            "custom.email.from_name": "Owned Sender",
+            "custom.http.method": "get",
+            "_tabs": "_tab.custom.bark",
+            "custom.bark._config_cipher_dialog_closed": false,
+            "custom.email.smtp_host": "owned.smtp.invalid",
+            "custom.onebot-11._config_message_template": false
+          }
+        }
+      ],
+      "saved": 1,
+      "closed": 0,
+      "errors": []
+    }
+  },
+  "console_errors_or_warnings": [],
+  "screenshot": "plugin-merge-message-form-ui.png",
+  "frontend_checks": {
+    "tests": 141,
+    "passed": 141,
+    "failed": 0,
+    "skipped": 0,
+    "typecheck_exit_code": 0,
+    "build_exit_code": 0,
+    "build_warning": "Existing chart chunk exceeds 500 kB; no new runtime warning/error."
+  },
+  "files": {
+    "web/src/features/plugin-forms.ts": "08cfb264e5d290c3b31c8de93b762510f67e2ad9adbefba91792cae88d94e031",
+    "web/src/components/PluginFormRenderer.vue": "a26e3f15ea4397ce0e8118c29904b3d6206feb64baef40d8709e8a8aa561cbd2",
+    "web/src/components/PluginDialogCloseBtn.vue": "07be8074d65b55a88c8ed50235de7d96c9e8fe80d5015e497cbd19a56e38ccab",
+    "docs/plugin-merge-message-form-ui.png": "e194ae2023e036405f1962e897403de144107afb2422153d44801f162af79d65"
+  }
+}
