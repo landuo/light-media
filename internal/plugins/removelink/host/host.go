@@ -18,19 +18,20 @@ type request struct {
 	result chan error
 }
 type Host struct {
-	opts     Options
-	binding  Binding
-	ops      *localOps
-	machine  *removelink.Machine
-	config   json.RawMessage
-	watcher  Watcher
-	blocked  string
-	commands chan request
-	done     chan struct{}
-	closing  bool
-	running  bool
-	paused   bool
-	captures map[string]bool
+	opts        Options
+	binding     Binding
+	ops         *localOps
+	machine     *removelink.Machine
+	config      json.RawMessage
+	watcher     Watcher
+	blocked     string
+	commands    chan request
+	done        chan struct{}
+	closing     bool
+	running     bool
+	paused      bool
+	captures    map[string]bool
+	guardAction string // owner-only; nested drains retain the enclosing lease.
 }
 
 func Open(opts Options) (*Host, error) {
@@ -180,7 +181,39 @@ func (h *Host) guard(ctx context.Context, action string) (func(), error) {
 	if e == nil && release == nil {
 		return nil, ErrUnsafe
 	}
-	return release, e
+	if e != nil {
+		return nil, e
+	}
+	previous := h.guardAction
+	h.guardAction = action
+	return func() { h.guardAction = previous; release() }, nil
+}
+func (h *Host) afterAction(ctx context.Context, active *Event) error {
+	if h.opts.AfterAction == nil {
+		return nil
+	}
+	err := h.opts.AfterAction(ctx, h.binding, h.guardAction)
+	if err == nil {
+		return nil
+	}
+	// Preserve the active selection and confirmed filesystem receipts. The
+	// source machine may already have consumed its queue; replay is unsafe.
+	h.blocked = err.Error()
+	h.running = false
+	_ = h.closeWatch(context.Background(), false)
+	persist, cancel := context.WithTimeout(context.Background(), h.opts.AsyncTimeout)
+	defer cancel()
+	if saveErr := h.save(persist, active, func(s *Durable) {
+		if active != nil {
+			if r, ok := s.Events[active.ID]; ok {
+				r.Error = err.Error()
+				s.Events[active.ID] = r
+			}
+		}
+	}); saveErr != nil {
+		return errors.Join(err, saveErr)
+	}
+	return err
 }
 func (h *Host) checkpoint(ctx context.Context, active *Event) error { return h.save(ctx, active, nil) }
 func (h *Host) writeState(s *Durable, active *Event) {
@@ -207,7 +240,13 @@ func (h *Host) block(reason string) {
 	h.blocked = reason
 	h.running = false
 	_ = h.closeWatch(context.Background(), false)
-	_ = h.checkpoint(context.Background(), nil)
+	// A second error in the observer loop must not erase an AfterAction
+	// failure's active scope (or any earlier interrupted execution evidence).
+	ctx, cancel := context.WithTimeout(context.Background(), h.opts.AsyncTimeout)
+	defer cancel()
+	if s, err := h.opts.Journal.Read(ctx); err == nil {
+		_ = h.checkpoint(ctx, s.Active)
+	}
 }
 func (h *Host) Snapshot(ctx context.Context) (Durable, error) {
 	var out Durable
@@ -357,6 +396,9 @@ func (h *Host) configureOwner(ctx context.Context, binding Binding, raw json.Raw
 	}
 	if e == nil && len(h.ops.errors) > 0 {
 		e = h.ops.errors[0]
+	}
+	if after := h.afterAction(ctx, &event); after != nil {
+		return errors.Join(e, after)
 	}
 	if e != nil {
 		_ = h.closeWatch(ctx, false)
@@ -626,6 +668,9 @@ func (h *Host) process(ctx context.Context, event Event, guarded bool) (err erro
 	if err == nil && len(h.ops.errors) > 0 {
 		err = h.ops.errors[0]
 	}
+	if after := h.afterAction(ctx, &event); after != nil {
+		return errors.Join(err, after)
+	}
 	state := "confirmed"
 	if err != nil {
 		state = "failed"
@@ -678,15 +723,18 @@ func (h *Host) tick(ctx context.Context, guarded bool) error {
 	h.ops.errors = nil
 	before := len(h.machine.Errors)
 	h.machine.Tick()
-	if len(h.machine.Queue) == 0 {
-		h.ops.frozen = map[string]Pin{}
-	}
 	var err error
 	if len(h.machine.Errors) > before {
 		err = h.machine.Errors[before]
 	}
 	if err == nil && len(h.ops.errors) > 0 {
 		err = h.ops.errors[0]
+	}
+	if after := h.afterAction(ctx, &event); after != nil {
+		return errors.Join(err, after)
+	}
+	if len(h.machine.Queue) == 0 {
+		h.ops.frozen = map[string]Pin{}
 	}
 	if err != nil {
 		h.blocked = err.Error()
@@ -741,6 +789,9 @@ func (h *Host) stopOwner(ctx context.Context, reason string, finish func(context
 	}
 	if e == nil && len(h.ops.errors) > 0 {
 		e = h.ops.errors[0]
+	}
+	if after := h.afterAction(ctx, &event); after != nil {
+		return errors.Join(e, after)
 	}
 	if e != nil {
 		h.blocked = e.Error()

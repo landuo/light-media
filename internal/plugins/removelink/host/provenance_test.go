@@ -26,11 +26,12 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		FormalEvidence     map[string]string `json:"formal_validation_evidence"`
 		TransitionFiles    map[string]string `json:"transition_go_files"`
 		TransitionEvidence map[string]string `json:"transition_evidence_files"`
+		AfterActionFiles   map[string]string `json:"after_action_go_files"`
 	}
 	if err = json.Unmarshal(raw, &manifest); err != nil {
 		t.Fatal(err)
 	}
-	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 {
+	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 {
 		t.Fatal("missing installed source/candidate/evidence provenance")
 	}
 	verify := func(path, expected string) {
@@ -63,6 +64,12 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 	for name, sum := range manifest.TransitionFiles {
 		if filepath.Base(name) != name {
 			t.Fatal("invalid transition source filename")
+		}
+		verify(name, sum)
+	}
+	for name, sum := range manifest.AfterActionFiles {
+		if filepath.Base(name) != name {
+			t.Fatal("invalid AfterAction source filename")
 		}
 		verify(name, sum)
 	}

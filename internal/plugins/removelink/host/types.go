@@ -100,11 +100,16 @@ type Watcher interface {
 }
 type WatchFactory func(context.Context, []removelink.Watch, func(string) (*os.File, error)) (Watcher, error)
 type Options struct {
-	Binding         Binding
-	Roots           []Root
-	Journal         Journal
-	Effects         Effects
-	Guard           func(context.Context, Binding, string) (func(), error)
+	Binding Binding
+	Roots   []Root
+	Journal Journal
+	Effects Effects
+	Guard   func(context.Context, Binding, string) (func(), error)
+	// AfterAction runs before successful completion is checkpointed, while the
+	// exact Guard lease is still held. App owners must provide it to reconcile
+	// confirmed filesystem facts, including when all optional effects are off.
+	// Nil preserves the standalone host contract for non-App consumers.
+	AfterAction     func(context.Context, Binding, string) error
 	Watch           WatchFactory
 	Now             func() time.Time
 	MediaExtensions []string

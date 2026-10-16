@@ -241,6 +241,8 @@ func (h *Host) drainTransitionOwner(ctx context.Context, ticket TransitionTicket
 	if err = h.checkedCaptures(s, t.From); err != nil {
 		return err
 	}
+	// stopOwner runs AfterAction under its Guard before this drained marker.
+	// A failed core reconciliation must prevent publication/retirement.
 	return h.stopOwner(ctx, "transition:"+ticket.ID, func(ctx context.Context) error {
 		return h.opts.Journal.Update(ctx, func(s *Durable) error {
 			if !matchTicket(s.Transition, ticket) || s.Transition.Phase != t.Phase {
