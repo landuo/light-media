@@ -102,6 +102,50 @@ test('a newly introduced tab or nested dialog key remains reactive on its first 
   }
 });
 
+test('actual Lark form password visibility uses a fixed native action and preserves its value', () => {
+  const original = JSON.parse(
+    readFileSync(
+      new URL('../../testdata/plugins/lark-messager-0.9.1-form.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  assert.deepEqual(pluginFormIssues(original.form), []);
+  const fields = [];
+  const visit = (nodes) => {
+    for (const node of nodes) {
+      if (node.props?.model === 'app_secret') fields.push(node);
+      if (node.content) visit(node.content);
+    }
+  };
+  visit(original.form);
+  assert.equal(fields.length, 1);
+  const props = fields[0].props;
+  const draft = reactive({ ...original.defaults, app_secret: 'owned-synthetic-value' });
+  let rendered;
+  const watcher = effect(() => {
+    rendered = pluginFieldProps(props, draft);
+  });
+  assert.equal(rendered.type, 'password');
+  assert.equal(rendered['append-inner-icon'], 'mdi-eye');
+  rendered['onClick:append-inner']();
+  assert.equal(rendered.type, 'text');
+  assert.equal(rendered['append-inner-icon'], 'mdi-eye-off');
+  assert.equal(draft.app_secret, 'owned-synthetic-value');
+  rendered['onClick:append-inner']();
+  assert.equal(rendered.type, 'password');
+  assert.equal(draft.app_secret_visible, false);
+  assert.equal(draft.app_secret, 'owned-synthetic-value');
+  stop(watcher);
+  for (const changes of [
+    { 'onClick:append-inner': 'function(e){ fetch("https://foreign.invalid") }' },
+    { type: "{{ model.some_other_key ? 'text' : 'password' }}" },
+    { model: 'another_password' },
+    { onInput: 'function(e){ model.app_secret = e }' },
+  ]) {
+    assert.notDeepEqual(pluginFormIssues([{ ...fields[0], props: { ...props, ...changes } }]), []);
+  }
+});
+
 test('original switch and Ace model bindings save the current independent draft', () => {
   const model = { enabled: false, content: 'movie:\n' };
   const switchProps = pluginFieldProps(

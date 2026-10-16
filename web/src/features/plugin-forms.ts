@@ -44,6 +44,22 @@ const tableElements = new Set([
 ]);
 const modelKey = /^[A-Za-z_][A-Za-z0-9_.-]{0,255}$/;
 
+// The installed Lark form declares exactly this password visibility action.
+// Translate that one native behavior; no server-provided JavaScript executes.
+const larkPasswordAction = {
+  model: 'app_secret',
+  type: "{{ app_secret_visible ? 'text' : 'password' }}",
+  'append-inner-icon': "{{ app_secret_visible ? 'mdi-eye-off' : 'mdi-eye' }}",
+  'onClick:append-inner': 'function(e){ model.app_secret_visible = !model.app_secret_visible }',
+};
+function originalPasswordAction(props: Record<string, any>): boolean {
+  return Object.entries(larkPasswordAction).every(([key, value]) => props[key] === value);
+}
+function passwordVisible(model: Record<string, any>): boolean {
+  const value = model.app_secret_visible;
+  return Object.hasOwn(model, 'app_secret_visible') && !!value;
+}
+
 function validModelKey(value: any): value is string {
   return (
     typeof value === 'string' &&
@@ -89,8 +105,11 @@ function pluginRenderIssues(
       issues.push('尚未实现的插件组件：' + String(node?.component || 'unknown'));
       continue;
     }
+    const passwordAction = originalPasswordAction(node.props || {});
     for (const [key, value] of Object.entries(node.props || {})) {
-      if (['model', 'modelvalue', 'v-model'].includes(key)) {
+      if (passwordAction && Object.hasOwn(larkPasswordAction, key) && key !== 'model') {
+        continue;
+      } else if (['model', 'modelvalue', 'v-model'].includes(key)) {
         if (!validModelKey(value)) issues.push('插件表单字段名无效');
       } else if (
         key.startsWith('on') ||
@@ -164,6 +183,7 @@ export function pluginChartHTML(text: string): string {
 
 export function pluginFieldProps(props: Record<string, any>, model: Record<string, any>) {
   const bound: Record<string, any> = {};
+  const passwordAction = originalPasswordAction(props);
   for (const [key, value] of Object.entries(props)) {
     if (['model', 'modelvalue', 'v-model'].includes(key)) {
       if (!validModelKey(value)) continue;
@@ -174,6 +194,14 @@ export function pluginFieldProps(props: Record<string, any>, model: Record<strin
       bound[name] = Object.hasOwn(model, value) ? current : undefined;
       bound['onUpdate:' + name] = (updated: any) => {
         model[value] = updated;
+      };
+    } else if (passwordAction && key === 'type') {
+      bound.type = passwordVisible(model) ? 'text' : 'password';
+    } else if (passwordAction && key === 'append-inner-icon') {
+      bound[key] = passwordVisible(model) ? 'mdi-eye-off' : 'mdi-eye';
+    } else if (passwordAction && key === 'onClick:append-inner') {
+      bound[key] = () => {
+        model.app_secret_visible = !passwordVisible(model);
       };
     } else if (
       !key.startsWith('on') &&

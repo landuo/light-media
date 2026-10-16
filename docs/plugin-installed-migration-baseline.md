@@ -79,3 +79,5 @@ AutoSignIn 原生配置切换已保存旧 admission 原 Scope/配置链/未投�
 CleanInvalidSeed 的正式宿主、实际 App journal 和两份 NAS 验证范围见 [宿主与 journal](plugin-clean-invalid-seed-host.md)。真实文件/下载器租约、Core/barrier、注册及迁移仍待接入，没有操作用户种子或媒体。
 
 聚合通知原表单需要的页签、子弹窗、完整字面键和链接已补，655节点检查及跨渠道编辑/一次保存的浏览器证据见 [原版表单交互](plugin-merge-message-form-ui.md)。这不是正式安装、账户发送或完整模板依赖的证据。
+
+Lark 原 App Secret 显隐已映射为固定原生动作并验证 password→text→password 与一次保存保留原值，见 [表单交互](plugin-lark-password-ui.md)。原对象 rules 的 warning 如实保留，不声明前端 required 验证完成；整个 Lark 业务及配置迁移仍未完成。
