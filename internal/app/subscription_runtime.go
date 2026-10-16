@@ -361,6 +361,11 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), key); e != nil {
 		return s, e
 	}
+	if old.ID == "" {
+		if e = a.recordSubscriptionAddedTx(ctx, tx, s); e != nil {
+			return s, e
+		}
+	}
 	if e = tx.Commit(); e != nil {
 		return s, e
 	}

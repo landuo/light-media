@@ -15,23 +15,24 @@ import (
 // committed facts only, never arbitrary payloads, paths or private metainfo.
 // No plugin is started or granted authority by producing or reading an event.
 type DomainEvent struct {
-	Sequence      int64  `json:"sequence,omitempty"`
-	SchemaVersion int    `json:"schema_version"`
-	EventID       string `json:"event_id"`
-	Type          string `json:"event_type"`
-	OccurredAt    string `json:"occurred_at"`
-	WorkflowID    string `json:"workflow_id"`
-	JobID         string `json:"job_id,omitempty"`
-	MediaID       string `json:"media_id"`
-	IntentID      string `json:"intent_id,omitempty"`
-	AssetID       string `json:"asset_id,omitempty"`
-	SiteID        string `json:"site_id,omitempty"`
-	Purpose       string `json:"purpose"`
-	SubjectID     string `json:"subject_id"`
-	SubjectKind   string `json:"subject_kind"`
-	CausationID   string `json:"causation_id,omitempty"`
-	ParentJobID   string `json:"parent_job_id,omitempty"`
-	Origin        string `json:"origin"`
+	Sequence       int64  `json:"sequence,omitempty"`
+	SchemaVersion  int    `json:"schema_version"`
+	EventID        string `json:"event_id"`
+	Type           string `json:"event_type"`
+	OccurredAt     string `json:"occurred_at"`
+	WorkflowID     string `json:"workflow_id"`
+	JobID          string `json:"job_id,omitempty"`
+	MediaID        string `json:"media_id"`
+	IntentID       string `json:"intent_id,omitempty"`
+	AssetID        string `json:"asset_id,omitempty"`
+	SiteID         string `json:"site_id,omitempty"`
+	SubscriptionID string `json:"subscription_id,omitempty"`
+	Purpose        string `json:"purpose"`
+	SubjectID      string `json:"subject_id"`
+	SubjectKind    string `json:"subject_kind"`
+	CausationID    string `json:"causation_id,omitempty"`
+	ParentJobID    string `json:"parent_job_id,omitempty"`
+	Origin         string `json:"origin"`
 }
 type DomainEventPage struct {
 	Events     []DomainEvent `json:"events"`
@@ -56,10 +57,10 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	if in.SchemaVersion == 0 {
 		in.SchemaVersion = 1
 	}
-	if in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || (in.JobID == "" && in.Type != "download.completed" && in.Type != "site.refreshed") || (in.JobID != "" && !domainReferencePattern.MatchString(in.JobID)) {
+	if in.SchemaVersion != 1 || in.Sequence != 0 || !domainEventIDPattern.MatchString(in.EventID) || (in.JobID == "" && in.Type != "download.completed" && in.Type != "site.refreshed" && in.Type != "subscription.added") || (in.JobID != "" && !domainReferencePattern.MatchString(in.JobID)) {
 		return invalid()
 	}
-	for _, value := range []string{in.IntentID, in.AssetID, in.WorkflowID, in.CausationID, in.ParentJobID} {
+	for _, value := range []string{in.IntentID, in.AssetID, in.WorkflowID, in.CausationID, in.ParentJobID, in.SubscriptionID} {
 		if value != "" && !domainReferencePattern.MatchString(value) {
 			return invalid()
 		}
@@ -69,8 +70,15 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 		if in.Type == "site.refreshed" {
 			in.Purpose = "site_statistics"
 		}
+		if in.Type == "subscription.added" {
+			in.Purpose = "subscription"
+		}
 	}
-	if (in.Type == "site.refreshed" && in.Purpose != "site_statistics") || (in.Type != "site.refreshed" && (in.Purpose != "core_download" || in.SiteID != "")) {
+	if in.Type == "subscription.added" {
+		if in.Purpose != "subscription" || in.SiteID != "" || in.IntentID != "" || in.AssetID != "" || in.JobID != "" || in.WorkflowID != "" {
+			return invalid()
+		}
+	} else if in.SubscriptionID != "" || (in.Type == "site.refreshed" && in.Purpose != "site_statistics") || (in.Type != "site.refreshed" && (in.Purpose != "core_download" || in.SiteID != "")) {
 		return invalid()
 	}
 	if in.Origin == "" {
@@ -98,10 +106,15 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 			return invalid()
 		}
 		subject, kind = in.SiteID, "site"
+	case "subscription.added":
+		if in.SubscriptionID == "" || !domainMediaPattern.MatchString(in.MediaID) {
+			return invalid()
+		}
+		subject, kind = in.SubscriptionID, "subscription"
 	default:
 		return invalid()
 	}
-	if in.Type != "job.failed" && in.Type != "site.refreshed" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
+	if in.Type != "job.failed" && in.Type != "site.refreshed" && in.Type != "subscription.added" && (in.WorkflowID == "" || !domainMediaPattern.MatchString(in.MediaID)) {
 		return invalid()
 	}
 	if in.MediaID != "" && !domainMediaPattern.MatchString(in.MediaID) {

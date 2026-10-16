@@ -33,12 +33,12 @@ func (p *PluginStore) configureEventSubscription(ctx context.Context, run Plugin
 }
 
 func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.Tx, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
-	if !pluginStorageID.MatchString(handler) || len(types) == 0 || len(types) > 7 || delay < 0 {
+	if !pluginStorageID.MatchString(handler) || len(types) == 0 || len(types) > 8 || delay < 0 {
 		return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件订阅参数无效")
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "subscription.added"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true
