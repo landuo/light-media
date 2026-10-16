@@ -279,9 +279,10 @@ func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode str
 }
 
 func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
-	// The category write replaces one file with the same validated content and
-	// uses an idempotent notification id. Other plugins require own reconciliation.
-	_, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state=CASE WHEN instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id='CategoryEditor') THEN 'pending' ELSE 'reconcile_pending' END,error_code='PLUGIN_INTERRUPTED',updated_at=? WHERE state='running' OR (state='reconcile_pending' AND instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id='CategoryEditor'))`, now())
+	// These native operations are idempotent: category replaces a validated
+	// file; Hosts replaces only its marked tail; process init has no side effect.
+	// Other plugins require their own external-operation reconciliation.
+	_, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state=CASE WHEN instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id IN ('CategoryEditor','CustomHosts','SystemProcess')) THEN 'pending' ELSE 'reconcile_pending' END,error_code='PLUGIN_INTERRUPTED',updated_at=? WHERE state='running' OR (state='reconcile_pending' AND instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id IN ('CategoryEditor','CustomHosts','SystemProcess')))`, now())
 	return err
 }
 
@@ -324,6 +325,40 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 	}
 	if n, _ := changed.RowsAffected(); n != 1 {
 		return bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
+	}
+	// Internal normalization and clearing one-shot flags must reach already
+	// queued invocations too. Only advance snapshots that still match this
+	// exact generation/revision; a user edit continues to invalidate old work.
+	for {
+		var pendingID string
+		var pendingSealed []byte
+		err := tx.QueryRowContext(ctx, `SELECT id,input FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state='pending' ORDER BY id LIMIT 1`, run.InstanceID, run.Generation, revision).Scan(&pendingID, &pendingSealed)
+		if errors.Is(err, sql.ErrNoRows) {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		pendingRaw, err := p.unseal("run", run.InstanceID, pendingID, pendingSealed)
+		if err != nil {
+			return err
+		}
+		var invocation map[string]json.RawMessage
+		if json.Unmarshal(pendingRaw, &invocation) != nil || invocation == nil {
+			return bad("INVALID_PLUGIN_RUN", "排队插件执行快照无效")
+		}
+		invocation["config"] = raw
+		pendingRaw, err = pluginJSON(invocation, false)
+		if err != nil {
+			return err
+		}
+		pendingSealed, err = p.seal("run", run.InstanceID, pendingID, pendingRaw)
+		if err != nil {
+			return err
+		}
+		if _, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,input=?,updated_at=? WHERE id=?`, value.Revision, pendingSealed, now(), pendingID); err != nil {
+			return err
+		}
 	}
 	if err := tx.Commit(); err != nil {
 		return err

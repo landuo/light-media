@@ -11,6 +11,13 @@ import { api, errorText, toast } from '../api';
 import type { PluginCard } from '../features/plugin-forms';
 import AppIcon from './AppIcon.vue';
 const PluginConfigDialog = defineAsyncComponent(() => import('./PluginConfigDialog.vue'));
+const PluginDataDialog = defineAsyncComponent(() => import('./PluginDataDialog.vue'));
+const detail = ref<PluginCard>();
+function openPlugin(plugin: PluginCard) {
+  if (!plugin.installed) return;
+  if (plugin.has_page) detail.value = plugin;
+  else selected.value = plugin;
+}
 
 const tab = ref('installed'),
   query = ref(''),
@@ -121,7 +128,7 @@ onUnmounted(() => clearInterval(timer));
         v-for="plugin in visible"
         :key="plugin.instance_id"
         class="plugin-card"
-        @click="plugin.installed && (selected = plugin)"
+        @click="openPlugin(plugin)"
       >
         <div class="plugin-card-cover">
           <VCardTitle class="plugin-card-title"
@@ -157,7 +164,9 @@ onUnmounted(() => clearInterval(timer));
                 ><AppIcon name="more" /></VBtn
             ></template>
             <VList class="plugin-menu"
-              ><VListItem title="设置" @click="selected = plugin" /><VListItem
+              ><VListItem v-if="plugin.has_page" title="详情" @click="detail = plugin" /><VListItem
+                title="设置"
+                @click="selected = plugin" /><VListItem
                 title="重置"
                 @click="confirmation = { plugin, action: 'reset' }" /><VListItem
                 title="卸载"
@@ -169,6 +178,16 @@ onUnmounted(() => clearInterval(timer));
         </VCardText>
       </VCard>
     </div>
+    <PluginDataDialog
+      v-if="detail"
+      :key="detail.instance_id"
+      :plugin="detail"
+      @close="detail = undefined"
+      @switch="
+        selected = detail;
+        detail = undefined;
+      "
+    />
     <PluginConfigDialog
       v-if="selected"
       :key="selected.instance_id"

@@ -43,9 +43,13 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 			if err == nil && exists && installation.DesiredEnabled {
 				var flags struct {
 					Enabled bool `json:"enabled"`
+					Enable  bool `json:"enable"`
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "SystemProcess" {
+					state = flags.Enable
+				}
 			}
 			items = append(items, pluginCard{Manifest: manifest, InstanceID: installation.InstanceID, Installed: true, State: state})
 		}
@@ -105,8 +109,8 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		return nil, err
 	}
 	if err == nil {
-		// This first migrated form contains only non-secret category fields.
-		// Future schemas must define secret projections before joining the catalog.
+		// The current catalog has no credential fields. Credentialed schemas must
+		// define secret projections before joining this catalog.
 		var config map[string]json.RawMessage
 		if json.Unmarshal(stored.Value, &config) != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "插件配置无效")
@@ -127,6 +131,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	}
 	if path == "market" && r.Method == "GET" {
 		return a.pluginCards(ctx, true)
+	}
+	if path == "dashboard/meta" && r.Method == "GET" {
+		return a.pluginDashboardMeta(ctx)
 	}
 	if path == "install" && r.Method == "POST" {
 		var in struct {
@@ -165,31 +172,38 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		return nil, &APIError{"NOT_FOUND", "插件已卸载", 404}
 	}
 	switch {
+	case parts[1] == "page" && r.Method == "GET":
+		return a.pluginView(ctx, installation, "page", "")
+	case parts[1] == "dashboard" && r.Method == "GET":
+		if !installation.DesiredEnabled {
+			return nil, bad("PLUGIN_MIGRATION_STAGED", "迁移插件仍在暂存")
+		}
+		key := r.URL.Query().Get("key")
+		if key == "" {
+			key = "default"
+		}
+		return a.pluginView(ctx, installation, "dashboard", key)
 	case parts[1] == "form" && r.Method == "GET":
 		return a.pluginForm(ctx, installation)
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
-			Revision int64 `json:"revision"`
-			Config   struct {
-				Enabled bool   `json:"enabled"`
-				Content string `json:"content"`
-			} `json:"config"`
+			Revision int64           `json:"revision"`
+			Config   json.RawMessage `json:"config"`
 		}
 		if err := decodePluginBody(w, r, &in); err != nil {
 			return nil, err
 		}
-		if in.Config.Enabled {
-			if _, err := parseMediaCategoryPolicy([]byte(in.Config.Content)); err != nil {
-				return nil, err
-			}
+		configValue, err := a.validateNativePluginConfig(installation.PluginID, in.Config)
+		if err != nil {
+			return nil, err
 		}
 		a.pluginMu.Lock()
-		config, run, err := a.pluginStore.SaveConfigAndQueue(ctx, installation.InstanceID, in.Revision, in.Config)
+		config, run, err := a.pluginStore.SaveConfigAndQueue(ctx, installation.InstanceID, in.Revision, configValue)
 		a.pluginMu.Unlock()
 		if err == nil {
 			a.wakePlugins()
@@ -221,5 +235,55 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		return map[string]bool{"uninstalled": err == nil, "data_retained": true}, err
 	default:
 		return nil, &APIError{"NOT_FOUND", "插件操作不存在或方法不支持", 404}
+	}
+}
+
+func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (any, error) {
+	if !strings.HasPrefix(strings.TrimSpace(string(raw)), "{") {
+		return nil, bad("INVALID_PLUGIN_JSON", "插件配置必须是对象")
+	}
+	decode := func(value any) error {
+		decoder := json.NewDecoder(strings.NewReader(string(raw)))
+		decoder.DisallowUnknownFields()
+		if decoder.Decode(value) != nil || decoder.Decode(new(any)) != io.EOF {
+			return bad("INVALID_PLUGIN_JSON", "插件请求含无效或尚未支持的字段")
+		}
+		return nil
+	}
+	switch pluginID {
+	case "CategoryEditor":
+		var config struct {
+			Enabled bool   `json:"enabled"`
+			Content string `json:"content"`
+		}
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if config.Enabled {
+			if _, err := parseMediaCategoryPolicy([]byte(config.Content)); err != nil {
+				return nil, err
+			}
+		}
+		return config, nil
+	case "CustomHosts":
+		var config builtin.CustomHostsConfiguration
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if err := config.Validate(); err != nil {
+			return nil, bad("INVALID_HOSTS_VALUE", "Hosts配置必须为文本或文本行数组，且不超过128 KiB")
+		}
+		return config, nil
+	case "SystemProcess":
+		var config builtin.SystemProcessConfiguration
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if _, _, err := config.Display(); err != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "仪表板尺寸必须选择列表中的值，刷新间隔须为0到86400秒或留空")
+		}
+		return config, nil
+	default:
+		return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件尚无配置校验实现")
 	}
 }

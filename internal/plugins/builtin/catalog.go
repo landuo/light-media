@@ -8,11 +8,15 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 	switch pluginID {
 	case "CategoryEditor":
 		return CategoryEditorManifest(), HandleCategoryEditor, true
+	case "CustomHosts":
+		return CustomHostsManifest(), HandleCustomHosts, true
+	case "SystemProcess":
+		return SystemProcessManifest(), HandleSystemProcess, true
 	default:
 		return plugins.Manifest{}, nil, false
 	}
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest()}
+	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest()}
 }

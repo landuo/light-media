@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -30,6 +31,51 @@ func (a *App) wakePlugins() {
 	case a.pluginWake <- struct{}{}:
 	default:
 	}
+}
+
+func (a *App) initializeNativePlugins(ctx context.Context) error {
+	a.pluginMu.Lock()
+	defer a.pluginMu.Unlock()
+	installations, err := a.pluginStore.Installations(ctx)
+	if err != nil {
+		return err
+	}
+	for _, installation := range installations {
+		// Import staging must never reapply hosts or replay one-shot config.
+		if !installation.DesiredEnabled {
+			continue
+		}
+		manifest, _, exists := builtin.Lookup(installation.PluginID)
+		if !exists || manifest.Version != installation.Version {
+			continue
+		}
+		config, err := a.pluginStore.Config(ctx, installation.InstanceID)
+		if missingPluginValue(err) {
+			continue
+		}
+		if err != nil {
+			return err
+		}
+		if installation.PluginID == "CategoryEditor" {
+			var state struct {
+				Enabled bool `json:"enabled"`
+			}
+			if json.Unmarshal(config.Value, &state) != nil || !state.Enabled {
+				continue
+			}
+		}
+		var existing int
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state IN ('pending','running')`, installation.InstanceID, installation.Generation, config.Revision).Scan(&existing); err != nil {
+			return err
+		}
+		if existing > 0 {
+			continue
+		}
+		if _, err := a.pluginStore.EnqueueRun(ctx, installation.InstanceID, "init", nil); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (a *App) pluginWorker(ctx context.Context) {
@@ -164,6 +210,10 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "配置表单只能读取默认分类策略")
 	}
 	switch method {
+	case "hosts.read":
+		return a.readContainerHosts()
+	case "hosts.replace":
+		return a.replaceContainerHosts(ctx, raw)
 	case "category.read":
 		return json.Marshal(map[string]string{"content": defaultMediaCategoryPolicy})
 	case "category.write":
@@ -182,8 +232,27 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return json.RawMessage(`{"applied":true}`), nil
 	case "config.patch":
 		var fields map[string]json.RawMessage
-		if json.Unmarshal(raw, &fields) != nil || len(fields) != 1 || string(fields["enabled"]) != "false" {
-			return nil, bad("PLUGIN_CAPABILITY_DENIED", "二级分类插件只能关闭自身的一次性开关")
+		if json.Unmarshal(raw, &fields) != nil {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件配置更新格式不符合授权范围")
+		}
+		if installation.PluginID == "CategoryEditor" {
+			if len(fields) != 1 || string(fields["enabled"]) != "false" {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "二级分类插件只能关闭自身的一次性开关")
+			}
+		} else if installation.PluginID == "CustomHosts" {
+			var enabled bool
+			var hosts string
+			var invalid []string
+			if len(fields) != 3 || json.Unmarshal(fields["enabled"], &enabled) != nil || json.Unmarshal(fields["hosts"], &hosts) != nil || json.Unmarshal(fields["err_hosts"], &invalid) != nil || len(hosts) > builtin.MaxCustomHostsBytes {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "Hosts插件只能规范自身配置和错误记录")
+			}
+			stored, err := a.pluginStore.Config(ctx, run.InstanceID)
+			var source builtin.CustomHostsConfiguration
+			if err != nil || json.Unmarshal(stored.Value, &source) != nil || (!source.Enabled && enabled) {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件不能自行启用未获用户启用的配置")
+			}
+		} else {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "此插件尚无配置写回授权")
 		}
 		if err := a.pluginStore.patchRunConfig(ctx, run, fields); err != nil {
 			return nil, err
@@ -191,10 +260,38 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return json.RawMessage(`{"saved":true}`), nil
 	case "notification.post":
 		var notice struct {
-			Title   string `json:"title"`
-			Message string `json:"message"`
+			Title    string   `json:"title"`
+			Message  string   `json:"message"`
+			Messages []string `json:"messages"`
 		}
-		if json.Unmarshal(raw, &notice) != nil || notice.Title != "二级分类策略" || notice.Message != "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！" {
+		if json.Unmarshal(raw, &notice) != nil {
+			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件通知格式无效")
+		}
+		categoryNotice := installation.PluginID == "CategoryEditor" && notice.Title == "二级分类策略" && notice.Message == "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+		hostsNotice := installation.PluginID == "CustomHosts" && notice.Title == "自定义Hosts" && notice.Message == "写入系统hosts文件失败，请检查容器挂载及文件权限。"
+		if installation.PluginID == "CustomHosts" && notice.Title == "自定义Hosts" && notice.Message == "" && len(notice.Messages) > 0 && len(notice.Messages) <= 4096 {
+			for _, message := range notice.Messages {
+				if message != "[HOST] 格式转换错误：" && message != "[HOST] 格式转换错误：list index out of range" && message != "[HOST] 格式转换错误：Address and Name(s) must be specified." {
+					return nil, bad("PLUGIN_CAPABILITY_DENIED", "Hosts错误通知内容无效")
+				}
+			}
+			tx, err := a.Store.DB.BeginTx(ctx, nil)
+			if err != nil {
+				return nil, err
+			}
+			defer tx.Rollback()
+			for index, message := range notice.Messages {
+				n := Notification{ID: fmt.Sprintf("plugin_notice_%s_invalid_%d", run.ID, index), Title: notice.Title, Message: message, CreatedAt: now()}
+				if err := txPut(ctx, tx, "notification", n.ID, n); err != nil {
+					return nil, err
+				}
+			}
+			if err := tx.Commit(); err != nil {
+				return nil, err
+			}
+			return json.RawMessage(`{"posted":true}`), nil
+		}
+		if !categoryNotice && !hostsNotice {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件通知内容不符合已授权动作")
 		}
 		n := Notification{ID: "plugin_notice_" + run.ID, Title: notice.Title, Message: notice.Message, CreatedAt: now()}

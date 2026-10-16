@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pluginFormIssues, pluginFieldProps } from '../src/features/plugin-forms.ts';
+import {
+  pluginFormIssues,
+  pluginPageIssues,
+  pluginFieldProps,
+} from '../src/features/plugin-forms.ts';
 
 test('original switch and Ace model bindings save the current independent draft', () => {
   const model = { enabled: false, content: 'movie:\n' };
@@ -18,6 +22,32 @@ test('original switch and Ace model bindings save the current independent draft'
   editorProps['onUpdate:value']('movie:\n  华语电影:\n');
   assert.deepEqual(model, { enabled: true, content: 'movie:\n  华语电影:\n' });
   assert.equal(editorProps.theme, 'monokai');
+});
+
+test('plugin data tables support actual process lists and reject executable HTML', () => {
+  const table = [
+    {
+      component: 'VTable',
+      content: [
+        {
+          component: 'tbody',
+          content: Array.from({ length: 1024 }, (_, i) => ({
+            component: 'tr',
+            content: [{ component: 'td', text: i }],
+          })),
+        },
+      ],
+    },
+  ];
+  assert.deepEqual(pluginPageIssues(table), []);
+  assert.notDeepEqual(pluginFormIssues(table), []);
+  for (const node of [
+    { component: 'script', text: 'alert(1)' },
+    { component: 'td', props: { innerHTML: '<img src=x onerror=alert(1)>' } },
+    { component: 'VSwitch', props: { model: 'constructor' } },
+  ])
+    assert.notDeepEqual(pluginPageIssues([node]), []);
+  assert.equal('innerHTML' in pluginFieldProps({ innerHTML: '<b>unsafe</b>' }, {}), false);
 });
 
 test('unsupported original UI behavior is reported before save, not silently discarded', () => {

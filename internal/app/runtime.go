@@ -23,39 +23,41 @@ import (
 )
 
 type App struct {
-	directoryFileMu  sync.Mutex
-	RestartRequested chan struct{}
-	logs             *runtimeLogger
-	logError         string
-	catMu            sync.Mutex
-	catClient        *catalog.Client
-	catCreds         TMDBConfig
-	Store            *Store
-	Dir              string
-	web              http.Handler
-	cfgMu            sync.RWMutex
-	settingsMu       sync.Mutex
-	config           Settings
-	controlMu        sync.Mutex
-	control          string
-	activeWrites     int
-	logMu            sync.Mutex
-	authMu           sync.Mutex
-	authAttempts     map[string][]time.Time
-	jobWake          chan struct{}
-	wg               sync.WaitGroup
-	importMu         sync.Mutex
-	subMu            sync.Mutex
-	downloadMu       sync.Mutex
-	materialMu       sync.Mutex
-	materials        map[string][]byte
-	siteLocks        sync.Map
-	cancel           context.CancelFunc
-	pluginMu         sync.Mutex
-	pluginStore      *PluginStore
-	pluginWake       chan struct{}
-	pluginProcess    chan struct{}
-	pluginCommand    func(string) (plugins.Command, error)
+	directoryFileMu    sync.Mutex
+	RestartRequested   chan struct{}
+	logs               *runtimeLogger
+	logError           string
+	catMu              sync.Mutex
+	catClient          *catalog.Client
+	catCreds           TMDBConfig
+	Store              *Store
+	Dir                string
+	web                http.Handler
+	cfgMu              sync.RWMutex
+	settingsMu         sync.Mutex
+	config             Settings
+	controlMu          sync.Mutex
+	control            string
+	activeWrites       int
+	logMu              sync.Mutex
+	authMu             sync.Mutex
+	authAttempts       map[string][]time.Time
+	jobWake            chan struct{}
+	wg                 sync.WaitGroup
+	importMu           sync.Mutex
+	subMu              sync.Mutex
+	downloadMu         sync.Mutex
+	materialMu         sync.Mutex
+	materials          map[string][]byte
+	siteLocks          sync.Map
+	cancel             context.CancelFunc
+	pluginMu           sync.Mutex
+	pluginStore        *PluginStore
+	pluginWake         chan struct{}
+	pluginProcess      chan struct{}
+	pluginCommand      func(string) (plugins.Command, error)
+	pluginHostsFile    string // Test seam; production always uses the container's /etc/hosts.
+	pluginProcessStats pluginProcessSnapshotter
 }
 type Options struct {
 	DataDir string
@@ -134,6 +136,9 @@ func New(opts Options) (*App, error) {
 func (a *App) Start(parent context.Context) {
 	ctx, cancel := context.WithCancel(parent)
 	a.cancel = cancel
+	if err := a.initializeNativePlugins(ctx); err != nil {
+		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
+	}
 	for i := 0; i < 2; i++ {
 		a.wg.Add(1)
 		go func() { defer a.wg.Done(); a.worker(ctx) }()

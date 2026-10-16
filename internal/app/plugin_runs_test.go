@@ -123,6 +123,59 @@ func TestPluginRunsGenerationSurvivesResetAndReinstall(t *testing.T) {
 	}
 }
 
+func TestPluginRunsInternalPatchPreservesQueuedEventAndClearsOneShot(t *testing.T) {
+	_, p := pluginStoreFixture(t)
+	ctx := context.Background()
+	installStoredPlugin(t, p, "one")
+	_, first, err := p.SaveConfigAndQueue(ctx, "one", 0, map[string]any{"onlyonce": true, "value": "synthetic-private-config"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	active, err := p.ClaimRun(ctx)
+	if err != nil || active.ID != first.ID {
+		t.Fatal("initial invocation missing", err)
+	}
+	event, err := p.EnqueueRun(ctx, "one", "event", json.RawMessage(`{"event_id":"fixture-event"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := p.patchRunConfig(ctx, &active, map[string]json.RawMessage{"onlyonce": json.RawMessage(`false`)}); err != nil {
+		t.Fatal(err)
+	}
+	if err := p.FinishRun(ctx, active.ID, "succeeded", "", nil); err != nil {
+		t.Fatal(err)
+	}
+	claimed, err := p.ClaimRun(ctx)
+	var invocation struct {
+		Config struct {
+			OnlyOnce bool   `json:"onlyonce"`
+			Value    string `json:"value"`
+		} `json:"config"`
+		Input struct {
+			EventID string `json:"event_id"`
+		} `json:"input"`
+	}
+	if err != nil || claimed.ID != event.ID || claimed.ConfigRevision != active.ConfigRevision || json.Unmarshal(claimed.Input, &invocation) != nil || invocation.Config.OnlyOnce || invocation.Config.Value != "synthetic-private-config" || invocation.Input.EventID != "fixture-event" {
+		t.Fatal("internal patch canceled event, replayed one-shot or lost payload", claimed.ID, err)
+	}
+	if err := p.FinishRun(ctx, claimed.ID, "succeeded", "", nil); err != nil {
+		t.Fatal(err)
+	}
+	stale, err := p.EnqueueRun(ctx, "one", "event", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, fresh, err := p.SaveConfigAndQueue(ctx, "one", active.ConfigRevision, map[string]any{"onlyonce": false, "value": "user-edit"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	claimed, err = p.ClaimRun(ctx)
+	old, _ := p.Run(ctx, stale.ID)
+	if err != nil || claimed.ID != fresh.ID || old.State != "canceled" {
+		t.Fatal("user edit no longer invalidates old work", claimed.ID, old.State, err)
+	}
+}
+
 func TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations(t *testing.T) {
 	ctx := context.Background()
 	dir := t.TempDir()
@@ -134,7 +187,7 @@ func TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, id := range []string{"CategoryEditor", "SyntheticPlugin"} {
+	for _, id := range []string{"CategoryEditor", "SystemProcess", "SyntheticPlugin"} {
 		in := storedPluginFixture(id)
 		in.PluginID = id
 		if err := p.Install(ctx, in); err != nil {
@@ -160,8 +213,9 @@ func TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations(t *testing.T) {
 		t.Fatal("restart failed", err)
 	}
 	category, _ := p.Runs(ctx, "CategoryEditor", 50)
+	process, _ := p.Runs(ctx, "SystemProcess", 50)
 	other, _ := p.Runs(ctx, "SyntheticPlugin", 50)
-	if len(category) != 1 || category[0].State != "pending" || len(other) != 1 || other[0].State != "reconcile_pending" {
+	if len(category) != 1 || category[0].State != "pending" || len(process) != 1 || process[0].State != "pending" || len(other) != 1 || other[0].State != "reconcile_pending" {
 		t.Fatal("restart blindly replayed a side effect", category, other)
 	}
 }

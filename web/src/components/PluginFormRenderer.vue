@@ -7,13 +7,14 @@ import { VAlert } from 'vuetify/components/VAlert';
 import { VTextField } from 'vuetify/components/VTextField';
 import { VTextarea } from 'vuetify/components/VTextarea';
 import { VSelect } from 'vuetify/components/VSelect';
+import { VTable } from 'vuetify/components/VTable';
 import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
 import { pluginFieldProps, type PluginFormNode } from '../features/plugin-forms';
 
 const props = defineProps<{ node: PluginFormNode; model: Record<string, any> }>();
-const components: Record<string, Component> = {
+const components: Record<string, Component | string> = {
   VForm,
   VRow,
   VCol,
@@ -23,6 +24,12 @@ const components: Record<string, Component> = {
   VTextarea,
   VSelect,
   VAceEditor,
+  VTable,
+  thead: 'thead',
+  tbody: 'tbody',
+  tr: 'tr',
+  th: 'th',
+  td: 'td',
 };
 function render(node: PluginFormNode): any {
   const component = components[node.component];
@@ -33,10 +40,11 @@ function render(node: PluginFormNode): any {
   return h(
     component,
     bound,
-    node.component === 'VAceEditor'
+    node.component === 'VAceEditor' || (node.text === undefined && !node.content?.length)
       ? undefined
       : {
-          default: () => node.text || (node.content || []).map(render),
+          default: () =>
+            node.text !== undefined ? String(node.text) : (node.content || []).map(render),
         },
   );
 }

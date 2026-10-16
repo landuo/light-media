@@ -2,7 +2,7 @@ export type PluginFormNode = {
   component: string;
   props?: Record<string, any>;
   content?: PluginFormNode[];
-  text?: string;
+  text?: string | number;
 };
 
 const supported = new Set([
@@ -16,22 +16,50 @@ const supported = new Set([
   'VTextarea',
   'VSelect',
 ]);
+const tableElements = new Set(['VTable', 'thead', 'tbody', 'tr', 'th', 'td']);
 const modelKey = /^[A-Za-z][A-Za-z0-9_]*$/;
 
+function validModelKey(value: any): value is string {
+  return (
+    typeof value === 'string' &&
+    modelKey.test(value) &&
+    !['constructor', 'prototype'].includes(value)
+  );
+}
+
 export function pluginFormIssues(nodes: PluginFormNode[], depth = 0): string[] {
-  if (!Array.isArray(nodes) || depth > 16 || nodes.length > 256)
+  return pluginRenderIssues(nodes, false, depth, { remaining: 4096 });
+}
+
+export function pluginPageIssues(nodes: PluginFormNode[]): string[] {
+  return pluginRenderIssues(nodes, true, 0, { remaining: 16384 });
+}
+
+function pluginRenderIssues(
+  nodes: PluginFormNode[],
+  page: boolean,
+  depth: number,
+  budget: { remaining: number },
+): string[] {
+  if (
+    !Array.isArray(nodes) ||
+    depth > 16 ||
+    nodes.length > (page ? 2048 : 256) ||
+    (budget.remaining -= nodes.length) < 0
+  )
     return ['插件表单结构无效或超过限制'];
   const issues: string[] = [];
   for (const node of nodes) {
-    if (!node || !supported.has(node.component)) {
+    if (!node || (!supported.has(node.component) && !(page && tableElements.has(node.component)))) {
       issues.push('尚未实现的插件组件：' + String(node?.component || 'unknown'));
       continue;
     }
     for (const [key, value] of Object.entries(node.props || {})) {
       if (['model', 'modelvalue', 'v-model'].includes(key)) {
-        if (typeof value !== 'string' || !modelKey.test(value)) issues.push('插件表单字段名无效');
+        if (!validModelKey(value)) issues.push('插件表单字段名无效');
       } else if (
         key.startsWith('on') ||
+        ['innerHTML', 'outerHTML', 'srcdoc'].includes(key) ||
         key.includes('show') ||
         (typeof value === 'string' && value.includes('{{'))
       ) {
@@ -39,7 +67,7 @@ export function pluginFormIssues(nodes: PluginFormNode[], depth = 0): string[] {
       }
     }
     if ('html' in node || 'slots' in node) issues.push('此插件的富文本或插槽行为尚未移植');
-    if (node.content) issues.push(...pluginFormIssues(node.content, depth + 1));
+    if (node.content) issues.push(...pluginRenderIssues(node.content, page, depth + 1, budget));
   }
   return [...new Set(issues)];
 }
@@ -48,13 +76,17 @@ export function pluginFieldProps(props: Record<string, any>, model: Record<strin
   const bound: Record<string, any> = {};
   for (const [key, value] of Object.entries(props)) {
     if (['model', 'modelvalue', 'v-model'].includes(key)) {
-      if (typeof value !== 'string' || !modelKey.test(value)) continue;
+      if (!validModelKey(value)) continue;
       const name = key === 'modelvalue' ? 'value' : 'modelValue';
       bound[name] = model[value];
       bound['onUpdate:' + name] = (updated: any) => {
         model[value] = updated;
       };
-    } else if (!key.startsWith('on') && !key.includes('show')) {
+    } else if (
+      !key.startsWith('on') &&
+      !key.includes('show') &&
+      !['innerHTML', 'outerHTML', 'srcdoc'].includes(key)
+    ) {
       bound[key] = value;
     }
   }
@@ -71,4 +103,6 @@ export type PluginCard = {
   author_url: string;
   installed: boolean;
   state: boolean;
+  has_page?: boolean;
+  dashboards?: string[];
 };

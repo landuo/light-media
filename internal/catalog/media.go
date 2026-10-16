@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"encoding/json"
 	"net/url"
 	"sort"
 	"strconv"
@@ -97,12 +98,41 @@ func (c *Client) Browse(ctx context.Context, kind, list string, page int) (Page,
 // Empty Chinese titles/overviews use English when available; failure of this
 // optional fallback does not discard otherwise valid Chinese metadata.
 func (c *Client) Detail(ctx context.Context, kind string, id int64) (Media, error) {
+	return c.DetailForCategory(ctx, kind, id, nil)
+}
+
+// DetailForCategory preserves comparisons for any requested top-level TMDB
+// field, without storing the complete remote response or unrelated properties.
+func (c *Client) DetailForCategory(ctx context.Context, kind string, id int64, fields []string) (Media, error) {
 	if !kindOK(kind) || !validID(id) {
 		return Media{}, &Error{Code: "invalid_input"}
 	}
 	path := kind + "/" + strconv.FormatInt(id, 10)
 	var response wireMedia
-	if err := c.get(ctx, path, url.Values{"append_to_response": {"credits,recommendations,external_ids,alternative_titles"}}, &response); err != nil {
+	var categoryFields map[string]CategoryField
+	query := url.Values{"append_to_response": {"credits,recommendations,external_ids,alternative_titles"}}
+	if len(fields) > 0 {
+		if len(fields) > 128 {
+			return Media{}, &Error{Code: "invalid_input"}
+		}
+		for _, field := range fields {
+			if !validCategoryFieldName(field) {
+				return Media{}, &Error{Code: "invalid_input"}
+			}
+		}
+		var raw json.RawMessage
+		if err := c.get(ctx, path, query, &raw); err != nil {
+			return Media{}, err
+		}
+		if decode(raw, &response) != nil {
+			return Media{}, &Error{Code: "invalid_response"}
+		}
+		var err error
+		categoryFields, err = c.categoryFields(raw, fields)
+		if err != nil {
+			return Media{}, err
+		}
+	} else if err := c.get(ctx, path, query, &response); err != nil {
 		return Media{}, err
 	}
 	if response.ID != id || (response.MediaType != "" && response.MediaType != kind) {
@@ -122,7 +152,9 @@ func (c *Client) Detail(ctx context.Context, kind string, id int64) (Media, erro
 			}
 		}
 	}
-	return c.media(response, kind, true)
+	result, err := c.media(response, kind, true)
+	result.CategoryFields = categoryFields
+	return result, err
 }
 
 func (c *Client) page(response wirePage, kind string, requested int) (Page, error) {

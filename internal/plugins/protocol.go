@@ -44,6 +44,8 @@ type Manifest struct {
 	Methods       []string `json:"methods"`
 	Capabilities  []string `json:"capabilities"`
 	Events        []string `json:"events,omitempty"`
+	HasPage       bool     `json:"has_page,omitempty"`
+	Dashboards    []string `json:"dashboards,omitempty"`
 }
 
 func (m Manifest) Validate() error {
@@ -56,10 +58,10 @@ func (m Manifest) Validate() error {
 	if m.HostAPIMin > HostAPIVersion || m.HostAPIMax < HostAPIVersion {
 		return failure("unsupported_api")
 	}
-	if len(m.Methods) == 0 || len(m.Methods) > 64 || len(m.Capabilities) > 64 || len(m.Events) > 64 {
+	if len(m.Methods) == 0 || len(m.Methods) > 64 || len(m.Capabilities) > 64 || len(m.Events) > 64 || len(m.Dashboards) > 64 {
 		return failure("invalid_manifest")
 	}
-	for _, values := range [][]string{m.Methods, m.Capabilities, m.Events} {
+	for _, values := range [][]string{m.Methods, m.Capabilities, m.Events, m.Dashboards} {
 		seen := map[string]bool{}
 		for _, value := range values {
 			if !methodPattern.MatchString(value) || seen[value] {
@@ -69,6 +71,9 @@ func (m Manifest) Validate() error {
 		}
 	}
 	if !slices.Contains(m.Methods, "stop") {
+		return failure("invalid_manifest")
+	}
+	if (m.HasPage && !slices.Contains(m.Methods, "page")) || (len(m.Dashboards) != 0 && !slices.Contains(m.Methods, "dashboard")) {
 		return failure("invalid_manifest")
 	}
 	return nil

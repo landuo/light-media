@@ -154,6 +154,23 @@ onMounted(load);
   flex-direction: row;
   gap: 0;
 }
+.plugin-dialog-surface .v-field input,
+.plugin-dialog-surface .v-field textarea {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  min-width: 0;
+}
+.plugin-dialog-surface .v-field__input > input {
+  padding: 0;
+}
+.plugin-dialog-surface .v-field textarea {
+  resize: none;
+}
 .plugin-dialog-actions {
   padding: 16px 24px !important;
   justify-content: flex-end;

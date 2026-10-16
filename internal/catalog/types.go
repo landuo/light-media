@@ -30,28 +30,29 @@ type Media struct {
 	ProductionCountries []Country `json:"production_countries"`
 	// CategoryMetadataKnown records a valid detail fetch by this decoder, even
 	// when TMDB leaves classification fields empty. Older cache entries lack it.
-	CategoryMetadataKnown bool            `json:"category_metadata_known,omitempty"`
-	IMDbID                string          `json:"imdb_id"`
-	Aliases               []string        `json:"aliases"`
-	Year                  int             `json:"year"`
-	Overview              string          `json:"overview"`
-	PosterPath            string          `json:"poster_path"`
-	BackdropPath          string          `json:"backdrop_path"`
-	ReleaseDate           string          `json:"release_date"`
-	VoteAverage           float64         `json:"vote_average"`
-	VoteCount             int             `json:"vote_count"`
-	Popularity            float64         `json:"popularity"`
-	Genres                []Genre         `json:"genres"`
-	GenreIDs              []int64         `json:"genre_ids,omitempty"`
-	Cast                  []CastMember    `json:"cast"`
-	Recommendations       []Media         `json:"recommendations"`
-	Seasons               []SeasonSummary `json:"seasons"`
-	NumberOfEpisodes      int             `json:"number_of_episodes"`
-	NumberOfSeasons       int             `json:"number_of_seasons"`
-	Status                string          `json:"status"`
-	Runtime               int             `json:"runtime"`
-	Character             string          `json:"character,omitempty"`
-	Job                   string          `json:"job,omitempty"`
+	CategoryMetadataKnown bool                     `json:"category_metadata_known,omitempty"`
+	CategoryFields        map[string]CategoryField `json:"category_fields,omitempty"`
+	IMDbID                string                   `json:"imdb_id"`
+	Aliases               []string                 `json:"aliases"`
+	Year                  int                      `json:"year"`
+	Overview              string                   `json:"overview"`
+	PosterPath            string                   `json:"poster_path"`
+	BackdropPath          string                   `json:"backdrop_path"`
+	ReleaseDate           string                   `json:"release_date"`
+	VoteAverage           float64                  `json:"vote_average"`
+	VoteCount             int                      `json:"vote_count"`
+	Popularity            float64                  `json:"popularity"`
+	Genres                []Genre                  `json:"genres"`
+	GenreIDs              []int64                  `json:"genre_ids,omitempty"`
+	Cast                  []CastMember             `json:"cast"`
+	Recommendations       []Media                  `json:"recommendations"`
+	Seasons               []SeasonSummary          `json:"seasons"`
+	NumberOfEpisodes      int                      `json:"number_of_episodes"`
+	NumberOfSeasons       int                      `json:"number_of_seasons"`
+	Status                string                   `json:"status"`
+	Runtime               int                      `json:"runtime"`
+	Character             string                   `json:"character,omitempty"`
+	Job                   string                   `json:"job,omitempty"`
 }
 
 type Genre struct {

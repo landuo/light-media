@@ -107,19 +107,16 @@ func TestCustomMediaCategoryPreservesFileOrderAndConditionSemantics(t *testing.T
 
 func TestMediaCategoryPolicyRejectsUnsafeOrUnsupportedConfiguration(t *testing.T) {
 	for _, raw := range []string{
-		"movie: []",
+		"movie: [bad]",
 		"movie: {}\nmovie: {}",
 		"movie:\n  ../逃逸: {}",
 		"movie:\n  '电影/子目录': {}",
 		"movie:\n  '.隐藏目录': {}",
 		"movie:\n  重复: {}\n  重复: {}",
-		"movie:\n  条件:\n    popularity: '100'",
 		"movie:\n  条件:\n    genre_ids: '16'\n    genre_ids: '99'",
-		"movie:\n  条件:\n    genre_ids: '1-100000'",
-		"movie:\n  条件:\n    genre_ids: '50-1'",
-		"movie:\n  条件:\n    origin_country: 'China'",
+		"movie:\n  条件:\n    genre_ids: 16",
 		"movie:\n  条件:\n    original_language: ['zh']",
-		"movie:\n  条件: &alias {}\n  其它: *alias",
+		"movie: &loop\n  <<: *loop",
 		"movie: {}\n---\ntv: {}",
 		strings.Repeat("#", maxCategoryPolicyBytes+1),
 	} {

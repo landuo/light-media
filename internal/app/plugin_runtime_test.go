@@ -177,7 +177,7 @@ func TestPluginCategoryRejectsInvalidYAMLAndSymlinkWithoutOverwriting(t *testing
 		t.Fatal(w.Body.String())
 	}
 	for _, body := range []string{
-		`{"revision":1,"config":{"enabled":true,"content":"movie: []"}}`,
+		`{"revision":1,"config":{"enabled":true,"content":"movie: [bad]"}}`,
 		`{"revision":1,"config":{"enabled":false,"content":"","unported_option":true}}`,
 	} {
 		if w := callTest(t, a.Handler(), "PUT", "/api/plugins/CategoryEditor/config", body, cookie, ""); w.Code != 400 {
