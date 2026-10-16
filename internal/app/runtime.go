@@ -52,6 +52,7 @@ type App struct {
 	siteLocks          sync.Map
 	cancel             context.CancelFunc
 	pluginMu           sync.Mutex
+	pluginLifecycleMu  sync.Mutex
 	pluginStore        *PluginStore
 	pluginWake         chan struct{}
 	pluginProcess      chan struct{}
@@ -160,6 +161,9 @@ func (a *App) Close() error {
 		a.cancel()
 	}
 	a.wg.Wait()
+	if a.cancel != nil {
+		a.stopMediaRefreshPlugins()
+	}
 	a.log("INFO", "runtime", "stopped", "服务已停止", "", "")
 	a.logs.close()
 	return a.Store.Close()

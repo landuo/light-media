@@ -3,6 +3,7 @@ package fnos
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,6 +11,71 @@ import (
 	"strings"
 	"testing"
 )
+
+func TestServiceRefreshPagedSourceCompletesBeforeAnyWrite(t *testing.T) {
+	requests := []string{}
+	read, committed := 0, false
+	adapter := testService(t, func(w http.ResponseWriter, r *http.Request) {
+		if !committed || read != 27 {
+			t.Error("refresh began before all pages and the durable boundary")
+		}
+		requests = append(requests, r.Method+" "+r.URL.Path)
+		fmt.Fprint(w, `{"code":0,"data":true}`)
+	})
+	result, err := adapter.RefreshLibraryBatches(context.Background(), func(ctx context.Context, libraries []ServiceLibrary) ([]string, error) {
+		read++
+		if read == 27 {
+			return nil, nil
+		}
+		paths := make([]string, 200)
+		for i := range paths {
+			paths[i] = fmt.Sprintf("/vol2/media/page-%d/file-%d.mkv", read, i)
+		}
+		return paths, nil
+	}, func() error {
+		committed = true
+		return nil
+	})
+	if err != nil || result.AllLibraries || !reflect.DeepEqual(result.LibraryGUIDs, []string{serviceLibGUID}) || !reflect.DeepEqual(requests, []string{"GET /v/api/v1/task/running", "POST /v/api/v1/mdb/scan/" + serviceLibGUID}) {
+		t.Fatal("paged refresh truncated, duplicated or scanned early", result, requests, err)
+	}
+}
+
+func TestServiceRefreshLateSourceAndBoundaryFailuresPreventRemoteWrites(t *testing.T) {
+	for _, failure := range []string{"page", "invalid_path", "boundary"} {
+		t.Run(failure, func(t *testing.T) {
+			adapter := testService(t, func(w http.ResponseWriter, r *http.Request) {
+				t.Error("failed source/boundary reached a scan endpoint", r.URL.Path)
+			})
+			reads, boundaries := 0, 0
+			injected := errors.New("injected persistence failure")
+			_, err := adapter.RefreshLibraryBatches(context.Background(), func(context.Context, []ServiceLibrary) ([]string, error) {
+				reads++
+				if reads == 1 {
+					return []string{"/vol2/unmatched/first.mkv"}, nil
+				}
+				if failure == "page" {
+					return nil, injected
+				}
+				if failure == "invalid_path" {
+					return []string{"relative"}, nil
+				}
+				return nil, nil
+			}, func() error {
+				boundaries++
+				return injected
+			})
+			if failure == "invalid_path" {
+				serviceErrorCode(t, err, "invalid_input")
+			} else if !errors.Is(err, injected) {
+				t.Fatal("source/boundary error was hidden", err)
+			}
+			if reads != 2 || (failure != "boundary" && boundaries != 0) || (failure == "boundary" && boundaries != 1) {
+				t.Fatal("unmatched fallback skipped source validation", reads, boundaries)
+			}
+		})
+	}
+}
 
 func TestServiceRefreshDeduplicatesLibraryAndUsesEmptySignedPost(t *testing.T) {
 	requests := []string{}

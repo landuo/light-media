@@ -521,6 +521,10 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	if _, err = snapshotPath(asset.Path); err != nil {
 		return bad("REVIEW_ASSET_MISSING", "视频不可访问")
 	}
+	pluginOwnsScan, pluginScanAt, err := a.pluginRefreshGate(ctx, asset)
+	if err != nil {
+		return err
+	}
 	actual := asset.Path
 	if len(configuration.Mappings) > 0 {
 		if mapped, e := mapPath(asset.Path, configuration.Mappings); e == nil {
@@ -567,7 +571,7 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 	}
 	scope := libraryGUID + ":" + filepath.ToSlash(scanDirectory)
 	lastScan, _ := time.Parse(time.RFC3339Nano, asset.FNOSScanAt)
-	if asset.FNOSScanScope != scope || lastScan.IsZero() || time.Since(lastScan) >= 2*time.Minute {
+	if !pluginOwnsScan && (asset.FNOSScanScope != scope || lastScan.IsZero() || time.Since(lastScan) >= 2*time.Minute) {
 		if err = service.Scan(ctx, libraryGUID, filepath.ToSlash(scanDirectory)); err != nil {
 			return err
 		}
@@ -575,6 +579,9 @@ func (a *App) runFNOSSync(ctx context.Context, job Job, assetID string) (returnE
 		if err = a.Store.Put(ctx, "asset", asset.ID, asset); err != nil {
 			return err
 		}
+	}
+	if pluginScanAt != "" {
+		asset.FNOSScanAt, asset.FNOSScanScope = pluginScanAt, "plugin:MediaServerRefresh"
 	}
 	if err = a.jobCancelled(ctx, job); err != nil {
 		return err

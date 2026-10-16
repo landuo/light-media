@@ -125,6 +125,10 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 }
 
 func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	if r.Method != "GET" {
+		a.pluginLifecycleMu.Lock()
+		defer a.pluginLifecycleMu.Unlock()
+	}
 	ctx := r.Context()
 	if path == "" && r.Method == "GET" {
 		return a.pluginCards(ctx, false)
@@ -188,7 +192,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginStore.Runs(ctx, installation.InstanceID, 50)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" {
+		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -202,6 +206,16 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		if err != nil {
 			return nil, err
 		}
+		stored, err := a.pluginStore.Config(ctx, installation.InstanceID)
+		if err != nil && !missingPluginValue(err) {
+			return nil, err
+		}
+		if stored.Revision != in.Revision {
+			return nil, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，请重新打开配置")
+		}
+		if err := a.drainMediaRefresh(ctx, installation); err != nil {
+			return nil, err
+		}
 		a.pluginMu.Lock()
 		config, run, err := a.pluginStore.SaveConfigAndQueue(ctx, installation.InstanceID, in.Revision, configValue)
 		a.pluginMu.Unlock()
@@ -213,6 +227,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		if !installation.DesiredEnabled {
 			return nil, bad("PLUGIN_MIGRATION_STAGED", "迁移插件仍在暂存，请先核对并保存配置")
 		}
+		if err := a.drainMediaRefresh(ctx, installation); err != nil {
+			return nil, err
+		}
 		a.pluginMu.Lock()
 		run, err := a.pluginStore.EnqueueRun(ctx, installation.InstanceID, "reload", nil)
 		a.pluginMu.Unlock()
@@ -221,6 +238,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		return map[string]any{"run": run}, err
 	case parts[1] == "reset" && r.Method == "POST":
+		if err := a.drainMediaRefresh(ctx, installation); err != nil {
+			return nil, err
+		}
 		a.pluginMu.Lock()
 		err := a.pluginStore.Reset(ctx, installation.InstanceID)
 		a.pluginMu.Unlock()
@@ -229,6 +249,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 		}
 		return map[string]bool{"reset": true}, nil
 	case parts[1] == "uninstall" && r.Method == "POST":
+		if err := a.drainMediaRefresh(ctx, installation); err != nil {
+			return nil, err
+		}
 		a.pluginMu.Lock()
 		err := a.pluginStore.Uninstall(ctx, installation.InstanceID)
 		a.pluginMu.Unlock()
@@ -281,6 +304,20 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		}
 		if _, _, err := config.Display(); err != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "仪表板尺寸必须选择列表中的值，刷新间隔须为0到86400秒或留空")
+		}
+		return config, nil
+	case "MediaServerRefresh":
+		var config builtin.MediaServerRefreshConfiguration
+		if err := decode(&config); err != nil {
+			return nil, err
+		}
+		if _, err := config.Duration(); err != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "媒体库刷新延迟或媒体服务器引用无效")
+		}
+		for _, server := range config.MediaServers {
+			if server != "fnos" {
+				return nil, bad("PLUGIN_MEDIA_SERVER_UNMAPPED", "媒体服务器引用尚未映射")
+			}
 		}
 		return config, nil
 	default:

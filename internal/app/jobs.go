@@ -173,7 +173,10 @@ func (a *App) worker(ctx context.Context) {
 			if errors.As(e, &api) {
 				code = api.Code
 			}
-			if code == "DOWNLOADER_DISABLED" {
+			var pendingRefresh *pluginRefreshWait
+			if errors.As(e, &pendingRefresh) {
+				code, state, runAt = "PLUGIN_REFRESH_PENDING", "retry_wait", pendingRefresh.Until.Unix()
+			} else if code == "DOWNLOADER_DISABLED" {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Minute).Unix()
 			} else if code == "AUTOMATION_PAUSED" {
@@ -193,7 +196,9 @@ func (a *App) worker(ctx context.Context) {
 			a.notifyFailed(ctx, j, message)
 		}
 		if changed {
-			if e != nil {
+			if code == "PLUGIN_REFRESH_PENDING" {
+				a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
+			} else if e != nil {
 				a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
 			} else {
 				a.log("INFO", j.Kind, "completed", "任务完成", j.WorkflowID, j.ID)

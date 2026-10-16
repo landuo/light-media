@@ -12,11 +12,13 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 		return CustomHostsManifest(), HandleCustomHosts, true
 	case "SystemProcess":
 		return SystemProcessManifest(), HandleSystemProcess, true
+	case "MediaServerRefresh":
+		return MediaServerRefreshManifest(), HandleMediaServerRefresh, true
 	default:
 		return plugins.Manifest{}, nil, false
 	}
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest()}
+	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest()}
 }

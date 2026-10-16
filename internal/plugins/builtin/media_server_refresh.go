@@ -41,8 +41,6 @@ func (c MediaServerRefreshConfiguration) Duration() (time.Duration, error) {
 	return time.Duration(milliseconds) * time.Millisecond, nil
 }
 
-// The implementation remains out of the install catalog until host refresh,
-// lifecycle draining and the core scan/verification handoff are integrated.
 func MediaServerRefreshManifest() plugins.Manifest {
 	return plugins.Manifest{SchemaVersion: 1, PluginID: "MediaServerRefresh", Name: "媒体库服务器刷新", Description: "入库后自动刷新Emby/Jellyfin/Plex服务器海报墙。", Icon: "refresh2.png", Version: "1.3.3", Author: "jxxghp", AuthorURL: "https://github.com/jxxghp", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{"media.servers", "events.configure", "media.refresh"}, Events: []string{"import.completed"}}
 }

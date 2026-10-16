@@ -102,6 +102,10 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	defer tx.Rollback()
+	activation, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
+	if err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	stored, err := p.saveValueTx(ctx, tx, instanceID, "config", "main", revision, raw)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -115,11 +119,49 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
-	run, err := p.enqueueRunTx(ctx, tx, instanceID, "init", nil)
+	run, err := p.enqueueRunTx(ctx, tx, instanceID, "init", activation)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	return stored, run, tx.Commit()
+}
+
+// Carry the last drained cursor across an enabled-to-enabled config handoff.
+// Facts committed after drain froze its high water must reach the replacement
+// config. A previously disabled config still starts from the new save boundary.
+func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, instanceID string, revision int64, next json.RawMessage) (json.RawMessage, error) {
+	var sealed []byte
+	err := tx.QueryRowContext(ctx, `SELECT v.sealed FROM plugin_values v JOIN plugin_installations i ON i.instance_id=v.instance_id WHERE i.instance_id=? AND i.plugin_id='MediaServerRefresh' AND v.kind='config' AND v.item_key='main' AND v.revision=?`, instanceID, revision).Scan(&sealed)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	old, err := p.unseal("config", instanceID, "main", sealed)
+	if err != nil {
+		return nil, err
+	}
+	type state struct {
+		Enabled bool     `json:"enabled"`
+		Servers []string `json:"mediaservers"`
+	}
+	var before, after state
+	if json.Unmarshal(old, &before) != nil || json.Unmarshal(next, &after) != nil {
+		return nil, bad("INVALID_PLUGIN_CONFIG", "媒体库刷新配置无法读取")
+	}
+	if !before.Enabled || !after.Enabled || len(before.Servers) == 0 || len(after.Servers) == 0 {
+		return nil, nil
+	}
+	var cursor int64
+	err = tx.QueryRowContext(ctx, `SELECT s.cursor FROM plugin_event_subscriptions s JOIN plugin_installations i ON i.instance_id=s.instance_id WHERE s.instance_id=? AND s.handler_key='refresh' AND s.generation=i.generation AND s.config_revision=?`, instanceID, revision).Scan(&cursor)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(map[string]int64{"event_after": cursor})
 }
 
 func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, action string, input json.RawMessage) (PluginRun, error) {
@@ -135,11 +177,31 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 		return PluginRun{}, bad("PLUGIN_QUEUE_FULL", "插件执行队列已满，请等待现有任务处理")
 	}
 	var installed, allowed bool
-	if err := tx.QueryRowContext(ctx, `SELECT version,generation,installed,desired_enabled FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&run.Version, &run.Generation, &installed, &allowed); err != nil {
+	var pluginID string
+	if err := tx.QueryRowContext(ctx, `SELECT version,generation,installed,desired_enabled,plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&run.Version, &run.Generation, &installed, &allowed, &pluginID); err != nil {
 		return PluginRun{}, err
 	}
 	if !installed || !allowed {
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
+	}
+	if pluginID == "MediaServerRefresh" && (action == "init" || action == "reload") && len(input) == 0 {
+		// Save the activation boundary with the queued config, not when the
+		// asynchronous worker eventually starts. Imports committed in between
+		// must be delivered without replaying earlier disabled history.
+		var cursor int64
+		if err := tx.QueryRowContext(ctx, `SELECT COALESCE(MAX(seq),0) FROM domain_events`).Scan(&cursor); err != nil {
+			return PluginRun{}, err
+		}
+		if action == "reload" {
+			var drained int64
+			err := tx.QueryRowContext(ctx, `SELECT s.cursor FROM plugin_event_subscriptions s JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.instance_id=? AND s.handler_key='refresh' AND s.generation=? AND s.config_revision=v.revision`, instanceID, run.Generation).Scan(&drained)
+			if err == nil {
+				cursor = drained
+			} else if !errors.Is(err, sql.ErrNoRows) {
+				return PluginRun{}, err
+			}
+		}
+		input, _ = json.Marshal(map[string]int64{"event_after": cursor})
 	}
 	var config []byte
 	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config); err != nil {
@@ -219,12 +281,16 @@ func (p *PluginStore) Runs(ctx context.Context, instanceID string, limit int) ([
 // ClaimRun atomically claims one current invocation. Old config/generation
 // snapshots are canceled rather than being replayed after user edits or reset.
 func (p *PluginStore) ClaimRun(ctx context.Context) (PluginRun, error) {
+	return p.claimRunForInstance(ctx, "")
+}
+
+func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string) (PluginRun, error) {
 	for {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return PluginRun{}, err
 		}
-		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' ORDER BY created_at,id LIMIT 1`))
+		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID))
 		if err != nil {
 			_ = tx.Rollback()
 			return PluginRun{}, err
@@ -289,6 +355,17 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 	// file; Hosts replaces only its marked tail; process init has no side effect.
 	// Other plugins require their own external-operation reconciliation.
 	_, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state=CASE WHEN instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id IN ('CategoryEditor','CustomHosts','SystemProcess')) THEN 'pending' ELSE 'reconcile_pending' END,error_code='PLUGIN_INTERRUPTED',updated_at=? WHERE state='running' OR (state='reconcile_pending' AND instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id IN ('CategoryEditor','CustomHosts','SystemProcess')))`, now())
+	if err == nil {
+		err = p.recoverMediaRefreshRuns(ctx)
+	}
+	return err
+}
+
+func (p *PluginStore) recoverMediaRefreshRuns(ctx context.Context) error {
+	if _, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code='PLUGIN_INTERRUPTED',updated_at=? WHERE state='running' AND instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id='MediaServerRefresh') AND EXISTS(SELECT 1 FROM plugin_media_refresh_operations o WHERE o.run_id=plugin_runs.id AND o.state='submitting')`, now()); err != nil {
+		return err
+	}
+	_, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='pending',updated_at=? WHERE state IN ('running','reconcile_pending') AND instance_id IN (SELECT instance_id FROM plugin_installations WHERE plugin_id='MediaServerRefresh') AND action IN ('init','reload','event') AND NOT EXISTS(SELECT 1 FROM plugin_media_refresh_operations o WHERE o.run_id=plugin_runs.id AND o.state='submitting')`, now())
 	return err
 }
 

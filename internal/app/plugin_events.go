@@ -55,6 +55,22 @@ func (p *PluginStore) configureEventSubscription(ctx context.Context, run Plugin
 	}
 	if err != nil || generation != run.Generation || revision != run.ConfigRevision || !wasActive {
 		cursor = highWater // First enable/re-enable never silently replays history.
+		var invocation struct {
+			Input *struct {
+				EventAfter int64 `json:"event_after"`
+			} `json:"input"`
+		}
+		if (run.Action == "init" || run.Action == "reload") && len(run.Input) != 0 {
+			if json.Unmarshal(run.Input, &invocation) != nil {
+				return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无法读取")
+			}
+			if invocation.Input != nil {
+				if invocation.Input.EventAfter < 0 || invocation.Input.EventAfter > highWater {
+					return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无效")
+				}
+				cursor = invocation.Input.EventAfter
+			}
+		}
 	}
 	raw, _ := json.Marshal(types)
 	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_event_subscriptions VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(instance_id,handler_key) DO UPDATE SET generation=excluded.generation,config_revision=excluded.config_revision,event_types=excluded.event_types,delay_ms=excluded.delay_ms,active=excluded.active,cursor=excluded.cursor`, run.InstanceID, handler, run.Generation, run.ConfigRevision, string(raw), delay.Milliseconds(), active, cursor)
@@ -88,6 +104,10 @@ func (p *PluginStore) activeEventSubscriptions(ctx context.Context) ([]pluginEve
 }
 
 func (p *PluginStore) collectPluginEvents(ctx context.Context, subscription pluginEventSubscription, at time.Time) error {
+	return p.collectPluginEventsUntil(ctx, subscription, at, 1<<63-1)
+}
+
+func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription pluginEventSubscription, at time.Time, highWater int64) error {
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -101,7 +121,7 @@ func (p *PluginStore) collectPluginEvents(ctx context.Context, subscription plug
 	if err != nil {
 		return err
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT seq,event_id,payload FROM domain_events WHERE seq>? ORDER BY seq LIMIT 200`, cursor)
+	rows, err := tx.QueryContext(ctx, `SELECT seq,event_id,payload FROM domain_events WHERE seq>? AND seq<=? ORDER BY seq LIMIT 200`, cursor, highWater)
 	if err != nil {
 		return err
 	}
@@ -181,13 +201,17 @@ func (p *PluginStore) collectPluginEvents(ctx context.Context, subscription plug
 }
 
 func (p *PluginStore) enqueueDuePluginEvents(ctx context.Context, at time.Time) error {
+	return p.enqueueDuePluginEventsFor(ctx, at, "")
+}
+
+func (p *PluginStore) enqueueDuePluginEventsFor(ctx context.Context, at time.Time, drainingInstance string) error {
 	for count := 0; count < 200; count++ {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return err
 		}
 		var batchID, instanceID string
-		err = tx.QueryRowContext(ctx, `SELECT b.id,b.instance_id FROM plugin_event_batches b JOIN plugin_event_subscriptions s ON s.instance_id=b.instance_id AND s.handler_key=b.handler_key JOIN plugin_installations i ON i.instance_id=b.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE b.run_id IS NULL AND b.state='collecting' AND b.due_at<=? AND s.active=1 AND i.installed=1 AND i.desired_enabled=1 AND i.generation=b.generation AND s.generation=b.generation AND v.revision=b.config_revision AND s.config_revision=b.config_revision ORDER BY b.due_at,b.id LIMIT 1`, at.UnixMilli()).Scan(&batchID, &instanceID)
+		err = tx.QueryRowContext(ctx, `SELECT b.id,b.instance_id FROM plugin_event_batches b JOIN plugin_event_subscriptions s ON s.instance_id=b.instance_id AND s.handler_key=b.handler_key JOIN plugin_installations i ON i.instance_id=b.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE b.run_id IS NULL AND b.state='collecting' AND b.due_at<=? AND (s.active=1 OR b.instance_id=?) AND i.installed=1 AND i.desired_enabled=1 AND i.generation=b.generation AND s.generation=b.generation AND v.revision=b.config_revision AND s.config_revision=b.config_revision ORDER BY b.due_at,b.id LIMIT 1`, at.UnixMilli(), drainingInstance).Scan(&batchID, &instanceID)
 		if errors.Is(err, sql.ErrNoRows) {
 			_ = tx.Rollback()
 			return nil

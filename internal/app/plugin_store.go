@@ -141,11 +141,20 @@ CREATE TABLE IF NOT EXISTS plugin_event_deliveries(
  instance_id TEXT NOT NULL,handler_key TEXT NOT NULL,event_id TEXT NOT NULL,event_seq INTEGER NOT NULL,batch_id TEXT NOT NULL,
  PRIMARY KEY(instance_id,handler_key,event_id),FOREIGN KEY(batch_id) REFERENCES plugin_event_batches(id));
 CREATE INDEX IF NOT EXISTS plugin_event_deliveries_batch ON plugin_event_deliveries(batch_id,event_seq);
+CREATE TABLE IF NOT EXISTS plugin_media_refresh_operations(
+ run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,service_fingerprint TEXT NOT NULL,state TEXT NOT NULL,result BLOB,updated_at TEXT NOT NULL,
+ FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
+CREATE TABLE IF NOT EXISTS plugin_media_refresh_items(
+ run_id TEXT NOT NULL,asset_id TEXT NOT NULL,digest BLOB NOT NULL,
+ PRIMARY KEY(run_id,asset_id),FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
 INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, domainEventSchema); err != nil {
+		return nil, err
+	}
+	if _, err = tx.ExecContext(ctx, `CREATE INDEX IF NOT EXISTS plugin_domain_asset_events ON domain_events(json_extract(payload,'$.asset_id'),json_extract(payload,'$.event_type'),seq)`); err != nil {
 		return nil, err
 	}
 	if err = tx.Commit(); err != nil {

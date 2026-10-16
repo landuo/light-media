@@ -168,6 +168,9 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 		a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，需要对账", "PLUGIN_FINISH_FAILED")
 		return
 	}
+	if installation.PluginID == "MediaServerRefresh" {
+		a.wakeMediaVerification(finishCtx)
+	}
 	if err != nil {
 		a.pluginExecutionLog(installation, run, "ERROR", "execution_failed", "插件执行失败，详情见插件执行记录", errorCode)
 	} else {
@@ -206,10 +209,12 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		if err != nil || persisted.State != "running" {
 			return nil, bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
 		}
-	} else if method != "category.read" {
+	} else if method != "category.read" && method != "media.servers" {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "配置表单只能读取默认分类策略")
 	}
 	switch method {
+	case "media.servers", "events.configure", "media.refresh":
+		return a.pluginMediaHost(ctx, installation, run, method, raw)
 	case "hosts.read":
 		return a.readContainerHosts()
 	case "hosts.replace":

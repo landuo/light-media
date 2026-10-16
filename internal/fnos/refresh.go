@@ -54,6 +54,24 @@ func (s *Service) RefreshLibrariesByPaths(ctx context.Context, paths []string) (
 			return result, &ServiceError{Code: "invalid_input"}
 		}
 	}
+	read := false
+	return s.RefreshLibraryBatches(ctx, func(context.Context, []ServiceLibrary) ([]string, error) {
+		if read {
+			return nil, nil
+		}
+		read = true
+		return paths, nil
+	}, func() error { return nil })
+}
+
+// RefreshLibraryBatches validates a paged source before the first remote write.
+// The host can prepare durable receipts while iterating; beforeScan commits its
+// submitting boundary. Memory depends on library count, not imported file count.
+func (s *Service) RefreshLibraryBatches(ctx context.Context, next func(context.Context, []ServiceLibrary) ([]string, error), beforeScan func() error) (RefreshResult, error) {
+	result := RefreshResult{LibraryGUIDs: []string{}}
+	if ctx == nil || next == nil || beforeScan == nil {
+		return result, &ServiceError{Code: "invalid_input"}
+	}
 	current, err := s.session(ctx)
 	if err != nil {
 		return result, err
@@ -68,30 +86,49 @@ func (s *Service) RefreshLibrariesByPaths(ctx context.Context, paths []string) (
 	selected := []string{}
 	seen := map[string]bool{}
 	all := false
-	for _, target := range paths {
-		if ctx.Err() != nil {
-			return result, &ServiceError{Code: "canceled"}
+	count := 0
+	for {
+		paths, err := next(ctx, libraries)
+		if err != nil {
+			return result, err
 		}
-		matched := ""
-		for _, library := range libraries {
-			for _, directory := range library.Directories {
-				if target == directory || strings.HasPrefix(target, directory+"/") {
-					matched = library.GUID
+		if len(paths) == 0 {
+			break
+		}
+		for _, target := range paths {
+			if ctx.Err() != nil {
+				return result, &ServiceError{Code: "canceled"}
+			}
+			if !servicePath(target, false) {
+				return result, &ServiceError{Code: "invalid_input"}
+			}
+			count++
+			matched := ""
+			for _, library := range libraries {
+				for _, directory := range library.Directories {
+					if target == directory || strings.HasPrefix(target, directory+"/") {
+						matched = library.GUID
+						break
+					}
+				}
+				if matched != "" {
 					break
 				}
 			}
-			if matched != "" {
-				break
+			if matched == "" {
+				all = true
+			}
+			if matched != "" && !seen[matched] {
+				seen[matched] = true
+				selected = append(selected, matched)
 			}
 		}
-		if matched == "" {
-			all = true
-			break
-		}
-		if !seen[matched] {
-			seen[matched] = true
-			selected = append(selected, matched)
-		}
+	}
+	if count == 0 {
+		return result, &ServiceError{Code: "invalid_input"}
+	}
+	if err := beforeScan(); err != nil {
+		return result, err
 	}
 	refreshAll := func() (RefreshResult, error) {
 		if ctx.Err() != nil {
