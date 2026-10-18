@@ -38,7 +38,7 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "subscription.added"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "subscription.added", "notice.message"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true
@@ -163,6 +163,11 @@ func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription
 		cursor = event.Sequence
 		if !slices.Contains(subscription.Types, event.Type) {
 			continue
+		}
+		if event.Type == "notice.message" {
+			if _, err := p.noticeMessage(ctx, tx, event.NoticeID); err != nil {
+				return err
+			}
 		}
 		var duplicate int
 		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_event_deliveries WHERE instance_id=? AND handler_key=? AND event_id=?`, subscription.InstanceID, subscription.Handler, event.EventID).Scan(&duplicate); err != nil {

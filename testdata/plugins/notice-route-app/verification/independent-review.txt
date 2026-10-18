@@ -1,0 +1,102 @@
+Root 通知 driver 只读审查（未编译、未改 formal）
+
+审查依据：work/review-notice-route-snapshot/snapshot.json。
+最初12文件在同一次只读capture固定，其后补充原source Journal/ActionJournal两文件；每份内容及SHA都在快照。行号按此快照，不保证root动态编辑后的行号不变。未运行Go编译或测试，不冒称复现已经执行；下面给的是从实际路径可构造的确定性复现。
+
+发现1 — P1：A阶段commit ack丢失直接使源失败，未按exact receipt恢复
+
+位置：internal/plugins/cleaninvalidseed/host/owner.go:665-686。
+Journal.Update 出错后680-681直接return，只有成功才走AfterNotice。实际
+pluginCleanInvalidSeedJournal.Update / ActionJournal.Update最后直接tx.Commit，
+没有为Notice统一做commit readback。现Config写路径已有类似readback逻辑。
+
+可构造复现：采用现host_test.go loseCommittedConfigReply同类wrapper，仅把
+触发条件换成首次Kind=notice/Phase=confirmed，包装底层实际Journal.Update；
+底层commit成功后返回synthetic ack loss。此时history、full envelope、Core
+receipt、route anchor全部已提交，源却直接SOURCE_FAILED，不走AfterNotice，
+后续原config effect不按已提交成功的源操作结果继续。后台可能仍路由该消息，
+不能据此说明源调用正确恢复。
+
+建议：A出错后不重做Core.Notice、不重新生成CreatedAt。用WithoutCancel有界
+readback确认同一run/inv/effect identity、不可变Args、Authority/ConfigReceipt
+与State.Notices/effects，再由现AfterNotice核验exact Core/outbox/route anchor；
+全部一致时走原AfterNotice并按其实际结果返回。明确rollback且无fact保留原
+错误；无法确定/read失败调用fault(ErrUnknown)，不把未明结果标SOURCE_FAILED。
+需要actual source前缀测试证明后续config只在真实恢复的成功结果之后发生。
+
+发现2 — P1/P2：Direct pending行永久消耗FIFO扫描预算，普通队列可被饿死
+
+位置：internal/app/plugin_notice_delivery.go:350-383。
+每次drain after从0开始，循环limit按扫描行计；Direct=true只是continue。
+若最早limit个pending/intent都是Direct，其route因busy/损坏/未恢复而保留，
+后面的普通FIFO entry在每一个tick都不会被检查。
+
+最小复现：limit=1，先有一个Direct pending（route gate保持busy），再有一个
+普通queued；在允许窗口连续调用drain(...,1)两次，当前实现都只跳过首行。
+无需200项即可证明生产limit200的同构问题。
+
+建议：独立持久化bounded queue scan cursor/round，或有绑定验证的indexed
+mode；跳过direct后后续tick必须能推进至普通FIFO。普通项失败不能越过其位置，
+queue内原FIFO不改变；direct仍归source continuation，不强行入旧FIFO后。
+root已确认此点，正在改queueAfter与补limit1实际回归。此报告不先宣称修复已验证。
+
+发现3 — P2：Sender只收到浅拷贝，nested修改污染待提交q.Call
+
+位置：internal/app/plugin_notice_delivery.go:296-304与322-324。
+顶层Kwargs新建，但message/targets/buttons等嵌套对象仍与q.Call共享。trusted
+sender若改copied.Call.Kwargs["message"].(map)["text"]，会连带改q.Call。
+Finish从sealed旧记录读回后与已变q.Call比较不等，错误返回ErrUnknown，留下
+intent；后续恢复把它消费为unknown，即使本次sender正常返回也不能正确finish。
+
+最小复现：设置owned native sender，仅改nested message字段后返回(1,nil)，
+执行一次direct call。应当source正常返回、sealed original Call不变、queue为
+consumed；当前浅copy会触发ErrUnknown。此问题不需要实际外发。
+
+建议：对完整Call做JSON-shaped owned deep copy，再仅在副本删除immediately；
+sender可修改其本次调用对象，但不应污染journal comparison基准。root已确认并
+在补actual source回归；本报告未编译或断言修复完成。
+
+其余核查与限定（不是全量通过结论）
+
+- readNoticeRoute并非信任SQL索引存在：验证route密文identity、原private outbox、
+  原Notice payload构造出的full envelope、State.Notices/effects及Core effect
+  digest，然后验证notice receipt中的RouteID/initialSHA。Count/ordinal连续性、
+  PreviousSHA/LastSHA、sealed step AAD包含ordinal，缺项/截断/改ordinal能被拒绝。
+  Stage output的JSON number采用UseNumber，未发现此处float64丢大ID的路径。
+- noticeMessage与readPluginMessage还核对exact step kind/input SHA及output opaque
+  ID，queue accepted_sha覆盖初始Call/Direct/created time，未把public ID当发送授权。
+- routeGate的refs/drop/try结构在锁内维护生命周期，tryNoticeLock对busy route不会
+  等channel，因此现live source route本身不会占着dispatcher等待同一route gate。
+  当worker自行获得一个cold route并实际执行direct sender时，它仍是同步发送；
+  worker被该次IO占用属于现串行worker策略，需要真正sender有界cancel/timeout。
+- callback在Commit后执行，未持有SQL tx。consumed/unknown不会重新callback；
+  intent经恢复变unknown后被消费，后续普通FIFO可继续；不能把unknown当negative ack
+  或重试。发现2是direct扫描预算问题，与这个unknown消费语义分开。
+- putNoticePreference/noticePreference对nil和map{}分别以null和{}往返；user
+  不存在nil与存在空设置{}仍被Router区分，没有在这里发现合并。
+- 该桥仍只接Clean preformatted通知。full renderer、真实偏好迁移/UI、Merge/Lark
+  消费者owner与transport未接，不以这些未实现项重复报“driver bug”。
+- sendPluginMessageModules返回0,nil表示当前空registry的原无模块返回，不表示
+  delivered；staged Lark显式ErrDependency会被_send语义消费并留下MODULE_FAILED，
+  也不表示它已可用。发现3的sender seam仅用于证明owned对象边界。
+- 此次未见新的可确认source授权绕过或per-step SQL顺序错误。仍需要root正在准备的
+  actual SDK测试、race与NAS验证；本报告不能作为这些验证已通过的证据。
+
+Window补充（root已识别并准备改造，不先记为已修）
+
+原installed helper/message.py的MessageQueueManager是进程共享SingletonClass。
+init_config读取NotificationSendTime并赋schedule_periods；不是每次Send/Tick重读
+DB。_parse_schedule抛异常时赋值未发生，旧cache自然保留。Native ensure-init
+应位于原Base/Chain构造等价点、A历史之前，同一App queue epoch只执行一次；
+不应每个Clean owner generation/warm Init都隐式reload。
+
+原monitor每次先执行检查/drain，再stop_event.wait(check_interval=10)。启动时
+先iteration，而不是先睡10秒。直接Send并不持monitor drain锁，可以与监控线程
+发送并行；不要把所有direct强制全局串行或排到旧FIFO后。
+
+已冻结leaf覆盖periods端点包含、equal endpoints只允许该分钟、跨午夜、小时/
+分钟值不自造range clamp，truthy非map period在parse try外抛AttributeError。
+Native cache应保留这一解析结果，不把malformed reload替换成无窗口/全天允许。
+Window是允许发送时段，nil/empty表示全时段，不是反向quiet-hours。
+
+此补充只定位源语义，不证明新owner cache/monitor代码、实际依赖或测试已经完成。

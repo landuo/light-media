@@ -23,7 +23,7 @@
 | TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 待实现、待迁移、待验证 |
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
 | LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 主流程、13个消息模块、API/回调与受控HTTP已迁入正式Go包；1,376条原执行及28项NAS隔离测试通过。实际App持久宿主、可信消息入口、完整动态输入及配置/KV迁移未完成，不在可安装目录 |
-| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 已接正式catalog、真实SDK终态/owner/Core、配置生命周期与调度；下载器写前拒绝与未知写分开留证，完整通知源校验/密文与历史鉴权已有43项相关App NAS证据。原148项联合及29项host证据保留，新增mutation冻结98项NAS另记；可信远程五命令入口、完整通知路由/外发及正式迁移未完成 |
+| CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 已接正式catalog、真实SDK终态/owner/Core、配置生命周期与调度；下载器写前拒绝与未知写分开留证，源通知路由、私有事件和持久队列已接入。本轮107项联合NAS保留独立证据；原43/148项及mutation98项证据保留。可信远程五命令入口、真实通知渠道/完整依赖及正式迁移未完成 |
 | SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 待实现、待迁移、待验证 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 待实现、待迁移、待验证 |
 | CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | Go 写入/停用恢复及实际域名连接已在 NAS 隔离容器验证；待正式可写挂载和配置迁移 |
@@ -87,3 +87,5 @@ AutoSignIn 新增可选的逐条收据、缓存与运行头读取接口，保留
 Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验证见 [Go核心迁入记录](plugin-lark-go-port.txt)。跨执行的持久owner、可信回调授权和消息生产者仍待接入，不能把受控HTTP或SDK通过表述为已发送真实消息或已完成迁移。
 
 2026-10-18 追加：共享 Notification/路由/窗口纯Go核心的15项NAS与1,316条原参考见 [通知核心](notice-message-go-port.txt)。实际 CleanInvalidSeed 源调用的构造校验、完整24字段密文及历史收据鉴权见 [源通知接线](plugin-clean-seed-notice-go-port.txt)；43项相关App正常/race/NAS通过不等于外发已送达。下载器写前拒绝、7个真实SDK恢复分支及58项leaf/40项App的独立冻结NAS合计98项证据见 [写入阶段](plugin-download-mutation-phase-go-port.txt)。原配置/KV/文件正式迁移数量仍为0，尚未启用或部署新增插件。
+
+2026-10-18 追加：实际 Clean 源调用之后的路由、私有 NoticeMessage 事实与核心持久队列，及稳定数字站点映射已合入正式代码。新107项应用测试的普通/竞态/NAS、31项宿主测试及首轮缺样本的失败证据，分别见 [通知接线](plugin-notice-route-go-port.txt)与[站点映射](native-site-identity-go-port.txt)。真实通知渠道、原配置引用接线和正式数据迁移仍未完成；没有部署或启用新增插件。

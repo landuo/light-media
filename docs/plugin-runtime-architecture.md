@@ -1,6 +1,6 @@
 # 纯 Go 插件运行与 MoviePilot 插件迁移方案
 
-状态：代码审计与逐插件实现阶段，2026-10-17；不是完整平台或插件迁移完成报告。本文件不包含原始凭据或插件配置值，原 MoviePilot 保持只读。
+状态：代码审计与逐插件实现阶段，2026-10-18；不是完整平台或插件迁移完成报告。本文件不包含原始凭据或插件配置值，原 MoviePilot 保持只读。
 
 ## 交付含义
 
@@ -295,4 +295,6 @@ RemoveLink 和 CleanInvalidSeed 的实际操作在 SDK 唯一终态握手并退�
 
 MergeMessageNotify、LarkMessager 已有正式 Go 核心、原执行参考和纯包 NAS 验证，尚无完整生产宿主及用户配置迁移，分别见 [聚合通知](plugin-merge-message-go-port.md)、[Lark](plugin-lark-go-port.txt)。消息历史、NoticeMessage 事件接受、核心消息队列和各渠道发送是不同阶段；任何前一阶段成功不能冒充后一阶段送达。完整23实例的配置/KV/文件迁移数量仍为0，当前目录中的12个处理器也不计作12个已迁移插件。
 
-2026-10-18 通知源阶段补充：正式 internal/notice 已有原始 Notification 构造、Chain 路由和 Queue 时间窗口的纯Go核心（15项NAS），CleanInvalidSeed 实际SDK/Core已接源构造校验、完整信封和历史鉴权（43项相关App正常/race/NAS）。这还没有同步完整Chain路由/真实发送。原 immediately/允许时段会在源调用返回前尝试发送，窗口外才排队；后续须在SQL事务之外继续实际阶段、保留已完成前缀，不能用一律异步投递替代。NoticeMessage与核心Queue拥有独立消费者/收据，完整接线与数据迁移仍属本次范围。新增下载器阶段证明只认证实际未发写入的Client私有错误；已发写入失去响应仍保留未知，不自动重试。证据见 plugin-download-mutation-phase-verification.json 和 plugin-clean-seed-notice-verification.json。
+2026-10-18 通知接线补充：正式 internal/notice 已有原始 Notification 构造、Chain 路由和 Queue 时间窗口的纯Go核心（15项NAS）。此前 CleanInvalidSeed 的源构造、完整信封和历史鉴权有43项相关App证据；本轮进一步在真实源调用返回前接 Router，分别持久化 NoticeMessage 与核心队列阶段。immediately/允许时段等待发送尝试，窗口外才入FIFO，网络期间不持SQL/生命周期锁；历史和已发布事件不因后续失败回滚。未知发送不盲目重发，提交回执丢失先核对精确收据。真实渠道模块、完整模板、其他生产者与原配置迁移仍未接通，不能称已外发。新路由与站点映射的联合范围见[通知接线记录](plugin-notice-route-go-port.txt)，旧43项与新107项证据分别保存。下载器写前拒绝和已发写入失去响应仍区分，不自动重试，见 plugin-download-mutation-phase-verification.json。
+
+原插件的数字站点编号现有独立、稳定的 native 映射：实际CRUD/导入/排序/设置写入与映射、删除墓碑及缓存清理同事务提交，普通查询不分配编号。导入文档中的旧数字ID仅保存为未认领来源；原安装快照、精确origin与目标的独立迁移收据才可转换旧插件引用。IYUU远端sid仍是不同命名空间；AutoSignIn/IYUU Inventory、表单、MergeSiteSwitch的类型化引用及site.deleted生产者尚待接线。见[站点身份记录](native-site-identity-go-port.txt)。映射不是用户插件配置迁移，正式迁移数量仍为0。

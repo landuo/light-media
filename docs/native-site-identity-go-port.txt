@@ -1,0 +1,87 @@
+Native numeric site identity — Go integration
+
+This module provides one stable native numeric source ID for each actual App
+opaque site ID. It is infrastructure for the original plugins' numeric site
+references. It does not migrate an original plugin configuration by itself.
+
+The independent candidate was based on 6e6e980186260b92acbe6250e3c590633b69eeb6.
+Its complete actual App/Store/HTTP copy contained 1,713 pinned inputs; there was no
+shim. The reviewed seven-file patch was applied to the formal worktree only after
+an exact git apply --check. The existing notification runtime changes were kept;
+removing only the two native insertion hunks from the resulting runtime.go
+restored the pre-promotion file byte-for-byte. No test, compiler, commit, deploy
+or actual user-data migration was run as part of promotion.
+
+Native identity and actual save paths
+
+native_site_identities uses an INTEGER PRIMARY KEY AUTOINCREMENT, a unique opaque
+site_id, canonical origin, state, created/deleted times and a domain-separated
+keyed proof. Committed deleted rows remain tombstones. Deleting and adding the
+same name/URL creates a new opaque ID and a later committed numeric ID. An old
+opaque ID cannot revive its tombstone. Renaming, ordering, saving or editing a
+record keeps its native numeric identity. A URL edit changes its current origin;
+old source-origin receipts do not silently follow the new destination.
+
+OpenStore creates the schema. New performs an explicit local identity bootstrap
+before plugin initialization, in deterministic opaque-ID order. This bootstrap
+reads only this App's encrypted Settings; it does not inspect MoviePilot config
+or claim an original plugin selection. Lookups, inventory and management GET
+never allocate or claim identities.
+
+Actual saveSettingsWithEffect reconciles identities in the same transaction as
+validated, encrypted Settings publication. That includes management add/edit,
+import, priority changes, deletion, generic settings saves and existing native
+site-control effects. Deletion's connection/statistics cache removal is part of
+the same transaction, rather than a later independent commit. A failed statement
+rolls back configuration, map/tombstone, peer effects and imported reference facts.
+
+Mapping state active means the record exists. It does not mean site Enabled or
+confer a transport grant. Existing disabled/incomplete records can retain an
+empty unresolved canonical origin and still have stable native identity; they
+cannot satisfy strict original-source migration or authorize network access.
+
+Original source reference migration
+
+The following namespaces remain distinct: native numeric source ID, original
+MoviePilot numeric Site.id, native opaque site ID, CustomSites identifiers and
+IYUU's remote service sid. A coincidentally equal number is not an identity proof.
+Existing P0 site APIs, subscriptions and core IndexerSites/RSSSites remain opaque.
+
+Ordinary site import preserves any original positive numeric id as a sealed
+unclaimed reference bound to its exact import-document keyed digest, ordinal,
+actual native ID/opaque ID and canonical origin. Its fingerprint is not an
+original installation fingerprint. It never migrates old plugin selections.
+
+Explicit internal migration contracts register an independently authenticated
+source fingerprint/snapshot and bind an observed original numeric ID/origin to
+an explicitly selected native target. A sealed receipt binds both namespaces,
+source snapshot digest and exact canonical origin. Display names and related DNS
+suffixes cannot establish the mapping. Exact replay retains the first receipt;
+conflicting targets, changed origins and tombstoned/re-added targets reject.
+
+The registration contract is host-internal; no public browser endpoint accepts
+an arbitrary fingerprint claim. The authenticated original source collector,
+actual plugin config/KV/file/reference migration and source-deleted event producer
+remain separate work. This integration has not read or migrated the user's
+original settings, credentials, plugin selections, files, schedules or flags.
+
+Required follow-up
+
+AutoSignIn and IYUU native Inventory/Factory/forms need numeric native projections
+and current origin/credential/transport proofs. Their original persisted IDs need
+explicit receipt-based translation. IYUU remote sid values must retain their
+separate original API semantics. MergeSiteSwitch's current string-only reference
+boundary needs a reviewed typed source projection and per-peer config transition;
+it must not copy opaque IDs into original numeric config fields. A source-deleted
+producer must capture the exact retired numeric ID in the same delete transaction.
+
+Candidate validation was 37 actual App tests passing normal and race, plus vet
+and a CGO-free Linux test build. That proves the isolated candidate scope only.
+Subsequent formal combined verification passed 107 actual App tests in normal,
+race and real NAS runs, with vet exit 0; 31 host tests also passed normal/race.
+The first NAS bundle omitted a site HTML fixture (106 pass / 1 fail); the second
+run changed only packaging and passed all 107 with the identical binary. Both
+records are retained in plugin-notice-route-verification.json. Owned resources
+were removed and production services remained unchanged. The adjacent JSON
+retains the independent candidate and promotion hashes separately from these
+formal joint results. No original user migration or deployment occurred.

@@ -26,6 +26,7 @@ type DomainEvent struct {
 	IntentID         string `json:"intent_id,omitempty"`
 	NativeDownloadID string `json:"native_download_id,omitempty"`
 	FileEventID      string `json:"file_event_id,omitempty"`
+	NoticeID         string `json:"notice_id,omitempty"`
 	AssetID          string `json:"asset_id,omitempty"`
 	SiteID           string `json:"site_id,omitempty"`
 	SubscriptionID   string `json:"subscription_id,omitempty"`
@@ -58,6 +59,12 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	}
 	if in.SchemaVersion == 0 {
 		in.SchemaVersion = 1
+	}
+	if in.Type == "notice.message" {
+		return validateNoticeMessageDomainEvent(in)
+	}
+	if in.NoticeID != "" {
+		return invalid()
 	}
 	if in.Type == "downloadfile.deleted" {
 		return validateDownloadFileDomainEvent(in)
@@ -163,6 +170,11 @@ func recordDomainEventTx(ctx context.Context, tx *sql.Tx, in DomainEvent) error 
 	event, err := validateDomainEvent(in)
 	if err != nil {
 		return err
+	}
+	if event.Type == "notice.message" {
+		if err = validateNoticeMessageBackingTx(ctx, tx, event); err != nil {
+			return err
+		}
 	}
 	if event.Type == "downloadfile.deleted" {
 		if err = validateDownloadFileEventBackingTx(ctx, tx, event); err != nil {

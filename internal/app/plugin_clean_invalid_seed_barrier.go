@@ -272,7 +272,10 @@ func cleanSeedRoots(settings Settings, raw json.RawMessage) ([]seedhost.Root, er
 
 // The wrapper adds actual core schedule projection to the same existing SQL
 // transaction; it creates neither a database nor an independent job system.
-type pluginCleanInvalidSeedActionJournal struct{ o *pluginCleanInvalidSeedOwner }
+type pluginCleanInvalidSeedActionJournal struct {
+	o           *pluginCleanInvalidSeedOwner
+	afterCommit func() error
+}
 
 func (j *pluginCleanInvalidSeedActionJournal) Read(ctx context.Context) (seedhost.State, error) {
 	return j.o.j.Read(ctx)
@@ -317,7 +320,14 @@ func (j *pluginCleanInvalidSeedActionJournal) Update(ctx context.Context, fn fun
 	if err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	// Native storage seam for a lost acknowledgement after an actual commit.
+	if j.afterCommit != nil {
+		return j.afterCommit()
+	}
+	return nil
 }
 func cleanSeedServiceID(plan string) string { return "clean_seed." + tokenHash(plan) }
 func (o *pluginCleanInvalidSeedOwner) projectSchedulesTx(ctx context.Context, tx *sql.Tx, s seedhost.State) error {

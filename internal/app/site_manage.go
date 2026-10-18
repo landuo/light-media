@@ -244,11 +244,6 @@ func (a *App) deleteManagedSite(ctx context.Context, key string) (any, error) {
 	if e := a.saveSettings(ctx, c); e != nil {
 		return nil, e
 	}
-	// Old statistical snapshots are private application data, not site data.
-	_, e := a.Store.DB.ExecContext(ctx, `DELETE FROM records WHERE (kind IN ('site_connection','site_stats_latest','site_cooldown') AND id=?) OR (kind='site_stats_history' AND substr(id,1,?)=?)`, key, len(key)+1, key+":")
-	if e != nil {
-		return nil, e
-	}
 	return a.managedSites(ctx)
 }
 

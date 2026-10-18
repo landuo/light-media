@@ -72,7 +72,10 @@ type PluginImport struct {
 
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
-type PluginStore struct{ store *Store }
+type PluginStore struct {
+	store   *Store
+	notices pluginNoticeRuntime
+}
 
 const pluginValueLimit = 1 << 20
 const pluginDataValueLimit = plugins.MaxPayloadBytes
@@ -174,6 +177,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, pluginNoticeSchema); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, pluginCleanupOutboxSchema); err != nil {
 		return nil, err
 	}
@@ -250,7 +256,7 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" {
 		limit = pluginDataValueLimit
 	}
-	if kind == "clean_seed_journal" {
+	if kind == "clean_seed_journal" || kind == "notice_journal" {
 		limit = pluginCleanInvalidSeedJournalLimit
 	}
 	if len(sealed) < aead.NonceSize()+aead.Overhead() || len(sealed) > limit+aead.NonceSize()+aead.Overhead() {

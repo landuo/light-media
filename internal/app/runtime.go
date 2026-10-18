@@ -110,6 +110,10 @@ func New(opts Options) (*App, error) {
 		s.Close()
 		return nil, e
 	}
+	if e = a.bootstrapNativeSiteIdentities(context.Background()); e != nil {
+		s.Close()
+		return nil, e
+	}
 	a.pluginStore, e = NewPluginStore(context.Background(), s)
 	if e == nil {
 		e = a.pluginStore.recoverPluginRuns(context.Background())
@@ -173,6 +177,8 @@ func (a *App) Start(parent context.Context) {
 	go func() { defer a.wg.Done(); a.pluginWorker(ctx) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.pluginEventWorker(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.pluginNoticeWorker(ctx) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.pluginScheduleWorker(ctx) }()
 	a.log("INFO", "runtime", "started", "服务已启动", "", "")
@@ -247,6 +253,9 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 		}
 	}
 	if err := validateSettings(c); err != nil {
+		return err
+	}
+	if err := a.reconcileNativeSiteIdentitiesTx(ctx, tx, previous, c); err != nil {
 		return err
 	}
 	if err := bumpPriorityRuleRevisions(ctx, tx, previous.PriorityRules, c.PriorityRules); err != nil {

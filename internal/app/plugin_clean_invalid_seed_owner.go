@@ -234,6 +234,9 @@ func (a *App) pluginCleanInvalidSeedHost(ctx context.Context, installation Plugi
 		return nil, err
 	}
 	defer o.unlock()
+	if _, err = a.pluginStore.noticePeriods(ctx); err != nil {
+		return nil, err
+	}
 	if err = o.openHost(inv.Binding); err != nil {
 		return nil, err
 	}
@@ -340,6 +343,23 @@ func (p *PluginStore) cleanInvalidSeedDeferredOutcome(ctx context.Context, run P
 			}
 			return nil, "", false, err
 		}
+		if effect.Kind == "notice" {
+			receipt, receiptErr := cleanSeedReadReceipt(ctx, tx, j, effect.ID)
+			var proof pluginCleanInvalidSeedNoticeReceipt
+			if receiptErr != nil || cleanupJournalStrict(receipt.Payload, &proof) != nil {
+				return nil, "", false, seedhost.ErrUnsafe
+			}
+			if proof.RouteID != "" {
+				route, _, routeErr := p.readNoticeRoute(ctx, tx, proof.RouteID)
+				if routeErr != nil {
+					return nil, "", false, routeErr
+				}
+				if !route.Complete {
+					return nil, "", false, nil
+				}
+			}
+		}
+
 	}
 	code := ""
 	if r.Phase == "failed" {

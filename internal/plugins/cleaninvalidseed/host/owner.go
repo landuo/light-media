@@ -662,7 +662,7 @@ func (e *execution) Notice(ctx context.Context, n map[string]any) error {
 		return ErrUnsafe
 	}
 	defer release()
-	return e.o.opts.Journal.Update(ctx, func(tx *sql.Tx, s *State) error {
+	err = e.o.opts.Journal.Update(ctx, func(tx *sql.Tx, s *State) error {
 		r, ok := s.Runs[e.inv.RunID]
 		if !ok || r.Invocation != e.inv || r.Phase != "started" || r.Effective != e.effective || r.ConfigReceipt != e.configReceipt {
 			return ErrUnsafe
@@ -677,6 +677,34 @@ func (e *execution) Notice(ctx context.Context, n map[string]any) error {
 		s.Effects[effect.ID] = effect
 		return nil
 	})
+
+	if err != nil {
+		checkCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
+		defer cancel()
+		state, readErr := e.o.opts.Journal.Read(checkCtx)
+		run, hasRun := state.Runs[e.inv.RunID]
+		savedNotice, hasNotice := state.Notices[notice.ID]
+		savedEffect, hasEffect := state.Effects[effect.ID]
+		runMatches := hasRun && run.Invocation == e.inv && run.Phase == "started" && run.Effective == e.effective && run.ConfigReceipt == e.configReceipt
+		if readErr == nil && runMatches && !hasNotice && !hasEffect {
+			return err
+		} // known local rollback, no accepted prefix
+		if readErr != nil || !runMatches || !hasNotice || !hasEffect || digest(savedNotice) != digest(notice) || digest(savedEffect) != digest(effect) {
+			e.fault(ErrUnknown)
+			return errors.Join(ErrUnknown, err)
+		}
+		// Exact local acceptance was committed; do not call Core.Notice or history again.
+	}
+	if after, ok := e.o.opts.Core.(interface {
+		AfterNotice(context.Context, Invocation, Notice) error
+	}); ok {
+		err = after.AfterNotice(ctx, e.inv, notice)
+		if errors.Is(err, ErrUnknown) {
+			e.fault(ErrUnknown)
+		}
+		return err
+	}
+	return nil
 }
 func (e *execution) Log(context.Context, string, string) {} // No raw tracker body/name/credential logging.
 

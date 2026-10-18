@@ -25,8 +25,9 @@ type pluginCleanInvalidSeedPrivateNotice struct {
 }
 
 type pluginCleanInvalidSeedNoticeReceipt struct {
-	Version   int
-	OutboxSHA string
+	Version                  int
+	OutboxSHA                string
+	RouteID, RouteInitialSHA string
 }
 
 func cleanSeedSourceNotice(raw json.RawMessage) (*notice.Envelope, error) {
@@ -101,7 +102,11 @@ func (c *pluginCleanInvalidSeedCore) acceptNoticeTx(ctx context.Context, tx *sql
 	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_clean_seed_outbox VALUES(?,?,?,?)`, c.o.instance, c.o.generation, token, sealed); err != nil {
 		return err
 	}
-	proof, err := cleanupJournalJSON(pluginCleanInvalidSeedNoticeReceipt{Version: 1, OutboxSHA: tokenHash(string(payload))})
+	routeID, initialSHA, err := c.o.a.pluginStore.initCleanNoticeRouteTx(ctx, tx, c.o.j, box, payload)
+	if err != nil {
+		return err
+	}
+	proof, err := cleanupJournalJSON(pluginCleanInvalidSeedNoticeReceipt{Version: 1, OutboxSHA: tokenHash(string(payload)), RouteID: routeID, RouteInitialSHA: initialSHA})
 	if err != nil {
 		return err
 	}

@@ -190,10 +190,16 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 	config.Sites = append([]SiteConfig(nil), config.Sites...)
 	seen := map[string]bool{}
 	touched := map[string]bool{}
+	identityRefs := []importedSiteIdentity{}
+	documentFingerprint := a.Store.siteIdentityMAC("import-document", []byte(raw))
 	for index, entry := range entries {
 		own, _ := siteImportExtension(entry)
 		result := siteImportResult{Index: index + 1, Name: fmt.Sprintf("第 %d 项", index+1), Status: "failed", Warnings: []string{}}
 		in, warnings, err := decodeSiteImportEntry(entry, native)
+		originalNumericID, identityErr := importedNumericSiteID(entry)
+		if err == nil && identityErr != nil {
+			err = identityErr
+		}
 		result.Warnings = warnings
 		if err == nil {
 			result.Name = siteImportName(in.Kind)
@@ -275,11 +281,14 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				report.Created++
 			}
 			report.Imported++
+			if originalNumericID > 0 {
+				identityRefs = append(identityRefs, importedSiteIdentity{DocumentFingerprint: documentFingerprint, Ordinal: index + 1, OriginalSourceID: originalNumericID, SiteID: in.ID, CanonicalOrigin: in.BaseURL})
+			}
 		}
 		report.Results = append(report.Results, result)
 	}
 	if report.Imported > 0 {
-		if err := a.saveSettings(ctx, config); err != nil {
+		if err := a.saveSettings(context.WithValue(ctx, importedSiteIdentitiesKey{}, identityRefs), config); err != nil {
 			return siteImportReport{}, bad("SITE_IMPORT_FAILED", "站点配置保存失败，本次导入未生效")
 		}
 	}
