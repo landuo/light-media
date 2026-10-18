@@ -30,24 +30,10 @@ var SiteControlSlots = []SiteControlSlot{
 
 type SiteControls map[string]json.RawMessage
 
-func (c SiteControls) Sites(key string) []string {
-	out := []string{}
-	_ = json.Unmarshal(c[key], &out)
-	if out == nil {
-		return []string{}
-	}
-	return out
-}
 func (c SiteControls) Follows(key string) bool {
 	var out bool
 	_ = json.Unmarshal(c[key], &out)
 	return out
-}
-func (c SiteControls) SetSites(key string, values []string) {
-	if values == nil {
-		values = []string{}
-	}
-	c[key], _ = json.Marshal(values)
 }
 func (c SiteControls) Clone() SiteControls {
 	out := SiteControls{}
@@ -69,18 +55,13 @@ func (c SiteControls) Validate() error {
 			return errors.New("unknown site control field")
 		}
 		if list {
-			var ids []string
+			var ids []SiteReference
 			if json.Unmarshal(raw, &ids) != nil || len(ids) > 1024 {
 				return errors.New("invalid site references")
 			}
 			for _, id := range ids {
-				if len(id) == 0 || len(id) > 256 {
+				if id.Validate() != nil {
 					return errors.New("invalid site reference")
-				}
-				for _, r := range id {
-					if r < 32 || r == 127 {
-						return errors.New("invalid site reference")
-					}
 				}
 			}
 		} else {
@@ -107,22 +88,22 @@ func (c SiteControls) AnyFollow(installed []string) bool {
 	return false
 }
 
-func NormalizeSiteControls(c SiteControls, customIDs []string) SiteControls {
+func NormalizeSiteControlReferences(c SiteControls, customIDs []SiteReference) SiteControls {
 	out := c.Clone()
-	enabled := c.Sites("enable_sites")
+	enabled := c.References("enable_sites")
 	for _, slot := range SiteControlSlots {
 		if !c.Follows(slot.Follow) {
 			continue
 		}
 		values := slices.Clone(enabled)
 		if slot.Custom {
-			for _, id := range c.Sites(slot.Key) {
-				if id != "" && slices.Contains(customIDs, id) {
+			for _, id := range c.References(slot.Key) {
+				if slices.Contains(customIDs, id) {
 					values = append(values, id)
 				}
 			}
 		}
-		out.SetSites(slot.Key, values)
+		out.SetReferences(slot.Key, values)
 	}
 	return out
 }
@@ -141,8 +122,8 @@ func ChangeSiteControl(values []string, id string, enabled bool) ([]string, bool
 }
 
 type SiteControlOption struct {
-	Title string `json:"title"`
-	Value string `json:"value"`
+	Title string        `json:"title"`
+	Value SiteReference `json:"value"`
 }
 type SiteControlSnapshot struct {
 	Config      SiteControls        `json:"config"`

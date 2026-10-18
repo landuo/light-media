@@ -49,6 +49,15 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		if !installation.DesiredEnabled {
 			continue
 		}
+		if siteReferencePlugin(installation.PluginID) {
+			if _, e := a.pluginStore.readSiteReferenceProtocol(ctx, a.Store.DB, installation); e != nil {
+				if code := pluginErrorCodeInternal(e); code != "PLUGIN_SITE_PROTOCOL_UNCLAIMED" && code != "PLUGIN_SITE_PROTOCOL_INVALID" {
+					return e
+				}
+				a.log("ERROR", "plugins", "site_reference_protocol_pending", "插件站点引用尚未确认，已保留旧配置和待执行任务；其他插件继续启动", "", "")
+				continue
+			}
+		}
 		manifest, _, exists := builtin.Lookup(installation.PluginID)
 		if !exists || manifest.Version != installation.Version {
 			continue
@@ -248,6 +257,14 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_UNINSTALL_RECEIPT_FAILED"
 		} else if found {
 			result.Result, err, state, errorCode = committed, nil, "succeeded", ""
+		}
+	}
+	if installation.PluginID == "MergeSiteSwitch" && installation.Version == "1.2" {
+		committed, receiptErr := a.pluginStore.siteControlReceipt(finishCtx, run)
+		if receiptErr == nil {
+			result.Result, err, state, errorCode = committed, nil, "succeeded", ""
+		} else if !errors.Is(receiptErr, sql.ErrNoRows) {
+			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_SITE_RECEIPT_INVALID"
 		}
 	}
 	if err != nil && deferred != nil {

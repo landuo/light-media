@@ -237,13 +237,6 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 		if err := effect(ctx, tx, &c); err != nil {
 			return err
 		}
-	} else {
-		if err := a.followSiteControlsTx(ctx, tx, previous, &c); err != nil {
-			return err
-		}
-	}
-	if err := a.pruneDeletedSiteSubscriptionsTx(ctx, tx, previous, c); err != nil {
-		return err
 	}
 	for i := range c.Sites {
 		if c.Sites[i].Enabled {
@@ -256,6 +249,17 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 		return err
 	}
 	if err := a.reconcileNativeSiteIdentitiesTx(ctx, tx, previous, c); err != nil {
+		return err
+	}
+	if effect == nil {
+		if err := a.followSiteControlsTx(ctx, tx, previous, &c); err != nil {
+			return err
+		}
+	}
+	if err := a.pruneDeletedSiteSubscriptionsTx(ctx, tx, previous, c); err != nil {
+		return err
+	}
+	if err := validateSettings(c); err != nil {
 		return err
 	}
 	if err := bumpPriorityRuleRevisions(ctx, tx, previous.PriorityRules, c.PriorityRules); err != nil {

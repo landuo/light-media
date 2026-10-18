@@ -18,7 +18,7 @@ type SiteStatisticConfiguration struct {
 	NotifyType    string `json:"notify_type"`
 	// MergeSiteSwitch stores this field in the source. SiteStatistic 1.9.7
 	// never reads it; it does not filter charts, notifications or collection.
-	StatisticSites []string `json:"statistic_sites,omitempty"`
+	StatisticSites []SiteReference `json:"statistic_sites,omitempty"`
 }
 
 func (c SiteStatisticConfiguration) Validate() error {

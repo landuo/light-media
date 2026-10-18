@@ -379,7 +379,7 @@ func TestPluginMergeSiteSwitchActuallyBindsSiteStatistic(t *testing.T) {
 	}
 	var config builtin.SiteStatisticConfiguration
 	json.Unmarshal(stored.Value, &config)
-	if !config.Enabled || config.DashboardType != "total" || config.NotifyType != "inc" || len(config.StatisticSites) != 1 || config.StatisticSites[0] != "s1" {
+	if !config.Enabled || config.DashboardType != "total" || config.NotifyType != "inc" || len(config.StatisticSites) != 1 || config.StatisticSites[0] != (builtin.SiteReference{Native: identityRequire(t, a, "s1").SourceID}) {
 		t.Fatal("real peer field clobbered", string(stored.Value))
 	}
 	current := a.Settings().Sites[1]

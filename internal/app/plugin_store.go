@@ -174,6 +174,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, siteReferenceProtocolSchema); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
 		return nil, err
 	}
@@ -291,6 +294,9 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 	if err == nil && previousID != in.PluginID {
 		return bad("PLUGIN_INSTANCE_CONFLICT", "插件实例已属于其他插件")
 	}
+	if err := p.prepareSiteReferenceInstallTx(ctx, tx, in); err != nil {
+		return err
+	}
 	sealed, err := p.seal("manifest", in.InstanceID, "main", in.Manifest)
 	if err != nil {
 		return err
@@ -299,7 +305,10 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=excluded.manifest_schema,
  manifest=excluded.manifest,desired_enabled=excluded.desired_enabled,installed=1,generation=plugin_installations.generation+1,updated_at=excluded.updated_at`,
 		in.InstanceID, in.PluginID, in.Version, in.ManifestSchemaVersion, sealed, in.DesiredEnabled, now(), now())
-	return err
+	if err != nil {
+		return err
+	}
+	return p.markInstalledSiteReferencesTx(ctx, tx, in.InstanceID, "host-install/v1")
 }
 
 func (p *PluginStore) Install(ctx context.Context, in PluginInstallation) error {
@@ -463,6 +472,9 @@ func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return err
 	}
+	if err := p.markInstalledSiteReferencesTx(ctx, tx, instanceID, "reset-empty/v1"); err != nil {
+		return err
+	}
 	return tx.Commit()
 }
 
@@ -602,6 +614,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		return PluginMigrationReceipt{}, bad("PLUGIN_IMPORT_TARGET_EXISTS", "目标插件已有配置或保留数据，迁移未覆盖")
 	}
 	if err = p.installTx(ctx, tx, installation); err != nil {
+		return PluginMigrationReceipt{}, err
+	}
+	if err = p.stageImportedSiteReferencesTx(ctx, tx, installation.InstanceID, run.ID); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
 	if _, err = p.saveValueTx(ctx, tx, installation.InstanceID, "config", "main", 0, config); err != nil {

@@ -107,6 +107,9 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	defer tx.Rollback()
+	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	activation, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -198,6 +201,9 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	}
 	if !installed || !allowed {
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
+	}
+	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
+		return PluginRun{}, err
 	}
 	if pluginID == "MediaServerRefresh" && (action == "init" || action == "reload") && len(input) == 0 {
 		// Save the activation boundary with the queued config, not when the
@@ -314,15 +320,27 @@ func (p *PluginStore) ClaimRun(ctx context.Context) (PluginRun, error) {
 }
 
 func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string) (PluginRun, error) {
+	afterCreated, afterID := "", ""
 	for {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return PluginRun{}, err
 		}
-		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID))
+		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, afterCreated, afterCreated, afterID))
 		if err != nil {
 			_ = tx.Rollback()
 			return PluginRun{}, err
+		}
+		afterCreated, afterID = run.CreatedAt, run.ID
+		// Preserve old admissions, including stale revisions, until a private
+		// source transition can bind their original input and terminal outcome.
+		// They must not prevent unrelated proven plugins from being claimed.
+		if e := p.requireSiteReferenceProtocolTx(ctx, tx, run.InstanceID); e != nil {
+			_ = tx.Rollback()
+			if code := pluginErrorCodeInternal(e); code == "PLUGIN_SITE_PROTOCOL_UNCLAIMED" || code == "PLUGIN_SITE_PROTOCOL_INVALID" {
+				continue
+			}
+			return PluginRun{}, e
 		}
 		var current int
 		err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision).Scan(&current)

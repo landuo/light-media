@@ -19,12 +19,12 @@ func TestMergeSiteSwitchOriginalOracle(t *testing.T) {
 			Config    SiteControls
 			Installed []string
 			Events    []struct {
-				SiteID  string `json:"site_id"`
+				SiteID  SiteReference `json:"site_id"`
 				Enabled bool
 			}
 			State      bool
 			Normalized SiteControls
-			System     struct{ Search, RSS []string }
+			System     struct{ Search, RSS []SiteReference }
 			Plugins    map[string]map[string]json.RawMessage
 		}
 	}
@@ -33,11 +33,11 @@ func TestMergeSiteSwitchOriginalOracle(t *testing.T) {
 	}
 	for index, sample := range fixture.Cases {
 		t.Run(string(rune('A'+index)), func(t *testing.T) {
-			custom := []string{}
+			custom := []SiteReference{}
 			if slices.Contains(sample.Installed, "CustomSites") {
-				custom = []string{"c1"}
+				custom = []SiteReference{{Custom: "c1"}}
 			}
-			normalized := NormalizeSiteControls(sample.Config, custom)
+			normalized := NormalizeSiteControlReferences(sample.Config, custom)
 			if normalized.Validate() != nil {
 				t.Fatal("source configuration rejected")
 			}
@@ -52,17 +52,17 @@ func TestMergeSiteSwitchOriginalOracle(t *testing.T) {
 			if state := sample.Config.AnyFollow(sample.Installed); state != sample.State {
 				t.Fatal("source state gate differs", state, sample.State)
 			}
-			actual := map[string][]string{}
+			actual := map[string][]SiteReference{}
 			for _, slot := range SiteControlSlots {
 				if slot.PluginID == "" || slices.Contains(sample.Installed, slot.PluginID) {
-					actual[slot.Key] = normalized.Sites(slot.Key)
+					actual[slot.Key] = normalized.References(slot.Key)
 				}
 			}
 			if sample.Config.AnyFollow(sample.Installed) {
 				for _, event := range sample.Events {
 					for _, slot := range SiteControlSlots {
 						if sample.Config.Follows(slot.Follow) && (slot.PluginID == "" || slices.Contains(sample.Installed, slot.PluginID)) {
-							actual[slot.Key], _ = ChangeSiteControl(actual[slot.Key], event.SiteID, event.Enabled)
+							actual[slot.Key], _ = ChangeSiteReference(actual[slot.Key], event.SiteID, event.Enabled)
 						}
 					}
 				}
@@ -71,7 +71,7 @@ func TestMergeSiteSwitchOriginalOracle(t *testing.T) {
 				if slot.PluginID != "" && !slices.Contains(sample.Installed, slot.PluginID) {
 					continue
 				}
-				var want []string
+				var want []SiteReference
 				if slot.Key == "search_sites" {
 					want = sample.System.Search
 				} else if slot.Key == "rss_sites" {
@@ -80,11 +80,11 @@ func TestMergeSiteSwitchOriginalOracle(t *testing.T) {
 					json.Unmarshal(sample.Plugins[slot.PluginID][slot.PeerField], &want)
 				}
 				if want == nil {
-					want = []string{}
+					want = []SiteReference{}
 				}
 				got := actual[slot.Key]
 				if got == nil {
-					got = []string{}
+					got = []SiteReference{}
 				}
 				if !reflect.DeepEqual(got, want) {
 					t.Fatal("site-event result differs", slot.Key, got, want)
@@ -96,7 +96,7 @@ func TestMergeSiteSwitchOriginalOracle(t *testing.T) {
 
 func TestMergeSiteSwitchOriginalFormAndNoImplicitApply(t *testing.T) {
 	for _, installed := range [][]string{{}, {"AutoSignIn", "SiteStatistic", "IYUUAutoSeed", "BrushFlow", "CrossSeed", "CustomSites"}} {
-		snapshot := SiteControlSnapshot{Revision: 5, Config: SiteControls{}, Sites: []SiteControlOption{{"系统一", "s1"}}, CustomSites: []SiteControlOption{{"自定义一 [自定义]", "c1"}}, Installed: installed}
+		snapshot := SiteControlSnapshot{Revision: 5, Config: SiteControls{}, Sites: []SiteControlOption{{"系统一", SiteReference{Custom: "s1"}}}, CustomSites: []SiteControlOption{{"自定义一 [自定义]", SiteReference{Custom: "c1"}}}, Installed: installed}
 		response, err := HandleMergeSiteSwitch(context.Background(), "config_form", nil, func(ctx context.Context, method string, raw json.RawMessage) (json.RawMessage, error) {
 			if method != "sites.controls.read" || string(raw) != "{}" {
 				t.Fatal("unscoped form call")
@@ -152,9 +152,9 @@ func TestMergeSiteSwitchExactOriginalFormMetadata(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, sample := range fixture.Cases {
-		snapshot := SiteControlSnapshot{Config: SiteControls{}, Installed: sample.Installed, Sites: []SiteControlOption{{"系统一", "s1"}, {"系统二", "s2"}}}
+		snapshot := SiteControlSnapshot{Config: SiteControls{}, Installed: sample.Installed, Sites: []SiteControlOption{{"系统一", SiteReference{Custom: "s1"}}, {"系统二", SiteReference{Custom: "s2"}}}}
 		if slices.Contains(sample.Installed, "CustomSites") {
-			snapshot.CustomSites = []SiteControlOption{{"自定义一 [自定义]", "c1"}}
+			snapshot.CustomSites = []SiteControlOption{{"自定义一 [自定义]", SiteReference{Custom: "c1"}}}
 		}
 		result, err := HandleMergeSiteSwitch(context.Background(), "config_form", nil, func(ctx context.Context, method string, raw json.RawMessage) (json.RawMessage, error) {
 			return json.Marshal(snapshot)

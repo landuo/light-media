@@ -68,17 +68,17 @@ func (p *PluginStore) siteControlPeersTx(ctx context.Context, tx *sql.Tx) ([]str
 	return installed, peers, nil
 }
 
-func siteControlReferences(config map[string]json.RawMessage, key string) ([]string, error) {
+func siteControlReferences(config map[string]json.RawMessage, key string) ([]builtin.SiteReference, error) {
 	raw, ok := config[key]
 	if !ok {
-		return []string{}, nil
+		return []builtin.SiteReference{}, nil
 	}
-	values := []string{}
+	values := []builtin.SiteReference{}
 	if json.Unmarshal(raw, &values) != nil {
 		return nil, bad("PLUGIN_SITE_REFERENCE_UNMAPPED", "原站点编号尚未映射为新项目站点引用")
 	}
 	if values == nil {
-		values = []string{}
+		values = []builtin.SiteReference{}
 	}
 	return values, nil
 }
@@ -102,7 +102,7 @@ func siteControlCustomOptions(peers map[string]siteControlPeer) ([]builtin.SiteC
 	}
 	for _, row := range rows {
 		if row.ID != "" {
-			options = append(options, builtin.SiteControlOption{Title: row.Name + " [自定义]", Value: row.ID})
+			options = append(options, builtin.SiteControlOption{Title: row.Name + " [自定义]", Value: builtin.SiteReference{Custom: row.ID}})
 		}
 	}
 	return options, nil
@@ -110,6 +110,15 @@ func siteControlCustomOptions(peers map[string]siteControlPeer) ([]builtin.SiteC
 
 func (a *App) siteControlSnapshotTx(ctx context.Context, tx *sql.Tx, instanceID string, c Settings) (builtin.SiteControlSnapshot, int64, error) {
 	out := builtin.SiteControlSnapshot{Sites: []builtin.SiteControlOption{}, CustomSites: []builtin.SiteControlOption{}, Installed: []string{}, Config: builtin.SiteControls{}}
+	var installedSelf int
+	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&installedSelf); err != nil {
+		return out, 0, err
+	}
+	if installedSelf != 0 {
+		if err := a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
+			return out, 0, err
+		}
+	}
 	var revision int64
 	var sealed []byte
 	err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&revision, &sealed)
@@ -125,21 +134,42 @@ func (a *App) siteControlSnapshotTx(ctx context.Context, tx *sql.Tx, instanceID 
 			return out, 0, bad("INVALID_PLUGIN_CONFIG", "聚合站点开关配置无效")
 		}
 	}
-	sites := slices.Clone(c.Sites)
-	sort.SliceStable(sites, func(i, j int) bool { return sites[i].Priority < sites[j].Priority })
-	enabled := []string{}
-	for _, site := range sites {
-		out.Sites = append(out.Sites, builtin.SiteControlOption{Title: site.Name, Value: site.ID})
-		if site.Enabled {
-			enabled = append(enabled, site.ID)
-		}
-	}
-	out.Config.SetSites("enable_sites", enabled)
-	out.Config.SetSites("search_sites", c.IndexerSites)
-	out.Config.SetSites("rss_sites", c.RSSSites)
 	installed, peers, err := a.pluginStore.siteControlPeersTx(ctx, tx)
 	if err != nil {
 		return out, 0, err
+	}
+	custom, err := siteControlCustomOptions(peers)
+	if err != nil {
+		return out, 0, err
+	}
+	projection, err := a.siteReferenceProjectionTx(ctx, tx, custom)
+	if err != nil {
+		return out, 0, err
+	}
+	out.Config, err = sourceSiteControls(out.Config)
+	if err != nil {
+		return out, 0, err
+	}
+	sites := slices.Clone(c.Sites)
+	sort.SliceStable(sites, func(i, j int) bool { return sites[i].Priority < sites[j].Priority })
+	enabled := []builtin.SiteReference{}
+	for _, site := range sites {
+		ref, e := projection.source(site.ID)
+		if e != nil {
+			return out, 0, e
+		}
+		out.Sites = append(out.Sites, builtin.SiteControlOption{Title: site.Name, Value: ref})
+		if site.Enabled {
+			enabled = append(enabled, ref)
+		}
+	}
+	out.Config.SetReferences("enable_sites", enabled)
+	for key, ids := range map[string][]string{"search_sites": c.IndexerSites, "rss_sites": c.RSSSites} {
+		refs, e := projection.sourceList(ids)
+		if e != nil {
+			return out, 0, e
+		}
+		out.Config.SetReferences(key, refs)
 	}
 	out.Installed = installed
 	out.CustomSites, err = siteControlCustomOptions(peers)
@@ -152,27 +182,17 @@ func (a *App) siteControlSnapshotTx(ctx context.Context, tx *sql.Tx, instanceID 
 			if err != nil {
 				return out, 0, err
 			}
-			out.Config.SetSites(slot.Key, values)
+			if err := a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, peer.ID); err != nil {
+				return out, 0, err
+			}
+			out.Config.SetReferences(slot.Key, values)
 		}
 	}
 	return out, revision, nil
 }
 
 func (a *App) registerSiteControlsTx(ctx context.Context, tx *sql.Tx, run PluginRun, config builtin.SiteControls) error {
-	var count int
-	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs r JOIN plugin_installations i ON i.instance_id=r.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE r.id=? AND r.instance_id=? AND r.state='running' AND i.plugin_id='MergeSiteSwitch' AND i.installed=1 AND i.desired_enabled=1 AND i.generation=? AND r.generation=i.generation AND v.revision=? AND r.config_revision=v.revision`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision).Scan(&count); err != nil {
-		return err
-	}
-	if count != 1 {
-		return bad("PLUGIN_SNAPSHOT_STALE", "聚合站点开关配置已变化")
-	}
-	raw, _ := json.Marshal(config)
-	sealed, err := a.pluginStore.seal("site_controls_watch", run.InstanceID, "main", raw)
-	if err != nil {
-		return err
-	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_site_control_watchers VALUES(?,?,?,?,?) ON CONFLICT(instance_id) DO UPDATE SET generation=excluded.generation,config_revision=excluded.config_revision,config=excluded.config,updated_at=excluded.updated_at`, run.InstanceID, run.Generation, run.ConfigRevision, sealed, now())
-	return err
+	return a.registerSiteControlsRevisionTx(ctx, tx, run, config, run.ConfigRevision)
 }
 
 func (a *App) writeSiteControlPeersTx(ctx context.Context, tx *sql.Tx, peers map[string]siteControlPeer, changes map[string]map[string]json.RawMessage) error {
@@ -191,6 +211,9 @@ func (a *App) writeSiteControlPeersTx(ctx context.Context, tx *sql.Tx, peers map
 		}
 		if !available || !peer.Desired {
 			return bad("PLUGIN_DEPENDENCY_UNAVAILABLE", "关联插件尚未完成Go实现或仍在迁移暂存，本次开关更新未应用")
+		}
+		if err := a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, peer.ID); err != nil {
+			return err
 		}
 		for key, value := range changes[pluginID] {
 			peer.Config[key] = value
@@ -225,7 +248,7 @@ func controlPeerChanges(config builtin.SiteControls, peers map[string]siteContro
 			if out[slot.PluginID] == nil {
 				out[slot.PluginID] = map[string]json.RawMessage{}
 			}
-			values := config.Sites(slot.Key)
+			values := config.References(slot.Key)
 			out[slot.PluginID][slot.PeerField], _ = json.Marshal(values)
 		}
 	}
@@ -296,9 +319,11 @@ func (a *App) pluginSiteControlsHost(ctx context.Context, installation PluginIns
 		}
 		return json.RawMessage(`{"configured":true,"applied":false}`), tx.Commit()
 	}
-	updated := *run
 	result := json.RawMessage(`{"configured":true,"applied":true}`)
 	err = a.saveSettingsWithEffect(ctx, a.Settings(), func(ctx context.Context, tx *sql.Tx, next *Settings) error {
+		if err := a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, installation.InstanceID); err != nil {
+			return err
+		}
 		_, peers, err := a.pluginStore.siteControlPeersTx(ctx, tx)
 		if err != nil {
 			return err
@@ -307,37 +332,38 @@ func (a *App) pluginSiteControlsHost(ctx context.Context, installation PluginIns
 		if err != nil {
 			return err
 		}
-		customIDs := []string{}
-		for _, option := range custom {
-			customIDs = append(customIDs, option.Value)
-		}
-		normalized := builtin.NormalizeSiteControls(config, customIDs)
-		enabled := normalized.Sites("enable_sites")
-		for i := range next.Sites {
-			next.Sites[i].Enabled = slices.Contains(enabled, next.Sites[i].ID)
-		}
-		next.IndexerSites = normalized.Sites("search_sites")
-		next.RSSSites = normalized.Sites("rss_sites")
-		if err := a.writeSiteControlPeersTx(ctx, tx, peers, controlPeerChanges(normalized, peers)); err != nil {
-			return err
-		}
-		if err := a.pluginStore.patchRunConfigTx(ctx, tx, &updated, map[string]json.RawMessage(normalized)); err != nil {
-			return err
-		}
-		if err := a.registerSiteControlsTx(ctx, tx, updated, normalized); err != nil {
-			return err
-		}
-		sealed, err := a.pluginStore.seal("site_controls_result", updated.InstanceID, updated.ID, result)
+		projection, err := a.siteReferenceProjectionTx(ctx, tx, custom)
 		if err != nil {
 			return err
 		}
-		_, err = tx.ExecContext(ctx, `INSERT INTO plugin_site_control_operations VALUES(?,?,?,?,?)`, updated.ID, updated.InstanceID, updated.Generation, updated.ConfigRevision, sealed)
-		return err
+		projected, err := sourceSiteControls(config)
+		if err != nil {
+			return err
+		}
+		normalized := builtin.NormalizeSiteControlReferences(projected, projection.custom)
+		enabled, err := projection.opaque(normalized.References("enable_sites"))
+		if err != nil {
+			return err
+		}
+		for i := range next.Sites {
+			next.Sites[i].Enabled = slices.Contains(enabled, next.Sites[i].ID)
+		}
+		next.IndexerSites, err = projection.opaque(normalized.References("search_sites"))
+		if err != nil {
+			return err
+		}
+		next.RSSSites, err = projection.opaque(normalized.References("rss_sites"))
+		if err != nil {
+			return err
+		}
+		if err := a.writeSiteControlPeersTx(ctx, tx, peers, controlPeerChanges(normalized, peers)); err != nil {
+			return err
+		}
+		return a.commitSiteControlNormalizationTx(ctx, tx, *run, normalized, result)
 	})
 	if err != nil {
 		return nil, err
 	}
-	*run = updated
 	return result, nil
 }
 
@@ -346,7 +372,11 @@ func (p *PluginStore) siteControlReceipt(ctx context.Context, run PluginRun) (js
 	if err := p.store.DB.QueryRowContext(ctx, `SELECT result FROM plugin_site_control_operations WHERE run_id=? AND instance_id=? AND generation=? AND config_revision=?`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision).Scan(&sealed); err != nil {
 		return nil, err
 	}
-	return p.unseal("site_controls_result", run.InstanceID, run.ID, sealed)
+	raw, err := p.unseal("site_controls_result", run.InstanceID, run.ID, sealed)
+	if err != nil {
+		return nil, err
+	}
+	return p.siteControlNormalizationResult(ctx, run, raw)
 }
 
 // Core site commits and follow updates share a transaction. Watchers contain
@@ -355,6 +385,7 @@ func (a *App) followSiteControlsTx(ctx context.Context, tx *sql.Tx, previous Set
 	type change struct {
 		id      string
 		enabled bool
+		deleted bool
 	}
 	changes := []change{}
 	old := map[string]SiteConfig{}
@@ -365,12 +396,12 @@ func (a *App) followSiteControlsTx(ctx context.Context, tx *sql.Tx, previous Set
 	for _, site := range next.Sites {
 		current[site.ID] = true
 		if before, ok := old[site.ID]; !ok || !reflect.DeepEqual(before, site) {
-			changes = append(changes, change{site.ID, site.Enabled})
+			changes = append(changes, change{site.ID, site.Enabled, false})
 		}
 	}
 	for _, site := range previous.Sites {
 		if !current[site.ID] {
-			changes = append(changes, change{site.ID, false})
+			changes = append(changes, change{site.ID, false, true})
 			next.IndexerSites, _ = builtin.ChangeSiteControl(next.IndexerSites, site.ID, false)
 			next.RSSSites, _ = builtin.ChangeSiteControl(next.RSSSites, site.ID, false)
 		}
@@ -378,18 +409,19 @@ func (a *App) followSiteControlsTx(ctx context.Context, tx *sql.Tx, previous Set
 	if len(changes) == 0 {
 		return nil
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT w.instance_id,w.config FROM plugin_site_control_watchers w JOIN plugin_installations i ON i.instance_id=w.instance_id WHERE i.plugin_id='MergeSiteSwitch' AND i.installed=1 AND i.desired_enabled=1 AND i.generation=w.generation AND i.version=? ORDER BY i.created_at,i.instance_id`, builtin.MergeSiteSwitchManifest().Version)
+	rows, err := tx.QueryContext(ctx, `SELECT w.instance_id,w.generation,w.config_revision,w.config FROM plugin_site_control_watchers w JOIN plugin_installations i ON i.instance_id=w.instance_id WHERE i.plugin_id='MergeSiteSwitch' AND i.installed=1 AND i.desired_enabled=1 AND i.generation=w.generation AND i.version=? ORDER BY i.created_at,i.instance_id`, builtin.MergeSiteSwitchManifest().Version)
 	if err != nil {
 		return err
 	}
 	type watcher struct {
-		id     string
-		sealed []byte
+		id                   string
+		generation, revision int64
+		sealed               []byte
 	}
 	watchers := []watcher{}
 	for rows.Next() {
 		var w watcher
-		if err := rows.Scan(&w.id, &w.sealed); err != nil {
+		if err := rows.Scan(&w.id, &w.generation, &w.revision, &w.sealed); err != nil {
 			rows.Close()
 			return err
 		}
@@ -416,17 +448,28 @@ func (a *App) followSiteControlsTx(ctx context.Context, tx *sql.Tx, previous Set
 		if !config.AnyFollow(installed) {
 			continue
 		}
+		custom, err := siteControlCustomOptions(peers)
+		if err != nil {
+			return err
+		}
+		projection, err := a.siteReferenceProjectionTx(ctx, tx, custom)
+		if err != nil {
+			return err
+		}
+		if err := a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, watch.id); err != nil {
+			return err
+		}
 		updates := map[string]map[string]json.RawMessage{}
 		for _, slot := range builtin.SiteControlSlots {
 			if !config.Follows(slot.Follow) {
 				continue
 			}
-			var values []string
+			var values []builtin.SiteReference
 			if slot.PluginID == "" {
 				if slot.Key == "search_sites" {
-					values = next.IndexerSites
+					values, err = projection.sourceList(next.IndexerSites)
 				} else {
-					values = next.RSSSites
+					values, err = projection.sourceList(next.RSSSites)
 				}
 			} else {
 				peer, ok := peers[slot.PluginID]
@@ -438,10 +481,22 @@ func (a *App) followSiteControlsTx(ctx context.Context, tx *sql.Tx, previous Set
 					return err
 				}
 			}
+			if err != nil {
+				return err
+			}
 			changed := false
 			for _, change := range changes {
+				// Core P0 deletion already removed the first selection above.
+				// Peers still receive the original single list.remove effect.
+				if slot.PluginID == "" && change.deleted {
+					continue
+				}
 				var effect bool
-				values, effect = builtin.ChangeSiteControl(values, change.id, change.enabled)
+				ref, e := projection.source(change.id)
+				if e != nil {
+					return e
+				}
+				values, effect = builtin.ChangeSiteReference(values, ref, change.enabled)
 				changed = changed || effect
 			}
 			if !changed {
@@ -449,9 +504,12 @@ func (a *App) followSiteControlsTx(ctx context.Context, tx *sql.Tx, previous Set
 			}
 			if slot.PluginID == "" {
 				if slot.Key == "search_sites" {
-					next.IndexerSites = values
+					next.IndexerSites, err = projection.opaque(values)
 				} else {
-					next.RSSSites = values
+					next.RSSSites, err = projection.opaque(values)
+				}
+				if err != nil {
+					return err
 				}
 			} else {
 				if updates[slot.PluginID] == nil {
@@ -540,14 +598,14 @@ func (a *App) pruneDeletedSiteSubscriptionsTx(ctx context.Context, tx *sql.Tx, p
 }
 
 func (p *PluginStore) recoverSiteControlRuns(ctx context.Context) error {
-	rows, err := p.store.DB.QueryContext(ctx, `SELECT r.id,r.instance_id,r.generation,r.config_revision FROM plugin_runs r JOIN plugin_installations i ON i.instance_id=r.instance_id WHERE i.plugin_id='MergeSiteSwitch' AND r.state='reconcile_pending' AND r.action IN ('init','reload')`)
+	rows, err := p.store.DB.QueryContext(ctx, `SELECT r.id,r.instance_id,r.generation,r.config_revision,r.state FROM plugin_runs r JOIN plugin_installations i ON i.instance_id=r.instance_id WHERE i.plugin_id='MergeSiteSwitch' AND r.action IN ('init','reload') AND (r.state='reconcile_pending' OR (r.state='failed' AND EXISTS(SELECT 1 FROM plugin_site_control_operations o WHERE o.run_id=r.id)))`)
 	if err != nil {
 		return err
 	}
 	runs := []PluginRun{}
 	for rows.Next() {
 		var run PluginRun
-		if err := rows.Scan(&run.ID, &run.InstanceID, &run.Generation, &run.ConfigRevision); err != nil {
+		if err := rows.Scan(&run.ID, &run.InstanceID, &run.Generation, &run.ConfigRevision, &run.State); err != nil {
 			rows.Close()
 			return err
 		}
@@ -561,6 +619,9 @@ func (p *PluginStore) recoverSiteControlRuns(ctx context.Context) error {
 	for _, run := range runs {
 		result, err := p.siteControlReceipt(ctx, run)
 		if errors.Is(err, sql.ErrNoRows) {
+			if run.State == "failed" {
+				return bad("PLUGIN_SITE_RECEIPT_INVALID", "已提交的站点开关执行缺少原收据")
+			}
 			if _, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='pending',updated_at=? WHERE id=? AND state='reconcile_pending'`, now(), run.ID); err != nil {
 				return err
 			}
@@ -573,7 +634,7 @@ func (p *PluginStore) recoverSiteControlRuns(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		if _, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='succeeded',result=?,error_code='',updated_at=? WHERE id=? AND state='reconcile_pending'`, sealed, now(), run.ID); err != nil {
+		if _, err := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='succeeded',result=?,error_code='',updated_at=? WHERE id=? AND state=?`, sealed, now(), run.ID, run.State); err != nil {
 			return err
 		}
 	}

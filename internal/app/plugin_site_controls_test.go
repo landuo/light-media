@@ -69,6 +69,18 @@ func siteSwitchExecute(t *testing.T, a *App, success bool) PluginRun {
 
 func siteSwitchSave(t *testing.T, a *App, cookie *http.Cookie, config map[string]any) {
 	t.Helper()
+	// These older protocol fixtures named core choices with native opaque IDs.
+	// Build real source numeric choices explicitly in the fixture, rather than
+	// making the production source API guess a string's namespace.
+	for _, key := range []string{"enable_sites", "search_sites", "rss_sites"} {
+		if opaque, ok := config[key].([]string); ok {
+			ids := make([]int64, 0, len(opaque))
+			for _, id := range opaque {
+				ids = append(ids, identityRequire(t, a, id).SourceID)
+			}
+			config[key] = ids
+		}
+	}
 	stored, err := a.pluginStore.Config(context.Background(), "MergeSiteSwitch")
 	if err != nil {
 		t.Fatal(err)
@@ -177,7 +189,7 @@ func TestPluginSiteSwitchFollowUsesInitializedFlagsAndReflectsExternalEdits(t *t
 	var value struct {
 		Data struct{ Model builtin.SiteControls }
 	}
-	if json.Unmarshal(form.Body.Bytes(), &value) != nil || !reflect.DeepEqual(value.Data.Model.Sites("enable_sites"), []string{"s2"}) {
+	if json.Unmarshal(form.Body.Bytes(), &value) != nil || !reflect.DeepEqual(value.Data.Model.References("enable_sites"), []builtin.SiteReference{{Native: identityRequire(t, a, "s2").SourceID}}) {
 		t.Fatal("form reads stale plugin copy")
 	}
 	// A config waiting in the queue must not become an active watcher early.
@@ -247,10 +259,10 @@ func TestPluginSiteSwitchPeerTransactionProtocolFixtureAndUnavailableRollback(t 
 	peer, _ = a.pluginStore.Config(ctx, "AutoSignIn")
 	var fields map[string]json.RawMessage
 	json.Unmarshal(peer.Value, &fields)
-	var signs, logins []string
+	var signs, logins []builtin.SiteReference
 	json.Unmarshal(fields["sign_sites"], &signs)
 	json.Unmarshal(fields["login_sites"], &logins)
-	if peer.Revision != 2 || !reflect.DeepEqual(signs, []string{"s2"}) || !reflect.DeepEqual(logins, []string{"s2"}) || string(fields["cookie"]) != `"synthetic-peer-secret"` || string(fields["enabled"]) != "false" {
+	if peer.Revision != 2 || !reflect.DeepEqual(signs, []builtin.SiteReference{{Native: identityRequire(t, a, "s2").SourceID}}) || !reflect.DeepEqual(logins, []builtin.SiteReference{{Native: identityRequire(t, a, "s2").SourceID}}) || string(fields["cookie"]) != `"synthetic-peer-secret"` || string(fields["enabled"]) != "false" {
 		t.Fatal("peer projection overwrote unrelated config")
 	}
 	var queued int
