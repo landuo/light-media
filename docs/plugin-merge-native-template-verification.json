@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "status": "native template dependency increment; not full plugin completion",
+  "base_head": "8eafd0ef91e637fc6680908363c2a29a8c739056",
+  "frozen_source_inputs": 3124,
+  "frozen_manifest_sha256": "06f646f9726e73944e7855f1ead70b0cdd2b286e1db8eae42df9965599f2100e",
+  "zero_source_drift": true,
+  "changed_existing": 2,
+  "new_frozen_inputs": 28,
+  "checks": [
+    {
+      "kind": "normal",
+      "exit_code": 0,
+      "packages": {
+        "light-media/internal/plugins/mergemessagenotify/mako": {
+          "top": 5,
+          "including_subtests": 1260,
+          "skipped": 0
+        },
+        "light-media/internal/plugins/mergemessagenotify": {
+          "top": 16,
+          "including_subtests": 16,
+          "skipped": 0
+        },
+        "light-media/internal/plugins/mergemessagenotify/smtp": {
+          "top": 14,
+          "including_subtests": 58,
+          "skipped": 0
+        }
+      }
+    },
+    {
+      "kind": "race",
+      "exit_code": 0,
+      "packages": {
+        "light-media/internal/plugins/mergemessagenotify/mako": {
+          "top": 5,
+          "including_subtests": 1260,
+          "skipped": 0
+        },
+        "light-media/internal/plugins/mergemessagenotify": {
+          "top": 16,
+          "including_subtests": 16,
+          "skipped": 0
+        }
+      }
+    }
+  ],
+  "vet_exit_code": 0,
+  "product_build_exit_code": 0,
+  "product_sha256": "8b42441e238793520f564753939f22fc52d215d63b2190d725947d08341e9272",
+  "linux_amd64_cgo0_test_compile_exit_code": 0,
+  "linux_test_sha256": "c3ba38980bbf7db4bbfb41c482340631985abc57bac32b6b99fb21a93b278209",
+  "source_comparison": {
+    "original_templates": 19,
+    "expanded": 1236,
+    "expanded_normal_outputs": 1128,
+    "expanded_original_error_fallbacks": 108,
+    "native_renderer_channel_request_cases": 4720
+  },
+  "failures_preserved": {
+    "first": "compile variable shadowing",
+    "second": "seven actual source output mismatches, fixed using original outputs and exceptions",
+    "fourth": "diagnostic only; oracle generation overlapped compiler; excluded from success evidence, frozen rerun passed",
+    "sixth": "old test source integrity rejected modified original test; original test restored exactly and native comparison placed in separate file",
+    "seventh": "unordered Go map iteration was hidden as source TypeError; corrected to explicit unsupported",
+    "eighth": "original frozen templates.go source integrity rejected deliberate URL str correction; old source/manifest preserved and independent pinned review added"
+  },
+  "evidence": [
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/frozen-inputs.json.gz",
+      "sha256": "dba8031ccf9abbfa53b74b3a3acde467f15e7750ca8ffa3061016354dea96df9",
+      "raw_sha256": "06f646f9726e73944e7855f1ead70b0cdd2b286e1db8eae42df9965599f2100e",
+      "raw_bytes": 436731
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-first.jsonl.gz",
+      "sha256": "90dc604bbba07bbfd37cbe848645bc6187fcfcf6bc6209ce86c17c71fe4957d4",
+      "raw_sha256": "eca5c63b5f7e183b68f32746b9ad2aa55087cd0e094a90bd892b757807b28c74",
+      "raw_bytes": 1977
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-second.jsonl.gz",
+      "sha256": "cb230bdbbbbe0097ad91dc04d3da4da1f253132b77c042c3886928eb426a1d5f",
+      "raw_sha256": "cdaaf4771d322388244bd7b22cb9d432f04f7aabd745996b14226e3c3b777acb",
+      "raw_bytes": 119764
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-fourth.jsonl.gz",
+      "sha256": "ad409e37e3337690c50458e6d24deb9c632d138c5d5097dd42cf204b54f23df6",
+      "raw_sha256": "128e55fdb2b315c5425b65e1dfc9b852ea7dd147560d000973c1426428f85c38",
+      "raw_bytes": 133891
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-sixth-native-channel.jsonl.gz",
+      "sha256": "a967a2e7baba8421c27b2785c42cafab522b91d66e73b3ee4e666bfddbfb9c97",
+      "raw_sha256": "809ea2a0454e2861bd4f37e1b5266aceadeed650839a0e3607c667fe1a382510",
+      "raw_bytes": 146276
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-seventh-native-channel.jsonl.gz",
+      "sha256": "a4478ddad0c2646abc124bf5d73f926ffd7795b8a1bbe4915ba4212d8c4abf2c",
+      "raw_sha256": "603c45187daaf61e0a5f384f3673ad47d1115752ac4f8de07183f6aa2ec2aba4",
+      "raw_bytes": 148603
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-eighth-native-channel.jsonl.gz",
+      "sha256": "f2fd614a45aca63dd5bc2df74aadafac41763cfa1e227d12576b49287b50f455",
+      "raw_sha256": "43634fc030ae5a72e8abbd3adf3814d8b7f99d13ee8ae5ffcd80855c1bae89fb",
+      "raw_bytes": 148876
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-final-normal.jsonl.gz",
+      "sha256": "3d6d2ed840d711081dd8b837c52ec2a7a6c8bd1f952eeac2394587608cf9664b",
+      "raw_sha256": "6f4ec96bec19477e9865d44f0b7ff54eb4375e02de3cb8f817ceac586e586225",
+      "raw_bytes": 1078248
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-final-race.jsonl.gz",
+      "sha256": "a2fe9331fa3a6d6d2b7c1a5f9b23ecf95cf1509d063a1cb3393dcbc8ccc3806d",
+      "raw_sha256": "5dc5d894529161226f0d6fb9479f6ccd3cc9c9aee6e51889520ae383c530c8d8",
+      "raw_bytes": 1027220
+    },
+    {
+      "path": "testdata/plugins/merge-message-native-mako/verification/mako-final-vet.txt.gz",
+      "sha256": "4b76fe842a138875cdb57ff80c681778f702e854bc54f55a22fd34ba3246d1c6",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_bytes": 0
+    }
+  ],
+  "scope_limits": [
+    "Mako/Python remaining valid language stays explicitly unfinished; this is not full language closure",
+    "Apprise native library and actual MergeMessageNotify owner/platform hooks still pending",
+    "SMTP deep compatibility boundaries remain",
+    "no real notifications sent",
+    "no NAS fixture, service mutation or deployment in this increment",
+    "original plugin data migrations remain zero"
+  ],
+  "formal_registered_handlers": 20,
+  "actual_original_migrations": 0,
+  "production_unchanged_version": "0.3.21"
+}

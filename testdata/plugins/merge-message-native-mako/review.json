@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "base_head": "8eafd0ef91e637fc6680908363c2a29a8c739056",
+  "base_manifest_sha256": "d33d9a3b5f271c011496b4fcb25a3a86ba29450d9e4290c4d5471f7ecb015c2b",
+  "changes": {
+    "internal/plugins/mergemessagenotify/templates.go": {
+      "before_sha256": "e0df56ca77831d9e9d286a734fecce5ad7845696cc8d7a7a516b9e9051483154",
+      "before_file": "testdata/plugins/merge-message-native-mako/baseline/templates.go.txt",
+      "after_sha256": "284ac3c32253c42f289a77a5a193ea42045f85b4a28d5afcf78638e6bd0002cf",
+      "reason": "Use native Python str semantics before original urllib.quote URL encoding; fixes list values previously rendered with Go fmt.Sprint. Unknown Go-map order stays explicit dependency until supplied as ordered values."
+    }
+  },
+  "additions": {
+    "internal/plugins/mergemessagenotify/mako/NOTICE": "6ae27f8a55b79728684224ad050b2ed23165435062d9435812893bb8198a86b1",
+    "internal/plugins/mergemessagenotify/mako/builtins.go": "2115442f682cd1510a834de66bcbb6fcef38c5144e230c126df81785ed61ddd6",
+    "internal/plugins/mergemessagenotify/mako/context.go": "e75d5af1d6de47cb972143db980ce152b46015e67b433fade56cfaddfc8f8544",
+    "internal/plugins/mergemessagenotify/mako/entities.go": "6b3c2d83c4f87b19eba1fce0bf61fbb6321aece46e67b45748feb5441cda4c40",
+    "internal/plugins/mergemessagenotify/mako/exceptions.go": "823c7726c226217057f25ab666ebc823116ebff5fb2adf8a14ac22a308690421",
+    "internal/plugins/mergemessagenotify/mako/expression.go": "9a546923f5a72f9ab0746b918fca7fabea88b37c420e416a476a18614d4600ab",
+    "internal/plugins/mergemessagenotify/mako/html4-entities.json": "a3cd9ca92d689ea99dc48f654c2a1f6e20361087333a42301f6325d8d25d17b3",
+    "internal/plugins/mergemessagenotify/mako/json.go": "6d8c669b3f9725539510dbb09878d2dd5d9d754bcb4a59276bee6a49b276ede7",
+    "internal/plugins/mergemessagenotify/mako/json_test.go": "9762e5a0ab3af581c4fd2acfe2e04baf821d3b65e2413e0e76eacecfd5847bf0",
+    "internal/plugins/mergemessagenotify/mako/licenses/CPython-PSF.txt": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+    "internal/plugins/mergemessagenotify/mako/licenses/Mako-MIT.txt": "8c1d171bc5d341ad9cd33d5e2c39b96a82c7bd49b3ae89a470c37e5822232054",
+    "internal/plugins/mergemessagenotify/mako/licenses/MarkupSafe-BSD.txt": "489a8e1108509ed98a37bb983e11e0f7e1d31f0bd8f99a79c8448e7ff37d07ea",
+    "internal/plugins/mergemessagenotify/mako/oracle_test.go": "a04de198ddc15d20d716e02d48ead094083bdb80a24541adff9797ef598ea50f",
+    "internal/plugins/mergemessagenotify/mako/parser.go": "ceb430d80b3c0eb035a19cbfd72f628795cfc0965738276a7bb6638bbd83154d",
+    "internal/plugins/mergemessagenotify/mako/template.go": "944a0283d1fc6f324ceddc179b2bba47e4706266bdf3c78abb33541fe46b3d43",
+    "internal/plugins/mergemessagenotify/mako/testdata/mako-1.4.1.jsonl.gz": "576d86858f245230d2d0382c9f2aa706a6c321215893c151182edd5d4ccc6711",
+    "internal/plugins/mergemessagenotify/mako/testdata/provenance.json": "a969fb085396ed4d15acd3afb09cede58e6d6c35c71c559f7a8c74c059f0b24a",
+    "internal/plugins/mergemessagenotify/mako/unicode-cpython312.json.gz": "06be309f2a4520e2897e5fc1574cb9f7990268c59774033b071611d44957625d",
+    "internal/plugins/mergemessagenotify/mako/unicode.go": "5a763a6eedab55e02ca324cae3ba2e9e7d8ee9ab52e93f1239c0dfb4e33c7dcb",
+    "internal/plugins/mergemessagenotify/mako/value.go": "f79c253f88b1e90933b2a26bc088cab63b17e07b87b64de5df29abd434c55a86",
+    "internal/plugins/mergemessagenotify/native_template.go": "a77a4c87c0ae361137974c662264241fa974add6aadd4492f0d72ae517a9f46d",
+    "internal/plugins/mergemessagenotify/native_template_channels_test.go": "09970171f4722003dcec4118ff1e92719e09e0582b66d7f2da4d8e26476682ec",
+    "internal/plugins/mergemessagenotify/native_template_test.go": "8244ca74f6b1777102d2dd32d3eec48375ee834cf867f02e60a785b54dea3c7d",
+    "testdata/plugins/merge-message-native-mako/baseline/formal-manifest.json": "d33d9a3b5f271c011496b4fcb25a3a86ba29450d9e4290c4d5471f7ecb015c2b",
+    "testdata/plugins/merge-message-native-mako/baseline/templates.go.txt": "e0df56ca77831d9e9d286a734fecce5ad7845696cc8d7a7a516b9e9051483154",
+    "testdata/plugins/merge-message-native-mako/offline-oracle-generator.py.txt": "435a2a90b180d00bd1d72ef917dbfb1d672e89c05127d84ca59dbeb02ded456d",
+    "testdata/plugins/merge-message-native-mako/oracle-environment.json": "0d96ebc9c43b5311b72ecabf9b879a63ea5907eafc0647ee255e9d63c103f047"
+  },
+  "verified_source_cases": {
+    "original_templates": 19,
+    "expanded_success": 1128,
+    "expanded_original_exceptions": 108,
+    "channels_with_native_renderer": 4720
+  },
+  "remaining": [
+    "not the complete Mako/Python language",
+    "Apprise full native dependency",
+    "MergeMessageNotify actual App owner/module/event/lifecycle wiring",
+    "SMTP remaining compatibility boundaries",
+    "no original configuration/KV/files migrated",
+    "not deployed"
+  ]
+}

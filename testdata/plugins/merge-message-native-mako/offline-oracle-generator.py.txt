@@ -1,0 +1,157 @@
+"""Offline only: exact pinned source outputs; never imported by the Go app."""
+import sys
+sys.dont_write_bytecode = True
+from pathlib import Path
+import gzip, json, hashlib, unicodedata
+
+ROOT = Path(__file__).resolve().parent
+APP = ROOT / 'app'
+REFERENCE = APP / 'testdata/plugins/merge-message-notify-1.20.1/input/_merge_message_notify_port'
+sys.path[:0] = [str(ROOT / 'oracle-deps'), str(REFERENCE / 'reference/dependencies/mako')]
+import mako, markupsafe
+from mako.template import Template
+
+variables = dict(title='合成标题<&>', text='正文\n第二行', image=None, n=1000000.0, flag=True, xs=['甲', '乙'])
+def render(text, variables):
+    if not text or not variables:
+        return text
+    try:
+        return Template(text=text).render(**variables)
+    except Exception:
+        return text
+
+original = [json.loads(line) for line in gzip.open(REFERENCE / 'testdata/installed-templates.jsonl.gz', 'rt')]
+for i, case in enumerate(original):
+    actual = render(case['text'], case['variables'])
+    assert actual == case['result'], (i, actual, case['result'])
+
+expressions = [
+ 'None', 'True', 'False', 'xs', '(title,)', '{"a": title, "b": 2}',
+ '2**100', '-2**2', '(-2)**2', '10//3', '-10//3', '10%-3', '-10%3',
+ '1+2*3', '1<<8', '~10', 'True+2', '1/2', '2**-3', '1e-5', '1e-4', '1e15', '1e16',
+ '0 or title', 'title and text', 'missing or "fallback"', 'False and 1/0',
+ 'title if flag else 1/0', '1<2<3', '1<2>3', '"甲" in xs', 'None is None',
+ 'xs[-1]', 'title[0:2]', 'xs[::-1]', 'title[::-1]',
+ 'title.upper()', '"Straße ﬃ".upper()', '"ΟΣ ΟΣΑ AΣ\u0301".lower()',
+ '"a b-Café".title()', '"ß hello".capitalize()', '"aBß".swapcase()',
+ '" A\u001c B ".strip()', '"aabb".strip("ab")', '"a  b  c ".split(None,1)',
+ '" a  b  c ".rsplit(None,1)', '"a,b,c".rsplit(",",1)', '"abc".replace("", "-", 2)',
+ '",".join(xs)', '"甲乙甲".find("甲",1)', '"abc".startswith(("z","a"))',
+ '"{}:{:03d}".format(title, 2)', '"{name!r}".format(name=title)', '"%s:%d"%(title,3)',
+ 'len(title)', 'str(None)', 'repr(text)', 'bool([])', 'int("ff",16)', 'float("1.25")',
+ 'list(range(1,5))', 'tuple(xs)', 'list(enumerate(xs,3))', 'list(zip(xs,[1,2]))',
+ 'sum(range(5))', 'all([1,2])', 'any([0,False])', 'abs(-100)', 'round(2.5)',
+ 'min([3,1,2])', 'max([],default=9)', 'sorted([3,1,2],reverse=True)',
+ 'sorted(["aaa","b","cc"],key=len)', 'list(reversed(xs))', 'chr(30002)', 'ord("甲")',
+ 'format(12,"04d")', 'format(1.25,".1f")',
+ '[x.upper() for x in xs]', '[x*x for x in range(5) if x%2]',
+ '{x:x*x for x in range(3)}', '(lambda x: x+1)(3)',
+ 'missing', '1/0', 'xs[999]', '"x"+1',
+]
+templates = ['${'+x+'}' for x in expressions]
+for a in ['-9','-1','0','1','2','7','2**70','-(2**70)']:
+    for b in ['-3','-1','0','1','3','2**65']:
+        for operator in ['+','-','*','/','//','%','==','<','<=','>','>=']:
+            templates.append('${('+a+')'+operator+'('+b+')}')
+for a in ['0.0','-0.0','1.0','-1.0','1.25','0.1','1e-20','1e20','float("nan")','float("inf")']:
+    for b in ['0.0','-0.0','0.1','-0.1','3.0']:
+        for operator in ['+','-','*','/','//','%','==','<','<=','>','>=']:
+            templates.append('${('+a+')'+operator+'('+b+')}')
+for char in ['\x00','\x1c','\x7f','\x80','\u00a0','\u200b','\u2028','\U0001f600']:
+    templates.append('${repr('+repr('A'+char+'B')+')}')
+templates += [
+ '## comment\nplain', '  ## comment\nplain', 'abc\\\ndef', 'abc\\\r\ndef',
+ '%% literal\n', '  %% literal\n', 'literal ${title | h}', '${title | x}',
+ '${title | u}', '${"  x  " | trim}', '${"é &" | entity}', '${title | n}',
+ '% if image:\nyes\n% elif flag:\nflag\n% else:\nno\n% endif\n',
+ '% for x in xs:\n${loop.index}:${x}:${loop.first}:${loop.last}:${loop.even}\n% endfor\n',
+ '% for i,x in enumerate(xs):\n${i}:${x}\n% endfor\n',
+ '% for x in []:\nno\n% else:\nempty\n% endfor\n',
+ '% for x in range(5):\n% if x==2:\n% break\n% endif\n${x}\n% endfor\n',
+    '% for x in range(5):\n% if x==2:\n<% break %>\n% endif\n${x}\n% endfor\n',
+    '% for x in range(3):\n% if x==1:\n<% continue %>\n% endif\n${x}\n% endfor\n',
+    '% for x in xs:\n% for y in xs:\n${loop.parent.index}:${loop.index}:${loop.cycle("a","b")}\n% endfor\n% endfor\n',
+    '<% x=0 %>\n% while x<3:\n${x}<% x+=1 %>\n% endwhile\n',
+    '% try:\n${1/0}\n% except ZeroDivisionError:\nzero\n% else:\nno\n% finally:\nend\n% endtry\n',
+    '% try:\nokay\n% except Exception:\nno\n% else:\nyes\n% finally:\nend\n% endtry\n',
+    '% try:\n${missing}\n% except NameError as err:\nmissing\n% endtry\n',
+    '% try:\n${[1][2]}\n% except (KeyError, IndexError):\nlookup\n% endtry\n',
+    '% try:\n${1/0}\n% except ValueError:\nwrong\n% endtry\n',
+    '% try:\n${1/0}\n% except ArithmeticError:\nzero\n% finally:\nend\n% endtry\n',
+    '% try:\nokay\n% except Exception:\nno\n% finally:\nend\n% endtry\n',
+    '% try:\nokay\n% finally:\nend\n% endtry\n',
+    '% if True:\n${"okay"}\n% endif\n',
+    '% if True: # comment\nokay\n% endif # comment\n',
+    '% if True\nwrong\n% endif\n',
+    '% if False:\n<% break %>\n% endif\n',
+    '% if False:\nno\n% else if True:\nwrong\n% endif\n',
+    '% while False:\nno\n% else:\nwrong\n% endwhile\n',
+    '<% x = [\n 1,\n 2\n] %>${x}',
+    '<% x = """line1\nline2""" %>${x}',
+ '<% x=1 %>${x}', '<% x=1; x+=2 %>${x}',
+ '<%\nx = 1\ny = x+2\n%>${y}',
+ '<%def name="hello(x)">Hello ${x}</%def>${hello(title)}',
+ '<%def name="hello(x)">Hello ${x}</%def>${len(hello(title))}',
+ '<%def name="hello(x)" buffered="True">Hello ${x}</%def>${len(hello(title))}',
+ '<%def name="hello(x=title)">Hello ${x}</%def>${hello()}',
+    "<%def name=\"hello(x='world')\">Hello ${x}</%def>${hello()}",
+    '<%! default="world" %><%def name="hello(x=default)">Hello ${x}</%def>${hello()}',
+    '<%def name="hello(x)">Hello ${x}</%def>${capture(hello,title)}',
+    '<%def name="hello(x)">Hello ${x}</%def>${self.hello(title)}',
+    '${context.get("title")}:${context.get("missing","fallback")}',
+    '<% context.write(title) %>',
+    '<%block name="hello">Hello ${title}</%block>',
+ '${hello(title)}<%def name="hello(x)">Hello ${x}</%def>',
+ '<%text>${literal}\n% if foo:\n</%text>', '<%doc>${ignored}</%doc>okay',
+ '<%page args="name=title"/>${name}', '<%include file="missing"/>',
+    "<%page args=\"name='world'\"/>${name}",
+    '<%! x=title %>literal',
+    '<%namespace name="missing" file="missing"/>${missing.x()}',
+ '<%inherit file="missing"/>', '<%namespace name="missing" file="missing"/>',
+ '% if True:\nokay\n', '${', '${title | missing_filter}',
+]
+cases = []
+for t in templates:
+    try:
+        result = Template(text=t).render(**variables)
+        source_error = None
+    except Exception as e:
+        result = t
+        source_error = dict(type=type(e).__name__, message=str(e))
+    cases.append(dict(text=t, variables=variables, result=result, source_error=source_error))
+destination = APP / 'internal/plugins/mergemessagenotify/mako/testdata'
+destination.mkdir(parents=True, exist_ok=True)
+data = ''.join(json.dumps(c,ensure_ascii=False,separators=(',',':'))+'\n' for c in cases).encode()
+with (destination / 'mako-1.4.1.jsonl.gz').open('wb') as f:
+    with gzip.GzipFile(fileobj=f,mode='wb',mtime=0) as z:
+        z.write(data)
+
+mapping = {}
+cased, ignorable, printable = [], [], []
+print_start = None
+for i in range(0x110000):
+    if 0xd800 <= i <= 0xdfff:
+        continue
+    c = chr(i)
+    if c.isprintable():
+        if print_start is None:
+            print_start = i
+    elif print_start is not None:
+        printable.append([print_start,i-1])
+        print_start = None
+    transforms = [c.upper(), c.lower(), c.title(), c.casefold()]
+    if any(t != c for t in transforms):
+        mapping[str(i)] = transforms
+    if c.islower() or c.isupper() or c.istitle():
+        cased.append(i)
+    if ('AΣ'+c+'A').lower()[1] == 'σ' and ('AΣ'+c+' ').lower()[1] == 'ς':
+        ignorable.append(i)
+if print_start is not None:
+    printable.append([print_start,0x10ffff])
+unicode_data = json.dumps(dict(version=unicodedata.unidata_version,mapping=mapping,cased=cased,ignorable=ignorable,printable=printable),ensure_ascii=False,separators=(',',':')).encode()
+with (APP / 'internal/plugins/mergemessagenotify/mako/unicode-cpython312.json.gz').open('wb') as f:
+    with gzip.GzipFile(fileobj=f,mode='wb',mtime=0) as z:
+        z.write(unicode_data)
+provenance = dict(python=sys.version, mako=mako.__version__, markupsafe='3.0.3', unicode=unicodedata.unidata_version, original_cases_verified=len(original), generated_cases=len(cases), source_success_cases=sum(c['source_error'] is None for c in cases), source_error_cases=sum(c['source_error'] is not None for c in cases), oracle_sha256=hashlib.sha256(data).hexdigest(), unicode_sha256=hashlib.sha256(unicode_data).hexdigest(), purpose='offline source oracle only; no Python product/runtime dependency')
+(destination / 'provenance.json').write_text(json.dumps(provenance,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(provenance,ensure_ascii=False))

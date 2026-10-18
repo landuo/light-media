@@ -18,7 +18,11 @@ func (p *Plugin) render(ctx context.Context, text any, variables map[string]any,
 				continue
 			}
 			if val != nil {
-				val = quote(str(val))
+				s, err := templateString(val)
+				if err != nil {
+					return nil, err
+				}
+				val = quote(s)
 			}
 			v[k] = val
 		}
