@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS native_site_identities(
  state TEXT NOT NULL CHECK(state IN ('active','deleted')),
  created_at TEXT NOT NULL,deleted_at TEXT NOT NULL,proof TEXT NOT NULL);
 CREATE UNIQUE INDEX IF NOT EXISTS native_site_active_origin ON native_site_identities(canonical_origin) WHERE state='active' AND canonical_origin<>'';
+CREATE TABLE IF NOT EXISTS native_site_deletions(event_id TEXT PRIMARY KEY,site_id TEXT NOT NULL UNIQUE,source_id INTEGER NOT NULL UNIQUE,sealed BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS native_site_import_refs(ref_id TEXT PRIMARY KEY,site_id TEXT NOT NULL,native_source_id INTEGER NOT NULL,sealed BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS native_site_source_snapshots(snapshot_id TEXT PRIMARY KEY,source_fingerprint TEXT NOT NULL,snapshot_digest TEXT NOT NULL,sealed BLOB NOT NULL,UNIQUE(source_fingerprint,snapshot_digest));
 CREATE TABLE IF NOT EXISTS native_site_migration_receipts(source_fingerprint TEXT NOT NULL,original_source_id INTEGER NOT NULL,native_source_id INTEGER NOT NULL,site_id TEXT NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(source_fingerprint,original_source_id),UNIQUE(source_fingerprint,native_source_id));`
@@ -176,6 +177,9 @@ func (a *App) reconcileNativeSiteIdentitiesTx(ctx context.Context, tx *sql.Tx, p
 			v.State = "deleted"
 			v.DeletedAt = now()
 			if err = a.Store.writeNativeSiteIdentityTx(ctx, tx, v); err != nil {
+				return err
+			}
+			if err = a.Store.recordNativeSiteDeletionTx(ctx, tx, v); err != nil {
 				return err
 			}
 		}

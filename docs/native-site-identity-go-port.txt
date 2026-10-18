@@ -61,8 +61,9 @@ conflicting targets, changed origins and tombstoned/re-added targets reject.
 
 The registration contract is host-internal; no public browser endpoint accepts
 an arbitrary fingerprint claim. The authenticated original source collector,
-actual plugin config/KV/file/reference migration and source-deleted event producer
-remain separate work. This integration has not read or migrated the user's
+actual plugin config/KV/file/reference migration remain separate work. The
+subsequent native source-deleted producer is documented separately below.
+This integration has not read or migrated the user's
 original settings, credentials, plugin selections, files, schedules or flags.
 
 Required follow-up
@@ -72,8 +73,10 @@ and current origin/credential/transport proofs. Their original persisted IDs nee
 explicit receipt-based translation. IYUU remote sid values must retain their
 separate original API semantics. MergeSiteSwitch's current string-only reference
 boundary needs a reviewed typed source projection and per-peer config transition;
-it must not copy opaque IDs into original numeric config fields. A source-deleted
-producer must capture the exact retired numeric ID in the same delete transaction.
+it must not copy opaque IDs into original numeric config fields. The subsequent
+source-deleted producer now captures the exact retired numeric ID and encrypted
+fact in the same delete transaction; its consumers still need actual wiring.
+See native-site-deleted-go-port.txt and native-site-deleted-verification.json.
 
 Candidate validation was 37 actual App tests passing normal and race, plus vet
 and a CGO-free Linux test build. That proves the isolated candidate scope only.

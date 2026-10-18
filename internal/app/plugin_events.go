@@ -38,7 +38,7 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "subscription.added", "notice.message"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "site.deleted", "subscription.added", "notice.message"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true
@@ -166,6 +166,11 @@ func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription
 		}
 		if event.Type == "notice.message" {
 			if _, err := p.noticeMessage(ctx, tx, event.NoticeID); err != nil {
+				return err
+			}
+		}
+		if event.Type == "site.deleted" {
+			if _, err := p.store.siteDeletedSourceData(ctx, tx, event); err != nil {
 				return err
 			}
 		}

@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "baseline_commit": "ea8ec288e53bbe6882f6a9c0afa9e17d1c12aaf0",
+  "scope": "Actual App native site deletion producer, encrypted source fact, numeric original source projection and private event consumption. No original plugin configuration/data/file migration or production deployment.",
+  "source_snapshot": {
+    "path": "testdata/plugins/native-site-deleted/verification/source-snapshot.json",
+    "files": 1556,
+    "sha256": "2b2b9a49b9d49ba12c23b106223870b1350e1e0a4c30a28c7ff81d9e68fc114f",
+    "unchanged_after_all_compilers": true
+  },
+  "verification": {
+    "normal": {
+      "exit_code": 0,
+      "top_level_passes": 112,
+      "failures": 0,
+      "skips": 0,
+      "elapsed_seconds": 18.229,
+      "sha256": "982e19d9bfc7c1251aee777e4529126b23bbc3452c2f03daa86397e47b5eea6e",
+      "path": "testdata/plugins/native-site-deleted/verification/normal.jsonl.gz"
+    },
+    "race": {
+      "exit_code": 0,
+      "top_level_passes": 112,
+      "failures": 0,
+      "skips": 0,
+      "elapsed_seconds": 293.325,
+      "sha256": "9c2583b24d70b5750b602023d8086ed1229c054be43f619a0a28f600e47e9681",
+      "path": "testdata/plugins/native-site-deleted/verification/race.jsonl.gz"
+    },
+    "vet": {
+      "exit_code": 0,
+      "path": "testdata/plugins/native-site-deleted/verification/vet.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "production_build": {
+      "exit_code": 0,
+      "path": "testdata/plugins/native-site-deleted/verification/production_build.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "nas": {
+      "id": "7770f6a8-c236-44b5-b135-73352c082d3d",
+      "date": "2026-10-18",
+      "platform": "linux/amd64",
+      "CGO_ENABLED": "0",
+      "tags": "modernconly",
+      "test_regex": "^Test(NativeSite(Identity|Deleted)|ManagedSite|SiteImport|SiteExport|SitePriority|Plugin(SiteSwitch|Notice|CleanInvalidSeed|Deferred|Events)|DomainEvent|DomainDownload)",
+      "sha256": "6d2274d6ce5b5e611fc07c306768cae0c951e3b167c58f630c8757ba70b1351a",
+      "remote_sha256": "6d2274d6ce5b5e611fc07c306768cae0c951e3b167c58f630c8757ba70b1351a",
+      "results": {
+        "exit_code": 0,
+        "top_level_passes": 112,
+        "top_level_skips": 0,
+        "top_level_failures": 0
+      },
+      "container_oom_killed": false,
+      "services_unchanged": true,
+      "environment": {
+        "image": "alpine:3.22",
+        "user": "1000:1001",
+        "network": "none",
+        "read_only": true,
+        "cap_drop": [
+          "ALL"
+        ],
+        "no_new_privileges": true,
+        "memory_bytes": 268435456,
+        "memory_swap_bytes": 268435456,
+        "tmpfs_bytes": 134217728,
+        "pids_limit": 256,
+        "GOMEMLIMIT": "64MiB",
+        "inspect_matches": true
+      },
+      "scope": "formal App encrypted SQL/transition and management/store regression; synthetic owned SQLite/files/SDK fixtures only; no production plugin registration or migration",
+      "cleanup": {
+        "container_removed": true,
+        "owned_remote_stage_removed": true,
+        "services_unchanged": true
+      }
+    }
+  },
+  "input_resolution": {
+    "scope": "Resolved after terminal verification; supplemental GOOS-specific tracked files are verified byte-identical to the pre-run baseline commit. Generated testmain is Go-tool output, not a repository input. Imported-package test inventories are a conservative superset.",
+    "platforms": {
+      "darwin-arm64": {
+        "resolved_repo_input_count": 646,
+        "supplemental_repo_paths": [],
+        "generated_testmain_sha256": [
+          "da24a8b8a40476344ed4e5365886a09f3dbbb69b51cc5b17d7a5c0509e1fda6e"
+        ]
+      },
+      "linux-amd64": {
+        "resolved_repo_input_count": 648,
+        "supplemental_repo_paths": [
+          "internal/app/import_rename_linux.go",
+          "internal/plugins/cleaninvalidseed/host/rename_linux.go",
+          "internal/plugins/removelink/host/host_linux_test.go",
+          "internal/plugins/removelink/host/rename_linux.go",
+          "internal/plugins/removelink/host/transition_linux_test.go",
+          "internal/plugins/removelink/host/watch_linux.go"
+        ],
+        "generated_testmain_sha256": [
+          "da24a8b8a40476344ed4e5365886a09f3dbbb69b51cc5b17d7a5c0509e1fda6e"
+        ]
+      }
+    },
+    "baseline_verified_supplement": {
+      "internal/app/import_rename_linux.go": "60f21eaa0825c7079705f9182b580dd61612e202b054e8af89ae563f34428e96",
+      "internal/plugins/cleaninvalidseed/host/rename_linux.go": "e53d928f71766cb493418c9ec21337b7292a2bfc860a5185c70d9b88e060ca67",
+      "internal/plugins/removelink/host/host_linux_test.go": "4d870bc980dd01a10d6a887b021c21c90a6fa22cc11bb6eab3dd4955b3268ce5",
+      "internal/plugins/removelink/host/rename_linux.go": "22c9db38c066a6746bc987e088ad8837ffc07236507fe7ebbd57fe926abfebf1",
+      "internal/plugins/removelink/host/transition_linux_test.go": "61d8d3650455aa20d8ee2eb3507be56eb7c7ce0bd23248612351458f26f1a1e4",
+      "internal/plugins/removelink/host/watch_linux.go": "58a722c729f69e2359f001facab613b108b51a695ca8f5244f96a0571ac04379"
+    }
+  },
+  "reference_source_manifest_sha256": "73ab57c55775b188abd9f16f685ce4173807e45fd133ca0a82b0ad81a0bb7795"
+}

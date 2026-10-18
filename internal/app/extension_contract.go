@@ -29,6 +29,7 @@ type DomainEvent struct {
 	NoticeID         string `json:"notice_id,omitempty"`
 	AssetID          string `json:"asset_id,omitempty"`
 	SiteID           string `json:"site_id,omitempty"`
+	SourceSiteID     int64  `json:"source_site_id,omitempty"`
 	SubscriptionID   string `json:"subscription_id,omitempty"`
 	Purpose          string `json:"purpose"`
 	SubjectID        string `json:"subject_id"`
@@ -59,6 +60,12 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	}
 	if in.SchemaVersion == 0 {
 		in.SchemaVersion = 1
+	}
+	if in.Type == "site.deleted" {
+		return validateSiteDeletedDomainEvent(in)
+	}
+	if in.SourceSiteID != 0 {
+		return invalid()
 	}
 	if in.Type == "notice.message" {
 		return validateNoticeMessageDomainEvent(in)
@@ -173,6 +180,11 @@ func recordDomainEventTx(ctx context.Context, tx *sql.Tx, in DomainEvent) error 
 	}
 	if event.Type == "notice.message" {
 		if err = validateNoticeMessageBackingTx(ctx, tx, event); err != nil {
+			return err
+		}
+	}
+	if event.Type == "site.deleted" {
+		if err = validateSiteDeletedBackingTx(ctx, tx, event); err != nil {
 			return err
 		}
 	}

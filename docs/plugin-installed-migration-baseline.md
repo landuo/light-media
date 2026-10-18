@@ -89,3 +89,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-18 追加：共享 Notification/路由/窗口纯Go核心的15项NAS与1,316条原参考见 [通知核心](notice-message-go-port.txt)。实际 CleanInvalidSeed 源调用的构造校验、完整24字段密文及历史收据鉴权见 [源通知接线](plugin-clean-seed-notice-go-port.txt)；43项相关App正常/race/NAS通过不等于外发已送达。下载器写前拒绝、7个真实SDK恢复分支及58项leaf/40项App的独立冻结NAS合计98项证据见 [写入阶段](plugin-download-mutation-phase-go-port.txt)。原配置/KV/文件正式迁移数量仍为0，尚未启用或部署新增插件。
 
 2026-10-18 追加：实际 Clean 源调用之后的路由、私有 NoticeMessage 事实与核心持久队列，及稳定数字站点映射已合入正式代码。新107项应用测试的普通/竞态/NAS、31项宿主测试及首轮缺样本的失败证据，分别见 [通知接线](plugin-notice-route-go-port.txt)与[站点映射](native-site-identity-go-port.txt)。真实通知渠道、原配置引用接线和正式数据迁移仍未完成；没有部署或启用新增插件。
+
+2026-10-18 追加：实际站点删除的数字身份、私有删除事实及队列验真已接入，112项实际App普通/竞态/NAS联合验证通过，见[站点删除事件](native-site-deleted-go-port.txt)。原版重置的 `*`、AutoSignIn/IYUU实际消费者与配置引用迁移仍未完成；可安装处理器数量仍为12，原配置/KV/文件正式迁移仍为0。

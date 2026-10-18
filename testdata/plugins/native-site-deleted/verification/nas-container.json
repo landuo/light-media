@@ -1,0 +1,232 @@
+{
+  "Id": "044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb",
+  "Created": "2026-10-18T03:38:50.81586466Z",
+  "Path": "/bin/sh",
+  "Args": [
+    "/workspace/run-tests.sh"
+  ],
+  "State": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-18T03:38:55.06496492Z",
+    "FinishedAt": "2026-10-18T03:39:28.130878454Z"
+  },
+  "Image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+  "ResolvConfPath": "/vol2/docker/containers/044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb/resolv.conf",
+  "HostnamePath": "/vol2/docker/containers/044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb/hostname",
+  "HostsPath": "/vol2/docker/containers/044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb/hosts",
+  "LogPath": "/vol2/docker/containers/044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb/044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb-json.log",
+  "Name": "/lm-app-site-deleted-7770f6a8",
+  "RestartCount": 0,
+  "Driver": "overlay2",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "docker-default",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": null,
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {
+        "max-file": "5",
+        "max-size": "100m"
+      }
+    },
+    "NetworkMode": "none",
+    "PortBindings": {},
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": [
+      "ALL"
+    ],
+    "CgroupnsMode": "private",
+    "Dns": [],
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": true,
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "Tmpfs": {
+      "/tmp": "rw,nosuid,nodev,size=128m"
+    },
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 268435456,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteIOps": [],
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": [],
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 268435456,
+    "MemorySwappiness": null,
+    "OomKillDisable": null,
+    "PidsLimit": 256,
+    "Ulimits": [],
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/tmp/light-media-app-site-deleted.10MbL5kI",
+        "Target": "/workspace",
+        "ReadOnly": true
+      }
+    ],
+    "MaskedPaths": [
+      "/proc/asound",
+      "/proc/acpi",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/sys/firmware",
+      "/sys/devices/virtual/powercap",
+      "/sys/devices/system/cpu/cpu0/thermal_throttle",
+      "/sys/devices/system/cpu/cpu1/thermal_throttle",
+      "/sys/devices/system/cpu/cpu2/thermal_throttle",
+      "/sys/devices/system/cpu/cpu3/thermal_throttle"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "GraphDriver": {
+    "Data": {
+      "ID": "044f7ff20f6b08afef96bc24785257c66eee17e2fdebbfbba3ea83f8871c56fb",
+      "LowerDir": "/vol2/docker/overlay2/89f03e0a3284b90ba93947cd77bb61ef204c22c4ff505e69c73c272a62d1e67a-init/diff:/vol2/docker/overlay2/6f45e1e1a03bc0d8b9b9b4d8e112ae717a71c18f0724387ff96e3838d1284878/diff",
+      "MergedDir": "/vol2/docker/overlay2/89f03e0a3284b90ba93947cd77bb61ef204c22c4ff505e69c73c272a62d1e67a/merged",
+      "UpperDir": "/vol2/docker/overlay2/89f03e0a3284b90ba93947cd77bb61ef204c22c4ff505e69c73c272a62d1e67a/diff",
+      "WorkDir": "/vol2/docker/overlay2/89f03e0a3284b90ba93947cd77bb61ef204c22c4ff505e69c73c272a62d1e67a/work"
+    },
+    "Name": "overlay2"
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/tmp/light-media-app-site-deleted.10MbL5kI",
+      "Destination": "/workspace",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Config": {
+    "Hostname": "044f7ff20f6b",
+    "Domainname": "",
+    "User": "1000:1001",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "GOMEMLIMIT=64MiB",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "/bin/sh",
+      "/workspace/run-tests.sh"
+    ],
+    "Image": "alpine:3.22",
+    "Volumes": null,
+    "WorkingDir": "/",
+    "Entrypoint": null,
+    "OnBuild": null,
+    "Labels": {}
+  },
+  "NetworkSettings": {
+    "Bridge": "",
+    "SandboxID": "",
+    "SandboxKey": "",
+    "Ports": {},
+    "HairpinMode": false,
+    "LinkLocalIPv6Address": "",
+    "LinkLocalIPv6PrefixLen": 0,
+    "SecondaryIPAddresses": null,
+    "SecondaryIPv6Addresses": null,
+    "EndpointID": "",
+    "Gateway": "",
+    "GlobalIPv6Address": "",
+    "GlobalIPv6PrefixLen": 0,
+    "IPAddress": "",
+    "IPPrefixLen": 0,
+    "IPv6Gateway": "",
+    "MacAddress": "",
+    "Networks": {
+      "none": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": null,
+        "MacAddress": "",
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "9b7600b9a43a741560744d0526047dae83f0add4ad0869ea9825158fcb228fab",
+        "EndpointID": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": null
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+Native SiteDeleted producer and private source fact
+
+The actual site deletion paths now publish the retired site's native numeric
+source identity in the same SQLite transaction as the encrypted Settings save,
+permanent identity tombstone, cache cleanup and existing peer effects. Both
+DELETE /api/sites/manage/{id} and a real PUT /api/settings deletion use this
+producer. Statement failure rolls back the entire change; retry publishes one
+complete event. Reads never allocate or reconstruct a deletion fact.
+
+The source comparison is the actual installed MoviePilot site.py, obtained by
+read-only docker exec cat and parsed as source locally, without importing or
+executing its modules. Its SHA is
+c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8.
+The two extracted functions and hashes are pinned in the reference manifest.
+Original delete_site sends SiteDeleted with numeric site_id after deletion.
+Original reset separately sends the '*' sentinel. The native application has no
+equivalent reset route, so ordinary multi-row deletion does not manufacture '*'.
+
+The public site.deleted event contains an opaque native site ID, its retired
+numeric source ID, timestamp and fixed references. It contains no site name,
+URL or credentials. A separate encrypted native_site_deletions record binds the
+exact event ID, tombstone and source purpose. Private consumption authenticates
+both this fact and the permanent identity MAC before accepting the event.
+An old authenticated tombstone alone is insufficient: historical rows created
+before this producer do not become newly accepted events during an upgrade.
+Re-adding the same origin has a new identity and does not change the old fact.
+
+Plugin event collection performs this validation before cursor/delivery commit.
+Invalid numeric references, changed public fields, missing or corrupted private
+facts cannot advance the cursor. Private original-source projection returns
+only {site_id: json.Number}; it grants no live transport or credential access.
+The existing AutoSignIn source engine is tested with that numeric result, but
+its actual Manager/Inventory/Factory registration is still separate work.
+
+Five new actual App tests cover source provenance, authenticated HTTP deletion
+and cold reopen, both save paths with injected SQL rollback, actual persistent
+event collection and fact tampering, and denial of unauthenticated references.
+The frozen joint suite passed 112 top-level tests in normal and race runs,
+with no failures/skips; race took 293.325 seconds. Vet and production builds of
+internal/... and cmd/... exited 0. The same selected 112 App tests passed in an
+owned CGO-free Linux/amd64 NAS container with 256 MiB, network none, read-only
+root and unprivileged UID. All owned remote resources were removed; production
+service identities/start times/restart counts were unchanged.
+
+native-site-deleted-verification.json preserves commands/scope, compressed logs,
+source hashes, NAS binary identity and cleanup results. The 1,556-input pre-run
+freeze was unchanged after the compilers finished. Six additional Linux-selected
+tracked inputs were resolved afterward and verified byte-identical to the
+pre-run commit; they are explicitly recorded as a supplement, not falsely
+labelled as pre-frozen. Generated testmain is Go-tool output.
+
+This is native infrastructure, not an original configuration/KV/file migration.
+AutoSignIn and IYUU actual consumers, original reference translation, typed
+MergeSiteSwitch transitions, reset semantics and final deployment remain in
+scope. No installed user plugin was activated and no real site was deleted.

@@ -297,6 +297,8 @@ MergeMessageNotify、LarkMessager 已有正式 Go 核心、原执行参考和纯
 
 2026-10-18 通知接线补充：正式 internal/notice 已有原始 Notification 构造、Chain 路由和 Queue 时间窗口的纯Go核心（15项NAS）。此前 CleanInvalidSeed 的源构造、完整信封和历史鉴权有43项相关App证据；本轮进一步在真实源调用返回前接 Router，分别持久化 NoticeMessage 与核心队列阶段。immediately/允许时段等待发送尝试，窗口外才入FIFO，网络期间不持SQL/生命周期锁；历史和已发布事件不因后续失败回滚。未知发送不盲目重发，提交回执丢失先核对精确收据。真实渠道模块、完整模板、其他生产者与原配置迁移仍未接通，不能称已外发。新路由与站点映射的联合范围见[通知接线记录](plugin-notice-route-go-port.txt)，旧43项与新107项证据分别保存。下载器写前拒绝和已发写入失去响应仍区分，不自动重试，见 plugin-download-mutation-phase-verification.json。
 
-原插件的数字站点编号现有独立、稳定的 native 映射：实际CRUD/导入/排序/设置写入与映射、删除墓碑及缓存清理同事务提交，普通查询不分配编号。导入文档中的旧数字ID仅保存为未认领来源；原安装快照、精确origin与目标的独立迁移收据才可转换旧插件引用。IYUU远端sid仍是不同命名空间；AutoSignIn/IYUU Inventory、表单、MergeSiteSwitch的类型化引用及site.deleted生产者尚待接线。见[站点身份记录](native-site-identity-go-port.txt)。映射不是用户插件配置迁移，正式迁移数量仍为0。
+原插件的数字站点编号现有独立、稳定的 native 映射：实际CRUD/导入/排序/设置写入与映射、删除墓碑及缓存清理同事务提交，普通查询不分配编号。导入文档中的旧数字ID仅保存为未认领来源；原安装快照、精确origin与目标的独立迁移收据才可转换旧插件引用。IYUU远端sid仍是不同命名空间；AutoSignIn/IYUU Inventory、表单及MergeSiteSwitch的类型化引用尚待接线。见[站点身份记录](native-site-identity-go-port.txt)。映射不是用户插件配置迁移，正式迁移数量仍为0。
+
+实际站点删除现已在同一事务写入带原数字编号的 `site.deleted` 事件和私有密文事实，插件事件队列在推进游标前验证事实及墓碑。旧墓碑不补造事件，同域名重新添加不替换历史身份；原版重置的 `*` 语义尚未接入。112项实际App普通/竞态及NAS隔离验证、生产build与边界见[删除事件记录](native-site-deleted-go-port.txt)。这是原生生产者与队列基础设施；实际AutoSignIn/IYUU消费者及原配置迁移仍未完成。
 
 AutoBackup 2.1.4 已有正式 Go 组件、原版配置/表单/SDK、归档/ctime保留/WebDAV和固定pg_dump适配；18项普通/竞态通过，NAS17通过/1缺initdb跳过，本机真实PG导出恢复另行通过。源布局user.db*不是当前App布局，正式owner必须使用Store一致快照及恢复必需密钥，并验证新App恢复，不可空ZIP报成功。App授权、持久once/cron/API、文件/远端效果收据、通知和迁移仍在接线中，详见[自动备份记录](plugin-auto-backup-go-port.txt)。没有恢复全局备份界面或增加正式迁移数量。
