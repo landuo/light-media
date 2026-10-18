@@ -1,0 +1,1036 @@
+import datetime
+import hashlib
+import os
+import platform
+import re
+import shutil
+import socket
+import struct
+import subprocess
+import sys
+import time
+import urllib.parse
+import uuid
+from pathlib import Path
+from typing import List, Optional, Tuple, Union
+
+try:
+    import fcntl
+except ImportError:
+    fcntl = None
+
+import psutil
+
+from app import schemas
+from app.schemas.worker import TransferMode, WorkerError
+from version import APP_VERSION
+
+# mp-transfer worker 的接口路径，集中常量便于后续协议升级
+_TRANSFER_WORKER_NAME = "transfer"
+_TRANSFER_API_PATH = "/api/v1/transfer"
+
+def _try_worker_transfer(mode: str, src: Path, dest: Path) -> Optional[Tuple[int, str]]:
+    """
+    尝试通过 mp-transfer worker 完成一次物理 IO 操作。
+
+    返回值约定：
+    - 返回 (0, "")：worker 调用成功，调用方应直接返回此结果；
+    - 返回 None：worker 不可用 / 调用异常 / 未启用，调用方应继续走 Python 本地实现降级。
+
+    设计要点：
+    - 不抛异常给调用方：所有 worker 错误都收敛到 "返回 None 走降级"，
+      避免改变 SystemUtils.copy/move/link/softlink 的对外行为契约；
+    - 路径必须为绝对路径：worker 进程 cwd 不一定与 Python 一致；
+    - 仅在 worker_name 已启用时才走 worker 路径，未启用时直接 None，
+      不打印任何日志，避免与现有 watcher 巡检日志互相干扰。
+    """
+    # 延迟导入避免顶层循环依赖（worker_client 反向依赖了 schemas/log/...）
+    try:
+        from app.core.config import settings
+        from app.utils.worker_client import WorkerClientManager
+    except Exception:
+        return None
+
+    if not settings.is_worker_enabled(_TRANSFER_WORKER_NAME):
+        return None
+
+    src_str = str(src)
+    dest_str = str(dest)
+    if not os.path.isabs(src_str) or not os.path.isabs(dest_str):
+        # 相对路径无法跨进程语义对齐，直接走本地
+        return None
+
+    client = WorkerClientManager().get(_TRANSFER_WORKER_NAME)
+    if not client.is_available():
+        return None
+
+    try:
+        client.call_or_raise(
+            _TRANSFER_API_PATH,
+            {"mode": mode, "src": src_str, "dst": dest_str},
+        )
+    except WorkerError:
+        # 让调用方降级；具体错误日志由 WorkerClient 内部记录，避免双倍噪音
+        return None
+    return 0, ""
+
+
+# Linux amd64/arm64 UAPI: _IOR(BTRFS_IOCTL_MAGIC, 31, struct btrfs_ioctl_fs_info_args)
+_BTRFS_IOC_FS_INFO = 0x8400941F
+_BTRFS_FS_INFO_SIZE = 1024
+_BTRFS_FSID_OFFSET = 16
+_BTRFS_FSID_SIZE = 16
+
+
+class SystemUtils:
+    """
+    系统工具类，提供系统相关的操作和信息获取方法。
+    """
+
+    _URL_WITH_USERINFO_PATTERN = re.compile(r"([A-Za-z][A-Za-z0-9+.-]*://[^\s]+)")
+
+    @staticmethod
+    def execute(cmd: str) -> str:
+        """
+        执行命令，获得返回结果
+        """
+        try:
+            with os.popen(cmd) as p:
+                return p.readline().strip()
+        except Exception as err:
+            print(str(err))
+            return ""
+
+    @staticmethod
+    def redact_url_userinfo(value: str) -> str:
+        """
+        脱敏 URL 中的 userinfo，避免命令输出泄露镜像源或代理凭据。
+        """
+        def replace(match: re.Match[str]) -> str:
+            candidate = match.group(1)
+            trailing = ""
+            while candidate and candidate[-1] in ".,;:)":
+                trailing = candidate[-1] + trailing
+                candidate = candidate[:-1]
+            parsed = urllib.parse.urlsplit(candidate)
+            if not parsed.username and not parsed.password:
+                return match.group(1)
+            host = parsed.netloc.rsplit("@", 1)[-1]
+            redacted = urllib.parse.urlunsplit((
+                parsed.scheme,
+                host,
+                parsed.path,
+                parsed.query,
+                parsed.fragment,
+            ))
+            return f"{redacted}{trailing}"
+
+        return SystemUtils._URL_WITH_USERINFO_PATTERN.sub(replace, value or "")
+
+    @staticmethod
+    def redact_command_url_userinfo(command: list[str]) -> List[str]:
+        """
+        脱敏命令参数中的 URL userinfo，供错误信息展示。
+        """
+        return [SystemUtils.redact_url_userinfo(str(item)) for item in command]
+
+    @staticmethod
+    def execute_with_subprocess(
+            pip_command: list,
+            env: Optional[dict[str, str]] = None,
+            safe_command: Optional[list[str]] = None,
+    ) -> Tuple[bool, str]:
+        """
+        执行命令并捕获标准输出和错误输出，记录日志。
+
+        :param pip_command: 要执行的命令，以列表形式提供
+        :param env: 传递给子进程的环境变量
+        :param safe_command: 用于错误信息展示的脱敏命令
+        :return: (命令是否成功, 输出信息或错误信息)
+        """
+        display_command = safe_command or pip_command
+        try:
+            # 使用 subprocess.run 捕获标准输出和标准错误
+            result = subprocess.run(
+                pip_command,
+                check=True,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=env,
+            )
+            # 合并 stdout 和 stderr
+            output = SystemUtils.redact_url_userinfo(result.stdout + result.stderr)
+            return True, output
+        except subprocess.CalledProcessError as e:
+            stdout = SystemUtils.redact_url_userinfo((e.stdout or "").strip())
+            stderr = SystemUtils.redact_url_userinfo((e.stderr or "").strip())
+            # 不同命令/兼容层可能把失败原因写入 stdout，失败时需要同时保留两路输出。
+            output_parts = []
+            if stdout:
+                output_parts.append(f"标准输出：{stdout}")
+            if stderr:
+                output_parts.append(f"错误输出：{stderr}")
+            if not output_parts:
+                output_parts.append("无标准输出或错误输出")
+            error_message = (
+                f"命令：{' '.join(SystemUtils.redact_command_url_userinfo(display_command))}，执行失败，"
+                f"返回码：{e.returncode}，{'; '.join(output_parts)}"
+            )
+            return False, error_message
+        except Exception as e:
+            error_message = (
+                f"未知错误，命令：{' '.join(SystemUtils.redact_command_url_userinfo(display_command))}，"
+                f"错误：{SystemUtils.redact_url_userinfo(str(e))}"
+            )
+            return False, error_message
+
+    @staticmethod
+    def is_docker() -> bool:
+        """
+        判断是否为Docker环境
+        """
+        return Path("/.dockerenv").exists()
+
+    @staticmethod
+    def is_synology() -> bool:
+        """
+        判断是否为群晖系统
+        """
+        if SystemUtils.is_windows():
+            return False
+        return "synology" in SystemUtils.execute('uname -a')
+
+    @staticmethod
+    def is_windows() -> bool:
+        """
+        判断是否为Windows系统
+        """
+        return os.name == "nt"
+
+    @staticmethod
+    def is_frozen() -> bool:
+        """
+        判断是否为冻结的二进制文件
+        """
+        return getattr(sys, 'frozen', False)
+
+    @staticmethod
+    def is_macos() -> bool:
+        """
+        判断是否为MacOS系统
+        """
+        return platform.system() == 'Darwin'
+
+    @staticmethod
+    def is_aarch64() -> bool:
+        """
+        判断是否为ARM64架构
+        """
+        return platform.machine().lower() in ('aarch64', 'arm64')
+
+    @staticmethod
+    def is_aarch() -> bool:
+        """
+        判断是否为ARM32架构
+        """
+        arch_name = platform.machine().lower()
+        return arch_name.startswith(('arm', 'aarch')) and arch_name not in ('aarch64', 'arm64')
+
+    @staticmethod
+    def is_x86_64() -> bool:
+        """
+        判断是否为AMD64架构
+        """
+        return platform.machine().lower() in ('amd64', 'x86_64')
+
+    @staticmethod
+    def is_x86_32() -> bool:
+        """
+        判断是否为AMD32架构
+        """
+        return platform.machine().lower() in ('i386', 'i686', 'x86', '386', 'x86_32')
+
+    @staticmethod
+    def platform() -> str:
+        """
+        获取系统平台
+        """
+        if SystemUtils.is_windows():
+            return "Windows"
+        elif SystemUtils.is_macos():
+            return "MacOS"
+        elif SystemUtils.is_aarch64():
+            return "Arm64"
+        else:
+            return "Linux"
+
+    @staticmethod
+    def cpu_arch() -> str:
+        """
+        获取CPU架构
+        """
+        if SystemUtils.is_x86_64():
+            return "x86_64"
+        elif SystemUtils.is_x86_32():
+            return "x86_32"
+        elif SystemUtils.is_aarch64():
+            return "Arm64"
+        elif SystemUtils.is_aarch():
+            return "Arm32"
+        else:
+            return platform.machine()
+
+    @staticmethod
+    def copy(src: Path, dest: Path) -> Tuple[int, str]:
+        """
+        复制
+        """
+        # 优先走 mp-transfer worker（Linux 下走 copy_file_range 零拷贝）
+        worker_result = _try_worker_transfer(TransferMode.COPY, src, dest)
+        if worker_result is not None:
+            return worker_result
+        try:
+            shutil.copy2(src, dest)
+            return 0, ""
+        except Exception as err:
+            return -1, str(err)
+
+    @staticmethod
+    def move(src: Path, dest: Path) -> Tuple[int, str]:
+        """
+        移动
+        """
+        worker_result = _try_worker_transfer(TransferMode.MOVE, src, dest)
+        if worker_result is not None:
+            return worker_result
+        try:
+            # 直接移动到目标路径，避免中间改名步骤触发目录监控
+            shutil.move(src, dest)
+            return 0, ""
+        except Exception as err:
+            return -1, str(err)
+
+    @staticmethod
+    def link(src: Path, dest: Path) -> Tuple[int, str]:
+        """
+        硬链接
+        """
+        worker_result = _try_worker_transfer(TransferMode.LINK, src, dest)
+        if worker_result is not None:
+            return worker_result
+        try:
+            # 准备目标路径，增加后缀 .mp
+            tmp_path = dest.with_suffix(dest.suffix + ".mp")
+            # 检查目标路径是否已存在，如果存在则先unlink
+            if tmp_path.exists():
+                tmp_path.unlink()
+            tmp_path.hardlink_to(src)
+            # 硬链接完成，移除 .mp 后缀
+            shutil.move(tmp_path, dest)
+            return 0, ""
+        except Exception as err:
+            return -1, str(err)
+
+    @staticmethod
+    def softlink(src: Path, dest: Path) -> Tuple[int, str]:
+        """
+        软链接
+        """
+        worker_result = _try_worker_transfer(TransferMode.SOFTLINK, src, dest)
+        if worker_result is not None:
+            return worker_result
+        try:
+            dest.symlink_to(src)
+            return 0, ""
+        except Exception as err:
+            return -1, str(err)
+
+    @staticmethod
+    def list_files(directory: Path, extensions: list = None,
+                   min_filesize: int = 0, recursive: bool = True) -> List[Path]:
+        """
+        获取目录下所有指定扩展名的文件（包括子目录）
+        :param directory: 指定的父目录
+        :param extensions: 需要包含的扩展名列表，例如 ['mkv', 'mp4']
+        :param min_filesize: 文件最低大小，单位 MB
+        :param recursive: 是否递归查找，可选参数，默认 True
+        :return: 文件 Path 列表
+        """
+
+        if not min_filesize:
+            min_filesize = 0
+
+        if not directory.exists():
+            return []
+
+        if directory.is_file():
+            return [directory]
+
+        files = []
+        # 预编译正则表达式
+        if extensions:
+            pattern = re.compile(r".*(" + "|".join(extensions) + r")$", re.IGNORECASE)
+        else:
+            pattern = re.compile(r".*")
+
+        def _scan_directory(dir_path: Path, is_recursive: bool):
+            try:
+                with os.scandir(dir_path) as entries:
+                    for entry in entries:
+                        try:
+                            if entry.is_file(follow_symlinks=False):
+                                entry_path = Path(entry.path)
+                                if (pattern.match(entry.name) and
+                                    (min_filesize <= 0 or entry.stat().st_size >= min_filesize * 1024 * 1024)):
+                                    files.append(entry_path)
+                            elif entry.is_dir() and is_recursive:
+                                _scan_directory(Path(entry.path), is_recursive)
+                        except (OSError, PermissionError):
+                            continue
+            except (OSError, PermissionError):
+                pass
+
+        _scan_directory(directory, recursive)
+        return files
+
+    @staticmethod
+    def unpack_archive(archive_file: Path, extract_dir: Path, archive_format: Optional[str] = None) -> None:
+        """
+        解压压缩包，并补充标准库未覆盖的 RAR 格式支持。
+
+        :param archive_file: 待解压的压缩包文件
+        :param extract_dir: 解压目标目录
+        :param archive_format: 压缩包格式，未指定时按文件后缀推断
+        """
+        if archive_format == "rar" or (not archive_format and archive_file.suffix.lower() == ".rar"):
+            SystemUtils.__unpack_rar_archive(archive_file, extract_dir)
+            return
+        shutil.unpack_archive(archive_file, extract_dir, format=archive_format)
+
+    @staticmethod
+    def __unpack_rar_archive(archive_file: Path, extract_dir: Path) -> None:
+        """
+        调用系统解压工具处理 RAR 压缩包。
+        """
+        extract_dir.mkdir(parents=True, exist_ok=True)
+        commands = []
+        if shutil.which("unar"):
+            commands.append([
+                "unar",
+                "-quiet",
+                "-force-overwrite",
+                "-output-directory",
+                extract_dir.as_posix(),
+                archive_file.as_posix(),
+            ])
+        if shutil.which("unrar"):
+            commands.append([
+                "unrar",
+                "x",
+                "-o+",
+                "-idq",
+                archive_file.as_posix(),
+                f"{extract_dir.as_posix()}/",
+            ])
+        if shutil.which("7z"):
+            commands.append([
+                "7z",
+                "x",
+                "-y",
+                f"-o{extract_dir.as_posix()}",
+                archive_file.as_posix(),
+            ])
+        if shutil.which("bsdtar"):
+            commands.append([
+                "bsdtar",
+                "-xf",
+                archive_file.as_posix(),
+                "-C",
+                extract_dir.as_posix(),
+            ])
+        if not commands:
+            raise RuntimeError("未找到可用的 RAR 解压工具，请安装 unar、unrar、7z 或 bsdtar")
+
+        errors = []
+        for command in commands:
+            try:
+                result = subprocess.run(
+                    command,
+                    check=False,
+                    text=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    timeout=120,
+                )
+            except Exception as err:
+                errors.append(f"{command[0]}：{str(err)}")
+                continue
+            if result.returncode == 0:
+                return
+            output = (result.stderr or result.stdout or "").strip()
+            errors.append(f"{command[0]}：{output or f'返回码 {result.returncode}'}")
+        raise RuntimeError(f"RAR 压缩包解压失败：{'；'.join(errors)}")
+
+    @staticmethod
+    def exits_files(directory: Path, extensions: list, min_filesize: int = 0, recursive: bool = True) -> bool:
+        """
+        判断目录下是否存在指定扩展名的文件
+
+        :param directory: 指定的父目录
+        :param extensions: 需要包含的扩展名列表，例如 ['mkv', 'mp4']
+        :param min_filesize: 文件最低大小，单位 MB
+        :param recursive: 是否递归查找，可选参数，默认 True
+        :return: True存在 False不存在
+        """
+
+        if not directory.exists():
+            return False
+
+        # 预编译正则表达式
+        if extensions:
+            pattern = re.compile(r".*(" + "|".join(extensions) + r")$", re.IGNORECASE)
+        else:
+            pattern = re.compile(r".*")
+
+        if directory.is_file():
+            # 检查单个文件是否符合条件
+            if extensions and not pattern.match(directory.name):
+                return False
+            if min_filesize > 0 and directory.stat().st_size < min_filesize * 1024 * 1024:
+                return False
+            return True
+
+        def _search_files(dir_path: Path, is_recursive: bool) -> bool:
+            try:
+                with os.scandir(dir_path) as entries:
+                    for entry in entries:
+                        try:
+                            if entry.is_file(follow_symlinks=False):
+                                # 检查文件是否符合条件
+                                if (pattern.match(entry.name) and
+                                    (min_filesize <= 0 or entry.stat().st_size >= min_filesize * 1024 * 1024)):
+                                    return True
+                            elif entry.is_dir() and is_recursive:
+                                # 递归搜索子目录
+                                if _search_files(Path(entry.path), is_recursive):
+                                    return True
+                        except (OSError, PermissionError):
+                            continue
+            except (OSError, PermissionError):
+                pass
+            return False
+
+        return _search_files(directory, recursive)
+
+    @staticmethod
+    def list_sub_files(directory: Path, extensions: list) -> List[Path]:
+        """
+        列出当前目录下的所有指定扩展名的文件(不包括子目录)
+        """
+        if not directory.exists():
+            return []
+
+        if directory.is_file():
+            return [directory]
+
+        files = []
+
+        # 预编译正则表达式
+        if extensions:
+            pattern = re.compile(r".*(" + "|".join(extensions) + r")$", re.IGNORECASE)
+        else:
+            pattern = re.compile(r".*")
+
+        try:
+            with os.scandir(directory) as entries:
+                for entry in entries:
+                    if entry.is_file() and pattern.match(entry.name):
+                        files.append(Path(entry.path))
+        except OSError:
+            pass
+
+        return files
+
+    @staticmethod
+    def list_sub_directory(directory: Path) -> List[Path]:
+        """
+        列出当前目录下的所有子目录（不递归）
+        """
+        if not directory.exists():
+            return []
+
+        if directory.is_file():
+            return []
+
+        dirs = []
+
+        # 遍历目录
+        for path in directory.iterdir():
+            if path.is_dir():
+                if not SystemUtils.is_windows() and path.name.startswith("."):
+                    continue
+                if path.name == "@eaDir":
+                    continue
+                dirs.append(path)
+
+        return dirs
+
+    @staticmethod
+    def list_sub_file(directory: Path) -> List[Path]:
+        """
+        列出当前目录下的所有子目录和文件（不递归）
+        """
+        if not directory.exists():
+            return []
+
+        if directory.is_file():
+            return [directory]
+
+        items = []
+
+        # 遍历目录
+        for path in directory.iterdir():
+            if path.is_file():
+                items.append(path)
+
+        return items
+
+    @staticmethod
+    def get_directory_size(path: Path) -> int:
+        """
+        计算目录的大小
+
+        参数:
+            directory_path (Path): 目录路径
+
+        返回:
+            int: 目录的大小（以字节为单位）
+        """
+        if not path or not path.exists():
+            return 0
+
+        def _calc_dir_size(dir_path):
+            total = 0
+            try:
+                with os.scandir(dir_path) as entries:
+                    for entry in entries:
+                        if entry.is_file():
+                            total += entry.stat().st_size
+                        elif entry.is_dir():
+                            total += _calc_dir_size(entry.path)
+            except OSError:
+                pass
+            return total
+
+        return _calc_dir_size(path) if path.is_dir() else path.stat().st_size
+
+    @staticmethod
+    def _get_btrfs_fsid(dir_path: Path) -> Optional[bytes]:
+        """读取目录所属 Btrfs 文件系统的 FSID，无法确认时返回 None。"""
+        if not sys.platform.startswith("linux") or fcntl is None \
+                or not (SystemUtils.is_x86_64() or SystemUtils.is_aarch64()):
+            return None
+
+        fd = None
+        try:
+            flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_CLOEXEC", 0)
+            fd = os.open(dir_path, flags)
+            fs_info = bytearray(_BTRFS_FS_INFO_SIZE)
+            fcntl.ioctl(fd, _BTRFS_IOC_FS_INFO, fs_info, True)
+            if len(fs_info) != _BTRFS_FS_INFO_SIZE:
+                return None
+            num_devices = struct.unpack_from("=Q", fs_info, 8)[0]
+            fsid = bytes(fs_info[_BTRFS_FSID_OFFSET:_BTRFS_FSID_OFFSET + _BTRFS_FSID_SIZE])
+            if num_devices == 0 or fsid == bytes(_BTRFS_FSID_SIZE):
+                return None
+            return fsid
+        except (OSError, OverflowError, ValueError, struct.error):
+            return None
+        finally:
+            if fd is not None:
+                try:
+                    os.close(fd)
+                except OSError:
+                    pass
+
+    @staticmethod
+    def space_usage(dir_list: Union[Path, List[Path]], btrfs_fsid_dedup: bool = False) -> Tuple[float, float]:
+        """
+        计算多个目录的总可用空间/剩余空间（单位：Byte），并去除重复磁盘
+
+        :param dir_list: 待统计的目录或目录列表
+        :param btrfs_fsid_dedup: 是否在 Linux amd64/arm64 下以 Btrfs FSID 辅助去重
+
+        默认保持原有的驱动器号/st_dev 去重。显式启用后，st_dev 仍作为基础依据，
+        FSID 仅用于合并同一 Btrfs 文件系统中的不同子卷；证据缺失或冲突时
+        保守回退 st_dev，允许多计而不猜测合并独立存储。
+        """
+        if not dir_list:
+            return 0.0, 0.0
+        if not isinstance(dir_list, list):
+            dir_list = [dir_list]
+
+        use_btrfs_fsid = btrfs_fsid_dedup and sys.platform.startswith("linux") \
+            and (SystemUtils.is_x86_64() or SystemUtils.is_aarch64())
+        if not use_btrfs_fsid:
+            # 默认分支保留原有行为，不打开目录或调用 ioctl。
+            disk_set = set()
+            total_free_space = 0.0
+            total_space = 0.0
+            for dir_path in dir_list:
+                if not dir_path:
+                    continue
+                if not dir_path.exists():
+                    continue
+                if os.name == "nt":
+                    disk = dir_path.drive
+                else:
+                    disk = os.stat(dir_path).st_dev
+                if disk not in disk_set:
+                    disk_set.add(disk)
+                    total_space += SystemUtils.total_space(dir_path)
+                    total_free_space += SystemUtils.free_space(dir_path)
+            return total_space, total_free_space
+
+        total_free_space = 0.0
+        total_space = 0.0
+        # 先按 st_dev 恢复原有去重语义，再用组内唯一可信的 FSID 合并 Btrfs 子卷。
+        disk_groups = {}
+        for dir_path in dir_list:
+            if not dir_path or not dir_path.exists():
+                continue
+            st_dev = os.stat(dir_path).st_dev
+            if st_dev not in disk_groups:
+                disk_groups[st_dev] = (dir_path, set())
+            btrfs_fsid = SystemUtils._get_btrfs_fsid(dir_path)
+            if btrfs_fsid:
+                disk_groups[st_dev][1].add(btrfs_fsid)
+
+        disk_set = set()
+        for st_dev, (dir_path, fsids) in disk_groups.items():
+            # 同一 st_dev 出现冲突 FSID 可能是挂载变化导致的不一致快照，
+            # 此时禁止跨 st_dev 合并，避免少计独立存储。
+            disk = ("btrfs_fsid", next(iter(fsids))) if len(fsids) == 1 else ("st_dev", st_dev)
+            if disk not in disk_set:
+                disk_set.add(disk)
+                total_space += SystemUtils.total_space(dir_path)
+                total_free_space += SystemUtils.free_space(dir_path)
+        return total_space, total_free_space
+
+    @staticmethod
+    def free_space(path: Path) -> float:
+        """
+        获取指定路径的剩余空间（单位：Byte）
+        """
+        if not os.path.exists(path):
+            return 0.0
+        return psutil.disk_usage(str(path)).free
+
+    @staticmethod
+    def total_space(path: Path) -> float:
+        """
+        获取指定路径的总空间（单位：Byte）
+        """
+        if not os.path.exists(path):
+            return 0.0
+        return psutil.disk_usage(str(path)).total
+
+    @staticmethod
+    def processes() -> List[schemas.ProcessInfo]:
+        """
+        获取所有进程
+        """
+        processes = []
+        for proc in psutil.process_iter(['pid', 'name', 'create_time', 'memory_info', 'status']):
+            try:
+                if proc.status() != psutil.STATUS_ZOMBIE:
+                    runtime = datetime.datetime.now() - datetime.datetime.fromtimestamp(
+                        int(getattr(proc, 'create_time', 0)()))
+                    mem_info = getattr(proc, 'memory_info', None)()
+                    if mem_info is not None:
+                        mem_mb = round(mem_info.rss / (1024 * 1024), 1)
+                        processes.append(schemas.ProcessInfo(
+                            pid=proc.pid, name=proc.name(), run_time=runtime.seconds, memory=mem_mb
+                        ))
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+        return processes
+
+    @staticmethod
+    def dashboard_system_info() -> schemas.DashboardSystemInfo:
+        """
+        获取仪表板展示所需的系统摘要信息。
+
+        运行时间以当前 MoviePilot 进程为基准，避免宿主机或容器长期运行时间
+        掩盖服务最近一次重启。
+        """
+        return schemas.DashboardSystemInfo(
+            hostname=socket.gethostname(),
+            operating_system=SystemUtils._operating_system_name(),
+            runtime=max(0, int(time.time() - psutil.Process().create_time())),
+            version=APP_VERSION,
+        )
+
+    @staticmethod
+    def _operating_system_name() -> str:
+        """返回适合在仪表板展示的操作系统名称。"""
+        if SystemUtils.is_windows():
+            return platform.platform()
+        if SystemUtils.is_macos():
+            version = platform.mac_ver()[0]
+            return f"macOS {version}".strip()
+
+        try:
+            operating_system = platform.freedesktop_os_release()
+            return operating_system.get("PRETTY_NAME") or operating_system.get("NAME") or platform.platform()
+        except OSError:
+            return platform.platform()
+
+    @staticmethod
+    def is_bluray_dir(dir_path: Path) -> bool:
+        """
+        判断是否为蓝光原盘目录
+
+        (该方法已弃用，改用`StorageChain().is_bluray_folder)`
+        """
+        if not dir_path.is_dir():
+            return False
+        # 蓝光原盘目录必备的文件或文件夹
+        required_files = ['BDMV', 'CERTIFICATE']
+        # 检查目录下是否存在所需文件或文件夹
+        for item in required_files:
+            if (dir_path / item).exists():
+                return True
+        return False
+
+    @staticmethod
+    def get_windows_drives():
+        """
+        获取Windows所有盘符
+        """
+        vols = []
+        for i in range(65, 91):
+            vol = chr(i) + ':'
+            if os.path.isdir(vol):
+                vols.append(vol)
+        return vols
+
+    @staticmethod
+    def cpu_usage():
+        """
+        获取CPU使用率
+        """
+        return psutil.cpu_percent()
+
+    @staticmethod
+    def memory_usage() -> schemas.DashboardMemoryInfo:
+        """
+        获取当前 MoviePilot 进程内存与系统缓存、可用和总内存信息。
+        """
+        memory = psutil.virtual_memory()
+        total = max(0, int(memory.total))
+        used = max(0, int(psutil.Process().memory_info().rss))
+        cached = max(
+            0,
+            int(getattr(memory, "cached", 0) or 0)
+            + int(getattr(memory, "buffers", 0) or 0),
+        )
+        available = max(0, int(memory.available))
+        usage = used / total * 100 if total else 0.0
+        return schemas.DashboardMemoryInfo(
+            total=total,
+            used=used,
+            cached=cached,
+            available=available,
+            usage=usage,
+        )
+
+    @staticmethod
+    def network_usage() -> List[int]:
+        """
+        获取当前网络流量（上行和下行流量，单位：bytes/s）
+        """
+        import time
+        # 获取初始网络统计
+        net_io_1 = psutil.net_io_counters()
+        time.sleep(1)  # 等待1秒
+        # 获取1秒后的网络统计
+        net_io_2 = psutil.net_io_counters()
+
+        # 计算1秒内的流量变化
+        upload_speed = net_io_2.bytes_sent - net_io_1.bytes_sent
+        download_speed = net_io_2.bytes_recv - net_io_1.bytes_recv
+
+        return [upload_speed, download_speed]
+
+    @staticmethod
+    def is_hardlink(src: Path, dest: Path) -> bool:
+        """
+        判断是否为硬链接（可能无法支持宿主机挂载smb盘符映射docker的场景）
+        """
+        try:
+            if not src.exists() or not dest.exists():
+                return False
+            if src.is_file():
+                # 如果是文件，直接比较文件
+                return src.samefile(dest)
+            else:
+                for src_file in src.glob("**/*"):
+                    if src_file.is_dir():
+                        continue
+                    # 计算目标文件路径
+                    relative_path = src_file.relative_to(src)
+                    target_file = dest.joinpath(relative_path)
+                    # 检查是否是硬链接
+                    if not target_file.exists() or not src_file.samefile(target_file):
+                        return False
+                return True
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+
+    @staticmethod
+    def is_network_filesystem(
+            directory: Path, include_local_fuse: bool = False
+    ) -> bool:
+        """
+        检测是否为网络文件系统
+        :param directory: 目录路径
+        :param include_local_fuse: 是否将本地 FUSE 挂载视为挂载文件系统
+        :return: 是否为网络文件系统
+        """
+        try:
+            system = platform.system()
+            if system == 'Linux':
+                # 检查挂载信息
+                result = subprocess.run(['df', '-T', str(directory)],
+                                        capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    output = result.stdout.lower()
+                    # 以下本地文件系统含有fuse关键字
+                    local_fs = [
+                        "fuse.shfs",  # Unraid
+                        "zfuse.zfsv",  # 极空间(zfuse.zfsv2、zfuse.zfsv3、...)
+                        "fuseblk",
+                        # TBD
+                    ]
+                    if (
+                            not include_local_fuse
+                            and any(fs in output for fs in local_fs)
+                    ):
+                        return False
+                    network_fs = ['nfs', 'cifs', 'smbfs', 'fuse', 'sshfs', 'ftpfs']
+                    return any(fs in output for fs in network_fs)
+            elif system == 'Darwin':
+                # macOS 检查
+                result = subprocess.run(['df', '-T', str(directory)],
+                                        capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    output = result.stdout.lower()
+                    return (
+                            'nfs' in output
+                            or 'smbfs' in output
+                            or (include_local_fuse and 'fuse' in output)
+                    )
+            elif system == 'Windows':
+                # Windows 检查网络驱动器
+                return str(directory).startswith('\\\\')
+        except Exception as e:
+            print(f"Error occurred: {e}")
+        return False
+
+    @staticmethod
+    def is_same_disk(src: Path, dest: Path) -> bool:
+        """
+        判断两个路径是否在同一磁盘
+        """
+        if not src.exists() or not dest.exists():
+            return False
+        if os.name == "nt":
+            return src.drive == dest.drive
+        return os.stat(src).st_dev == os.stat(dest).st_dev
+
+    @staticmethod
+    def get_config_path(config_dir: Optional[str] = None) -> Path:
+        """
+        获取配置路径
+        """
+        if not config_dir:
+            config_dir = os.getenv("CONFIG_DIR")
+        if config_dir:
+            return Path(config_dir)
+        if SystemUtils.is_docker():
+            return Path("/config")
+        elif SystemUtils.is_frozen():
+            return Path(sys.executable).parent / "config"
+        else:
+            return Path(__file__).parents[2] / "config"
+
+    @staticmethod
+    def get_env_path() -> Path:
+        """
+        获取配置路径
+        """
+        return SystemUtils.get_config_path() / "app.env"
+
+    @staticmethod
+    def clear(temp_path: Path, days: int):
+        """
+        清理指定目录中指定天数前的文件，递归删除子文件及空文件夹
+        """
+        if not temp_path.exists():
+            return
+        # 遍历目录及子目录中的所有文件和文件夹
+        for file in temp_path.rglob('*'):
+            # 如果是文件并且符合时间条件，则删除
+            if file.is_file() and (
+                    datetime.datetime.now() - datetime.datetime.fromtimestamp(file.stat().st_mtime)).days > days:
+                file.unlink()
+        # 删除空的文件夹
+        for folder in sorted(temp_path.rglob('*'), reverse=True):
+            # 确保是空文件夹
+            if folder.is_dir() and not any(folder.iterdir()):
+                folder.rmdir()
+
+    @staticmethod
+    def generate_user_unique_id():
+        """
+        根据优先级依次尝试生成稳定唯一ID：
+        1. 文件系统唯一标识符。
+        2. MAC 地址。
+        3. 主机名。
+        """
+
+        def get_filesystem_unique_id():
+            """
+            获取文件系统的唯一标识符。
+            使用根目录的设备号和 inode。
+            """
+            try:
+                stat_info = os.stat("/")
+                fs_id = f"{stat_info.st_dev}-{stat_info.st_ino}"
+                return hashlib.sha256(fs_id.encode("utf-8")).hexdigest()
+            except Exception as e:
+                print(str(e))
+                return None
+
+        def get_mac_address_id():
+            """
+            获取设备的 MAC 地址并生成唯一标识符。
+            """
+            try:
+                mac_address = uuid.getnode()
+                if (mac_address >> 40) % 2:  # 检查是否是虚拟MAC地址
+                    raise ValueError("MAC地址可能是虚拟地址")
+                mac_str = f"{mac_address:012x}"
+                return hashlib.sha256(mac_str.encode("utf-8")).hexdigest()
+            except Exception as e:
+                print(str(e))
+                return None
+
+        for method in [get_filesystem_unique_id, get_mac_address_id]:
+            unique_id = method()
+            if unique_id:
+                return unique_id
+        return None

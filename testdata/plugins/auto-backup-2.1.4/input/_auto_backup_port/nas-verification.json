@@ -1,0 +1,71 @@
+{
+  "id": "10596cf6-0263-4e2d-8cf2-cc9b84ec5722",
+  "recorded_at": "2026-10-18T03:09:23.361Z",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "sha256": "e520dc74b4fea9749f9c66ec29267eeee81c74a82cb8a300a190ff7011cf9ed3",
+  "remote_sha256": "e520dc74b4fea9749f9c66ec29267eeee81c74a82cb8a300a190ff7011cf9ed3",
+  "source_snapshot_sha256": "cbb94918d955b7857e41d56f0cbebbeb7cbb16e8222de19a812427b22b67ef88",
+  "container_started_at": "2026-10-18T03:09:00.075605378Z",
+  "container_finished_at": "2026-10-18T03:09:01.273202504Z",
+  "results": {
+    "exit_code": 0,
+    "top_level_passes": 15,
+    "top_level_skips": 1,
+    "top_level_failures": 0,
+    "passed_tests": [
+      "TestInstalledArchiveOracleOnOwnedFilesystem",
+      "TestNativeArchiveGrantsRejectSymlinkEscapeWithoutReadingOrWriting",
+      "TestActualCoreNativeArchiveAndOldestRetention",
+      "TestInstalledBusinessOracle",
+      "TestNativePostgresFixedArgvPasswordOnlyInEnvironment",
+      "TestNativePostgresMissingClientUsesOnlyHostPackagedResolution",
+      "TestSDKFixtureProcess",
+      "TestActualSDKUsesTrustedConfigAndOpaqueOccurrences",
+      "TestOriginalFormMetadataAndInvalidWorkerInputs",
+      "TestSourceAPIWrongKeyHasNoEffectsAndDisabledPluginCanRun",
+      "TestInstalledSystemHelpersAndClientProvisionSourceOracle",
+      "TestDateSchedulerOriginalOnceMisfireAndStopWait",
+      "TestSourceCronUsesLocalZoneAndOnceUsesSettingsZone",
+      "TestInstalledWebDAVDependencyOracle",
+      "TestNativeWebDAVTLSUploadOriginalCallbackAndDigestFlag"
+    ],
+    "skipped_tests": [
+      "TestNativePostgresOwnedClusterDumpAndRestore"
+    ],
+    "failed_tests": []
+  },
+  "oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "tmpfs_bytes": 134217728,
+    "inspect_matches": true
+  },
+  "scope": "Frozen AutoBackup Go candidate, actual SDK child processes, source-oracle comparisons, owned filesystem ZIP/retention and loopback TLS WebDAV. No original config/database/backup path or real WebDAV/PostgreSQL target. The real PostgreSQL case requires optional fixed tools and any skip is retained separately from the independently passed macOS owned PostgreSQL dump/restore.",
+  "tests_log_sha256": "99165c42ddb49bddb6505d38d0ab09d4f2d80bf8ffa52c7fc6a72d0f84708088",
+  "container_inspect_sha256": "8a72a20111c22b0d357c686d4533a5f2d57188dfac58fad9cb4819fdd2319b99",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  },
+  "skip_reasons": [
+    "postgres_test.go:77: owned PostgreSQL toolchain unavailable: initdb"
+  ],
+  "process_terminal_evidence": {
+    "start_session": 30821,
+    "start_exit_code": 0,
+    "finish_session": 74536,
+    "finish_exit_code": 0,
+    "container_exit_code": 0,
+    "all_owned_resources_cleaned": true
+  }
+}

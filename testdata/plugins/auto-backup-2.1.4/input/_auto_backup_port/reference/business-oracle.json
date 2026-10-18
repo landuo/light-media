@@ -1,0 +1,5944 @@
+{
+  "source_sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "kind": "init",
+      "input": null,
+      "repeat": false,
+      "trace": [],
+      "logs": [],
+      "state": false,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": null,
+      "repeat": true,
+      "trace": [],
+      "logs": [],
+      "state": false,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {},
+      "repeat": false,
+      "trace": [],
+      "logs": [],
+      "state": false,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {},
+      "repeat": true,
+      "trace": [],
+      "logs": [],
+      "state": false,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "enabled": false
+      },
+      "repeat": false,
+      "trace": [],
+      "logs": [],
+      "state": false,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "enabled": false
+      },
+      "repeat": true,
+      "trace": [],
+      "logs": [],
+      "state": false,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "enabled": true,
+        "cron": "0 3 * * *",
+        "onlyonce": true,
+        "notify": true,
+        "cnt": "3"
+      },
+      "repeat": false,
+      "trace": [
+        [
+          "scheduler_new",
+          {
+            "timezone": "Asia/Shanghai"
+          }
+        ],
+        [
+          "scheduler_add",
+          {
+            "trigger": "date",
+            "run_date": "2026-10-18T09:02:06+08:00",
+            "name": "自动备份"
+          }
+        ],
+        [
+          "config",
+          {
+            "onlyonce": false,
+            "cron": "0 3 * * *",
+            "enabled": true,
+            "cnt": "3",
+            "notify": true,
+            "back_path": null,
+            "webdav_enabled": false,
+            "webdav_hostname": null,
+            "webdav_login": null,
+            "webdav_password": null,
+            "webdav_digest_auth": false,
+            "webdav_max_count": null,
+            "webdav_notify": false,
+            "webdav_disable_check": false
+          }
+        ],
+        [
+          "scheduler_print"
+        ],
+        [
+          "scheduler_start"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "自动备份服务启动，立即运行一次"
+        ]
+      ],
+      "state": true,
+      "service": [
+        {
+          "id": "AutoBackup",
+          "name": "自动备份定时服务",
+          "trigger": {
+            "cron": "0 3 * * *",
+            "fields": [
+              "*",
+              "*",
+              "*",
+              "*",
+              "*",
+              "3",
+              "0",
+              "0"
+            ]
+          },
+          "func": "__backup",
+          "kwargs": {}
+        }
+      ],
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "enabled": true,
+        "cron": "0 3 * * *",
+        "onlyonce": true,
+        "notify": true,
+        "cnt": "3"
+      },
+      "repeat": true,
+      "trace": [
+        [
+          "scheduler_new",
+          {
+            "timezone": "Asia/Shanghai"
+          }
+        ],
+        [
+          "scheduler_add",
+          {
+            "trigger": "date",
+            "run_date": "2026-10-18T09:02:06+08:00",
+            "name": "自动备份"
+          }
+        ],
+        [
+          "config",
+          {
+            "onlyonce": false,
+            "cron": "0 3 * * *",
+            "enabled": true,
+            "cnt": "3",
+            "notify": true,
+            "back_path": null,
+            "webdav_enabled": false,
+            "webdav_hostname": null,
+            "webdav_login": null,
+            "webdav_password": null,
+            "webdav_digest_auth": false,
+            "webdav_max_count": null,
+            "webdav_notify": false,
+            "webdav_disable_check": false
+          }
+        ],
+        [
+          "scheduler_print"
+        ],
+        [
+          "scheduler_start"
+        ],
+        [
+          "scheduler_clear"
+        ],
+        [
+          "scheduler_shutdown"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "自动备份服务启动，立即运行一次"
+        ]
+      ],
+      "state": true,
+      "service": [
+        {
+          "id": "AutoBackup",
+          "name": "自动备份定时服务",
+          "trigger": {
+            "cron": "0 3 * * *",
+            "fields": [
+              "*",
+              "*",
+              "*",
+              "*",
+              "*",
+              "3",
+              "0",
+              "0"
+            ]
+          },
+          "func": "__backup",
+          "kwargs": {}
+        }
+      ],
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "onlyonce": true,
+        "back_path": "/owned/backup",
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/path",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true,
+        "webdav_disable_check": true
+      },
+      "repeat": false,
+      "trace": [
+        [
+          "dav_init",
+          {
+            "webdav_hostname": "https://dav.invalid/path",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": true,
+            "disable_check": true
+          }
+        ],
+        [
+          "scheduler_new",
+          {
+            "timezone": "Asia/Shanghai"
+          }
+        ],
+        [
+          "scheduler_add",
+          {
+            "trigger": "date",
+            "run_date": "2026-10-18T09:02:06+08:00",
+            "name": "自动备份"
+          }
+        ],
+        [
+          "config",
+          {
+            "onlyonce": false,
+            "cron": null,
+            "enabled": null,
+            "cnt": null,
+            "notify": null,
+            "back_path": "/owned/backup",
+            "webdav_enabled": true,
+            "webdav_hostname": "https://dav.invalid/path",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": true,
+            "webdav_max_count": null,
+            "webdav_notify": false,
+            "webdav_disable_check": true
+          }
+        ],
+        [
+          "scheduler_print"
+        ],
+        [
+          "scheduler_start"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "自动备份服务启动，立即运行一次"
+        ]
+      ],
+      "state": null,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "onlyonce": true,
+        "back_path": "/owned/backup",
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/path",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true,
+        "webdav_disable_check": true
+      },
+      "repeat": true,
+      "trace": [
+        [
+          "dav_init",
+          {
+            "webdav_hostname": "https://dav.invalid/path",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": true,
+            "disable_check": true
+          }
+        ],
+        [
+          "scheduler_new",
+          {
+            "timezone": "Asia/Shanghai"
+          }
+        ],
+        [
+          "scheduler_add",
+          {
+            "trigger": "date",
+            "run_date": "2026-10-18T09:02:06+08:00",
+            "name": "自动备份"
+          }
+        ],
+        [
+          "config",
+          {
+            "onlyonce": false,
+            "cron": null,
+            "enabled": null,
+            "cnt": null,
+            "notify": null,
+            "back_path": "/owned/backup",
+            "webdav_enabled": true,
+            "webdav_hostname": "https://dav.invalid/path",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": true,
+            "webdav_max_count": null,
+            "webdav_notify": false,
+            "webdav_disable_check": true
+          }
+        ],
+        [
+          "scheduler_print"
+        ],
+        [
+          "scheduler_start"
+        ],
+        [
+          "scheduler_clear"
+        ],
+        [
+          "scheduler_shutdown"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "自动备份服务启动，立即运行一次"
+        ]
+      ],
+      "state": null,
+      "service": null,
+      "error": null
+    },
+    {
+      "kind": "init",
+      "input": {
+        "enabled": true,
+        "cron": "0 3 * * *",
+        "onlyonce": true,
+        "notify": true,
+        "cnt": "3"
+      },
+      "repeat": false,
+      "fault": "config",
+      "trace": [
+        [
+          "scheduler_new",
+          {
+            "timezone": "Asia/Shanghai"
+          }
+        ],
+        [
+          "scheduler_add",
+          {
+            "trigger": "date",
+            "run_date": "2026-10-18T09:02:06+08:00",
+            "name": "自动备份"
+          }
+        ],
+        [
+          "config",
+          {
+            "onlyonce": false,
+            "cron": "0 3 * * *",
+            "enabled": true,
+            "cnt": "3",
+            "notify": true,
+            "back_path": null,
+            "webdav_enabled": false,
+            "webdav_hostname": null,
+            "webdav_login": null,
+            "webdav_password": null,
+            "webdav_digest_auth": false,
+            "webdav_max_count": null,
+            "webdav_notify": false,
+            "webdav_disable_check": false
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "自动备份服务启动，立即运行一次"
+        ]
+      ],
+      "error": "RuntimeError"
+    },
+    {
+      "kind": "init",
+      "input": {
+        "enabled": true,
+        "cron": "bad"
+      },
+      "repeat": false,
+      "fault": "",
+      "trace": [],
+      "logs": [],
+      "error": "ValueError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 2
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 1\n剩余备份数量 2\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 2 需要删除备份文件数量 1"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 2
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 2 需要删除备份文件数量 1"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 10
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 -7\n剩余备份数量 10\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 10 无需删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 10
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 10 无需删除"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 0
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 0
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": "0"
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 3\n剩余备份数量 0\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 0 需要删除备份文件数量 3"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": "0"
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 0 需要删除备份文件数量 3"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": -2
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 -2 需要删除备份文件数量 5"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": null,
+      "error": "IndexError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": -2
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 -2 需要删除备份文件数量 5"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": null,
+      "error": "IndexError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": "bad"
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ]
+      ],
+      "result": null,
+      "error": "ValueError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": "bad"
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ]
+      ],
+      "result": null,
+      "error": "ValueError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": true
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 2\n剩余备份数量 1\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 1 需要删除备份文件数量 2"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": true
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 1 需要删除备份文件数量 2"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": "２"
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 1\n剩余备份数量 2\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 2 需要删除备份文件数量 1"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": "２"
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 2 需要删除备份文件数量 1"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 2.9
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 1\n剩余备份数量 2\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 2 需要删除备份文件数量 1"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 2.9
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 2 需要删除备份文件数量 1"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 1e+100
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 -10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815101\n剩余备份数量 10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815104\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815104 无需删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 1e+100
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815104 无需删除"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": -1e+100
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 -10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815104 需要删除备份文件数量 10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815107"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": null,
+      "error": "IndexError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": -1e+100
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 -10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815104 需要删除备份文件数量 10000000000000000159028911097599180468360808563945281389781327557747838772170381060813469985856815107"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": null,
+      "error": "IndexError"
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 1e-100
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 3\n剩余备份数量 0\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 0 需要删除备份文件数量 3"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "cnt": 1e-100
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "rmtree",
+          "/owned/backup/bk_1"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_2"
+        ],
+        [
+          "unlink",
+          "/owned/backup/bk_3"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份失败\n"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ],
+        [
+          "info",
+          "获取到 /owned/backup 路径下备份文件数量 3 保留数量 0 需要删除备份文件数量 3"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_1 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_2 成功"
+        ],
+        [
+          "debug",
+          "删除备份 /owned/backup/bk_3 成功"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": false
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": false
+      },
+      "files": {
+        "/owned/backup/bk_3": {
+          "kind": "file",
+          "ctime": 3
+        },
+        "/owned/backup/bk_1": {
+          "kind": "dir",
+          "ctime": 1
+        },
+        "/owned/backup/bk_2": {
+          "kind": "file",
+          "ctime": 2
+        }
+      },
+      "zip_success": false,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "error",
+          "创建备份失败"
+        ]
+      ],
+      "result": [
+        false,
+        "创建备份失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，符合最大保留数 1，不需删除文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，符合最大保留数 0，不需删除文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {},
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，超出最大保留数 -2，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "init_error": "init failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_init",
+          {
+            "webdav_hostname": "https://dav.invalid/root",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": false
+          }
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\nWebDAV客户端初始化失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "error",
+          "WebDAV客户端初始化失败: init failed"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "error",
+          "WebDAV客户端初始化失败: init failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV客户端初始化失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "init_error": "init failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_init",
+          {
+            "webdav_hostname": "https://dav.invalid/root",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": false
+          }
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\nWebDAV客户端初始化失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "error",
+          "WebDAV客户端初始化失败: init failed"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "error",
+          "WebDAV客户端初始化失败: init failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV客户端初始化失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "init_error": "init failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_init",
+          {
+            "webdav_hostname": "https://dav.invalid/root",
+            "webdav_login": "owned",
+            "webdav_password": "synthetic",
+            "webdav_digest_auth": false
+          }
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\nWebDAV客户端初始化失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "error",
+          "WebDAV客户端初始化失败: init failed"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "error",
+          "WebDAV客户端初始化失败: init failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV客户端初始化失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "list_error": "list failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\n连接到WebDAV服务器失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "error",
+          "连接到WebDAV服务器失败: list failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip 连接到WebDAV服务器失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "list_error": "list failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\n连接到WebDAV服务器失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "error",
+          "连接到WebDAV服务器失败: list failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip 连接到WebDAV服务器失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "list_error": "list failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\n连接到WebDAV服务器失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "error",
+          "连接到WebDAV服务器失败: list failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip 连接到WebDAV服务器失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "upload_error": "put failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\n上传到WebDAV服务器失败: put failed"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "上传到WebDAV服务器失败: put failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip 上传到WebDAV服务器失败: put failed"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "upload_error": "put failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\n上传到WebDAV服务器失败: put failed"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "上传到WebDAV服务器失败: put failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip 上传到WebDAV服务器失败: put failed"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "upload_error": "put failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传失败\n上传到WebDAV服务器失败: put failed"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "上传到WebDAV服务器失败: put failed"
+        ]
+      ],
+      "result": [
+        false,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip 上传到WebDAV服务器失败: put failed"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "check": false
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份上传完成但验证失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "上传完成，但远程备份路径没有检测到备份文件，请检查备份路径是否正确，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，符合最大保留数 1，不需删除文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份上传完成但验证失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "check": false
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份上传完成但验证失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "上传完成，但远程备份路径没有检测到备份文件，请检查备份路径是否正确，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，符合最大保留数 0，不需删除文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份上传完成但验证失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "check": false
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份上传完成但验证失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "上传完成，但远程备份路径没有检测到备份文件，请检查备份路径是否正确，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，超出最大保留数 -2，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份上传完成但验证失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "check_error": "head failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份上传完成但验证失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "warning",
+          "检查文件存在性时出错: head failed，但上传可能已完成"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，符合最大保留数 1，不需删除文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份上传完成但验证失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "check_error": "head failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份上传完成但验证失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "warning",
+          "检查文件存在性时出错: head failed，但上传可能已完成"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，符合最大保留数 0，不需删除文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份上传完成但验证失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "check_error": "head failed"
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份上传完成但验证失败"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "warning",
+          "检查文件存在性时出错: head failed，但上传可能已完成"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 0，超出最大保留数 -2，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份上传完成但验证失败"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip",
+          "bk_20260201000000.zip",
+          "bk_20260301000000.zip",
+          "other"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260101000000.zip"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260201000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 3，超出最大保留数 1，需删除 2 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260101000000.zip 已删除"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260201000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip",
+          "bk_20260201000000.zip",
+          "bk_20260301000000.zip",
+          "other"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 3，超出最大保留数 0，需删除 3 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip",
+          "bk_20260201000000.zip",
+          "bk_20260301000000.zip",
+          "other"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260101000000.zip"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260201000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 3，超出最大保留数 -2，需删除 5 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260101000000.zip 已删除"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260201000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip",
+          "bk_20260201000000.zip"
+        ],
+        "delete_errors": [
+          "/bk_20260101000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260101000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 1，需删除 1 个备份文件"
+        ],
+        [
+          "error",
+          "删除WebDAV文件 /bk_20260101000000.zip 失败: delete failed"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip",
+          "bk_20260201000000.zip"
+        ],
+        "delete_errors": [
+          "/bk_20260101000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 0，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip",
+          "bk_20260201000000.zip"
+        ],
+        "delete_errors": [
+          "/bk_20260101000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260101000000.zip"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260201000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 -2，需删除 4 个备份文件"
+        ],
+        [
+          "error",
+          "删除WebDAV文件 /bk_20260101000000.zip 失败: delete failed"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260201000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip.foo",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: unconverted data remains: .foo"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip.foo",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: unconverted data remains: .foo"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_20260101000000.zip.foo",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: unconverted data remains: .foo"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_99999999999999.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: time data 'bk_99999999999999.zip' does not match format 'bk_%Y%m%d%H%M%S.zip'"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_99999999999999.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: time data 'bk_99999999999999.zip' does not match format 'bk_%Y%m%d%H%M%S.zip'"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_99999999999999.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: time data 'bk_99999999999999.zip' does not match format 'bk_%Y%m%d%H%M%S.zip'"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_２０２６０１０１００００００.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: time data 'bk_２０２６０１０１００００００.zip' does not match format 'bk_%Y%m%d%H%M%S.zip'"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_２０２６０１０１００００００.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: time data 'bk_２０２６０１０１００００００.zip' does not match format 'bk_%Y%m%d%H%M%S.zip'"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_２０２６０１０１００００００.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "error",
+          "获取WebDAV文件列表失败: time data 'bk_２０２６０１０１００００００.zip' does not match format 'bk_%Y%m%d%H%M%S.zip'"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_２０２６0101000000.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_２０２６0101000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 1，需删除 1 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_２０２６0101000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_２０２６0101000000.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 0，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_２０２６0101000000.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_２０２６0101000000.zip"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260201000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 -2，需删除 4 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_２０２６0101000000.zip 已删除"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260201000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_202601010１0000.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_202601010１0000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 1，需删除 1 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_202601010１0000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_202601010１0000.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 0，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_202601010１0000.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_202601010１0000.zip"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260201000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 -2，需删除 4 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_202601010１0000.zip 已删除"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260201000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": 1,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_2026010100000１.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_2026010100000１.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 1，需删除 1 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_2026010100000１.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": "0",
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_2026010100000１.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 0，需删除 2 个备份文件"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    },
+    {
+      "kind": "backup",
+      "input": {
+        "back_path": "/owned/backup",
+        "notify": true,
+        "webdav_enabled": true,
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_max_count": -2,
+        "webdav_notify": true
+      },
+      "files": {},
+      "zip_success": true,
+      "dav": {
+        "files": [
+          "bk_2026010100000１.zip",
+          "bk_20260201000000.zip"
+        ]
+      },
+      "trace": [
+        [
+          "backup_file",
+          "/owned/backup"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_upload",
+          "bk_20261018090203.zip",
+          "/owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "dav_check",
+          "https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "dav_list",
+          "/"
+        ],
+        [
+          "dav_delete",
+          "/bk_2026010100000１.zip"
+        ],
+        [
+          "dav_delete",
+          "/bk_20260201000000.zip"
+        ],
+        [
+          "notice",
+          {
+            "mtype": "SiteMessage",
+            "title": "【自动备份任务完成】",
+            "text": "创建备份成功\n清理备份数量 0\n剩余备份数量 0\n\nWebDAV上传成功\nWebDAV备份验证成功"
+          }
+        ]
+      ],
+      "logs": [
+        [
+          "info",
+          "WebDAV客户端初始化成功"
+        ],
+        [
+          "info",
+          "当前时间 2026-10-18 09:02:03 开始备份"
+        ],
+        [
+          "info",
+          "备份完成 备份文件 /owned/backup/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "开始上传备份文件到WebDAV服务器"
+        ],
+        [
+          "info",
+          "成功连接到WebDAV服务器"
+        ],
+        [
+          "info",
+          "远程备份路径为：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "上传完成，远程备份路径：https://dav.invalid/root/bk_20261018090203.zip"
+        ],
+        [
+          "info",
+          "WebDAV上备份文件数量为 2，超出最大保留数 -2，需删除 4 个备份文件"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_2026010100000１.zip 已删除"
+        ],
+        [
+          "info",
+          "WebDAV上的备份文件 /bk_20260201000000.zip 已删除"
+        ]
+      ],
+      "result": [
+        true,
+        "备份完成 备份文件 /owned/backup/bk_20261018090203.zip WebDAV备份验证成功"
+      ],
+      "error": null
+    }
+  ]
+}

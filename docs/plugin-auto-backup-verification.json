@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "baseline_commit": "80cceaf4db33995fed148ca3e7c2565e7528f7e5",
+  "scope": "Formal pure Go AutoBackup component with actual SDK/protocol and native owned ZIP/retention/TLS-WebDAV/PG adapters; not actual App registration, migration or deployment.",
+  "manifest": "testdata/plugins/auto-backup-2.1.4/formal-manifest.json",
+  "manifest_sha256": "8ec424684d8a8ab74d398628ff099941957d4ea28e287e48b4258daf68480f88",
+  "source_files": {
+    "internal/plugins/autobackup/ctime_linux.go": "8f2c601a9eb7e285869f2599da3bea3d1e894f766cc2c6c527f661cf684d7a73",
+    "internal/plugins/autobackup/system.go": "64b4f72d6678788e59741c2de4387e158db07100e778408f68887a8dff891d63",
+    "internal/plugins/autobackup/webdav.go": "4b189d2c66c30ae12a71bfafce242c0d1751a3fa4619f8db2b4136a8fb3e36bc",
+    "internal/plugins/autobackup/archive_test.go": "8aa589607bf6d296c6f454acb50392eddc035bab4567288c881b4ae64508364a",
+    "internal/plugins/autobackup/core_test.go": "c0ed0b6b21656d4e3db02d90104f71388c4fc38e3a7044925fd4177e8b41d88b",
+    "internal/plugins/autobackup/ctime_darwin.go": "885b695bf4a91047380d3f4a5dabd77d26460ce0cbc3fda731e3a857fa9185b8",
+    "internal/plugins/autobackup/types.go": "eace871f92b98d60975147af17e2b22b1e36cda8de00ea5ce67f6172e351ce61",
+    "internal/plugins/autobackup/core.go": "353bac41919dab3869e80660d6f4cda8944e7d4da126336d1e554ab80d4b1b03",
+    "internal/plugins/autobackup/metadata.json": "53f65b0347160b8d0fd877efbeecc4b9f8eadf40f73768e2ce7d8f3779b8f209",
+    "internal/plugins/autobackup/filesystem.go": "2805aeb6006449f96b6f2408c104b2d6b5cc2b8ee21e77ef7942dbde2e2ef1da",
+    "internal/plugins/autobackup/date_scheduler.go": "d805a1759f0a68cfe84d0e815cc12380dc37db0a1d88117d3ea001e25c024f2a",
+    "internal/plugins/autobackup/archive.go": "30b500d5b5280aadbab84838d30cad2aa4b10541aa8f687e86c764aab15c6a8c",
+    "internal/plugins/autobackup/postgres.go": "dd9bd8bfd06889bbc83e15be856057e7808ce9bb7865704ad057d40349e28a61",
+    "internal/plugins/autobackup/entry.go": "8a97ebf3963e881235c773b3d24fffaeaf70b0020f5f638d733ff984b409759c",
+    "internal/plugins/autobackup/webdav_test.go": "31bf015fc7d8151cc210844257bbe1be212c3408e6198be0cc09a7fb3bdbc54e",
+    "internal/plugins/autobackup/formal_provenance_test.go": "789391cc6c02bcbda6ba522bb522ffb129a0a0963a41d24d915f6931f4f2e89f",
+    "internal/plugins/autobackup/postgres_test.go": "0be2aa4780667e220bc433bee1e9f8ac891a94cfba4762f25c96a9e4df2fdc1c",
+    "internal/plugins/autobackup/ctime_other.go": "d25f416ab9798fd7266d0ddbcb20e5529e661f0634b845e804b07fa610ea4709",
+    "internal/plugins/autobackup/sdk_test.go": "ee4840bc5cff9facdd4fa8556d8a1758248fecd467ce1a686b0c2b03f84b5358",
+    "internal/plugins/autobackup/form.json": "cbb8966d67caad6023b166a2cff8094c223965dc5bb5a01f238c7be0b5498dcc",
+    "internal/plugins/autobackup/system_test.go": "a3daa4564c6531e03ba84cfe7a5322f4328f6c16a9f6ca618c845898dbf4fe9e"
+  },
+  "frozen_inputs": {
+    "count": 117,
+    "changed_after_checks": [],
+    "evidence": {
+      "path": "testdata/plugins/auto-backup-2.1.4/verification/input-snapshot.json.gz",
+      "sha256": "1e2e629b42a67624c41d195a86b3a105dd2695f5056332c44154c1445aaf8f9e",
+      "uncompressed_sha256": "55e088aa1b0cdd502938a983ce7fb55652105a2be556b6d07542a7e14ddc76b2"
+    }
+  },
+  "source_oracle_cases": {
+    "business": 82,
+    "webdav_dependency": 55,
+    "archive": 9,
+    "container_id": 10,
+    "version_sql": 11,
+    "client_branch": 32,
+    "total": 199
+  },
+  "checks": {
+    "normal": {
+      "exit_code": 0,
+      "top_level_passes": 18,
+      "failures": 0,
+      "skips": 0,
+      "tests": [
+        "TestInstalledArchiveOracleOnOwnedFilesystem",
+        "TestNativeArchiveGrantsRejectSymlinkEscapeWithoutReadingOrWriting",
+        "TestActualCoreNativeArchiveAndOldestRetention",
+        "TestInstalledBusinessOracle",
+        "TestFormalAutoBackupSourceInventory",
+        "TestFormalAutoBackupMatchesFrozenCandidateAndOriginalCorpus",
+        "TestNativePostgresFixedArgvPasswordOnlyInEnvironment",
+        "TestNativePostgresOwnedClusterDumpAndRestore",
+        "TestNativePostgresMissingClientUsesOnlyHostPackagedResolution",
+        "TestSDKFixtureProcess",
+        "TestActualSDKUsesTrustedConfigAndOpaqueOccurrences",
+        "TestOriginalFormMetadataAndInvalidWorkerInputs",
+        "TestSourceAPIWrongKeyHasNoEffectsAndDisabledPluginCanRun",
+        "TestInstalledSystemHelpersAndClientProvisionSourceOracle",
+        "TestDateSchedulerOriginalOnceMisfireAndStopWait",
+        "TestSourceCronUsesLocalZoneAndOnceUsesSettingsZone",
+        "TestInstalledWebDAVDependencyOracle",
+        "TestNativeWebDAVTLSUploadOriginalCallbackAndDigestFlag"
+      ],
+      "package_seconds": 1.905,
+      "evidence": {
+        "path": "testdata/plugins/auto-backup-2.1.4/verification/normal.jsonl.gz",
+        "sha256": "b593fa84840303bee3cdccfcd91c6058ddca1b91d050c195b2d7b2d93e04d452",
+        "uncompressed_sha256": "19feb014d0d6ea3a597a489bb8cb97768faa0a8711ea68faf18276d0ef5b9522"
+      },
+      "actual_owned_PostgreSQL_dump_restore_passed": true
+    },
+    "race": {
+      "exit_code": 0,
+      "top_level_passes": 18,
+      "failures": 0,
+      "skips": 0,
+      "tests": [
+        "TestInstalledArchiveOracleOnOwnedFilesystem",
+        "TestNativeArchiveGrantsRejectSymlinkEscapeWithoutReadingOrWriting",
+        "TestActualCoreNativeArchiveAndOldestRetention",
+        "TestInstalledBusinessOracle",
+        "TestFormalAutoBackupSourceInventory",
+        "TestFormalAutoBackupMatchesFrozenCandidateAndOriginalCorpus",
+        "TestNativePostgresFixedArgvPasswordOnlyInEnvironment",
+        "TestNativePostgresOwnedClusterDumpAndRestore",
+        "TestNativePostgresMissingClientUsesOnlyHostPackagedResolution",
+        "TestSDKFixtureProcess",
+        "TestActualSDKUsesTrustedConfigAndOpaqueOccurrences",
+        "TestOriginalFormMetadataAndInvalidWorkerInputs",
+        "TestSourceAPIWrongKeyHasNoEffectsAndDisabledPluginCanRun",
+        "TestInstalledSystemHelpersAndClientProvisionSourceOracle",
+        "TestDateSchedulerOriginalOnceMisfireAndStopWait",
+        "TestSourceCronUsesLocalZoneAndOnceUsesSettingsZone",
+        "TestInstalledWebDAVDependencyOracle",
+        "TestNativeWebDAVTLSUploadOriginalCallbackAndDigestFlag"
+      ],
+      "package_seconds": 11.24,
+      "evidence": {
+        "path": "testdata/plugins/auto-backup-2.1.4/verification/race.jsonl.gz",
+        "sha256": "78c6d556e7664d9e287528c2fea63aca2c18aca9e1d5da13eba5d44c0bd48782",
+        "uncompressed_sha256": "77215a71cac79d17552f2c1a3bf2cd2fba905421e185f64aff93dc86f451f3cd"
+      },
+      "actual_owned_PostgreSQL_dump_restore_passed": true
+    },
+    "vet": {
+      "exit_code": 0,
+      "evidence": {
+        "path": "testdata/plugins/auto-backup-2.1.4/verification/vet.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "linux_build": {
+      "exit_code": 0,
+      "CGO_ENABLED": "0",
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "binary_sha256": "e27c57c3bd9cdb81a82b578adc053d3dcca41f093bd17caeb533bb3740ee7910",
+      "evidence": {
+        "path": "testdata/plugins/auto-backup-2.1.4/verification/linux-build.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "NAS": {
+    "results": {
+      "exit_code": 0,
+      "top_level_passes": 17,
+      "top_level_skips": 1,
+      "top_level_failures": 0,
+      "passed_tests": [
+        "TestInstalledArchiveOracleOnOwnedFilesystem",
+        "TestNativeArchiveGrantsRejectSymlinkEscapeWithoutReadingOrWriting",
+        "TestActualCoreNativeArchiveAndOldestRetention",
+        "TestInstalledBusinessOracle",
+        "TestFormalAutoBackupSourceInventory",
+        "TestFormalAutoBackupMatchesFrozenCandidateAndOriginalCorpus",
+        "TestNativePostgresFixedArgvPasswordOnlyInEnvironment",
+        "TestNativePostgresMissingClientUsesOnlyHostPackagedResolution",
+        "TestSDKFixtureProcess",
+        "TestActualSDKUsesTrustedConfigAndOpaqueOccurrences",
+        "TestOriginalFormMetadataAndInvalidWorkerInputs",
+        "TestSourceAPIWrongKeyHasNoEffectsAndDisabledPluginCanRun",
+        "TestInstalledSystemHelpersAndClientProvisionSourceOracle",
+        "TestDateSchedulerOriginalOnceMisfireAndStopWait",
+        "TestSourceCronUsesLocalZoneAndOnceUsesSettingsZone",
+        "TestInstalledWebDAVDependencyOracle",
+        "TestNativeWebDAVTLSUploadOriginalCallbackAndDigestFlag"
+      ],
+      "skipped_tests": [
+        "TestNativePostgresOwnedClusterDumpAndRestore"
+      ],
+      "failed_tests": []
+    },
+    "evidence": {
+      "path": "testdata/plugins/auto-backup-2.1.4/verification/nas.json",
+      "sha256": "687a6b12301821ea92cb68372756f232ff3fd3ff1cea7cad6f1a31b0052590ee",
+      "uncompressed_sha256": "687a6b12301821ea92cb68372756f232ff3fd3ff1cea7cad6f1a31b0052590ee"
+    },
+    "log": {
+      "path": "testdata/plugins/auto-backup-2.1.4/verification/nas.log.gz",
+      "sha256": "c8cf5541f84c645d999139932480598df9be39e2bf4479b2c2d1836980bf3dcc",
+      "uncompressed_sha256": "4036c07568bc7e8599919ac21441262e6e3dfa2c0090de523b434986a67061e8"
+    },
+    "services_before": {
+      "path": "testdata/plugins/auto-backup-2.1.4/verification/services-before.txt",
+      "sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4",
+      "uncompressed_sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4"
+    },
+    "services_after": {
+      "path": "testdata/plugins/auto-backup-2.1.4/verification/services-after.txt",
+      "sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4",
+      "uncompressed_sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4"
+    },
+    "oom_killed": false,
+    "environment": {
+      "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+      "user": "1000:1001",
+      "network": "none",
+      "read_only": true,
+      "memory_bytes": 268435456,
+      "memory_swap_bytes": 268435456,
+      "pids_limit": 256,
+      "GOMEMLIMIT": "64MiB",
+      "tmpfs_bytes": 134217728,
+      "inspect_matches": true
+    },
+    "cleanup": {
+      "container_removed": true,
+      "owned_remote_stage_removed": true,
+      "services_unchanged": true
+    }
+  },
+  "candidate_evidence": "input/_auto_backup_port/verification.json and nas-verification.json are historical independent candidate results; not substituted for these formal checks.",
+  "boundary": [
+    "Production files and embeds are identical to frozen candidate. Six existing test files only rebase fixture reads; two new tests verify exact source/inventory/corpus.",
+    "No new external Go modules or Python runtime. PostgreSQL pg_dump is an optional fixed packaged native tool, not a dynamic shell installer.",
+    "NAS real PG cluster test is skipped because initdb is absent; macOS actual owned PG dump/restore passes normal and race.",
+    "Actual App snapshot/archive/restore, grants, owner, once/cron/API, source notices and effect recovery are separate work. Pure original user.db layout cannot back up this App directly.",
+    "No original user credentials/config/KV/files/backups read or migrated by this work; no production calls, deployment or activation. Registered partial handler count remains 12; formal data migration count remains 0."
+  ]
+}

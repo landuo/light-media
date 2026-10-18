@@ -1,0 +1,106 @@
+AutoBackup candidate handoff — no formal edits, no commit
+
+1. Production source and exact hashes: migration-manifest.json production_files
+   and embed_files. Target internal/plugins/autobackup. Tests are in test_files.
+   No new external Go module is needed: only stdlib and existing formal SDK,
+   schedule and legacyanime helpers are used. Do not copy candidate go.mod/sum.
+
+2. Original surface:
+   init_plugin -> Plugin.Init; stop_service -> Stop; get_state -> GetState;
+   get_service -> GetService and ServiceTrigger; actual date scheduler implements
+   the consumed three-second once/default-one-second-misfire/wait-on-stop behavior.
+   Settings timezone governs once; process local IANA timezone governs cron.
+   get_command/get_page return original None. Form/metadata retain original API,
+   defaults, labels/hints/show expressions and original password field type.
+   api_backup -> APIBackup: wrong key zero effects/Response, good key tuple.
+   backup -> BackupResponse, __backup -> Backup. API/manual behavior does not
+   invent an enabled check. The host must verify the actual API credential before
+   issuing APICapability for its own request ID; the worker never carries a key.
+
+3. Archive and cleanup:
+   Archive.BackupFile copies category.yaml, user.db* for sqlite, app.env and
+   recursively copied cookies; unknown DB vendor skips database copies as source.
+   ZIP contents are relative, include directories, preserve copied modes; staging
+   is removed only after ZIP success, same-second zip is overwritten, failures
+   retain the original observable prefix. Missing config can produce an empty zip.
+   Filesystem uses true Unix metadata change time on Linux/macOS, not mtime or
+   filename. Other OS change-time backend explicitly errors rather than guessing.
+   Bound read/write roots are host authority. Symlink escapes are rejected before
+   file I/O; formal owner must bind leases and durable receipts for destructive
+   retention and archive creation rather than trusting arbitrary worker paths.
+
+4. PostgreSQL:
+   NativePostgres uses a fixed absolute binary and argument vector, no shell and
+   no secret in argv. Optional host ResolveClient receives ClientProvisionPlan
+   with the exact original major-version/proxy/local-vs-container projection.
+   The old apt shell installer is deliberately replaced with packaged dependency
+   resolution per root instruction; no host/container mutation is performed.
+   MajorVersion accepts a host-owned *sql.DB for SHOW server_version; missing or
+   failed/non-string rows fall back to original 17. Actual pg_dump16.15 restore
+   was verified, not a synthetic SQL-only serializer. The optional image must
+   package a client compatible with the target server; no live user PG access.
+
+5. WebDAV:
+   HTTPDAV ports only the exact dependency methods used by this plugin and uses
+   streaming upload, normal TLS verification and a bound same-origin client.
+   Original config digest flag is passed/preserved but ignored by the installed
+   dependency; do not silently convert it into a new Digest feature.
+   Original callbacks/verification/failure and retention slices are source-tested.
+   Host must supply trusted read roots, client policy and origin; cross-origin
+   redirects without a new grant are rejected. Network/OS exception suffixes can
+   differ, and no arbitrary Python object / unsupported credential-type fidelity
+   is claimed. All ordinary original UI credential fields are strings.
+
+6. Evidence and promotion:
+   final-source-snapshot.json binds candidate production/tests/embeds and the 17
+   compiled formal dependencies at final normal/race/vet/CGO0 build. verification
+   records exact commands, exit codes/log SHAs and the 199 source cases. Raw final
+   logs are normal-final.jsonl/race-final.jsonl/vet-final.log/linux-build-final.log.
+   The actual Python3.12 source oracle identity/isolation is retained in reference.
+   Rebase reference/ fixture paths for formal tests and add formal provenance
+   checks; issue new source manifest and fresh formal tests after promotion.
+   Candidate results must not substitute for post-edit/formal App results.
+
+7. Still required for the full user objective:
+   Formal App compiled registration; authenticated instance/config ownership;
+   durable once/cron/API admissions and actual plugin owner lifecycle; native
+   filesystem/WebDAV/optional-PG effects with leases, intents and confirmed vs
+   unknown recovery receipts; encrypted accepted Notification plus actual source
+   routing; full original UI rendering; original config/KV/files/reference migration
+   and actual formal App NAS validation. The candidate itself was executed on
+   NAS:15 passed/1 real-PG-toolchain SKIP/0 failures, separately from macOS
+   true PG normal/race; see nas-verification.json and nas-tests.log.
+   Zero user plugin settings/files were migrated here.
+   Do not count this as one of the 23 completed migrations or turn on the plugin.
+
+8. Source redistribution/license provenance:
+   Original installed source and consumed Python dependencies are offline inputs,
+   not a Python runtime bundled into the Go program. Their independent licensing
+   must be retained/reviewed at formal source-fixture packaging; the installed
+   third-party plugin is not automatically relicensed by MoviePilot's GPL notice.
+
+All candidate-owned compiler handles terminal: final group38865 exit0; source
+oracle group7854 exit0. All owned oracle containers and local PG clusters removed;
+final process/container inventory was empty. No original backup/database content
+or real credentials were read; no formal catalog/service/deployment was changed.
+
+NAS Go start30821/finish74536 terminal exit0. Container
+lm-autobackup-go-10596cf6 and owned /tmp/light-media-autobackup-go.uHnQ6Pne
+were removed; light-media/moviepilot/qb identity/start/restart counts unchanged.
+NAS original SKIP reason: postgres_test.go:77: owned PostgreSQL toolchain unavailable: initdb
+
+Minimal formal migration set: 12 production Go files + 2 embed JSON, 6 Go tests,
+4 source-oracle JSON files plus original full form/metadata and source/dependency
+input bundle with independent SHA verification. The 17 compiled formal source
+dependencies are already in the repository; no new Go dependency or Go module
+change is needed. Optional PostgreSQL image requires a fixed compatible pg_dump.
+Source files remain byte-identical to final-source-snapshot.json.
+
+License input set is now retained in reference/licenses/ with exact hashes in
+reference/license-provenance.json and migration-manifest.json. Existing runtime
+legacyanime MPL2+Unicode notices, Go BSD and optional pg_dump PostgreSQL COPYRIGHT
+are included. Original Python package notices are offline-source only. AutoBackup
+third-party plugin distribution license has not been independently established;
+do not label it GPL by inheritance. No shared SDK change is needed for the pure
+package promotion; actual App owner/admission registration is a separate next
+candidate, not proof of completed user migration.

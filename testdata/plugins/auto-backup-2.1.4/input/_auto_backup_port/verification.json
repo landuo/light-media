@@ -1,0 +1,207 @@
+{
+  "all_compilers_terminal": true,
+  "all_commands_exit_zero": true,
+  "sources_unchanged": true,
+  "changed_files": [],
+  "binary_sha256": "e520dc74b4fea9749f9c66ec29267eeee81c74a82cb8a300a190ff7011cf9ed3",
+  "commands": [
+    {
+      "label": "normal-final",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "-count=1",
+        "./..."
+      ],
+      "started_at": "2026-10-18T03:04:18.956232+00:00",
+      "finished_at": "2026-10-18T03:04:23.036257+00:00",
+      "exit_code": 0,
+      "log": "normal-final.jsonl",
+      "log_sha256": "be167c6f23af97e6bb2d91c0a4e46ad9c915a88c6975a2c3e3125f14f15fc696"
+    },
+    {
+      "label": "race-final",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-json",
+        "-count=1",
+        "./..."
+      ],
+      "started_at": "2026-10-18T03:04:18.956329+00:00",
+      "finished_at": "2026-10-18T03:04:31.999949+00:00",
+      "exit_code": 0,
+      "log": "race-final.jsonl",
+      "log_sha256": "e675d5d705b1938906c7066ddafb4eef80fb43542835abda467595525afd3ce4"
+    },
+    {
+      "label": "vet-final",
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "started_at": "2026-10-18T03:04:18.956402+00:00",
+      "finished_at": "2026-10-18T03:04:19.232409+00:00",
+      "exit_code": 0,
+      "log": "vet-final.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "linux-build-final",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "build/autobackup-linux-amd64.test",
+        "."
+      ],
+      "started_at": "2026-10-18T03:04:18.956518+00:00",
+      "finished_at": "2026-10-18T03:04:19.957805+00:00",
+      "exit_code": 0,
+      "log": "linux-build-final.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "recorded_at": "2026-10-18T03:10:21.808519+00:00",
+  "source_snapshot_sha256": "cbb94918d955b7857e41d56f0cbebbeb7cbb16e8222de19a812427b22b67ef88",
+  "results": [
+    {
+      "label": "normal-final",
+      "top_level_passes": 16,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "subtest_passes": 146,
+      "package_elapsed_seconds": 3.493,
+      "tests": [
+        "TestInstalledArchiveOracleOnOwnedFilesystem",
+        "TestNativeArchiveGrantsRejectSymlinkEscapeWithoutReadingOrWriting",
+        "TestActualCoreNativeArchiveAndOldestRetention",
+        "TestInstalledBusinessOracle",
+        "TestNativePostgresFixedArgvPasswordOnlyInEnvironment",
+        "TestNativePostgresOwnedClusterDumpAndRestore",
+        "TestNativePostgresMissingClientUsesOnlyHostPackagedResolution",
+        "TestSDKFixtureProcess",
+        "TestActualSDKUsesTrustedConfigAndOpaqueOccurrences",
+        "TestOriginalFormMetadataAndInvalidWorkerInputs",
+        "TestSourceAPIWrongKeyHasNoEffectsAndDisabledPluginCanRun",
+        "TestInstalledSystemHelpersAndClientProvisionSourceOracle",
+        "TestDateSchedulerOriginalOnceMisfireAndStopWait",
+        "TestSourceCronUsesLocalZoneAndOnceUsesSettingsZone",
+        "TestInstalledWebDAVDependencyOracle",
+        "TestNativeWebDAVTLSUploadOriginalCallbackAndDigestFlag"
+      ],
+      "race_warnings": 0
+    },
+    {
+      "label": "race-final",
+      "top_level_passes": 16,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "subtest_passes": 146,
+      "package_elapsed_seconds": 11.838,
+      "tests": [
+        "TestInstalledArchiveOracleOnOwnedFilesystem",
+        "TestNativeArchiveGrantsRejectSymlinkEscapeWithoutReadingOrWriting",
+        "TestActualCoreNativeArchiveAndOldestRetention",
+        "TestInstalledBusinessOracle",
+        "TestNativePostgresFixedArgvPasswordOnlyInEnvironment",
+        "TestNativePostgresOwnedClusterDumpAndRestore",
+        "TestNativePostgresMissingClientUsesOnlyHostPackagedResolution",
+        "TestSDKFixtureProcess",
+        "TestActualSDKUsesTrustedConfigAndOpaqueOccurrences",
+        "TestOriginalFormMetadataAndInvalidWorkerInputs",
+        "TestSourceAPIWrongKeyHasNoEffectsAndDisabledPluginCanRun",
+        "TestInstalledSystemHelpersAndClientProvisionSourceOracle",
+        "TestDateSchedulerOriginalOnceMisfireAndStopWait",
+        "TestSourceCronUsesLocalZoneAndOnceUsesSettingsZone",
+        "TestInstalledWebDAVDependencyOracle",
+        "TestNativeWebDAVTLSUploadOriginalCallbackAndDigestFlag"
+      ],
+      "race_warnings": 0
+    }
+  ],
+  "source_oracle_counts": {
+    "business": 82,
+    "webdav": 55,
+    "archive": 9,
+    "container": 10,
+    "server_version": 11,
+    "provision": 32
+  },
+  "total_source_oracle_cases": 199,
+  "source_runtime": "3.12.13",
+  "postgres_owned_real_round_trip": {
+    "result": "passed normal and race",
+    "network": "Unix socket only; TCP disabled",
+    "toolchain": {
+      "pg_dump": {
+        "path": "/opt/homebrew/bin/pg_dump",
+        "sha256": "7cfa7424e38d30cf8457fbeb6bbaa4c50ae7a24f8f00af4ad9118ee10220e755",
+        "version": "pg_dump (PostgreSQL) 16.15 (Homebrew)"
+      },
+      "postgres": {
+        "path": "/opt/homebrew/bin/postgres",
+        "sha256": "1436f8edadd644ca3bdf7a2b7f7712b30cb23319ce310050bc3e179433921957",
+        "version": "postgres (PostgreSQL) 16.15 (Homebrew)"
+      },
+      "psql": {
+        "path": "/opt/homebrew/bin/psql",
+        "sha256": "e528355f85a1e685618ec6e69ccdee666d2e1a48978d20e2e770e16bb94b19ad",
+        "version": "psql (PostgreSQL) 16.15 (Homebrew)"
+      },
+      "initdb": {
+        "path": "/opt/homebrew/bin/initdb",
+        "sha256": "40dbaa2e1f378e95ca75b127851a10b138391731c7073612563f4edc50f673bc",
+        "version": "initdb (PostgreSQL) 16.15 (Homebrew)"
+      },
+      "pg_ctl": {
+        "path": "/opt/homebrew/bin/pg_ctl",
+        "sha256": "3a0e11904813964990ea91bfb1f28124ee5126af3ed7e642bf00f68c6525feb6",
+        "version": "pg_ctl (PostgreSQL) 16.15 (Homebrew)"
+      }
+    },
+    "objects_verified": [
+      "schema",
+      "table rows",
+      "Unicode/quotes/newlines/bytea",
+      "enum",
+      "view",
+      "function",
+      "index",
+      "comment",
+      "sequence state"
+    ],
+    "no_original_database_or_credentials_used": true
+  },
+  "not_claimed": [
+    "Formal App registration/owner/journal installation and 23-plugin migration are not complete.",
+    "Original dynamic shell/apt installer is intentionally replaced by a trusted fixed packaged-client resolver per root instruction; no host/container OS mutation.",
+    "Exception string suffixes can differ by language/OS; core logger oracle normalizes only the captured source-exception suffix in remote-retention error logs.",
+    "No full frontend rendering/interaction claim; complete original form structure/defaults and actual SDK are compared.",
+    "No Python runtime is required by Go candidate; Python sources are offline oracle inputs only.",
+    "Linux Alpine did not execute real PostgreSQL integration because fixed optional initdb/pg_dump tools are absent; original SKIP is retained. macOS real PostgreSQL normal/race proof is separate."
+  ],
+  "linux_nas": {
+    "report": "nas-verification.json",
+    "report_sha256": "8a19ce67b7a5eab35e29df5dabbbf01021ef3fb5c38a697f226da5fca774ae63",
+    "test_log": "nas-tests.log",
+    "test_log_sha256": "99165c42ddb49bddb6505d38d0ab09d4f2d80bf8ffa52c7fc6a72d0f84708088",
+    "passes": 15,
+    "skips": 1,
+    "failures": 0,
+    "skip_reasons": [
+      "postgres_test.go:77: owned PostgreSQL toolchain unavailable: initdb"
+    ],
+    "source_unchanged": true,
+    "no_oom": true,
+    "cleanup": {
+      "container_removed": true,
+      "owned_remote_stage_removed": true,
+      "services_unchanged": true
+    }
+  }
+}

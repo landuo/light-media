@@ -1,0 +1,60 @@
+AutoBackup 2.1.4：正式 Go 组件
+
+2026-10-18，基线80cceaf。已将独立候选中的12个生产Go文件、2份嵌入表单/
+元数据和6份测试迁入 internal/plugins/autobackup。生产文件和嵌入数据逐字节
+一致；原测试只改离线样本读取路径。另加2项来源与完整迁入校验。没有复制
+候选go.mod成为产品依赖，没有增加Go第三方模块，没有Python运行时。
+
+原实际安装源码SHA为 dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4。
+离线原参考使用隔离CPython3.12.13，保留原源码、实际安装依赖版本、来源SHA、
+生成器、原执行结果、隔离记录及独立许可证。它们只在testdata作为开发参考，
+Go测试直接读取固定JSON，不启动Python，也不读取原用户配置/数据库/备份。
+
+已移植的组件行为
+
+- Init/Stop/GetState、原配置和WebDAV初始化、3秒后一次执行、关闭onlyonce、
+  原本地时区cron与settings时区date。调度关闭等待正在执行的回调；正式App
+  的持久计划、实例接管、停用和重启恢复仍需其宿主实现。
+- 原表单、默认值、字段显示和API声明；原commands/page为None。API错误key
+  不产生效果，正确key返回原tuple语义；手动/API执行不自加enabled检查。
+  SDK只转发宿主拥有的事件/request ID，worker不能以配置指定文件/DB凭据。
+- 原布局的category.yaml、user.db*、app.env、cookies归档、ZIP相对条目与模式、
+  成功后删除暂存、同秒ZIP覆盖、失败保留已发生前缀。缺少原配置的空ZIP是
+  原源行为，不能直接拿它冒充新App已有有效备份。
+- 保留清理按Unix ctime排序；不把mtime或文件名日期当ctime。负数/浮点保留
+  数量、删除前缀后IndexError、原通知剩余数量的既有计算均按实际源保留。
+- 实际使用的webdavclient3 3.14.7方法：列表、上传、回调校验、保留清理，
+  同源重定向、普通TLS校验、流式文件上传。原dependency忽略digest配置，
+  因而保持Basic；回调校验失败改变原文案但不擅改上传返回成功的源语义。
+- PostgreSQL使用可信宿主指定的固定pg_dump路径和argv，密码只通过环境传递。
+  缺客户端由宿主解析已打包工具，不运行源插件的apt/shell，不改宿主系统。
+  原容器ID、版本回退17、root/container分支及代理投影有独立原执行参考。
+
+验证
+
+原执行参考199条：82业务、55WebDAV依赖、9归档、10容器ID、11版本读取及
+32客户端分支。正式包18项顶层普通/竞态全通过，vet和Linux CGO0构建通过。
+本机真实PostgreSQL16.15在独占Unix socket/临时集群导出后重建，核对Unicode、
+数据、schema、枚举、视图、函数、索引、注释及sequence，结束后停止清理。
+NAS实际执行同一份正式二进制：17通过、1跳过、0失败、无OOM；跳过的是
+缺initdb的真实PG集群测试，不能写成NAS18项全通过。固定pg_dump调用与客户端
+解析测试仍在NAS执行通过；本机真实PG结果与NAS结果分别保存。
+NAS使用独占只读/无网络/普通UID/256MiB/GOMEM64容器，只访问自有合成文件和
+本机TLS HTTP；容器和远端目录已清理，观察的生产服务身份及启动/重启计数未变。
+具体文件、转化、终态和日志见 plugin-auto-backup-verification.json。
+
+仍需完成
+
+本包尚未注册正式App安装目录。实际App owner、配置/版本授权、deferred和API
+admission、持久once/cron、文件及WebDAV写入/删除的意图与未知恢复、源通知
+路由、完整前端操作及原配置/KV/文件迁移均需接通后验证。
+新App真实数据是light-media.db和secret.key；App适配必须使用SQLite一致快照，
+包含恢复必需密钥，并在独立App重开验证可解密。不能把纯原布局Archive套到
+App.Dir后因找不到user.db*生成空ZIP，仍宣称备份成功。实际接线候选正在独立
+目录实现，不恢复已明确移除的全局数据库备份UI/API。
+
+Native文件系统适配的路径授权不是跨进程文件租约，宿主还须冻结归属/快照、
+处理路径变化和逐步收据。没有声称任意Python对象或网络/OS异常文案后缀完全
+等价；原安装插件自身许可证尚需在对外分发前独立核实，未套用MoviePilot许可。
+目前没有部署、启用或迁移用户数据；23实例的正式配置/KV/文件迁移数量仍为0，
+正式目录中的12个部分处理器数量未因这个未注册组件而增加。

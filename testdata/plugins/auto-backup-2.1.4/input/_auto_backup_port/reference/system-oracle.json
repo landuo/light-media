@@ -1,0 +1,1227 @@
+{
+  "source_sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+  "helper_source_sha256": "9f253d050c392124f26fe9cabcd30d049cd7ea939d3696fc84387be42bc95c1e",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "container": [
+    {
+      "input": "",
+      "output": null
+    },
+    {
+      "input": "unrelated",
+      "output": null
+    },
+    {
+      "input": "resolv.conf",
+      "output": "resolv.con"
+    },
+    {
+      "input": "/resolv.conf",
+      "output": null
+    },
+    {
+      "input": "/a/resolv.conf",
+      "output": "a"
+    },
+    {
+      "input": "/var/lib/docker/containers/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/resolv.conf mounted",
+      "output": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "input": "/short/resolv.conf previous /docker/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb /sys/fs/cgroup/devices cgroup",
+      "output": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "input": "/a/resolv.conf /b /sys/fs/cgroup/devices",
+      "output": "b"
+    },
+    {
+      "input": " /  /resolv.conf ",
+      "output": ""
+    },
+    {
+      "input": "/docker/ cccccccccccccccccccccccc /resolv.conf",
+      "output": "cccccccccccccccccccccccc"
+    }
+  ],
+  "versions": [
+    {
+      "row": null,
+      "output": 17
+    },
+    {
+      "row": [],
+      "output": 17
+    },
+    {
+      "row": [
+        "17.5"
+      ],
+      "output": 17
+    },
+    {
+      "row": [
+        "9.6.2"
+      ],
+      "output": 9
+    },
+    {
+      "row": [
+        "18beta1"
+      ],
+      "output": 17
+    },
+    {
+      "row": [
+        "１８.1"
+      ],
+      "output": 18
+    },
+    {
+      "row": [
+        17
+      ],
+      "output": 17
+    },
+    {
+      "row": [
+        18
+      ],
+      "output": 17
+    },
+    {
+      "row": [
+        18.2
+      ],
+      "output": 17
+    },
+    {
+      "row": [
+        null
+      ],
+      "output": 17
+    },
+    {
+      "row": "__error__",
+      "output": 17
+    }
+  ],
+  "plans": [
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": null,
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": null,
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": null,
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": null,
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": null,
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": null,
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": null,
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": null,
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 0,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": null,
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": null,
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": null,
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": null,
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": false,
+      "container_id": "owned-container",
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": null,
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": null,
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": null,
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": null,
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "local",
+        "container_id": null,
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "run",
+          [
+            "sh",
+            "-c",
+            "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+          ],
+          {
+            "capture_output": true,
+            "text": true,
+            "check": true,
+            "env": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "",
+      "plan": {
+        "major_version": 17,
+        "execution": "container",
+        "container_id": "owned-container",
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "docker_client",
+          {
+            "base_url": "unix:///owned/docker.sock"
+          }
+        ],
+        [
+          "container_get",
+          "owned-container"
+        ],
+        [
+          "exec_run",
+          {
+            "cmd": [
+              "sh",
+              "-c",
+              "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+            ],
+            "environment": {}
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "http://proxy.invalid:8080",
+      "plan": {
+        "major_version": 17,
+        "execution": "container",
+        "container_id": "owned-container",
+        "environment": {
+          "HTTP_PROXY": "http://proxy.invalid:8080",
+          "HTTPS_PROXY": "http://proxy.invalid:8080",
+          "http_proxy": "http://proxy.invalid:8080",
+          "https_proxy": "http://proxy.invalid:8080"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "docker_client",
+          {
+            "base_url": "unix:///owned/docker.sock"
+          }
+        ],
+        [
+          "container_get",
+          "owned-container"
+        ],
+        [
+          "exec_run",
+          {
+            "cmd": [
+              "sh",
+              "-c",
+              "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+            ],
+            "environment": {
+              "HTTP_PROXY": "http://proxy.invalid:8080",
+              "HTTPS_PROXY": "http://proxy.invalid:8080",
+              "http_proxy": "http://proxy.invalid:8080",
+              "https_proxy": "http://proxy.invalid:8080"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "https://proxy.invalid",
+      "plan": {
+        "major_version": 17,
+        "execution": "container",
+        "container_id": "owned-container",
+        "environment": {
+          "HTTP_PROXY": "https://proxy.invalid",
+          "HTTPS_PROXY": "https://proxy.invalid",
+          "http_proxy": "https://proxy.invalid",
+          "https_proxy": "https://proxy.invalid"
+        },
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "docker_client",
+          {
+            "base_url": "unix:///owned/docker.sock"
+          }
+        ],
+        [
+          "container_get",
+          "owned-container"
+        ],
+        [
+          "exec_run",
+          {
+            "cmd": [
+              "sh",
+              "-c",
+              "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+            ],
+            "environment": {
+              "HTTP_PROXY": "https://proxy.invalid",
+              "HTTPS_PROXY": "https://proxy.invalid",
+              "http_proxy": "https://proxy.invalid",
+              "https_proxy": "https://proxy.invalid"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "uid": 1000,
+      "docker": true,
+      "container_id": "owned-container",
+      "proxy": "HTTP://ignored",
+      "plan": {
+        "major_version": 17,
+        "execution": "container",
+        "container_id": "owned-container",
+        "environment": {},
+        "original_package": "postgresql-17"
+      },
+      "source_calls": [
+        [
+          "docker_client",
+          {
+            "base_url": "unix:///owned/docker.sock"
+          }
+        ],
+        [
+          "container_get",
+          "owned-container"
+        ],
+        [
+          "exec_run",
+          {
+            "cmd": [
+              "sh",
+              "-c",
+              "apt-get update && apt-get install -y wget gnupg lsb-release && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/postgresql.gpg && echo \"deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" > /etc/apt/sources.list.d/pgdg.list && apt-get update && apt-get install -y postgresql-17"
+            ],
+            "environment": {}
+          }
+        ]
+      ]
+    }
+  ]
+}

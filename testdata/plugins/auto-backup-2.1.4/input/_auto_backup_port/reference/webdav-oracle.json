@@ -1,0 +1,1903 @@
+{
+  "source_sha256": "4f436b85d1818651de1480614c9ff74744a8d5ff191bff66af301df0b6aaf95c",
+  "runtime": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+  "cases": [
+    {
+      "input": {},
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {},
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {},
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {},
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {},
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "disable_check": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "disable_check": true
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "disable_check": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "disable_check": true
+      },
+      "operation": "check",
+      "trace": [],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "disable_check": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "disable_check": true
+      },
+      "operation": "check_url",
+      "trace": [],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "disable_check": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "disable_check": true
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {
+        "disable_check": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "disable_check": true
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "webdav_digest_auth": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "webdav_digest_auth": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "webdav_digest_auth": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "webdav_digest_auth": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {
+        "webdav_digest_auth": true
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic",
+        "webdav_digest_auth": true
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<bad"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<bad"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<bad"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<bad"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {
+        "xml": "<bad"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<d:multistatus xmlns:d=\"DAV:\"><d:response><d:href/></d:response></d:multistatus>"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<d:multistatus xmlns:d=\"DAV:\"><d:response><d:href/></d:response></d:multistatus>"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<d:multistatus xmlns:d=\"DAV:\"><d:response><d:href/></d:response></d:multistatus>"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "xml": "<d:multistatus xmlns:d=\"DAV:\"><d:response><d:href/></d:response></d:multistatus>"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {
+        "xml": "<d:multistatus xmlns:d=\"DAV:\"><d:response><d:href/></d:response></d:multistatus>"
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 404
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 404
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": false,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 404
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": false,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 404
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": "RemoteParentNotFound",
+      "message": "Remote parent for: /owned.zip not found",
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 404
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 201
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 201
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": false,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 201
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": false,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 201
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": "RemoteParentNotFound",
+      "message": "Remote parent for: /owned.zip not found",
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "HEAD": 201
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 507
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 507
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 507
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 507
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": "NotEnoughSpace",
+      "message": "Not enough space on the server",
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 507
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 423
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 423
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 423
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 423
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": "ResourceLocked",
+      "message": "Resource /owned.zip locked",
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PUT": 423
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "DELETE": 405
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": [
+        "bk_20260101000000.zip",
+        "folder/",
+        "a b.zip"
+      ],
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "DELETE": 405
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "DELETE": 405
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "DELETE": 405
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {
+        "status": {
+          "DELETE": 405
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": "MethodNotSupported",
+      "message": "Method 'clean' not supported for https://dav.invalid/root",
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PROPFIND": 500
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "list",
+      "trace": [
+        {
+          "method": "PROPFIND",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Depth": "1"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": "ResponseErrorCode",
+      "message": "Request to https://dav.invalid/root/ failed with code 500 and message: b'<d:multistatus xmlns:d=\"DAV:\"><d:response><d:href>/</d:href><d:propstat><d:prop><d:resourcetype><d:collection/></d:resourcetype></d:prop></d:propstat></d:response><d:response><d:href>/bk_20260101000000.zip</d:href></d:response><d:response><d:href>/folder/</d:href><d:collection/></d:response><d:response><d:href>https://dav.invalid/root/a%20b.zip</d:href></d:response></d:multistatus>'",
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PROPFIND": 500
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PROPFIND": 500
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "check_url",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/https%3A/dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": true,
+      "error": null,
+      "message": null,
+      "callback": []
+    },
+    {
+      "input": {
+        "status": {
+          "PROPFIND": 500
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "upload",
+      "trace": [
+        {
+          "method": "HEAD",
+          "url": "https://dav.invalid/root/",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        },
+        {
+          "method": "PUT",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {},
+          "body": "owned zip bytes",
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": [
+        "called"
+      ]
+    },
+    {
+      "input": {
+        "status": {
+          "PROPFIND": 500
+        }
+      },
+      "options": {
+        "webdav_hostname": "https://dav.invalid/root",
+        "webdav_login": "owned",
+        "webdav_password": "synthetic"
+      },
+      "operation": "delete",
+      "trace": [
+        {
+          "method": "DELETE",
+          "url": "https://dav.invalid/root/owned.zip",
+          "auth": [
+            "owned",
+            "synthetic"
+          ],
+          "headers": {
+            "Accept": "*/*",
+            "Connection": "Keep-Alive"
+          },
+          "body": null,
+          "timeout": 30,
+          "verify": true
+        }
+      ],
+      "result": null,
+      "error": null,
+      "message": null,
+      "callback": []
+    }
+  ]
+}

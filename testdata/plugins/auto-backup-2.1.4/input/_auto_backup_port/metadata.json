@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "plugin_name": "自动备份",
+    "plugin_desc": "自动备份数据和配置文件。",
+    "plugin_icon": "Time_machine_B.png",
+    "plugin_version": "2.1.4",
+    "plugin_author": "thsrite",
+    "author_url": "https://github.com/thsrite",
+    "plugin_config_prefix": "autobackup_",
+    "plugin_order": 17,
+    "auth_level": 1
+  },
+  "api": [
+    {
+      "path": "/backup",
+      "endpoint": "api_backup",
+      "methods": [
+        "GET"
+      ],
+      "summary": "MoviePilot备份",
+      "description": "MoviePilot备份"
+    }
+  ],
+  "commands": null,
+  "page": null
+}
