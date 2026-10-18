@@ -715,11 +715,13 @@ func (a *App) pluginRemoveLinkHost(ctx context.Context, installation PluginInsta
 		if actual.Action == "reload" {
 			base = json.RawMessage(`{}`)
 		}
-		effective, err := removeLinkEffectiveConfig(base, c.Value)
+		var effective json.RawMessage
+		effective, err = removeLinkEffectiveConfig(base, c.Value)
 		if err != nil {
 			return nil, err
 		}
-		roots, err := a.removeLinkRoots(effective, s.Roots)
+		var roots []cleanuphost.RootStamp
+		roots, err = a.removeLinkRoots(effective, s.Roots)
 		if err != nil {
 			return nil, err
 		}

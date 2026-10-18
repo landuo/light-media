@@ -1,0 +1,18 @@
+RemoveLink 配置执行错误传递修复
+
+范围与现象
+当前正式基线 cdc2193 的联动删除插件，在原生监听器重新创建失败时，可能把实际 SDK 执行标记为成功。此修复仅处理已存在插件的错误传递，不增加插件、不改变原版联动删除策略，也不迁移或启用用户配置。
+
+原因与变更
+pluginRemoveLinkHost 的配置分支用 := 声明 effective、roots 时同时创建了内部 err。ApplyTransition 把失败写入这个内部变量，函数最后检查的却是外部仍为 nil 的 err。改为显式声明配置和目录变量，并复用同一个 err，让原生执行失败传回 SDK 与持久执行记录。
+
+实际回归
+使用真实 SDK 子进程、HTTP 配置保存、原生 owner 和 SQLite 生命周期记录；仅注入自有 watcher 工厂第二次创建失败。修复前，观察器创建失败后真实 run 仍为 succeeded；该回归以退出码 1 明确失败。修复后，同一失败可见为 reconcile_pending / PLUGIN_EXECUTION_FAILED，原有 published 过渡记录保留，不伪造 applied 或成功结果。自建源文件与硬链接目标内容均保持不变，SDK 进程名额正常释放。
+
+验证结果
+RemoveLink 应用相关正常与 race 回归各 54 个顶层、147 个含子用例结果通过。原插件核心与原生宿主正常及 race 回归各 46 个顶层、213 个含子用例结果通过。产品构建、go vet、CGO=0 的 Linux amd64 服务与应用测试二进制编译通过，Linux 产物已检查 ELF 标识。本轮没有在 NAS 执行这些 Linux 二进制，操作系统条件分支不能据此算作 Linux 实机验证。
+
+证据与边界
+详细命令、退出码、冻结输入与日志 SHA256 见同名 verification.json；原始前后失败/成功日志及完整回归日志以 gzip 保存在 testdata/plugins/removelink-transition-error/verification。编译前后 2896 个输入路径无漂移；原 2895 个正式路径中仅 owner 文件变更，另增加一个故障回归测试。
+
+原 MoviePilot、实际用户影视文件与种子未修改。原版插件配置、KV、文件迁移仍为 0，生产版本仍为 0.3.21；本轮未部署。

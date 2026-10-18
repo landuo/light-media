@@ -1,0 +1,271 @@
+{
+  "base": "cdc219314aae54dfb7e35734da172c197951ce75",
+  "manifest_sha256": "fbc53288941f9e077c63dacfedce650d71aff2b58af5aee2e2f4a81bd6e203bb",
+  "source_count": 2896,
+  "checks": [
+    {
+      "name": "app-normal",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^TestPluginRemoveLink"
+      ],
+      "env": {},
+      "exit_code": 0,
+      "elapsed_seconds": 19.728,
+      "log_sha256": "d46809e2d58d4fa3d28c451aa9a7809794ba5d72b70e5da3ce4b9a8395612e7e",
+      "test_counts": {
+        "pass_including_subtests": 147,
+        "pass_top_level": 54
+      },
+      "skipped": []
+    },
+    {
+      "name": "core-host-normal",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-json",
+        "./internal/plugins/removelink/..."
+      ],
+      "env": {},
+      "exit_code": 0,
+      "elapsed_seconds": 13.001,
+      "log_sha256": "a5b686bdd8b4fe475a59f7a6a53a35d548e0df014c38466c55550538d58d2dac",
+      "test_counts": {
+        "pass_including_subtests": 213,
+        "pass_top_level": 46
+      },
+      "skipped": []
+    },
+    {
+      "name": "app-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^TestPluginRemoveLink"
+      ],
+      "env": {},
+      "exit_code": 0,
+      "elapsed_seconds": 129.822,
+      "log_sha256": "925946dc5604856d9ba69adbfa2036defcb4c6ed14f6f3aa79c3c5b3a2eda056",
+      "test_counts": {
+        "pass_including_subtests": 147,
+        "pass_top_level": 54
+      },
+      "skipped": []
+    },
+    {
+      "name": "core-host-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-json",
+        "./internal/plugins/removelink/..."
+      ],
+      "env": {},
+      "exit_code": 0,
+      "elapsed_seconds": 15.432,
+      "log_sha256": "62626d1a26fb292a904451cb8c52f6729ed42e3feb1f4efc495bad027a115b39",
+      "test_counts": {
+        "pass_including_subtests": 213,
+        "pass_top_level": 46
+      },
+      "skipped": []
+    },
+    {
+      "name": "product",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_remove_link_transition_error/light-media-darwin",
+        "./cmd/server"
+      ],
+      "env": {},
+      "exit_code": 0,
+      "elapsed_seconds": 3.476,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./internal/app",
+        "./internal/plugins/removelink/..."
+      ],
+      "env": {},
+      "exit_code": 0,
+      "elapsed_seconds": 1.378,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "linux-product",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_remove_link_transition_error/light-media-linux",
+        "./cmd/server"
+      ],
+      "env": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 4.764,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "linux-app-test",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_remove_link_transition_error/app-linux.test",
+        "./internal/app"
+      ],
+      "env": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 4.997,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "drift": [],
+  "binaries": {
+    "light-media-darwin": {
+      "sha256": "26c8858822cb2a34809ca4adf15b7b02672b45657abfd591476287e844fcc805",
+      "bytes": 43384562,
+      "linux_elf": null
+    },
+    "light-media-linux": {
+      "sha256": "187280d33b608de4db1e948180f1d92bff6e6c7596ced3902eba37020cbac508",
+      "bytes": 44863169,
+      "linux_elf": true
+    },
+    "app-linux.test": {
+      "sha256": "89cc582cc4df6263d66345725fa4fd471f68b04b8d7dfe2692e4e56e2091aacb",
+      "bytes": 55442465,
+      "linux_elf": true
+    }
+  },
+  "independent_audit": {
+    "baseline_paths": 2895,
+    "baseline_changed": [
+      "internal/app/plugin_remove_link_owner.go"
+    ],
+    "new_source": [
+      "internal/app/plugin_remove_link_transition_error_test.go"
+    ],
+    "all_logs_hash_verified": true,
+    "all_source_drift": [],
+    "nas_executed": false,
+    "original_data_migrated": 0,
+    "deployed": false
+  },
+  "scope": "Existing RemoveLink actual SDK configuration failure propagation only; no new handler, user migration or production deployment",
+  "before_fix": {
+    "exit_code": 1,
+    "observed": "second watcher creation failed but actual SDK run succeeded with empty error code",
+    "fixture_note": "same fault and assertions; final fixture additionally logs actual failure state after checks"
+  },
+  "after_fix": {
+    "state": "reconcile_pending",
+    "error_code": "PLUGIN_EXECUTION_FAILED",
+    "transition": "published",
+    "watcher_creates": 2,
+    "source_and_target_bytes_unchanged": true
+  },
+  "changed_source": [
+    {
+      "path": "internal/app/plugin_remove_link_owner.go",
+      "sha256": "4460796f8b82d43fd695f9631d9738f88408b7cbe8dc5a000517c49b466767ea"
+    },
+    {
+      "path": "internal/app/plugin_remove_link_transition_error_test.go",
+      "sha256": "41a43f43f408c013955d72638fb04c3c9173d35957284ff0138618a4fcb4b1ec"
+    }
+  ],
+  "evidence_directory": "testdata/plugins/removelink-transition-error/verification",
+  "evidence_archives": {
+    "before-fix.jsonl.gz": {
+      "sha256": "5e884113c3c8696cbd6ff65b1bfb234d04617d342f3ded9d89f146114325ff8c",
+      "uncompressed_sha256": "2f03c8c30ceeadbeef46a07ace2f2e389cf9fa605614d174897e73048ae1551c",
+      "bytes": 1422
+    },
+    "after-fix-focused.jsonl.gz": {
+      "sha256": "b2c8b6ccba7a25564bda65e4eab751a6225fd0df05d65e9b101ecca58896d456",
+      "uncompressed_sha256": "7d20b1140c4e6ec6544a9b3ef7621d42d03a5c74891723c5725c315204aede6c",
+      "bytes": 1394
+    },
+    "final-inputs.json.gz": {
+      "sha256": "a0fe2988c7902d8b90db7e4d8c9177d8e260548c7a937d2922e143d8427ab6ee",
+      "uncompressed_sha256": "fbc53288941f9e077c63dacfedce650d71aff2b58af5aee2e2f4a81bd6e203bb",
+      "bytes": 131852
+    },
+    "app-normal.log.gz": {
+      "sha256": "2091e0d70d90710778fe17b1842f43ef78a6cf64142bba295eda69c257c43720",
+      "uncompressed_sha256": "d46809e2d58d4fa3d28c451aa9a7809794ba5d72b70e5da3ce4b9a8395612e7e",
+      "bytes": 32037
+    },
+    "core-host-normal.log.gz": {
+      "sha256": "00890dd8a2f9b136eaf927c80e92ff2c1a818516e774a9be54fbd279028241ab",
+      "uncompressed_sha256": "a5b686bdd8b4fe475a59f7a6a53a35d548e0df014c38466c55550538d58d2dac",
+      "bytes": 12136
+    },
+    "app-race.log.gz": {
+      "sha256": "4f021d9c546a64dee21a97a72061582a378c4dea1923af434517b5d6efcd7ea4",
+      "uncompressed_sha256": "925946dc5604856d9ba69adbfa2036defcb4c6ed14f6f3aa79c3c5b3a2eda056",
+      "bytes": 32954
+    },
+    "core-host-race.log.gz": {
+      "sha256": "8f40ab00f7396846cba30c8ae56a90881fdeb0589c9770854ce628a5723c14c6",
+      "uncompressed_sha256": "62626d1a26fb292a904451cb8c52f6729ed42e3feb1f4efc495bad027a115b39",
+      "bytes": 12103
+    },
+    "product.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    "vet.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    "linux-product.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    "linux-app-test.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    }
+  },
+  "limitations": [
+    "Linux binaries cross-compiled and verified ELF; not executed on NAS in this round",
+    "Watcher factory fault is synthetic; actual App HTTP lifecycle, SDK subprocess, native owner and SQL store were exercised",
+    "No installed-handler count or migration count increase"
+  ]
+}
