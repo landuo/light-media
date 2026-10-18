@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, shallowRef, markRaw, computed, onMounted, onUnmounted, type Component } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
 import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
@@ -9,32 +9,59 @@ import { api, errorText } from '../api';
 import { pluginPageIssues, type PluginCard, type PluginFormNode } from '../features/plugin-forms';
 import AppIcon from './AppIcon.vue';
 import PluginFormRenderer from './PluginFormRenderer.vue';
+import { loadPluginRemote } from '../features/plugin-federation';
+import { createPluginRemoteAPI } from '../features/plugin-remote-api';
 
 const props = defineProps<{ plugin: PluginCard }>();
 const emit = defineEmits<{ close: []; switch: [] }>();
 const display = useDisplay();
+const renderMode = ref<'vuetify' | 'vue'>('vuetify');
+const remote = shallowRef<Component>();
+const controller = new AbortController();
+const remoteAPI = createPluginRemoteAPI(
+  props.plugin.plugin_id,
+  props.plugin.instance_id,
+  controller.signal,
+);
 const loading = ref(true),
   error = ref(''),
   nodes = ref<PluginFormNode[]>([]);
 const issues = computed(() => pluginPageIssues(nodes.value));
-let active = true;
+let active = true,
+  fetching = false;
 async function load() {
+  if (fetching) return;
+  fetching = true;
+  loading.value = true;
   try {
     const result = await api('/plugins/' + encodeURIComponent(props.plugin.instance_id) + '/page');
     if (!active) return;
-    if (result?.render_mode !== 'vuetify' || !Array.isArray(result.page))
-      throw new Error('插件页面返回格式无效');
-    nodes.value = result.page;
+    if (!['vuetify', 'vue'].includes(result?.render_mode)) throw new Error('插件页面返回格式无效');
+    renderMode.value = result.render_mode;
+    if (renderMode.value === 'vue') {
+      const component = await loadPluginRemote(
+        props.plugin.plugin_id,
+        props.plugin.instance_id,
+        'Page',
+      );
+      if (!active) return;
+      remote.value = markRaw(component);
+    } else {
+      if (!Array.isArray(result.page)) throw new Error('插件页面返回格式无效');
+      nodes.value = result.page;
+    }
     error.value = '';
   } catch (e) {
     if (active) error.value = errorText(e);
   } finally {
+    fetching = false;
     if (active) loading.value = false;
   }
 }
 onMounted(load);
 onUnmounted(() => {
   active = false;
+  controller.abort();
 });
 </script>
 <template>
@@ -46,7 +73,7 @@ onUnmounted(() => {
     content-class="plugin-dialog-surface"
     @update:model-value="emit('close')"
   >
-    <VCard class="plugin-data-card">
+    <VCard v-if="renderMode === 'vuetify'" class="plugin-data-card">
       <VCardTitle class="plugin-data-title"
         >{{ plugin.name
         }}<VBtn
@@ -84,6 +111,22 @@ onUnmounted(() => {
         @click="emit('switch')"
         ><AppIcon name="settings"
       /></VBtn>
+    </VCard>
+    <VCard v-else class="plugin-data-card">
+      <VCardText class="pa-0">
+        <p v-if="loading" class="pa-4" role="status">正在加载…</p>
+        <VAlert v-if="error" type="error" variant="tonal" class="ma-4"
+          >{{ error }}<VBtn variant="text" @click="load">重试</VBtn></VAlert
+        >
+        <component
+          v-if="remote && !loading && !error"
+          :is="remote"
+          :api="remoteAPI"
+          :show_switch="true"
+          @switch="emit('switch')"
+          @close="emit('close')"
+        />
+      </VCardText>
     </VCard>
   </VDialog>
 </template>

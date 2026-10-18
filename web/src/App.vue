@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
+import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
+import { VIcon } from 'vuetify/components/VIcon';
 import Catalog from './components/Catalog.vue';
 import Resources from './components/Resources.vue';
 import DownloaderTasks from './components/DownloaderTasks.vue';
@@ -15,6 +17,9 @@ import BrandMark from './components/BrandMark.vue';
 import AppIcon from './components/AppIcon.vue';
 const ShortcutTools = defineAsyncComponent(() => import('./components/ShortcutTools.vue'));
 const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
+const PluginAppPage = defineAsyncComponent(() => import('./components/PluginAppPage.vue'));
+const pluginNavigation = createPluginNavigation(() => api('/plugins/navigation'));
+const pluginNavItems = pluginNavigation.state;
 function normalizeRoute(value: string) {
   if (['library', 'assets'].includes(value.split('?')[0]!.split('/')[0]!)) return 'files';
   if (value.split('?')[0] === 'downloaders') return 'settings?tab=system';
@@ -112,6 +117,7 @@ function organizePaths(paths: string[]) {
 function expired() {
   auth.value = { authenticated: false, setup_required: false };
   ui.settings = null;
+  pluginNavigation.reset();
 }
 async function bootstrap() {
   try {
@@ -119,6 +125,7 @@ async function bootstrap() {
     if (auth.value.authenticated) {
       await Promise.all([refreshSettings(), refreshStatus()]);
       loadNotifications().catch(() => {});
+      pluginNavigation.ensure();
     }
   } catch (e) {
     authError.value = errorText(e);
@@ -220,8 +227,19 @@ onUnmounted(() => {
             }}<span v-if="n[0] === 'jobs' && ui.status?.counts?.active_jobs" class="counter">{{
               ui.status.counts.active_jobs
             }}</span></a
-          ></template
-        >
+          >
+          <template v-if="group.label === '整理'">
+            <a
+              v-for="item in pluginNavItems.items.filter((item) => item.section === 'organize')"
+              :key="item.instance_id + ':' + item.nav_key"
+              :href="'#' + pluginNavigationTarget(item)"
+              :class="{ active: route === pluginNavigationTarget(item) }"
+              :aria-current="route === pluginNavigationTarget(item) ? 'page' : undefined"
+            >
+              <span class="nav-icon"><VIcon :icon="item.icon" size="22" /></span>{{ item.title }}
+            </a>
+          </template>
+        </template>
       </nav>
     </aside>
     <div class="main-shell">
@@ -327,7 +345,8 @@ onUnmounted(() => {
           :key="route"
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
-        <Plugins v-else-if="pageKey === 'plugins'" />
+        <Plugins v-else-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
+        <PluginAppPage v-else-if="pageKey === 'plugin-app'" :key="route" :route="route" />
         <FileManager
           v-else-if="pageKey === 'files' || pageKey === 'organize'"
           :key="route"

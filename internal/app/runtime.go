@@ -75,6 +75,7 @@ type App struct {
 	pluginAutoBackup        pluginAutoBackupRuntime
 	pluginIYUU              pluginIYUURuntime
 	pluginCloudflare        pluginCloudflareRuntime
+	pluginSeedRescue        pluginSeedRescueRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 

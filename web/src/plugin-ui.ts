@@ -5,6 +5,7 @@ import { Icon, addCollection } from '@iconify/vue/offline';
 import mdiIcons from './assets/material-design-icons.json';
 import './assets/plugin-utilities.css';
 import './assets/plugin-dialogs.css';
+import { pluginRemoteComponents } from './plugin-remote-components';
 
 // Original forms supply icon names, rather than SVG path data. Bundle the
 // original MDI shapes locally so every declared field icon works offline.
@@ -15,6 +16,7 @@ addCollection(mdiIcons, 'mdi-');
 // Import component styles as needed, without applying Vuetify's global reset
 // to the application's existing pages.
 export const pluginUI = createVuetify({
+  components: pluginRemoteComponents,
   icons: {
     defaultSet: 'iconify',
     aliases: {
@@ -41,6 +43,10 @@ export const pluginUI = createVuetify({
           background: '#F4F5FA',
           surface: '#FFFFFF',
           'on-surface': '#3A3541',
+          // Original Vue plugins use these semantic colors directly. Vuetify's
+          // default on-surface-variant is nearly white, unreadable on this light host.
+          'surface-variant': '#F0F2F8',
+          'on-surface-variant': '#3A3541',
           'on-primary': '#FFFFFF',
         },
         variables: {

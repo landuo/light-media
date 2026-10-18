@@ -306,6 +306,10 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if !found || o.removed[instance] {
 		return bad("PLUGIN_RUN_SCOPE_DENIED", "卸载目标不属于当前已安装快照")
 	}
+	rescueParent, isRescue, e := o.p.seedRescueLifecycleParentTx(ctx, o.tx, instance)
+	if e != nil {
+		return e
+	}
 	cfParent, isCF, err := o.p.cloudflareLifecycleParentTx(ctx, o.tx, instance)
 	if err != nil {
 		return err
@@ -359,6 +363,11 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 			return err
 		}
 	}
+	if isRescue {
+		if err = o.p.seedRescueGenesisTx(ctx, o.tx, instance, "bulk_uninstall", rescueParent); err != nil {
+			return err
+		}
+	}
 	return o.uninstallPlanOperations.RemovePlugin(ctx, instance)
 }
 
@@ -402,11 +411,16 @@ type pluginUninstallCleanupPrepared struct {
 	auto              *pluginAutoBackupPrepared
 	iyuu              *pluginIYUUPrepared
 	cloudflare        *pluginCloudflarePrepared
+	rescue            *pluginSeedRescuePrepared
 }
 
 func (p *pluginUninstallCleanupPrepared) release() {
 	if p.cloudflare != nil {
 		p.cloudflare.o.unlock()
+		return
+	}
+	if p.rescue != nil {
+		p.rescue.o.unlock()
 		return
 	}
 	if p.auto != nil {
@@ -423,6 +437,9 @@ func (p *pluginUninstallCleanupPrepared) release() {
 }
 func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
 	if p.cloudflare != nil {
+		return nil
+	}
+	if p.rescue != nil {
 		return nil
 	}
 	if p.auto != nil {
@@ -443,6 +460,9 @@ func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.
 	if p.cloudflare != nil {
 		return p.cloudflare.publishTx(ctx, tx)
 	}
+	if p.rescue != nil {
+		return p.rescue.publishTx(ctx, tx)
+	}
 	if p.auto != nil {
 		return p.auto.publishTx(ctx, tx)
 	}
@@ -460,6 +480,10 @@ func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.
 func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committed bool) error {
 	if p.cloudflare != nil {
 		p.cloudflare.resolve(committed)
+		return nil
+	}
+	if p.rescue != nil {
+		p.rescue.resolve(committed)
 		return nil
 	}
 	if p.auto != nil {
@@ -500,6 +524,11 @@ func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []Plu
 			p.cloudflare, err = a.prepareCloudflareTransition(ctx, in)
 			if err == nil {
 				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.cloudflare.fromRevision}
+			}
+		case "SeedRescue":
+			p.rescue, err = a.prepareSeedRescueTransition(ctx, in)
+			if err == nil {
+				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.rescue.fromRevision}
 			}
 		case "AutoBackup":
 			p.auto, err = a.prepareAutoBackupTransition(ctx, in)
@@ -600,7 +629,7 @@ func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([
 	}
 	selected := []PluginInstallation{}
 	for _, in := range inventory {
-		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest") {
+		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest" || in.PluginID == "SeedRescue") {
 			selected = append(selected, in)
 		}
 	}
@@ -656,7 +685,7 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 		return json.RawMessage(`null`), nil
 	}
 	for _, instance := range planned.Removed {
-		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" {
+		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" || target.PluginID == "SeedRescue" {
 			matched := false
 			for _, p := range prepared {
 				if p.from.InstanceID == instance && p.from.Generation == target.Generation && p.pluginID == target.PluginID && p.version == target.Version {

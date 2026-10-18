@@ -1,19 +1,31 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, shallowRef, markRaw, computed, onMounted, onUnmounted, type Component } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
 import { VCard, VCardTitle, VCardText, VCardActions } from 'vuetify/components/VCard';
 import { VDivider } from 'vuetify/components/VDivider';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VAlert } from 'vuetify/components/VAlert';
+import { VProgressLinear } from 'vuetify/components/VProgressLinear';
 import { api, errorText, toast } from '../api';
 import { pluginFormIssues, type PluginFormNode, type PluginCard } from '../features/plugin-forms';
 import AppIcon from './AppIcon.vue';
 import PluginFormRenderer from './PluginFormRenderer.vue';
+import { loadPluginRemote } from '../features/plugin-federation';
+import { createPluginRemoteAPI } from '../features/plugin-remote-api';
 
 const props = defineProps<{ plugin: PluginCard }>();
-const emit = defineEmits<{ close: []; saved: [] }>();
+const emit = defineEmits<{ close: []; saved: []; switch: [] }>();
 const display = useDisplay();
+const renderMode = ref<'vuetify' | 'vue'>('vuetify');
+const remote = shallowRef<Component>();
+const controller = new AbortController();
+const remoteAPI = createPluginRemoteAPI(
+  props.plugin.plugin_id,
+  props.plugin.instance_id,
+  controller.signal,
+);
+let active = true;
 const nodes = ref<PluginFormNode[]>([]),
   model = ref<Record<string, any>>({}),
   revision = ref(0);
@@ -48,13 +60,24 @@ function focusAfterClick(event: MouseEvent) {
 async function load() {
   try {
     const form = await api(base + '/form');
-    nodes.value = form.conf;
+    if (!active) return;
+    renderMode.value = form.render_mode || 'vuetify';
+    if (!['vuetify', 'vue'].includes(renderMode.value)) throw new Error('插件界面格式无效');
+    nodes.value = form.conf || [];
     model.value = form.model;
     revision.value = form.revision;
+    if (renderMode.value === 'vue') {
+      const component = await loadPluginRemote(
+        props.plugin.plugin_id,
+        props.plugin.instance_id,
+        'Config',
+      );
+      if (active) remote.value = markRaw(component);
+    }
   } catch (e) {
-    error.value = errorText(e);
+    if (active) error.value = errorText(e);
   } finally {
-    loading.value = false;
+    if (active) loading.value = false;
   }
 }
 async function save() {
@@ -68,7 +91,7 @@ async function save() {
       'PUT',
     );
     const deadline = Date.now() + 30000;
-    while (Date.now() < deadline) {
+    while (active && Date.now() < deadline) {
       const runs = await api(base + '/runs');
       const run = runs.find((item: any) => item.id === accepted.run.id);
       if (run?.state === 'succeeded') {
@@ -81,6 +104,7 @@ async function save() {
       }
       await new Promise((resolve) => setTimeout(resolve, 350));
     }
+    if (!active) return;
     throw new Error('配置已保存，插件仍在执行，请在插件执行记录中查看结果');
   } catch (e) {
     error.value = errorText(e);
@@ -95,7 +119,15 @@ async function save() {
     saving.value = false;
   }
 }
+async function saveRemote(config: Record<string, any>) {
+  model.value = config;
+  await save();
+}
 onMounted(load);
+onUnmounted(() => {
+  active = false;
+  controller.abort();
+});
 </script>
 <template>
   <VDialog
@@ -109,7 +141,7 @@ onMounted(load);
     @mousedown.capture="keepPointerTarget"
     @click.capture="focusAfterClick"
   >
-    <VCard class="plugin-config-card">
+    <VCard v-if="renderMode === 'vuetify'" class="plugin-config-card">
       <VCardTitle class="plugin-dialog-title"
         >{{ plugin.name }} - 配置
         <VBtn
@@ -147,10 +179,26 @@ onMounted(load);
           variant="flat"
           :loading="saving"
           :disabled="loading || !!issues.length || (!nodes.length && !!error)"
-          @click="save"
+          @click="save()"
           ><AppIcon name="save" />保存</VBtn
         >
       </VCardActions>
+    </VCard>
+    <VCard v-else class="plugin-config-card">
+      <VCardText class="pa-0">
+        <p v-if="loading" class="pa-4" role="status">正在加载配置…</p>
+        <VAlert v-if="error" type="error" variant="tonal" class="ma-4">{{ error }}</VAlert>
+        <VProgressLinear v-if="saving" indeterminate aria-label="正在保存配置" />
+        <component
+          v-if="remote && !loading"
+          :is="remote"
+          :initial-config="model"
+          :api="remoteAPI"
+          @save="saveRemote"
+          @switch="!saving && emit('switch')"
+          @close="!saving && emit('close')"
+        />
+      </VCardText>
     </VCard>
   </VDialog>
 </template>

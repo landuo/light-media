@@ -1,0 +1,212 @@
+{
+  "status": "standalone source-core candidate frozen; NOT App/product completion",
+  "plugin": "SeedRescue",
+  "version": "1.6.3",
+  "go": "go version go1.26.2 darwin/arm64",
+  "local_platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "runtime": [
+    "pure Go",
+    "no CGO",
+    "no Python execution"
+  ],
+  "oracle": {
+    "source_pure_cases": 180,
+    "actual_submission_flows": 10,
+    "actual_full_scan_flows": 11,
+    "total": 201,
+    "python": "3.14.4 LOCAL, not original NAS CPython3.12",
+    "lxml": "6.1.1",
+    "libxml2": "2.14.6",
+    "host_dependencies": "deterministic synthetic owned adapter only",
+    "source_files": "reference/source-manifest.json",
+    "flow_source_method_execution": true
+  },
+  "tests": {
+    "top_level_go_tests": 17,
+    "normal": "go test -count=1 ./...",
+    "race": "go test -race -count=1 ./...",
+    "vet": "go vet ./...",
+    "linux": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go test -c -o verification/seedrescue-linux-amd64.test"
+  },
+  "compiler_handles": [
+    {
+      "handle": "aed9c6",
+      "kind": "initial core compile",
+      "exit": 0
+    },
+    {
+      "handle": "e3f0b4",
+      "kind": "ports/config compile",
+      "exit": 0
+    },
+    {
+      "handle": "afc2c7",
+      "kind": "machine compile",
+      "exit": 0
+    },
+    {
+      "handle": "bcda88",
+      "kind": "views compile",
+      "exit": 0
+    },
+    {
+      "handle": "dc958b",
+      "kind": "detail+scan+probe+download compile (no tests yet)",
+      "exit": 0
+    },
+    {
+      "handle": "794f91",
+      "kind": "helper compile",
+      "exit": 0
+    },
+    {
+      "handle": "74026",
+      "terminal_chunk": "54ebba",
+      "kind": "180 actual source oracle cases normal",
+      "exit": 0
+    },
+    {
+      "handle": "328443",
+      "kind": "new meaningful behavior test failure",
+      "exit": 1,
+      "resolved": "native []int source IDs were not handled by array(); added exact native representation support"
+    },
+    {
+      "handle": "d46b92",
+      "kind": "stop cancellation regression",
+      "exit": 1,
+      "resolved": "Stop now sets stopped even if interrupted-status save fails; safe checkpoints cannot resurrect it"
+    },
+    {
+      "handle": "e6d20a",
+      "kind": "behavior tests after fixes",
+      "exit": 0
+    },
+    {
+      "handle": "5bb0a1",
+      "kind": "10 actual source submission flow oracle normal",
+      "exit": 0
+    },
+    {
+      "handle": "97551",
+      "terminal_chunk": "b5be81",
+      "kind": "detail transport behavior normal",
+      "exit": 0
+    },
+    {
+      "handle": "62564",
+      "terminal_chunk": "d7dffe",
+      "kind": "original frontend embed tests normal",
+      "exit": 0
+    },
+    {
+      "handle": "2efbf9",
+      "kind": "full source scan oracle comparison mismatch",
+      "exit": 1,
+      "resolved": "offline oracle lacked original StringUtils host stub; added exact URL-host stub, reran original source; no Go source was weakened to match failed oracle"
+    },
+    {
+      "handle": "966b54",
+      "kind": "full source scan oracle normal after harness correction",
+      "exit": 0
+    },
+    {
+      "handle": "35745",
+      "terminal_chunk": "8519dd",
+      "kind": "race",
+      "exit": 0,
+      "go_test_seconds": 1.912
+    },
+    {
+      "handle": "9282f2",
+      "kind": "vet",
+      "exit": 0
+    },
+    {
+      "handle": "ca8d52",
+      "kind": "Linux CGO0 test binary build",
+      "exit": 0
+    },
+    {
+      "handle": "4cfe63",
+      "kind": "normal after target/once tests",
+      "exit": 0,
+      "go_test_seconds": 0.396
+    },
+    {
+      "handle": "66996",
+      "terminal_chunk": "54f139",
+      "kind": "race after target/once tests",
+      "exit": 0,
+      "go_test_seconds": 1.596
+    },
+    {
+      "handle": "4dd649",
+      "kind": "vet",
+      "exit": 0
+    },
+    {
+      "handle": "acb135",
+      "kind": "Linux CGO0 test binary build",
+      "exit": 0
+    },
+    {
+      "handle": "2418",
+      "terminal_chunk": "056a8a",
+      "kind": "FINAL normal including missing RSS fields source scan",
+      "exit": 0,
+      "go_test_seconds": 1.258
+    },
+    {
+      "handle": "52942",
+      "terminal_chunk": "df96c2",
+      "kind": "FINAL race",
+      "exit": 0,
+      "go_test_seconds": 1.653
+    },
+    {
+      "handle": "25c1fe",
+      "kind": "FINAL vet",
+      "exit": 0
+    },
+    {
+      "handle": "435722",
+      "kind": "FINAL Linux CGO0 test binary build",
+      "exit": 0
+    }
+  ],
+  "all_compiler_handles_terminal": true,
+  "other_handles": [
+    {
+      "handle": "14727",
+      "terminal_chunk": "8c1767",
+      "kind": "owned offline oracle venv install lxml6.1.1",
+      "exit": 0
+    },
+    {
+      "handle": "98232",
+      "terminal_chunk": "d65aee",
+      "kind": "public official frontend/source fetch",
+      "exit": 0
+    }
+  ],
+  "nas": {
+    "new_resources": [],
+    "reason": "Root explicitly requested no new NAS tasks after daemon unreachable; no NAS proof claimed"
+  },
+  "live_external_io": {
+    "downloader_writes": 0,
+    "real_site_accounts": 0,
+    "original_config_or_KV_imported": false,
+    "production_or_formal_modified": false
+  },
+  "remaining": [
+    "actual App owner/receipt and unknown admission integration",
+    "existing trusted IYUU/site/RSS/downloader adapters",
+    "SDK/API/auth/schedule execution integration",
+    "original federation UI mounting and actual browser validation",
+    "libxml2 malformed-tree repair parity not ported",
+    "generalized CPython exotic Unicode/URL/schema-invalid-object equivalence not claimed"
+  ],
+  "source_core_manifest_sha256": "b2c276e5ef672003c1d3557a31cbe4abaf9452199c6af1cfbb58dd6ca634471a"
+}

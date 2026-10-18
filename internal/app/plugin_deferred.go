@@ -114,6 +114,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 	if in.PluginID == "AutoBackup" && in.Version == "2.1.4" {
 		return autoBackupDeferredSpec(run)
 	}
+	if in.PluginID == "SeedRescue" && in.Version == "1.6.3" {
+		return seedRescueDeferredSpec(run)
+	}
 	return "", nil, nil
 }
 func deferredSameRun(r pluginDeferredRecord, in PluginInstallation, run PluginRun) bool {
@@ -162,6 +165,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 	}
 	if r.Plugin == "AutoBackup" && r.Version == "2.1.4" {
 		return (r.ErrorCode == "AUTO_BACKUP_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == autoBackupBlockedByUnknown && bytes.Equal(r.Result, autoBackupBlockedResult()))
+	}
+	if r.Plugin == "SeedRescue" && r.Version == "1.6.3" {
+		return ((r.ErrorCode == "SEED_RESCUE_SOURCE_FAILED" || r.ErrorCode == seedRescueObserved) && json.Valid(r.Result)) || (r.ErrorCode == seedRescueBlockedByUnknown && bytes.Equal(r.Result, seedRescueBlockedResult()))
 	}
 	return r.Plugin == "CleanInvalidSeed" && r.Version == "2.1" &&
 		(r.ErrorCode == "CLEAN_SEED_SOURCE_FAILED" || r.ErrorCode == "CLEAN_SEED_HOST_DENIED") && json.Valid(r.Result)
@@ -315,6 +321,11 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 			return err
 		}
 	}
+	if from == "prepared" && to == "started" && r.Plugin == "SeedRescue" && r.Version == "1.6.3" {
+		if err = d.seedRescueStartedTx(ctx, tx); err != nil {
+			return err
+		}
+	}
 	r.Phase, r.Result, r.ErrorCode = to, result, code
 	if err = d.a.pluginStore.writeDeferred(ctx, tx, r, sealed); err != nil {
 		return err
@@ -399,6 +410,17 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 		}
 		defer release()
 	}
+	if d.record.Plugin == "SeedRescue" && d.record.Version == "1.6.3" {
+		held, release, e := d.lockSeedRescue(ctx)
+		if errors.Is(e, errSeedRescueBusy) {
+			return d.seedRescueBusy(ctx)
+		}
+		if e != nil {
+			return nil, e
+		}
+		defer release()
+		ctx = held
+	}
 	if err := d.changePhase(ctx, "prepared", "started", nil); err != nil {
 		return nil, err
 	}
@@ -452,6 +474,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 			if knownCode != "" {
 				phase, code = "terminal_failed", knownCode
 				err = bad(code, "插件操作失败，已保留确证结果")
+			}
+		}
+	}
+	if d.record.Plugin == "SeedRescue" && d.record.Version == "1.6.3" {
+		known, knownCode, found, proofErr := d.a.pluginStore.seedRescueOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "稀缺保种结果尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "稀缺保种操作失败，已保留确证结果")
 			}
 		}
 	}
@@ -534,12 +569,14 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "CloudflareSpeedTest" {
+			if r.Plugin == "SeedRescue" {
+				result, code, found, proofErr = p.seedRescueOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "CloudflareSpeedTest" {
 				result, code, found, proofErr = p.cloudflareOutcome(ctx, run, r.Method)
 			} else if r.Plugin == "AutoBackup" {
 				result, code, found, proofErr = p.autoBackupOutcome(ctx, run, r.Method)

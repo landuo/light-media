@@ -32,6 +32,7 @@ import {
   type PluginGridItem,
   type FolderConfig,
 } from '../features/plugin-organization';
+const emit = defineEmits<{ changed: [] }>();
 const PluginFolderDialog = defineAsyncComponent(() => import('./PluginFolderDialog.vue'));
 
 const PluginConfigDialog = defineAsyncComponent(() => import('./PluginConfigDialog.vue'));
@@ -132,6 +133,7 @@ async function load() {
       currentFolder.value = '';
     if (tab.value === 'market') market.value = await api('/plugins/market');
     error.value = '';
+    emit('changed');
   } catch (e) {
     error.value = errorText(e);
   } finally {
@@ -654,6 +656,7 @@ onUnmounted(() => clearInterval(timer));
       :key="selected.instance_id"
       :plugin="selected"
       @close="selected = undefined"
+      @switch="detail = selected; selected = undefined"
       @saved="
         selected = undefined;
         load();

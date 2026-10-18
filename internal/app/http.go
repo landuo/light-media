@@ -122,6 +122,9 @@ func (a *App) handler() http.Handler {
 func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	p := strings.TrimPrefix(r.URL.Path, "/api/")
+	if a.pluginFrontendHTTP(w, r, p) {
+		return
+	}
 	if a.pluginServicesHTTP(w, r, p) {
 		return
 	}

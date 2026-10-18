@@ -1,0 +1,976 @@
+{
+  "cases": [
+    {
+      "scenario": "manual",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 1,
+            "total": 1,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "AWAITING_SELECTION",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": null,
+              "source_site_id": null,
+              "source_site_name": null,
+              "source_seeders": null,
+              "promotion": null,
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": null,
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292"
+              ],
+              "torrent_ids": [
+                "42"
+              ]
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "auto",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 1,
+            "total": 1,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "SOURCE_DOWNLOADING",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+              "source_site_id": 2,
+              "source_site_name": "Source",
+              "source_seeders": 3,
+              "promotion": "free",
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292"
+              ],
+              "torrent_ids": [
+                "42"
+              ]
+            }
+          }
+        },
+        "adds": [
+          {
+            "content_hex": "64343a696e666f64343a6e616d65313a796565",
+            "download_dir": null,
+            "category": "seed-rescue",
+            "tag": [
+              "seed-rescue"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "hybrid",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 1,
+            "total": 1,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "SOURCE_DOWNLOADING",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+              "source_site_id": 2,
+              "source_site_name": "Source",
+              "source_seeders": 3,
+              "promotion": "free",
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292"
+              ],
+              "torrent_ids": [
+                "42"
+              ]
+            }
+          }
+        },
+        "adds": [
+          {
+            "content_hex": "64343a696e666f64343a6e616d65313a796565",
+            "download_dir": null,
+            "category": "seed-rescue",
+            "tag": [
+              "seed-rescue"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "capacity",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 1,
+            "total": 1,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "WAITING_CAPACITY",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": null,
+              "source_site_id": null,
+              "source_site_name": null,
+              "source_seeders": null,
+              "promotion": null,
+              "reason": "达到稀缺保种同时下载上限",
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": null,
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292"
+              ],
+              "torrent_ids": [
+                "42"
+              ]
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "rss_empty",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 0,
+            "total": 0,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {},
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [],
+              "torrent_ids": []
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "rss_failure",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "failed",
+            "stage": "target_stats",
+            "completed": 0,
+            "total": 0,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 1,
+            "issues": [
+              "RSS 拉取失败，保留上次成功记录"
+            ],
+            "message": "全部 RSS 拉取失败，已保留上次成功记录"
+          },
+          "jobs": {},
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "error": "RSS 拉取失败，保留上次成功记录"
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "metadata_failure",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "partial",
+            "stage": "target_stats",
+            "completed": 0,
+            "total": 0,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 1,
+            "issues": [
+              "部分 RSS 种子元数据获取失败，将在后续扫描重试"
+            ],
+            "message": "扫描完成，部分请求失败，详见提示及任务重试时间"
+          },
+          "jobs": {},
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292"
+              ],
+              "torrent_ids": [
+                "42"
+              ]
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "duplicate",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 1,
+            "total": 1,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "AWAITING_SELECTION",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": null,
+              "source_site_id": null,
+              "source_site_name": null,
+              "source_seeders": null,
+              "promotion": null,
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": null,
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292"
+              ],
+              "torrent_ids": [
+                "42",
+                "42"
+              ]
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "initial_limit",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 1,
+            "total": 1,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "AWAITING_SELECTION",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": null,
+              "source_site_id": null,
+              "source_site_name": null,
+              "source_seeders": null,
+              "promotion": null,
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": null,
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+                "466c4f3e5ddec444982e5dc9b64d75db1687730ab6426a1fa1d35fb58b6abb17"
+              ],
+              "torrent_ids": [
+                "42",
+                "43"
+              ]
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "batch",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "success",
+            "stage": "target_stats",
+            "completed": 2,
+            "total": 2,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 0,
+            "issues": [],
+            "message": "扫描完成"
+          },
+          "jobs": {
+            "c06fadd1439dd2d619fec4538d69a54e614bb831": {
+              "feed_key": "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+              "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "target_site_id": 1,
+              "title": "Film.2026.WEB-DL",
+              "state": "AWAITING_SELECTION",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": null,
+              "source_site_id": null,
+              "source_site_name": null,
+              "source_seeders": null,
+              "promotion": null,
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": null,
+              "target_site_name": "Target",
+              "target_torrent_id": "42",
+              "target_page_url": "https://target.test/details.php?id=42",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            },
+            "28df4fba7cf83261497c0c3b95ae83acabab6411": {
+              "feed_key": "466c4f3e5ddec444982e5dc9b64d75db1687730ab6426a1fa1d35fb58b6abb17",
+              "target_hash": "28df4fba7cf83261497c0c3b95ae83acabab6411",
+              "target_site_id": 1,
+              "title": "Other.2026.WEB-DL",
+              "state": "AWAITING_SELECTION",
+              "created_at": "2026-10-18T01:02:03+00:00",
+              "updated_at": "2026-10-18T01:02:03+00:00",
+              "source_hash": null,
+              "source_site_id": null,
+              "source_site_name": null,
+              "source_seeders": null,
+              "promotion": null,
+              "reason": null,
+              "probes": [
+                {
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "seeders": 3,
+                  "promotion": "free",
+                  "matched": true,
+                  "metadata_status": "ready",
+                  "lookup_method": "detail",
+                  "searches": 0,
+                  "torrent_id": "7",
+                  "search_limited": false
+                }
+              ],
+              "candidates": [
+                {
+                  "candidate_id": "2:7:9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "iyuu_sid": 2,
+                  "site_id": 2,
+                  "site_name": "Source",
+                  "title": "Source fixture",
+                  "page_url": "https://source.test/details.php?id=7",
+                  "torrent_id": "7",
+                  "expected_hash": "9977c61f8cecafcfe74a9da422362af5d5119ddb",
+                  "seeders": 3,
+                  "leechers": null,
+                  "grabs": null,
+                  "size": null,
+                  "download_factor": 0,
+                  "promotion": "free",
+                  "priority": 0,
+                  "metadata_status": "ready",
+                  "metadata_error": null,
+                  "lookup_method": "detail",
+                  "eligible": true,
+                  "exclusion_reason": null
+                }
+              ],
+              "selected_candidate_id": null,
+              "target_site_name": "Target",
+              "target_torrent_id": "43",
+              "target_page_url": "https://target.test/details.php?id=43",
+              "target_size": 1024,
+              "rss_current": true,
+              "rss_last_seen_at": "2026-10-18T01:02:03+00:00",
+              "rss_archived_at": null,
+              "retry_count": 0,
+              "next_retry_at": null,
+              "target_stats_checked_at": "2026-10-18T01:02:03+00:00",
+              "target_stats_error": null,
+              "target_seeders": 2,
+              "target_peers": 1,
+              "target_grabs": 5,
+              "target_stats_updated_at": "2026-10-18T01:02:03+00:00",
+              "target_download_factor": 0,
+              "target_promotion_updated_at": "2026-10-18T01:02:03+00:00"
+            }
+          },
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "ad939411cac2720bff6fb9f146c0c11205944cf72750eadff8ec44d4746ae292",
+                "466c4f3e5ddec444982e5dc9b64d75db1687730ab6426a1fa1d35fb58b6abb17"
+              ],
+              "torrent_ids": [
+                "42",
+                "43"
+              ]
+            }
+          }
+        },
+        "adds": []
+      }
+    },
+    {
+      "scenario": "missing_fields",
+      "value": {
+        "data": {
+          "scan_status": {
+            "state": "partial",
+            "stage": "target_stats",
+            "completed": 0,
+            "total": 0,
+            "started_at": "2026-10-18T01:02:03+00:00",
+            "finished_at": "2026-10-18T01:02:03+00:00",
+            "errors": 1,
+            "issues": [
+              "部分 RSS 种子元数据获取失败，将在后续扫描重试"
+            ],
+            "message": "扫描完成，部分请求失败，详见提示及任务重试时间"
+          },
+          "jobs": {},
+          "rss_snapshots": {
+            "1:b96565ea3fd34e2453da26b013da644d63f6f372d2279f8b05c0d346e0ae64f7": {
+              "last_attempt_at": "2026-10-18T01:02:03+00:00",
+              "last_success_at": "2026-10-18T01:02:03+00:00",
+              "error": null,
+              "item_keys": [
+                "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91"
+              ],
+              "torrent_ids": []
+            }
+          }
+        },
+        "adds": []
+      }
+    }
+  ],
+  "source": "actual scan/_run_scan and complete matching/probing/runtime control flow, trusted dependencies synthetic"
+}

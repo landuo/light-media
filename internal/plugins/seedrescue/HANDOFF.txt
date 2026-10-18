@@ -1,0 +1,101 @@
+SeedRescue 1.6.3 — standalone Go source core candidate
+
+Location: work/_seed_rescue_port
+Module: lightmedia/seedrescue; package seedrescue; Go 1.26.0 (tested Go 1.26.2)
+Product dependency: golang.org/x/net/html v0.61.0. No Python runtime, CGO,
+subprocess or network listener is used by the Go package.
+
+Scope delivered
+- Source metadata, original six bearer API declarations, no source commands,
+  cron and +3 second once schedules, original sidebar declaration.
+- Configuration normalization/current config/once clearing; selection model.
+- RSS scan stages, progress/issues, cold interrupted status, mutual exclusion,
+  stop safe checkpoints, reconciliation and pending recovery.
+- Per-feed successful snapshots, failure retention, archive/current membership,
+  initial limit independent from RSS membership, ordered jobs, 1000 other-history
+  retention plus all current/in-progress/retry jobs.
+- Batched IYUU mapping, exact station torrent-ID matching, source grouping,
+  at most four groups per job/four jobs, per-site serial locks, six global slots,
+  one detail lookup per unique ID and source-specific bounded search fallback.
+- Detail URL, MTeam API fields/promotion precedence, runtime-only dynamic token
+  recipe, Nexus own-heading/statistics selectors and fixed safe failures.
+- Promotion/minimum seeder eligibility/ranking/exclusion reasons; manual,
+  auto and hybrid selection; capacity; fresh risk confirmation and persistent
+  skip-future preference only after confirmation of the latest factor.
+- Raw info-slice SHA1; known pre-submit failure vs persisted SOURCE_SUBMITTING
+  intent; False/error remains unknown; no automatic second source/re-add.
+- Target-original direct selection, RSS fallback with unknown current promotion,
+  reuse of existing downloads; complete vs paused/error/checking/seeding states.
+- Retry/ignore, 5/10/20/40 minute backoff, five-attempt terminal state,
+  source notifications/log strings, strict safe public job/candidate projections.
+- Original Vue federation frontend: only the 8 reachable files, byte-identical
+  original UI (no redesign). FrontendAssets() and RenderMode() expose the graph.
+
+Public API
+New(lifecycleContext, trusted Host) (*Machine,error)
+Init(context, Object) error; Config/State/Form/Page/Sidebar
+Services(context) ([]Schedule,error); Scan(context) error; ScanNow(context)
+GetStatus(context,StatusFilter), GetJob(context,hash), DownloadCandidate(context,
+ hash,Selection), RetryJob(context,hash), IgnoreJob(context,hash), Stop(context)
+Core helper APIs, ParseSelection, FetchDetail(DetailTransport), FrontendAssets.
+Six route paths/summaries are in APIs(). No unauthenticated router is created.
+
+Host integration contract (not implemented/registered in this candidate)
+- Trusted owner-scoped Host must provide authenticated KV/config writes, current
+  original site/downloader inventory, IYUU service/token and actual site/RSS/
+  downloader adapters. Host.Options filters private indexers and qB only.
+- Host.Detail enforces existing station flow control before FetchDetail whenever
+  DetailURL is supported; it also supplies current cookie/API/UA/proxy/timeout.
+- Host.DownloadMetadata handles normal .torrent and the existing MTeam dynamic
+  token recipe only at actual submission, with the same credential/guard scope.
+- Source qB tuple must map to AddTorrent bool by its first element. False after
+  attempted add is conservatively unknown; no wrapper retry is permitted.
+- Host must seal accepted/started/effect facts, lifecycle generation, receipts,
+  SDK inputs and scheduling identity using the app's existing trusted machinery.
+  This core's chan lock and SaveData intent are not a replacement for a durable
+  authenticated host journal, cross-process exclusion or unknown admission gate.
+- Bind lifecycleContext to installed owner lifecycle, not HTTP request lifetime.
+  Stop does not abort an already executing downloader call. Adapters must return
+  errors, not panic; owner denial/cancellation must use the existing host's
+  private terminal proof policy rather than infer dispatch from an error string.
+- Serve original assets through the authenticated existing plugin mount with
+  shared Vue and Vuetify components; feed original props api/pluginId/model/etc.
+  List of 30 consumed Vuetify components is frontend-components.json. Actual
+  browser mounting/SDK/HTTP/App integration is NOT claimed by this package.
+
+Source provenance
+Captured plugin source is version 1.6.3. Public __init__.py AST equals captured
+AST after docstring removal. Captured core NON_FREE was redacted; public GitHub
+blob 725f7c268dc82b10a0737bcbe815740af63fc528 proves exact non_free literal.
+Two active frontend files were independently fetched from the author repo;
+each equals captured bytes after that exact literal restoration only. The
+other six active assets had no redaction markers and are copied verbatim.
+Source/public/frontend hashes and original method line numbers are recorded in
+reference manifests. Source license was not declared in captured plugin; no
+license was guessed. This is local private development, not redistribution.
+
+Verification and limitations
+- 180 actual source pure/config/view/detail oracle cases, 10 actual source
+  submission/persistence flows, and 11 actual full source scan/matching flows.
+  Host dependencies in flow oracle are deterministic synthetic adapters, not
+  fake claims of live service success. Byte-level .torrent checks are real.
+- 17 Go top-level tests plus subcases cover those 201 source cases and meaningful
+  extra recovery/concurrency/risk/secret/selector/retention/once boundaries.
+- normal/race/vet and Linux amd64 CGO_ENABLED=0 test-binary build terminal states
+  are in verification.json. No new NAS/container/server/real downloader requests
+  or old data binaries. No user configuration/KV/credentials were imported.
+- Offline oracle uses LOCAL CPython 3.14.4, lxml6.1.1/libxml2 2.14.6, not the
+  original NAS CPython3.12. This distinction is retained; no NAS comparison was
+  started because Root explicitly froze new NAS work after daemon failures.
+- ParseNexus uses x/net/html's HTML5 tree repair, not a full libxml2/lxml port.
+  The consumed selectors match source cases; malformed HTML repair can differ.
+  Do not present arbitrary malformed HTML/XPath equivalence as closed.
+- URL parsing, Unicode title-regex/digit/case behavior and permissive invalid
+  Python config objects are not a generalized CPython compatibility layer.
+  Normal original UI JSON types and fixed consumed cases are verified; exotic
+  Unicode/ill-formed URL or schema-invalid objects may differ. No unrelated
+  Python regex/codec/object engine was added to this plugin.
+- This package is NOT an installed, usable product on its own. Actual app owner,
+  recovery receipts, public API/auth/SDK, native adapter, installed UI/browser,
+  production server and real account validation remain integration work.
+- Frozen CF candidate, existing formal/old projects and production are untouched.

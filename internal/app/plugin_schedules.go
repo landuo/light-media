@@ -267,6 +267,9 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 					if !handled && err == nil {
 						run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
 					}
+					if !handled && err == nil {
+						run, handled, err = p.enqueueSeedRescueScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+					}
 				}
 				if !handled && err == nil {
 					input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
@@ -406,6 +409,9 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 		run, handled, err = p.enqueueCloudflareScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
 		if !handled && err == nil {
 			run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+		}
+		if !handled && err == nil {
+			run, handled, err = p.enqueueSeedRescueScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
 		}
 	}
 	if !handled && err == nil {

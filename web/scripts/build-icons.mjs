@@ -12,7 +12,11 @@ async function scan(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const name = path.join(directory, entry.name);
     if (entry.isDirectory()) await scan(name);
-    else if (/\.(vue|ts|go)$/.test(name) && !name.endsWith('_test.go')) {
+    else if (
+      (/\.(vue|ts|go)$/.test(name) ||
+        (name.includes('/frontend/assets/') && name.endsWith('.js'))) &&
+      !name.endsWith('_test.go')
+    ) {
       const text = await readFile(name, 'utf8');
       for (const match of text.matchAll(/\bmdi[-:]([a-z0-9-]+)/g)) names.add(match[1]);
     }

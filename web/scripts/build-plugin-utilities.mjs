@@ -11,7 +11,11 @@ async function scan(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const name = path.join(directory, entry.name);
     if (entry.isDirectory()) await scan(name);
-    else if (/\.(vue|ts|go)$/.test(name) && !name.endsWith('_test.go'))
+    else if (
+      (/\.(vue|ts|go)$/.test(name) ||
+        (name.includes('/frontend/assets/') && name.endsWith('.js'))) &&
+      !name.endsWith('_test.go')
+    )
       corpus += '\n' + (await readFile(name, 'utf8'));
   }
 }

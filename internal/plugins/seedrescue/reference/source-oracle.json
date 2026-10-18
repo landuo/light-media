@@ -1,0 +1,2025 @@
+{
+  "environment": {
+    "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "lxml": "6.1.1"
+  },
+  "public_core_sha256": "db94a30635ed122fe37ffd617509ffc106a1e0612931bde951334f5cf7e44095",
+  "public_vs_capture": "identical AST after docstring removal and verified NON_FREE restoration",
+  "cases": [
+    {
+      "op": "promotion",
+      "arg": null,
+      "value": "unknown"
+    },
+    {
+      "op": "promotion",
+      "arg": "",
+      "value": "unknown"
+    },
+    {
+      "op": "promotion",
+      "arg": 0,
+      "value": "free"
+    },
+    {
+      "op": "promotion",
+      "arg": 1,
+      "value": "non_free"
+    },
+    {
+      "op": "promotion",
+      "arg": false,
+      "value": "free"
+    },
+    {
+      "op": "promotion",
+      "arg": true,
+      "value": "non_free"
+    },
+    {
+      "op": "promotion",
+      "arg": -1,
+      "value": "unknown"
+    },
+    {
+      "op": "promotion",
+      "arg": 0.5,
+      "value": "non_free"
+    },
+    {
+      "op": "promotion",
+      "arg": "0",
+      "value": "free"
+    },
+    {
+      "op": "promotion",
+      "arg": "0.0",
+      "value": "free"
+    },
+    {
+      "op": "promotion",
+      "arg": " 1 ",
+      "value": "non_free"
+    },
+    {
+      "op": "promotion",
+      "arg": "bad",
+      "value": "unknown"
+    },
+    {
+      "op": "promotion",
+      "arg": "NaN",
+      "value": "unknown"
+    },
+    {
+      "op": "promotion",
+      "arg": "inf",
+      "value": "non_free"
+    },
+    {
+      "op": "promotion",
+      "arg": [],
+      "value": "unknown"
+    },
+    {
+      "op": "promotion",
+      "arg": {},
+      "value": "unknown"
+    },
+    {
+      "op": "optional",
+      "arg": null,
+      "value": null
+    },
+    {
+      "op": "positive",
+      "arg": null,
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": "",
+      "value": null
+    },
+    {
+      "op": "positive",
+      "arg": "",
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": 0,
+      "value": null
+    },
+    {
+      "op": "positive",
+      "arg": 0,
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": 1,
+      "value": 1
+    },
+    {
+      "op": "positive",
+      "arg": 1,
+      "value": 1
+    },
+    {
+      "op": "optional",
+      "arg": -1,
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": -1,
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": true,
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": true,
+      "value": 1
+    },
+    {
+      "op": "optional",
+      "arg": false,
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": false,
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": 1.2,
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": 1.2,
+      "value": 1
+    },
+    {
+      "op": "optional",
+      "arg": 2.0,
+      "value": 2
+    },
+    {
+      "op": "positive",
+      "arg": 2.0,
+      "value": 2
+    },
+    {
+      "op": "optional",
+      "arg": "1.0",
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": "1.0",
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": "1e2",
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": "1e2",
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": "1_0",
+      "value": 10
+    },
+    {
+      "op": "positive",
+      "arg": "1_0",
+      "value": 10
+    },
+    {
+      "op": "optional",
+      "arg": " 03 ",
+      "value": 3
+    },
+    {
+      "op": "positive",
+      "arg": " 03 ",
+      "value": 3
+    },
+    {
+      "op": "optional",
+      "arg": "+4",
+      "value": 4
+    },
+    {
+      "op": "positive",
+      "arg": "+4",
+      "value": 4
+    },
+    {
+      "op": "optional",
+      "arg": "no",
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": "no",
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": [],
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": [],
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": {},
+      "value": 7
+    },
+    {
+      "op": "positive",
+      "arg": {},
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": "0",
+      "value": null
+    },
+    {
+      "op": "positive",
+      "arg": "0",
+      "value": 7
+    },
+    {
+      "op": "optional",
+      "arg": "-0",
+      "value": null
+    },
+    {
+      "op": "positive",
+      "arg": "-0",
+      "value": 7
+    },
+    {
+      "op": "config",
+      "arg": null,
+      "value": {
+        "enabled": false,
+        "notify": true,
+        "confirm_download_risk": true,
+        "onlyonce": false,
+        "cron": "*/30 * * * *",
+        "token": "",
+        "target_site_id": 0,
+        "rss_urls": "",
+        "source_site_ids": [],
+        "minimum_seeders": null,
+        "allowed_promotions": [
+          "free",
+          "non_free"
+        ],
+        "downloader": "",
+        "save_path": "",
+        "max_download_count": null,
+        "initial_limit": null,
+        "selection_mode": "manual"
+      }
+    },
+    {
+      "op": "config",
+      "arg": {},
+      "value": {
+        "enabled": false,
+        "notify": true,
+        "confirm_download_risk": true,
+        "onlyonce": false,
+        "cron": "*/30 * * * *",
+        "token": "",
+        "target_site_id": 0,
+        "rss_urls": "",
+        "source_site_ids": [],
+        "minimum_seeders": null,
+        "allowed_promotions": [
+          "free",
+          "non_free"
+        ],
+        "downloader": "",
+        "save_path": "",
+        "max_download_count": null,
+        "initial_limit": null,
+        "selection_mode": "manual"
+      }
+    },
+    {
+      "op": "config",
+      "arg": {
+        "enabled": 1,
+        "onlyonce": true,
+        "notify": false,
+        "target_site_id": "1",
+        "source_site_ids": [
+          0,
+          1,
+          2,
+          "2",
+          3
+        ],
+        "rss_urls": "one\n two\none",
+        "selection_mode": " HYBRID ",
+        "confirm_download_risk": null
+      },
+      "value": {
+        "enabled": true,
+        "notify": false,
+        "confirm_download_risk": true,
+        "onlyonce": false,
+        "cron": "*/30 * * * *",
+        "token": "",
+        "target_site_id": 1,
+        "rss_urls": "one\ntwo",
+        "source_site_ids": [
+          2,
+          3
+        ],
+        "minimum_seeders": null,
+        "allowed_promotions": [
+          "free",
+          "non_free"
+        ],
+        "downloader": "",
+        "save_path": "",
+        "max_download_count": null,
+        "initial_limit": null,
+        "selection_mode": "hybrid"
+      }
+    },
+    {
+      "op": "config",
+      "arg": {
+        "minimum_seeders": "1.0",
+        "max_download_count": -1,
+        "initial_limit": true,
+        "allowed_promotions": [
+          "unknown",
+          "free",
+          "non_free",
+          "free"
+        ]
+      },
+      "value": {
+        "enabled": false,
+        "notify": true,
+        "confirm_download_risk": true,
+        "onlyonce": false,
+        "cron": "*/30 * * * *",
+        "token": "",
+        "target_site_id": 0,
+        "rss_urls": "",
+        "source_site_ids": [],
+        "minimum_seeders": 1,
+        "allowed_promotions": [
+          "free",
+          "non_free"
+        ],
+        "downloader": "",
+        "save_path": "",
+        "max_download_count": 2,
+        "initial_limit": 20,
+        "selection_mode": "manual"
+      }
+    },
+    {
+      "op": "config",
+      "arg": {
+        "cron": "  ",
+        "save_path": " /owned ",
+        "token": " fixture-token ",
+        "allowed_promotions": []
+      },
+      "value": {
+        "enabled": false,
+        "notify": true,
+        "confirm_download_risk": true,
+        "onlyonce": false,
+        "cron": "",
+        "token": "fixture-token",
+        "target_site_id": 0,
+        "rss_urls": "",
+        "source_site_ids": [],
+        "minimum_seeders": null,
+        "allowed_promotions": [],
+        "downloader": "",
+        "save_path": "/owned",
+        "max_download_count": null,
+        "initial_limit": null,
+        "selection_mode": "manual"
+      }
+    },
+    {
+      "op": "keywords",
+      "arg": "",
+      "value": []
+    },
+    {
+      "op": "keywords",
+      "arg": "Film.2024.1080p.WEB-DL",
+      "value": [
+        "Film 2024",
+        "Film",
+        "Film.2024.1080p.WEB-DL"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": "Show.S02E03.2160p",
+      "value": [
+        "Show S02",
+        "Show",
+        "Show.S02E03.2160p"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": "Movie Title",
+      "value": [
+        "Movie Title"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": "a.2024.x",
+      "value": [
+        "a.2024.x"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": "电影名.2026.国语",
+      "value": [
+        "电影名 2026",
+        "电影名",
+        "电影名.2026.国语"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": " Title_2025 ",
+      "value": [
+        "Title 2025",
+        "Title",
+        "Title_2025"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": "The.Show-S01E001-GROUP",
+      "value": [
+        "The Show S01",
+        "The Show",
+        "The.Show-S01E001-GROUP"
+      ]
+    },
+    {
+      "op": "keywords",
+      "arg": "S01E02",
+      "value": [
+        "S01E02"
+      ]
+    },
+    {
+      "op": "extract",
+      "arg": "https://site.test/details.php?id=42&passkey=fixture#x",
+      "value": "42"
+    },
+    {
+      "op": "safe",
+      "arg": "https://site.test/details.php?id=42&passkey=fixture#x",
+      "value": "https://site.test/details.php?id=42"
+    },
+    {
+      "op": "extract",
+      "arg": "https://u:p@site.test/a?id=2",
+      "value": "2"
+    },
+    {
+      "op": "safe",
+      "arg": "https://u:p@site.test/a?id=2",
+      "value": null
+    },
+    {
+      "op": "extract",
+      "arg": "ftp://site.test/123",
+      "value": "123"
+    },
+    {
+      "op": "safe",
+      "arg": "ftp://site.test/123",
+      "value": null
+    },
+    {
+      "op": "extract",
+      "arg": "https://site.test/detail/53",
+      "value": "53"
+    },
+    {
+      "op": "safe",
+      "arg": "https://site.test/detail/53",
+      "value": "https://site.test/detail/53"
+    },
+    {
+      "op": "extract",
+      "arg": "https%3A%2F%2Fsite.test%2Fdetails.php%3Fid%3D2",
+      "value": "2"
+    },
+    {
+      "op": "safe",
+      "arg": "https%3A%2F%2Fsite.test%2Fdetails.php%3Fid%3D2",
+      "value": null
+    },
+    {
+      "op": "extract",
+      "arg": "https://site.test/details.php?torrentid=91&token=x",
+      "value": "91"
+    },
+    {
+      "op": "safe",
+      "arg": "https://site.test/details.php?torrentid=91&token=x",
+      "value": "https://site.test/details.php?torrentid=91"
+    },
+    {
+      "op": "extract",
+      "arg": "https://site.test/a?k=%ZZ&x=&PASSKEY=xx",
+      "value": null
+    },
+    {
+      "op": "safe",
+      "arg": "https://site.test/a?k=%ZZ&x=&PASSKEY=xx",
+      "value": "https://site.test/a?k=%25ZZ&x="
+    },
+    {
+      "op": "extract",
+      "arg": "HTTPS://SITE.test/details.php?id=4",
+      "value": "4"
+    },
+    {
+      "op": "safe",
+      "arg": "HTTPS://SITE.test/details.php?id=4",
+      "value": "https://SITE.test/details.php?id=4"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f64343a6e616d65313a786565",
+      "value": "c06fadd1439dd2d619fec4538d69a54e614bb831"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f69315f306565",
+      "value": "5a3f1a1c5a38770fdd2ffc5c3e2254ac0b6e2fb6"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f692b30316565",
+      "value": "8760fd9b436be4bc84a6b8a103e857f8e921aafd"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f6c6931656932656565",
+      "value": "cbf5eef94efd4be79ce230c54dacff429e8faae5"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f313a7865545241494c",
+      "value": "ab9c6a62e28dfec67c4f220290a2348d7841fadf"
+    },
+    {
+      "op": "hash",
+      "arg": "6c",
+      "error": "TorrentFormatError",
+      "message": "种子顶层必须是字典"
+    },
+    {
+      "op": "hash",
+      "arg": "6465",
+      "error": "TorrentFormatError",
+      "message": "种子缺少 info 字典"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f69776565",
+      "error": "TorrentFormatError",
+      "message": "无效的整数"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f3939393939393939393939393939393939393939393939393a78",
+      "error": "TorrentFormatError",
+      "message": "字符串超出种子数据范围"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f6c65",
+      "value": "593b743b207e10ff55ec63e71a46c07909d0880a"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f6931",
+      "error": "TorrentFormatError",
+      "message": "无效的整数"
+    },
+    {
+      "op": "hash",
+      "arg": "64343a696e666f6920203209206565",
+      "value": "0b559267519d167e42fe6eb3e6f7346e2859ba55"
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "uploading",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_SEEDING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "uploading",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "uploading",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_SEEDING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "uploading",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_SEEDING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "uploading",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stalledUP",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_SEEDING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stalledUP",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stalledUP",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_SEEDING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stalledUP",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_SEEDING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stalledUP",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "pausedUP",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "pausedUP",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "pausedUP",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "pausedUP",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "pausedUP",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stoppedDL",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stoppedDL",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stoppedDL",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stoppedDL",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "stoppedDL",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_PAUSED",
+          "目标种已暂停，不会自动恢复"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "checkingUP",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_RECHECKING",
+          "目标种正在校验"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "checkingUP",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_RECHECKING",
+          "目标种正在校验"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "checkingUP",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_RECHECKING",
+          "目标种正在校验"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "checkingUP",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_RECHECKING",
+          "目标种正在校验"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "checkingUP",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_RECHECKING",
+          "目标种正在校验"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "error",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "error",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "error",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "error",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "error",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "missingFiles",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "missingFiles",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "missingFiles",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "missingFiles",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "missingFiles",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "unknown",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "unknown",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "unknown",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "unknown",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "unknown",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_ERROR",
+          "目标种存在下载器错误或文件缺失，请在 qBittorrent 检查"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "queuedUP",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "queuedUP",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "queuedUP",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_COMPLETE",
+          "数据已完整，等待下载器进入做种状态"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "queuedUP",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_COMPLETE",
+          "数据已完整，等待下载器进入做种状态"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "queuedUP",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "downloading",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "downloading",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "downloading",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_COMPLETE",
+          "数据已完整，等待下载器进入做种状态"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "downloading",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_COMPLETE",
+          "数据已完整，等待下载器进入做种状态"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "downloading",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "",
+        "progress": null,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "",
+        "progress": 0,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "",
+        "progress": 1,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_COMPLETE",
+          "数据已完整，等待下载器进入做种状态"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "",
+        "progress": 100,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": true,
+        "status": [
+          "TARGET_COMPLETE",
+          "数据已完整，等待下载器进入做种状态"
+        ]
+      }
+    },
+    {
+      "op": "torrent",
+      "arg": {
+        "state": "",
+        "progress": 0.5,
+        "amount_left": 0
+      },
+      "value": {
+        "complete": false,
+        "status": [
+          "TARGET_DOWNLOADING",
+          null
+        ]
+      }
+    },
+    {
+      "op": "detail_url",
+      "arg": {
+        "url": "https://site.test/",
+        "schema": "NexusPhp"
+      },
+      "value": "https://site.test/details.php?id=42"
+    },
+    {
+      "op": "detail_url",
+      "arg": {
+        "url": "https://kp.m-team.cc"
+      },
+      "value": "https://kp.m-team.cc/detail/42"
+    },
+    {
+      "op": "detail_url",
+      "arg": {
+        "url": "https://api2.m-team.io"
+      },
+      "value": "https://kp.m-team.io/detail/42"
+    },
+    {
+      "op": "detail_url",
+      "arg": {
+        "url": "https://site.test",
+        "parser": "custom",
+        "schema": "nexus"
+      },
+      "value": null
+    },
+    {
+      "op": "detail_url",
+      "arg": {
+        "url": "https://site.test"
+      },
+      "value": null
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": "NORMAL",
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": 1
+      }
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": "FREE",
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": 0
+      }
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": "PERCENT_50",
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": 0.5
+      }
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": "PERCENT_70",
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": 0.3
+      }
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": "_2X_FREE",
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": 0
+      }
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": "UNKNOWN",
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": null
+      }
+    },
+    {
+      "op": "mteam",
+      "arg": {
+        "code": "0",
+        "data": {
+          "id": "42",
+          "name": "Fixture",
+          "size": "1,024",
+          "status": {
+            "discount": null,
+            "seeders": "2",
+            "leechers": 0,
+            "timesCompleted": "13"
+          }
+        }
+      },
+      "value": {
+        "title": "Fixture",
+        "size": 1024,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 13,
+        "downloadvolumefactor": null
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\"></span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 1
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">[FREE]</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 0
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">【免费】</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 0
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">[2xFREE]</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 0
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">[50%]</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 0.5
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">[30%]</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 0.3
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">free period</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": null
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">[70%]</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": null
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<html><h1 id=\"top\">Fixture <span class=\"twoupfree\">审核通过</span></h1><a href=\"download.php?id=42&amp;passkey=fixture\">D</a><div id=\"peercount\">1,024 seeders 7 leechers</div><a href=\"viewsnatches.php?id=42\">2,301 times</a><table><tr><td><b>大小：</b> 1.5 GiB</td></tr></table></html>",
+      "value": {
+        "title": "Fixture",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42&passkey=fixture",
+        "seeders": 1024,
+        "peers": 7,
+        "grabs": 2301,
+        "size": 1610612736,
+        "downloadvolumefactor": 1
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<h1>Title</h1><a href=\"https://evil.test/download.php?id=42\">D</a>",
+      "value": null
+    },
+    {
+      "op": "nexus",
+      "arg": "<h1>Title</h1><input type=\"password\"><a href=\"download.php?id=42\">D</a>",
+      "value": null
+    },
+    {
+      "op": "nexus",
+      "arg": "<h1><span>[FREE]</span> Title</h1><a href=\"download.php?id=42\">D</a>",
+      "value": {
+        "title": "[FREE] Title",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42",
+        "seeders": null,
+        "peers": null,
+        "grabs": null,
+        "size": null,
+        "downloadvolumefactor": 1
+      }
+    },
+    {
+      "op": "nexus",
+      "arg": "<h1>Film FREE</h1><a href=\"download.php?id=42\">D</a>",
+      "value": {
+        "title": "Film FREE",
+        "page_url": "https://site.test/details.php?id=42",
+        "enclosure": "https://site.test/download.php?id=42",
+        "seeders": null,
+        "peers": null,
+        "grabs": null,
+        "size": null,
+        "downloadvolumefactor": 1
+      }
+    },
+    {
+      "op": "job_view",
+      "arg": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "MATCHING",
+        "enclosure": "fixture-must-not-survive",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": []
+      },
+      "value": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "MATCHING",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": [],
+        "target_candidate": {
+          "candidate_id": "target:1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "is_target": true,
+          "selectable": false,
+          "site_id": 1,
+          "site_name": "Target",
+          "title": "Fixture",
+          "page_url": "https://site.test/details.php?id=42",
+          "seeders": null,
+          "leechers": null,
+          "grabs": null,
+          "size": null,
+          "download_factor": null,
+          "promotion": "unknown",
+          "promotion_updated_at": null,
+          "promotion_note": "待补查原站促销"
+        }
+      }
+    },
+    {
+      "op": "job_view",
+      "arg": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "AWAITING_SELECTION",
+        "enclosure": "fixture-must-not-survive",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": []
+      },
+      "value": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "AWAITING_SELECTION",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": [],
+        "target_candidate": {
+          "candidate_id": "target:1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "is_target": true,
+          "selectable": true,
+          "site_id": 1,
+          "site_name": "Target",
+          "title": "Fixture",
+          "page_url": "https://site.test/details.php?id=42",
+          "seeders": null,
+          "leechers": null,
+          "grabs": null,
+          "size": null,
+          "download_factor": null,
+          "promotion": "unknown",
+          "promotion_updated_at": null,
+          "promotion_note": "待补查原站促销"
+        }
+      }
+    },
+    {
+      "op": "job_view",
+      "arg": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "SOURCE_SUBMITTING",
+        "enclosure": "fixture-must-not-survive",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": []
+      },
+      "value": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "SOURCE_SUBMITTING",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": [],
+        "target_candidate": {
+          "candidate_id": "target:1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "is_target": true,
+          "selectable": false,
+          "site_id": 1,
+          "site_name": "Target",
+          "title": "Fixture",
+          "page_url": "https://site.test/details.php?id=42",
+          "seeders": null,
+          "leechers": null,
+          "grabs": null,
+          "size": null,
+          "download_factor": null,
+          "promotion": "unknown",
+          "promotion_updated_at": null,
+          "promotion_note": "待补查原站促销"
+        }
+      }
+    },
+    {
+      "op": "job_view",
+      "arg": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "TARGET_SEEDING",
+        "enclosure": "fixture-must-not-survive",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": []
+      },
+      "value": {
+        "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target_site_id": 1,
+        "target_site_name": "Target",
+        "target_torrent_id": "42",
+        "title": "Fixture",
+        "state": "TARGET_SEEDING",
+        "target_page_url": "https://site.test/details.php?id=42&passkey=fixture",
+        "probes": [],
+        "candidates": [],
+        "target_candidate": {
+          "candidate_id": "target:1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "is_target": true,
+          "selectable": false,
+          "site_id": 1,
+          "site_name": "Target",
+          "title": "Fixture",
+          "page_url": "https://site.test/details.php?id=42",
+          "seeders": null,
+          "leechers": null,
+          "grabs": null,
+          "size": null,
+          "download_factor": null,
+          "promotion": "unknown",
+          "promotion_updated_at": null,
+          "promotion_note": "待补查原站促销"
+        }
+      }
+    }
+  ]
+}

@@ -59,14 +59,29 @@ THE SOFTWARE.
   flex-wrap: wrap !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.justify-end),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.justify-end) {
+  justify-content: flex-end !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.align-center),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.align-center) {
   align-items: center !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ga-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.ga-2) {
+  gap: 8px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ga-3),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.ga-3) {
   gap: 12px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ma-4),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.ma-4) {
+  margin: 16px !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-1),
@@ -77,6 +92,11 @@ THE SOFTWARE.
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-2),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-2) {
   margin-top: 8px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-3),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-3) {
+  margin-top: 12px !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-4),
@@ -99,6 +119,16 @@ THE SOFTWARE.
   margin-bottom: 16px !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ml-1),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.ml-1) {
+  margin-left: 4px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.ml-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.ml-2) {
+  margin-left: 8px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.me-2),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.me-2) {
   margin-inline-end: 8px !important;
@@ -109,6 +139,11 @@ THE SOFTWARE.
   margin-inline-end: 12px !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mt-n3),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mt-n3) {
+  margin-top: -12px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.pa-0),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.pa-0) {
   padding: 0px !important;
@@ -117,6 +152,11 @@ THE SOFTWARE.
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.pa-3),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.pa-3) {
   padding: 12px !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.pa-4),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.pa-4) {
+  padding: 16px !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.px-2),
@@ -226,6 +266,16 @@ THE SOFTWARE.
   font-weight: normal;
   line-height: 1.75;
   letter-spacing: 0.009375em !important;
+  font-family: inherit;
+  text-transform: none !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.text-body-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.text-body-2) {
+  font-size: 0.875rem !important;
+  font-weight: 400;
+  line-height: 1.425;
+  letter-spacing: 0.0178571429em !important;
   font-family: inherit;
   text-transform: none !important;
 }

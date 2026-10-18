@@ -385,6 +385,15 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			if errorCode != "" {
 				state = "canceled"
 			}
+		} else if p.isSeedRescueRun(ctx, tx, run) && (run.Action == "once" || run.Action == "service") {
+			errorCode, err = p.claimSeedRescueScheduleTx(ctx, tx, run, time.Now())
+			if err != nil {
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
+			if errorCode != "" {
+				state = "canceled"
+			}
 		} else if run.Action == "service" {
 			errorCode, err = p.claimPluginScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
@@ -488,6 +497,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 	}
 	if err == nil {
 		err = p.recoverDeferredRuns(ctx)
+	}
+	if err == nil {
+		err = p.recoverSeedRescueReads(ctx)
 	}
 	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)

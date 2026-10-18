@@ -177,7 +177,7 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, siteReferenceProtocolSchema); err != nil {
 		return nil, err
 	}
-	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema+cloudflareSchema+cloudflareRootSchema+cloudflareCommandSchema+cloudflareNoticeSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema+cloudflareSchema+cloudflareRootSchema+cloudflareCommandSchema+cloudflareNoticeSchema+seedRescueSchema+seedRescueRootSchema); err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
@@ -307,6 +307,14 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 			return err
 		}
 	}
+	var rescueParent seedRescueParent
+	if in.PluginID == "SeedRescue" {
+		var e error
+		rescueParent, e = p.seedRescueTransitionParentTx(ctx, tx, in.InstanceID)
+		if e != nil {
+			return e
+		}
+	}
 	var autoParent autoBackupParent
 	if in.PluginID == "AutoBackup" {
 		var err error
@@ -349,6 +357,11 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 	}
 	if err != nil {
 		return err
+	}
+	if in.PluginID == "SeedRescue" {
+		if err = p.seedRescueGenesisTx(ctx, tx, in.InstanceID, "install", rescueParent); err != nil {
+			return err
+		}
 	}
 	return p.markInstalledSiteReferencesTx(ctx, tx, in.InstanceID, "host-install/v1")
 }
@@ -475,6 +488,10 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 		return err
 	}
 	defer tx.Rollback()
+	rescueParent, isRescue, e := p.seedRescueLifecycleParentTx(ctx, tx, instanceID)
+	if e != nil {
+		return e
+	}
 	cfParent, isCF, err := p.cloudflareLifecycleParentTx(ctx, tx, instanceID)
 	if err != nil {
 		return err
@@ -526,6 +543,11 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 			return err
 		}
 	}
+	if isRescue {
+		if err = p.seedRescueGenesisTx(ctx, tx, instanceID, "uninstall", rescueParent); err != nil {
+			return err
+		}
+	}
 	return tx.Commit()
 }
 
@@ -538,6 +560,10 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 		return err
 	}
 	defer tx.Rollback()
+	rescueParent, isRescue, e := p.seedRescueLifecycleParentTx(ctx, tx, instanceID)
+	if e != nil {
+		return e
+	}
 	cfParent, isCF, err := p.cloudflareLifecycleParentTx(ctx, tx, instanceID)
 	if err != nil {
 		return err
@@ -589,6 +615,11 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	}
 	if effect != nil {
 		if err := effect(ctx, tx); err != nil {
+			return err
+		}
+	}
+	if isRescue {
+		if err = p.seedRescueGenesisTx(ctx, tx, instanceID, "reset", rescueParent); err != nil {
 			return err
 		}
 	}

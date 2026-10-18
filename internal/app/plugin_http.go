@@ -159,6 +159,7 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		Conf             json.RawMessage            `json:"conf"`
 		Model            map[string]json.RawMessage `json:"model"`
 		SnapshotRevision *int64                     `json:"revision"`
+		RenderMode       string                     `json:"render_mode"`
 	}
 	if json.Unmarshal(result.Result, &form) != nil || form.Model == nil || !json.Valid(form.Conf) {
 		return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回格式无效")
@@ -209,7 +210,17 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 	if installation.PluginID == "MergeSiteSwitch" && form.SnapshotRevision != nil {
 		stored.Revision = *form.SnapshotRevision
 	}
-	return map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}, nil
+	if installation.PluginID == "SeedRescue" {
+		projectSeedRescueSecrets(form.Model)
+	}
+	response := map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}
+	if form.RenderMode != "" {
+		if form.RenderMode != "vue" && form.RenderMode != "vuetify" {
+			return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回界面格式无效")
+		}
+		response["render_mode"] = form.RenderMode
+	}
+	return response, nil
 }
 
 func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request, path string) (any, error) {
@@ -225,6 +236,9 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	}
 	if a.cloudflareLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginCloudflareLifecycleHTTP(w, r, path)
+	}
+	if a.seedRescueLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginSeedRescueLifecycleHTTP(w, r, path)
 	}
 	if a.autoBackupLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginAutoBackupLifecycleHTTP(w, r, path)
@@ -251,6 +265,9 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	}
 	if path == "dashboard/meta" && r.Method == "GET" {
 		return a.pluginDashboardMeta(ctx)
+	}
+	if path == "navigation" && r.Method == "GET" {
+		return a.pluginNavigation(ctx)
 	}
 	if path == "install" && r.Method == "POST" {
 		var in struct {

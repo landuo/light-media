@@ -1,0 +1,300 @@
+{
+  "cases": [
+    {
+      "mode": "success",
+      "value": {
+        "ok": true,
+        "reason": "",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "SOURCE_DOWNLOADING",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 2,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": null,
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": [
+          {
+            "kind": "add",
+            "intent": {
+              "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "target_site_id": 1,
+              "title": "Fixture",
+              "state": "SOURCE_SUBMITTING",
+              "probes": [],
+              "candidates": [],
+              "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "source_site_id": 2,
+              "source_site_name": "Source",
+              "source_seeders": 3,
+              "promotion": "free",
+              "reason": "下载提交待确认",
+              "updated_at": "2026-10-18T01:02:03+00:00"
+            },
+            "category": "seed-rescue",
+            "tag": [
+              "seed-rescue"
+            ],
+            "download_dir": null,
+            "content_hex": "64343a696e666f64343a6e616d65313a786565"
+          }
+        ]
+      }
+    },
+    {
+      "mode": "false",
+      "value": {
+        "error": "DownloadSubmissionUncertain",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "SOURCE_SUBMITTING",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 2,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": "下载器未确认添加结果，后续扫描将核对同一 Hash；请先检查 qBittorrent，勿重复添加",
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": [
+          {
+            "kind": "add",
+            "intent": {
+              "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "target_site_id": 1,
+              "title": "Fixture",
+              "state": "SOURCE_SUBMITTING",
+              "probes": [],
+              "candidates": [],
+              "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "source_site_id": 2,
+              "source_site_name": "Source",
+              "source_seeders": 3,
+              "promotion": "free",
+              "reason": "下载提交待确认",
+              "updated_at": "2026-10-18T01:02:03+00:00"
+            },
+            "category": "seed-rescue",
+            "tag": [
+              "seed-rescue"
+            ],
+            "download_dir": null,
+            "content_hex": "64343a696e666f64343a6e616d65313a786565"
+          }
+        ]
+      }
+    },
+    {
+      "mode": "error",
+      "value": {
+        "error": "DownloadSubmissionUncertain",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "SOURCE_SUBMITTING",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 2,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": "下载提交结果未知，后续扫描将核对同一 Hash；请先检查 qBittorrent，勿重复添加",
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": [
+          {
+            "kind": "add",
+            "intent": {
+              "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "target_site_id": 1,
+              "title": "Fixture",
+              "state": "SOURCE_SUBMITTING",
+              "probes": [],
+              "candidates": [],
+              "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+              "source_site_id": 2,
+              "source_site_name": "Source",
+              "source_seeders": 3,
+              "promotion": "free",
+              "reason": "下载提交待确认",
+              "updated_at": "2026-10-18T01:02:03+00:00"
+            },
+            "category": "seed-rescue",
+            "tag": [
+              "seed-rescue"
+            ],
+            "download_dir": null,
+            "content_hex": "64343a696e666f64343a6e616d65313a786565"
+          }
+        ]
+      }
+    },
+    {
+      "mode": "missing_link",
+      "value": {
+        "ok": false,
+        "reason": "来源种子缺少下载链接",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "AWAITING_SELECTION",
+          "probes": [],
+          "candidates": []
+        },
+        "calls": []
+      }
+    },
+    {
+      "mode": "bad_hash",
+      "value": {
+        "ok": false,
+        "reason": "下载种子Hash与IYUU映射不一致",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "AWAITING_SELECTION",
+          "probes": [],
+          "candidates": []
+        },
+        "calls": []
+      }
+    },
+    {
+      "mode": "metadata_missing",
+      "value": {
+        "ok": false,
+        "reason": "fixture metadata error",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "AWAITING_SELECTION",
+          "probes": [],
+          "candidates": []
+        },
+        "calls": []
+      }
+    },
+    {
+      "mode": "existing_complete",
+      "value": {
+        "ok": true,
+        "reason": "",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "WAITING_IYUU",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 2,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": "来源种子已存在于下载器",
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": []
+      }
+    },
+    {
+      "mode": "existing_incomplete",
+      "value": {
+        "ok": true,
+        "reason": "",
+        "job": {
+          "target_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "SOURCE_DOWNLOADING",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "2:7:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 2,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": "来源种子已存在于下载器",
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": []
+      }
+    },
+    {
+      "mode": "target_seeding",
+      "value": {
+        "ok": true,
+        "reason": "",
+        "job": {
+          "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "TARGET_SEEDING",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "target:1:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 1,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": null,
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": []
+      }
+    },
+    {
+      "mode": "target_paused",
+      "value": {
+        "ok": true,
+        "reason": "",
+        "job": {
+          "target_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "target_site_id": 1,
+          "title": "Fixture",
+          "state": "TARGET_PAUSED",
+          "probes": [],
+          "candidates": [],
+          "selected_candidate_id": "target:1:c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_hash": "c06fadd1439dd2d619fec4538d69a54e614bb831",
+          "source_site_id": 1,
+          "source_site_name": "Source",
+          "source_seeders": 3,
+          "promotion": "free",
+          "reason": "目标种已暂停，不会自动恢复",
+          "updated_at": "2026-10-18T01:02:03+00:00"
+        },
+        "calls": []
+      }
+    }
+  ],
+  "source": "actual _start_source and _persist_job/_finish/_set_source_job methods",
+  "environment": {
+    "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]"
+  }
+}

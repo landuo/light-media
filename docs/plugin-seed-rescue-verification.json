@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-18",
+  "baseline": "c621f4a019eea826fd76b2cf187b41438569a1c5",
+  "runtime": "Go only; no Python runtime dependency",
+  "scope": "SeedRescue1.6.3 actual native owner/SDK plus original Vue Config/Page/AppPage/sidebar; no original data migration or deployment",
+  "backend_patch_sha256": "a78867ff3d6209d31dff86cf69d7c5c87c5ce8b6bd0e4e9209fdd9491db0de8f",
+  "backend_source_files": 2804,
+  "consumer_source_files": 2812,
+  "consumer_source_manifest_sha256": "ee8061e2eca152a0ec7e453f19f4e66c7ac4ee5ec854bf27bb3209a809a83198",
+  "consumer_source_drift": 0,
+  "formal_consumer_exact_bytes": false,
+  "changed_files": 142,
+  "removed_old_web_assets": 35,
+  "checks": [
+    {
+      "scope": "complete App before isolated RSS-list projection fix",
+      "exit": 0,
+      "top_pass": 760,
+      "including_subtests_pass": 1551,
+      "opt_in_or_environment_skips": 5,
+      "seconds": 228.63
+    },
+    {
+      "scope": "selected actual SeedRescue/static/frontend/IYUU App race before isolated RSS-list fix",
+      "exit": 0,
+      "top_pass": 13,
+      "including_subtests_pass": 32,
+      "skips": 0,
+      "seconds": 166.505
+    },
+    {
+      "scope": "RSS-list/string/null projection/retain actual SDK and private original frontend graph after fix, race",
+      "exit": 0,
+      "top_pass": 3,
+      "including_subtests_pass": 6,
+      "skips": 0,
+      "seconds": 25.692
+    },
+    {
+      "scope": "frontend build and complete frontend tests",
+      "exit": 0,
+      "tests_pass": 153,
+      "skips": 0
+    },
+    {
+      "scope": "final Darwin product, vet App/core, Linux amd64 CGO_ENABLED=0 product ELF",
+      "exit": 0
+    }
+  ],
+  "ui": {
+    "actual_production_binary": true,
+    "synthetic_empty_instance": true,
+    "config_save": true,
+    "original_page_dialog": true,
+    "applied_sidebar_and_original_app_page": true,
+    "invalid_scan_source_error_visible": true,
+    "token_projected": true,
+    "actual_sdk_run_states": [
+      "succeeded",
+      "succeeded",
+      "succeeded",
+      "succeeded",
+      "succeeded",
+      "succeeded",
+      "succeeded"
+    ],
+    "original_asset_files": 8,
+    "original_exports_imported": [
+      "Config",
+      "Page",
+      "Dashboard",
+      "AppPage"
+    ],
+    "dashboard_layout_not_claimed": true,
+    "temporary_tab_closed": true,
+    "cleanup": {
+      "server_exit": 0,
+      "data_removed": true
+    },
+    "binary_sha256": "b37098d78f0800a5b570faf3cf13a6a2f2376ec1209c7def140e00f6a8bd383e",
+    "verified_source_scope": "c621 + SeedRescue + root original UI before isolated RSS array projection fix; frontend source unchanged afterward; final RSS fix separately exercised by actual SDK/HTTP race"
+  },
+  "failure_evidence": [
+    "Original Config initially rendered empty because config_form and shared form omitted render_mode; fixed and actually reopened/saved.",
+    "Interim browser unmount caused exact readonly API reconcile_pending/execution_canceled; actual SDK cancellation fix now gives a known terminal failure without changing write uncertainty.",
+    "Legacy RSS array was exposed by actual SDK form: owned failing regression retained; projection fixed and original array/null shape preserved after save.",
+    "First static-graph check expected404 for literal dot-segment path; Go ServeMux canonicalized307. Test follows only its same-origin relative canonical URL and requires404; product path protection was not relaxed."
+  ],
+  "remaining": [
+    "No original config,3 KV values,reference/layout or files imported; migrated plugins0.",
+    "No new NAS validation or deployment; live service remains v0.3.21.",
+    "Real external notification channels and full dashboard platform/layout remain incomplete.",
+    "Whole DB plus all authenticated roots consistently rolled back cannot be detected without an independent external anchor.",
+    "Original source qB-only interface preserved; lower Transmission support does not change that source configuration.",
+    "Source standalone oracles used local CPython3.14.4/lxml6.1.1, not NAS3.12; arbitrary Python/Pydantic values and malformed HTML parity are not claimed.",
+    "Unknown remote IYUU reportExisting registration remains blocked until trustworthy external evidence; it cannot be blindly replayed."
+  ],
+  "artifact_receipts": [
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/backend-source-inputs.json.gz",
+      "uncompressed_sha256": "588345f0e560dd76c025023212b71c5b83a204eb3c1f99937272619bca9a3247",
+      "compressed_sha256": "1546737d43d5be67d492c26a136906efb59d92e24a34a2d47450b0bc7f9d36f8"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/backend-compiler-inputs.json.gz",
+      "uncompressed_sha256": "7d54202e1cce6b6c6ccc5b4a0162f63e378d8bf0dea3c67c1e63aff20d28dbed",
+      "compressed_sha256": "91ab4baab22fefbbb75c6688b8c9c1db88d933586995b567ff7918149bac95a0"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/backend-focused-sources.json.gz",
+      "uncompressed_sha256": "43a9c6a34c423bff6b8cc5580527850dd76180329758e4fd3a6aaa58d549f9b9",
+      "compressed_sha256": "c85abdccb78ba38a51afd45c222604fe6b7df77f4c499e1fcae02abf9dbfd68b"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/backend-verification.json.gz",
+      "uncompressed_sha256": "6dfcbd82975e74619d13fcd2b17ce2c1784fd8d72c2d7c59a4801d23a5cd50ba",
+      "compressed_sha256": "1be0c9a1b4d95b27c2a88f5d33b345b6538df2d4057cbcb7f1237718a0ff5fbf"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/consumer-source-inputs.json.gz",
+      "uncompressed_sha256": "ee8061e2eca152a0ec7e453f19f4e66c7ac4ee5ec854bf27bb3209a809a83198",
+      "compressed_sha256": "d4f35a92b33d6edb5031e772c5d0cee511b9316405a9c1c89c273d7512bfa0f0"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/consumer-app-normal.jsonl.gz",
+      "uncompressed_sha256": "95714c0dacd60839479668878199c8781594cf63c6cdc385039d8bde2886b20a",
+      "compressed_sha256": "26e5a52cb34c84f7c7b4ad85e708f3eaf9232bc42ea3f6340918d64598c0d9d6"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/consumer-app-race.jsonl.gz",
+      "uncompressed_sha256": "e0734909562bada8a0b2321905857be63c085f16a657125461b6168870dd1ef0",
+      "compressed_sha256": "bc7ffce02058310b91555650b416a9499aa693472e5dcad13baf26c3385fe9bb"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/consumer-rss-list-before.jsonl.gz",
+      "uncompressed_sha256": "589aed999a31ed28a9e77325f5e10cae3118aff546a6946ff912d9e9ca3b1b4b",
+      "compressed_sha256": "59b8e824a209a5a64f960076dc1e64164d43d0288db9f50cc626951af94915f2"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/consumer-rss-list-after-race.jsonl.gz",
+      "uncompressed_sha256": "5fcfd4f739534f6ff5f0bd62a79ad02ab88c9adea8d1864fe822d6ce06d7ae10",
+      "compressed_sha256": "0e445117734d06c4f36ff4075f100db943d06049e2e345ecf810089d969987f5"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-native/verification/consumer-frontend-tests.log.gz",
+      "uncompressed_sha256": "0639d0498bd737ad4832c9ef843bc7f388c6e16321f1185a443b183696552b90",
+      "compressed_sha256": "bbf893e59a0ce1627753bd9e5e26ddd0251e6cf323cbcb2b7c807c7fd51993ae"
+    }
+  ],
+  "deployment": {
+    "performed": false,
+    "actual_original_plugin_data_migrated": 0,
+    "installable_handlers_after_code_change": 16
+  },
+  "formal_consumer_exact_code_and_assets": true,
+  "formal_documentation_difference": [
+    "docs/plugin-installed-migration-baseline.md"
+  ],
+  "formal_matching_frozen_files": 2811,
+  "formal_product_build_exit": 0,
+  "formal_product_binary_sha256": "4a39cbc233a8ccb31315fa28fccfec378869e4b9cb3a0cc2f110619674c0269b"
+}
