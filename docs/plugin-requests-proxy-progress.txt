@@ -1,0 +1,15 @@
+原生通知的环境代理依赖（2026-10-18）
+
+新增 Go 的 requests 环境代理解析与 transport，供后续 Lark、Apprise 等原生通知使用。原有 MoviePilot 显式 PROXY 设置解析保持原样，两者语义不同。
+
+对照原 NAS 实际 requests 2.34.2 / CPython 3.12.13 的 Linux 代码，覆盖 ALL_PROXY、大小写优先级、CGI HTTP_PROXY、NO_PROXY 域名/端口/IPv4 CIDR、IPv4 旧记法及 scheme://host 优先级。1,080 组合用例先在本机离线源中生成，再在原容器只读 -B 子进程以纯函数和合成环境核对，0 差异；没有发出 HTTP 请求、没有写字节码或原配置。
+
+实际本机代理测试覆盖 HTTP 代理鉴权、SOCKS4/4a、SOCKS5 本地 DNS 与 SOCKS5h 远端 DNS、调用方 TLS 根证书保留，以及 SOCKS4/5/5h/HTTP CONNECT 的取消。测试真实发现取消返回但握手 socket 仍存活，现通过私有请求上下文绑定修复，原失败保留。
+
+最终正常与竞态均 13 顶层 / 1,106 含子测试，0 失败、0 跳过；vet、产品构建、Linux amd64 CGO=0 测试编译通过。3,146 个冻结输入无漂移，其中原 3,136 个输入没有修改。本次只添加共用依赖；不是 Lark 或聚合通知完整可用声明。正式入口仍 20，真实插件配置/KV/文件迁移为 0，生产 v0.3.21 未部署更新。
+
+接口：RequestsEnvironmentProxy(environ []string, target *url.URL) (*url.URL, error)；NewRequestsTransport(base *http.Transport, environ func() []string) *RequestsTransport；CloseIdleConnections()。nil environ 使用 os.Environ。调用方仍负责固定目标来源、重定向、凭据和 TLS 策略。支持 SOCKS 时使用 transport，不应仅用 Go 默认 Proxy callback 代替 SOCKS5 的本地 DNS 语义。
+
+平台范围是原 NAS 的 Linux trust-env 路径，不宣称实现 macOS 系统代理或 Windows 注册表代理。
+
+正式合入前另按实际安装的 PySocks 1.7.1 源复核 SOCKS4：真实测试复现了八进制形式 IPv4 被错误发送为远端域名的问题，已修正为原版 inet_aton 数值地址语义，并补源 SOCKS4a 的 IPv6 远端名称分支。新增 3 个实际握手用例，原失败与源代码审查记录保留。最终本轮新增 10 个文件，原 3,136 个输入无修改。

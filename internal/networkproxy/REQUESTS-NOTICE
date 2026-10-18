@@ -1,0 +1,22 @@
+Native Go routing dependency for the installed notification plugins.
+
+Reference: requests 2.34.2 (Apache 2.0; licenses/Requests-Apache-2.0.txt)
+and the original NAS CPython 3.12.13 urllib.request environment functions
+(PSF; licenses/CPython-PSF.txt). The original source hashes and read-only Linux
+capture are retained with the source comparison evidence.
+
+The existing Resolve explicit MoviePilot PROXY mapping remains separate.
+The native environment resolver covers the tested Linux trust-env path;
+it does not read macOS SystemConfiguration or Windows registry proxy settings.
+The original NAS is Linux. Python is used only for offline source comparison;
+the Go product and its tests do not invoke Python or the original plugins.
+
+HTTP and SOCKS wire tests use owned local listeners only. Request context is
+explicitly retained through proxy handshakes, preserving caller TLS settings.
+Errors do not print proxy credential values. Callers retain authorization of
+target origins, redirects and credentials; this package is only transport.
+
+SOCKS4/4a reference additionally reviewed against the original installed
+PySocks 1.7.1 source; its BSD license is retained (licenses/PySocks-BSD.txt).
+Legacy numeric IPv4 is encoded as an address, and other SOCKS4a destinations
+are sent as remote names, including the source IPv6-name branch.

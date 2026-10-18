@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "base_head": "26ab64eba09bcb2671c825e4890cbd7756667049",
+  "status": "native Linux requests environment/proxy dependency; not full notification plugin",
+  "source_inputs": 3146,
+  "zero_drift": true,
+  "all_compilers_terminal": true,
+  "normal": {
+    "top": 13,
+    "including_subtests": 1106,
+    "fail": 0,
+    "skip": 0
+  },
+  "race": {
+    "top": 13,
+    "including_subtests": 1106,
+    "fail": 0,
+    "skip": 0
+  },
+  "vet_exit_code": 0,
+  "product_build_exit_code": 0,
+  "linux_amd64_cgo0_test_compile_exit_code": 0,
+  "original_linux_environment_oracle": {
+    "count": 1080,
+    "mismatch": 0,
+    "requests": "2.34.2",
+    "python": "3.12.13",
+    "original_container": "cb82e3f55088",
+    "execution": "read-only -B child; synthetic environments, pure proxy functions only, no HTTP request"
+  },
+  "wire": [
+    "actual owned HTTP proxy and synthetic Proxy-Authorization",
+    "SOCKS4 IPv4 + user, SOCKS4a remote domain",
+    "SOCKS5 local destination, SOCKS5h remote domain",
+    "caller TLS certificate roots preserved and certificate verification enabled",
+    "actual SOCKS4/SOCKS5/SOCKS5h/HTTP CONNECT cancel closes socket"
+  ],
+  "original_sources_unchanged": 3136,
+  "additions": {
+    "internal/networkproxy/REQUESTS-NOTICE": "fa44e9afaa4821fdb777249c16a495148509bbb74a7b60ecd26780544f58b913",
+    "internal/networkproxy/licenses/CPython-PSF.txt": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+    "internal/networkproxy/licenses/PySocks-BSD.txt": "7027e214e014eb78b7adcc1ceda5aca713a79fc4f6a0c52c9da5b3e707e6ffe9",
+    "internal/networkproxy/licenses/Requests-Apache-2.0.txt": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+    "internal/networkproxy/requests_cancel.go": "6d4ece2855fc3e40b757ea8d9c0dcb76a673f98eba73db8209c3c3cc8be1ce5b",
+    "internal/networkproxy/requests_env.go": "0cfe43608aea2ea00cf02e20de21a41ab18cc4b5379c05756bd24e65875c66e3",
+    "internal/networkproxy/requests_env_test.go": "e0ac8a3b5603e53ca5be98330991b3c7e2c993db82da70bd2a63941a2c4eb767",
+    "internal/networkproxy/requests_transport.go": "da687ca276a9454a1d1e1c93103485345d5ca2867d1d31f55d2b66b49c074900",
+    "internal/networkproxy/requests_transport_test.go": "ba12d44e66e32b5c464c80ff4a81e083d914d01852d0d0f886ead3172ea43cd9",
+    "internal/networkproxy/testdata/requests-linux-2.34.2.jsonl.gz": "6a5728589730460478470d391fcb3db01e9fa0a4855f56fb03425bc489141fee"
+  },
+  "failures_preserved": [
+    "SOCKS wire fixture variable-shadowing compile error",
+    "actual cancellation returned but socket leaked before private request-context binding",
+    "NAS oracle controller nested quoting SyntaxError (not product failure), then correct structured multiline invocation 1080/0",
+    "revision2 before actual SOCKS4 legacy numeric-address packet mismatch, then normal/race source correction passed"
+  ],
+  "interface": {
+    "resolver": "RequestsEnvironmentProxy([]string, *url.URL) (*url.URL,error)",
+    "transport": "NewRequestsTransport(*http.Transport, func()[]string) *RequestsTransport",
+    "cleanup": "CloseIdleConnections()",
+    "notes": "nil environment function uses os.Environ; caller owns fixed origin, redirects, credentials and TLS policy; use transport for SOCKS5 local DNS, not Go Proxy callback alone"
+  },
+  "platform_scope": "Linux original trust-env; no macOS SystemConfiguration/Windows registry",
+  "not_deployed": true,
+  "original_migrations": 0,
+  "archives": [
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/handoff.json.gz",
+      "sha256": "0ae07ebbf6ab11dc861ca10d777559c280e75ae06d96c2639ec30f9230214441",
+      "raw_sha256": "5fab61c63a79e0a247b029bb4aa86bb36dea6f27ef097bcfb146ee4e5d512115"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/frozen-inputs.json.gz",
+      "sha256": "18ec381e351604ea3942aaeeeecc3743bd1c2b36e38ef2a765ca1962b6a8fe5b",
+      "raw_sha256": "25a7ac6489bf20d68c6da2256840f2339f3c35f3d825436631d565745a84049a"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/final-normal.jsonl.gz",
+      "sha256": "18894365ae13f49167d53b3b8abc3088675fe724d11ce7b4c30be3f40ec7367f",
+      "raw_sha256": "8d546a8a6b123da93592e709770b097a02ed9013341f95024120f1d0ff91cece"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/final-race.jsonl.gz",
+      "sha256": "e6b6ab8fa389bc6e80c8a9d6bea2e6b45a36cdae9aecf8ac8f7bddbb2e145f1c",
+      "raw_sha256": "4453fdca99fa031d056ed9237338b4c63bce17f23fb308cc2b59d0adbb465a76"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/final-vet.txt.gz",
+      "sha256": "555bd2289e2ad04ffbf852844a766f5afffacae1d50cefee3245cf90cc11c3ee",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-nas-requests-env-oracle-controller-syntax-failure.json.gz",
+      "sha256": "7b5e6060b67190ba6129eb9f29b8638c43af6cf591c922f1d64ed0502186eb0d",
+      "raw_sha256": "956ace6e6ed3f2b883564f0974cf8944bd4b30a4d2ff6d6bbc859ae173200d02"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-nas-requests-env-oracle-result.json.gz",
+      "sha256": "9c005bafebcb453cb14a56866d82c800d19da169027f7d4d3687ed1cb0d57bf7",
+      "raw_sha256": "535871be589e4809b2cb7cc557f034ab991920bd144828e45d3bac4c409e647c"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-offline-generator.py.txt.gz",
+      "sha256": "abef3331df6420db6f92201acc3b4effc03d8a981dee0340c2bbbdb835969b6d",
+      "raw_sha256": "fa0a8197a1528753f8204b8988eae05ecdf93b82d18acde9657a37916600aa89"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-original-linux-proxy-source.json.gz",
+      "sha256": "7ca98cb70c13c3a90fbfe128c37643880f51af280c77f3c48657a7be3d517332",
+      "raw_sha256": "f4f8de26f727adb395870cabbba2d224587d3d7f67f30bf786e8bb215b756f8a"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-requests-env-first.jsonl.gz",
+      "sha256": "9458da23ead74cd4786048dc540478388e40099840e5b48f614b31dd4d0905b5",
+      "raw_sha256": "009918be4a9c360faee201edf000f5c0d49184ccd62754d94be56e6c9e8c7a2f"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-requests-transport-before-cancel.go.txt.gz",
+      "sha256": "a4069b2c936db15b2d947e8ba7badf23d5233741e3d01e740f95cb5e07f2ba17",
+      "raw_sha256": "479522681c9cc15738894a144000687677efb1b867ae37f18df13f045e134ee7"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-requests-transport-wire.jsonl.gz",
+      "sha256": "dea0ccc69fecab93d41e606eac6475b151ffa93ec1b84b90bd7adc42f32c27f3",
+      "raw_sha256": "1fd3e65e7ca3e6381aa4dfeba027a7075604fabf6939b31e615e1ae12bd8af8c"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-requests-transport-wire2.jsonl.gz",
+      "sha256": "278b4512260a77044b63aa2d3d2dd14948d6d7bc12110e900e1e1dc32b536562",
+      "raw_sha256": "8471f2c7f298427d9dda0d7f8eefaf9edfcf33d597eb22833489a6e7a90f490d"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-requests-transport-wire3.jsonl.gz",
+      "sha256": "81553d003f47147f8e43ad957af047fd837155bb1d80f1de7693e0d21d74d5aa",
+      "raw_sha256": "9d22a635ae66f92a176af51944160d27c20df8a18f6e0fff0d9ffa575d8bc619"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/reference-requests-transport-wire4.jsonl.gz",
+      "sha256": "5b0b04a9585d4f899bb1149681c2b70ddb3d1df14b36b397b4d001cb1e891f86",
+      "raw_sha256": "e3fa75162ffd24bf59f05586fc0e4bb689c447c99135e4cf75df083947b48066"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-PySocks-1.7.1-SOCKS4-reviewed.txt.gz",
+      "sha256": "a20db6f99a511084a7362005b0fdf071d820795c4c2369746e712245cf2a01fe",
+      "raw_sha256": "93e99b52b8bf81b6552aae1df106f8cf07c9490788cbb8a046181f3fb8f30247"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-frozen-inputs.json.gz",
+      "sha256": "89a02efe371eb9146ea45fcc94d491f9be52506545668063ed910f60efb64e10",
+      "raw_sha256": "1993095c5cce021c579599891c2f7efc3e9afb9a5ee9e896b543c40b6ad37700"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-focused.json.gz",
+      "sha256": "21b8995e8cfa44087d50c32d2429e3bc14db8a312b369ed45ea169af732a820e",
+      "raw_sha256": "df3be8992593176924e9b883302d1973c1dc10c5e1e8712b564dbe2534617c27"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-handoff.json.gz",
+      "sha256": "aef5b6f2dcd813b7212206503ef5c64276b479846a65d538739654c1db04f692",
+      "raw_sha256": "6d0a5d0778ca281f54b08b8ed6c26963dfed0fdf9dd67fe51588016828148c14"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-before-socks4-legacy.jsonl.gz",
+      "sha256": "a68c314415c281a84cb9862a9aca732505d351f73d5904a908c01ffe1b9ec618",
+      "raw_sha256": "f0e5a15e394bfe337b24ab93242a534ffa1a40219535b9d18f3cdf82f18541f1"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-after-normal.jsonl.gz",
+      "sha256": "1677820e6eb726a4f5c643471a2e7e429374dd8c835fa1d146f861ac814c38ef",
+      "raw_sha256": "6505c78b4d4a6db7a2dd86b1b20b241dcf690376ca0e59a77d10c4459f4f2977"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-after-race.jsonl.gz",
+      "sha256": "f425c369ea11c8174a795e5de2ed7fe79fc62360d7336e527ba1d1b88fe90bab",
+      "raw_sha256": "6b3938dc31089ed994efb557191d9865efe4cb2bb38c4ed0ff1af550fabb38f5"
+    },
+    {
+      "path": "testdata/plugins/native-requests-proxy/verification/revision2-after-vet.txt.gz",
+      "sha256": "c151a52e3a40e9ac18c2929a1d211c54aeeaf64a439718ee7838179bdf9b8d38",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "product_sha256": "5e6d3271505a70d6979df2e83fe0a5a5c5fcde1079b509b3a815f83f68458b4e",
+  "linux_test_sha256": "33bf1f1860bd823bfa82779f6bd12209f370bf67eedcb6b500e0fdacc71c1b22",
+  "registered_handlers": 20,
+  "production_unchanged_version": "0.3.21",
+  "previous_v1": {
+    "source_inputs": 3145,
+    "normal": {
+      "top": 13,
+      "including_subtests": 1103,
+      "fail": 0,
+      "skip": 0
+    },
+    "race": {
+      "top": 13,
+      "including_subtests": 1103,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "frozen_manifest_sha256": "1993095c5cce021c579599891c2f7efc3e9afb9a5ee9e896b543c40b6ad37700",
+  "pysocks_review": {
+    "version": "1.7.1",
+    "wheel_sha256": "2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5",
+    "before_actual_wire_failure": "SOCKS4a legacy IPv4 0177.0.0.1 incorrectly sent as domain; exact source uses IPv4 address",
+    "after": "legacy numeric IPv4 encoded directly; source SOCKS4a IPv6-name branch preserved; three new actual wire cases passed"
+  },
+  "git_whitespace_review": {
+    "full_check_exit_code": 2,
+    "original_upstream_license_kept_verbatim": "internal/networkproxy/licenses/PySocks-BSD.txt",
+    "source_sha256": "7027e214e014eb78b7adcc1ceda5aca713a79fc4f6a0c52c9da5b3e707e6ffe9",
+    "remaining_source_whitespace_check_exit_code": 0
+  }
+}
