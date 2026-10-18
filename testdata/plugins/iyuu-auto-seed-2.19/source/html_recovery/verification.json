@@ -1,0 +1,68 @@
+{
+  "created_utc": "2026-10-18T04:51:21.708257+00:00",
+  "source_manifest": "reference/frozen-source-manifest.json",
+  "source_manifest_sha256": "5fc4a6b0c7ee7b9c80e9137f8698211961f18972491861ab668b2faf5b2d6514",
+  "actual_source_resolver_cases": 1377,
+  "actual_source_complete_XPath_cases": 27815,
+  "source_dependency_versions": {
+    "requests": "2.34.2",
+    "lxml": [
+      6,
+      1,
+      1,
+      0
+    ],
+    "libxml": [
+      2,
+      14,
+      6
+    ],
+    "chardet": "7.4.3"
+  },
+  "normal": {
+    "handle": "25878",
+    "exit": 0,
+    "seconds": 1.097
+  },
+  "race": {
+    "handle": "25878",
+    "exit": 0,
+    "seconds": 7.177
+  },
+  "vet": {
+    "handle": "25878",
+    "exit": 0
+  },
+  "production_build": {
+    "handle": "25878",
+    "exit": 0
+  },
+  "linux_test_CGO0_build": {
+    "handle": "25878",
+    "exit": 0,
+    "sha256": "5104c3bef614139c7167ae20b6f5566bf8e221ddc6eab7e6a37ecf9b205c5932"
+  },
+  "nas": {
+    "handle": "82359",
+    "path": "reference/linux-8bb615f9-0c9b-408a-ada4-49a171bf96e1.json",
+    "sha256": "a17dab80aee0d26b5d6b8b1961065166abb41fab8156fff175e705c43f948905",
+    "exit": 0,
+    "oom": false,
+    "container_absent": true,
+    "stage_absent": true
+  },
+  "prior_failure_preserved": "reference/entities-soup-normal.txt: one script ESC1 mismatch in 22,815 cases; direct pinned libxml script state machine port fixes it; all current 27,815 full lists now pass.",
+  "integration": {
+    "module": "lightmedia/htmlextract",
+    "api": [
+      "Extract(string) (Links,error)",
+      "ErrUnicodeEncode"
+    ],
+    "assets": [],
+    "licenses": [
+      "LICENSE.libxml2"
+    ],
+    "current_main_consumes": false
+  },
+  "scope": "exact consumed XPath forms/actions, anchors/href/class and recovery states; no runtime C/CGO/Python and no generic lxml API claim"
+}

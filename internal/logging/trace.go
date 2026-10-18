@@ -158,6 +158,12 @@ func Transport(base http.RoundTripper) http.RoundTripper {
 
 type traceTransport struct{ base http.RoundTripper }
 
+func (t traceTransport) CloseIdleConnections() {
+	if closer, ok := t.base.(interface{ CloseIdleConnections() }); ok {
+		closer.CloseIdleConnections()
+	}
+}
+
 func (t traceTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	r, _ := req.Context().Value(runKey{}).(*Run)
 	if r == nil {

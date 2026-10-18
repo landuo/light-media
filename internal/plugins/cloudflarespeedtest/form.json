@@ -1,0 +1,226 @@
+{
+  "conf": [
+    {
+      "component": "VForm",
+      "content": [
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "cf_ip",
+                    "label": "优选IP",
+                    "placeholder": "121.121.121.121"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "cron",
+                    "label": "优选周期",
+                    "placeholder": "0 0 0 ? *"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "version",
+                    "readonly": true,
+                    "label": "CloudflareSpeedTest版本",
+                    "placeholder": "暂未安装"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "ipv4",
+                    "label": "IPv4"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "ipv6",
+                    "label": "IPv6"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "check",
+                    "label": "自动校准"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "onlyonce",
+                    "label": "立即运行一次"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "re_install",
+                    "label": "重装后运行"
+                  }
+                }
+              ]
+            },
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 4
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "notify",
+                    "label": "运行时通知"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VTextField",
+                  "props": {
+                    "model": "additional_args",
+                    "label": "高级参数",
+                    "placeholder": "-dd"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAlert",
+                  "props": {
+                    "type": "info",
+                    "variant": "tonal",
+                    "text": "F12看请求的Server属性，如果是cloudflare说明该站点支持Cloudflare IP优选。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "model": {
+    "cf_ip": "",
+    "cron": "",
+    "version": "",
+    "ipv4": true,
+    "ipv6": false,
+    "check": false,
+    "onlyonce": false,
+    "re_install": false,
+    "notify": true,
+    "additional_args": ""
+  }
+}

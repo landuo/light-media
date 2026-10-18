@@ -6,6 +6,8 @@ import (
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/autobackup"
 	"light-media/internal/plugins/cleaninvalidseed"
+	"light-media/internal/plugins/cloudflarespeedtest"
+	iyuu "light-media/internal/plugins/iyuuautoseed"
 	"light-media/internal/plugins/removelink"
 	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/uninstall"
@@ -13,8 +15,12 @@ import (
 
 func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 	switch pluginID {
+	case "CloudflareSpeedTest":
+		return cloudflarespeedtest.NativeManifest(), cloudflarespeedtest.NativeHandle, true
 	case "AutoBackup":
 		return autobackup.Manifest(), autobackup.Handle, true
+	case "IYUUAutoSeed":
+		return iyuu.Manifest(), iyuu.Handle, true
 	case "CleanInvalidSeed":
 		return cleaninvalidseed.Manifest(), cleaninvalidseed.Handle, true
 	case "RemoveLink":
@@ -45,5 +51,5 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
+	return []plugins.Manifest{cloudflarespeedtest.NativeManifest(), iyuu.Manifest(), autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
 }

@@ -52,6 +52,15 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "CloudflareSpeedTest" {
+					effective := config.Value
+					if owned, _, e := a.pluginStore.cloudflareRead(ctx, a.Store.DB, installation.InstanceID, installation.Generation); e == nil && len(owned.Config) > 0 {
+						effective = owned.Config
+					}
+					if value, e := cloudflareConfig(effective); e == nil {
+						state = removelink.Truth(value["cf_ip"]) && removelink.Truth(value["cron"]) && (removelink.Truth(value["ipv4"]) || removelink.Truth(value["ipv6"]))
+					}
+				}
 				if installation.PluginID == "AutoBackup" {
 					effective := config.Value
 					var exists int
@@ -203,12 +212,19 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 	return map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}, nil
 }
 
-func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	if parts := strings.Split(path, "/"); len(parts) == 2 && parts[1] == "abandon-unknown" {
+		i, e := a.pluginStore.Installation(r.Context(), parts[0])
+		if e == nil && i.PluginID == "CloudflareSpeedTest" {
+			return a.pluginCloudflareAbandonHTTP(w, r, parts[0])
+		}
 		return a.pluginAutoBackupAbandonHTTP(w, r, parts[0])
 	}
 	if parts := strings.Split(path, "/"); len(parts) == 2 && parts[1] == "retry" && r.Method == "POST" {
 		return a.pluginDeferredRetryHTTP(w, r, parts[0])
+	}
+	if a.cloudflareLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginCloudflareLifecycleHTTP(w, r, path)
 	}
 	if a.autoBackupLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginAutoBackupLifecycleHTTP(w, r, path)
@@ -294,7 +310,7 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginRunHistory(ctx, installation.InstanceID)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
+		if installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -399,11 +415,18 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "CloudflareSpeedTest":
+		if _, e := cloudflareConfig(raw); e != nil {
+			return nil, e
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "AutoBackup":
 		if _, err := autoBackupConfig(raw); err != nil {
 			return nil, err
 		}
 		return append(json.RawMessage(nil), raw...), nil
+	case "IYUUAutoSeed":
+		return iyuuTypedConfig(raw)
 	case "CleanInvalidSeed":
 		if _, err := cleanSeedConfigMap(raw); err != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "清理无效做种配置必须是有效对象")

@@ -139,10 +139,19 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 	if a.Store.Get(ctx, "site_cooldown", s.ID, &cooldown) == nil && cooldown.Until > time.Now().Unix() {
 		return bad("SITE_COOLDOWN", "站点因限流或认证异常正在冷却，请稍后重试")
 	}
+	proxySnapshot := a.Settings().ProxyHost
 	client, e := sites.New(s.Config)
+	if e == nil && s.Proxy {
+		proxy, proxyErr := resolveProxyConfig(proxySnapshot)
+		if proxyErr != nil {
+			return bad("SITE_PROXY", "全局代理配置无效")
+		}
+		client, e = sites.NewWithProxy(s.Config, proxy)
+	}
 	if e != nil {
 		return bad("SITE_CONFIG", e.Error())
 	}
+	defer client.CloseIdleConnections()
 	client.SetRequestGuard(func(requestCtx context.Context) error {
 		if e := a.guardSubscriptionContext(requestCtx); e != nil {
 			return e
@@ -156,6 +165,9 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 		}
 		if a.managedSiteKey(current) != a.managedSiteKey(s) {
 			return bad("SITE_CHANGED", "站点设置已变化，请重新发起请求")
+		}
+		if s.Proxy && a.Settings().ProxyHost != proxySnapshot {
+			return bad("SITE_CHANGED", "代理设置已变化，请重新发起请求")
 		}
 		if e := a.waitSiteRequestLimits(requestCtx, current); e != nil {
 			return e

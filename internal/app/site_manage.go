@@ -376,6 +376,9 @@ type managedDownloaderConnection struct {
 }
 
 func (a *App) managedDownloaderKey(d DownloaderConfig) string {
+	if d.APIKey != "" {
+		return a.managedConnectionKey("downloader", d.Kind, d.BaseURL, d.Username, d.Password, "api_key", d.APIKey)
+	}
 	return a.managedConnectionKey("downloader", d.Kind, d.BaseURL, d.Username, d.Password)
 }
 
@@ -388,13 +391,14 @@ func (a *App) managedDownloaders(ctx context.Context) (any, error) {
 		if observed.ConfigKey != a.managedDownloaderKey(d) {
 			observed = managedDownloaderConnection{}
 		}
-		configured := d.Password != ""
+		configured := d.Password != "" || d.APIKey != ""
+		credentials := map[string]bool{"password": d.Password != "", "api_key": d.APIKey != ""}
 		d.Password = ""
 		if !downloaderEnabled(d) {
 			observed.Status = "disabled"
 			observed.Error = ""
 		}
-		rows = append(rows, map[string]any{"config": map[string]any{"id": d.ID, "name": d.Name, "kind": d.Kind, "base_url": d.BaseURL, "username": d.Username, "enabled": downloaderEnabled(d)}, "credential_configured": configured, "default": d.ID == c.DefaultDownloader, "connection": observed.managedConnection})
+		rows = append(rows, map[string]any{"config": map[string]any{"id": d.ID, "name": d.Name, "kind": d.Kind, "base_url": d.BaseURL, "username": d.Username, "enabled": downloaderEnabled(d), "auto_category": d.AutoCategory, "sequential": d.Sequential, "first_last_piece": d.FirstLast}, "credential_configured": configured, "credential_state": credentials, "default": d.ID == c.DefaultDownloader, "connection": observed.managedConnection})
 	}
 	return map[string]any{"downloaders": rows, "default_downloader": c.DefaultDownloader}, nil
 }
@@ -428,13 +432,15 @@ func (a *App) saveManagedDownloader(ctx context.Context, in ManagedDownloaderReq
 					in.DownloadPath = old.DownloadPath
 				}
 			}
-			if old.BaseURL == in.BaseURL && old.Username == in.Username && old.Kind == in.Kind && in.Password == "" {
-				in.Password = old.Password
-			}
+			preserveDownloaderCredentials(&in.DownloaderConfig, old)
 		} else if strings.EqualFold(old.Name, in.Name) {
 			return nil, bad("DUPLICATE_DOWNLOADER_NAME", "下载器名称已存在")
 		}
 	}
+	if in.ClearAPIKey {
+		in.APIKey = ""
+	}
+	in.ClearAPIKey = false
 	if found < 0 {
 		c.Downloaders = append(c.Downloaders, in.DownloaderConfig)
 	} else {

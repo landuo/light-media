@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"light-media/internal/logging"
+	"light-media/internal/networkproxy"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -53,6 +54,22 @@ func (*Client) GoString() string     { return "catalog.Client{[redacted]}" }
 // and performs no network request. Credential errors are returned by operations.
 func New(credentials Credentials) *Client {
 	return newClient(credentials, http.DefaultTransport, 250*time.Millisecond)
+}
+
+func NewWithProxy(credentials Credentials, config networkproxy.Config) *Client {
+	transport, err := config.Transport(nil)
+	if err != nil {
+		c := newClient(credentials, nil, 250*time.Millisecond)
+		c.configError = &Error{Code: "invalid_input"}
+		return c
+	}
+	return newClient(credentials, transport, 250*time.Millisecond)
+}
+
+func (c *Client) CloseIdleConnections() {
+	if c != nil && c.http != nil {
+		c.http.CloseIdleConnections()
+	}
 }
 
 // The private transport seam lets package tests use httptest while production

@@ -111,6 +111,10 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
+	raw, err = p.iyuuPreserveCachesTx(ctx, tx, instanceID, revision, raw)
+	if err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	activation, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -204,6 +208,9 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
 	}
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
+		return PluginRun{}, err
+	}
+	if err := p.iyuuQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
 		return PluginRun{}, err
 	}
 	if pluginID == "MediaServerRefresh" && (action == "init" || action == "reload") && len(input) == 0 {
@@ -344,14 +351,31 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			return PluginRun{}, e
 		}
 		var current int
-		err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision).Scan(&current)
+		var pluginID string
+		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision).Scan(&current, &pluginID)
 		if err != nil {
 			_ = tx.Rollback()
 			return PluginRun{}, err
 		}
+		if e := p.iyuuQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID); e != nil {
+			_ = tx.Rollback()
+			if iyuuUnconfirmedQueueAdmission(e) {
+				continue // Keep this original pending identity; advance the cursor.
+			}
+			return PluginRun{}, e
+		}
 		state, errorCode := "running", ""
 		if current != 1 {
 			state, errorCode = "canceled", "PLUGIN_SNAPSHOT_STALE"
+		} else if p.isCloudflareRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
+			errorCode, err = p.claimCloudflareScheduleTx(ctx, tx, run, time.Now())
+			if err != nil {
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
+			if errorCode != "" {
+				state = "canceled"
+			}
 		} else if p.isAutoBackupRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimAutoBackupScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {

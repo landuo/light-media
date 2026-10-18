@@ -17,6 +17,7 @@ import (
 
 	"light-media/internal/logging"
 	"light-media/internal/metainfo"
+	"light-media/internal/networkproxy"
 )
 
 type Config struct {
@@ -60,10 +61,11 @@ type SearchResult struct {
 }
 
 type Client struct {
-	requestGuard func(context.Context) error
-	config       Config
-	base         *url.URL
-	http         *http.Client
+	closeProxyTransport func()
+	requestGuard        func(context.Context) error
+	config              Config
+	base                *url.URL
+	http                *http.Client
 }
 
 var numericID = regexp.MustCompile(`^[1-9][0-9]{0,19}$`)
@@ -72,6 +74,29 @@ var configID = regexp.MustCompile(`^[A-Za-z0-9_-]{1,80}$`)
 
 const htmlLimit = 8 << 20
 const torrentLimit = 32 << 20
+
+func NewWithProxy(c Config, proxy networkproxy.Config) (*Client, error) {
+	client, err := New(c)
+	if err != nil {
+		return nil, err
+	}
+	if proxy.HTTP == "" && proxy.HTTPS == "" {
+		return client, nil
+	}
+	transport, err := proxy.Transport(nil)
+	if err != nil {
+		return nil, err
+	}
+	client.http.Transport = logging.Transport(transport)
+	client.closeProxyTransport = transport.(interface{ CloseIdleConnections() }).CloseIdleConnections
+	return client, nil
+}
+
+func (c *Client) CloseIdleConnections() {
+	if c.closeProxyTransport != nil {
+		c.closeProxyTransport()
+	}
+}
 
 func New(c Config) (*Client, error) {
 	switch c.Kind {

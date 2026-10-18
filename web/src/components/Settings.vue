@@ -4,6 +4,7 @@ import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from 
 import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
 import ApiTokenSettings from './ApiTokenSettings.vue';
+import ProxySettings from './ProxySettings.vue';
 const RuleManager = defineAsyncComponent(() => import('./RuleManager.vue'));
 const ResourceMetadataSettings = defineAsyncComponent(
   () => import('./ResourceMetadataSettings.vue'),
@@ -174,6 +175,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         </div>
       </section>
       <section class="panel"><DownloaderManager /></section>
+      <section class="panel"><ProxySettings /></section>
       <section class="panel">
         <header class="section-heading"><h2>站点选项</h2></header>
         <div class="form-grid">

@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	iyuu "light-media/internal/plugins/iyuuautoseed"
 	"os"
 	"path/filepath"
 	"slices"
@@ -16,6 +17,7 @@ import (
 	"light-media/internal/plugins/autobackup"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/cleaninvalidseed"
+	cf "light-media/internal/plugins/cloudflarespeedtest"
 	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/uninstall"
 )
@@ -84,6 +86,16 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 			initialize, err := a.shouldInitializeCleanInvalidSeed(ctx, installation, config)
 			if err != nil {
 				a.log("ERROR", "plugins", "clean_seed_initialize_pending", "无效做种清理存在待核对状态，未重新初始化；其他插件继续启动", "", "")
+				continue
+			}
+			if !initialize {
+				continue
+			}
+		}
+		if installation.PluginID == cf.PluginID {
+			initialize, e := a.shouldInitializeCloudflare(ctx, installation, config)
+			if e != nil {
+				a.log("ERROR", "plugins", "cloudflare_initialize_pending", "Cloudflare存在待核对状态或证据缺失，未重新初始化", "", "")
 				continue
 			}
 			if !initialize {
@@ -222,6 +234,9 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 		ctx = lifecycleCtx
 	}
 	workerInput := run.Input
+	if err == nil && installation.PluginID == cf.PluginID && run.Action == "api" {
+		workerInput, err = cloudflareWorkerInput(run)
+	}
 	if err == nil && installation.PluginID == "AutoBackup" && run.Action == "api" {
 		workerInput, err = autoBackupWorkerInput(run)
 	}
@@ -394,8 +409,14 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == "server.status.configure" {
 		return a.pluginServerStatusConfigure(ctx, installation, run, raw)
 	}
+	if method == iyuu.ConfigureCapability || method == iyuu.ExecuteCapability || method == iyuu.FormCapability {
+		return a.pluginIYUUHost(ctx, installation, run, method, raw)
+	}
 	if method == cleaninvalidseed.ConfigureCapability || method == cleaninvalidseed.ExecuteCapability || method == cleaninvalidseed.FormCapability {
 		return a.pluginCleanInvalidSeedHost(ctx, installation, run, method, raw)
+	}
+	if method == cf.ConfigureCapability || method == cf.RunCapability {
+		return a.pluginCloudflareHost(ctx, installation, run, method, raw)
 	}
 	if method == autobackup.ConfigureCapability || method == autobackup.ExecuteCapability || method == autobackup.APICapability || method == autobackup.FormCapability {
 		return a.pluginAutoBackupHost(ctx, installation, run, method, raw)

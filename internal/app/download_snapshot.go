@@ -13,7 +13,8 @@ func downloaderSnapshot(d DownloaderConfig) string {
 	raw, _ := json.Marshal(struct {
 		Kind, BaseURL, DownloadPath string
 		Mappings                    []PathMapping
-	}{d.Kind, d.BaseURL, d.DownloadPath, d.Mappings})
+		AutoCategory                bool `json:"AutoCategory,omitempty"`
+	}{d.Kind, d.BaseURL, d.DownloadPath, d.Mappings, d.AutoCategory})
 	h := sha256.Sum256(raw)
 	return hex.EncodeToString(h[:])
 }

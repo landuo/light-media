@@ -177,7 +177,7 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, siteReferenceProtocolSchema); err != nil {
 		return nil, err
 	}
-	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema+cloudflareSchema+cloudflareRootSchema+cloudflareCommandSchema+cloudflareNoticeSchema); err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
@@ -300,12 +300,27 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 	if err := p.prepareSiteReferenceInstallTx(ctx, tx, in); err != nil {
 		return err
 	}
+	var cfParent cloudflareParent
+	if in.PluginID == "CloudflareSpeedTest" {
+		cfParent, err = p.cloudflareTransitionParentTx(ctx, tx, in.InstanceID)
+		if err != nil {
+			return err
+		}
+	}
 	var autoParent autoBackupParent
 	if in.PluginID == "AutoBackup" {
 		var err error
 		autoParent, err = p.autoBackupTransitionParentTx(ctx, tx, in.InstanceID)
 		if err != nil {
 			return err
+		}
+	}
+	var iyuuParent iyuuOwnerParent
+	if in.PluginID == "IYUUAutoSeed" {
+		var rootErr error
+		iyuuParent, rootErr = p.iyuuTransitionParentTx(ctx, tx, in.InstanceID)
+		if rootErr != nil {
+			return rootErr
 		}
 	}
 	sealed, err := p.seal("manifest", in.InstanceID, "main", in.Manifest)
@@ -319,10 +334,21 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 	if err != nil {
 		return err
 	}
+	if in.PluginID == "CloudflareSpeedTest" {
+		if err = p.cloudflareGenesisTx(ctx, tx, in.InstanceID, "install", cfParent); err != nil {
+			return err
+		}
+	}
 	if in.PluginID == "AutoBackup" {
 		if err = p.autoBackupGenesisTx(ctx, tx, in.InstanceID, "install", autoParent); err != nil {
 			return err
 		}
+	}
+	if err == nil && in.PluginID == "IYUUAutoSeed" {
+		err = p.iyuuGenesisTx(ctx, tx, in.InstanceID, "install", iyuuParent)
+	}
+	if err != nil {
+		return err
 	}
 	return p.markInstalledSiteReferencesTx(ctx, tx, in.InstanceID, "host-install/v1")
 }
@@ -387,6 +413,11 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 	if !installed {
 		return PluginStoredValue{}, bad("PLUGIN_NOT_INSTALLED", "插件已卸载，保留数据只读")
 	}
+	if kind == "config" && key == "main" {
+		if err := p.iyuuConfigWriteTx(ctx, tx, instanceID, expectedRevision, raw); err != nil {
+			return PluginStoredValue{}, err
+		}
+	}
 	var revision int64
 	err := tx.QueryRowContext(ctx, `SELECT revision FROM plugin_values WHERE instance_id=? AND kind=? AND item_key=?`, instanceID, kind, key).Scan(&revision)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -436,12 +467,23 @@ func (p *PluginStore) SaveData(ctx context.Context, instanceID, key string, expe
 // Uninstall keeps all config/data and migration receipts. Reset removes only
 // this instance's config/KV; it does not delete its package or migration audit.
 func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
+	return p.iyuuUninstallWithEffect(ctx, instanceID, nil)
+}
+func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) error {
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	parent, isAuto, err := p.autoBackupLifecycleParentTx(ctx, tx, instanceID)
+	cfParent, isCF, err := p.cloudflareLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
+	autoParent, isAuto, err := p.autoBackupLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
+	iyuuParent, isIYUU, err := p.iyuuLifecycleParentTx(ctx, tx, instanceID)
 	if err != nil {
 		return err
 	}
@@ -465,7 +507,22 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 		return err
 	}
 	if isAuto {
-		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "uninstall", parent); err != nil {
+		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "uninstall", autoParent); err != nil {
+			return err
+		}
+	}
+	if isIYUU {
+		if err = p.iyuuGenesisTx(ctx, tx, instanceID, "uninstall", iyuuParent); err != nil {
+			return err
+		}
+	}
+	if effect != nil {
+		if err := effect(ctx, tx); err != nil {
+			return err
+		}
+	}
+	if isCF {
+		if err = p.cloudflareGenesisTx(ctx, tx, instanceID, "uninstall", cfParent); err != nil {
 			return err
 		}
 	}
@@ -473,12 +530,23 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 }
 
 func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
+	return p.iyuuResetWithEffect(ctx, instanceID, nil)
+}
+func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) error {
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	parent, isAuto, err := p.autoBackupLifecycleParentTx(ctx, tx, instanceID)
+	cfParent, isCF, err := p.cloudflareLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
+	autoParent, isAuto, err := p.autoBackupLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
+	iyuuParent, isIYUU, err := p.iyuuLifecycleParentTx(ctx, tx, instanceID)
 	if err != nil {
 		return err
 	}
@@ -505,7 +573,22 @@ func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 		return err
 	}
 	if isAuto {
-		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "reset", parent); err != nil {
+		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "reset", autoParent); err != nil {
+			return err
+		}
+	}
+	if isIYUU {
+		if err = p.iyuuGenesisTx(ctx, tx, instanceID, "reset", iyuuParent); err != nil {
+			return err
+		}
+	}
+	if isCF {
+		if err = p.cloudflareGenesisTx(ctx, tx, instanceID, "reset", cfParent); err != nil {
+			return err
+		}
+	}
+	if effect != nil {
+		if err := effect(ctx, tx); err != nil {
 			return err
 		}
 	}
@@ -653,7 +736,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if err = p.stageImportedSiteReferencesTx(ctx, tx, installation.InstanceID, run.ID); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
-	if _, err = p.saveValueTx(ctx, tx, installation.InstanceID, "config", "main", 0, config); err != nil {
+	importCtx := ctx
+	if installation.PluginID == "IYUUAutoSeed" {
+		importCtx = context.WithValue(ctx, iyuuOriginalImportKey{}, iyuuOriginalImportAdmission{Instance: installation.InstanceID, Migration: run.ID, ConfigSHA: tokenHash(string(config))})
+	}
+	if _, err = p.saveValueTx(importCtx, tx, installation.InstanceID, "config", "main", 0, config); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
 	for key, value := range in.Data {

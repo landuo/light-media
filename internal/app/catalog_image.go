@@ -74,7 +74,7 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		return bad("IMAGE_UNAVAILABLE", "无法建立图片请求")
 	}
 	req.Header.Set("Accept", "image/jpeg,image/png,image/webp")
-	response, e := assetImageClient.Do(req)
+	response, e := a.metadataImageRequest(req)
 	if e != nil {
 		return bad("IMAGE_UNAVAILABLE", "TMDB 图片暂时不可用")
 	}

@@ -375,7 +375,7 @@ func (a *App) fetchAssetImage(ctx context.Context, job Job, asset Asset, relativ
 		}
 		request.Header.Set("User-Agent", "light-media/0.1")
 		request.Header.Set("Accept", "image/jpeg,image/png,image/webp")
-		response, err := assetImageClient.Do(request)
+		response, err := a.metadataImageRequest(request)
 		if err != nil {
 			return bad("IMAGE_UNAVAILABLE", "TMDB 图片暂时不可用")
 		}

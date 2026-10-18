@@ -1,3 +1,6 @@
 # Vite preserves the upstream chart library's multiline SVG string literals.
 # Their trailing spaces are literal data; source files keep normal checks.
 web/dist/assets/PluginPieChart-*.js whitespace=-blank-at-eol
+# Preserve exact upstream detector data and the source oracle byte stream.
+internal/plugins/iyuuautoseed/compat/encodingdetector/models/idf.bin binary
+testdata/plugins/iyuu-auto-seed-2.19/source/__init__.py whitespace=-blank-at-eol

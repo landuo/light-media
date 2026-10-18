@@ -1,0 +1,106 @@
+{
+  "created_utc": "2026-10-18T05:33:18.268422+00:00",
+  "candidate_only": true,
+  "registered": false,
+  "complete_IYUU_migration": false,
+  "migrated_original_configuration": false,
+  "migrated_original_KV_entries": 0,
+  "source_manifest": "reference/phase5-current-inputs.json",
+  "source_manifest_sha256": "df2ad0550840c6d1046c62ad993baea0753f2a90d4bc00210e85bb03332ba10f",
+  "input_count": 2630,
+  "command_ledger": "reference/phase5-command-ledger.jsonl",
+  "command_ledger_sha256": "2c19d6cdbd6d4349397e37b349fc4a938527df2030062a6b006f29dd9d088db5",
+  "checks": [
+    {
+      "handle": "23837",
+      "command": "final core/native go build ./...; full normal/race/vet; Linux CGO0 core/native test builds",
+      "exit": 0,
+      "normal_seconds": [
+        1.043,
+        0.475
+      ],
+      "race_seconds": [
+        7.02,
+        2.003
+      ]
+    },
+    {
+      "handle": "69792",
+      "command": "final complete actual App server production build; shared notice/uninstall/deferred+IYUU normal; all IYUU race; App vet; Linux CGO0 App test and complete server build",
+      "exit": 0,
+      "normal_seconds": 15.685,
+      "race_seconds": 52.556
+    },
+    {
+      "handle": "57158",
+      "command": "fresh original helper/config/business exact AST oracle isolation",
+      "exit": 0,
+      "report": "reference/phase5-source-oracles-ffee494e-1cdc-4917-a30d-b2b93f163408.json"
+    },
+    {
+      "handle": "92897 (second allocation)",
+      "chunk": "d6af66",
+      "command": "normal after refreshed AST fixtures; full NAS core/native/App/product smoke",
+      "exit": 0,
+      "normal_seconds": 1.992,
+      "report": "reference/phase5-linux-9118f18b-6373-4d9c-a144-b8cfb10f1ae2.json"
+    }
+  ],
+  "nas": {
+    "path": "reference/phase5-linux-9118f18b-6373-4d9c-a144-b8cfb10f1ae2.json",
+    "sha256": "6fc20e4bd1c03fa4442ae0987e42d9e6be032a13ed1b57584eec4432ff38bc68",
+    "jobs": [
+      [
+        "core",
+        0,
+        false
+      ],
+      [
+        "native",
+        0,
+        false
+      ],
+      [
+        "app",
+        0,
+        false
+      ],
+      [
+        "smoke",
+        0,
+        false
+      ]
+    ],
+    "stage_absent": true,
+    "containers_absent": {
+      "lightmedia-iyuu-phase5-go-core-9118f18b-6373-4d9c-a144-b8cfb10f1ae2": true,
+      "lightmedia-iyuu-phase5-go-native-9118f18b-6373-4d9c-a144-b8cfb10f1ae2": true,
+      "lightmedia-iyuu-phase5-go-app-9118f18b-6373-4d9c-a144-b8cfb10f1ae2": true,
+      "lightmedia-iyuu-phase5-go-smoke-9118f18b-6373-4d9c-a144-b8cfb10f1ae2": true
+    }
+  },
+  "binaries": {
+    "reference/build/phase5-app.test": "7d168bc900452efc29b530ad37f4ebba88302a04feb97e5f179d1c3d9381d6ec",
+    "reference/build/phase5-core.test": "0ae372f2de5e870d28961507ec65a783d81130b3d12ecd1ee470782a77429d4e",
+    "reference/build/phase5-macos-server": "19e77d06be9102b69e4a84bc86abe6764b8291efdfbfd7c8759cdcaa6cb6ce2a",
+    "reference/build/phase5-native.test": "59cb0b53559c84627bf709f946f232b3477a817aa2df7e691f17be365b654ad6",
+    "reference/build/phase5-server": "58c943fab763f85ac8f97e93dc6ae069b0217c9b85c3b0e984dbb49bd0808fed"
+  },
+  "dependency_proofs": {
+    "encoding": "encoding_detector/verification.json",
+    "html": "html_recovery/verification.json",
+    "urlprep": "url_prep/verification-manifest.json",
+    "pythonre": "python_re/verification-manifest.json"
+  },
+  "dependency_proof_sha256": {
+    "encoding_detector/verification.json": "043344163416ae3d865b6837f107d2294f18876a4fa1b09c020c61a912b42cd6",
+    "html_recovery/verification.json": "c8a5e0d7ea64cd3cae0e0bc5c61023994e34af52e20a3cbbbfcac167c270259b",
+    "url_prep/verification-manifest.json": "4b137101bbc6bea261b6756a0ce27ab769a6432d5842d962c9f4ff4e14166c3b",
+    "python_re/verification-manifest.json": "cf91600001d28bce3ecdbf3cff493fd68b0ae891ca9a50311899e330e91a6c1d"
+  },
+  "promotion_plan": "handoff/promotion-plan.json",
+  "promotion_plan_sha256": "0cf716f94bd8c2c6f3c7e1619792bf243d02b9fb01cc7c8d04f965550daa638b",
+  "focused_App_patch_sha256": "acb5123da791741b95680f213107ec65440bd058baba63ceeceed751287c6342",
+  "known_gaps": "PHASE5_KNOWN_GAPS.md",
+  "all_recorded_compiler_and_nas_handles_terminal": true
+}

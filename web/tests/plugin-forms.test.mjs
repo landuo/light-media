@@ -348,3 +348,53 @@ test('complete original AutoSignIn form retains its cron editor and independent 
   assert.equal(model.cron, null);
   assert.equal(model.unrelated, false);
 });
+
+test('complete original IYUU form supports its explanatory span, underline and safe README link', () => {
+  const original = JSON.parse(
+    readFileSync(new URL('../../internal/plugins/iyuuautoseed/form.json', import.meta.url), 'utf8'),
+  );
+  assert.deepEqual(pluginFormIssues(original.form), []);
+  const tags = [];
+  const visit = (nodes) =>
+    nodes.forEach((node) => {
+      tags.push(node.component);
+      if (node.content) visit(node.content);
+    });
+  visit(original.form);
+  assert.equal(tags.length, 51);
+  assert.equal(tags.filter((tag) => tag === 'span').length, 1);
+  assert.equal(tags.filter((tag) => tag === 'u').length, 1);
+  const renderer = readFileSync(
+    new URL('../src/components/PluginFormRenderer.vue', import.meta.url),
+    'utf8',
+  );
+  assert.match(renderer, /u: 'u'/);
+  assert.match(renderer, /pluginFieldProps\(node.props \|\| \{\}, props.model, node.component\)/);
+});
+
+test('plain source text components forward only safe text decoration props and no event or HTML', () => {
+  const safe = {
+    class: 'text-primary',
+    title: 'README <safe>',
+    style: { color: '#663399', textDecoration: 'underline' },
+  };
+  for (const component of ['span', 'u']) {
+    assert.deepEqual(pluginFieldProps(safe, {}, component), safe);
+    assert.deepEqual(
+      pluginFormIssues([{ component, props: safe, text: '<script>plain text</script>' }]),
+      [],
+    );
+    for (const props of [
+      { onclick: 'alert(1)' },
+      { onClick: 'alert(1)' },
+      { innerHTML: '<img src=x onerror=alert(1)>' },
+      { href: 'https://example.org' },
+      { style: { backgroundImage: 'url(https://example.org)' } },
+      { style: { color: 'expression(alert(1))' } },
+      { style: 'color:red;position:fixed' },
+    ]) {
+      assert.notDeepEqual(pluginFormIssues([{ component, props }]), []);
+      assert.deepEqual(pluginFieldProps(props, {}, component), {});
+    }
+  }
+});

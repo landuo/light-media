@@ -399,7 +399,7 @@ const actions: Record<string, string> = {
   service: '定时执行',
   event: '事件处理',
   once: '立即运行一次',
-  run: '手动备份',
+  run: '手动执行',
 };
 onMounted(() => {
   load();

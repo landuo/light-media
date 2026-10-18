@@ -24,6 +24,7 @@ type PathMapping struct {
 }
 type DownloaderConfig struct {
 	download.Config
+	ClearAPIKey  bool          `json:"clear_api_key,omitempty"`
 	Name         string        `json:"name"`
 	DownloadPath string        `json:"download_path"`
 	Mappings     []PathMapping `json:"mappings"`
@@ -72,6 +73,8 @@ type TMDBConfig struct {
 	AccessToken string `json:"access_token"`
 }
 type Settings struct {
+	ProxyHost            string                       `json:"proxy_host,omitempty"`
+	ClearProxyHost       bool                         `json:"clear_proxy_host,omitempty"`
 	PriorityRules        *priorityrules.Configuration `json:"priority_rules,omitempty"`
 	APIToken             string                       `json:"api_token"`
 	SiteDataRefreshHours *int                         `json:"site_data_refresh_hours"`

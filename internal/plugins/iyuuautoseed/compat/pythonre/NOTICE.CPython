@@ -1,0 +1,15 @@
+This Go implementation is derived from the consumed Unicode str regular
+expression parser, compiler and matching semantics in CPython v3.12.13:
+Lib/re/{__init__,_parser,_compiler,_constants,_casefix}.py and
+Modules/_sre/{sre.c,sre.h,sre_lib.h,sre_constants.h,sre_targets.h}.
+
+Secret Labs' Regular Expression Engine
+Copyright (c) 1997-2001 by Secret Labs AB. All rights reserved.
+The original sre.c SRE2.2.2 notice additionally states Copyright(c)1997-2002 by Secret Labs AB.
+Original source headers state redistribution under the Python 1.6 license.
+The complete CPython license chain is retained in LICENSE.PSF; exact original
+source files and their headers are preserved under reference/source/.
+
+Unicode character properties and names are from CPython3.12.13 Unicode15.0.0.
+Copyright (c) 1991-2026 Unicode, Inc. See LICENSE.Unicode.
+No Python interpreter, C extension, or CGO component is used at product runtime.

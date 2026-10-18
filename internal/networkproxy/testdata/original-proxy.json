@@ -1,0 +1,104 @@
+{
+  "source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "source_path": "MoviePilot/app/core/config.py",
+  "source_methods": [
+    "PROXY",
+    "_get_env_proxy"
+  ],
+  "cases": [
+    {
+      "setting": "",
+      "env": {},
+      "expected": null
+    },
+    {
+      "setting": "   ",
+      "env": {},
+      "expected": null
+    },
+    {
+      "setting": " http://explicit.invalid:7890 ",
+      "env": {
+        "HTTPS_PROXY": "http://ignored.invalid:9"
+      },
+      "expected": {
+        "http": "http://explicit.invalid:7890",
+        "https": "http://explicit.invalid:7890"
+      }
+    },
+    {
+      "setting": "",
+      "env": {
+        "HTTPS_PROXY": " http://upper-https.invalid:1 ",
+        "https_proxy": "http://lower-https.invalid:2"
+      },
+      "expected": {
+        "http": "http://upper-https.invalid:1",
+        "https": "http://upper-https.invalid:1"
+      }
+    },
+    {
+      "setting": "",
+      "env": {
+        "HTTP_PROXY": "http://upper-http.invalid:3",
+        "http_proxy": "http://lower-http.invalid:4"
+      },
+      "expected": {
+        "http": "http://upper-http.invalid:3",
+        "https": "http://upper-http.invalid:3"
+      }
+    },
+    {
+      "setting": "",
+      "env": {
+        "HTTPS_PROXY": " ",
+        "https_proxy": "http://lower-https.invalid:2",
+        "HTTP_PROXY": "http://upper-http.invalid:3"
+      },
+      "expected": {
+        "http": "http://upper-http.invalid:3",
+        "https": "http://lower-https.invalid:2"
+      }
+    },
+    {
+      "setting": "",
+      "env": {
+        "HTTP_PROXY": " ",
+        "http_proxy": "socks5://user:password@http.invalid:1080"
+      },
+      "expected": {
+        "http": "socks5://user:password@http.invalid:1080",
+        "https": "socks5://user:password@http.invalid:1080"
+      }
+    },
+    {
+      "setting": "",
+      "env": {
+        "HTTPS_PROXY": "socks5h://https.invalid:1080",
+        "HTTP_PROXY": "https://http.invalid:443",
+        "NO_PROXY": "*"
+      },
+      "expected": {
+        "http": "https://http.invalid:443",
+        "https": "socks5h://https.invalid:1080"
+      }
+    },
+    {
+      "setting": "",
+      "env": {
+        "ALL_PROXY": "http://unused.invalid:9"
+      },
+      "expected": null
+    },
+    {
+      "setting": "socks5://proxy.invalid:1080",
+      "env": {
+        "HTTP_PROXY": "http://ignored.invalid:1"
+      },
+      "expected": {
+        "http": "socks5://proxy.invalid:1080",
+        "https": "socks5://proxy.invalid:1080"
+      }
+    }
+  ]
+}

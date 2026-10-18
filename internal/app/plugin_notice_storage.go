@@ -187,11 +187,19 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err := p.noticeUnseal("route", id, sealed, &r); err != nil {
 		return r, nil, err
 	}
-	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || (r.Kind != "clean_seed" && r.Kind != "auto_backup") || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
+	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || (r.Kind != "clean_seed" && r.Kind != "auto_backup" && r.Kind != "iyuu" && r.Kind != "cloudflare") || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
-	if r.Kind == "auto_backup" {
+	if r.Kind == "cloudflare" {
+		if err := p.validateCloudflareNotice(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else if r.Kind == "auto_backup" {
 		if err := p.validateAutoBackupNotice(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else if r.Kind == "iyuu" {
+		if err := p.validateIYUUNotice(ctx, q, r); err != nil {
 			return r, nil, err
 		}
 	} else {

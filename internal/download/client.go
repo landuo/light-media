@@ -31,11 +31,15 @@ var (
 )
 
 type Config struct {
-	ID       string `json:"id"`
-	Kind     string `json:"kind"`
-	BaseURL  string `json:"base_url"`
-	Username string `json:"username,omitempty"`
-	Password string `json:"password,omitempty"`
+	ID           string `json:"id"`
+	Kind         string `json:"kind"`
+	BaseURL      string `json:"base_url"`
+	Username     string `json:"username,omitempty"`
+	Password     string `json:"password,omitempty"`
+	APIKey       string `json:"api_key,omitempty"`
+	AutoCategory bool   `json:"auto_category,omitempty"`
+	Sequential   bool   `json:"sequential,omitempty"`
+	FirstLast    bool   `json:"first_last_piece,omitempty"`
 }
 
 type Task struct {
@@ -117,6 +121,10 @@ func New(config Config) (*Client, error) {
 	}
 	if len(config.Username) > 256 || len(config.Password) > 4096 || strings.ContainsAny(config.Username, "\r\n:") {
 		return nil, failure("configure", "invalid_credentials")
+	}
+	config.APIKey = strings.TrimSpace(config.APIKey)
+	if len(config.APIKey) > 4096 || strings.IndexFunc(config.APIKey, func(r rune) bool { return r < 32 || r == 127 }) >= 0 || (config.APIKey != "" && config.Kind != "qbittorrent") {
+		return nil, failure("configure", "invalid_api_key")
 	}
 	if config.Kind == "transmission" && (u.Path == "" || u.Path == "/") {
 		u.Path = "/transmission/rpc"
@@ -345,6 +353,9 @@ func (c *Client) request(ctx context.Context, method string, endpoint *url.URL, 
 	}
 	req.Header.Set("Accept", "application/json, text/plain")
 	req.Header.Set("Referer", c.base.Scheme+"://"+c.base.Host+"/")
+	if c.config.Kind == "qbittorrent" && c.config.APIKey != "" {
+		req.Header.Set("Authorization", "Bearer "+c.config.APIKey)
+	}
 	if c.config.Kind == "transmission" {
 		req.SetBasicAuth(c.config.Username, c.config.Password)
 		if session != "" {

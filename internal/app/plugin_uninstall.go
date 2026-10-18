@@ -306,7 +306,15 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if !found || o.removed[instance] {
 		return bad("PLUGIN_RUN_SCOPE_DENIED", "卸载目标不属于当前已安装快照")
 	}
-	parent, isAuto, err := o.p.autoBackupLifecycleParentTx(ctx, o.tx, instance)
+	cfParent, isCF, err := o.p.cloudflareLifecycleParentTx(ctx, o.tx, instance)
+	if err != nil {
+		return err
+	}
+	autoParent, isAuto, err := o.p.autoBackupLifecycleParentTx(ctx, o.tx, instance)
+	if err != nil {
+		return err
+	}
+	iyuuParent, isIYUU, err := o.p.iyuuLifecycleParentTx(ctx, o.tx, instance)
 	if err != nil {
 		return err
 	}
@@ -337,7 +345,17 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 		return err
 	}
 	if isAuto {
-		if err = o.p.autoBackupGenesisTx(ctx, o.tx, instance, "bulk_uninstall", parent); err != nil {
+		if err = o.p.autoBackupGenesisTx(ctx, o.tx, instance, "bulk_uninstall", autoParent); err != nil {
+			return err
+		}
+	}
+	if isIYUU {
+		if err = o.p.iyuuGenesisTx(ctx, o.tx, instance, "bulk_uninstall", iyuuParent); err != nil {
+			return err
+		}
+	}
+	if isCF {
+		if err = o.p.cloudflareGenesisTx(ctx, o.tx, instance, "bulk_uninstall", cfParent); err != nil {
 			return err
 		}
 	}
@@ -382,9 +400,15 @@ type pluginUninstallCleanupPrepared struct {
 	remove            *pluginRemoveLinkPrepared
 	seed              *pluginCleanInvalidSeedPrepared
 	auto              *pluginAutoBackupPrepared
+	iyuu              *pluginIYUUPrepared
+	cloudflare        *pluginCloudflarePrepared
 }
 
 func (p *pluginUninstallCleanupPrepared) release() {
+	if p.cloudflare != nil {
+		p.cloudflare.o.unlock()
+		return
+	}
 	if p.auto != nil {
 		p.auto.o.unlock()
 		return
@@ -393,9 +417,14 @@ func (p *pluginUninstallCleanupPrepared) release() {
 		p.remove.release()
 	} else if p.seed != nil {
 		p.seed.release()
+	} else if p.iyuu != nil {
+		p.iyuu.release()
 	}
 }
 func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
+	if p.cloudflare != nil {
+		return nil
+	}
 	if p.auto != nil {
 		return nil
 	}
@@ -405,9 +434,15 @@ func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
 	if p.seed != nil {
 		return p.seed.drain(ctx)
 	}
+	if p.iyuu != nil {
+		return p.iyuu.drain(ctx)
+	}
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
 func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.Tx, to cleanuphost.Binding, runID string) error {
+	if p.cloudflare != nil {
+		return p.cloudflare.publishTx(ctx, tx)
+	}
 	if p.auto != nil {
 		return p.auto.publishTx(ctx, tx)
 	}
@@ -417,9 +452,16 @@ func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.
 	if p.seed != nil {
 		return p.seed.publishTx(ctx, tx, seedhost.Binding{InstanceID: to.InstanceID, Generation: to.Generation, Revision: to.Revision}, runID)
 	}
+	if p.iyuu != nil {
+		return p.iyuu.publishTx(ctx, tx, to, runID)
+	}
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
 func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committed bool) error {
+	if p.cloudflare != nil {
+		p.cloudflare.resolve(committed)
+		return nil
+	}
 	if p.auto != nil {
 		return nil
 	}
@@ -430,6 +472,9 @@ func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committe
 	}
 	if p.seed != nil {
 		return p.seed.resolve(ctx, committed)
+	}
+	if p.iyuu != nil {
+		return p.iyuu.resolve(ctx, committed)
 	}
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
@@ -451,10 +496,20 @@ func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []Plu
 		p := &pluginUninstallCleanupPrepared{pluginID: in.PluginID, version: in.Version}
 		var err error
 		switch in.PluginID {
+		case "CloudflareSpeedTest":
+			p.cloudflare, err = a.prepareCloudflareTransition(ctx, in)
+			if err == nil {
+				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.cloudflare.fromRevision}
+			}
 		case "AutoBackup":
 			p.auto, err = a.prepareAutoBackupTransition(ctx, in)
 			if err == nil {
 				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.auto.fromRevision}
+			}
+		case "IYUUAutoSeed":
+			p.iyuu, err = a.prepareIYUUTransition(ctx, in, "uninstall")
+			if err == nil {
+				p.from = p.iyuu.from
 			}
 		case "RemoveLink":
 			p.remove, err = a.prepareRemoveLinkTransition(ctx, in, "uninstall")
@@ -545,7 +600,7 @@ func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([
 	}
 	selected := []PluginInstallation{}
 	for _, in := range inventory {
-		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup") {
+		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest") {
 			selected = append(selected, in)
 		}
 	}
@@ -601,7 +656,7 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 		return json.RawMessage(`null`), nil
 	}
 	for _, instance := range planned.Removed {
-		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" {
+		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" {
 			matched := false
 			for _, p := range prepared {
 				if p.from.InstanceID == instance && p.from.Generation == target.Generation && p.pluginID == target.PluginID && p.version == target.Version {

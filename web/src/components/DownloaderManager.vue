@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import AppIcon from './AppIcon.vue';
-import { onMounted, ref } from 'vue';
+import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { api, action, clone, errorText, friendly, refreshSettings, toast } from '../api';
+const DownloaderConfigDialog = defineAsyncComponent(() => import('./DownloaderConfigDialog.vue'));
 const data = ref<any>({ downloaders: [], default_downloader: '' }),
   editing = ref<any>(null),
   original = ref<any>(null),
@@ -29,6 +30,10 @@ function create(kind: string) {
       base_url: '',
       username: '',
       password: '',
+      api_key: '',
+      auto_category: false,
+      sequential: false,
+      first_last_piece: false,
       enabled: false,
     },
     default: false,
@@ -40,6 +45,7 @@ function edit(row: any) {
   original.value = row;
   editing.value = {
     ...clone(row.config),
+    api_key: row.config.api_key || '',
     enabled: row.config.enabled !== false,
     default: row.default,
   };
@@ -182,58 +188,13 @@ onMounted(load);
         </div>
       </div>
     </footer>
-    <div v-if="editing" class="modal-backdrop" @click.self="editing = null">
-      <form
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="downloader-title"
-        @submit.prevent="update"
-      >
-        <header class="section-heading">
-          <div>
-            <h2 id="downloader-title">配置</h2>
-            <p class="hint">{{ editing.name }}</p>
-          </div>
-          <button type="button" class="icon-button" aria-label="关闭" @click="editing = null">
-            <AppIcon name="close" />
-          </button>
-        </header>
-        <div class="form-grid">
-          <label class="check"
-            ><input
-              v-model="editing.enabled"
-              type="checkbox"
-              @change="editing.enabled || (editing.default = false)"
-            />启用</label
-          >
-          <label class="check"
-            ><input
-              v-model="editing.default"
-              type="checkbox"
-              :disabled="!editing.enabled"
-            />默认</label
-          >
-          <label>名称<input v-model.trim="editing.name" required maxlength="64" /></label>
-          <label class="span-two"
-            >地址<input
-              v-model.trim="editing.base_url"
-              type="url"
-              :required="editing.enabled"
-              placeholder="http(s)://IP:端口"
-          /></label>
-          <label>用户名<input v-model="editing.username" autocomplete="off" /></label>
-          <label
-            >密码<input
-              v-model="editing.password"
-              type="password"
-              autocomplete="new-password"
-              :placeholder="original?.credential_configured ? '已保存，留空保留' : '登录密码'"
-          /></label>
-        </div>
-        <footer class="button-row"><button class="primary" type="submit">保存</button></footer>
-      </form>
-    </div>
+    <DownloaderConfigDialog
+      v-if="editing"
+      :value="editing"
+      :credentials="original?.credential_state"
+      @close="editing = null"
+      @confirm="update"
+    />
   </section>
 </template>
 <style scoped>

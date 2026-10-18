@@ -21,6 +21,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 	"light-media/internal/catalog"
+	"light-media/internal/networkproxy"
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/subscribegroup"
 )
@@ -35,6 +36,10 @@ type App struct {
 	catMu                   sync.Mutex
 	catClient               *catalog.Client
 	catCreds                TMDBConfig
+	catProxy                networkproxy.Config
+	metadataProxyMu         sync.Mutex
+	metadataProxyConfig     networkproxy.Config
+	metadataProxyClient     *http.Client
 	Store                   *Store
 	Dir                     string
 	web                     http.Handler
@@ -68,6 +73,8 @@ type App struct {
 	pluginRemoveLink        pluginRemoveLinkRuntime
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime
+	pluginIYUU              pluginIYUURuntime
+	pluginCloudflare        pluginCloudflareRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 
@@ -199,6 +206,16 @@ func (a *App) Close() error {
 		a.stopMediaRefreshPlugins()
 	}
 	a.log("INFO", "runtime", "stopped", "服务已停止", "", "")
+	a.catMu.Lock()
+	if a.catClient != nil {
+		a.catClient.CloseIdleConnections()
+	}
+	a.catMu.Unlock()
+	a.metadataProxyMu.Lock()
+	if a.metadataProxyClient != nil {
+		a.metadataProxyClient.CloseIdleConnections()
+	}
+	a.metadataProxyMu.Unlock()
 	a.logs.close()
 	return a.Store.Close()
 }
@@ -219,8 +236,18 @@ func (a *App) saveSettings(ctx context.Context, c Settings) error {
 // Callers hold settingsMu. The existing download/import lock order also binds
 // plugin site changes to the same publication boundary as all other settings.
 func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect func(context.Context, *sql.Tx, *Settings) error) error {
+	if err := normalizeProxySettings(&c); err != nil {
+		return err
+	}
 	c.DebugUntil = ""
 	c.AutoImportMode = "hardlink"
+	for i := range c.Downloaders {
+		c.Downloaders[i].APIKey = strings.TrimSpace(c.Downloaders[i].APIKey)
+		if c.Downloaders[i].ClearAPIKey {
+			c.Downloaders[i].APIKey = ""
+		}
+		c.Downloaders[i].ClearAPIKey = false
+	}
 	a.downloadMu.Lock()
 	defer a.downloadMu.Unlock()
 	a.importMu.Lock()
@@ -344,11 +371,12 @@ var urlPattern = regexp.MustCompile(`(?i)https?://[^\s"<>]+`)
 
 func cleanWithSettings(s string, c Settings) string {
 	secrets := []string{c.TMDB.APIKey, c.TMDB.AccessToken, c.FNOS.Password, c.APIToken}
+	secrets = append(secrets, proxySecrets(c.ProxyHost)...)
 	for _, x := range c.Sites {
 		secrets = append(secrets, x.Cookie, x.APIKey, x.Token, x.RSS, string(x.Note))
 	}
 	for _, x := range c.Downloaders {
-		secrets = append(secrets, x.Password)
+		secrets = append(secrets, x.Password, x.APIKey)
 	}
 	for _, v := range secrets {
 		if v != "" {
@@ -484,12 +512,21 @@ func (a *App) cached(ctx context.Context, key string, ttl time.Duration, dst any
 	return c.At, json.Unmarshal(b, dst)
 }
 func (a *App) catalog() *catalog.Client {
-	c := a.Settings().TMDB
+	settings := a.Settings()
+	c := settings.TMDB
+	proxy, err := networkproxy.Resolve(settings.ProxyHost, os.Getenv)
+	if err != nil {
+		proxy = networkproxy.Config{HTTP: "invalid", HTTPS: "invalid"}
+	}
 	a.catMu.Lock()
 	defer a.catMu.Unlock()
-	if a.catClient == nil || a.catCreds != c {
-		a.catClient = catalog.New(catalog.Credentials{APIKey: c.APIKey, AccessToken: c.AccessToken})
+	if a.catClient == nil || a.catCreds != c || a.catProxy != proxy {
+		if a.catClient != nil {
+			a.catClient.CloseIdleConnections()
+		}
+		a.catClient = catalog.NewWithProxy(catalog.Credentials{APIKey: c.APIKey, AccessToken: c.AccessToken}, proxy)
 		a.catCreds = c
+		a.catProxy = proxy
 	}
 	return a.catClient
 }

@@ -49,6 +49,7 @@ const components: Record<string, Component | string> = {
   VApexChart: defineAsyncComponent(() => import('./PluginPieChart.vue')),
   div: 'div',
   span: 'span',
+  u: 'u',
   a: 'a',
   thead: 'thead',
   tbody: 'tbody',
@@ -59,7 +60,7 @@ const components: Record<string, Component | string> = {
 function render(node: PluginFormNode): any {
   const component = components[node.component];
   if (!component) return null; // The dialog blocks save and reports unsupported nodes.
-  const bound = pluginFieldProps(node.props || {}, props.model);
+  const bound = pluginFieldProps(node.props || {}, props.model, node.component);
   if (node.component === 'a') bound.rel = 'noopener noreferrer';
   if (node.component === 'VImg' && /^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(bound.src || ''))
     bound.src = import.meta.env.BASE_URL + bound.src.slice(1);

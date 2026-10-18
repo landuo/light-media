@@ -67,6 +67,7 @@ async function mount(t, initial = {}) {
         return {
           ...vue,
           onMounted: (callback) => mounted.push(callback),
+          defineAsyncComponent: () => ({ name: 'DownloaderConfigDialog' }),
           withDirectives: (node) => node,
         };
       if (dependency === '../api')
@@ -154,34 +155,35 @@ test('LAN HTTP can add both downloader types as distinct disabled drafts and edi
     'adding a draft must not persist settings or contact a downloader',
   );
 
+  const editor = () => app.nodes().find((node) => node.type?.name === 'DownloaderConfigDialog');
   for (const card of cards) {
     await card.props.onClick();
     await vue.nextTick();
-    const dialog = app.nodes().find((node) => node.props?.role === 'dialog');
+    const dialog = editor();
     assert.ok(dialog);
-    assert.match(nodeText(dialog), new RegExp(nodeText(card).match(/下载器\d+/)[0]));
-    await app.click('关闭');
+    assert.equal(dialog.props.value.name, nodeText(card).match(/下载器\d+/)[0]);
+    await dialog.props.onClose();
+    await vue.nextTick();
+    assert.equal(editor(), undefined);
   }
 
   await app.cards()[0].props.onClick();
   await vue.nextTick();
-  const nameLabel = app
-    .nodes()
-    .find((node) => node.type === 'label' && nodeText(node).trim() === '名称');
-  assert.ok(nameLabel);
-  const nameInput = nameLabel.children.find((node) => node.type === 'input');
-  nameInput.props['onUpdate:modelValue']('家庭 qB');
+  // The Vuetify child edits an isolated draft. Close discards changes; its
+  // validated confirm event updates this card without submitting settings.
+  editor().props.value.name = 'discarded draft';
+  await editor().props.onClose();
   await vue.nextTick();
-  const form = app.nodes().find((node) => node.type === 'form');
-  await form.props.onSubmit({ preventDefault() {} });
+  assert.match(nodeText(app.cards()[0]), /下载器1/);
+  await app.cards()[0].props.onClick();
+  await vue.nextTick();
+  editor().props.value.name = '家庭 qB';
+  await editor().props.onConfirm();
   await vue.nextTick();
   assert.match(nodeText(app.cards()[0]), /家庭 qB/);
   assert.equal(app.cards()[0].key, cards[0].key);
   assert.ok(app.cards()[0].props.class.includes('disabled'));
-  assert.equal(
-    app.nodes().some((node) => node.props?.role === 'dialog'),
-    false,
-  );
+  assert.equal(editor(), undefined);
 });
 
 test('section save preserves existing downloader identity and unrelated settings while saving new disabled drafts', async (t) => {

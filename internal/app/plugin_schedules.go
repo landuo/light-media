@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regexp"
+	"strings"
 	"time"
 
 	"light-media/internal/plugins/schedule"
@@ -193,15 +194,27 @@ func latestPluginScheduleDue(trigger *schedule.Trigger, due, at time.Time) (time
 
 func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Time) (int, error) {
 	queued := 0
+	// Only this dispatch skips a positively identified unknown owner. Its due
+	// instant is untouched and the next dispatch checks the owner again.
+	blocked := make([]any, 0)
 	for count := 0; count < 200; count++ {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return queued, err
 		}
-		var instanceID, serviceID, dueText string
+		var instanceID, serviceID, dueText, pluginID string
 		var generation, revision int64
 		var sealed []byte
-		err = tx.QueryRowContext(ctx, `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND v.revision=s.config_revision ORDER BY s.next_due,s.instance_id,s.service_id LIMIT 1`, schedule.FormatTime(at)).Scan(&instanceID, &serviceID, &generation, &revision, &sealed, &dueText)
+		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND v.revision=s.config_revision`
+		args := []any{schedule.FormatTime(at)}
+		if len(blocked) > 0 {
+			// At most 200 instances are considered in one bounded dispatch. IDs
+			// stay SQL parameters, including all services of a blocked instance.
+			query += ` AND s.instance_id NOT IN (` + strings.TrimSuffix(strings.Repeat("?,", len(blocked)), ",") + `)`
+			args = append(args, blocked...)
+		}
+		query += ` ORDER BY s.next_due,s.instance_id,s.service_id LIMIT 1`
+		err = tx.QueryRowContext(ctx, query, args...).Scan(&instanceID, &serviceID, &generation, &revision, &sealed, &dueText, &pluginID)
 		if errors.Is(err, sql.ErrNoRows) {
 			_ = tx.Rollback()
 			return queued, nil
@@ -228,6 +241,11 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 			if err != nil {
 				return bad("PLUGIN_SCHEDULE_CORRUPT", "插件定时触发器无法读取")
 			}
+			// Check before misfire/busy handling too: neither can consume a due
+			// instant belonging to an unresolved authenticated IYUU timeline.
+			if err := p.iyuuQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
+				return err
+			}
 			latest, next := latestPluginScheduleDue(trigger, due, at)
 			occurrenceID := id("ps_")
 			state := "queued"
@@ -245,7 +263,10 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 			if state == "queued" {
 				run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
 				if !handled && err == nil {
-					run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+					run, handled, err = p.enqueueCloudflareScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+					if !handled && err == nil {
+						run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+					}
 				}
 				if !handled && err == nil {
 					input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
@@ -273,6 +294,10 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		}()
 		if applyErr != nil {
 			_ = tx.Rollback()
+			if iyuuUnconfirmedQueueAdmission(applyErr) {
+				blocked = append(blocked, instanceID)
+				continue
+			}
 			return queued, applyErr
 		}
 		if err := tx.Commit(); err != nil {
@@ -378,7 +403,10 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 	occurrenceID := id("ps_")
 	run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
 	if !handled && err == nil {
-		run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+		run, handled, err = p.enqueueCloudflareScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+		if !handled && err == nil {
+			run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+		}
 	}
 	if !handled && err == nil {
 		input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})

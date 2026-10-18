@@ -33,7 +33,7 @@ type siteReferenceProtocol struct {
 }
 
 func siteReferencePlugin(id string) bool {
-	return id == "MergeSiteSwitch" || slices.ContainsFunc(builtin.SiteControlSlots, func(s builtin.SiteControlSlot) bool { return s.PluginID == id })
+	return id == "IYUUAutoSeed" || id == "MergeSiteSwitch" || slices.ContainsFunc(builtin.SiteControlSlots, func(s builtin.SiteControlSlot) bool { return s.PluginID == id })
 }
 
 func (p *PluginStore) readSiteReferenceProtocol(ctx context.Context, q pluginRemoveLinkJournalReader, in PluginInstallation) (siteReferenceProtocol, error) {

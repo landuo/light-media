@@ -19,6 +19,7 @@ import (
 	"light-media/internal/download"
 	"light-media/internal/fnos"
 	"light-media/internal/integrations"
+	"light-media/internal/networkproxy"
 	"light-media/internal/priorityrules"
 )
 
@@ -501,6 +502,10 @@ func (a *App) status(ctx context.Context) map[string]any {
 func (a *App) publicSettings() map[string]any {
 	c := a.Settings()
 	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != "", "api_token": c.APIToken != ""}
+	secretState["proxy_host"] = c.ProxyHost != ""
+	proxyEndpoint := networkproxy.Endpoint(c.ProxyHost)
+	c.ProxyHost = ""
+	c.ClearProxyHost = false
 	c.APIToken = ""
 	siteState := map[string]bool{}
 	for i := range c.Sites {
@@ -509,8 +514,10 @@ func (a *App) publicSettings() map[string]any {
 	}
 	downState := map[string]bool{}
 	for i := range c.Downloaders {
-		downState[c.Downloaders[i].ID] = c.Downloaders[i].Password != ""
+		downState[c.Downloaders[i].ID] = c.Downloaders[i].Password != "" || c.Downloaders[i].APIKey != ""
 		c.Downloaders[i].Password = ""
+		c.Downloaders[i].APIKey = ""
+		c.Downloaders[i].ClearAPIKey = false
 	}
 	c.TMDB.APIKey = ""
 	c.TMDB.AccessToken = ""
@@ -544,6 +551,7 @@ func (a *App) publicSettings() map[string]any {
 		delete(fn, "library_guid")
 	}
 	m["secret_state"] = secretState
+	m["proxy_endpoint"] = proxyEndpoint
 	return m
 }
 
@@ -593,6 +601,12 @@ func (a *App) preserveSecrets(c *Settings) {
 	c.IndexerSites = a.Settings().IndexerSites
 	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
+	if c.ClearProxyHost {
+		c.ProxyHost = ""
+	} else if strings.TrimSpace(c.ProxyHost) == "" {
+		c.ProxyHost = old.ProxyHost
+	}
+	c.ClearProxyHost = false
 	// Rules have independent section revisions. A cached system/directory form
 	// is never an authority to overwrite a more recently saved rule section.
 	c.PriorityRules = old.PriorityRules
@@ -657,10 +671,12 @@ func (a *App) preserveSecrets(c *Settings) {
 					c.Downloaders[i].DownloadPath = v.DownloadPath
 				}
 			}
-			if c.Downloaders[i].ID == v.ID && c.Downloaders[i].BaseURL == v.BaseURL && c.Downloaders[i].Username == v.Username && c.Downloaders[i].Password == "" {
-				c.Downloaders[i].Password = v.Password
-			}
+			preserveDownloaderCredentials(&c.Downloaders[i], v)
 		}
+		if c.Downloaders[i].ClearAPIKey {
+			c.Downloaders[i].APIKey = ""
+		}
+		c.Downloaders[i].ClearAPIKey = false
 	}
 }
 func validateSettings(c Settings) error {

@@ -21,6 +21,12 @@ func (c *Client) qbURL(endpoint string) *url.URL {
 	return &u
 }
 func (c *Client) qbLogin(ctx context.Context) error {
+	if c.config.APIKey != "" {
+		// Original qB API-key authentication never submits username/password or
+		// silently falls back to a different credential after rejection.
+		c.loggedIn = true
+		return nil
+	}
 	v := url.Values{"username": {c.config.Username}, "password": {c.config.Password}}
 	u := c.qbURL("auth/login")
 	body, _, status, err := c.request(ctx, http.MethodPost, u, []byte(v.Encode()), "application/x-www-form-urlencoded", "")
@@ -58,6 +64,9 @@ func (c *Client) qb(ctx context.Context, method, endpoint, data, contentType str
 	}
 	// Authentication rejection precedes execution; only this rejection is retried.
 	if status == http.StatusForbidden || status == http.StatusUnauthorized {
+		if c.config.APIKey != "" {
+			return nil, statusError(status)
+		}
 		c.loggedIn = false
 		if err := c.qbLogin(ctx); err != nil {
 			return nil, err
@@ -239,7 +248,7 @@ func (c *Client) qbAdd(ctx context.Context, in AddRequest, hashes []string) (Add
 		return out, failure("add", "multipart_failed")
 	}
 	_, _ = f.Write(in.Torrent)
-	for key, value := range map[string]string{"savepath": in.SavePath, "stopped": strconv.FormatBool(in.Paused), "tags": strings.Join(in.Tags, ","), "autoTMM": "false", "skip_checking": "false", "contentLayout": "Original"} {
+	for key, value := range map[string]string{"savepath": in.SavePath, "stopped": strconv.FormatBool(in.Paused), "tags": strings.Join(in.Tags, ","), "autoTMM": strconv.FormatBool(c.config.AutoCategory), "sequentialDownload": strconv.FormatBool(c.config.Sequential), "firstLastPiecePrio": strconv.FormatBool(c.config.FirstLast), "skip_checking": "false", "contentLayout": "Original"} {
 		if err := w.WriteField(key, value); err != nil {
 			return out, failure("add", "multipart_failed")
 		}

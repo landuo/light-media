@@ -24,6 +24,8 @@ const supported = new Set([
   'VDialog',
   'VDialogCloseBtn',
   'a',
+  'span',
+  'u',
 ]);
 const tableElements = new Set([
   'VTable',
@@ -42,6 +44,46 @@ const tableElements = new Set([
   'VImg',
   'VApexChart',
 ]);
+const plainTextComponents = new Set(['span', 'u']);
+const plainTextStyles = new Set([
+  'color',
+  'fontWeight',
+  'fontStyle',
+  'fontSize',
+  'textDecoration',
+  'whiteSpace',
+  'margin',
+  'marginLeft',
+  'marginRight',
+]);
+function validPlainTextStyle(value: unknown): boolean {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.entries(value).every(
+      ([key, v]) =>
+        plainTextStyles.has(key) &&
+        ((typeof v === 'number' && Number.isFinite(v) && Math.abs(v) <= 10000) ||
+          (typeof v === 'string' && /^[#A-Za-z0-9 .,%\-]{0,80}$/.test(v))),
+    )
+  );
+}
+function validPlainTextProps(props: Record<string, any>): boolean {
+  return Object.entries(props).every(([key, value]) =>
+    key === 'class'
+      ? typeof value === 'string' && /^[A-Za-z0-9_ -]{0,256}$/.test(value)
+      : key === 'title'
+        ? typeof value === 'string' && value.length <= 2048
+        : key === 'style' && validPlainTextStyle(value),
+  );
+}
+function plainTextProps(props: Record<string, any>): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(props).filter(([key, value]) => validPlainTextProps({ [key]: value })),
+  );
+}
+
 const modelKey = /^[A-Za-z_][A-Za-z0-9_.-]{0,255}$/;
 
 // The installed Lark form declares exactly this password visibility action.
@@ -105,6 +147,8 @@ function pluginRenderIssues(
       issues.push('尚未实现的插件组件：' + String(node?.component || 'unknown'));
       continue;
     }
+    if (plainTextComponents.has(node.component) && !validPlainTextProps(node.props || {}))
+      issues.push('插件文本组件属性无效');
     const passwordAction = originalPasswordAction(node.props || {});
     for (const [key, value] of Object.entries(node.props || {})) {
       if (passwordAction && Object.hasOwn(larkPasswordAction, key) && key !== 'model') {
@@ -181,7 +225,12 @@ export function pluginChartHTML(text: string): string {
     .replace(/'/g, '&#39;');
 }
 
-export function pluginFieldProps(props: Record<string, any>, model: Record<string, any>) {
+export function pluginFieldProps(
+  props: Record<string, any>,
+  model: Record<string, any>,
+  component?: string,
+) {
+  if (component && plainTextComponents.has(component)) return plainTextProps(props);
   const bound: Record<string, any> = {};
   const passwordAction = originalPasswordAction(props);
   for (const [key, value] of Object.entries(props)) {

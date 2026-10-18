@@ -49,6 +49,9 @@ func deferredInputSHA(raw []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawMessage, error) {
+	if in.PluginID == "IYUUAutoSeed" && in.Version == "2.19" {
+		return iyuuDeferredSpec(run)
+	}
 	if in.PluginID == "PluginUnInstall" && in.Version == "2.2" && (run.Action == "init" || run.Action == "reload") {
 		var invocation plugins.Invocation
 		if json.Unmarshal(run.Input, &invocation) != nil {
@@ -105,6 +108,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 			return cleaninvalidseed.ExecuteCapability, raw, nil
 		}
 	}
+	if in.PluginID == "CloudflareSpeedTest" && in.Version == "1.5.1" {
+		return cloudflareDeferredSpec(run)
+	}
 	if in.PluginID == "AutoBackup" && in.Version == "2.1.4" {
 		return autoBackupDeferredSpec(run)
 	}
@@ -143,13 +149,16 @@ func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJourna
 // retry. Only the source-specific private journal can establish known failure.
 func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 	if r.Phase == "abandoned_unknown" {
-		return validAutoBackupDeferredAbandon(r)
+		return validAutoBackupDeferredAbandon(r) || validCloudflareDeferredAbandon(r)
 	}
 	if r.Phase == "snapshot_cut" {
 		return validAutoBackupDeferredCut(r)
 	}
 	if r.Phase != "terminal_failed" {
 		return r.ErrorCode == ""
+	}
+	if r.Plugin == "CloudflareSpeedTest" && r.Version == "1.5.1" {
+		return (r.ErrorCode == "CLOUDFLARE_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == cloudflareBlockedByUnknown && bytes.Equal(r.Result, cloudflareBlockedResult()))
 	}
 	if r.Plugin == "AutoBackup" && r.Version == "2.1.4" {
 		return (r.ErrorCode == "AUTO_BACKUP_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == autoBackupBlockedByUnknown && bytes.Equal(r.Result, autoBackupBlockedResult()))
@@ -203,6 +212,9 @@ func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, 
 	persisted, err := a.pluginStore.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, run.ID))
 	if err != nil || persisted.State != "running" || !bytes.Equal(persisted.Input, run.Input) || persisted.Version != run.Version || persisted.Generation != run.Generation || persisted.ConfigRevision != run.ConfigRevision || persisted.InstanceID != run.InstanceID || persisted.Action != run.Action {
 		return nil, bad("PLUGIN_RUN_SCOPE_DENIED", "插件执行身份已变化")
+	}
+	if err = a.pluginStore.iyuuQueueAdmissionTx(ctx, tx, run.InstanceID, in.PluginID); err != nil {
+		return nil, err
 	}
 	r, _, err := a.pluginStore.readDeferred(ctx, tx, run)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -294,10 +306,24 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 		if err = d.a.pluginStore.validateDeferredRunTx(ctx, tx, r, d.run); err != nil {
 			return err
 		}
+		if r.Plugin == "CloudflareSpeedTest" && r.Version == "1.5.1" && to == "started" {
+			if err = d.cloudflareStartedTx(ctx, tx); err != nil {
+				return err
+			}
+		}
+		if err = d.a.pluginStore.iyuuQueueAdmissionTx(ctx, tx, r.Instance, r.Plugin); err != nil {
+			return err
+		}
 	}
 	r.Phase, r.Result, r.ErrorCode = to, result, code
 	if err = d.a.pluginStore.writeDeferred(ctx, tx, r, sealed); err != nil {
 		return err
+	}
+	if from == "prepared" && to == "started" && r.Plugin == "IYUUAutoSeed" {
+		admission := context.WithValue(ctx, iyuuAdmissionKey{}, iyuuAdmissionFromRun(d.run, r.Method))
+		if err = d.a.pluginStore.iyuuAcceptRunTx(admission, tx, d.run); err != nil {
+			return err
+		}
 	}
 	return tx.Commit()
 }
@@ -353,6 +379,26 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 }
 
 func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.RawMessage, error) {
+	if d.installation.PluginID == "CloudflareSpeedTest" {
+		var release func()
+		var err error
+		ctx, release, err = d.lockCloudflareDeferred(ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer release()
+	}
+	if d.installation.PluginID == "IYUUAutoSeed" {
+		// No worker/global/SQL lock is held while waiting. This owner gate
+		// spans admission, started, actual effects and the final receipt.
+		var release func()
+		var err error
+		ctx, release, err = d.lockIYUUDeferred(ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer release()
+	}
 	if err := d.changePhase(ctx, "prepared", "started", nil); err != nil {
 		return nil, err
 	}
@@ -366,6 +412,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 	if err != nil {
 		phase = "uncertain"
 		result = nil
+	}
+	if d.record.Plugin == "CloudflareSpeedTest" && d.record.Version == "1.5.1" {
+		known, knownCode, found, proofErr := d.a.pluginStore.cloudflareOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "Cloudflare操作尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "Cloudflare执行失败，已保留确认结果")
+			}
+		}
 	}
 	if d.record.Plugin == "AutoBackup" && d.record.Version == "2.1.4" {
 		known, knownCode, found, proofErr := d.a.pluginStore.autoBackupOutcome(finish, d.run, d.record.Method)
@@ -441,15 +500,48 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Run != run.ID || r.Instance != run.InstanceID || r.Version != run.Version || r.Generation != run.Generation || r.Action != run.Action || r.InputSHA != deferredInputSHA(run.Input) {
 			return bad("PLUGIN_DEFERRED_INVALID", "插件操作恢复身份不匹配")
 		}
+
+		if r.Plugin == "IYUUAutoSeed" && (r.Phase == "started" || r.Phase == "uncertain") {
+			result, found, e := p.iyuuDeferredOutcome(ctx, run, r)
+			if e != nil {
+				if code := iyuuRecoveryErrorCode(e); code != "" {
+					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code=?,updated_at=? WHERE id=? AND state IN ('running','reconcile_pending','failed')`, code, now(), run.ID); err != nil {
+						return err
+					}
+					continue // Keep original private evidence; unrelated App features can start.
+				}
+				return e
+			}
+			if found {
+				r.Phase, r.Result = "confirmed", result
+				tx, e := p.store.DB.BeginTx(ctx, nil)
+				if e != nil {
+					return e
+				}
+				if e = p.writeDeferred(ctx, tx, r, previous); e != nil {
+					tx.Rollback()
+					return e
+				}
+				if e = tx.Commit(); e != nil {
+					return e
+				}
+				r, previous, e = p.readDeferred(ctx, p.store.DB, run)
+				if e != nil {
+					return e
+				}
+			}
+		}
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "AutoBackup" {
+			if r.Plugin == "CloudflareSpeedTest" {
+				result, code, found, proofErr = p.cloudflareOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "AutoBackup" {
 				result, code, found, proofErr = p.autoBackupOutcome(ctx, run, r.Method)
 			} else if r.Plugin == "RemoveLink" {
 				result, found, proofErr = p.removeLinkDeferredOutcome(ctx, run, r.Method)
@@ -457,8 +549,12 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 				result, code, found, proofErr = p.cleanInvalidSeedDeferredOutcome(ctx, run, r.Method)
 			}
 			if proofErr != nil {
-				if r.Plugin == "AutoBackup" && autoBackupErrorCode(proofErr) == "AUTO_BACKUP_EVIDENCE_MISSING" {
-					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code='AUTO_BACKUP_EVIDENCE_MISSING',updated_at=? WHERE id=? AND state IN ('running','reconcile_pending','failed')`, now(), run.ID); err != nil {
+				if (r.Plugin == "AutoBackup" && autoBackupErrorCode(proofErr) == "AUTO_BACKUP_EVIDENCE_MISSING") || (r.Plugin == "CloudflareSpeedTest" && cloudflareErrorCode(proofErr) == "CLOUDFLARE_EVIDENCE_MISSING") {
+					code := "AUTO_BACKUP_EVIDENCE_MISSING"
+					if r.Plugin == "CloudflareSpeedTest" {
+						code = "CLOUDFLARE_EVIDENCE_MISSING"
+					}
+					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code=?,updated_at=? WHERE id=? AND state IN ('running','reconcile_pending','failed')`, code, now(), run.ID); err != nil {
 						return err
 					}
 					continue // Preserve private evidence; other plugins and diagnostics can still start.
@@ -629,6 +725,16 @@ func (a *App) pluginRunHistory(ctx context.Context, instance string) ([]PluginRu
 	config, configErr := a.pluginStore.Config(ctx, instance)
 	for index := range runs {
 		run := &runs[index]
+		if installation.PluginID == "CloudflareSpeedTest" {
+			full, e := a.pluginStore.Run(ctx, run.ID)
+			if e != nil {
+				return nil, e
+			}
+			run.Recovery, e = a.pluginStore.cloudflareDiagnostic(ctx, installation, full)
+			if e != nil {
+				return nil, e
+			}
+		}
 		if installation.PluginID == "AutoBackup" {
 			full, e := a.pluginStore.Run(ctx, run.ID)
 			if e != nil {
