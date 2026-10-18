@@ -1,0 +1,288 @@
+{
+  "status": "focused daemon destination feature integrated; not all IYUU or 23 plugins complete",
+  "consumption": {
+    "base_formal": "b86276d37e542d404221a92c10dd23a5bdf81287",
+    "source_inputs": 2726,
+    "exact_except_one_known_docs_update": true,
+    "known_docs_update": [
+      "docs/plugin-installed-migration-baseline.md"
+    ],
+    "nine_focus_files_after_match": true,
+    "unlisted_missing_inputs": 0,
+    "plan": {
+      "base_commit": "aebd1e15d100f2069ec3a6513da535a691b89345",
+      "combined_manifest_sha256": "9390046defb1698b48a864554adf0c6de1bd25c10a2470a2ae25043a85b3deec",
+      "patch_sha256": "39521f918d7cf44d6213f2658bcb4cf1ea386bf00f417741ca47810a5af2bf7c",
+      "files": [
+        {
+          "path": "internal/app/plugin_iyuu_owner.go",
+          "before": "b04a96a2f3097b04b23eb72fa74b2ef6b4391cd16c93849cd08d3ea66603b3a6",
+          "after": "11bcd2c630b958e83ffa21fc76a0d9bb9646760eb43310633614fc1b444be2b8"
+        },
+        {
+          "path": "internal/app/plugin_iyuu_owner_test.go",
+          "before": "25cf72dfa48cad45511e5020e5bd0d01499e3fc1a613799a970c8806019401f9",
+          "after": "4117292a04745f2bd77a039c4742f1bdcdbba67ed61e93a915ce6fd156e24e8f"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native/iyuu.go",
+          "before": "e613d953afdc58beb5640751db03c0c815befdb3aef1f645c12b30dee3245a9b",
+          "after": "19a0bd6042b846263b7bf2eb0d6f64bc73a7502b453834f5e21fb3e7494d8e74"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native/iyuu_destination.go",
+          "before": null,
+          "after": "b0b90f062b9e17a96ff9dbbde07f651180785ac245b2154782970958b7d49a32"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native/iyuu_destination_test.go",
+          "before": null,
+          "after": "29afcd7c5de098c495587777dc123678d657e9765a4532c3d1849d15e849c585"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native_destination.go",
+          "before": null,
+          "after": "1e51bfbab142c8074f0065d6db5e1c4ea06343a93bf715c2d7bc08684feb354b"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native_destination_test.go",
+          "before": null,
+          "after": "432f52e755e71407da3f95ca2f62729c341785aa01ae00c6d66f6e90ac8b54f3"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native_host.go",
+          "before": "5741c9a25ad585c586683244cc7818e49ec4e2f3fdb3561a1c5a78df60121e3c",
+          "after": "ae00a60d96c85d46949d7aa5744f168693bbad8c2a0533df2913a2ed30e290e6"
+        },
+        {
+          "path": "internal/plugins/iyuuautoseed/native_host_test.go",
+          "before": "1c86005e5a17b003b418218c9083a6f11fe54be23f3d45474c9edf6980244f0f",
+          "after": "91d708c6885b72c6f152525833dc331bb66a76d4d759b06ad947e29d810feabf"
+        }
+      ],
+      "full_apply_match_count": 2726,
+      "unrelated_baseline_files_unchanged": true,
+      "root_APIKey_Proxy_shared_repairs_retained": true,
+      "root_key_options_fixture_retained_and_extended_to_observe_ATM_destination": true,
+      "phase8_original_freeze_unchanged": true,
+      "formal_changed": false
+    }
+  },
+  "agent_verified_source": {
+    "status": "complete_focused_feature_candidate_only",
+    "source_manifest": {
+      "original_phase8": "21e1241a9910cd395f19759ff832a16177113b8acf72fa925574d7fedd77b12f",
+      "current_aeb_consumer": "9390046defb1698b48a864554adf0c6de1bd25c10a2470a2ae25043a85b3deec"
+    },
+    "final_patch": {
+      "path": "handoff/daemon-destinations-on-aebd1e.patch",
+      "sha256": "39521f918d7cf44d6213f2658bcb4cf1ea386bf00f417741ca47810a5af2bf7c"
+    },
+    "production": {
+      "handle": 87412,
+      "exit": 0
+    },
+    "core_normal_race": {
+      "handle": 91603,
+      "exit": 0
+    },
+    "app_full_normal": {
+      "handle": 8379,
+      "exit": 0,
+      "log": "combined-app-normal.jsonl",
+      "sha256": "490b36ea762343ddca8eb06b351f71d40553d503b6e35c2f86027f06c47dcae5",
+      "top_level_pass": 750,
+      "pass_including_subtests": 1533,
+      "test_skips": [
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+      ],
+      "package_results": [
+        {
+          "Package": "light-media/internal/app",
+          "Action": "pass",
+          "Elapsed": 228.204
+        }
+      ]
+    },
+    "app_focused_race": {
+      "handle": 79459,
+      "exit": 0,
+      "log": "combined-app-race.jsonl",
+      "sha256": "91eceb0c8d78073aa370328d3c4380e90da78c010fd398bcc7d3ef3e0d6f719e",
+      "top_level_pass": 65,
+      "pass_including_subtests": 191,
+      "test_skips": [
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+      ],
+      "package_results": [
+        {
+          "Package": "light-media/internal/app",
+          "Action": "pass",
+          "Elapsed": 267.03
+        }
+      ]
+    },
+    "vet_linux": {
+      "handle": 92757,
+      "exit": 0,
+      "scope": [
+        "go vet actual core/native/App",
+        "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 production cmd/server",
+        "Linux core test binary",
+        "Linux App test binary"
+      ]
+    },
+    "failures_retained": [
+      {
+        "handle": 82430,
+        "cause": "synthetic legacy TR response omitted request tag; fixed fixture, second71080=0"
+      },
+      {
+        "handle": 5527,
+        "cause": "production build caught now-unused strings import after root grant removal; fixed before freeze"
+      },
+      {
+        "handle": 77411,
+        "cause": "phase7 patch does not apply to new aeb key-options fixture; focused three-way merge, no formal edits"
+      },
+      {
+        "handle": 70261,
+        "cause": "merge script cwd failed; old key-options fixture compiled without new prefs/categories; kept failed test evidence, correct merged4196=0"
+      }
+    ],
+    "NAS_operations": 0,
+    "formal_modified": false,
+    "original_config_migrated": false,
+    "original_KV_migrated": 0,
+    "promotion_allowed": false,
+    "utc": "2026-10-18T08:02:24.611122+00:00",
+    "core_normal": {
+      "log": "combined-core-normal.jsonl",
+      "sha256": "dcd9223532e9327d9e7a66fe3d069fb575b278ef4e1e556453e765f62422b5ba",
+      "top_level_pass": 94,
+      "pass_including_subtests": 567,
+      "test_skips": [],
+      "package_results": [
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/htmlextract",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/encodingdetector",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/pythonre",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/urlprep",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/native",
+          "Action": "pass",
+          "Elapsed": 1.51
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed",
+          "Action": "pass",
+          "Elapsed": 2.533
+        }
+      ]
+    },
+    "core_race": {
+      "log": "combined-core-race.jsonl",
+      "sha256": "aed6a7897901c512283c6cc700d04ce40018d7f138737159d60a7f9e8cdb27a6",
+      "top_level_pass": 94,
+      "pass_including_subtests": 567,
+      "test_skips": [],
+      "package_results": [
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/encodingdetector",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/htmlextract",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/pythonre",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/urlprep",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed/native",
+          "Action": "pass",
+          "Elapsed": 2.142
+        },
+        {
+          "Package": "light-media/internal/plugins/iyuuautoseed",
+          "Action": "pass",
+          "Elapsed": 10.024
+        }
+      ]
+    },
+    "input_audit": {
+      "path": "reference/post-freeze-input-audit.json",
+      "sha256": "d909b1e9f7bfe6f765af94f59f63d8a415eb43ea87f83138aac45b3e0ba03bd4",
+      "all_frozen_compiler_inputs_unchanged": true
+    },
+    "focused_apply": {
+      "path": "reference/focused-apply-proof.json",
+      "sha256": "344c4c8c036bf71bd3f722377952f5e7521ffb605ed07c5ed9f6b9c718174c15",
+      "all_2726_final_files_match": true
+    },
+    "NAS_reason": "parent explicitly paused NAS build/container operations; no new NAS test this phase",
+    "focused_handoff_ready": true,
+    "limits": [
+      "No actual original-user downloader/site/notice operations",
+      "Original config and325KV migrated0",
+      "Four compat packages have no standalone tests; real consumer tests cover used paths",
+      "Full App five opt-in integration/long skips listed; no new >120s directory-specific claim",
+      "Daemon source reviewed; no executed Qt/libtorrent oracle or live-daemon acceptance",
+      "TR explicit empty string rejection preserved, invalid-input HTTP trace intentionally not asserted identical",
+      "Old unfinished Go-only journal runs require reconciliation, not erased or automatically replayed",
+      "No deployment or whole-IYUU/23-plugin completion claim"
+    ]
+  },
+  "root_default_production_build_exit": 0,
+  "root_own_actual_checks": {
+    "root-core-normal": {
+      "top_pass": 94,
+      "including_subtests": 567,
+      "fail": 0,
+      "skip_tests": []
+    },
+    "root-app-race": {
+      "top_pass": 3,
+      "including_subtests": 14,
+      "fail": 0,
+      "skip_tests": []
+    }
+  },
+  "NAS_final_composition_tested": false,
+  "original_config_migrated": 0,
+  "original_KV_migrated": 0,
+  "production_deployed": false,
+  "remaining": [
+    "all-23 business/platform completion and actual migration",
+    "requests trust-env universal parity is not asserted",
+    "real user-daemon acceptance after final staging; no user torrents mutated"
+  ]
+}

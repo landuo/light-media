@@ -12,7 +12,7 @@
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类适配、原表单/详情及逐效果StateJournal已迁入正式Go包；实际SQLite分行/owner、内部配置CAS与旧admission归档切换已有NAS证据。实际Manager/调度/消息及Browser/OCR接线、资源按需加载/回收、注册、配置/KV迁移和实机验收未完成 |
 | MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 主流程/17渠道构造/SDK及SMTP依赖已迁入正式Go包，28项NAS隔离测试通过。原表单页签/子弹窗/点号键已用实际ConfigDialog验证；完整Mako/Apprise、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
-| IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 2026-10-18 已接正式 Go handler、实际 SDK/原生下载器宿主、持久队列和原日志；默认目录/ATM 落点后续候选验证中，325 项 KV、配置、引用尚未迁移，未部署 |
+| IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 2026-10-18 已接正式 Go handler、实际 SDK/原生下载器宿主、持久队列和原日志；默认目录/ATM 落点及无需整理路径映射的原生授权已验证并纳入正式代码，325 项 KV、配置、引用尚未迁移，未部署 |
 | SystemProcess | 系统进程 | 1.1 | 启用 | 0 | Go 进程采样、配置/详情页及仪表板数据已验证；仪表板布局待接入，待正式迁移 |
 | MediaServerRefresh | 媒体库服务器刷新 | 1.3.3 | 启用 | 0 | 已接 Go 子进程、持久批次、飞牛刷新、停用/重载/卸载/关闭收尾及核心核对交接；已有独占测试库实机证据，正式配置引用映射和迁移尚未执行 |
 | RemoteIdentifiers | 共享识别词 | 2.4.1 | 停用 | 0 | Go 词表获取、定时/一次性执行、实际识别接线和原版配置表单已验证；正式配置及全局识别词迁移仍未执行 |
@@ -36,7 +36,7 @@
 
 同日只读核查原版 `/config/plugins/<原插件ID>` 的文件元数据：AutoBackup 有 7 个文件、51,658,600 字节，最大单文件 7,414,774 字节；CloudflareSpeedTest 有 12 个文件、15,871,166 字节，最大单文件 7,930,040 字节。两处均无符号链接或特殊文件，其余 21 个已装 ID 未发现对应数据目录。本次没有读取/导出文件正文，也没有把备份包放入 Git。后续迁移须分别保留这些文件的内容和校验收据，密文落盘；不得把旧可执行文件复制后直接运行，也不能因 KV 为 0 就漏掉文件迁移。
 
-聚合站点开关对 SiteStatistic 的字段更新和真实 Go 初始化已联调，不使用可用性测试替身；保留统计插件启用状态及其他选项。原版 SiteStatistic 1.9.7 未读取 statistic_sites，不能把该字段自行解释为图表/采集过滤条件，实际数据仍按核心启用站点展示。AutoSignIn 的实际 Manager/宿主仍在独立候选接线，IYUUAutoSeed 已接正式 Go 宿主但仍有默认目录/ATM 等边界待完成；未就绪依赖会阻止整次聚合更新，不能用测试替身的配置/队列结果代替该证据。原版只识别 BrushFlow，不把当前安装的 BrushFlowLanduo 自动视为同一插件。
+聚合站点开关对 SiteStatistic 的字段更新和真实 Go 初始化已联调，不使用可用性测试替身；保留统计插件启用状态及其他选项。原版 SiteStatistic 1.9.7 未读取 statistic_sites，不能把该字段自行解释为图表/采集过滤条件，实际数据仍按核心启用站点展示。AutoSignIn 的实际 Manager/宿主仍在独立候选接线，IYUUAutoSeed 已接正式 Go 宿主及默认目录/ATM 观测，但整体业务/迁移验收仍待完成；未就绪依赖会阻止整次聚合更新，不能用测试替身的配置/队列结果代替该证据。原版只识别 BrushFlow，不把当前安装的 BrushFlowLanduo 自动视为同一插件。
 
 自定义 API 的已实现行为、24 组原 ASGI 对照、鉴权/恢复/NAS 证据和未完成边界见 [plugin-http-api-verification.md](plugin-http-api-verification.md)。已装源码中的 24 项 API 声明不等于 24 项业务均已实现，本批只接通 SiteStatistic 的按域名刷新；没有增加“已迁移”插件数量。
 
@@ -97,3 +97,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-18 追加：AutoBackup实际App接线、快照恢复、独立证据与零效果阻止、页面核对以及最终129项NAS组合验证见[自动备份宿主](plugin-auto-backup-host-go-port.txt)。本机129项普通与53项所选竞态分别计证；此前联合竞态超时记录保留。当前可安装处理器为13，完整业务/平台及原23个实例配置/KV/文件的正式迁移仍未完成，不能表述为13个插件已迁移。
 
 2026-10-18 集成更新：提交 aebd1e1 的源码输入、测试范围和未完成边界见 [IYUU/优选 IP 集成报告](plugin-iyuu-cloudflare-integrated-go-port.txt) 与 [逐项验证记录](plugin-iyuu-cloudflare-integrated-verification.json)。此更新未部署；原配置、KV 和文件正式迁移数量仍为 0。SeedRescue 原业务核心及 Vue 联邦界面正在独立候选接入，尚未进入可安装目录。
+
+2026-10-18 IYUU 目录跟进见 [实际目录授权方案与边界](plugin-iyuu-daemon-destinations-go-port.txt) 和 [验证记录](plugin-iyuu-daemon-destinations-verification.json)。不需要把下载器目录加入 App 整理规则；未操作用户既有种子。

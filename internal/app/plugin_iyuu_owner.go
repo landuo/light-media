@@ -518,6 +518,11 @@ func (a *App) executeIYUU(ctx context.Context, owner *pluginIYUUOwner, in Plugin
 		}
 		bindings = append(bindings, iyuu.NativeBinding{Service: iyuu.Service{Ref: d.ID, Name: d.Name, Kind: kind, Inactive: !downloaderEnabled(d)}, Config: iyuudownload.Config{ID: d.ID, Kind: kind, BaseURL: d.BaseURL, Username: d.Username, Password: d.Password}, Options: iyuudownload.IYUUOptions{APIKey: d.APIKey, AutoCategory: d.AutoCategory, Sequential: d.Sequential, FirstLast: d.FirstLast, Sleep: a.pluginIYUU.pollSleep}, AllowedSaveRoots: roots})
 	}
+	// A configured native daemon may expose its own directory settings; this
+	// grants no App filesystem access and performs no directory mapping.
+	for i := range bindings {
+		bindings[i].AllowDefaultPath = true
+	}
 	siteBindings := []iyuu.SiteTransportBinding{}
 	sites := []iyuu.Site{}
 	for _, s := range settings.Sites {

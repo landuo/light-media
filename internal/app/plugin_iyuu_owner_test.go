@@ -122,10 +122,31 @@ func TestIYUUActualAppSDKDownloaderAPIKeyAndOptions(t *testing.T) {
 	testIYUUActualAppSDK(t, "qbittorrent", false, "key-options")
 }
 
+func TestIYUUActualAppSDKDaemonDefaultDirectories(t *testing.T) {
+	for _, kind := range []string{"qbittorrent", "transmission"} {
+		t.Run(kind+"/nil", func(t *testing.T) { testIYUUActualAppSDK(t, kind, false, "directory-nil") })
+		t.Run(kind+"/observed-explicit-outside-app-roots", func(t *testing.T) { testIYUUActualAppSDK(t, kind, false, "directory-explicit") })
+	}
+	t.Run("qbittorrent/empty", func(t *testing.T) { testIYUUActualAppSDK(t, "qbittorrent", false, "directory-empty") })
+}
+
+func TestIYUUActualAppSDKDaemonDirectoryChangeAndLostACK(t *testing.T) {
+	for _, kind := range []string{"qbittorrent", "transmission"} {
+		for _, stage := range []string{"directory-before-change", "directory-after-change", "directory-lost-add"} {
+			t.Run(kind+"/"+stage, func(t *testing.T) { testIYUUActualAppSDK(t, kind, false, stage) })
+		}
+	}
+}
+
 func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...string) {
 	stage := "pending"
 	if len(stages) > 0 {
 		stage = stages[0]
+	}
+	directoryMode := ""
+	if strings.HasPrefix(stage, "directory-") {
+		directoryMode = stage
+		stage = "pending"
 	}
 	effectArrived, allowEffect := make(chan struct{}, 1), make(chan struct{})
 	var allowOnce sync.Once
@@ -141,6 +162,24 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	added := false
 	calls := map[string]int{}
 	sourcePath := filepath.Join(a.Dir, "owned-source")
+	if directoryMode != "" {
+		sourcePath = "/daemon/owned-default"
+	}
+	var sourceDirectory any = sourcePath
+	if directoryMode != "" && directoryMode != "directory-empty" && directoryMode != "directory-explicit" {
+		sourceDirectory = nil
+	} else if directoryMode == "directory-empty" {
+		sourceDirectory = ""
+	}
+	sourceWire := sourcePath
+	if directoryMode != "" && directoryMode != "directory-explicit" {
+		sourceWire = ""
+	}
+	actualTaskPath := sourcePath
+	if stage == "key-options" {
+		actualTaskPath = "/daemon/auto-movie"
+	}
+	destinationReads := 0
 	var server *httptest.Server
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mu.Lock()
@@ -165,7 +204,14 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 			}
 			switch method {
 			case "session_get":
-				respond(map[string]any{"version": "4.1"})
+				directory := sourcePath
+				if args["fields"] == nil {
+					destinationReads++
+					if directoryMode == "directory-before-change" && destinationReads > 1 {
+						directory = "/daemon/changed"
+					}
+				}
+				respond(map[string]any{"version": "4.1", "download_dir": directory})
 			case "torrent_get":
 				ids, _ := args["ids"].([]any)
 				hash, status := original, 6
@@ -176,12 +222,26 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 					}
 					hash, status = observed, 0
 				}
-				respond(map[string]any{"torrents": []any{map[string]any{"hash_string": hash, "download_dir": sourcePath, "labels": []string{"original"}, "status": status, "percent_done": 1, "total_size": 1073741824}}})
+				directory := any(actualTaskPath)
+				if hash == original {
+					directory = sourceDirectory
+				}
+				respond(map[string]any{"torrents": []any{map[string]any{"hash_string": hash, "download_dir": directory, "labels": []string{"original"}, "status": status, "percent_done": 1, "total_size": 1073741824}}})
 			case "torrent_add":
-				if args["download_dir"] != sourcePath || args["paused"] != true {
+				if args["download_dir"] != sourceDirectory || args["paused"] != true {
 					t.Error("actual TR paused/save path contract")
 				}
 				added = true
+				if directoryMode == "directory-after-change" {
+					actualTaskPath = "/daemon/changed"
+				}
+				if directoryMode == "directory-lost-add" {
+					connection, _, err := w.(http.Hijacker).Hijack()
+					if err == nil {
+						connection.Close()
+					}
+					return
+				}
 				respond(map[string]any{"torrent_added": map[string]any{"hash_string": observed}})
 			case "torrent_start":
 				ids, _ := args["ids"].([]any)
@@ -207,15 +267,30 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 			default:
 				t.Errorf("unexpected TR method %s", method)
 			}
+		case "/api/v2/torrents/categories":
+			json.NewEncoder(w).Encode(map[string]any{"movie": map[string]any{"savePath": actualTaskPath}})
+		case "/api/v2/app/preferences":
+			directory := sourcePath
+			destinationReads++
+			if directoryMode == "directory-before-change" && destinationReads > 1 {
+				directory = "/daemon/changed"
+			}
+			json.NewEncoder(w).Encode(map[string]any{"save_path": directory})
 		case "/api/v2/app/webapiVersion":
 			io.WriteString(w, "2.11.0")
 		case "/api/v2/torrents/info":
 			if r.Form.Get("filter") == "completed" {
-				json.NewEncoder(w).Encode([]any{map[string]any{"hash": original, "save_path": sourcePath, "tags": "original", "category": "movie", "state": "pausedUP", "progress": 1, "amount_left": 0, "total_size": 1073741824}})
+				json.NewEncoder(w).Encode([]any{map[string]any{"hash": original, "save_path": sourceDirectory, "tags": "original", "category": "movie", "state": "pausedUP", "progress": 1, "amount_left": 0, "total_size": 1073741824}})
 			} else if r.Form.Get("hashes") == seed {
 				io.WriteString(w, "[]")
 			} else if added {
-				json.NewEncoder(w).Encode([]any{map[string]any{"hash": observed, "save_path": sourcePath, "tags": temp, "state": "pausedUP", "progress": 1, "amount_left": 0}})
+				category := ""
+				auto := false
+				if stage == "key-options" {
+					category = "movie"
+					auto = true
+				}
+				json.NewEncoder(w).Encode([]any{map[string]any{"hash": observed, "save_path": actualTaskPath, "category": category, "auto_tmm": auto, "tags": temp, "state": "pausedUP", "progress": 1, "amount_left": 0}})
 			} else {
 				io.WriteString(w, "[]")
 			}
@@ -230,10 +305,20 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 					t.Error("actual App lost downloader options")
 				}
 			}
-			if r.FormValue("savepath") != sourcePath || r.FormValue("autoTMM") != expectedAuto {
+			if r.FormValue("savepath") != sourceWire || r.FormValue("autoTMM") != expectedAuto {
 				t.Error("actual App changed source savepath")
 			}
 			added = true
+			if directoryMode == "directory-after-change" {
+				actualTaskPath = "/daemon/changed"
+			}
+			if directoryMode == "directory-lost-add" {
+				connection, _, err := w.(http.Hijacker).Hijack()
+				if err == nil {
+					connection.Close()
+				}
+				return
+			}
 			io.WriteString(w, "Ok.")
 		case "/api/v2/torrents/removeTags", "/api/v2/torrents/recheck", "/api/v2/torrents/start":
 			if r.Form.Get("hashes") != observed {
@@ -321,6 +406,44 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	run, e = a.pluginStore.claimRunForInstance(ctx, queued.InstanceID)
 	if e != nil {
 		t.Fatal(e)
+	}
+	if directoryMode == "directory-before-change" || directoryMode == "directory-after-change" || directoryMode == "directory-lost-add" {
+		run, e = invokeIYUUActualSDKOutcome(t, a, run, directoryMode == "directory-before-change")
+		if directoryMode == "directory-before-change" {
+			if e != nil || run.State != "succeeded" {
+				t.Fatal("known-undispatched directory change", run.State, e)
+			}
+		} else {
+			if directoryMode == "directory-lost-add" && !errors.Is(e, iyuu.ErrUnconfirmed) {
+				t.Fatal("lost add acknowledgement", e)
+			}
+			if directoryMode == "directory-after-change" && (e == nil || !strings.Contains(e.Error(), "destination changed")) {
+				t.Fatal("unobserved daemon destination continued", e)
+			}
+			if e = a.pluginStore.FinishRun(ctx, run.ID, "failed", "OWNED_DESTINATION_RECONCILE", nil); e != nil {
+				t.Fatal(e)
+			}
+			iyuuAssertUnknownAdmissionsWarmCold(t, a, run)
+		}
+		mu.Lock()
+		defer mu.Unlock()
+		addKey := "/api/v2/torrents/add"
+		wantAdds := 1
+		if kind == "transmission" {
+			addKey = "tr:torrent_add"
+		}
+		if directoryMode == "directory-before-change" {
+			wantAdds = 0
+		}
+		if calls[addKey] != wantAdds {
+			t.Fatal("directory mutation repeated or dispatched", calls[addKey], wantAdds)
+		}
+		for _, key := range []string{"/api/v2/torrents/removeTags", "/api/v2/torrents/recheck", "/api/v2/torrents/start", "tr:torrent_start", "tr:torrent_verify"} {
+			if calls[key] != 0 {
+				t.Fatal("controls followed unconfirmed destination", key, calls[key])
+			}
+		}
+		return
 	}
 	if lostACK {
 		if stage != "pending" {

@@ -200,7 +200,11 @@ func (c *IYUUClient) Torrents(ctx context.Context, hashes []string, completed bo
 	return json.Marshal(out)
 }
 
-func (c *IYUUClient) AddPaused(ctx context.Context, spec IYUUAddSpec) (out IYUUAddResult, err error) {
+func (c *IYUUClient) AddPaused(ctx context.Context, spec IYUUAddSpec) (IYUUAddResult, error) {
+	return c.addPaused(ctx, spec, nil)
+}
+
+func (c *IYUUClient) addPaused(ctx context.Context, spec IYUUAddSpec, expected *IYUUDestination) (out IYUUAddResult, err error) {
 	ctx, phase := beginMutation(ctx)
 	defer func() { err = phase.finish(err, &out.Outcome) }()
 	out = IYUUAddResult{AddedIDs: []string{}, Outcome: "rejected", SourceTruthy: c.client.config.Kind == "qbittorrent"}
@@ -225,19 +229,19 @@ func (c *IYUUClient) AddPaused(ctx context.Context, spec IYUUAddSpec) (out IYUUA
 		return out, e
 	}
 	defer c.client.mu.Unlock()
-	if c.client.config.Kind == "qbittorrent" {
-		category := spec.Category
-		if _, e := c.webVersionLocked(ctx); e != nil {
+	if expected != nil {
+		current, e := c.effectiveAddDestinationLocked(ctx, spec)
+		if e != nil {
 			return out, e
 		}
-		auto := c.options.AutoCategory
-		if !spec.IgnoreCategoryCheck {
-			if category != nil && *category != "" && auto {
-				auto = true
-			} else {
-				auto = false
-				category = nil
-			}
+		if current != *expected {
+			return out, failure("iyuu_destination", "daemon_directory_changed")
+		}
+	}
+	if c.client.config.Kind == "qbittorrent" {
+		category, auto := c.addCategoryMode(spec)
+		if _, e := c.webVersionLocked(ctx); e != nil {
+			return out, e
 		}
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)

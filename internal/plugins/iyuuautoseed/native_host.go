@@ -6,10 +6,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"path"
 	"sort"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -17,9 +15,11 @@ import (
 )
 
 type NativeBinding struct {
-	Service          Service
-	Config           download.Config
-	Options          download.IYUUOptions
+	Service Service
+	Config  download.Config
+	Options download.IYUUOptions
+	// Retained in the immutable historical binding snapshot. It does not grant
+	// native daemon paths or App filesystem access; paths come from native IO.
 	AllowedSaveRoots []string
 	AllowDefaultPath bool
 }
@@ -72,6 +72,7 @@ type NativeHost struct {
 	urls           map[string]string
 	proofs         map[string]AuthorityGrant
 	tagReceipts    map[string]string
+	destinations   map[string]download.IYUUDestination
 	noticeAccepted func(context.Context, string) error
 }
 
@@ -112,7 +113,7 @@ func NewNativeHost(opt NativeHostOptions) (*NativeHost, error) {
 	}{transportBindings, opt.SiteHTTP.defaultUA}); e != nil {
 		return nil, e
 	}
-	h := &NativeHost{run: opt.Run, services: map[string]*nativeHostService{}, sites: map[string]Site{}, siteHTTP: opt.SiteHTTP, cache: opt.Cache, limiters: opt.Limiters, sourcePaths: map[string]bool{}, contents: map[string]bool{}, tags: map[string]string{}, added: map[string]bool{}, urls: map[string]string{}, proofs: map[string]AuthorityGrant{}, tagReceipts: map[string]string{}}
+	h := &NativeHost{run: opt.Run, services: map[string]*nativeHostService{}, sites: map[string]Site{}, siteHTTP: opt.SiteHTTP, cache: opt.Cache, limiters: opt.Limiters, sourcePaths: map[string]bool{}, contents: map[string]bool{}, tags: map[string]string{}, added: map[string]bool{}, urls: map[string]string{}, proofs: map[string]AuthorityGrant{}, tagReceipts: map[string]string{}, destinations: map[string]download.IYUUDestination{}}
 	h.noticeAccepted = opt.NoticeAccepted
 	for _, binding := range opt.Bindings {
 		s := binding.Service
@@ -340,19 +341,6 @@ func contentKey(b []byte, magnet string) string {
 	}
 	return "bytes/" + digest(b)
 }
-func allowedSave(p string, roots []string) bool {
-	if !strings.HasPrefix(p, "/") {
-		return false
-	}
-	clean := path.Clean(p)
-	for _, root := range roots {
-		r := path.Clean(root)
-		if strings.HasPrefix(r, "/") && (clean == r || strings.HasPrefix(clean, strings.TrimRight(r, "/")+"/")) {
-			return true
-		}
-	}
-	return false
-}
 func (h *NativeHost) AddPaused(ctx context.Context, s Service, spec AddSpec) (AddReceipt, error) {
 	entry, e := h.service(s)
 	if e != nil {
@@ -373,15 +361,15 @@ func (h *NativeHost) AddPaused(ctx context.Context, s Service, spec AddSpec) (Ad
 		if !ok {
 			return AddReceipt{}, sourceFault("TypeError", "download directory")
 		}
-		h.mu.Lock()
-		observed := h.sourcePaths[p]
-		h.mu.Unlock()
-		if !observed || !allowedSave(p, entry.binding.AllowedSaveRoots) {
-			return AddReceipt{}, errors.New("save path was not observed and granted")
+		if p != "" {
+			h.mu.Lock()
+			observed := h.sourcePaths[p]
+			h.mu.Unlock()
+			if !observed {
+				return AddReceipt{}, errors.New("save path was not observed")
+			}
 		}
 		native.SavePath = &p
-	} else if !entry.binding.AllowDefaultPath {
-		return AddReceipt{}, errors.New("default downloader path not granted")
 	}
 	if spec.Category != nil {
 		v, ok := spec.Category.(string)
@@ -394,6 +382,25 @@ func (h *NativeHost) AddPaused(ctx context.Context, s Service, spec AddSpec) (Ad
 		v := truth(spec.SkipChecking)
 		native.SkipChecking = &v
 	}
+	var destination *download.IYUUDestination
+	if entry.client.DestinationRequired(native) {
+		if !entry.binding.AllowDefaultPath {
+			return AddReceipt{}, errors.New("daemon destination observation not granted")
+		}
+		var observed download.IYUUDestination
+		e = h.run.step(ctx, "native-add-destination", struct {
+			Ref, Binding        string
+			SavePath, Category  any
+			IgnoreCategoryCheck bool
+		}{s.Ref, NativeBindingDigest(entry.binding), spec.SavePath, spec.Category, spec.IgnoreCategoryCheck}, false, &observed, func() (any, string, error) {
+			value, err := entry.client.EffectiveAddDestination(ctx, native)
+			return value, "read", err
+		})
+		if e != nil {
+			return AddReceipt{}, e
+		}
+		destination = &observed
+	}
 	h.mu.Lock()
 	for _, tag := range spec.Tags {
 		if ref, ok := h.tags[tag]; ok && ref != "" && ref != s.Ref {
@@ -404,10 +411,17 @@ func (h *NativeHost) AddPaused(ctx context.Context, s Service, spec AddSpec) (Ad
 	h.mu.Unlock()
 	var out AddReceipt
 	e = h.run.step(ctx, "native-add", struct {
-		Ref  string
-		Spec AddSpec
-	}{s.Ref, spec}, true, &out, func() (any, string, error) {
-		r, e := entry.client.AddPaused(ctx, native)
+		Ref         string
+		Spec        AddSpec
+		Destination *download.IYUUDestination
+	}{s.Ref, spec, destination}, true, &out, func() (any, string, error) {
+		var r download.IYUUAddResult
+		var e error
+		if destination == nil {
+			r, e = entry.client.AddPaused(ctx, native)
+		} else {
+			r, e = entry.client.AddPausedAt(ctx, native, *destination)
+		}
 		if e != nil {
 			outcome, known := nativeMutationOutcome(e)
 			r.Outcome = outcome
@@ -416,12 +430,18 @@ func (h *NativeHost) AddPaused(ctx context.Context, s Service, spec AddSpec) (Ad
 		return AddReceipt{SourceTruthy: r.SourceTruthy, Accepted: r.Accepted, Hash: r.Hash, Outcome: r.Outcome}, r.Outcome, e
 	})
 	out.ReceiptID = h.run.ReceiptID()
+	if e == nil && out.Accepted && out.Hash != "" && destination != nil {
+		e = h.verifyDaemonDestination(ctx, entry, out.Hash, *destination)
+	}
 	if e == nil {
 		h.mu.Lock()
 		for _, tag := range spec.Tags {
 			if _, ok := h.tags[tag]; ok {
 				h.tags[tag] = s.Ref
 				h.tagReceipts[tag] = out.ReceiptID
+				if destination != nil {
+					h.destinations[s.Ref+"/"+tag] = *destination
+				}
 			}
 		}
 		if out.Accepted && out.Hash != "" {
@@ -456,6 +476,14 @@ func (h *NativeHost) FindByTag(ctx context.Context, s Service, tag string) (stri
 	})
 	if e != nil || hash == "" {
 		return hash, e
+	}
+	h.mu.Lock()
+	destination, needsCheck := h.destinations[s.Ref+"/"+tag]
+	h.mu.Unlock()
+	if needsCheck {
+		if e := h.verifyDaemonDestination(ctx, entry, hash, destination); e != nil {
+			return "", e
+		}
 	}
 	h.mu.Lock()
 	h.added[s.Ref+"/"+hash] = true
