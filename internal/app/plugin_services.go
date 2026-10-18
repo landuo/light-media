@@ -60,7 +60,7 @@ func (p *PluginStore) publicPluginServices(ctx context.Context, at time.Time) ([
 	rows, err := tx.QueryContext(ctx, `SELECT s.instance_id,s.service_id,s.definition,s.next_due,i.plugin_id,i.version,i.manifest,
  EXISTS(SELECT 1 FROM plugin_schedule_occurrences o JOIN plugin_runs r ON r.id=o.run_id WHERE o.instance_id=s.instance_id AND o.service_id=s.service_id AND r.state='pending'),
  EXISTS(SELECT 1 FROM plugin_schedule_occurrences o JOIN plugin_runs r ON r.id=o.run_id WHERE o.instance_id=s.instance_id AND o.service_id=s.service_id AND r.state='running'),
- EXISTS(SELECT 1 FROM plugin_schedule_occurrences o JOIN plugin_runs r ON r.id=o.run_id WHERE o.instance_id=s.instance_id AND o.service_id=s.service_id AND r.state='reconcile_pending')
+ EXISTS(SELECT 1 FROM plugin_runs r WHERE r.instance_id=s.instance_id AND r.generation=i.generation AND r.state='reconcile_pending')
  FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main'
  WHERE s.active=1 AND i.installed=1 AND i.desired_enabled=1 AND s.generation=i.generation AND s.config_revision=v.revision`)
 	if err != nil {

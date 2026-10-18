@@ -197,6 +197,35 @@ func TestPublicPluginServicesConsumedOnceAndUncertainRemainVisible(t *testing.T)
 	}
 }
 
+func TestPublicPluginServicesManualUncertaintyBlocksSameGenerationOnly(t *testing.T) {
+	ctx := context.Background()
+	at := time.Now().UTC()
+	a, _, _ := pluginScheduleFixture(t, at, schedule.Spec{Kind: "interval", Timezone: "UTC", IntervalMS: 30000}, -1)
+	publicServiceValidTimerManifest(t, a)
+	// This is an actual non-service run. It has no schedule occurrence, and an
+	// internal config checkpoint may have advanced the installation revision.
+	run, err := a.pluginStore.EnqueueRun(ctx, "timer", "run", json.RawMessage(`{}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Store.DB.Exec(`UPDATE plugin_runs SET state='reconcile_pending',config_revision=config_revision+1 WHERE id=?`, run.ID); err != nil {
+		t.Fatal(err)
+	}
+	items, err := a.pluginStore.publicPluginServices(ctx, at)
+	if err != nil || len(items) != 1 || items[0].CanRun || items[0].Status != "等待核对" {
+		t.Fatal("unrelated manual uncertainty shown as executable", items, err)
+	}
+	// A run from another generation must not make the current services appear
+	// to be executing. Lifecycle transitions retain their own owner guards.
+	if _, err := a.Store.DB.Exec(`UPDATE plugin_runs SET generation=generation+1 WHERE id=?`, run.ID); err != nil {
+		t.Fatal(err)
+	}
+	items, err = a.pluginStore.publicPluginServices(ctx, at)
+	if err != nil || len(items) != 1 || !items[0].CanRun || items[0].Status != "等待" {
+		t.Fatal("other generation contaminated current service state", items, err)
+	}
+}
+
 // The storage-only timer fixture deliberately has a partial manifest. Supply
 // real protocol metadata for public API tests, which validate full packages.
 func publicServiceValidTimerManifest(t *testing.T, a *App) {

@@ -278,5 +278,101 @@
     "MoviePilot-Frontend/src/components/dialog/ShortcutToolDialog.vue": "2af3ddf3621dd4b7ce37354bae33237a3c4c8138378d0b9ec8ad2b77431643de",
     "MoviePilot-Frontend/src/layouts/components/ShortcutBar.vue": "41dc5e29542f460bce0cf80b312799dd6f0ca7b4bd9fe846b5f012228e686f9b",
     "MoviePilot/app/scheduler.py": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d"
+  },
+  "latest_instance_uncertainty_projection": {
+    "scope": "Manual/API uncertainty also disables every service of the same installation generation, regardless of internal config checkpoint revision; another generation does not contaminate current state. Display-only projection; canonical enqueue owner safety remains each adapter responsibility.",
+    "normal": {
+      "pass": 17,
+      "fail": 0,
+      "skip": 0
+    },
+    "race": {
+      "pass": 7,
+      "fail": 0,
+      "skip": 0
+    },
+    "verification": {
+      "checks": [
+        {
+          "name": "production",
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "normal",
+          "exit_code": 0,
+          "log_sha256": "c7f11d87e29b0a610536a90f8704f8d8b68b597ce180801adb4a685ba5702c3e"
+        },
+        {
+          "name": "race",
+          "exit_code": 0,
+          "log_sha256": "7cdd8144812cdcf4bff5d62936166f8bdadfc240be726fc708c50b2a5e1af73b"
+        },
+        {
+          "name": "linux-test",
+          "exit_code": 0,
+          "environment": {
+            "GOOS": "linux",
+            "GOARCH": "amd64",
+            "CGO_ENABLED": "0"
+          },
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "source_unchanged": true,
+      "changed": [],
+      "source_manifest_sha256": "8357ba1125b135c719431ba2692b5aef96ffcb00da2ef741066e56e608fb4840"
+    },
+    "NAS": {
+      "id": "dde2867d-5d9d-410f-8db8-0cffb7c21d31",
+      "date": "2026-10-18",
+      "platform": "linux/amd64",
+      "CGO_ENABLED": "0",
+      "tags": "modernconly",
+      "test_regex": "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules)",
+      "sha256": "0e74c1cf021209912aa5c50bdb36ae1c7e278cc9b22c59cfb93c7be03b29cbd5",
+      "remote_sha256": "0e74c1cf021209912aa5c50bdb36ae1c7e278cc9b22c59cfb93c7be03b29cbd5",
+      "results": {
+        "exit_code": 0,
+        "top_level_passes": 17,
+        "top_level_skips": 0,
+        "top_level_failures": 0
+      },
+      "container_oom_killed": false,
+      "services_unchanged": true,
+      "environment": {
+        "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+        "user": "1000:1001",
+        "network": "none",
+        "read_only": true,
+        "cap_drop": [
+          "ALL"
+        ],
+        "no_new_privileges": true,
+        "memory_bytes": 268435456,
+        "memory_swap_bytes": 268435456,
+        "tmpfs_bytes": 134217728,
+        "pids_limit": 256,
+        "GOMEMLIMIT": "64MiB",
+        "inspect_matches": true
+      },
+      "source_snapshot_sha256": "3ec7507082c7085fadf96cac576169746b5822a5db30d5be2f48aaf3a1eb0334",
+      "scope": "Public services projection includes manual/API uncertainty from same installation generation.17 selected App SQL/SDK/auth/timer tests; actual owned temporary data only. No deployment or user migration.",
+      "cleanup": {
+        "container_removed": true,
+        "owned_remote_stage_removed": true,
+        "services_unchanged": true
+      }
+    },
+    "independent_cleanup": {
+      "container_absent": true,
+      "stage_absent": true,
+      "production_unchanged": true
+    },
+    "source_file_hashes": {
+      "internal/app/plugin_services.go": "1fc418c427f85ba3b5caea3dad4d5da7c917353001074d93a77f11235b314dda",
+      "internal/app/plugin_services_test.go": "70b5f47baba46e2939c467fcd72299fce24702f1734fabcffcbdf11c77e494e9"
+    },
+    "frontend_unchanged": true
   }
 }
