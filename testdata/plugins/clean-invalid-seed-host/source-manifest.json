@@ -15,8 +15,10 @@
     "internal/plugins/cleaninvalidseed/host/fixture_journal_test.go": "1e4a44e2145537ff863bc2fba90d15c48d27b23bf6810eda08d1d771bc261994",
     "internal/plugins/cleaninvalidseed/host/fs.go": "ceedc14afc4cd9ccabaa0908bf00cf84dcf39f6fb981bf0d6cb2a623bcccc436",
     "internal/plugins/cleaninvalidseed/host/host_test.go": "61f5eb30eb99ac899ede4672525cc5ba7e5a0feb0cf9e4b4dcc8a180adc227f9",
-    "internal/plugins/cleaninvalidseed/host/native.go": "9719872a7ebe71007fa172dace5ccdf0337401aa4020d2eaa9f94b6df7d93b88",
-    "internal/plugins/cleaninvalidseed/host/owner.go": "6144d8490567ac3cecb01a6dfd545cdd8756deb52d3e93bbfc95f688d77034d1",
+    "internal/plugins/cleaninvalidseed/host/native.go": "20184c98ec653d6734002bacf7d3f7cfe148c5d2bdce9081bf6810045f9d73e4",
+    "internal/plugins/cleaninvalidseed/host/native_phase.go": "4ec93577613f7994502c78420ccf54a9924593a43d86b2cc6c540d611fb64068",
+    "internal/plugins/cleaninvalidseed/host/native_phase_test.go": "092b39e236fdb96c390a6aedb63bfd97195fd44a9b711cfdf2dcf87460249666",
+    "internal/plugins/cleaninvalidseed/host/owner.go": "0794cbdb6be8d9111a2a486599cf10ae5309916eb60f6e92a56856e92fb14f3c",
     "internal/plugins/cleaninvalidseed/host/rename.go": "62e105b5d21219904f32d17c46c49788db13200914e57e5e4a77cecb8f63322f",
     "internal/plugins/cleaninvalidseed/host/rename_darwin.go": "5e4fa2664d36c42b69809cf7f3c602b5ed695d27771887a76aa897b3a6d95194",
     "internal/plugins/cleaninvalidseed/host/rename_linux.go": "e53d928f71766cb493418c9ec21337b7292a2bfc860a5185c70d9b88e060ca67",
@@ -24,7 +26,13 @@
   },
   "fixture_files": {
     "testdata/plugins/clean-invalid-seed-host/reference/source-prefix.json": "b940243d274e4c02b2f978674ad23f82697195a923d5c630cc07c86f64e57306",
-    "testdata/plugins/clean-invalid-seed-host/reference/source_prefix_oracle.py": "27660d465e7762a58c9fcd47f5fb0c59f7c2ae05d8f5408b74ee7e343ddd54c6"
+    "testdata/plugins/clean-invalid-seed-host/reference/source_prefix_oracle.py": "27660d465e7762a58c9fcd47f5fb0c59f7c2ae05d8f5408b74ee7e343ddd54c6",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/source-manifest.json": "0df2fd9e36be2bd3afd83a9d11076ef26c7efcfbb9f62d15e0f6b230202c0eb4"
   },
-  "production_control_api": "RuntimeConfig + Rebind preserving warm source state; BeforeRun inside action gate retains real Core lease through finish; Trigger.OccurrenceID binds automatic/manual service, manual_service bypasses cron grace only with trusted Core occurrence proof"
+  "production_control_api": "RuntimeConfig + Rebind preserving warm source state; BeforeRun inside action gate retains real Core lease through finish; Trigger.OccurrenceID binds automatic/manual service, manual_service bypasses cron grace only with trusted Core occurrence proof",
+  "mutation_phase_provenance": {
+    "manifest": "testdata/plugins/clean-invalid-seed-mutation-phase/source-manifest.json",
+    "validation_status": "formal_source_migrated_pending_formal_tests",
+    "baseline_commit": "28cd053062aebe67918769a238f3d03d6600836c"
+  }
 }

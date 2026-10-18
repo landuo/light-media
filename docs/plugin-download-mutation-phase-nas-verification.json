@@ -1,0 +1,70 @@
+{
+  "id": "aaeff18a-22ce-4c0b-8e58-cbbc9d69355c",
+  "recorded_at": "2026-10-18T02:31:14.046Z",
+  "platform": "linux/amd64",
+  "CGO_ENABLED": "0",
+  "tags": "modernconly",
+  "binaries": {
+    "download.test": "3914fce868e4f380700b34106dc1016c74374006be7c5472ff0e3b05989d54bb",
+    "host.test": "4cc33cb149eba706e0c36955a1ac46676bae7df9a268a41da4e4843e9bd543e1",
+    "app.test": "b55d5b8bc106df7eff23a7c3a747bfc18d6e5194b0c83b1db58b747a2d9f79cf"
+  },
+  "remote_binaries": {
+    "download.test": "3914fce868e4f380700b34106dc1016c74374006be7c5472ff0e3b05989d54bb",
+    "host.test": "4cc33cb149eba706e0c36955a1ac46676bae7df9a268a41da4e4843e9bd543e1",
+    "app.test": "b55d5b8bc106df7eff23a7c3a747bfc18d6e5194b0c83b1db58b747a2d9f79cf"
+  },
+  "source_snapshot_sha256": "b67bf6cafd1824c38c668280629540b0097e0944c0ee44ce5b62a69f78b53341",
+  "results": [
+    {
+      "label": "download",
+      "expected": 27,
+      "top_level_passes": 27,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "final_pass": true
+    },
+    {
+      "label": "host",
+      "expected": 31,
+      "top_level_passes": 31,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "final_pass": true
+    },
+    {
+      "label": "app",
+      "expected": 40,
+      "top_level_passes": 40,
+      "top_level_skips": 0,
+      "top_level_failures": 0,
+      "final_pass": true
+    }
+  ],
+  "exit_code": 0,
+  "container_oom_killed": false,
+  "services_unchanged": true,
+  "environment": {
+    "image_requested": "alpine:3.22",
+    "image_id": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+    "user": "1000:1001",
+    "network": "none",
+    "read_only": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "memory_bytes": 268435456,
+    "memory_swap_bytes": 268435456,
+    "tmpfs_bytes": 134217728,
+    "pids_limit": 256,
+    "GOMEMLIMIT": "64MiB",
+    "inspect_matches": true
+  },
+  "scope": "Frozen formal download 27, Clean host 31 and actual App Clean+Deferred 40 tests, including seven mutation phase subcases. Synthetic owned HTTP/SQLite/files/SDK fixtures only; no production plugin activation, user configuration/data migration or actual downloader mutation.",
+  "cleanup": {
+    "container_removed": true,
+    "owned_remote_stage_removed": true,
+    "services_unchanged": true
+  }
+}

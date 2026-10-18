@@ -276,7 +276,7 @@ func (c *Client) qbAdd(ctx context.Context, in AddRequest, hashes []string) (Add
 }
 func (c *Client) qbControl(ctx context.Context, hash, action string) error {
 	if err := c.qbExists(ctx, hash); err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	endpoint := map[string]string{"start": "start", "pause": "stop", "verify": "recheck", "remove_keep_data": "delete", "remove_with_data": "delete"}[action]
 	args := url.Values{"hashes": {hash}}

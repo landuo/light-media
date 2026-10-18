@@ -102,12 +102,12 @@ func (c *Client) NativeTrackers(ctx context.Context, hash string) (json.RawMessa
 func (c *Client) SetTorrentTags(ctx context.Context, hash string, tags []string) error {
 	hash, err := c.validHash(hash)
 	if err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	size := 0
 	for _, tag := range tags {
 		if !utf8.ValidString(tag) || len(tag) > maxResponse-size {
-			return failure("native_tags", "invalid_tags")
+			return beforeMutation(failure("native_tags", "invalid_tags"))
 		}
 		size += len(tag)
 	}
@@ -115,16 +115,24 @@ func (c *Client) SetTorrentTags(ctx context.Context, hash string, tags []string)
 	// tag list. Do not reuse validTags, trim, split, deduplicate, or cap at 32.
 	labelBytes, err := json.Marshal(tags)
 	if err != nil || len(labelBytes) > maxResponse {
-		return failure("native_tags", "invalid_tags")
+		return beforeMutation(failure("native_tags", "invalid_tags"))
 	}
 	if err = c.nativeLock(ctx); err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	defer c.mu.Unlock()
 	if c.config.Kind == "qbittorrent" {
 		form := url.Values{"hashes": {hash}, "tags": {strings.Join(tags, ",")}}.Encode()
 		if len(form) > maxResponse {
-			return failure("native_tags", "invalid_tags")
+			return beforeMutation(failure("native_tags", "invalid_tags"))
+		}
+		// This is the same initial authentication performed by qb. Move only
+		// its pre-request boundary here, without adding a target existence
+		// check or changing the daemon's append semantics.
+		if !c.loggedIn && (c.config.Username != "" || c.config.Password != "") {
+			if err = c.qbLogin(ctx); err != nil {
+				return beforeMutation(err)
+			}
 		}
 		body, err := c.qb(ctx, http.MethodPost, "torrents/addTags", form, "application/x-www-form-urlencoded")
 		if err != nil {
@@ -136,7 +144,7 @@ func (c *Client) SetTorrentTags(ctx context.Context, hash string, tags []string)
 		return nil
 	}
 	if err = c.trConnect(ctx); err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	labels := append([]string{}, tags...)
 	_, err = c.trRPC(ctx, "torrent_set", map[string]any{"ids": []string{hash}, "labels": labels}, c.trDialect)

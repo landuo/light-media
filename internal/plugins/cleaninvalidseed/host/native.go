@@ -7,8 +7,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"light-media/internal/download"
 	seed "light-media/internal/plugins/cleaninvalidseed"
 	"strings"
+	"time"
 )
 
 func (e *execution) Services(_ context.Context, selected any) ([]seed.Service, error) {
@@ -265,19 +267,29 @@ func (e *execution) call(ctx context.Context, d Downloader, op string, args map[
 	}
 	intent.Phase = "confirmed"
 	intent.Result = json.RawMessage(`{"protocol_acknowledged":true,"observed":false}`)
+	commitCtx := ctx
+	knownNotStarted := download.MutationNotStarted(err)
 	if err != nil {
-		intent.Phase = "unknown"
-		intent.ErrorCode = "DOWNLOADER_MUTATION_UNCONFIRMED"
-		intent.Result = nil
-		e.fault(ErrUnknown)
+		if knownNotStarted {
+			intent.ErrorCode = "DOWNLOADER_MUTATION_NOT_STARTED"
+			intent.Result = json.RawMessage(`{"protocol_not_started":true}`)
+			bounded, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
+			defer cancel()
+			commitCtx = nativeNotStartedContext(bounded, e.inv, intent, err)
+		} else {
+			intent.Phase = "unknown"
+			intent.ErrorCode = "DOWNLOADER_MUTATION_UNCONFIRMED"
+			intent.Result = nil
+			e.fault(ErrUnknown)
+		}
 	}
 	saveErr := e.persist(func(tx *sql.Tx, s *State) error {
 		old, ok := s.Effects[intent.ID]
 		if !ok || old.Phase != "started" || old.Operation != intent.Operation || old.DownloaderSHA != d.ConfigSHA {
 			return ErrUnsafe
 		}
-		if err == nil {
-			if commitErr := e.o.opts.Core.Commit(ctx, tx, e.inv, intent); commitErr != nil {
+		if err == nil || knownNotStarted {
+			if commitErr := e.o.opts.Core.Commit(commitCtx, tx, e.inv, intent); commitErr != nil {
 				return commitErr
 			}
 		}

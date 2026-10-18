@@ -440,7 +440,14 @@ func (c *pluginCleanInvalidSeedCore) Commit(ctx context.Context, tx *sql.Tx, inv
 	}
 	switch e.Kind {
 	case "native_write":
-		if old.Phase != "started" || e.Phase != "confirmed" || e.Operation != old.Operation || e.DownloaderID != old.DownloaderID || e.DownloaderSHA != old.DownloaderSHA || e.DownloaderRevision != old.DownloaderRevision || !bytes.Equal(e.Args, old.Args) || !bytes.Equal(e.NativeSnapshot, old.NativeSnapshot) || string(e.Result) != `{"protocol_acknowledged":true,"observed":false}` {
+		if old.Phase != "started" || e.Phase != "confirmed" || e.Operation != old.Operation || e.DownloaderID != old.DownloaderID || e.DownloaderSHA != old.DownloaderSHA || e.DownloaderRevision != old.DownloaderRevision || !bytes.Equal(e.Args, old.Args) || !bytes.Equal(e.NativeSnapshot, old.NativeSnapshot) {
+			return seedhost.ErrUnsafe
+		}
+		if e.ErrorCode == "DOWNLOADER_MUTATION_NOT_STARTED" {
+			if string(e.Result) != `{"protocol_not_started":true}` || !seedhost.NativeMutationNotStarted(ctx, inv, e) {
+				return seedhost.ErrUnsafe
+			}
+		} else if e.ErrorCode != "" || string(e.Result) != `{"protocol_acknowledged":true,"observed":false}` {
 			return seedhost.ErrUnsafe
 		}
 		grant := e

@@ -244,12 +244,12 @@ func (c *Client) Add(ctx context.Context, in AddRequest) (AddResult, error) {
 func (c *Client) Control(ctx context.Context, hash, action string) error {
 	hash, err := c.validHash(hash)
 	if err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	switch action {
 	case "start", "pause", "verify", "remove_keep_data", "remove_with_data":
 	default:
-		return failure("control", "unsupported_action")
+		return beforeMutation(failure("control", "unsupported_action"))
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -257,7 +257,7 @@ func (c *Client) Control(ctx context.Context, hash, action string) error {
 		return c.qbControl(ctx, hash, action)
 	}
 	if err := c.trConnect(ctx); err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	return c.trControl(ctx, hash, action)
 }

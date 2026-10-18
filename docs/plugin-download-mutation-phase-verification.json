@@ -1,0 +1,446 @@
+{
+  "status": "formal_local_and_isolated_nas_passed",
+  "baseline_commit": "28cd053062aebe67918769a238f3d03d6600836c",
+  "source_files": {
+    "internal/app/plugin_clean_invalid_seed_core.go": "f6c4e358a115359603426e09cb448dd5523839aacb925afb81826d30ec48c941",
+    "internal/app/plugin_clean_invalid_seed_mutation_phase_test.go": "9eb76ab59b652f57e73aaadac5c8349da8822b7d930554bc1ff7603f48da6b94",
+    "internal/download/client.go": "6fc7aaa26d89e2499af036a687bd503f9f2b4d736470e4f9f541d1335b5e9155",
+    "internal/download/mutation_phase.go": "bd0b3f79e74dc09f9d5a415a12acff32671af8147f952e5c22aa768e26e2ee60",
+    "internal/download/mutation_phase_test.go": "94f1ec387ee964cc26d71b96bb6afe44ce6fd336a51b97e143f999c2b9b93a8a",
+    "internal/download/native.go": "5bdc7b766e0465e4a00ca4672aca14303b61b4f38441bc79ebd06dc2063aa7a7",
+    "internal/download/qbittorrent.go": "cf7f543d73dfe6681f2b7b46e044c5bac3272f35a381a1670147c822c5ca73f5",
+    "internal/download/transmission.go": "42681ab38514b80ea8f60191e1a89b98751faaebcd81835d35ab0c6306fcf929",
+    "internal/plugins/cleaninvalidseed/host/native.go": "20184c98ec653d6734002bacf7d3f7cfe148c5d2bdce9081bf6810045f9d73e4",
+    "internal/plugins/cleaninvalidseed/host/native_phase.go": "4ec93577613f7994502c78420ccf54a9924593a43d86b2cc6c540d611fb64068",
+    "internal/plugins/cleaninvalidseed/host/native_phase_test.go": "092b39e236fdb96c390a6aedb63bfd97195fd44a9b711cfdf2dcf87460249666",
+    "internal/plugins/cleaninvalidseed/host/owner.go": "0794cbdb6be8d9111a2a486599cf10ae5309916eb60f6e92a56856e92fb14f3c",
+    "internal/plugins/cleaninvalidseed/host/provenance_test.go": "2603eb88decead6f2cbba08c996d780704c88f653a3ba711c490cf46284de6da"
+  },
+  "host_manifest_sha256": "b408b174b0e59267bc26ce9c7fdc91702e5275b45654566bdb6ba85d35ba4ed1",
+  "original_source_oracle_manifest_sha256": "0df2fd9e36be2bd3afd83a9d11076ef26c7efcfbb9f62d15e0f6b230202c0eb4",
+  "candidate_reference_only": {
+    "snapshot_sha256": "3625df227d5208154f9b49ea1c1cbca24a9dacf681d14f7d2eb7015e3e8f9308",
+    "not_formal_validation": true
+  },
+  "transformations": [
+    "App top renamed TestCandidateCleanMutationPhaseActualSDKReceiptsContinuationAndColdRecovery to TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery.",
+    "Formal host provenance test gains an independent source/oracle integrity check; its original source entry count changes 12 to 14.",
+    "Existing formal host source manifest is updated in place with current native.go/owner.go and two native_phase source hashes, retains all prior candidate/NAS evidence, and adds the new source/oracle manifest."
+  ],
+  "verification": [
+    {
+      "mode": "normal",
+      "scope": "entire download and CleanInvalidSeed host packages",
+      "log": "work/download-mutation-phase-leaves-normal.jsonl",
+      "log_sha256": "a16f9e31c21e45e6d08e0f94f91c1fa577469ac8b2f564a08714be4720d4eeb7",
+      "started_at": "2026-10-17T04:55:11.522239+08:00",
+      "packages": [
+        {
+          "package": "light-media/internal/download",
+          "elapsed_seconds": 1.433,
+          "terminal_at": "2026-10-17T04:55:12.954931+08:00",
+          "top_level_passes": 27,
+          "top_level_skips": 0,
+          "top_level_failures": 0,
+          "tests": [
+            "TestQBitTorrentLifecycleAndDuplicateHasNoSideEffect",
+            "TestQBitTorrentAuthRefreshAndBusinessFailure",
+            "TestUnsafeInputsDoNotReachServer",
+            "TestRedirectNotFollowedAndSecretsNotInError",
+            "TestQBitTorrentUnsafeFileAndMissingTaskRejected",
+            "TestTransmissionJSONRPCAndLegacyLifecycle",
+            "TestTransmissionHandshakeIsBounded",
+            "TestTransmissionWrongResponseIDAndRPCFailure",
+            "TestTorrentHashUsesOriginalInfoAndRejectsInvalid",
+            "TestConcurrentClientsAddOnce",
+            "TestDefaultSavePathIsReadOnlyForBothTransmissionDialects",
+            "TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings",
+            "TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects",
+            "TestMutationPhaseLocalProofCannotComeFromJSONOrErrorCode",
+            "TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct",
+            "TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC",
+            "TestNativeInstalledFieldContract",
+            "TestNativeQBFullRawLazyTrackersAndAppend",
+            "TestNativeTransmissionDialectsFullFieldsAndReplace",
+            "TestNativeFailureAndSelectionBoundaries",
+            "TestNativeQBResponsesRedirectRateLimitAndCancel",
+            "TestNativeTransmissionProtocolFailures",
+            "TestNativeConcurrentClientsPreserveSessionAndRequestIDs",
+            "TestNativeOriginalWrapperSevenOpsLoopback",
+            "TestNativeTagFailureRetainsOriginalWrapperReturn",
+            "TestNativeTransmissionInFlightCancellation",
+            "TestNativeSnapshotDoesNotInheritTaskRowCap"
+          ]
+        },
+        {
+          "package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "elapsed_seconds": 3.302,
+          "terminal_at": "2026-10-17T04:55:14.89745+08:00",
+          "top_level_passes": 31,
+          "top_level_skips": 0,
+          "top_level_failures": 0,
+          "tests": [
+            "TestBeforeRunWaitsForActionGateAndKeepsLeaseThroughFinalization",
+            "TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish",
+            "TestTrustedManualServiceDoesNotUseCronMisfireGrace",
+            "TestTrustedRebindPreservesWarmObjectAndRejectsForeignBackend",
+            "TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData",
+            "TestUnknownRemoteOutcomeSurvivesReopenAndCannotReplayOrEraseAcceptedNotices",
+            "TestOwnedFilesAndTreeUseSnapshotReceiptsWithoutDeletingSeededData",
+            "TestFailedNativeListCannotAuthorizeFileDeletion",
+            "TestFileSnapshotAndFrozenManagedOwnerRejectReplacement",
+            "TestOnlyOnceRewriteAndThreeSecondPlanPublishAtomicallyAndDoNotReplay",
+            "TestCronAndDueEnqueueRollbackStopAndCommandBinding",
+            "TestConfigSQLFailureRollsBackFlagCoreRevisionAndSchedule",
+            "TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement",
+            "TestSourceConfigAndNoticePrefixesSurviveLaterFailures",
+            "TestStartedRunWithoutEffectsBlocksNewInvocationAfterActualDatabaseReopen",
+            "TestNativeGuardDenialCannotBeHiddenBySourceWrapper",
+            "TestOwnerGateCancellationAndImmutableDownloaderReference",
+            "TestCommandSourceFailurePreservesInstalledASTNoticePrefix",
+            "TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically",
+            "TestNativeAcknowledgementAndCoreReceiptFailureNeverReissuesMutation",
+            "TestInsertedTreeEntryCannotBeDeletedUsingOlderFrozenManifest",
+            "TestOnlyOnceConfigCommitReplyLossUsesExactReceiptAndNeverSavesTwice",
+            "TestConfigRejectsInvalidUTF8AndMultipleObjectsBeforeDurableBegin",
+            "TestWarmCommandFailureRetainsTemporaryFlagsButColdOwnerUsesSavedConfiguration",
+            "TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace",
+            "TestSuppliedConfigurationMustMatchTrustedCurrentRevision",
+            "TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh",
+            "TestTreeReceiptsRetainOnlyEachDeletedEntryProof",
+            "TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect",
+            "TestFormalHostSourceAndInstalledFailurePrefixProvenance",
+            "TestFormalMutationPhaseInstalledSourceAndContinuationOracleProvenance"
+          ]
+        }
+      ],
+      "race_warnings": 0,
+      "command_provenance": "Actual terminal JSON retained from interrupted prior agent; exact shell invocation was not retained. Package/test identities and mode are independently visible in the preserved log and work file role; no old candidate result is counted."
+    },
+    {
+      "mode": "race",
+      "scope": "entire download and CleanInvalidSeed host packages",
+      "log": "work/download-mutation-phase-leaves-race.jsonl",
+      "log_sha256": "f774e6345ad1d5f83c45bfcafd453a92f6e10a56d29850f93fad359c0d15441c",
+      "started_at": "2026-10-17T04:55:40.333293+08:00",
+      "packages": [
+        {
+          "package": "light-media/internal/download",
+          "elapsed_seconds": 1.873,
+          "terminal_at": "2026-10-17T04:55:42.206722+08:00",
+          "top_level_passes": 27,
+          "top_level_skips": 0,
+          "top_level_failures": 0,
+          "tests": [
+            "TestQBitTorrentLifecycleAndDuplicateHasNoSideEffect",
+            "TestQBitTorrentAuthRefreshAndBusinessFailure",
+            "TestUnsafeInputsDoNotReachServer",
+            "TestRedirectNotFollowedAndSecretsNotInError",
+            "TestQBitTorrentUnsafeFileAndMissingTaskRejected",
+            "TestTransmissionJSONRPCAndLegacyLifecycle",
+            "TestTransmissionHandshakeIsBounded",
+            "TestTransmissionWrongResponseIDAndRPCFailure",
+            "TestTorrentHashUsesOriginalInfoAndRejectsInvalid",
+            "TestConcurrentClientsAddOnce",
+            "TestDefaultSavePathIsReadOnlyForBothTransmissionDialects",
+            "TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings",
+            "TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects",
+            "TestMutationPhaseLocalProofCannotComeFromJSONOrErrorCode",
+            "TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct",
+            "TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC",
+            "TestNativeInstalledFieldContract",
+            "TestNativeQBFullRawLazyTrackersAndAppend",
+            "TestNativeTransmissionDialectsFullFieldsAndReplace",
+            "TestNativeFailureAndSelectionBoundaries",
+            "TestNativeQBResponsesRedirectRateLimitAndCancel",
+            "TestNativeTransmissionProtocolFailures",
+            "TestNativeConcurrentClientsPreserveSessionAndRequestIDs",
+            "TestNativeOriginalWrapperSevenOpsLoopback",
+            "TestNativeTagFailureRetainsOriginalWrapperReturn",
+            "TestNativeTransmissionInFlightCancellation",
+            "TestNativeSnapshotDoesNotInheritTaskRowCap"
+          ]
+        },
+        {
+          "package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "elapsed_seconds": 12.239,
+          "terminal_at": "2026-10-17T04:55:52.627654+08:00",
+          "top_level_passes": 31,
+          "top_level_skips": 0,
+          "top_level_failures": 0,
+          "tests": [
+            "TestBeforeRunWaitsForActionGateAndKeepsLeaseThroughFinalization",
+            "TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish",
+            "TestTrustedManualServiceDoesNotUseCronMisfireGrace",
+            "TestTrustedRebindPreservesWarmObjectAndRejectsForeignBackend",
+            "TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData",
+            "TestUnknownRemoteOutcomeSurvivesReopenAndCannotReplayOrEraseAcceptedNotices",
+            "TestOwnedFilesAndTreeUseSnapshotReceiptsWithoutDeletingSeededData",
+            "TestFailedNativeListCannotAuthorizeFileDeletion",
+            "TestFileSnapshotAndFrozenManagedOwnerRejectReplacement",
+            "TestOnlyOnceRewriteAndThreeSecondPlanPublishAtomicallyAndDoNotReplay",
+            "TestCronAndDueEnqueueRollbackStopAndCommandBinding",
+            "TestConfigSQLFailureRollsBackFlagCoreRevisionAndSchedule",
+            "TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement",
+            "TestSourceConfigAndNoticePrefixesSurviveLaterFailures",
+            "TestStartedRunWithoutEffectsBlocksNewInvocationAfterActualDatabaseReopen",
+            "TestNativeGuardDenialCannotBeHiddenBySourceWrapper",
+            "TestOwnerGateCancellationAndImmutableDownloaderReference",
+            "TestCommandSourceFailurePreservesInstalledASTNoticePrefix",
+            "TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically",
+            "TestNativeAcknowledgementAndCoreReceiptFailureNeverReissuesMutation",
+            "TestInsertedTreeEntryCannotBeDeletedUsingOlderFrozenManifest",
+            "TestOnlyOnceConfigCommitReplyLossUsesExactReceiptAndNeverSavesTwice",
+            "TestConfigRejectsInvalidUTF8AndMultipleObjectsBeforeDurableBegin",
+            "TestWarmCommandFailureRetainsTemporaryFlagsButColdOwnerUsesSavedConfiguration",
+            "TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace",
+            "TestSuppliedConfigurationMustMatchTrustedCurrentRevision",
+            "TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh",
+            "TestTreeReceiptsRetainOnlyEachDeletedEntryProof",
+            "TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect",
+            "TestFormalHostSourceAndInstalledFailurePrefixProvenance",
+            "TestFormalMutationPhaseInstalledSourceAndContinuationOracleProvenance"
+          ]
+        }
+      ],
+      "race_warnings": 0,
+      "command_provenance": "Actual terminal JSON retained from interrupted prior agent; exact shell invocation was not retained. Package/test identities and mode are independently visible in the preserved log and work file role; no old candidate result is counted."
+    },
+    {
+      "mode": "normal",
+      "scope": "actual App CleanInvalidSeed and deferred tests, including seven mutation phase cases",
+      "log": "work/download-mutation-phase-app-normal.jsonl",
+      "log_sha256": "004ff3707baadb53a77360042e6c189229e8071bb9f07addd5bd7b1e52add089",
+      "started_at": "2026-10-17T04:55:14.599308+08:00",
+      "packages": [
+        {
+          "package": "light-media/internal/app",
+          "elapsed_seconds": 7.68,
+          "terminal_at": "2026-10-17T04:55:22.279438+08:00",
+          "top_level_passes": 40,
+          "top_level_skips": 0,
+          "top_level_failures": 0,
+          "tests": [
+            "TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames",
+            "TestPluginCleanInvalidSeedHTTPLifecycleAuthResetRevisionZeroAndReinstall",
+            "TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners",
+            "TestPluginCleanInvalidSeedHTTPPreflightRejectsMissingDirectoryWithoutPublishing",
+            "TestPluginCleanInvalidSeedHTTPReloadCancelsOnlyPendingSourceOccurrenceAtSameRevision",
+            "TestPluginCleanInvalidSeedJournalAllFieldsDeltaAndConfidentiality",
+            "TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace",
+            "TestPluginCleanInvalidSeedJournalSameTransactionConfigAndTransitionRollback",
+            "TestPluginCleanInvalidSeedJournalRetirementScopeAndStringValidation",
+            "TestPluginCleanInvalidSeedPrivateJournalLimit",
+            "TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery",
+            "TestPluginCleanInvalidSeedOwnerWorkerFixture",
+            "TestPluginCleanInvalidSeedOwnerActualSDKDisabledAndOnlyOnceAtomicScope",
+            "TestPluginCleanInvalidSeedOwnerConfigPrefixSurvivesLaterNoticeFailure",
+            "TestPluginCleanInvalidSeedOwnerNativeKeepDataUnknownDoesNotReplay",
+            "TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure",
+            "TestPluginCleanInvalidSeedOwnerManualServiceHasNoMisfireAndPreservesDateAnchor",
+            "TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace",
+            "TestPluginCleanInvalidSeedOwnerInternalConfigRevisionMigratesOnlyPendingSourceOccurrence",
+            "TestPluginCleanInvalidSeedOwnerRealSourceDeletionKeepsMediaAndMediaDeletionPreservesIndex",
+            "TestPluginCleanInvalidSeedOwnerPreflightAndPublicationRollbackKeepOldSchedulesUsable",
+            "TestPluginCleanInvalidSeedOwnerCleanStopReopenUsesFreshInitAndCron",
+            "TestPluginCleanInvalidSeedOwnerInternalConfigCrashReopenPreservesAppliedObjectAndOnceDeadline",
+            "TestPluginCleanInvalidSeedRuntimeHTTPInstallAndOriginalOnceFlag",
+            "TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite",
+            "TestPluginDeferredTerminalFailureRecoveryPreservesFailureAndRejectsRetry",
+            "TestPluginDeferredFailureReceiptRejectsForeignPluginAndUntrustedErrorCode",
+            "TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority",
+            "TestPluginDeferredCleanPrivateProofCannotHideUnknownEffects",
+            "TestPluginDeferredHandshakeHasNoBusinessEffectAndRequiresTrustedExecution",
+            "TestPluginDeferredPayloadAndTerminalProtocolRejectTampering",
+            "TestPluginDeferredWorkerFixture",
+            "TestPluginDeferredRealWorkerFailureDoesNotStartOperation",
+            "TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun",
+            "TestPluginDeferredRunIdentityAndSealedTamperingFailClosed",
+            "TestPluginDeferredStartedRequiresCurrentRunningInstallation",
+            "TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage",
+            "TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork",
+            "TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt",
+            "TestPluginDeferredRetryHTTPUsesOriginalRunAndShowsOnlySafeActionMetadata"
+          ]
+        }
+      ],
+      "race_warnings": 0,
+      "command_provenance": "Actual terminal JSON retained from interrupted prior agent; exact shell invocation was not retained. Package/test identities and mode are independently visible in the preserved log and work file role; no old candidate result is counted."
+    },
+    {
+      "label": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./internal/download",
+        "./internal/plugins/cleaninvalidseed/host",
+        "./internal/app"
+      ],
+      "started_at": "2026-10-18T02:29:10.959457+00:00",
+      "finished_at": "2026-10-18T02:29:28.014064+00:00",
+      "exit_code": 0,
+      "log": "work/plugin-app-download-mutation-phase.tvhs2i64/vet.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "app-build",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-app-download-mutation-phase.tvhs2i64/bin/app.test",
+        "./internal/app"
+      ],
+      "started_at": "2026-10-18T02:29:10.959543+00:00",
+      "finished_at": "2026-10-18T02:29:32.451151+00:00",
+      "exit_code": 0,
+      "log": "work/plugin-app-download-mutation-phase.tvhs2i64/app-build.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "download-build",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-app-download-mutation-phase.tvhs2i64/bin/download.test",
+        "./internal/download"
+      ],
+      "started_at": "2026-10-18T02:29:10.960896+00:00",
+      "finished_at": "2026-10-18T02:29:24.520995+00:00",
+      "exit_code": 0,
+      "log": "work/plugin-app-download-mutation-phase.tvhs2i64/download-build.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "host-build",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-app-download-mutation-phase.tvhs2i64/bin/host.test",
+        "./internal/plugins/cleaninvalidseed/host"
+      ],
+      "started_at": "2026-10-18T02:29:10.962729+00:00",
+      "finished_at": "2026-10-18T02:29:30.551634+00:00",
+      "exit_code": 0,
+      "log": "work/plugin-app-download-mutation-phase.tvhs2i64/host-build.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "recorded_at": "2026-10-18T02:31:04.927945+00:00",
+  "formal_build_head": "2cd7987591195a91d403a3c0daaee663fb2d155b",
+  "frozen_source_snapshot_sha256": "b67bf6cafd1824c38c668280629540b0097e0944c0ee44ce5b62a69f78b53341",
+  "frozen_source_snapshot_recorded_at": "2026-10-18T02:29:10.945320+00:00",
+  "actual_app_mutation_subcases": [
+    {
+      "name": "known_missing",
+      "elapsed_seconds": 0.29,
+      "status": "pass"
+    },
+    {
+      "name": "known_ambiguous",
+      "elapsed_seconds": 0.27,
+      "status": "pass"
+    },
+    {
+      "name": "known_read_transport",
+      "elapsed_seconds": 0.27,
+      "status": "pass"
+    },
+    {
+      "name": "known_reply_loss",
+      "elapsed_seconds": 0.28,
+      "status": "pass"
+    },
+    {
+      "name": "known_receipt_sql_failure",
+      "elapsed_seconds": 0.15,
+      "status": "pass"
+    },
+    {
+      "name": "unknown_post500",
+      "elapsed_seconds": 0.14,
+      "status": "pass"
+    },
+    {
+      "name": "unknown_disconnect",
+      "elapsed_seconds": 0.15,
+      "status": "pass"
+    }
+  ],
+  "linux_frozen_binaries": {
+    "host.test": "4cc33cb149eba706e0c36955a1ac46676bae7df9a268a41da4e4843e9bd543e1",
+    "app.test": "b55d5b8bc106df7eff23a7c3a747bfc18d6e5194b0c83b1db58b747a2d9f79cf",
+    "download.test": "3914fce868e4f380700b34106dc1016c74374006be7c5472ff0e3b05989d54bb"
+  },
+  "scope_limits": [
+    "Original formal local normal/race logs are counted only within their explicit package/test scope; no entire-app race result is asserted.",
+    "Linux binaries were built from the recorded frozen formal source before root resumed independent Notice edits; later Core changes need fresh validation.",
+    "No production deployment, plugin activation, 23-plugin completion, user settings/KV/files migration, real site/downloader/media mutation or message delivery is asserted.",
+    "An old empty vet log had no exit-code proof and was not counted; a fresh explicit vet command exited zero."
+  ],
+  "completed_at": "2026-10-18T02:31:41.424796+00:00",
+  "retained_evidence_files": {
+    "testdata/plugins/clean-invalid-seed-mutation-phase/verification/formal-app-normal.jsonl": "004ff3707baadb53a77360042e6c189229e8071bb9f07addd5bd7b1e52add089",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/verification/formal-leaves-normal.jsonl": "a16f9e31c21e45e6d08e0f94f91c1fa577469ac8b2f564a08714be4720d4eeb7",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/verification/formal-leaves-race.jsonl": "f774e6345ad1d5f83c45bfcafd453a92f6e10a56d29850f93fad359c0d15441c",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/verification/formal-source-snapshot.json": "b67bf6cafd1824c38c668280629540b0097e0944c0ee44ce5b62a69f78b53341",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/verification/formal-vet-and-build-results.json": "39bf6fe04f52ef5e182a0e9e0228e459b880d2512a36391ab887bdd3595be5a6",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/verification/formal-nas-tests.log": "4a1b2b23db7752d16040469c19be1124f87b26eb0a0a13a6addaacd34ea1725b"
+  },
+  "nas_verification": {
+    "report": "docs/plugin-download-mutation-phase-nas-verification.json",
+    "report_sha256": "41cf108b4aaf35ef65443c64a53cdadba30671f1ca57213cca31326ee9d31c5b",
+    "results": [
+      {
+        "label": "download",
+        "expected": 27,
+        "top_level_passes": 27,
+        "top_level_skips": 0,
+        "top_level_failures": 0,
+        "final_pass": true
+      },
+      {
+        "label": "host",
+        "expected": 31,
+        "top_level_passes": 31,
+        "top_level_skips": 0,
+        "top_level_failures": 0,
+        "final_pass": true
+      },
+      {
+        "label": "app",
+        "expected": 40,
+        "top_level_passes": 40,
+        "top_level_skips": 0,
+        "top_level_failures": 0,
+        "final_pass": true
+      }
+    ],
+    "total_top_level_passes": 98,
+    "top_level_skips": 0,
+    "top_level_failures": 0
+  },
+  "process_terminal_evidence": {
+    "fresh_vet_and_three_builds_session": 27167,
+    "fresh_vet_and_three_builds_exit_code": 0,
+    "nas_dispatch_session": 7935,
+    "nas_dispatch_exit_code": 0,
+    "nas_finalization_session": 30459,
+    "nas_finalization_exit_code": 0,
+    "container": "lm-app-download-mutation-phase-aaeff18a",
+    "container_terminal_exit_code": 0,
+    "container_removed": true,
+    "owned_remote_stage_removed": true
+  }
+}

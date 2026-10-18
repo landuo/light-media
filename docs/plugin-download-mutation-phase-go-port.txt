@@ -1,0 +1,57 @@
+下载器写入阶段与 CleanInvalidSeed 确认失败收据
+
+本片从 work/_download_mutation_phase_port 的冻结候选迁入。正式基线为
+28cd053062aebe67918769a238f3d03d6600836c；迁入前逐项核对13个文件的原始
+SHA及候选SHA。正式测试结果单列在 plugin-download-mutation-phase-verification.json，
+候选 normal/race/vet 及 Linux 构建结果不替代正式验证。不部署、不触碰真实
+下载器、种子、媒体、消息渠道或生产数据库。
+
+download.MutationNotStarted 仅认可 Client 在实际写前边界构造的私有错误与
+非零私有seal。没有导出构造器；JSON、错误Code、零值、任意包裹或聚合错误
+不能生成该证据。Unwrap保留原 errors.Is/As 行为。Control原有参数、只读
+连接/协议协商、精确目标查验；SetTorrentTags原有参数、锁等待、初始认证及
+只读连接可确证未发选定写入。未新增SetTags目标查验。qB标签操作只把已有
+初始认证明确放到选定POST之前，未改认证重试、CSRF或原标签语义。
+
+一旦进入实际 mutation POST/RPC helper，断连、500、错误ACK、鉴权拒绝后
+重新登录失败、RPC返回错误都不能签发未写证据。Transmission的只读
+session_get/torrent_get即使使用HTTP POST，仍在所选mutation之前；不能根据
+ErrNotFound或远端字符串反推写入阶段。
+
+Clean宿主先保存真实native intent，才调用Client。明确未发出的错误产生
+绑定精确Invocation/Effect摘要/真实typed error的私有context proof。实际
+Core.Commit仍要求既有动作租约、当前安装/配置、精确grant及冻结下载器快照，
+还必须校验这一live proof，才与原journal同SQLite事务保存confirmed效果及
+DOWNLOADER_MUTATION_NOT_STARTED收据。结果固定为protocol_not_started；实际
+ACK仍是另一固定结果。worker JSON或仅有bool不能提交收据。
+
+私有historical outcome无需保留活context，只信同事务写入、绑定完整Effect
+摘要的真实Core密文收据。已确认未写的整次操作是CLEAN_SEED_HOST_DENIED /
+terminal_failed，绝不算成功或自动重试；保存收据SQL失败仍保留started /
+unknown。已发送但丢失结果的操作也继续保持待核对。旧版已unknown而缺少真实
+写前证据的历史记录不自动转换为已知失败。本片无schema、SDK、调度队列或
+deferred协议变更。
+
+原装CleanInvalidSeed与qB/TR wrapper方法SHA、AST离线oracle及脚本位于
+testdata/plugins/clean-invalid-seed-mutation-phase。三个来源SHA精确匹配既有
+已装参考。原wrapper吞异常/返回False或None，插件不检查返回并继续后续目标，
+通知按尝试数量计数。4个离线kind/op组合保留首目标失败后继续次目标、源
+计数2而合成实际接受1的事实。Go同样保留原通知文本与继续顺序；它们不能
+冒充真实写入成功，真实结果由私有效果与终态区分。
+
+正式新增App目标使用真实executePluginRun→内置SDK子进程→deferred→owner→
+Core：缺失、歧义、只读断连、deferred结果丢失、Core收据SQL失败、POST500与
+POST断连共7分支。每项核对后续独立目标继续、实际写入计数、原source尝试
+数量、精确收据、Close/New恢复及禁止旧操作重放；已确认失败还验证真实HTTP
+保存显式新修订后SDK可正常初始化。原型App top名在正式迁入时改为
+TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery。
+
+正式验证已完成：download全包27项、Clean宿主全包31项normal及race均通过；
+实际App Clean+Deferred 40项normal通过，新7分支全部执行。原空vet日志不作
+成功证据，另执行fresh vet并取得退出码0。三个Linux/amd64 CGO0、modernconly
+静态测试二进制已冻结并记录SHA。2026-10-18在NAS独立只读、断网、256MiB、
+UID1000:1001容器中实际执行98项，0跳过/失败，无OOM，生产服务身份/启动时间
+及重启次数前后相同；自有容器及远端临时目录已删除。完整正式日志与冻结
+源摘要保存在原source fixture目录内的verification子目录，其摘要列于正式报告。
+该结论仅覆盖冻结源版本；随后Notice改动须由后续正式验证重新覆盖，不宣称
+23插件迁移完成，也不把站内历史保存解释成消息已送达。

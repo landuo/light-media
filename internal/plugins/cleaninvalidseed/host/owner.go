@@ -243,6 +243,11 @@ func (e *execution) finish(sourceErr error) error {
 				}
 			}
 		}
+		if hostErr != nil {
+			// The native journal distinguishes a proven rejection from a lost
+			// outcome. Do not describe an exact not-issued receipt as unknown.
+			result.HostError = r.ErrorCode
+		}
 		r.Result = raw(result)
 		s.Runs[e.inv.RunID] = r
 		if e.inv.Action == "init" || e.inv.Action == "reload" {

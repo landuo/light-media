@@ -1,0 +1,24 @@
+{
+  "status": "formal_source_provenance_no_runtime_or_deployment_claim",
+  "baseline_commit": "28cd053062aebe67918769a238f3d03d6600836c",
+  "candidate_final_snapshot_sha256": "3625df227d5208154f9b49ea1c1cbca24a9dacf681d14f7d2eb7015e3e8f9308",
+  "source_sha256": {
+    "installed-plugin.py": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+    "installed-qb.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "installed-tr.py": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676"
+  },
+  "files": {
+    "installed-plugin.py": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+    "installed-qb.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "installed-tr.py": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+    "source-return-oracle.json": "4338c4dd8e05abcab22aa1bd3a6a7c4b164204048237730d58f853f76e13b451",
+    "source_return_oracle.py": "98e40bc8dd57763f42636c8d730da459bdf84563e8c9e95a463f8992fcdf152f"
+  },
+  "oracle_scope": "Original clean method and actual wrapper method AST; synthetic list/tracker/size dependencies, no MoviePilot imports or network; first wrapper failure continues second target; attempted count remains two, synthetic accepted count one",
+  "transformations": [
+    "Exact 13 candidate code files migrated after source SHA check.",
+    "App test top renamed TestCandidateCleanMutationPhaseActualSDKReceiptsContinuationAndColdRecovery to TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery.",
+    "Formal host provenance extended from 12 to 14 entries for native_phase.go and native_phase_test.go; historical candidate and NAS evidence retained.",
+    "Formal source integrity test additionally validates the five oracle input/output/script files."
+  ]
+}

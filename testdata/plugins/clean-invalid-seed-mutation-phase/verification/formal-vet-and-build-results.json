@@ -1,0 +1,71 @@
+[
+  {
+    "label": "vet",
+    "command": [
+      "go",
+      "vet",
+      "./internal/download",
+      "./internal/plugins/cleaninvalidseed/host",
+      "./internal/app"
+    ],
+    "started_at": "2026-10-18T02:29:10.959457+00:00",
+    "finished_at": "2026-10-18T02:29:28.014064+00:00",
+    "exit_code": 0,
+    "log": "work/plugin-app-download-mutation-phase.tvhs2i64/vet.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "app-build",
+    "command": [
+      "go",
+      "test",
+      "-tags",
+      "modernconly",
+      "-c",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-app-download-mutation-phase.tvhs2i64/bin/app.test",
+      "./internal/app"
+    ],
+    "started_at": "2026-10-18T02:29:10.959543+00:00",
+    "finished_at": "2026-10-18T02:29:32.451151+00:00",
+    "exit_code": 0,
+    "log": "work/plugin-app-download-mutation-phase.tvhs2i64/app-build.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "download-build",
+    "command": [
+      "go",
+      "test",
+      "-tags",
+      "modernconly",
+      "-c",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-app-download-mutation-phase.tvhs2i64/bin/download.test",
+      "./internal/download"
+    ],
+    "started_at": "2026-10-18T02:29:10.960896+00:00",
+    "finished_at": "2026-10-18T02:29:24.520995+00:00",
+    "exit_code": 0,
+    "log": "work/plugin-app-download-mutation-phase.tvhs2i64/download-build.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "host-build",
+    "command": [
+      "go",
+      "test",
+      "-tags",
+      "modernconly",
+      "-c",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-app-download-mutation-phase.tvhs2i64/bin/host.test",
+      "./internal/plugins/cleaninvalidseed/host"
+    ],
+    "started_at": "2026-10-18T02:29:10.962729+00:00",
+    "finished_at": "2026-10-18T02:29:30.551634+00:00",
+    "exit_code": 0,
+    "log": "work/plugin-app-download-mutation-phase.tvhs2i64/host-build.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

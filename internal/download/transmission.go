@@ -312,7 +312,7 @@ func (c *Client) trAdd(ctx context.Context, in AddRequest, hash string) (AddResu
 }
 func (c *Client) trControl(ctx context.Context, hash, action string) error {
 	if err := c.trExists(ctx, hash); err != nil {
-		return err
+		return beforeMutation(err)
 	}
 	method := map[string]string{"start": "torrent_start", "pause": "torrent_stop", "verify": "torrent_verify", "remove_keep_data": "torrent_remove", "remove_with_data": "torrent_remove"}[action]
 	args := map[string]any{"ids": []string{hash}}

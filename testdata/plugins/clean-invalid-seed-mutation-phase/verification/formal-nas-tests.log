@@ -1,0 +1,769 @@
+=== download ===
+=== RUN   TestQBitTorrentLifecycleAndDuplicateHasNoSideEffect
+--- PASS: TestQBitTorrentLifecycleAndDuplicateHasNoSideEffect (0.01s)
+=== RUN   TestQBitTorrentAuthRefreshAndBusinessFailure
+--- PASS: TestQBitTorrentAuthRefreshAndBusinessFailure (0.00s)
+=== RUN   TestUnsafeInputsDoNotReachServer
+--- PASS: TestUnsafeInputsDoNotReachServer (0.00s)
+=== RUN   TestRedirectNotFollowedAndSecretsNotInError
+--- PASS: TestRedirectNotFollowedAndSecretsNotInError (0.00s)
+=== RUN   TestQBitTorrentUnsafeFileAndMissingTaskRejected
+--- PASS: TestQBitTorrentUnsafeFileAndMissingTaskRejected (0.00s)
+=== RUN   TestTransmissionJSONRPCAndLegacyLifecycle
+=== RUN   TestTransmissionJSONRPCAndLegacyLifecycle/jsonrpc
+=== RUN   TestTransmissionJSONRPCAndLegacyLifecycle/legacy
+--- PASS: TestTransmissionJSONRPCAndLegacyLifecycle (0.01s)
+    --- PASS: TestTransmissionJSONRPCAndLegacyLifecycle/jsonrpc (0.01s)
+    --- PASS: TestTransmissionJSONRPCAndLegacyLifecycle/legacy (0.01s)
+=== RUN   TestTransmissionHandshakeIsBounded
+--- PASS: TestTransmissionHandshakeIsBounded (0.00s)
+=== RUN   TestTransmissionWrongResponseIDAndRPCFailure
+=== RUN   TestTransmissionWrongResponseIDAndRPCFailure/wrong_id
+=== RUN   TestTransmissionWrongResponseIDAndRPCFailure/rpc_error
+--- PASS: TestTransmissionWrongResponseIDAndRPCFailure (0.00s)
+    --- PASS: TestTransmissionWrongResponseIDAndRPCFailure/wrong_id (0.00s)
+    --- PASS: TestTransmissionWrongResponseIDAndRPCFailure/rpc_error (0.00s)
+=== RUN   TestTorrentHashUsesOriginalInfoAndRejectsInvalid
+--- PASS: TestTorrentHashUsesOriginalInfoAndRejectsInvalid (0.00s)
+=== RUN   TestConcurrentClientsAddOnce
+--- PASS: TestConcurrentClientsAddOnce (0.00s)
+=== RUN   TestDefaultSavePathIsReadOnlyForBothTransmissionDialects
+=== RUN   TestDefaultSavePathIsReadOnlyForBothTransmissionDialects/jsonrpc
+=== RUN   TestDefaultSavePathIsReadOnlyForBothTransmissionDialects/legacy
+--- PASS: TestDefaultSavePathIsReadOnlyForBothTransmissionDialects (0.00s)
+    --- PASS: TestDefaultSavePathIsReadOnlyForBothTransmissionDialects/jsonrpc (0.00s)
+    --- PASS: TestDefaultSavePathIsReadOnlyForBothTransmissionDialects/legacy (0.00s)
+=== RUN   TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings
+=== RUN   TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings/#00
+=== RUN   TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings/relative/path
+=== RUN   TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings//
+--- PASS: TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings (0.00s)
+    --- PASS: TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings/#00 (0.00s)
+    --- PASS: TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings/relative/path (0.00s)
+    --- PASS: TestDefaultSavePathRejectsMissingAndRelativeDaemonSettings// (0.00s)
+=== RUN   TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects
+=== RUN   TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects/jsonrpc
+=== RUN   TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects/legacy
+--- PASS: TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects (0.00s)
+    --- PASS: TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects/jsonrpc (0.00s)
+    --- PASS: TestTransmissionDeleteExplicitlyDistinguishesTaskAndDataForBothDialects/legacy (0.00s)
+=== RUN   TestMutationPhaseLocalProofCannotComeFromJSONOrErrorCode
+--- PASS: TestMutationPhaseLocalProofCannotComeFromJSONOrErrorCode (0.00s)
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/login_rejected
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/lookup_missing
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/lookup_ambiguous
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/lookup_transport
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_500
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_disconnect
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_bad_reply
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_auth_then_login_failure
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/ok
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/login_rejected
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_500
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_disconnect
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_bad_reply
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_auth_then_login_failure
+=== RUN   TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/ok
+--- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct (0.02s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/login_rejected (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/lookup_missing (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/lookup_ambiguous (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/lookup_transport (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_500 (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_disconnect (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_bad_reply (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/post_auth_then_login_failure (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/control/ok (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/login_rejected (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_500 (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_disconnect (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_bad_reply (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/post_auth_then_login_failure (0.00s)
+    --- PASS: TestMutationPhaseQBReadOnlyPreflightAndIssuedMutationAreDistinct/tags/ok (0.00s)
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/connect_rejected
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/lookup_missing
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/lookup_malformed
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/post_500
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/post_disconnect
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/post_rpc_error
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/ok
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/connect_rejected
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/post_500
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/post_disconnect
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/post_rpc_error
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/ok
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/connect_rejected
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/lookup_missing
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/lookup_malformed
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/post_500
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/post_disconnect
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/post_rpc_error
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/ok
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/connect_rejected
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/post_500
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/post_disconnect
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/post_rpc_error
+=== RUN   TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/ok
+--- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC (0.03s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/connect_rejected (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/lookup_missing (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/lookup_malformed (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/post_500 (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/post_disconnect (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/post_rpc_error (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/control/ok (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/connect_rejected (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/post_500 (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/post_disconnect (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/post_rpc_error (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_false/tags/ok (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/connect_rejected (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/lookup_missing (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/lookup_malformed (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/post_500 (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/post_disconnect (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/post_rpc_error (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/control/ok (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/connect_rejected (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/post_500 (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/post_disconnect (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/post_rpc_error (0.00s)
+    --- PASS: TestMutationPhaseTransmissionReadOnlyRPCVersusIssuedRPC/legacy_true/tags/ok (0.00s)
+=== RUN   TestNativeInstalledFieldContract
+--- PASS: TestNativeInstalledFieldContract (0.00s)
+=== RUN   TestNativeQBFullRawLazyTrackersAndAppend
+--- PASS: TestNativeQBFullRawLazyTrackersAndAppend (0.01s)
+=== RUN   TestNativeTransmissionDialectsFullFieldsAndReplace
+=== RUN   TestNativeTransmissionDialectsFullFieldsAndReplace/false
+=== RUN   TestNativeTransmissionDialectsFullFieldsAndReplace/true
+--- PASS: TestNativeTransmissionDialectsFullFieldsAndReplace (0.01s)
+    --- PASS: TestNativeTransmissionDialectsFullFieldsAndReplace/false (0.00s)
+    --- PASS: TestNativeTransmissionDialectsFullFieldsAndReplace/true (0.00s)
+=== RUN   TestNativeFailureAndSelectionBoundaries
+=== RUN   TestNativeFailureAndSelectionBoundaries/qb
+=== RUN   TestNativeFailureAndSelectionBoundaries/tr
+--- PASS: TestNativeFailureAndSelectionBoundaries (0.04s)
+    --- PASS: TestNativeFailureAndSelectionBoundaries/qb (0.02s)
+    --- PASS: TestNativeFailureAndSelectionBoundaries/tr (0.02s)
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-false
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-null
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-{}
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-[null]
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-[]_trailing
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-synthetic-secret-body
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-false
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-null
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-{}
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-[null]
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-[]_trailing
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-synthetic-secret-body
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/tags-false
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/tags-null
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/tags-{}
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/tags-[null]
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/tags-[]_trailing
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/tags-synthetic-secret-body
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/http302-torrents
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/http302-trackers
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/http302-tags
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/http429-torrents
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/http429-trackers
+=== RUN   TestNativeQBResponsesRedirectRateLimitAndCancel/http429-tags
+--- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel (0.02s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-false (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-null (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-{} (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-[null] (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-[]_trailing (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/torrents-synthetic-secret-body (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-false (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-null (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-{} (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-[null] (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-[]_trailing (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/trackers-synthetic-secret-body (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/tags-false (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/tags-null (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/tags-{} (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/tags-[null] (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/tags-[]_trailing (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/tags-synthetic-secret-body (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/http302-torrents (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/http302-trackers (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/http302-tags (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/http429-torrents (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/http429-trackers (0.00s)
+    --- PASS: TestNativeQBResponsesRedirectRateLimitAndCancel/http429-tags (0.00s)
+=== RUN   TestNativeTransmissionProtocolFailures
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-false_result
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-rpc_error
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-wrong_id
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-missing_torrents
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-null_torrents
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-bad_torrents
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-alias_conflict
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-handshake_limit
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-bad_session
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-rate_limit
+=== RUN   TestNativeTransmissionProtocolFailures/legacy-redirect
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-false_result
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-rpc_error
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-wrong_id
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-missing_torrents
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-null_torrents
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-bad_torrents
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-alias_conflict
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-handshake_limit
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-bad_session
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-rate_limit
+=== RUN   TestNativeTransmissionProtocolFailures/jsonrpc-redirect
+--- PASS: TestNativeTransmissionProtocolFailures (0.02s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-false_result (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-rpc_error (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-wrong_id (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-missing_torrents (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-null_torrents (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-bad_torrents (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-alias_conflict (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-handshake_limit (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-bad_session (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-rate_limit (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/legacy-redirect (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-false_result (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-rpc_error (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-wrong_id (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-missing_torrents (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-null_torrents (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-bad_torrents (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-alias_conflict (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-handshake_limit (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-bad_session (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-rate_limit (0.00s)
+    --- PASS: TestNativeTransmissionProtocolFailures/jsonrpc-redirect (0.00s)
+=== RUN   TestNativeConcurrentClientsPreserveSessionAndRequestIDs
+--- PASS: TestNativeConcurrentClientsPreserveSessionAndRequestIDs (0.06s)
+=== RUN   TestNativeOriginalWrapperSevenOpsLoopback
+=== RUN   TestNativeOriginalWrapperSevenOpsLoopback/qbittorrent
+=== RUN   TestNativeOriginalWrapperSevenOpsLoopback/transmission
+--- PASS: TestNativeOriginalWrapperSevenOpsLoopback (0.01s)
+    --- PASS: TestNativeOriginalWrapperSevenOpsLoopback/qbittorrent (0.00s)
+    --- PASS: TestNativeOriginalWrapperSevenOpsLoopback/transmission (0.00s)
+=== RUN   TestNativeTagFailureRetainsOriginalWrapperReturn
+=== RUN   TestNativeTagFailureRetainsOriginalWrapperReturn/qbittorrent
+=== RUN   TestNativeTagFailureRetainsOriginalWrapperReturn/transmission
+--- PASS: TestNativeTagFailureRetainsOriginalWrapperReturn (0.00s)
+    --- PASS: TestNativeTagFailureRetainsOriginalWrapperReturn/qbittorrent (0.00s)
+    --- PASS: TestNativeTagFailureRetainsOriginalWrapperReturn/transmission (0.00s)
+=== RUN   TestNativeTransmissionInFlightCancellation
+--- PASS: TestNativeTransmissionInFlightCancellation (0.00s)
+=== RUN   TestNativeSnapshotDoesNotInheritTaskRowCap
+--- PASS: TestNativeSnapshotDoesNotInheritTaskRowCap (0.02s)
+PASS
+=== host ===
+=== RUN   TestBeforeRunWaitsForActionGateAndKeepsLeaseThroughFinalization
+--- PASS: TestBeforeRunWaitsForActionGateAndKeepsLeaseThroughFinalization (0.04s)
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/callback_error
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/foreign_backend
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/missing_callback
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/missing_release
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/journal_unknown
+=== RUN   TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/finalize_denied
+--- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish (0.04s)
+    --- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/callback_error (0.01s)
+    --- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/foreign_backend (0.01s)
+    --- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/missing_callback (0.01s)
+    --- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/missing_release (0.01s)
+    --- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/journal_unknown (0.01s)
+    --- PASS: TestBeforeRunReleasesOnEveryRejectedAdmissionAndFailedFinish/finalize_denied (0.01s)
+=== RUN   TestTrustedManualServiceDoesNotUseCronMisfireGrace
+--- PASS: TestTrustedManualServiceDoesNotUseCronMisfireGrace (0.01s)
+=== RUN   TestTrustedRebindPreservesWarmObjectAndRejectsForeignBackend
+--- PASS: TestTrustedRebindPreservesWarmObjectAndRejectsForeignBackend (0.01s)
+=== RUN   TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData
+=== RUN   TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/qbittorrent/delete
+=== RUN   TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/qbittorrent/label
+=== RUN   TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/transmission/delete
+=== RUN   TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/transmission/label
+--- PASS: TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData (0.06s)
+    --- PASS: TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/qbittorrent/delete (0.02s)
+    --- PASS: TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/qbittorrent/label (0.02s)
+    --- PASS: TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/transmission/delete (0.01s)
+    --- PASS: TestPinnedNativeMutationsHaveReceiptsAndAlwaysKeepData/transmission/label (0.01s)
+=== RUN   TestUnknownRemoteOutcomeSurvivesReopenAndCannotReplayOrEraseAcceptedNotices
+--- PASS: TestUnknownRemoteOutcomeSurvivesReopenAndCannotReplayOrEraseAcceptedNotices (0.02s)
+=== RUN   TestOwnedFilesAndTreeUseSnapshotReceiptsWithoutDeletingSeededData
+--- PASS: TestOwnedFilesAndTreeUseSnapshotReceiptsWithoutDeletingSeededData (0.04s)
+=== RUN   TestFailedNativeListCannotAuthorizeFileDeletion
+--- PASS: TestFailedNativeListCannotAuthorizeFileDeletion (0.01s)
+=== RUN   TestFileSnapshotAndFrozenManagedOwnerRejectReplacement
+=== RUN   TestFileSnapshotAndFrozenManagedOwnerRejectReplacement/inode
+=== RUN   TestFileSnapshotAndFrozenManagedOwnerRejectReplacement/managed-owner
+=== RUN   TestFileSnapshotAndFrozenManagedOwnerRejectReplacement/symlink
+--- PASS: TestFileSnapshotAndFrozenManagedOwnerRejectReplacement (0.04s)
+    --- PASS: TestFileSnapshotAndFrozenManagedOwnerRejectReplacement/inode (0.02s)
+    --- PASS: TestFileSnapshotAndFrozenManagedOwnerRejectReplacement/managed-owner (0.01s)
+    --- PASS: TestFileSnapshotAndFrozenManagedOwnerRejectReplacement/symlink (0.01s)
+=== RUN   TestOnlyOnceRewriteAndThreeSecondPlanPublishAtomicallyAndDoNotReplay
+--- PASS: TestOnlyOnceRewriteAndThreeSecondPlanPublishAtomicallyAndDoNotReplay (0.01s)
+=== RUN   TestCronAndDueEnqueueRollbackStopAndCommandBinding
+--- PASS: TestCronAndDueEnqueueRollbackStopAndCommandBinding (0.02s)
+=== RUN   TestConfigSQLFailureRollsBackFlagCoreRevisionAndSchedule
+--- PASS: TestConfigSQLFailureRollsBackFlagCoreRevisionAndSchedule (0.01s)
+=== RUN   TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement
+=== RUN   TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement/same_owner
+=== RUN   TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement/new_owner
+--- PASS: TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement (0.03s)
+    --- PASS: TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement/same_owner (0.02s)
+    --- PASS: TestConfirmedFileFactRepairsCoreAfterSQLFailureWithoutDeletingReplacement/new_owner (0.01s)
+=== RUN   TestSourceConfigAndNoticePrefixesSurviveLaterFailures
+=== RUN   TestSourceConfigAndNoticePrefixesSurviveLaterFailures/toggle_config_then_second_notice_failure
+=== RUN   TestSourceConfigAndNoticePrefixesSurviveLaterFailures/start_notice_then_downloader_list_failure
+=== RUN   TestSourceConfigAndNoticePrefixesSurviveLaterFailures/onlyonce_flag_then_invalid_service_cron
+--- PASS: TestSourceConfigAndNoticePrefixesSurviveLaterFailures (0.03s)
+    --- PASS: TestSourceConfigAndNoticePrefixesSurviveLaterFailures/toggle_config_then_second_notice_failure (0.01s)
+    --- PASS: TestSourceConfigAndNoticePrefixesSurviveLaterFailures/start_notice_then_downloader_list_failure (0.01s)
+    --- PASS: TestSourceConfigAndNoticePrefixesSurviveLaterFailures/onlyonce_flag_then_invalid_service_cron (0.01s)
+=== RUN   TestStartedRunWithoutEffectsBlocksNewInvocationAfterActualDatabaseReopen
+--- PASS: TestStartedRunWithoutEffectsBlocksNewInvocationAfterActualDatabaseReopen (0.01s)
+=== RUN   TestNativeGuardDenialCannotBeHiddenBySourceWrapper
+--- PASS: TestNativeGuardDenialCannotBeHiddenBySourceWrapper (0.02s)
+=== RUN   TestOwnerGateCancellationAndImmutableDownloaderReference
+--- PASS: TestOwnerGateCancellationAndImmutableDownloaderReference (0.02s)
+=== RUN   TestCommandSourceFailurePreservesInstalledASTNoticePrefix
+--- PASS: TestCommandSourceFailurePreservesInstalledASTNoticePrefix (0.01s)
+=== RUN   TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically
+=== RUN   TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically/pending_prepared
+=== RUN   TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically/started
+=== RUN   TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically/late_sql_failure
+--- PASS: TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically (0.04s)
+    --- PASS: TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically/pending_prepared (0.02s)
+    --- PASS: TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically/started (0.01s)
+    --- PASS: TestInternalConfigRevisionRebindsOnlyExactUnstartedQueuedInvocationAtomically/late_sql_failure (0.01s)
+=== RUN   TestNativeAcknowledgementAndCoreReceiptFailureNeverReissuesMutation
+--- PASS: TestNativeAcknowledgementAndCoreReceiptFailureNeverReissuesMutation (0.02s)
+=== RUN   TestInsertedTreeEntryCannotBeDeletedUsingOlderFrozenManifest
+--- PASS: TestInsertedTreeEntryCannotBeDeletedUsingOlderFrozenManifest (0.01s)
+=== RUN   TestOnlyOnceConfigCommitReplyLossUsesExactReceiptAndNeverSavesTwice
+--- PASS: TestOnlyOnceConfigCommitReplyLossUsesExactReceiptAndNeverSavesTwice (0.01s)
+=== RUN   TestConfigRejectsInvalidUTF8AndMultipleObjectsBeforeDurableBegin
+--- PASS: TestConfigRejectsInvalidUTF8AndMultipleObjectsBeforeDurableBegin (0.01s)
+=== RUN   TestWarmCommandFailureRetainsTemporaryFlagsButColdOwnerUsesSavedConfiguration
+--- PASS: TestWarmCommandFailureRetainsTemporaryFlagsButColdOwnerUsesSavedConfiguration (0.02s)
+=== RUN   TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace
+=== RUN   TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace/cron_coalesce_and_max_instances
+=== RUN   TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace/late_once_is_missed_not_rescheduled
+=== RUN   TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace/late_execution_cannot_bypass_queue_grace
+--- PASS: TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace (0.03s)
+    --- PASS: TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace/cron_coalesce_and_max_instances (0.01s)
+    --- PASS: TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace/late_once_is_missed_not_rescheduled (0.01s)
+    --- PASS: TestDuePlansCoalesceMisfireBusyAndRecheckExecutionGrace/late_execution_cannot_bypass_queue_grace (0.01s)
+=== RUN   TestSuppliedConfigurationMustMatchTrustedCurrentRevision
+--- PASS: TestSuppliedConfigurationMustMatchTrustedCurrentRevision (0.00s)
+=== RUN   TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh
+=== RUN   TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh/ordinary_init
+=== RUN   TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh/reload
+=== RUN   TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh/cold_init
+--- PASS: TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh (0.02s)
+    --- PASS: TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh/ordinary_init (0.01s)
+    --- PASS: TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh/reload (0.01s)
+    --- PASS: TestFalseyConfigurationPreservesOrdinaryObjectButReloadAndColdStartAreFresh/cold_init (0.01s)
+=== RUN   TestTreeReceiptsRetainOnlyEachDeletedEntryProof
+--- PASS: TestTreeReceiptsRetainOnlyEachDeletedEntryProof (1.86s)
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/run
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/generation
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/revision
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/input
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/method
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/arguments
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/target
+=== RUN   TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/result
+--- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/run (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/generation (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/revision (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/input (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/method (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/arguments (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/target (0.00s)
+    --- PASS: TestNativeMutationNotStartedProofBindsExactLiveInvocationAndEffect/result (0.00s)
+=== RUN   TestFormalHostSourceAndInstalledFailurePrefixProvenance
+--- PASS: TestFormalHostSourceAndInstalledFailurePrefixProvenance (0.00s)
+=== RUN   TestFormalMutationPhaseInstalledSourceAndContinuationOracleProvenance
+--- PASS: TestFormalMutationPhaseInstalledSourceAndContinuationOracleProvenance (0.00s)
+PASS
+=== app ===
+=== RUN   TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames
+=== RUN   TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/instance
+=== RUN   TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/generation
+=== RUN   TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/manifest
+=== RUN   TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/request_fields
+{"app_version":"0.3.21","event":"stopped","id":"log_abT8iNX6xj6tKcIvsBZ_sWGq","instance_id":"instance_tea_H49hcPMrKvGKOGA44A9D","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:42.143987664Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames (0.01s)
+    --- PASS: TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/instance (0.00s)
+    --- PASS: TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/generation (0.00s)
+    --- PASS: TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/manifest (0.00s)
+    --- PASS: TestPluginCleanInvalidSeedFormPreviewOnlyReadsCompiledDownloaderNames/request_fields (0.00s)
+=== RUN   TestPluginCleanInvalidSeedHTTPLifecycleAuthResetRevisionZeroAndReinstall
+{"app_version":"0.3.21","event":"login","id":"log_STCsXvSIsuanu7aOkMvJw_OP","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:42.338777518Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":92,"event":"request_completed","http_status":200,"id":"log_oxm2DsivBpmL7WIlh74XCjtY","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_4baunZxtQSTRZiAyCFIVbN22","time":"2026-10-18T02:30:42.339041205Z"}
+{"app_version":"0.3.21","duration_ms":0,"event":"request_completed","http_status":401,"id":"log_6olCvHOUe-zxhMgpN6P2d5Y1","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"WARN","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_1RYFi__H1ql7tWPiH6fE3I9s","time":"2026-10-18T02:30:42.339584664Z"}
+{"app_version":"0.3.21","duration_ms":5,"event":"request_completed","http_status":200,"id":"log_i0i_2s77lt-y5Z45TRz_MYcz","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_6wZWnWZDoin1Elih-zHHBSka","time":"2026-10-18T02:30:42.345972563Z"}
+{"app_version":"0.3.21","duration_ms":10,"event":"request_completed","http_status":200,"id":"log_ItDXhXtYjl9JjUBvUxQ2LuWf","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_9a52J6XSBFuwxqAR7KMuEgGA","time":"2026-10-18T02:30:42.484456466Z"}
+{"app_version":"0.3.21","duration_ms":9,"event":"request_completed","http_status":200,"id":"log_LVdE_bel76pWyo0lwVzCr-1c","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_GKa9vdfRSkpZRMCVPiDTXOyT","time":"2026-10-18T02:30:42.658818269Z"}
+{"app_version":"0.3.21","duration_ms":7,"event":"request_completed","http_status":200,"id":"log_DmQ9un1QL8YKHDcVhPhue0E7","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_5YgtZvg5FrddeAz6AJbjUM_t","time":"2026-10-18T02:30:42.666560091Z"}
+{"app_version":"0.3.21","duration_ms":3,"event":"request_completed","http_status":200,"id":"log_CpXeJZt1zUeF9k0JEJnuey53","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_1P6x6Z-BiKmqt9fT8tLrsQ7d","time":"2026-10-18T02:30:42.759732002Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_6GkS1MVqmmpMt_s-k_AKdD-A","instance_id":"instance_ftNBZxZqVrkX7i1xu2spie4p","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:42.855072243Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedHTTPLifecycleAuthResetRevisionZeroAndReinstall (0.71s)
+=== RUN   TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners
+=== RUN   TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners/commit
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_pTLQ27wY6MNgD5lQduxjYW3O","instance_id":"instance_zPBOsiO_CT9g6aVsfPqwkVrG","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"RemoveLink","plugin_instance_id":"z-remove","plugin_run_id":"pr_k8jTfoseXgEXaNmgWjgzgZxa","plugin_version":"2.17","request_id":"","time":"2026-10-18T02:30:43.07251577Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_Gu08rPkXt9ZOvBV64OFtKSyF","instance_id":"instance_zPBOsiO_CT9g6aVsfPqwkVrG","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:43.093901339Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners/late_sql_rollback
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_lh2L-qSJ5kY1G_wRAdYRsMxc","instance_id":"instance_gDAopR3akAAmbz8NtT4fV22C","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"RemoveLink","plugin_instance_id":"z-remove","plugin_run_id":"pr_MeCUNYpoIwvO2QGtrZJvp9Y7","plugin_version":"2.17","request_id":"","time":"2026-10-18T02:30:43.305428571Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_9R79EqRi-vL9Pmgv1Jiugx3S","instance_id":"instance_gDAopR3akAAmbz8NtT4fV22C","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:43.329067111Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners (0.47s)
+    --- PASS: TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners/commit (0.24s)
+    --- PASS: TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners/late_sql_rollback (0.23s)
+=== RUN   TestPluginCleanInvalidSeedHTTPPreflightRejectsMissingDirectoryWithoutPublishing
+{"app_version":"0.3.21","event":"login","id":"log_WJtz3DnuMlcu-mLlUUHKIwR7","instance_id":"instance_Zric-xXVmHX3nCDh4k147MhH","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:43.51505221Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":88,"event":"request_completed","http_status":200,"id":"log_wKEJ9O9gAfpxLWalXIHtcysw","instance_id":"instance_Zric-xXVmHX3nCDh4k147MhH","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_5x7tPprMaBE3BAJd258sulag","time":"2026-10-18T02:30:43.515180332Z"}
+{"app_version":"0.3.21","error_code":"INTERNAL_ERROR","event":"request_failed","http_status":500,"id":"log_T6Zz4ZOEZDsLza_7dc6ldpVJ","instance_id":"instance_Zric-xXVmHX3nCDh4k147MhH","level":"ERROR","message":"no such file or directory","module":"api","request_id":"req_omDua9HCOhtGDGnAue27IxOO","time":"2026-10-18T02:30:43.518669483Z"}
+{"app_version":"0.3.21","duration_ms":3,"event":"request_completed","http_status":500,"id":"log_FRPmTRHweXUQF6INPF5VniFS","instance_id":"instance_Zric-xXVmHX3nCDh4k147MhH","level":"WARN","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_omDua9HCOhtGDGnAue27IxOO","time":"2026-10-18T02:30:43.518790309Z"}
+{"app_version":"0.3.21","duration_ms":4,"event":"request_completed","http_status":200,"id":"log_3asLUpeeEU2ZaKVUL6og2NHO","instance_id":"instance_Zric-xXVmHX3nCDh4k147MhH","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_DLKHmoWjJieZfDjkh0ajB4gc","time":"2026-10-18T02:30:43.523740285Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_LCD_0WmDFww4ktlujckfYUFv","instance_id":"instance_Zric-xXVmHX3nCDh4k147MhH","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:43.6216071Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedHTTPPreflightRejectsMissingDirectoryWithoutPublishing (0.29s)
+=== RUN   TestPluginCleanInvalidSeedHTTPReloadCancelsOnlyPendingSourceOccurrenceAtSameRevision
+{"app_version":"0.3.21","event":"login","id":"log_ZXFICoIJkdomNCy5tiTORl0F","instance_id":"instance_RlH-5cQbvsSau8y4qvmT4wd5","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:43.833924224Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":90,"event":"request_completed","http_status":200,"id":"log__-P0qRJvq9JP_r3tho6qWmka","instance_id":"instance_RlH-5cQbvsSau8y4qvmT4wd5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_PpmZxsk443ENJigRms3mlOz-","time":"2026-10-18T02:30:43.834100365Z"}
+{"app_version":"0.3.21","duration_ms":5,"event":"request_completed","http_status":200,"id":"log_SBXQH_rF_2jFXvjMyQRI3p8k","instance_id":"instance_RlH-5cQbvsSau8y4qvmT4wd5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_x05KDd0_vggsNCdXkHS7exCI","time":"2026-10-18T02:30:43.839987267Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_xhCmTjICxFXTchP-yR98QGBG","instance_id":"instance_RlH-5cQbvsSau8y4qvmT4wd5","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:43.970387543Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedHTTPReloadCancelsOnlyPendingSourceOccurrenceAtSameRevision (0.35s)
+=== RUN   TestPluginCleanInvalidSeedJournalAllFieldsDeltaAndConfidentiality
+--- PASS: TestPluginCleanInvalidSeedJournalAllFieldsDeltaAndConfidentiality (0.02s)
+=== RUN   TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace
+=== RUN   TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace/delete
+=== RUN   TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace/ordinal
+=== RUN   TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace/scope
+--- PASS: TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace (0.08s)
+    --- PASS: TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace/delete (0.02s)
+    --- PASS: TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace/ordinal (0.02s)
+    --- PASS: TestPluginCleanInvalidSeedJournalRejectsOmissionTamperAndNamespace/scope (0.04s)
+=== RUN   TestPluginCleanInvalidSeedJournalSameTransactionConfigAndTransitionRollback
+--- PASS: TestPluginCleanInvalidSeedJournalSameTransactionConfigAndTransitionRollback (0.03s)
+=== RUN   TestPluginCleanInvalidSeedJournalRetirementScopeAndStringValidation
+--- PASS: TestPluginCleanInvalidSeedJournalRetirementScopeAndStringValidation (0.02s)
+=== RUN   TestPluginCleanInvalidSeedPrivateJournalLimit
+--- PASS: TestPluginCleanInvalidSeedPrivateJournalLimit (0.30s)
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_missing
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_-1pvpUwLdVRqMd3kvFkS0h87","instance_id":"instance_r7iyGnxFaL8aVxSxXhlSJ11P","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_dl5SBJlLi6jiVAM2qk3YW49R","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:44.589174145Z"}
+{"app_version":"0.3.21","error_code":"CLEAN_SEED_HOST_DENIED","event":"execution_failed","id":"log_JU6gak8crmqJzFjoZoNjsOov","instance_id":"instance_r7iyGnxFaL8aVxSxXhlSJ11P","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_dF0Zh-oVENK9QSprNHV-qKiV","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:44.7590037Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_ZIHyXpC3Cogc-qGYmFZj5poO","instance_id":"instance_r7iyGnxFaL8aVxSxXhlSJ11P","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:44.763485838Z","workflow_id":""}
+{"app_version":"0.3.21","event":"login","id":"log_BhUUWGzXP32NPqqkZY8VLUaM","instance_id":"instance_L7BDeZAVu-SRxS5i8HU0aRzz","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:44.865817709Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":91,"event":"request_completed","http_status":200,"id":"log_hhHQAScn0B7Rg-CicfMnlK0G","instance_id":"instance_L7BDeZAVu-SRxS5i8HU0aRzz","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_5iI9qhJ4Kq8SW-gVIzkmjRGQ","time":"2026-10-18T02:30:44.865965342Z"}
+{"app_version":"0.3.21","duration_ms":10,"event":"request_completed","http_status":200,"id":"log_BUV8_gUhnyoRJHoHQrYzAUCW","instance_id":"instance_L7BDeZAVu-SRxS5i8HU0aRzz","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_9PDvZnOWz3TME4VqwouumlX8","time":"2026-10-18T02:30:44.877415762Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_N1XkVsX9NXRKdIDS-rjxY1sd","instance_id":"instance_L7BDeZAVu-SRxS5i8HU0aRzz","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_sB-5viUbSekQjxghK-ncon47","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:44.983551801Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_8lwjDXNvV2pYFkRUCx_2xAuZ","instance_id":"instance_L7BDeZAVu-SRxS5i8HU0aRzz","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:44.987883922Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_ambiguous
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_g-7_gxQbpuFVn_GXa5vAp4ea","instance_id":"instance_yDBkrqwww9Fy2cMpNVBAs_7G","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_zPz9wcm0GgnE8Uyf2s5hf1je","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:45.088071107Z"}
+{"app_version":"0.3.21","error_code":"CLEAN_SEED_HOST_DENIED","event":"execution_failed","id":"log_vFYelQw7eBan6UNiMegRE0rM","instance_id":"instance_yDBkrqwww9Fy2cMpNVBAs_7G","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_UeSAgKQ1RAUkNRMPABgU5b1Y","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:45.266058588Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log__-xBBMqWeaYoVjvVm-ReF59y","instance_id":"instance_yDBkrqwww9Fy2cMpNVBAs_7G","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:45.271063832Z","workflow_id":""}
+{"app_version":"0.3.21","event":"login","id":"log_bLUi2NSr9AVRNuQcqMpZ2gyU","instance_id":"instance_KuMN3zIEDCF5G1u-sAJIOswP","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:45.379476188Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":96,"event":"request_completed","http_status":200,"id":"log_OMZIphvRqViAASqoLZHhBxUP","instance_id":"instance_KuMN3zIEDCF5G1u-sAJIOswP","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_s1sTWYx8n52fUWzm5wM61Hyw","time":"2026-10-18T02:30:45.379712407Z"}
+{"app_version":"0.3.21","duration_ms":16,"event":"request_completed","http_status":200,"id":"log_0OMnbnXjahY615O8qRn1sX9L","instance_id":"instance_KuMN3zIEDCF5G1u-sAJIOswP","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_PibT3tvJgByreBT5897Qsdmx","time":"2026-10-18T02:30:45.398250595Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_zXKkFzEmqUGTCIZsjxBYfXwp","instance_id":"instance_KuMN3zIEDCF5G1u-sAJIOswP","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_jiqDyYmfRuc4o1SQse8CVOcN","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:45.506693008Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_0KaPfZrNzWYrcE07Rbxwar_H","instance_id":"instance_KuMN3zIEDCF5G1u-sAJIOswP","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:45.510305744Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_read_transport
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_MzPuuADTji6Ec7zzAfMJ3niD","instance_id":"instance_pafeBsart-tBBH4gihRL0bgf","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_Ew8DTykqR3zK8vUtvK_tanBc","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:45.616832775Z"}
+{"app_version":"0.3.21","error_code":"CLEAN_SEED_HOST_DENIED","event":"execution_failed","id":"log_njZP25yQnyofHnUQOfjKIMYb","instance_id":"instance_pafeBsart-tBBH4gihRL0bgf","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_yRTECocTtRk2XjBSYEoaovgj","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:45.791702987Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_l6HnTvmqAi29ZjtwjhCJMASg","instance_id":"instance_pafeBsart-tBBH4gihRL0bgf","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:45.797872809Z","workflow_id":""}
+{"app_version":"0.3.21","event":"login","id":"log_MOom8wTQ5YzGD15BNAnEijlZ","instance_id":"instance_JkYf0gWoF9AcgMmq1P0ziEp1","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:45.905448754Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":92,"event":"request_completed","http_status":200,"id":"log_HN-Pc2tteeQtuITBduG_oI6P","instance_id":"instance_JkYf0gWoF9AcgMmq1P0ziEp1","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_S92lrGgENtz0Sj3KP0NSe326","time":"2026-10-18T02:30:45.905572016Z"}
+{"app_version":"0.3.21","duration_ms":13,"event":"request_completed","http_status":200,"id":"log_HFvthu9ixevw2i7FOwsqXcJA","instance_id":"instance_JkYf0gWoF9AcgMmq1P0ziEp1","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_XjRVTi2tQUuqhRH7y_ILFRgR","time":"2026-10-18T02:30:45.919411478Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_DaC6qhtDS4u1fqAMgYMQgAap","instance_id":"instance_JkYf0gWoF9AcgMmq1P0ziEp1","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_7sIeKTlammpMxHvJy3MGUpQ-","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:46.064785681Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_7FSAJTziunlT8tra8wFw-dAt","instance_id":"instance_JkYf0gWoF9AcgMmq1P0ziEp1","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:46.070151301Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_reply_loss
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_8xrrklDhruUgPc4ulbk8_oiE","instance_id":"instance_KK4Ft_G-Vv9wtbmgzpiwcEm7","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_tPW9ESKwCK8-4LTA6S1828o6","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:46.177128696Z"}
+{"app_version":"0.3.21","error_code":"CLEAN_SEED_HOST_DENIED","event":"execution_failed","id":"log_ppbD7W0Nua7G1y0HHio7qvQn","instance_id":"instance_KK4Ft_G-Vv9wtbmgzpiwcEm7","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_KjlKjAzo_4Mxp0Q4oo0xEvGI","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:46.351555299Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_G0epdKLPTZGS0es65hFHDGxA","instance_id":"instance_KK4Ft_G-Vv9wtbmgzpiwcEm7","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:46.359742338Z","workflow_id":""}
+{"app_version":"0.3.21","event":"login","id":"log_U3DSefRHmpNVLgJuUgjRbh2E","instance_id":"instance_kL5JVXRgQlprBbRhl_YnwRUH","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:46.473933663Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":92,"event":"request_completed","http_status":200,"id":"log_QN90mSUNZ-8FkSvxCJ7QFC6Y","instance_id":"instance_kL5JVXRgQlprBbRhl_YnwRUH","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_XeJ1YgNn9_Scu2EHACP-ijsX","time":"2026-10-18T02:30:46.474142046Z"}
+{"app_version":"0.3.21","duration_ms":11,"event":"request_completed","http_status":200,"id":"log_l4t-W6fbhEYWbUDl3pT42zXl","instance_id":"instance_kL5JVXRgQlprBbRhl_YnwRUH","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_PBEHJF8wAFZHg6XsqB2GFrJW","time":"2026-10-18T02:30:46.486238341Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_1akoXsFWf2yOnrAXKHkX0YXm","instance_id":"instance_kL5JVXRgQlprBbRhl_YnwRUH","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_flNg25VUxrV2YNtsT_S7UfZG","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:46.614959357Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_XPckLpKuoEQfUNGLiULgSoUD","instance_id":"instance_kL5JVXRgQlprBbRhl_YnwRUH","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:46.621306031Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_receipt_sql_failure
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_c5daP2MAm3BN5YmjghJtRo9o","instance_id":"instance_MLY06cU0MnDObbFvIoZT6I93","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_3DJ64uap3F6DoA3Cxz38zPWp","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:46.730231287Z"}
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_UNCERTAIN","event":"execution_failed","id":"log_FrIg6FcyxTCX7Mjv43947j5E","instance_id":"instance_MLY06cU0MnDObbFvIoZT6I93","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_4fio2_OyRcZtum1F57B6E5hB","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:46.895687065Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_uSDD7Zdv2lmMf2QOAYPVbmnk","instance_id":"instance_MLY06cU0MnDObbFvIoZT6I93","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:46.900073583Z","workflow_id":""}
+{"app_version":"0.3.21","event":"clean_seed_initialize_pending","id":"log_QfOY3pKqJuNBYzqfKUcOMgzc","instance_id":"instance_kXSD93PW9FfRiIfvg-xRNL6a","job_id":"","level":"ERROR","message":"无效做种清理存在待核对状态，未重新初始化；其他插件继续启动","module":"plugins","time":"2026-10-18T02:30:46.908506247Z","workflow_id":""}
+{"app_version":"0.3.21","event":"stopped","id":"log_5VNwQs2nQ4D8HlbjCsDELiCz","instance_id":"instance_kXSD93PW9FfRiIfvg-xRNL6a","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:46.909096659Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/unknown_post500
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_80wsPjqZJxhF4Kv4xicgksUJ","instance_id":"instance_DUlrUw6PxXZRMEJiYug9h_-S","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_spCa3o9JChx8Ci9_3OJVoM3h","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:47.004546811Z"}
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_UNCERTAIN","event":"execution_failed","id":"log_Akjzbo9fyTS4uz4rirF05HM3","instance_id":"instance_DUlrUw6PxXZRMEJiYug9h_-S","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_9yDzppMYurD0C2iIejA6vuVE","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:47.192961524Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_30G4yjWBGv6qPKvXNkqz5DTq","instance_id":"instance_DUlrUw6PxXZRMEJiYug9h_-S","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:47.202303624Z","workflow_id":""}
+{"app_version":"0.3.21","event":"clean_seed_initialize_pending","id":"log_Rn6-qjNqDxgYlnuygp0RO-um","instance_id":"instance_jziY27htpef6kb8bH3a0t8Od","job_id":"","level":"ERROR","message":"无效做种清理存在待核对状态，未重新初始化；其他插件继续启动","module":"plugins","time":"2026-10-18T02:30:47.215444409Z","workflow_id":""}
+{"app_version":"0.3.21","event":"stopped","id":"log_4CuziFZBW4k5faiuERVEuwTs","instance_id":"instance_jziY27htpef6kb8bH3a0t8Od","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:47.216261935Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/unknown_disconnect
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_oyLvtM-iBwiXKvyucvaFsA-t","instance_id":"instance_DGEj3ubK6-X2949tWw77sktM","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_gPNTuDSpbd0798bRgjp7kGvs","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:47.343700649Z"}
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_UNCERTAIN","event":"execution_failed","id":"log_xdGr80bDr0KuyT7kgvHo4ZRj","instance_id":"instance_DGEj3ubK6-X2949tWw77sktM","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_FLA-dbK0EhmNgHjXumbt-7uW","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:47.573064684Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_1N-XVJoyrqSF2c8HLwsTj427","instance_id":"instance_DGEj3ubK6-X2949tWw77sktM","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:47.579697601Z","workflow_id":""}
+{"app_version":"0.3.21","event":"clean_seed_initialize_pending","id":"log_iLAFc38WjE1dMMTOx_ZSZMmq","instance_id":"instance_2aYZSR01Eo_0aPyxAw7zHU-H","job_id":"","level":"ERROR","message":"无效做种清理存在待核对状态，未重新初始化；其他插件继续启动","module":"plugins","time":"2026-10-18T02:30:47.594896252Z","workflow_id":""}
+{"app_version":"0.3.21","event":"stopped","id":"log_ZP5QAIoDLli19xz2lbXSOpsu","instance_id":"instance_2aYZSR01Eo_0aPyxAw7zHU-H","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:47.595639173Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery (3.17s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_missing (0.56s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_ambiguous (0.52s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_read_transport (0.56s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_reply_loss (0.55s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/known_receipt_sql_failure (0.29s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/unknown_post500 (0.31s)
+    --- PASS: TestPluginCleanInvalidSeedMutationPhaseActualSDKReceiptsContinuationAndColdRecovery/unknown_disconnect (0.38s)
+=== RUN   TestPluginCleanInvalidSeedOwnerWorkerFixture
+--- PASS: TestPluginCleanInvalidSeedOwnerWorkerFixture (0.00s)
+=== RUN   TestPluginCleanInvalidSeedOwnerActualSDKDisabledAndOnlyOnceAtomicScope
+{"app_version":"0.3.21","event":"stopped","id":"log_Ucw-iPJxWjXwl92tm39W2zxs","instance_id":"instance_8a-kHEkSDFCDctPJkaxDpv2j","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:47.706019122Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerActualSDKDisabledAndOnlyOnceAtomicScope (0.11s)
+=== RUN   TestPluginCleanInvalidSeedOwnerConfigPrefixSurvivesLaterNoticeFailure
+{"app_version":"0.3.21","event":"stopped","id":"log_LIYSW-XDlaje4s5_SRG9u3p6","instance_id":"instance_NmVHmL1SNmgPTTNRtQLyTdTA","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:47.953200853Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerConfigPrefixSurvivesLaterNoticeFailure (0.25s)
+=== RUN   TestPluginCleanInvalidSeedOwnerNativeKeepDataUnknownDoesNotReplay
+{"app_version":"0.3.21","event":"stopped","id":"log_4jEvE8Xk2nlSFT2NnDZ2-3WC","instance_id":"instance_EEZ9Pb0uMiGlKoUAIccCnzQm","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:48.274392782Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerNativeKeepDataUnknownDoesNotReplay (0.32s)
+=== RUN   TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure
+=== RUN   TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure/confirmed
+{"app_version":"0.3.21","event":"stopped","id":"log_AlSUs1NnEmUXkP_sZP7azgZS","instance_id":"instance_ZYKHJusnKUj1eHPhCBBiz_rS","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:48.538292349Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure/late_core_receipt_failure
+{"app_version":"0.3.21","event":"stopped","id":"log_9Qnn0QLJesRo6UZSb2Pjl2wC","instance_id":"instance_EYrkfHPNBGHMt8HZJIC04AZH","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:48.763524065Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure (0.49s)
+    --- PASS: TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure/confirmed (0.26s)
+    --- PASS: TestPluginCleanInvalidSeedOwnerNativeConfirmedReceiptAndLateCoreFailure/late_core_receipt_failure (0.23s)
+=== RUN   TestPluginCleanInvalidSeedOwnerManualServiceHasNoMisfireAndPreservesDateAnchor
+{"app_version":"0.3.21","event":"stopped","id":"log_EwbjZng8_Qnjl0Vcj2bTDvy2","instance_id":"instance_WZYr9I4-Q-RwDW8YQCheP3_e","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:49.005621907Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerManualServiceHasNoMisfireAndPreservesDateAnchor (0.24s)
+=== RUN   TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace
+=== RUN   TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/once
+{"app_version":"0.3.21","event":"stopped","id":"log_UUkjxRUl3P8UNrbf2wjTdKW5","instance_id":"instance_f_59yMmm9-RpMjH5FHgh5ViP","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:49.214389576Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/cron
+{"app_version":"0.3.21","event":"stopped","id":"log_V3tP7Jay5NWYHiVxd3jPsyMr","instance_id":"instance_FlQXMrEijdf08g3TiOI9eB-9","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:49.415795849Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/dispatch_missed
+{"app_version":"0.3.21","event":"stopped","id":"log_vmvQpXAscvEzQH1rUy2HYtXD","instance_id":"instance_UPJJuZOQ4J50Lbu2LzSK4DnU","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:49.682816423Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/enqueue_rollback
+{"app_version":"0.3.21","event":"stopped","id":"log_qMxSbrSqet34HOwAl2YlC2oh","instance_id":"instance_7Em-aj1ICsDF9Eb-LO3F_ial","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:49.932395273Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace (0.93s)
+    --- PASS: TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/once (0.21s)
+    --- PASS: TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/cron (0.20s)
+    --- PASS: TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/dispatch_missed (0.27s)
+    --- PASS: TestPluginCleanInvalidSeedOwnerAutomaticProducerAtomicDateCronAndDispatchGrace/enqueue_rollback (0.25s)
+=== RUN   TestPluginCleanInvalidSeedOwnerInternalConfigRevisionMigratesOnlyPendingSourceOccurrence
+{"app_version":"0.3.21","event":"stopped","id":"log_-K09NB9uge0RggYXOfnk77M-","instance_id":"instance_cnz3qsqUsN-w5od9WHoTsNs8","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:50.254727163Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerInternalConfigRevisionMigratesOnlyPendingSourceOccurrence (0.32s)
+=== RUN   TestPluginCleanInvalidSeedOwnerRealSourceDeletionKeepsMediaAndMediaDeletionPreservesIndex
+{"app_version":"0.3.21","event":"stopped","id":"log_n7Nio3mz4uS3tfAn7hkM0UJm","instance_id":"instance_uZLOvA-vDfxPCCh_QARxHLAz","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:50.773757325Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerRealSourceDeletionKeepsMediaAndMediaDeletionPreservesIndex (0.52s)
+=== RUN   TestPluginCleanInvalidSeedOwnerPreflightAndPublicationRollbackKeepOldSchedulesUsable
+{"app_version":"0.3.21","event":"stopped","id":"log_ec5a8hYVLfHKG5MPyH-iAVy6","instance_id":"instance_-MHOaw7uG2F7ZGt_sPQHxnTR","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:51.037610417Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerPreflightAndPublicationRollbackKeepOldSchedulesUsable (0.26s)
+=== RUN   TestPluginCleanInvalidSeedOwnerCleanStopReopenUsesFreshInitAndCron
+{"app_version":"0.3.21","event":"stopped","id":"log_WVxivND1M_2EK7C2xQDGzzFq","instance_id":"instance_GSESYEL12-P92n0bEM_DM5p1","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:51.155054421Z","workflow_id":""}
+{"app_version":"0.3.21","event":"stopped","id":"log_-4956QlUOVLVLV1U8MEa9MMW","instance_id":"instance_aEdGU8MVyw2_pct5hMnkpzCn","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:51.245298261Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerCleanStopReopenUsesFreshInitAndCron (0.21s)
+=== RUN   TestPluginCleanInvalidSeedOwnerInternalConfigCrashReopenPreservesAppliedObjectAndOnceDeadline
+{"app_version":"0.3.21","event":"stopped","id":"log_6tW9AAfOehyZUtVO6v7R1Ynb","instance_id":"instance_lWYMBTPfnwTKkcheqFQooQNb","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:51.606137633Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedOwnerInternalConfigCrashReopenPreservesAppliedObjectAndOnceDeadline (0.36s)
+=== RUN   TestPluginCleanInvalidSeedRuntimeHTTPInstallAndOriginalOnceFlag
+{"app_version":"0.3.21","event":"login","id":"log_4Y4dbKb9YjCF2xz93UoQqA32","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:51.715518053Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":89,"event":"request_completed","http_status":200,"id":"log_RtrvfLjhC6xr796f7qbI4b-u","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req__siXdF5y2YGSC1Zndq-iwYb2","time":"2026-10-18T02:30:51.715642885Z"}
+{"app_version":"0.3.21","duration_ms":85,"event":"request_completed","http_status":200,"id":"log_HKVaxPaRDr-s9zqFSPPpktFG","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_HcqRU43YH-I9VdixT5TsLohk","time":"2026-10-18T02:30:51.801540277Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_UvzlwhGuWUpEk5pXNIGyIGEv","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_FnKKeGrFvCvEfAXQNKFWAj9A","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:51.88186619Z"}
+{"app_version":"0.3.21","duration_ms":4,"event":"request_completed","http_status":200,"id":"log_AaxanD-DcAKTFpJnQ4E4seyJ","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_CdBhHnCgU4-1iA6d29TJC85V","time":"2026-10-18T02:30:51.964526718Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_VJxa12TtQO84cus88MDy5aIa","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_eNYpeWL6M-0vjqrVvt2jnEfW","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:52.058989262Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_cuqwmjbv-FOWD-T1CaBMrlAq","instance_id":"instance_IgClE5ZxSsbUcDkENqgR69Xr","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.062059665Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedRuntimeHTTPInstallAndOriginalOnceFlag (0.46s)
+=== RUN   TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite
+=== RUN   TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite/known_source_failure
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_VMBNAT3V0B2HZJ1NkBMDyDQR","instance_id":"instance_Vfj_okYPjXRHKvG7lnuCLU2i","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_6tUxmW9MoLB2HSdaxPvtHAqe","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:52.165993911Z"}
+{"app_version":"0.3.21","error_code":"CLEAN_SEED_SOURCE_FAILED","event":"execution_failed","id":"log_vLKYxDbovqILahU6ZS7nwDWM","instance_id":"instance_Vfj_okYPjXRHKvG7lnuCLU2i","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_XWpyFJhvQvazJaRs2nms-o-u","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:52.267231038Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_Y0pChJGzYbU5Pnu4vR30Jr2y","instance_id":"instance_Vfj_okYPjXRHKvG7lnuCLU2i","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.270234799Z","workflow_id":""}
+=== RUN   TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite/ambiguous_downloader_ack
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_5e49D83cRHJExdB46KzMFWxl","instance_id":"instance_8u-oXBGbLevQTPv2yZ_0U-l3","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_qdwW1Q51y2iZWmWSuGS0idmu","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:52.372875Z"}
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_UNCERTAIN","event":"execution_failed","id":"log_syVXANXuB10OGtPYevvsU-dS","instance_id":"instance_8u-oXBGbLevQTPv2yZ_0U-l3","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_MkCU6InVubh5gs983TRqMPea","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:52.49051015Z"}
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_UNCERTAIN","event":"execution_failed","id":"log_MnqxDrfCY_BQGcspvL35kZ1-","instance_id":"instance_8u-oXBGbLevQTPv2yZ_0U-l3","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"CleanInvalidSeed","plugin_instance_id":"CleanInvalidSeed","plugin_run_id":"pr_Y4q5WIgu3c7QUNzMLMwsgsAi","plugin_version":"2.1","request_id":"","time":"2026-10-18T02:30:52.569274445Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_8x3ZDLQrMVwf41HAWOGkAthZ","instance_id":"instance_8u-oXBGbLevQTPv2yZ_0U-l3","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.572278107Z","workflow_id":""}
+--- PASS: TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite (0.51s)
+    --- PASS: TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite/known_source_failure (0.21s)
+    --- PASS: TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite/ambiguous_downloader_ack (0.30s)
+=== RUN   TestPluginDeferredTerminalFailureRecoveryPreservesFailureAndRejectsRetry
+--- PASS: TestPluginDeferredTerminalFailureRecoveryPreservesFailureAndRejectsRetry (0.02s)
+=== RUN   TestPluginDeferredFailureReceiptRejectsForeignPluginAndUntrustedErrorCode
+--- PASS: TestPluginDeferredFailureReceiptRejectsForeignPluginAndUntrustedErrorCode (0.01s)
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/init
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/reload
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/run
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/event
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/service
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/once
+=== RUN   TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/command
+--- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/init (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/reload (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/run (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/event (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/service (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/once (0.00s)
+    --- PASS: TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority/command (0.00s)
+=== RUN   TestPluginDeferredCleanPrivateProofCannotHideUnknownEffects
+--- PASS: TestPluginDeferredCleanPrivateProofCannotHideUnknownEffects (0.03s)
+=== RUN   TestPluginDeferredHandshakeHasNoBusinessEffectAndRequiresTrustedExecution
+{"app_version":"0.3.21","event":"stopped","id":"log_2Ry_zZijDiRSjwcjaOcDgfC7","instance_id":"instance_mZJjMGP0MmTAhtMTQAYAlk89","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.666042985Z","workflow_id":""}
+--- PASS: TestPluginDeferredHandshakeHasNoBusinessEffectAndRequiresTrustedExecution (0.03s)
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/wrong-identity
+{"app_version":"0.3.21","event":"stopped","id":"log_whiIe4PA5358FOXp7CTj3qaK","instance_id":"instance_j2BeZJ17WPkDFcVbb4cVS_wG","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.688294737Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/wrong-method
+{"app_version":"0.3.21","event":"stopped","id":"log_CBqOkQE9FVKHt171LcDre2UO","instance_id":"instance_8Ix1UFEzmHmabQxo9QKjXvCz","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.703920833Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/extra-field
+{"app_version":"0.3.21","event":"stopped","id":"log_EenkGybKgbgrKTo2xhbu3zZf","instance_id":"instance_0dijaYW3GfqAC0_WdvkqVp02","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.720081084Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/duplicate-event
+{"app_version":"0.3.21","event":"stopped","id":"log_FHhoZgeOl3vgvrK0IWYNd8mx","instance_id":"instance_-LlaBf8DhvCOlJVXLBZlLa1I","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.73547735Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/null
+{"app_version":"0.3.21","event":"stopped","id":"log_nek68agWhDkJQYEWNN2vxSOu","instance_id":"instance_gvS_Yc23c8mTfeQ7rPRMXXUY","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.748547307Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/two-calls
+{"app_version":"0.3.21","event":"stopped","id":"log_TLUfFtGqow8zERdonv5CBKV0","instance_id":"instance_rwgNiInDmwpkI7s7oEsbr-pr","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.761766031Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/ignored-bad-call
+{"app_version":"0.3.21","event":"stopped","id":"log_DjBhhaPAoQd8GtIcWvzsTSO2","instance_id":"instance_iOyTB0IRE52BGu3fy6nbsOt6","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.778539134Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/forged-result
+{"app_version":"0.3.21","event":"stopped","id":"log_NCJfD9mqe9qRnPZIh1osmcmt","instance_id":"instance_mCDsTLO-0GDpRDsMM3eyR7tO","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.799442199Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/no-call
+{"app_version":"0.3.21","event":"stopped","id":"log_jkoimy4GDqF8eBF2aikg9EoO","instance_id":"instance_DY9oM3AjHZhr3zzYHtjlBJnY","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.823902247Z","workflow_id":""}
+=== RUN   TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/wrong-count
+{"app_version":"0.3.21","event":"stopped","id":"log_08W9iIseotqL3r1cTJjd5ZCS","instance_id":"instance_dDy0wbL2Au78GTFxc1Wsjs5T","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.847781375Z","workflow_id":""}
+--- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering (0.18s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/wrong-identity (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/wrong-method (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/extra-field (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/duplicate-event (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/null (0.01s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/two-calls (0.01s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/ignored-bad-call (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/forged-result (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/no-call (0.02s)
+    --- PASS: TestPluginDeferredPayloadAndTerminalProtocolRejectTampering/wrong-count (0.02s)
+=== RUN   TestPluginDeferredWorkerFixture
+--- PASS: TestPluginDeferredWorkerFixture (0.00s)
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation/valid
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_3KWiX_q0q0sYcWVJvpfSH1MP","instance_id":"instance_MEO_fWKozsWyWZ1WgXQ0c8G5","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_Zpzu0g0q3WcnJ0haxPe-rx2U","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:52.93451038Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_TZ03di-B1I_J-b9ZBfVmWoFY","instance_id":"instance_MEO_fWKozsWyWZ1WgXQ0c8G5","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:52.934864607Z","workflow_id":""}
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation/fail
+{"app_version":"0.3.21","error_code":"plugin_operation_failed","event":"execution_failed","id":"log_63U33aLoHBOcC8aO7Ji-ABkU","instance_id":"instance_5L2ryU414xKtGCfqdEy1-mu1","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_htOSoNKLUMvb4nVycn7M8v21","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:53.021627978Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_tkDWu0q97fkPvAFpVrEvwJdC","instance_id":"instance_5L2ryU414xKtGCfqdEy1-mu1","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.022022198Z","workflow_id":""}
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation/forged
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_PROTOCOL","event":"execution_failed","id":"log_ZK1qa5jDdJ-NZ0Mj8MTX9ZFW","instance_id":"instance_8uEpbuEiJIld5uiGxPpkyVc-","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_HXEyN_UY11AFP-NqGS9YrGkv","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:53.123902878Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_gVFpacQwQrVsvceQyc_x3u9x","instance_id":"instance_8uEpbuEiJIld5uiGxPpkyVc-","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.124317913Z","workflow_id":""}
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation/twice
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_PROTOCOL","event":"execution_failed","id":"log_HfINfKnUY9wxIYC32rI-xUYU","instance_id":"instance_ndw45-gmhEKH5ag4Zm29GzWW","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_mUVgP53c4I2t0xFwUc47Aulg","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:53.21418523Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log__Fd-m0loq7BgwmQVdlPtM9Qk","instance_id":"instance_ndw45-gmhEKH5ag4Zm29GzWW","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.214738458Z","workflow_id":""}
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation/extra
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_PROTOCOL","event":"execution_failed","id":"log_txIfAExOstfzvS1yP-J6UTRk","instance_id":"instance_y3UHXaNVmHodoXCGw800mFU5","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_VI2Up21vojrbVHm3HvGHc3sK","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:53.327487393Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_BrknH80vUToYb06SsR_t9rxX","instance_id":"instance_y3UHXaNVmHodoXCGw800mFU5","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.328740496Z","workflow_id":""}
+=== RUN   TestPluginDeferredRealWorkerFailureDoesNotStartOperation/no-call
+{"app_version":"0.3.21","error_code":"PLUGIN_DEFERRED_PROTOCOL","event":"execution_failed","id":"log_UGO1CsLPp40NXAkOhHB4JBxs","instance_id":"instance_FE4ozW4IKm0Kn_eSNU9qyLgC","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_Dxc4BkajxNg61MhZzStxkL4D","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:53.423204586Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_YC6riv2LCSLQGV02kqiq6v7F","instance_id":"instance_FE4ozW4IKm0Kn_eSNU9qyLgC","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.423673661Z","workflow_id":""}
+--- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation (0.58s)
+    --- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation/valid (0.09s)
+    --- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation/fail (0.09s)
+    --- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation/forged (0.10s)
+    --- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation/twice (0.09s)
+    --- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation/extra (0.11s)
+    --- PASS: TestPluginDeferredRealWorkerFailureDoesNotStartOperation/no-call (0.09s)
+=== RUN   TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun
+=== RUN   TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/prepared
+{"app_version":"0.3.21","event":"stopped","id":"log_gjix14s4bvqspHMYXUhIQAfe","instance_id":"instance_4YyhiEO4-qrKgcwsr9wG9OYT","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.438376458Z","workflow_id":""}
+=== RUN   TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/started
+{"app_version":"0.3.21","event":"stopped","id":"log_H9zXHxxltM0LBTc3eStCYBZD","instance_id":"instance_I6yFMocv0nAakSL9xC6o25wl","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.455400975Z","workflow_id":""}
+=== RUN   TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/uncertain
+{"app_version":"0.3.21","event":"stopped","id":"log_YjcPsQiDlPUQDPdcf1UdflBG","instance_id":"instance_XIs1RAKC8I7JKYgyXfVFz2Yw","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.475797551Z","workflow_id":""}
+=== RUN   TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/confirmed
+{"app_version":"0.3.21","event":"stopped","id":"log_O-HFpTi-wMyP0HCh3PGdB6JR","instance_id":"instance_ADSYBkkyhSnBkI20TKdu1sKT","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.494040622Z","workflow_id":""}
+--- PASS: TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun (0.07s)
+    --- PASS: TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/prepared (0.01s)
+    --- PASS: TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/started (0.02s)
+    --- PASS: TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/uncertain (0.02s)
+    --- PASS: TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun/confirmed (0.02s)
+=== RUN   TestPluginDeferredRunIdentityAndSealedTamperingFailClosed
+{"app_version":"0.3.21","event":"stopped","id":"log_pOZ-8wq52HixsCPGZZMppe0F","instance_id":"instance_aYE2RVrqUU5cXYWNEYjKynKA","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.510551366Z","workflow_id":""}
+--- PASS: TestPluginDeferredRunIdentityAndSealedTamperingFailClosed (0.02s)
+=== RUN   TestPluginDeferredStartedRequiresCurrentRunningInstallation
+=== RUN   TestPluginDeferredStartedRequiresCurrentRunningInstallation/terminal
+{"app_version":"0.3.21","event":"stopped","id":"log_EGeJSdAOcqG1DAXSaV07bijW","instance_id":"instance_wXxCcs0oe_DixMUbfrS-fUda","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.527451776Z","workflow_id":""}
+=== RUN   TestPluginDeferredStartedRequiresCurrentRunningInstallation/revision
+{"app_version":"0.3.21","event":"stopped","id":"log_kCz2YLQGM9otuKDw23Rh7m-K","instance_id":"instance_1iPAebFb-pJOIXtu515o2FCk","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.544172733Z","workflow_id":""}
+=== RUN   TestPluginDeferredStartedRequiresCurrentRunningInstallation/reset
+{"app_version":"0.3.21","event":"stopped","id":"log_Ac3aNy7ZDiarQoWx-xsksV_k","instance_id":"instance_KWKSGxgjv2Ybdj2vMrTg3ST0","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.560800657Z","workflow_id":""}
+=== RUN   TestPluginDeferredStartedRequiresCurrentRunningInstallation/uninstall
+{"app_version":"0.3.21","event":"stopped","id":"log_5PJYHueJQVHXi_HsjVv5oMX-","instance_id":"instance_z14pBtIhoZAFXValvHAJQ-mU","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.57750806Z","workflow_id":""}
+=== RUN   TestPluginDeferredStartedRequiresCurrentRunningInstallation/input
+{"app_version":"0.3.21","event":"stopped","id":"log_Grnbevk8R9ymvF6ok3IwqWDH","instance_id":"instance_2OX5dkYR7eLowrwVEO1zLc-2","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.593431346Z","workflow_id":""}
+--- PASS: TestPluginDeferredStartedRequiresCurrentRunningInstallation (0.08s)
+    --- PASS: TestPluginDeferredStartedRequiresCurrentRunningInstallation/terminal (0.02s)
+    --- PASS: TestPluginDeferredStartedRequiresCurrentRunningInstallation/revision (0.02s)
+    --- PASS: TestPluginDeferredStartedRequiresCurrentRunningInstallation/reset (0.02s)
+    --- PASS: TestPluginDeferredStartedRequiresCurrentRunningInstallation/uninstall (0.02s)
+    --- PASS: TestPluginDeferredStartedRequiresCurrentRunningInstallation/input (0.02s)
+=== RUN   TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage
+=== RUN   TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage/PLUGIN_RESULT_SAVE_FAILED
+{"app_version":"0.3.21","event":"stopped","id":"log_-y93yc39C3VA6G8kbfPwnntq","instance_id":"instance_T4oiAPAIw7Jc2Z5--5FLiqnt","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.613363258Z","workflow_id":""}
+=== RUN   TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage/PLUGIN_DEFERRED_UNCERTAIN
+{"app_version":"0.3.21","event":"stopped","id":"log_p920npEu70HzhjwIEK3zOLu-","instance_id":"instance_zgAZ_VanSdH1B22hL-y3mKF9","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.632136507Z","workflow_id":""}
+--- PASS: TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage (0.04s)
+    --- PASS: TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage/PLUGIN_RESULT_SAVE_FAILED (0.02s)
+    --- PASS: TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage/PLUGIN_DEFERRED_UNCERTAIN (0.02s)
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/safe
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_jLMt942eNS3Dron4IBwS0X4f","instance_id":"instance__iMN1Zv0GMk8YlsUhQrlHFpX","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_gbRIkwdRscv9ECWRsATjZhTC","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:53.732680659Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_WVn9ZEHu01L7tURgnb4rAzAQ","instance_id":"instance__iMN1Zv0GMk8YlsUhQrlHFpX","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.733022441Z","workflow_id":""}
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/started
+{"app_version":"0.3.21","event":"stopped","id":"log_wjzSzPDvjAPYz00CR8U2lMCu","instance_id":"instance_2SfGO4ZxZcQ1qViAe2aL1UIV","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.749761114Z","workflow_id":""}
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/uncertain
+{"app_version":"0.3.21","event":"stopped","id":"log_G1f50o0tGSLcwRpR-8m1POSw","instance_id":"instance_NkVWAhqrWx8vNBZpZy-d1YPo","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.771587085Z","workflow_id":""}
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/confirmed
+{"app_version":"0.3.21","event":"stopped","id":"log_YhVh5DsvlvmMEcA_j15ymFyy","instance_id":"instance_JlM9qRvjQMbQIW3BjZ029lg_","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.790335971Z","workflow_id":""}
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/new-config
+{"app_version":"0.3.21","event":"stopped","id":"log_RsiHONiyBDnNaThYl619sFIF","instance_id":"instance_NL94IKxcUD-TNt-IZH6jxNgP","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.804040858Z","workflow_id":""}
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/new-generation
+{"app_version":"0.3.21","event":"stopped","id":"log_nkJGNGW1J_WDUwsN0Nob_xmj","instance_id":"instance_zhyE2hnyQRU9xXxInhFq2yr9","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.822999043Z","workflow_id":""}
+=== RUN   TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/other-pending
+{"app_version":"0.3.21","event":"stopped","id":"log_7ZzW8u0OhrrH98aPJd7w4dO_","instance_id":"instance_NhxlK3uGrjHvBDq5qPncsQAP","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.843356464Z","workflow_id":""}
+--- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork (0.21s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/safe (0.10s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/started (0.02s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/uncertain (0.02s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/confirmed (0.02s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/new-config (0.01s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/new-generation (0.02s)
+    --- PASS: TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork/other-pending (0.02s)
+=== RUN   TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt
+=== RUN   TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt/target
+{"app_version":"0.3.21","event":"stopped","id":"log_lR75J-lahgNL5yddQP-xbM2o","instance_id":"instance_BMvRt4cc57vOjCV8h8IiRJMs","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.863641274Z","workflow_id":""}
+=== RUN   TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt/self
+{"app_version":"0.3.21","event":"stopped","id":"log_yJcmfQBLq_Jzun96FM8TX11I","instance_id":"instance_02a--kN5hTCPtXBxlfp80YwD","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:53.881899832Z","workflow_id":""}
+--- PASS: TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt (0.04s)
+    --- PASS: TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt/target (0.02s)
+    --- PASS: TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt/self (0.02s)
+=== RUN   TestPluginDeferredRetryHTTPUsesOriginalRunAndShowsOnlySafeActionMetadata
+{"app_version":"0.3.21","event":"login","id":"log_gQZRydDDGdmGxdJQGyNDqVa9","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-10-18T02:30:53.982420853Z","workflow_id":""}
+{"app_version":"0.3.21","duration_ms":87,"event":"request_completed","http_status":200,"id":"log_H55iYDpzEoDSnA2VC62Oqhrv","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_7-BCYHskx_OTr58NFb-JEaPx","time":"2026-10-18T02:30:53.982532845Z"}
+{"app_version":"0.3.21","error_code":"plugin_operation_failed","event":"execution_failed","id":"log__1jECCtj61qp1sXXjkIWc-jO","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"ERROR","message":"插件执行失败，详情见插件执行记录","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_7dR1TRvPwrxsEqADfaeSvkGL","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:54.060555542Z"}
+{"app_version":"0.3.21","duration_ms":0,"event":"request_completed","http_status":401,"id":"log_22H37JV9JnIYNEKErQE9ylBk","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_Wgevv8RMwYQVuCj642Ng4W_I","time":"2026-10-18T02:30:54.061800816Z"}
+{"app_version":"0.3.21","duration_ms":0,"event":"request_completed","http_status":403,"id":"log_5mcJkj9tkYUH_E6DPIiyprrO","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_XRsWOHKZmc2io0vD9ihyqdou","time":"2026-10-18T02:30:54.062090958Z"}
+{"app_version":"0.3.21","duration_ms":0,"event":"request_completed","http_status":400,"id":"log_5ktjAT5U7QT7X9pBvaJEp-28","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_9TBX0UDkwqXuN2JC0z98aAVg","time":"2026-10-18T02:30:54.06273049Z"}
+{"app_version":"0.3.21","duration_ms":0,"event":"request_completed","http_status":200,"id":"log_5k1FOPwA9B5Gvv2ZT88dPFrn","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_3-HVC-kH_o3Vwq6AprOq41UB","time":"2026-10-18T02:30:54.063850587Z"}
+{"app_version":"0.3.21","error_code":"","event":"execution_completed","id":"log_336VtfYY8sfhQnPEj_7VZ9fU","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","level":"INFO","message":"插件执行已完成","module":"plugins","plugin_id":"PluginUnInstall","plugin_instance_id":"PluginUnInstall","plugin_run_id":"pr_7dR1TRvPwrxsEqADfaeSvkGL","plugin_version":"2.2","request_id":"","time":"2026-10-18T02:30:54.153944444Z"}
+{"app_version":"0.3.21","event":"stopped","id":"log_xZ4ze_vD4lX9BTBEamY0dVZo","instance_id":"instance_VBanqS6wYAt99R7OW6aPqk7O","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-18T02:30:54.154905696Z","workflow_id":""}
+--- PASS: TestPluginDeferredRetryHTTPUsesOriginalRunAndShowsOnlySafeActionMetadata (0.27s)
+PASS

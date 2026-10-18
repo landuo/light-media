@@ -1,0 +1,86 @@
+{
+  "source_sha256": {
+    "installed-plugin.py": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+    "installed-qb.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "installed-tr.py": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676"
+  },
+  "scope": "offline actual method AST; explicit synthetic list/tracker/size dependencies; no network or real daemon",
+  "cases": [
+    {
+      "kind": "qbittorrent",
+      "operation": "delete",
+      "error": null,
+      "attempts": [
+        {
+          "method": "torrents_delete",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "method": "torrents_delete",
+          "hash": "cccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "synthetic_successes": [
+        "cccccccccccccccccccccccccccccccccccccccc"
+      ],
+      "source_count_two": true
+    },
+    {
+      "kind": "qbittorrent",
+      "operation": "tags",
+      "error": null,
+      "attempts": [
+        {
+          "method": "torrents_add_tags",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "method": "torrents_add_tags",
+          "hash": "cccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "synthetic_successes": [
+        "cccccccccccccccccccccccccccccccccccccccc"
+      ],
+      "source_count_two": true
+    },
+    {
+      "kind": "transmission",
+      "operation": "delete",
+      "error": null,
+      "attempts": [
+        {
+          "method": "remove_torrent",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "method": "remove_torrent",
+          "hash": "cccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "synthetic_successes": [
+        "cccccccccccccccccccccccccccccccccccccccc"
+      ],
+      "source_count_two": true
+    },
+    {
+      "kind": "transmission",
+      "operation": "tags",
+      "error": null,
+      "attempts": [
+        {
+          "method": "change_torrent",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "method": "change_torrent",
+          "hash": "cccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "synthetic_successes": [
+        "cccccccccccccccccccccccccccccccccccccccc"
+      ],
+      "source_count_two": true
+    }
+  ]
+}
