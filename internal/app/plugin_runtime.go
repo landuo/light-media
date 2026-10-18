@@ -168,8 +168,10 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	if run.RequestID != "" {
 		ctx = a.traceContext(ctx, "", "", run.RequestID)
 	}
-	ctx, cancelRun := context.WithTimeout(ctx, 2*time.Minute)
+	lifecycleCtx, cancelRun := context.WithCancel(ctx)
 	defer cancelRun()
+	ctx, cancelPrepare := context.WithTimeout(lifecycleCtx, 2*time.Minute)
+	defer cancelPrepare()
 	processHeld := false
 	releaseProcess := func() {
 		if processHeld {
@@ -213,6 +215,12 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	if err == nil {
 		deferred, err = a.preparePluginDeferred(ctx, installation, run)
 	}
+	policy := pluginInvocationPolicy(installation, run, deferred)
+	if err == nil && policy.Lifecycle {
+		// Preparation remains bounded. Only the exact admitted native operation
+		// may outlive that deadline; shutdown/drain cancellation still applies.
+		ctx = lifecycleCtx
+	}
 	workerInput := run.Input
 	if err == nil && installation.PluginID == "AutoBackup" && run.Action == "api" {
 		workerInput, err = autoBackupWorkerInput(run)
@@ -220,7 +228,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	result := plugins.RunResult{}
 	hostErrorCode := ""
 	if err == nil {
-		result, err = (plugins.Runner{Timeout: 2 * time.Minute}).Run(ctx, command, manifest, installation.InstanceID, "invoke", workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+		result, err = (plugins.Runner{Timeout: policy.WorkerTimeout, ExcludeHostTime: policy.ExcludeHostTime}).Run(ctx, command, manifest, installation.InstanceID, "invoke", workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 			var value json.RawMessage
 			var hostErr error
 			if deferred != nil {

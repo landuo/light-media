@@ -165,6 +165,10 @@ type Runner struct {
 	MaxStderrBytes   int
 	MaxHostCalls     int
 	Timeout          time.Duration
+	// ExcludeHostTime makes Timeout a cumulative worker/transport budget.
+	// Only a trusted native host should opt in: host callbacks retain the
+	// caller's cancellation but do not consume this budget.
+	ExcludeHostTime bool
 }
 
 type RunResult struct {
@@ -223,7 +227,7 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	if runner.MaxFrameBytes < 256 || runner.MaxFrameBytes > 4<<20 || runner.MaxOutputBytes < runner.MaxFrameBytes || runner.MaxOutputBytes > defaultWireBytes || runner.MaxInputBytes < runner.MaxFrameBytes || runner.MaxInputBytes > defaultWireBytes || runner.MaxMessageBytes < runner.MaxFrameBytes || runner.MaxMessageBytes > defaultLogicalBytes || runner.MaxChunkBytes < 1 || runner.MaxChunkBytes > defaultChunkBytes || runner.MaxMessageChunks < 1 || runner.MaxMessageChunks > 32768 || runner.MaxSessionChunks < 1 || runner.MaxSessionChunks > 65536 || runner.MaxStderrBytes < 256 || runner.MaxStderrBytes > 8<<20 || runner.MaxHostCalls < 1 || runner.MaxHostCalls > 256 || runner.Timeout < time.Millisecond || runner.Timeout > 30*time.Minute {
 		return out, failure("invalid_limits")
 	}
-	ctx, cancel := context.WithTimeout(ctx, runner.Timeout)
+	ctx, cancel, budget := runnerContext(ctx, runner.Timeout, runner.ExcludeHostTime)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, command.Path, command.Args...)
 	cmd.Dir, cmd.WaitDelay = command.Dir, time.Second
@@ -265,7 +269,7 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		}
 	}()
 	identity := Identity{PluginID: manifest.PluginID, InstanceID: instanceID, Version: manifest.Version}
-	session := wireSession{maxInput: runner.MaxInputBytes, role: "host", closeIO: func() { stdin.Close(); stdout.Close() }, reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, host: host, ctx: ctx}
+	session := wireSession{maxInput: runner.MaxInputBytes, role: "host", closeIO: func() { stdin.Close(); stdout.Close() }, reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, host: host, ctx: ctx, hostBudget: budget}
 	stopIO := context.AfterFunc(ctx, session.abort)
 	defer stopIO()
 	defer func() {
@@ -370,6 +374,7 @@ type wireSession struct {
 	abortOnce                                                 sync.Once
 	aborted                                                   atomic.Bool
 	host                                                      HostHandler
+	hostBudget                                                *runnerBudget
 }
 
 func (s *wireSession) exchange(method string, payload json.RawMessage) (json.RawMessage, error) {
@@ -402,7 +407,7 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 			if s.host == nil {
 				reply.Error = &ReplyError{Code: "HOST_DENIED"}
 			} else {
-				reply.Result, err = s.host(s.ctx, s.identity, frame.Method, frame.Payload)
+				reply.Result, err = s.callHost(frame.Method, frame.Payload)
 				if err != nil {
 					reply.Result, reply.Error = nil, &ReplyError{Code: "HOST_DENIED"}
 				}

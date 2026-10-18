@@ -1,0 +1,606 @@
+{
+  "date": "2026-10-18",
+  "status": "MERGED_SHARED_RUNNER_LOCAL_AND_NAS_VERIFIED_NOT_DEPLOYED",
+  "source_file_hashes": [
+    {
+      "path": "internal/plugins/protocol.go",
+      "sha256": "0ebfa53463b481b095ae433aaa0d2b875074f916af86f0080cccc8a2d11afb43",
+      "before_sha256": "b280e4561bde51b898e87c9960410382a909082c08838a2387e8698f7b3370b4"
+    },
+    {
+      "path": "internal/plugins/runner_budget.go",
+      "sha256": "279e83f64b07e9867d3222903e2e092da202b4466e4ec272f069918eddfb2e73",
+      "before_sha256": null
+    },
+    {
+      "path": "internal/app/plugin_runtime.go",
+      "sha256": "292eca3648f1af7daa9bbef16ca1a6a66322e9430d09e85de8d2e2dd231ecf8a",
+      "before_sha256": "11ea718e3c54761d2eb27514b5e0fdcb83accbe36b297edd32833f3177ceba5b"
+    },
+    {
+      "path": "internal/app/plugin_invocation_policy.go",
+      "sha256": "c6413d1d22ac095a18e7639e6f241cb189db05eda35d1bd7a1d976d47d22eb91",
+      "before_sha256": null
+    },
+    {
+      "path": "internal/plugins/runner_budget_test.go",
+      "sha256": "b3ead40968cc3c798d8a1e404297c15e8caa5b4d7a9e3f3421499602d18cccde",
+      "before_sha256": null
+    },
+    {
+      "path": "internal/app/plugin_invocation_policy_test.go",
+      "sha256": "237758da0fbe3facf33810e9602523e4f8f3233f2e8e174ebb823a624ee306e4",
+      "before_sha256": null
+    },
+    {
+      "path": "internal/plugins/autosignin/runner_lifetime_test.go",
+      "sha256": "76720b8762b26cc43ff1b048f1dc7e369887ee38574966d88de3288cddd2d833",
+      "before_sha256": null
+    }
+  ],
+  "joint_merged_checks": {
+    "source_manifest_sha256": "1a8c0957ca1b3e3c855639994d344a6198737cdfccbe552d1a2b37a1db6050cc",
+    "test_regex": "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules|TestPluginInvocationPolicy|TestPluginDeferred|TestPluginAutoBackup)",
+    "files_count": 2253,
+    "checks": [
+      {
+        "name": "production-default",
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_plugin_budget_joint/light-media-darwin",
+          "./cmd/server"
+        ],
+        "environment": {},
+        "started_at": "2026-10-18T06:05:40.264386+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "app-normal",
+        "command": [
+          "go",
+          "test",
+          "-tags",
+          "modernconly",
+          "-json",
+          "./internal/app",
+          "-run",
+          "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules|TestPluginInvocationPolicy|TestPluginDeferred|TestPluginAutoBackup)",
+          "-count=1",
+          "-timeout",
+          "8m"
+        ],
+        "environment": {},
+        "started_at": "2026-10-18T06:05:43.425565+00:00",
+        "exit_code": 0,
+        "log_sha256": "ebd612e5ae3a166915c5f14e29b7fdd214bd6caf4fe5300e74fe9f3450b4a48a",
+        "top_level": {
+          "pass": 61,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      {
+        "name": "app-policy-services-race",
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "-tags",
+          "modernconly",
+          "-json",
+          "./internal/app",
+          "-run",
+          "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginInvocationPolicy)",
+          "-count=1",
+          "-timeout",
+          "5m"
+        ],
+        "environment": {},
+        "started_at": "2026-10-18T06:06:15.946992+00:00",
+        "exit_code": 0,
+        "log_sha256": "432a5a0e7bcbdb7292dce2b91e8287a66c1bce2be5dec94c8b98515df3f10f73",
+        "top_level": {
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      {
+        "name": "protocol-normal",
+        "command": [
+          "go",
+          "test",
+          "-json",
+          "./internal/plugins",
+          "-count=1",
+          "-timeout",
+          "4m"
+        ],
+        "environment": {},
+        "started_at": "2026-10-18T06:06:40.038405+00:00",
+        "exit_code": 0,
+        "log_sha256": "145ce6ee4861b806c3800acafdde445a4aabf4aa9e41be6aa7155b5adcdb1535",
+        "top_level": {
+          "pass": 30,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      {
+        "name": "protocol-budget-race",
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "-json",
+          "./internal/plugins",
+          "-run",
+          "^TestRunnerBudget",
+          "-count=1",
+          "-timeout",
+          "5m"
+        ],
+        "environment": {},
+        "started_at": "2026-10-18T06:06:55.976696+00:00",
+        "exit_code": 0,
+        "log_sha256": "e8e6608a19c7a728f39003796b94b247d5b8f28d459e52f5c8f1af15d0a6dc86",
+        "top_level": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      {
+        "name": "vet",
+        "command": [
+          "go",
+          "vet",
+          "-tags",
+          "modernconly",
+          "./internal/app",
+          "./internal/plugins"
+        ],
+        "environment": {},
+        "started_at": "2026-10-18T06:07:04.650990+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "linux-production",
+        "command": [
+          "go",
+          "build",
+          "-tags",
+          "modernconly",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_plugin_budget_joint/light-media-linux-amd64",
+          "./cmd/server"
+        ],
+        "environment": {
+          "GOOS": "linux",
+          "GOARCH": "amd64",
+          "CGO_ENABLED": "0"
+        },
+        "started_at": "2026-10-18T06:07:05.614068+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "linux-test",
+        "command": [
+          "go",
+          "test",
+          "-tags",
+          "modernconly",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_plugin_budget_joint/app-linux-amd64.test",
+          "./internal/app"
+        ],
+        "environment": {
+          "GOOS": "linux",
+          "GOARCH": "amd64",
+          "CGO_ENABLED": "0"
+        },
+        "started_at": "2026-10-18T06:07:08.600008+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "source_unchanged": true,
+    "changed_files": [],
+    "binary_sha256": "396276ab1a4a6e71f484afa970ecba8fff8d7cc0324992e6ffe9ef0171dcf760"
+  },
+  "joint_NAS": {
+    "id": "cabf9dde-85c6-488e-b482-2a1ec929bc12",
+    "date": "2026-10-18",
+    "platform": "linux/amd64",
+    "CGO_ENABLED": "0",
+    "tags": "modernconly",
+    "test_regex": "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules|TestPluginInvocationPolicy|TestPluginDeferred|TestPluginAutoBackup)",
+    "sha256": "396276ab1a4a6e71f484afa970ecba8fff8d7cc0324992e6ffe9ef0171dcf760",
+    "remote_sha256": "396276ab1a4a6e71f484afa970ecba8fff8d7cc0324992e6ffe9ef0171dcf760",
+    "results": {
+      "exit_code": 0,
+      "top_level_passes": 61,
+      "top_level_skips": 0,
+      "top_level_failures": 0
+    },
+    "container_oom_killed": false,
+    "services_unchanged": true,
+    "environment": {
+      "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+      "user": "1000:1001",
+      "network": "none",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "no_new_privileges": true,
+      "memory_bytes": 268435456,
+      "memory_swap_bytes": 268435456,
+      "tmpfs_bytes": 134217728,
+      "pids_limit": 256,
+      "GOMEMLIMIT": "64MiB",
+      "inspect_matches": true
+    },
+    "source_snapshot_sha256": "0b5dd0366f09e2b98c33b80e838992dad011722e753aa93c5e824f765ccf9313",
+    "scope": "Combined public plugin services, admitted native lifecycle policy, AutoBackup and deferred recovery App regression. Same frozen source and binary; owned loopback/data only. Separate source AutoSignIn greater-than120s NAS proof not included in this61 count. No deployment or original migration.",
+    "cleanup": {
+      "container_removed": true,
+      "owned_remote_stage_removed": true,
+      "services_unchanged": true
+    }
+  },
+  "joint_independent_cleanup": {
+    "container_absent": true,
+    "stage_absent": true,
+    "production_unchanged": true
+  },
+  "source_consumer_files_match": {
+    "all_source_autosignin_files_match_agent_frozen": true,
+    "files_compared": 89,
+    "mismatches": []
+  },
+  "owner_source_consumer": {
+    "status": "SHARED_RUNNER_VALIDATED_NOT_AUTOSIGNIN_MANAGER_COMPLETION",
+    "date": "2026-10-18T06:02:57.928275+00:00",
+    "source_manifest_sha256": "56fef480e6018d8ce1767ed7ed5c399ce2293a87ff251c3ac0353fb18390e360",
+    "source_files": 1861,
+    "source_unchanged": true,
+    "patch": {
+      "status": "FROZEN_IMPLEMENTATION_VALIDATED",
+      "files": [
+        {
+          "path": "internal/plugins/protocol.go",
+          "sha256": "0ebfa53463b481b095ae433aaa0d2b875074f916af86f0080cccc8a2d11afb43",
+          "before_sha256": "b280e4561bde51b898e87c9960410382a909082c08838a2387e8698f7b3370b4"
+        },
+        {
+          "path": "internal/plugins/runner_budget.go",
+          "sha256": "279e83f64b07e9867d3222903e2e092da202b4466e4ec272f069918eddfb2e73",
+          "before_sha256": null
+        },
+        {
+          "path": "internal/app/plugin_runtime.go",
+          "sha256": "292eca3648f1af7daa9bbef16ca1a6a66322e9430d09e85de8d2e2dd231ecf8a",
+          "before_sha256": "11ea718e3c54761d2eb27514b5e0fdcb83accbe36b297edd32833f3177ceba5b"
+        },
+        {
+          "path": "internal/app/plugin_invocation_policy.go",
+          "sha256": "c6413d1d22ac095a18e7639e6f241cb189db05eda35d1bd7a1d976d47d22eb91",
+          "before_sha256": null
+        }
+      ],
+      "patch_sha256": "f73101be65612a61b124f55352ba776fa3d66a689dba3979f385f8597b7e899b"
+    },
+    "stages": [
+      {
+        "stage": "budget-production",
+        "command": [
+          "go",
+          "build",
+          "-tags",
+          "modernconly",
+          "./internal/...",
+          "./cmd/..."
+        ],
+        "started_at": "2026-10-18T05:54:59.727339+00:00",
+        "finished_at": "2026-10-18T05:55:00.913865+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "stage": "budget-protocol-normal",
+        "command": [
+          "go",
+          "test",
+          "./internal/plugins",
+          "-count=1",
+          "-timeout",
+          "5m",
+          "-json"
+        ],
+        "started_at": "2026-10-18T05:55:00.914376+00:00",
+        "finished_at": "2026-10-18T05:55:16.714882+00:00",
+        "exit_code": 0,
+        "log_sha256": "8e31081b32fb64a06474ecb679bec440174d3f40237871061f2232c7fc72562a",
+        "top_level": {
+          "pass": 30,
+          "fail": 0,
+          "skip": 0
+        },
+        "source_elapsed_output": []
+      },
+      {
+        "stage": "budget-app-normal",
+        "command": [
+          "go",
+          "test",
+          "-tags",
+          "modernconly",
+          "./internal/app",
+          "-run",
+          "^TestPlugin(InvocationPolicy|Deferred|AutoBackup)",
+          "-count=1",
+          "-timeout",
+          "10m",
+          "-json"
+        ],
+        "started_at": "2026-10-18T05:55:16.715375+00:00",
+        "finished_at": "2026-10-18T05:55:44.196044+00:00",
+        "exit_code": 0,
+        "log_sha256": "5fe9d0d724e614bf4c07fa693eb1ba6bef7a77c79973046489bd330540fcc1bb",
+        "top_level": {
+          "pass": 45,
+          "fail": 0,
+          "skip": 0
+        },
+        "source_elapsed_output": []
+      },
+      {
+        "stage": "budget-source-lifetime-normal",
+        "command": [
+          "go",
+          "test",
+          "./internal/plugins/autosignin",
+          "-run",
+          "^TestAutoSignInSDKSourceLifetimeOverTwoMinutesAndCancellation$",
+          "-count=1",
+          "-timeout",
+          "5m",
+          "-json"
+        ],
+        "started_at": "2026-10-18T05:55:44.196776+00:00",
+        "finished_at": "2026-10-18T05:57:48.494296+00:00",
+        "exit_code": 0,
+        "log_sha256": "0ff0b61dce9ede27d362de27051bae33d15f646a25bac1a4c95f460b76ccaa4d",
+        "top_level": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        "source_elapsed_output": [
+          "runner_lifetime_test.go:24: actual source Engine/Visitor + child SDK: elapsed=2m3.041214333s requests=3 host_calls=1"
+        ]
+      },
+      {
+        "stage": "budget-protocol-race",
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "./internal/plugins",
+          "-count=1",
+          "-timeout",
+          "8m",
+          "-json"
+        ],
+        "started_at": "2026-10-18T05:57:48.494977+00:00",
+        "finished_at": "2026-10-18T06:00:18.802422+00:00",
+        "exit_code": 0,
+        "log_sha256": "2ef81edb28e272002aa027cc1868129f75829203c5096ed50aac9094885f5e55",
+        "top_level": {
+          "pass": 30,
+          "fail": 0,
+          "skip": 0
+        },
+        "source_elapsed_output": []
+      },
+      {
+        "stage": "budget-app-policy-race",
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "-tags",
+          "modernconly",
+          "./internal/app",
+          "-run",
+          "^TestPluginInvocationPolicy",
+          "-count=1",
+          "-timeout",
+          "5m",
+          "-json"
+        ],
+        "started_at": "2026-10-18T06:00:18.803405+00:00",
+        "finished_at": "2026-10-18T06:00:31.770198+00:00",
+        "exit_code": 0,
+        "log_sha256": "738d5ed0ef980b72a0f2b507f1a23caa13f0740a449b4de036010aebbc04e51c",
+        "top_level": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        "source_elapsed_output": []
+      },
+      {
+        "stage": "budget-source-lifetime-race",
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "./internal/plugins/autosignin",
+          "-run",
+          "^TestAutoSignInSDKSourceLifetimeOverTwoMinutesAndCancellation$",
+          "-count=1",
+          "-timeout",
+          "5m",
+          "-json"
+        ],
+        "started_at": "2026-10-18T06:00:31.770713+00:00",
+        "finished_at": "2026-10-18T06:02:38.817458+00:00",
+        "exit_code": 0,
+        "log_sha256": "f2e46fe764692bbb33821558b6bfa4181aa5ca5efab9a94da9c7005675fec6b4",
+        "top_level": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        "source_elapsed_output": [
+          "runner_lifetime_test.go:24: actual source Engine/Visitor + child SDK: elapsed=2m4.087835083s requests=3 host_calls=1"
+        ]
+      },
+      {
+        "stage": "budget-vet",
+        "command": [
+          "go",
+          "vet",
+          "-tags",
+          "modernconly",
+          "./internal/plugins",
+          "./internal/plugins/autosignin",
+          "./internal/app"
+        ],
+        "started_at": "2026-10-18T06:02:38.818171+00:00",
+        "finished_at": "2026-10-18T06:02:39.839221+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "linux": [
+      {
+        "name": "production",
+        "command": [
+          "go",
+          "build",
+          "-tags",
+          "modernconly",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_auto_signin_host_port/runner-budget-linux/light-media",
+          "./cmd/server"
+        ],
+        "started_at": "2026-10-18T05:56:32.961104+00:00",
+        "finished_at": "2026-10-18T05:56:36.287020+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "protocol",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_auto_signin_host_port/runner-budget-linux/protocol.test",
+          "./internal/plugins"
+        ],
+        "started_at": "2026-10-18T05:56:36.287519+00:00",
+        "finished_at": "2026-10-18T05:56:36.684848+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "source",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_auto_signin_host_port/runner-budget-linux/source.test",
+          "./internal/plugins/autosignin"
+        ],
+        "started_at": "2026-10-18T05:56:36.685345+00:00",
+        "finished_at": "2026-10-18T05:56:37.472622+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "app",
+        "command": [
+          "go",
+          "test",
+          "-tags",
+          "modernconly",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_auto_signin_host_port/runner-budget-linux/app.test",
+          "./internal/app"
+        ],
+        "started_at": "2026-10-18T05:56:37.473279+00:00",
+        "finished_at": "2026-10-18T05:56:41.280229+00:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "NAS": {
+      "id": "1200503c-c220-4128-895b-32c65e92eb0e",
+      "stage": "/Users/accidia/projects/light-media/work/_auto_signin_host_port/runner-budget-nas-stage.h8S4k4",
+      "remote": "/tmp/light-media-runner-budget.jIdAkdkK",
+      "name": "lm-runner-budget-1200503c",
+      "source_manifest_sha256": "56fef480e6018d8ce1767ed7ed5c399ce2293a87ff251c3ac0353fb18390e360",
+      "binaries": {
+        "protocol.test": "68996ac0e16ec379c8bb6e9b2022121359edf063b398c0b52e84bfdad3abc147",
+        "source.test": "2f98fef08ef6777d2eec531baeccff379217cd6096b9f83226a5bc3558ce3c33",
+        "app.test": "ad26e926964adf43959bdf495b38c380ff92e5adad6fd0f7dd57fa591724410a"
+      },
+      "finished_at": "2026-10-18T06:01:04.684Z",
+      "exit_code": 0,
+      "oom_killed": false,
+      "top_passes": 7,
+      "top_failures": 0,
+      "top_skips": 0,
+      "isolation_verified": true,
+      "remote_binaries": {
+        "protocol.test": "68996ac0e16ec379c8bb6e9b2022121359edf063b398c0b52e84bfdad3abc147",
+        "source.test": "2f98fef08ef6777d2eec531baeccff379217cd6096b9f83226a5bc3558ce3c33",
+        "app.test": "ad26e926964adf43959bdf495b38c380ff92e5adad6fd0f7dd57fa591724410a"
+      },
+      "log_sha256": "eb02f7b5b2f5ee9c45317bdf5725bfc66846c2ed50f3395042af1539e0b6f4bd",
+      "services_unchanged": true,
+      "scope": "Shared Runner cumulative budget; real AutoSignIn Engine/Visitor + SDK >120s loopback and parent cancellation; actual App exact deferred policy. Not full AutoSignIn App Manager readiness or real site signin.",
+      "cleanup": {
+        "container_and_owned_stage_absent": true,
+        "services_unchanged": true
+      }
+    },
+    "terminal_handles": {
+      "local": "42090 exit0",
+      "linux": "32634 exit0",
+      "nas_start": "39410 exit0",
+      "nas_finish_cleanup": "81893 exit0"
+    },
+    "earlier_failure": {
+      "handle": "95508 exit1",
+      "cause": "New long source fixture omitted private synthetic cookie; source refused HTTP so no actual long consumer was executed. Preserved runner-budget-round1. Production code unchanged after that run.",
+      "invalid_linux_target": "Wrong ./cmd/light-media path failed before compile; real entry cmd/server retried0. Evidence preserved runner-budget-linux-invalid-target."
+    },
+    "limits": "Actual AutoSignIn Engine/Visitor+child SDK source consumer, not full actual App Manager. No real sites/notifications/production data or user migrations."
+  },
+  "owner_evidence_sha256": "5da211961785131ff3135562f671fda63221fca20de86f7d2b4b14b3b692d58b",
+  "owner_independent_cleanup": {
+    "container_absent": true,
+    "owned_stage_absent": true,
+    "production_unchanged": true
+  },
+  "limits": [
+    "Only exact prepared native deferred admissions gain lifecycle execution; other invocations retain two-minute whole-run timeout.",
+    "Form/read-only calls retain ten-second limits.",
+    "Source AutoSignIn greater-than120s Engine/Visitor/SDK evidence is not actual AutoSignIn Manager, Browser, OCR or notification readiness.",
+    "IYUU separate actual126s proof remains owned integration candidate; not formally registered or migrated here.",
+    "No original user configuration/data/files migrated; no production switch."
+  ]
+}
