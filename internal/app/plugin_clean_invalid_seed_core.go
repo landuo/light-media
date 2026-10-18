@@ -732,36 +732,7 @@ func (c *pluginCleanInvalidSeedCore) Notice(ctx context.Context, tx *sql.Tx, inv
 	if n.ID == "" || n.RunID != inv.RunID || n.State != "pending" {
 		return seedhost.ErrUnsafe
 	}
-	var notice map[string]any
-	if cleanupJournalStrict(n.Payload, &notice) != nil {
-		return seedhost.ErrUnsafe
-	}
-	title, _ := notice["title"].(string)
-	message, _ := notice["text"].(string)
-	mtype, _ := notice["mtype"].(string)
-	if title == "" {
-		return seedhost.ErrUnsafe
-	}
-	settings := c.o.a.Settings()
-	historyID := "notice_" + hex.EncodeToString(c.o.j.mac("notice-id", []byte(n.ID)))
-	local := Notification{ID: historyID, Title: cleanWithSettings(title, settings), Message: cleanWithSettings(message, settings), MType: mtype, CreatedAt: now()}
-	if err = putCleanupNoticeTx(ctx, tx, local); err != nil {
-		return err
-	}
-	// This is local acceptance and history storage, not external delivery.
-	payload, _ := cleanupJournalJSON(struct {
-		Notice           seedhost.Notice
-		HistoryID, State string
-	}{n, historyID, "history_saved"})
-	token := c.o.j.token("outbox", n.ID, -1)
-	sealed, err := c.o.a.pluginStore.seal("clean_seed_journal", c.o.instance, c.o.j.key("outbox", token), payload)
-	if err != nil {
-		return err
-	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_clean_seed_outbox VALUES(?,?,?,?)`, c.o.instance, c.o.generation, token, sealed); err != nil {
-		return err
-	}
-	return cleanSeedSaveReceipt(ctx, tx, c.o.j, pluginCleanInvalidSeedReceipt{Version: 1, Invocation: inv, ID: n.ID, Kind: "notice", Digest: cleanSeedEffectDigest(e)})
+	return c.acceptNoticeTx(ctx, tx, inv, n, e)
 }
 
 var _ seedhost.Core = (*pluginCleanInvalidSeedCore)(nil)

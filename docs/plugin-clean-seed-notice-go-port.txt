@@ -1,0 +1,51 @@
+CleanInvalidSeed 原始通知构造与完整私有信封
+
+2026-10-18。本片在 babd8c8 的下载器写前失败收据之上，把正式 Go
+internal/notice.NewEnvelope 接到实际 CleanInvalidSeed 源 Notice 调用内。
+实际 executePluginRun、内置 SDK、deferred、连续 owner、动作 grant 和 Core
+核验链保持不变；校验发生在当前源调用返回及后续配置变更之前。
+
+纯源移植将 NotificationType.SiteMessage 表示为 SiteMessage 符号轨迹。
+可信源适配仅把这一常量转为原枚举值“站点”；原 Args/Payload 不变。
+远程事件的 channel/user 不套用兼容回退，无效值产生原构造阶段的
+ValidationError。共享 NewEnvelope 枚举校验没有放宽。此前四处合成测试
+使用非原版渠道名，现改为合法 Web；新增真实 SDK 回归证明无效首条通知
+不会修改 notify_all、配置修订或站内历史，之后合法命令仍可继续执行。
+
+新 v2 私有 outbox 保存原 Notice、完整规范化的24字段 Notification、
+首次 UTC 登记时间、上海时区 current_time、history_saved/history_skipped
+阶段、历史ID及HMAC。date 保持源默认 null，未把登记时间塞进源字段。
+大整数用户编号保持 json.Number；userid、channel、null/default及未来路由
+所需原字段均来自完整信封，不从清洗后的站内标题/正文重建。
+当前 App 没有 APP_DOMAIN 映射，未凭请求 Host 或相对导航伪造外发链接。
+
+完整密文、站内历史和绑定原 effect 摘要的 Core 收据在同一事务接受。
+收据另外绑定完整 outbox 摘要。历史只公开既有清洗投影；完整目标仍在密文。
+原始 action journal 和 admission 不被规范化内容覆盖。历史读取逐项核对
+原 Run/Invocation、confirmed notice Effect、原 Notice、Core 收据、信封规范化
+结果及历史摘要，不要求已退休的原修订重新取得动作授权。读过通知仅改变
+Read，不改变首次时间或原接受收据。改过目标的密文不能冒充原消息。
+这条读取路径不是发送授权或新的执行入口。
+
+正式新增三项 App 顶层测试通过实际编译 SDK/owner/Core，覆盖首条无效
+channel和userid失败前缀、后续合法命令、24字段密文、大整数接收者、首次
+时间/已读状态、伪造收件人拒绝、真实 Store 关闭/重新打开、源 SiteMessage
+枚举与原 value。相关43项 normal/race/vet及NAS结果、源SHA见两个验证报告。
+NAS仅使用自有合成SQLite、HTTP/文件夹具，256MiB/无网络/只读容器；已清理
+独占容器与远端目录，观察的生产服务身份和启动/重启计数保持不变。
+
+完整通知链仍未完成，不能把本片称为已外发或全部插件已迁移。原版顺序为
+构造 → 同步 Render/history/隔离设置读取/NoticeMessage接受/Queue Send。
+NoticeMessage消费者异步独立，早于核心时间窗口判断；核心 Queue 的允许
+时段或 immediately 分支当场尝试发送、吞没sender异常，窗口外才入FIFO。
+因此后续接线须在无SQL事务/生命周期锁期间按源阶段继续，保留已提交失败
+前缀与原返回时机；不能一律异步接受后提前让源继续，也不能重试未知发送。
+当前仅到本地 history_saved，尚无完整同步路由、持久队列、真实消费及投递。
+
+旧匿名v0 outbox没有完整信封收据；本片不从公共站内消息静默重建或升级。
+APP_DOMAIN/隔离设置/用户绑定迁移、完整模板、发送模块和旧记录的明确
+迁移仍在后续范围。共享核心当前是JSON形状子集；Python对象/原始JSON中的
+lone surrogate语义尚不等价，不能用 model_validate_json 的拒绝代替原插件
+Notification(**对象) 的接受。没有把这一未覆盖边界算作新的通过样本。
+
+本片不导入原用户配置、KV或文件，不部署或启用插件，不增加正式迁移数量。

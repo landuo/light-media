@@ -294,3 +294,5 @@ RemoveLink 和 CleanInvalidSeed 的实际操作在 SDK 唯一终态握手并退�
 这两类原生终态依据私有加密收据判定：确证失败保持失败，已发操作但回复或持久化未知保持待核对，不能用新任务或重启盲重放。内部配置更新保留执行最初的 Run/Input，通过私有配置链证明有效 revision；不能套用旧通用配置规范化路径改写已经执行的 admission。AutoSignIn 的同类实际 SQL owner、原配置归档切换与新增按需读取见 [SQL 读取记录](plugin-auto-signin-typed-sql-go-port.txt)；Manager/调度/Browser/OCR/消息仍待接线，全部写入及受保护历史回收也未由读取接口自动完成。
 
 MergeMessageNotify、LarkMessager 已有正式 Go 核心、原执行参考和纯包 NAS 验证，尚无完整生产宿主及用户配置迁移，分别见 [聚合通知](plugin-merge-message-go-port.md)、[Lark](plugin-lark-go-port.txt)。消息历史、NoticeMessage 事件接受、核心消息队列和各渠道发送是不同阶段；任何前一阶段成功不能冒充后一阶段送达。完整23实例的配置/KV/文件迁移数量仍为0，当前目录中的12个处理器也不计作12个已迁移插件。
+
+2026-10-18 通知源阶段补充：正式 internal/notice 已有原始 Notification 构造、Chain 路由和 Queue 时间窗口的纯Go核心（15项NAS），CleanInvalidSeed 实际SDK/Core已接源构造校验、完整信封和历史鉴权（43项相关App正常/race/NAS）。这还没有同步完整Chain路由/真实发送。原 immediately/允许时段会在源调用返回前尝试发送，窗口外才排队；后续须在SQL事务之外继续实际阶段、保留已完成前缀，不能用一律异步投递替代。NoticeMessage与核心Queue拥有独立消费者/收据，完整接线与数据迁移仍属本次范围。新增下载器阶段证明只认证实际未发写入的Client私有错误；已发写入失去响应仍保留未知，不自动重试。证据见 plugin-download-mutation-phase-verification.json 和 plugin-clean-seed-notice-verification.json。

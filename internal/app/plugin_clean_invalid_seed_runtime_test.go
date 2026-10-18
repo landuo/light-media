@@ -84,7 +84,7 @@ func TestPluginCleanInvalidSeedRuntimePreservesKnownFailureAndUnknownWrite(t *te
 		if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_runtime_second_seed_notice BEFORE INSERT ON records WHEN NEW.kind='notification' AND (SELECT COUNT(*) FROM records WHERE kind='notification')>=1 BEGIN SELECT RAISE(ABORT,'owned runtime notice failure'); END`); err != nil {
 			t.Fatal(err)
 		}
-		if _, err := a.pluginStore.enqueueCleanInvalidSeedCommand(context.Background(), run.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "synthetic-local", "user": "owned-user"}); err != nil {
+		if _, err := a.pluginStore.enqueueCleanInvalidSeedCommand(context.Background(), run.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "Web", "user": "owned-user"}); err != nil {
 			t.Fatal(err)
 		}
 		got := cleanSeedRuntimeExecute(t, a, cleanSeedOwnerClaim(t, a, run.InstanceID))

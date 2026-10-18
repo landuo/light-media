@@ -218,7 +218,7 @@ func TestPluginCleanInvalidSeedOwnerConfigPrefixSurvivesLaterNoticeFailure(t *te
 	if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_second_seed_notice BEFORE INSERT ON records WHEN NEW.kind='notification' AND (SELECT COUNT(*) FROM records WHERE kind='notification')>=1 BEGIN SELECT RAISE(ABORT,'synthetic second notice failure'); END`); err != nil {
 		t.Fatal(err)
 	}
-	queued, err := a.pluginStore.enqueueCleanInvalidSeedCommand(context.Background(), run.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "synthetic-local", "user": "owned-user"})
+	queued, err := a.pluginStore.enqueueCleanInvalidSeedCommand(context.Background(), run.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "Web", "user": "owned-user"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -602,7 +602,7 @@ func TestPluginCleanInvalidSeedOwnerInternalConfigRevisionMigratesOnlyPendingSou
 	initial := uninstallInstall(t, a, "CleanInvalidSeed", seed.Manifest(), cleanSeedOwnerConfig(map[string]any{"cron": "* * * * *"}), true)
 	cleanSeedOwnerInvoke(t, a, initial)
 	ctx := context.Background()
-	command, err := a.pluginStore.enqueueCleanInvalidSeedCommand(ctx, initial.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "owned", "user": "owned"})
+	command, err := a.pluginStore.enqueueCleanInvalidSeedCommand(ctx, initial.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "Web", "user": "owned"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -895,7 +895,7 @@ func TestPluginCleanInvalidSeedOwnerInternalConfigCrashReopenPreservesAppliedObj
 	if err = a.Store.DB.QueryRow(`SELECT next_due FROM plugin_schedules WHERE instance_id=? AND service_id=?`, initial.InstanceID, cleanSeedServiceID(plan.ID)).Scan(&originalDue); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.pluginStore.enqueueCleanInvalidSeedCommand(context.Background(), initial.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "owned", "user": "owned"}); err != nil {
+	if _, err = a.pluginStore.enqueueCleanInvalidSeedCommand(context.Background(), initial.InstanceID, map[string]any{"action": "toggle_notify_all", "channel": "Web", "user": "owned"}); err != nil {
 		t.Fatal(err)
 	}
 	command := cleanSeedOwnerClaim(t, a, initial.InstanceID)
