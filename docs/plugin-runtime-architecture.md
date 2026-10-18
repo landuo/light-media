@@ -152,7 +152,7 @@ A/B 之后立即接实际插件切片，不等待通用市场、通用脚本引�
 - `CustomHosts 1.2.1` 已有原版字段、IP/IDNA 规范化、重复地址/域名跳过、错误行保留与通知、全非法输入保留旧文件，以及停用恢复原前缀。宿主只开放容器 `/etc/hosts` 的读取和带摘要条件的专属尾段替换；拒绝符号链接与前缀改写，写失败不报成功并关闭启用状态。启动重应用已保存的活动配置，迁移暂存实例不执行。重置/普通卸载沿用原版不自动清除 Hosts 的行为。
 - `SystemProcess 1.1` 已有原版配置、PID 倒序详情表格、空状态、CPU/内存/运行时长与仪表板数据接口。采样使用固定版本 [gopsutil v4.26.9](https://github.com/shirou/gopsutil/tree/v4.26.9) 的纯 Go 实现，读取当前进程命名空间，不增加 host PID 挂载；不查询命令行/环境。CPU 首次为 0，后续按两次查询之差计算，PID 重用重置采样；运行时长保留原版 `timedelta.seconds` 的 24 小时取模。未实现仪表板个性化布局前，不将数据接口称作仪表板交付完成。
 - 前端使用原版同版本 Vuetify 3.7.3 与 Ace 编辑器，按需加载；配置弹窗 60rem，详情弹窗 80rem、窄屏全屏，并可从详情切换设置。已接 JSON 表格组件，数字 0 不丢失；限制描述规模和组件范围，不执行 HTML/脚本。修正全局输入样式与插件控件双边框/高度冲突。当前组件不足全部 23 个插件，动态表达式/插槽、联邦页面、分身、原版完整菜单、完整仪表板等仍待实现。
-- HTTP 已接安装目录、已安装列表、表单、CAS 保存、重载、重置、保留数据卸载、执行元数据、只读详情和仪表板数据；经过现有管理员认证和同源检查，页面查询与执行共用单进程限额。新增 `PluginUnInstall 2.2` 已接真实宿主卸载、原版非强制清理 guard、自卸载加密收据及崩溃恢复，详见 `plugin-uninstall-go-port.md`。现有 v1 事实已接持久投递，定时计算/队列已接共享识别词、站点统计及清理无效做种；其他原版事件、其他定时业务及服务管理界面、专属 API/命令、完整迁移工具、另外11个尚未注册的插件及正式服务切换均未完成。12个已有不同程度 Go 行为的处理器不能代替各自剩余的平台交互、迁移和上线验收。
+- HTTP 已接安装目录、已安装列表、表单、CAS 保存、重载、重置、保留数据卸载、执行元数据、只读详情和仪表板数据；经过现有管理员认证和同源检查，页面查询与执行共用单进程限额。新增 `PluginUnInstall 2.2` 已接真实宿主卸载、原版非强制清理 guard、自卸载加密收据及崩溃恢复，详见 `plugin-uninstall-go-port.md`。现有 v1 事实已接持久投递，定时计算/队列已接共享识别词、站点统计及清理无效做种；其他原版事件、其他定时业务及服务管理界面、专属 API/命令、完整迁移工具、另外10个尚未注册的插件及正式服务切换均未完成。13个已有不同程度 Go 行为的处理器不能代替各自剩余的平台交互、迁移和上线验收。
 - `MPServerStatus 1.4` 已接真实 Go SDK、固定公共探针、按实例易失采样及 DNS/TLS 正负缓存，配置/重载/卸载主动取消旧探针。原表单、12 卡详情和两表、六卡仪表板数据及移动布局已有隔离浏览器证据；完整个性化仪表板与正式迁移仍未交付。源网络语义、平台边界及验证见 `plugin-server-status-go-port.md`。
 - 完整 MetaInfo/MetaBase 标题对象、修改器、状态保存和拼音依赖已在正式 `internal/releasemeta` 实现；现有普通下载消费者保持既有入口，完整RSS对象纯包也已落地，110个实际原链路参考和复制/状态语义已验证，但App消费者接线尚未完成，见 `metainfo-go-port.md` 与 `rss-context-full-go-port.md`。RemoveLink 2.17 的正式纯包及连续本地宿主已通过真实临时文件/native inotify验证，修后正式NAS包28项零跳过；App配置发布屏障、显式reload、SQL/核心Effects与生产注册仍未接通，见 `plugin-remove-link-go-port.md` 与 `plugin-remove-link-host-go-port.md`。ScrapeFileClean 1.0.7另有独立正式纯包和NAS10项验证，其Stop丢弃队列等算法不与RemoveLink合并，见 `plugin-scrape-file-clean-go-port.md`。
 - PL-37–40 文件夹/排序已接加密CAS快照、原新旧格式、原外观选项、实际拖入/混排/组内小数排序及卸载清成员；正常/竞态/全量、134项前端、实际浏览器与NAS隔离验证通过。补齐folders和PluginOrder原raw管理响应/别名、未设置顺序presence与20条实际ASGI参考，联合NAS34目标全部通过。原用户布局未迁移，分身入组、其他完整管理API仍待接通，见 `plugin-organization-go-port.md`。
@@ -293,7 +293,7 @@ RemoveLink 和 CleanInvalidSeed 的实际操作在 SDK 唯一终态握手并退�
 
 这两类原生终态依据私有加密收据判定：确证失败保持失败，已发操作但回复或持久化未知保持待核对，不能用新任务或重启盲重放。内部配置更新保留执行最初的 Run/Input，通过私有配置链证明有效 revision；不能套用旧通用配置规范化路径改写已经执行的 admission。AutoSignIn 的同类实际 SQL owner、原配置归档切换与新增按需读取见 [SQL 读取记录](plugin-auto-signin-typed-sql-go-port.txt)；Manager/调度/Browser/OCR/消息仍待接线，全部写入及受保护历史回收也未由读取接口自动完成。
 
-MergeMessageNotify、LarkMessager 已有正式 Go 核心、原执行参考和纯包 NAS 验证，尚无完整生产宿主及用户配置迁移，分别见 [聚合通知](plugin-merge-message-go-port.md)、[Lark](plugin-lark-go-port.txt)。消息历史、NoticeMessage 事件接受、核心消息队列和各渠道发送是不同阶段；任何前一阶段成功不能冒充后一阶段送达。完整23实例的配置/KV/文件迁移数量仍为0，当前目录中的12个处理器也不计作12个已迁移插件。
+MergeMessageNotify、LarkMessager 已有正式 Go 核心、原执行参考和纯包 NAS 验证，尚无完整生产宿主及用户配置迁移，分别见 [聚合通知](plugin-merge-message-go-port.md)、[Lark](plugin-lark-go-port.txt)。消息历史、NoticeMessage 事件接受、核心消息队列和各渠道发送是不同阶段；任何前一阶段成功不能冒充后一阶段送达。完整23实例的配置/KV/文件迁移数量仍为0，当前目录中的13个处理器也不计作13个已迁移插件。
 
 2026-10-18 通知接线补充：正式 internal/notice 已有原始 Notification 构造、Chain 路由和 Queue 时间窗口的纯Go核心（15项NAS）。此前 CleanInvalidSeed 的源构造、完整信封和历史鉴权有43项相关App证据；本轮进一步在真实源调用返回前接 Router，分别持久化 NoticeMessage 与核心队列阶段。immediately/允许时段等待发送尝试，窗口外才入FIFO，网络期间不持SQL/生命周期锁；历史和已发布事件不因后续失败回滚。未知发送不盲目重发，提交回执丢失先核对精确收据。真实渠道模块、完整模板、其他生产者与原配置迁移仍未接通，不能称已外发。新路由与站点映射的联合范围见[通知接线记录](plugin-notice-route-go-port.txt)，旧43项与新107项证据分别保存。下载器写前拒绝和已发写入失去响应仍区分，不自动重试，见 plugin-download-mutation-phase-verification.json。
 
@@ -301,4 +301,4 @@ MergeMessageNotify、LarkMessager 已有正式 Go 核心、原执行参考和纯
 
 实际站点删除现已在同一事务写入带原数字编号的 `site.deleted` 事件和私有密文事实，插件事件队列在推进游标前验证事实及墓碑。旧墓碑不补造事件，同域名重新添加不替换历史身份；原版重置的 `*` 语义尚未接入。112项实际App普通/竞态及NAS隔离验证、生产build与边界见[删除事件记录](native-site-deleted-go-port.txt)。这是原生生产者与队列基础设施；实际AutoSignIn/IYUU消费者及原配置迁移仍未完成。
 
-AutoBackup 2.1.4 已有正式 Go 组件、原版配置/表单/SDK、归档/ctime保留/WebDAV和固定pg_dump适配；18项普通/竞态通过，NAS17通过/1缺initdb跳过，本机真实PG导出恢复另行通过。源布局user.db*不是当前App布局，正式owner必须使用Store一致快照及恢复必需密钥，并验证新App恢复，不可空ZIP报成功。App授权、持久once/cron/API、文件/远端效果收据、通知和迁移仍在接线中，详见[自动备份记录](plugin-auto-backup-go-port.txt)。没有恢复全局备份界面或增加正式迁移数量。
+AutoBackup 2.1.4 已接实际App授权、原表单/SDK、持久once/cron/API、文件及WebDAV效果收据、通知队列和实例生命周期。App用Store一致SQLite快照、secret.key及category.yaml生成可恢复归档，并在自有快照内保留认证断点，旧动作不重放。独立代际根与run/deferred交叉校验，缺失不重新初始化；被旧未知任务阻止的重试有明确零效果失败结果。最终129项所选App普通/NAS、53项本轮重点竞态及生产构建通过，范围及此前超时记录见[实际宿主](plugin-auto-backup-host-go-port.txt)。此前纯包PG证据仍单独保留，App没有宣称支持PG；全局备份界面未恢复。真实外部渠道、原配置及7个历史文件迁移仍未完成，正式迁移仍为0。

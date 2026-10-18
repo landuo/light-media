@@ -187,22 +187,29 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err := p.noticeUnseal("route", id, sealed, &r); err != nil {
 		return r, nil, err
 	}
-	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || r.Kind != "clean_seed" || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
+	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || (r.Kind != "clean_seed" && r.Kind != "auto_backup") || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
-	j := &pluginCleanInvalidSeedJournal{p: p, instance: instance, generation: generation}
-	box, err := readCleanSeedPrivateNotice(ctx, q, j, token)
-	if err != nil {
-		return r, nil, err
-	}
-	raw := mustCleanSeedJSON(box)
-	if r.EffectID != box.Notice.ID || r.AcceptedSHA != tokenHash(string(raw)) || !bytes.Equal(r.Envelope, box.Envelope) || r.HistoryID != box.HistoryID || !hmac.Equal(r.HistoryDigest, box.HistoryDigest) || r.CreatedAt != box.CreatedAt || r.CurrentTime != box.CurrentTime {
-		return r, nil, seedhost.ErrUnsafe
-	}
-	receipt, err := cleanSeedReadReceipt(ctx, q, j, box.Notice.ID)
-	var anchor pluginCleanInvalidSeedNoticeReceipt
-	if err != nil || cleanupJournalStrict(receipt.Payload, &anchor) != nil || anchor.RouteID != id || anchor.RouteInitialSHA != noticeInitialSHA(r) {
-		return r, nil, seedhost.ErrUnsafe
+	if r.Kind == "auto_backup" {
+		if err := p.validateAutoBackupNotice(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else {
+		j := &pluginCleanInvalidSeedJournal{p: p, instance: instance, generation: generation}
+		box, err := readCleanSeedPrivateNotice(ctx, q, j, token)
+		if err != nil {
+			return r, nil, err
+		}
+		raw := mustCleanSeedJSON(box)
+		if r.EffectID != box.Notice.ID || r.AcceptedSHA != tokenHash(string(raw)) || !bytes.Equal(r.Envelope, box.Envelope) || r.HistoryID != box.HistoryID || !hmac.Equal(r.HistoryDigest, box.HistoryDigest) || r.CreatedAt != box.CreatedAt || r.CurrentTime != box.CurrentTime {
+			return r, nil, seedhost.ErrUnsafe
+		}
+		receipt, err := cleanSeedReadReceipt(ctx, q, j, box.Notice.ID)
+		var anchor pluginCleanInvalidSeedNoticeReceipt
+		if err != nil || cleanupJournalStrict(receipt.Payload, &anchor) != nil || anchor.RouteID != id || anchor.RouteInitialSHA != noticeInitialSHA(r) {
+			return r, nil, seedhost.ErrUnsafe
+		}
+
 	}
 	rows, err := q.QueryContext(ctx, `SELECT ordinal,sealed FROM plugin_notice_route_steps WHERE route_id=? ORDER BY ordinal`, id)
 	if err != nil {

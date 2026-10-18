@@ -306,6 +306,10 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if !found || o.removed[instance] {
 		return bad("PLUGIN_RUN_SCOPE_DENIED", "卸载目标不属于当前已安装快照")
 	}
+	parent, isAuto, err := o.p.autoBackupLifecycleParentTx(ctx, o.tx, instance)
+	if err != nil {
+		return err
+	}
 	changed, err := o.tx.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=? AND plugin_id=? AND version=? AND generation=? AND installed=1`, now(), instance, target.PluginID, target.Version, target.Generation)
 	if err != nil {
 		return err
@@ -331,6 +335,11 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	}
 	if err := o.p.removeOrganizationMemberTx(ctx, o.tx, instance); err != nil {
 		return err
+	}
+	if isAuto {
+		if err = o.p.autoBackupGenesisTx(ctx, o.tx, instance, "bulk_uninstall", parent); err != nil {
+			return err
+		}
 	}
 	return o.uninstallPlanOperations.RemovePlugin(ctx, instance)
 }
@@ -372,9 +381,14 @@ type pluginUninstallCleanupPrepared struct {
 	pluginID, version string
 	remove            *pluginRemoveLinkPrepared
 	seed              *pluginCleanInvalidSeedPrepared
+	auto              *pluginAutoBackupPrepared
 }
 
 func (p *pluginUninstallCleanupPrepared) release() {
+	if p.auto != nil {
+		p.auto.o.unlock()
+		return
+	}
 	if p.remove != nil {
 		p.remove.release()
 	} else if p.seed != nil {
@@ -382,6 +396,9 @@ func (p *pluginUninstallCleanupPrepared) release() {
 	}
 }
 func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
+	if p.auto != nil {
+		return nil
+	}
 	if p.remove != nil {
 		return p.remove.drain(ctx)
 	}
@@ -391,6 +408,9 @@ func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
 func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.Tx, to cleanuphost.Binding, runID string) error {
+	if p.auto != nil {
+		return p.auto.publishTx(ctx, tx)
+	}
 	if p.remove != nil {
 		return p.remove.publishTx(ctx, tx, to, runID)
 	}
@@ -400,6 +420,9 @@ func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
 func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committed bool) error {
+	if p.auto != nil {
+		return nil
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if p.remove != nil {
@@ -428,6 +451,11 @@ func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []Plu
 		p := &pluginUninstallCleanupPrepared{pluginID: in.PluginID, version: in.Version}
 		var err error
 		switch in.PluginID {
+		case "AutoBackup":
+			p.auto, err = a.prepareAutoBackupTransition(ctx, in)
+			if err == nil {
+				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.auto.fromRevision}
+			}
 		case "RemoveLink":
 			p.remove, err = a.prepareRemoveLinkTransition(ctx, in, "uninstall")
 			if err == nil {
@@ -517,7 +545,7 @@ func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([
 	}
 	selected := []PluginInstallation{}
 	for _, in := range inventory {
-		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed") {
+		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup") {
 			selected = append(selected, in)
 		}
 	}
@@ -573,7 +601,7 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 		return json.RawMessage(`null`), nil
 	}
 	for _, instance := range planned.Removed {
-		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" {
+		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" {
 			matched := false
 			for _, p := range prepared {
 				if p.from.InstanceID == instance && p.from.Generation == target.Generation && p.pluginID == target.PluginID && p.version == target.Version {

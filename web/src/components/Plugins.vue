@@ -367,6 +367,23 @@ async function retryRun(runId: string) {
     retryingRun.value = '';
   }
 }
+const abandoningRun = ref('');
+const abandonChoice = ref<any>();
+async function abandonUnknownRun() {
+  const run = abandonChoice.value;
+  if (!run || !historyInstance.value || abandoningRun.value) return;
+  abandoningRun.value = run.id;
+  try {
+    await api('/plugins/' + encodeURIComponent(historyInstance.value) + '/abandon-unknown', {
+      run_id: run.id,
+      confirm_abandon: true,
+    });
+    history.value = await api('/plugins/' + encodeURIComponent(historyInstance.value) + '/runs');
+    abandonChoice.value = undefined;
+    toast('已放弃旧执行并保留未知证据，旧动作不会重放');
+  } catch (e) { toast(errorText(e)); }
+  finally { abandoningRun.value = ''; }
+}
 const states: Record<string, string> = {
   pending: '等待执行',
   running: '执行中',
@@ -381,6 +398,8 @@ const actions: Record<string, string> = {
   reload: '重新加载',
   service: '定时执行',
   event: '事件处理',
+  once: '立即运行一次',
+  run: '手动备份',
 };
 onMounted(() => {
   load();
@@ -682,6 +701,12 @@ onUnmounted(() => clearInterval(timer));
               ><span>{{ states[run.state] || run.state }}</span
               ><time>{{ new Date(run.created_at).toLocaleString() }}</time
               ><code v-if="run.error_code">{{ run.error_code }}</code>
+              <div v-if="run.recovery" class="plugin-run-recovery" role="status">
+                <strong>{{ run.recovery.stage }}</strong>
+                <p>{{ run.recovery.message }}</p>
+                <VBtn v-if="run.recovery.abandon_allowed" size="small" color="warning" variant="tonal"
+                  :disabled="!!abandoningRun" @click="abandonChoice = run">核对后放弃旧执行</VBtn>
+              </div>
               <VBtn
                 v-if="run.retryable"
                 size="small"
@@ -696,9 +721,24 @@ onUnmounted(() => clearInterval(timer));
         ></VCard
       ></VDialog
     >
+    <VDialog :model-value="!!abandonChoice" max-width="500" content-class="plugin-dialog-surface"
+      @update:model-value="value => { if (!value && !abandoningRun) abandonChoice = undefined }">
+      <VCard><VCardTitle>确认放弃旧执行</VCardTitle><VCardText>
+        <p>请先核对备份目录及相关 WebDAV 文件。当前待核对阶段：{{ abandonChoice?.recovery?.stage }}。</p>
+        <p>此操作保留全部未知副作用证据，取消旧任务及其定时触发，不回滚文件，不重试旧动作。完成后可修改配置或发起新备份。</p>
+        <div class="plugin-run-abandon-actions">
+          <VBtn variant="text" :disabled="!!abandoningRun" @click="abandonChoice = undefined">返回核对</VBtn>
+          <VBtn color="warning" :loading="!!abandoningRun" @click="abandonUnknownRun">已核对，确认放弃</VBtn>
+        </div>
+      </VCardText></VCard>
+    </VDialog>
+
   </VThemeProvider>
 </template>
 <style scoped>
+.plugin-run-recovery { flex-basis: 100%; border-inline-start: 3px solid rgb(var(--v-theme-warning)); padding: 10px 12px; background: rgba(var(--v-theme-warning), 0.06); border-radius: 4px; }
+.plugin-run-recovery p { margin: 4px 0 10px; line-height: 1.6; }
+.plugin-run-abandon-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
 .plugin-surface {
   background: transparent !important;
   min-height: 320px;

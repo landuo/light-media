@@ -177,6 +177,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, siteReferenceProtocolSchema); err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
 		return nil, err
 	}
@@ -297,6 +300,14 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 	if err := p.prepareSiteReferenceInstallTx(ctx, tx, in); err != nil {
 		return err
 	}
+	var autoParent autoBackupParent
+	if in.PluginID == "AutoBackup" {
+		var err error
+		autoParent, err = p.autoBackupTransitionParentTx(ctx, tx, in.InstanceID)
+		if err != nil {
+			return err
+		}
+	}
 	sealed, err := p.seal("manifest", in.InstanceID, "main", in.Manifest)
 	if err != nil {
 		return err
@@ -307,6 +318,11 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 		in.InstanceID, in.PluginID, in.Version, in.ManifestSchemaVersion, sealed, in.DesiredEnabled, now(), now())
 	if err != nil {
 		return err
+	}
+	if in.PluginID == "AutoBackup" {
+		if err = p.autoBackupGenesisTx(ctx, tx, in.InstanceID, "install", autoParent); err != nil {
+			return err
+		}
 	}
 	return p.markInstalledSiteReferencesTx(ctx, tx, in.InstanceID, "host-install/v1")
 }
@@ -425,6 +441,10 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 		return err
 	}
 	defer tx.Rollback()
+	parent, isAuto, err := p.autoBackupLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
 	result, err := tx.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=?`, now(), instanceID)
 	if err != nil {
 		return err
@@ -444,6 +464,11 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 	if err := p.removeOrganizationMemberTx(ctx, tx, instanceID); err != nil {
 		return err
 	}
+	if isAuto {
+		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "uninstall", parent); err != nil {
+			return err
+		}
+	}
 	return tx.Commit()
 }
 
@@ -453,6 +478,10 @@ func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 		return err
 	}
 	defer tx.Rollback()
+	parent, isAuto, err := p.autoBackupLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
 	result, err := tx.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=?`, now(), instanceID)
 	if err != nil {
 		return err
@@ -474,6 +503,11 @@ func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 	}
 	if err := p.markInstalledSiteReferencesTx(ctx, tx, instanceID, "reset-empty/v1"); err != nil {
 		return err
+	}
+	if isAuto {
+		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "reset", parent); err != nil {
+			return err
+		}
 	}
 	return tx.Commit()
 }

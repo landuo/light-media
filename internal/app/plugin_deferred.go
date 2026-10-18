@@ -105,6 +105,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 			return cleaninvalidseed.ExecuteCapability, raw, nil
 		}
 	}
+	if in.PluginID == "AutoBackup" && in.Version == "2.1.4" {
+		return autoBackupDeferredSpec(run)
+	}
 	return "", nil, nil
 }
 func deferredSameRun(r pluginDeferredRecord, in PluginInstallation, run PluginRun) bool {
@@ -126,7 +129,7 @@ func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJourna
 		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作收据损坏")
 	}
 	switch r.Phase {
-	case "prepared", "started", "confirmed", "uncertain", "terminal_failed":
+	case "prepared", "started", "confirmed", "uncertain", "terminal_failed", "snapshot_cut", "abandoned_unknown":
 	default:
 		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作阶段无效")
 	}
@@ -139,8 +142,17 @@ func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJourna
 // This is a native receipt format, never an SDK-supplied error or permission to
 // retry. Only the source-specific private journal can establish known failure.
 func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
+	if r.Phase == "abandoned_unknown" {
+		return validAutoBackupDeferredAbandon(r)
+	}
+	if r.Phase == "snapshot_cut" {
+		return validAutoBackupDeferredCut(r)
+	}
 	if r.Phase != "terminal_failed" {
 		return r.ErrorCode == ""
+	}
+	if r.Plugin == "AutoBackup" && r.Version == "2.1.4" {
+		return (r.ErrorCode == "AUTO_BACKUP_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == autoBackupBlockedByUnknown && bytes.Equal(r.Result, autoBackupBlockedResult()))
 	}
 	return r.Plugin == "CleanInvalidSeed" && r.Version == "2.1" &&
 		(r.ErrorCode == "CLEAN_SEED_SOURCE_FAILED" || r.ErrorCode == "CLEAN_SEED_HOST_DENIED") && json.Valid(r.Result)
@@ -355,6 +367,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 		phase = "uncertain"
 		result = nil
 	}
+	if d.record.Plugin == "AutoBackup" && d.record.Version == "2.1.4" {
+		known, knownCode, found, proofErr := d.a.pluginStore.autoBackupOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "备份操作尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "自动备份执行失败，已保留确认结果")
+			}
+		}
+	}
 	if d.record.Plugin == "CleanInvalidSeed" && d.record.Version == "2.1" {
 		known, knownCode, found, proofErr := d.a.pluginStore.cleanInvalidSeedDeferredOutcome(finish, d.run, d.record.Method)
 		if proofErr != nil || !found {
@@ -419,17 +444,25 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "RemoveLink" {
+			if r.Plugin == "AutoBackup" {
+				result, code, found, proofErr = p.autoBackupOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "RemoveLink" {
 				result, found, proofErr = p.removeLinkDeferredOutcome(ctx, run, r.Method)
 			} else {
 				result, code, found, proofErr = p.cleanInvalidSeedDeferredOutcome(ctx, run, r.Method)
 			}
 			if proofErr != nil {
+				if r.Plugin == "AutoBackup" && autoBackupErrorCode(proofErr) == "AUTO_BACKUP_EVIDENCE_MISSING" {
+					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code='AUTO_BACKUP_EVIDENCE_MISSING',updated_at=? WHERE id=? AND state IN ('running','reconcile_pending','failed')`, now(), run.ID); err != nil {
+						return err
+					}
+					continue // Preserve private evidence; other plugins and diagnostics can still start.
+				}
 				return proofErr
 			}
 			if found {
@@ -596,6 +629,16 @@ func (a *App) pluginRunHistory(ctx context.Context, instance string) ([]PluginRu
 	config, configErr := a.pluginStore.Config(ctx, instance)
 	for index := range runs {
 		run := &runs[index]
+		if installation.PluginID == "AutoBackup" {
+			full, e := a.pluginStore.Run(ctx, run.ID)
+			if e != nil {
+				return nil, e
+			}
+			run.Recovery, e = a.pluginStore.autoBackupDiagnostic(ctx, installation, full)
+			if e != nil {
+				return nil, e
+			}
+		}
 		if run.State != "failed" || configErr != nil || !installation.Installed || !installation.DesiredEnabled || installation.Generation != run.Generation || installation.Version != run.Version || config.Revision != run.ConfigRevision {
 			continue
 		}

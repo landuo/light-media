@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/autobackup"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/removelink"
@@ -84,6 +85,21 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 			if err != nil {
 				a.log("ERROR", "plugins", "clean_seed_initialize_pending", "无效做种清理存在待核对状态，未重新初始化；其他插件继续启动", "", "")
 				continue
+			}
+			if !initialize {
+				continue
+			}
+		}
+		if installation.PluginID == "AutoBackup" {
+			initialize, e := a.shouldInitializeAutoBackup(ctx, installation, config)
+			if e != nil {
+				switch autoBackupErrorCode(e) {
+				case "AUTO_BACKUP_EVIDENCE_MISSING", "AUTO_BACKUP_JOURNAL_INVALID", "AUTO_BACKUP_UNCERTAIN":
+					a.log("ERROR", "plugins", "backup_initialize_pending", "自动备份存在待核对状态或执行证据缺失，未重新初始化；其他插件继续启动", "", "")
+					continue
+				default:
+					return e
+				}
 			}
 			if !initialize {
 				continue
@@ -197,10 +213,14 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	if err == nil {
 		deferred, err = a.preparePluginDeferred(ctx, installation, run)
 	}
+	workerInput := run.Input
+	if err == nil && installation.PluginID == "AutoBackup" && run.Action == "api" {
+		workerInput, err = autoBackupWorkerInput(run)
+	}
 	result := plugins.RunResult{}
 	hostErrorCode := ""
 	if err == nil {
-		result, err = (plugins.Runner{Timeout: 2 * time.Minute}).Run(ctx, command, manifest, installation.InstanceID, "invoke", run.Input, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+		result, err = (plugins.Runner{Timeout: 2 * time.Minute}).Run(ctx, command, manifest, installation.InstanceID, "invoke", workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 			var value json.RawMessage
 			var hostErr error
 			if deferred != nil {
@@ -368,6 +388,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == cleaninvalidseed.ConfigureCapability || method == cleaninvalidseed.ExecuteCapability || method == cleaninvalidseed.FormCapability {
 		return a.pluginCleanInvalidSeedHost(ctx, installation, run, method, raw)
+	}
+	if method == autobackup.ConfigureCapability || method == autobackup.ExecuteCapability || method == autobackup.APICapability || method == autobackup.FormCapability {
+		return a.pluginAutoBackupHost(ctx, installation, run, method, raw)
 	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()

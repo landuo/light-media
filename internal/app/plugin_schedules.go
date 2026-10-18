@@ -245,6 +245,9 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 			if state == "queued" {
 				run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
 				if !handled && err == nil {
+					run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+				}
+				if !handled && err == nil {
 					input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
 					run, err = p.enqueueRunTx(ctx, tx, instanceID, "service", input)
 				}
@@ -374,6 +377,9 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 	}
 	occurrenceID := id("ps_")
 	run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+	if !handled && err == nil {
+		run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+	}
 	if !handled && err == nil {
 		input, _ := json.Marshal(map[string]string{"occurrence_id": occurrenceID})
 		run, err = p.enqueueRunTx(ctx, tx, instanceID, "service", input)

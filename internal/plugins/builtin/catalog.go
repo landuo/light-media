@@ -4,6 +4,7 @@ package builtin
 
 import (
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/autobackup"
 	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/removelink"
 	serverstatus "light-media/internal/plugins/serverstatus"
@@ -12,6 +13,8 @@ import (
 
 func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 	switch pluginID {
+	case "AutoBackup":
+		return autobackup.Manifest(), autobackup.Handle, true
 	case "CleanInvalidSeed":
 		return cleaninvalidseed.Manifest(), cleaninvalidseed.Handle, true
 	case "RemoveLink":
@@ -42,5 +45,5 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
+	return []plugins.Manifest{autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
 }

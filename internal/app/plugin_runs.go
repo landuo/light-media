@@ -12,20 +12,21 @@ import (
 // PluginRun's public projection is metadata only. Config snapshots, input and
 // worker results may contain secrets and are never marshaled by list APIs.
 type PluginRun struct {
-	Retryable      bool            `json:"retryable,omitempty"`
-	RequestID      string          `json:"request_id,omitempty"`
-	ID             string          `json:"id"`
-	InstanceID     string          `json:"instance_id"`
-	Version        string          `json:"version"`
-	Generation     int64           `json:"generation"`
-	ConfigRevision int64           `json:"config_revision"`
-	Action         string          `json:"action"`
-	State          string          `json:"state"`
-	Input          json.RawMessage `json:"-"`
-	Result         json.RawMessage `json:"-"`
-	ErrorCode      string          `json:"error_code,omitempty"`
-	CreatedAt      string          `json:"created_at"`
-	UpdatedAt      string          `json:"updated_at"`
+	Recovery       *autoBackupRecovery `json:"recovery,omitempty"`
+	Retryable      bool                `json:"retryable,omitempty"`
+	RequestID      string              `json:"request_id,omitempty"`
+	ID             string              `json:"id"`
+	InstanceID     string              `json:"instance_id"`
+	Version        string              `json:"version"`
+	Generation     int64               `json:"generation"`
+	ConfigRevision int64               `json:"config_revision"`
+	Action         string              `json:"action"`
+	State          string              `json:"state"`
+	Input          json.RawMessage     `json:"-"`
+	Result         json.RawMessage     `json:"-"`
+	ErrorCode      string              `json:"error_code,omitempty"`
+	CreatedAt      string              `json:"created_at"`
+	UpdatedAt      string              `json:"updated_at"`
 }
 
 const pluginRunColumns = `id,instance_id,version,generation,config_revision,action,state,input,result,error_code,created_at,updated_at`
@@ -351,6 +352,15 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		state, errorCode := "running", ""
 		if current != 1 {
 			state, errorCode = "canceled", "PLUGIN_SNAPSHOT_STALE"
+		} else if p.isAutoBackupRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
+			errorCode, err = p.claimAutoBackupScheduleTx(ctx, tx, run, time.Now())
+			if err != nil {
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
+			if errorCode != "" {
+				state = "canceled"
+			}
 		} else if run.Action == "service" {
 			errorCode, err = p.claimPluginScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {

@@ -52,6 +52,19 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "AutoBackup" {
+					effective := config.Value
+					var exists int
+					if a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM sqlite_master WHERE name='plugin_auto_backup_state' AND type='table'`).Scan(&exists) == nil && exists == 1 {
+						s, _, e := a.pluginStore.autoBackupRead(ctx, a.Store.DB, installation.InstanceID, installation.Generation)
+						if e == nil && len(s.Config) != 0 && string(s.Config) != "null" {
+							effective = s.Config
+						}
+					}
+					if values, e := autoBackupConfig(effective); e == nil {
+						state = removelink.Truth(values["enabled"])
+					}
+				}
 				if installation.PluginID == "RemoveLink" {
 					cleanup := removelink.NewConfig()
 					if cleanup.Apply(config.Value) == nil {
@@ -151,6 +164,11 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		if json.Unmarshal(stored.Value, &config) != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "插件配置无效")
 		}
+		if installation.PluginID == "AutoBackup" {
+			for key, value := range config {
+				form.Model[key] = value
+			}
+		}
 		for key := range form.Model {
 			if value, exists := config[key]; exists {
 				form.Model[key] = value
@@ -186,8 +204,14 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 }
 
 func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	if parts := strings.Split(path, "/"); len(parts) == 2 && parts[1] == "abandon-unknown" {
+		return a.pluginAutoBackupAbandonHTTP(w, r, parts[0])
+	}
 	if parts := strings.Split(path, "/"); len(parts) == 2 && parts[1] == "retry" && r.Method == "POST" {
 		return a.pluginDeferredRetryHTTP(w, r, parts[0])
+	}
+	if a.autoBackupLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginAutoBackupLifecycleHTTP(w, r, path)
 	}
 	if a.removeLinkLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginRemoveLinkLifecycleHTTP(w, r, path)
@@ -375,6 +399,11 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "AutoBackup":
+		if _, err := autoBackupConfig(raw); err != nil {
+			return nil, err
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "CleanInvalidSeed":
 		if _, err := cleanSeedConfigMap(raw); err != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "清理无效做种配置必须是有效对象")

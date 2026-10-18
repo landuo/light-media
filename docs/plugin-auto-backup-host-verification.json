@@ -1,0 +1,357 @@
+{
+  "status": "LOCAL_AND_FINAL_COMBINED_NAS_VERIFIED_NOT_DEPLOYED",
+  "scope": "Actual merged Go App AutoBackup2.1.4 host, root/deferred recovery, zero-effect retry and startup error classification; existing typed site protocol retained",
+  "source_count": 1979,
+  "source_unchanged": true,
+  "source_snapshot_sha256": "bb3737be7617bc4f45bebb2861bfb808ed40207cea97cd665d47aa0ce124c04f",
+  "local_checks": [
+    {
+      "name": "production-default",
+      "command": [
+        "go",
+        "build",
+        "./internal/...",
+        "./cmd/..."
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:20:55.215621+00:00",
+      "finished_at": "2026-10-18T05:20:57.937537+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production-darwin",
+      "command": [
+        "go",
+        "build",
+        "-tags",
+        "modernconly",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_joint_integration/promote/light-media-darwin",
+        "./cmd/server"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:20:57.938979+00:00",
+      "finished_at": "2026-10-18T05:20:58.774893+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "normal",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^TestPlugin(AutoBackup|CleanInvalidSeed|Deferred|Uninstall|Notice|SiteSwitch|SiteReference|MergeSite|Store)",
+        "-count=1",
+        "-timeout",
+        "8m"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:20:58.776353+00:00",
+      "finished_at": "2026-10-18T05:21:58.129520+00:00",
+      "exit_code": 0,
+      "log_sha256": "6189150a2f0f1a288c6102a1ff2287595f43aaca9ed206ca7224147ea1c049f1"
+    },
+    {
+      "name": "race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-tags",
+        "modernconly",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^(?:TestPluginAutoBackup.*|TestPluginMergeSiteSwitchActuallyBindsSiteStatistic|TestPluginSiteSwitchLegacyTransitionActualSDKColdReopenAndIdempotentReceipt|TestPluginSiteSwitchLegacyTransitionExplicitSelectionsAndStaleSource|TestPluginSiteSwitchLegacyTransitionRollbackCoversWatcherRunsProofAndQueue|TestPluginSiteSwitchProtocolInstallResetReinstallAndTamperedScope|TestPluginSiteSwitchSourceCoreStringCannotBeGuessedOrPartiallyApplied|TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates|TestPluginStoreMigrationReceiptFailureRollsBackWholeImport|TestPluginStoreRejectsCiphertextMovedAcrossInstanceKindAndKey|TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues|TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData|TestPluginStoreUninstallPreservesAndResetDeletesOnlyTargetValues|TestPluginUninstallCanceledRefreshDrainKeepsTargetAndRestoresConsumer|TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned|TestPluginUninstallHostAtomicFailureLeavesNoPartialRemovalOrReceipt|TestPluginUninstallHostOriginalOrderRetainsDataAndStopsRealLifecycle|TestPluginUninstallHostRejectsPayloadForgedStaleAndReadOnlyRequests|TestPluginUninstallHostSelfReceiptSurvivesReplyLossAndReinstallation|TestPluginUninstallReadOnlyOptionsUseInstalledOrderAndDoNotExposeConfiguration|TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot|TestPluginUninstallRealSDKFailureBeforeTerminalCompletionCannotUninstall|TestPluginUninstallRealSDKOriginalFormSelfRemovalAndSharedExecutableSurvives|TestPluginUninstallReplyLossFixture|TestPluginUninstallRestartRestoresOnlyItsUncommittedSameSnapshotDrain)$",
+        "-count=1",
+        "-timeout",
+        "12m"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:21:58.131683+00:00",
+      "finished_at": "2026-10-18T05:30:07.762503+00:00",
+      "exit_code": 0,
+      "log_sha256": "024ae2be19e61af2a4cefb66142561f34b0ad201578f024652cf52aff979eb4e"
+    },
+    {
+      "name": "catalog-pure",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-json",
+        "./internal/plugins/builtin",
+        "./internal/plugins/autobackup",
+        "-count=1",
+        "-timeout",
+        "5m"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:30:07.764518+00:00",
+      "finished_at": "2026-10-18T05:30:10.911889+00:00",
+      "exit_code": 0,
+      "log_sha256": "e00077bdb09db79ce516ec3402b4654f5f2f64487168fc23b769194a178563e9"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "go",
+        "vet",
+        "-tags",
+        "modernconly",
+        "./internal/app",
+        "./internal/plugins/builtin",
+        "./internal/plugins/autobackup"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:30:10.913445+00:00",
+      "finished_at": "2026-10-18T05:30:11.719307+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "production",
+      "command": [
+        "go",
+        "build",
+        "./internal/...",
+        "./cmd/..."
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:30:11.720709+00:00",
+      "finished_at": "2026-10-18T05:30:13.660515+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "linux-production",
+      "command": [
+        "go",
+        "build",
+        "-tags",
+        "modernconly",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_joint_integration/promote/light-media-linux-amd64",
+        "./cmd/server"
+      ],
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "started_at": "2026-10-18T05:30:13.661982+00:00",
+      "finished_at": "2026-10-18T05:30:16.261724+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "linux-test",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_joint_integration/promote/app-linux-amd64.test",
+        "./internal/app"
+      ],
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "started_at": "2026-10-18T05:30:16.263066+00:00",
+      "finished_at": "2026-10-18T05:30:20.059703+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "normal_top_count": 129,
+  "race_top_count": 53,
+  "race_scope": "All AutoBackup29 affected tests plus unfinished prior combined126 tests; not a new all129 race claim",
+  "linux_test_binary_sha256": "7c7c7397bb064dc9e05f18a3a22e6feb8b02fd2fc372c298b04fa943b934f259",
+  "actual_production_smoke": {
+    "scope": "actual local production binary, actual private SDK worker, owned SQLite/files only; no deployment/user migration",
+    "binary_sha256": "ca0c175964cc015e4b23a3e723ba0f31b39807fd66be820ade777eb000bafed7",
+    "checks": {
+      "actual_cold_start": true,
+      "actual_static_embed": true,
+      "actual_install_and_sdk_init": true,
+      "actual_once_schedule_sdk_and_recovery_archive": true,
+      "first_clean_shutdown": 0,
+      "actual_cold_reopen": true,
+      "no_once_replay_after_cold_reopen": true,
+      "second_clean_shutdown": 0
+    },
+    "status": "PASS",
+    "owned_data_removed": true
+  },
+  "browser_UI": {
+    "recorded_at": "2026-10-18T05:08:48.228018+00:00",
+    "scope": "actual final merged App fixture and freshly built embedded frontend; synthetic owned data only",
+    "checks": [
+      "login through UI",
+      "installed original-style plugin operation menu",
+      "actual ZIP lost-reply recovery prompt",
+      "explicit confirmation dialog",
+      "cancel original execution and preserve unknown evidence",
+      "no abandon button after confirmation"
+    ],
+    "run_id": "pr_VOEyr8g5SwhrDJjGPJcQWRVH",
+    "screenshot_sha256": "0517bc560b4be6879d9ad94c7b555064ed65256687332771025c19f597ca35d0",
+    "production_modified": false
+  },
+  "prior_combined_race_timeout": {
+    "status": "INCOMPLETE_RACE_TIMEOUT_AND_SUPERSEDED_SOURCE",
+    "normal_top_count": 126,
+    "normal_exit_code": 0,
+    "race_exit_code": 1,
+    "race_terminal": "actual go test timeout after721.034sec; not all selected tests completed",
+    "race_passed_top_count": 102,
+    "race_unfinished_top_names": [
+      "TestPluginMergeSiteSwitchActuallyBindsSiteStatistic",
+      "TestPluginSiteSwitchLegacyTransitionActualSDKColdReopenAndIdempotentReceipt",
+      "TestPluginSiteSwitchLegacyTransitionExplicitSelectionsAndStaleSource",
+      "TestPluginSiteSwitchLegacyTransitionRollbackCoversWatcherRunsProofAndQueue",
+      "TestPluginSiteSwitchProtocolInstallResetReinstallAndTamperedScope",
+      "TestPluginSiteSwitchSourceCoreStringCannotBeGuessedOrPartiallyApplied",
+      "TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates",
+      "TestPluginStoreMigrationReceiptFailureRollsBackWholeImport",
+      "TestPluginStoreRejectsCiphertextMovedAcrossInstanceKindAndKey",
+      "TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues",
+      "TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData",
+      "TestPluginStoreUninstallPreservesAndResetDeletesOnlyTargetValues",
+      "TestPluginUninstallCanceledRefreshDrainKeepsTargetAndRestoresConsumer",
+      "TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned",
+      "TestPluginUninstallHostAtomicFailureLeavesNoPartialRemovalOrReceipt",
+      "TestPluginUninstallHostOriginalOrderRetainsDataAndStopsRealLifecycle",
+      "TestPluginUninstallHostRejectsPayloadForgedStaleAndReadOnlyRequests",
+      "TestPluginUninstallHostSelfReceiptSurvivesReplyLossAndReinstallation",
+      "TestPluginUninstallReadOnlyOptionsUseInstalledOrderAndDoNotExposeConfiguration",
+      "TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot",
+      "TestPluginUninstallRealSDKFailureBeforeTerminalCompletionCannotUninstall",
+      "TestPluginUninstallRealSDKOriginalFormSelfRemovalAndSharedExecutableSurvives",
+      "TestPluginUninstallReplyLossFixture",
+      "TestPluginUninstallRestartRestoresOnlyItsUncommittedSameSnapshotDrain"
+    ],
+    "reported_data_race_count": 0,
+    "known_followup_changes": [
+      "zero-effect blocked retry terminal correction",
+      "bounded startup evidence diagnostics vs real SQL failure"
+    ],
+    "source_unchanged": true
+  },
+  "owner_repair": {
+    "report_sha256": "161f5457762f475252e6be67d876fcbbe405950484cf62884474418b4f0c89f9",
+    "source_count": 2010,
+    "normal_race_NAS_count": 93,
+    "linux_test_binary_sha256": "aa5313ce04c9d1a7731fe52fc53b651fca929accd5db8487fa464e3fbb504253",
+    "root_independent_cleanup": {
+      "owned_container_absent": true,
+      "owned_remote_stage_absent": true,
+      "agent_verified_source_file_count": 2010,
+      "agent_actual_App_normal_race_NAS": 93,
+      "agent_report_sha256": "161f5457762f475252e6be67d876fcbbe405950484cf62884474418b4f0c89f9",
+      "note": "Root independently rechecked actual resource absence; no new source/production writes."
+    }
+  },
+  "startup_before_after": {
+    "scope": "actual App initialization; owned physical source, synthetic SQLite and actual SystemProcess SDK",
+    "before": {
+      "normal_exit_code": 1,
+      "failure": "AutoBackup SQL root-table query failure silently swallowed",
+      "other_plugin_continues": true
+    },
+    "after": {
+      "production_default_build_exit_code": 0,
+      "normal_exit_code": 0,
+      "race_exit_code": 0,
+      "top_tests": 2
+    },
+    "checks": [
+      "actual DROP TABLE root query preserves SQL failure",
+      "missing root evidence does not enqueue backup and other real plugin executes"
+    ],
+    "files": {
+      "startup-before.jsonl": "2f8c8e16e087d38ef78d8bcfdd3c085bcbdf54fc81f0dbe2e83b13a80ebc30f6",
+      "startup-after.jsonl": "b407ce6585cf8a28ed7996a5990b4fe76735304080968f71f10bf2f2d37a349a",
+      "startup-race.jsonl": "a3f0e3e771791e8db07fb6fb47060f51410a92779dfe220112034a9d8ed35523"
+    },
+    "formal_merged": false,
+    "production_modified": false
+  },
+  "original_user_config_KV_files_migrated": 0,
+  "production_deployed": false,
+  "limits": [
+    "Actual App supports SQLite only; pure PostgreSQL adapter evidence is separate",
+    "External message channel delivery still not implemented; durable notice queue does not mean sent",
+    "Original seven AutoBackup files not imported",
+    "No external freshness guarantee for whole database plus all authentication roots rollback",
+    "Owner journal limit16MiB; no automatic evidence pruning",
+    "Browser recovery screenshot used identical frontend source in earlier combined production fixture; backend final source has additional blocked/startup repairs tested separately"
+  ],
+  "NAS": {
+    "id": "10c17bc8-29aa-496c-a225-14e782d2845d",
+    "date": "2026-10-18",
+    "platform": "linux/amd64",
+    "CGO_ENABLED": "0",
+    "tags": "modernconly",
+    "test_regex": "^TestPlugin(AutoBackup|CleanInvalidSeed|Deferred|Uninstall|Notice|SiteSwitch|SiteReference|MergeSite|Store)",
+    "sha256": "7c7c7397bb064dc9e05f18a3a22e6feb8b02fd2fc372c298b04fa943b934f259",
+    "remote_sha256": "7c7c7397bb064dc9e05f18a3a22e6feb8b02fd2fc372c298b04fa943b934f259",
+    "results": {
+      "exit_code": 0,
+      "top_level_passes": 129,
+      "top_level_skips": 0,
+      "top_level_failures": 0
+    },
+    "container_oom_killed": false,
+    "services_unchanged": true,
+    "environment": {
+      "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+      "user": "1000:1001",
+      "network": "none",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "no_new_privileges": true,
+      "memory_bytes": 268435456,
+      "memory_swap_bytes": 268435456,
+      "tmpfs_bytes": 134217728,
+      "pids_limit": 256,
+      "GOMEMLIMIT": "64MiB",
+      "inspect_matches": true
+    },
+    "source_snapshot_sha256": "bb3737be7617bc4f45bebb2861bfb808ed40207cea97cd665d47aa0ce124c04f",
+    "scope": "Final combined actual App AutoBackup authenticated root and terminal zero-effect blocked retries/startup SQL classification plus typed numeric/custom site references and committed-save reply recovery; selected Clean/Deferred/Uninstall/Notice/Store regressions. Owned temp SQLite, files, loopback HTTP; no real configuration, production DB or backup bodies, real WebDAV/PG endpoint. No deployment or user migration.",
+    "cleanup": {
+      "container_removed": true,
+      "owned_remote_stage_removed": true,
+      "services_unchanged": true
+    }
+  },
+  "root_independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_remote_stage_absent": true,
+    "production_services_identity_status_started_restart_unchanged": true,
+    "original1979_inputs_still_same": true
+  },
+  "frontend_validation": {
+    "npm_test_top_count": 142,
+    "npm_test_exit_code": 0,
+    "production_frontend_build_exit_code": 0,
+    "note": "Earlier formal frontend build/test from same unchanged web source; actual browser recovery verified separately. No frontend edits during final Go checks.",
+    "unchanged_frontend_input_count": 125,
+    "test_log_sha256": "c8f9d18efd8673b1fa3677de162ae16e520c014a566a15b68a79acbe193d6487",
+    "build_log_sha256": "e75168a298c657d9a5ab2d4bbcbdfb89aafb5f25c0f65c5a7d50fdb7f2268fe8"
+  }
+}
