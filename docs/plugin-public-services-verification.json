@@ -1,0 +1,282 @@
+{
+  "date": "2026-10-18T05:59:20.070644+00:00",
+  "frozen_file_count": 2245,
+  "test_regex": "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules)",
+  "expected_test_count": 16,
+  "tests": [
+    "TestPluginSchedulesCoalesceOutageAndRespectMisfireAndBusyLimits",
+    "TestPluginSchedulesCoalescingCalendarGapsFoldsAndCenturies",
+    "TestPluginSchedulesDateDoesNotReplayOnSameConfigRestart",
+    "TestPluginSchedulesGroupReplacementAndLifecycleStopNewTriggers",
+    "TestPluginSchedulesInternalFlagPatchPreservesQueuedWorkAndAnchor",
+    "TestPluginSchedulesManualDoesNotMovePeriodAndCannotOverlap",
+    "TestPluginSchedulesPersistDueAndBindPrivateInvocation",
+    "TestPluginSchedulesQueueAndFinishFailuresAreAtomic",
+    "TestPluginSchedulesReopenRetainsNextDueAndDoesNotReplayUncertainRun",
+    "TestPluginSchedulesWaitingRunExpiresAndConfigEditCancelsOldSnapshot",
+    "TestPluginServiceTimeDifferenceOriginalUnits",
+    "TestPublicPluginServiceExecutesActualSDKAndPreservesAutomaticTime",
+    "TestPublicPluginServicesAmbiguousOriginalIDCannotSelectAnotherInstance",
+    "TestPublicPluginServicesAuthAndCrossSiteGETGuard",
+    "TestPublicPluginServicesConsumedOnceAndUncertainRemainVisible",
+    "TestPublicPluginServicesExcludeStaleDisabledAndTamper"
+  ],
+  "checks": [
+    {
+      "name": "production-default",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_services_port/frozen/light-media-darwin",
+        "./cmd/server"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:59:20.071123+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "normal",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules)",
+        "-count=1",
+        "-timeout",
+        "5m"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:59:23.815421+00:00",
+      "exit_code": 0,
+      "log_sha256": "a84558adb57ce10c49bce1880b6103c8632ceb8eaaee825b85affb31e9e165a9"
+    },
+    {
+      "name": "race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-tags",
+        "modernconly",
+        "-json",
+        "./internal/app",
+        "-run",
+        "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules)",
+        "-count=1",
+        "-timeout",
+        "7m"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:59:30.395243+00:00",
+      "exit_code": 0,
+      "log_sha256": "fda6ce00acf923cfeda593264dbc4fdef23a3652d5be264eb3b2967aa4391a86"
+    },
+    {
+      "name": "vet",
+      "command": [
+        "go",
+        "vet",
+        "-tags",
+        "modernconly",
+        "./internal/app"
+      ],
+      "environment": {},
+      "started_at": "2026-10-18T05:59:55.189779+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "linux-production",
+      "command": [
+        "go",
+        "build",
+        "-tags",
+        "modernconly",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_services_port/frozen/light-media-linux-amd64",
+        "./cmd/server"
+      ],
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "started_at": "2026-10-18T05:59:56.182066+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "linux-test",
+      "command": [
+        "go",
+        "test",
+        "-tags",
+        "modernconly",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_services_port/frozen/app-linux-amd64.test",
+        "./internal/app"
+      ],
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "started_at": "2026-10-18T05:59:59.739134+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Public plugin services API and original shortcut dialog; actual RemoteIdentifiers SDK plus local loopback HTTP business, persisted timer/lifecycle/auth/private projection checks. No production deployment/user data migration.",
+  "source_unchanged": true,
+  "changed_files": [],
+  "binary_sha256": "8b1d258faab1b598e92e7f46990e1b261d6eacf56bc8e82075cb458609912bb7",
+  "status": "LOCAL_AND_ISOLATED_NAS_VERIFIED_NOT_DEPLOYED",
+  "source_manifest_sha256": "8db25cee66a6c53e31282a2241423e5f6f4c017df450ce6c24310bde30fb86fa",
+  "source_file_hashes": {
+    "internal/app/http.go": "a58e14dc324d13c97dad18bcf419977ecc187bf4ceae244e5b28a10fbb01f53e",
+    "internal/app/plugin_services.go": "9c95fa7e83ed52c2c8c3594a1d0c16ffe4d604d2ba379171dbec225548b5a091",
+    "internal/app/plugin_services_test.go": "14f7fca9b18c4896d9e7f080916b95c28991ac053a8e648a2ff741966a54cc12",
+    "web/src/App.vue": "57e9f2971d91cb0e2e043062b4c81539bb58c172be7d2a61b5feca1411356ba6",
+    "web/src/components/PluginServices.vue": "8b7480b46de31c3e30248459d491df81b8e97c1d05648dc61bd9700b1e161395",
+    "web/src/components/ShortcutTools.vue": "6dc90e3c42fb48c940f65e10b1f2e8ff1523a38d75596a39e762240b412cde4f"
+  },
+  "test_results": {
+    "normal": {
+      "top_pass": 16,
+      "fail": 0,
+      "skip": 0
+    },
+    "race": {
+      "top_pass": 16,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "frontend": {
+    "tests": 142,
+    "fail": 0,
+    "skip": 0,
+    "test_log_sha256": "71ab398174f164490be02034e34ad107c171128105a79902483df9594f09214c",
+    "build_exit_code": 0,
+    "build_log_sha256": "acf7c2db8ad794b1573a342fd823337c7010307a7317bc61383980e71d6a71b7"
+  },
+  "browser": {
+    "production_binary_sha256": "1c9191f8d232e7465c55e92e21510d3310c13a6def960651a0e91ba878e3c22f",
+    "actual_clicks": [
+      "sign in disposable administrator",
+      "捷径 → 服务",
+      "执行 → 正在运行, button disabled",
+      "automatic five-second refresh → 等待, button enabled",
+      "close and reopen persisted service"
+    ],
+    "fixture_scope": "actual compiled App and SDK, one owned loopback source with 14-second response; all data synthetic; no real sites/downloaders",
+    "api_after": {
+      "external_requests": 1,
+      "service_runs": [
+        {
+          "state": "succeeded",
+          "action": "service"
+        }
+      ],
+      "services": [
+        {
+          "id": "RemoteIdentifiers_RemoteIdentifiers",
+          "instance_id": "RemoteIdentifiers",
+          "service_id": "RemoteIdentifiers",
+          "name": "获取远端识别词",
+          "provider": "共享识别词",
+          "status": "等待",
+          "next_run": "9小时57分钟",
+          "can_run": true
+        }
+      ]
+    },
+    "cleanup": {
+      "server_exit_code": 0,
+      "data_removed": true,
+      "words_fixture_stopped": true
+    }
+  },
+  "nas": {
+    "id": "ca684671-0dc6-458c-a237-567dfa8878aa",
+    "date": "2026-10-18",
+    "platform": "linux/amd64",
+    "CGO_ENABLED": "0",
+    "tags": "modernconly",
+    "test_regex": "^(TestPublicPluginService|TestPluginServiceTimeDifference|TestPluginSchedules)",
+    "sha256": "8b1d258faab1b598e92e7f46990e1b261d6eacf56bc8e82075cb458609912bb7",
+    "remote_sha256": "8b1d258faab1b598e92e7f46990e1b261d6eacf56bc8e82075cb458609912bb7",
+    "results": {
+      "exit_code": 0,
+      "top_level_passes": 16,
+      "top_level_skips": 0,
+      "top_level_failures": 0
+    },
+    "container_oom_killed": false,
+    "services_unchanged": true,
+    "environment": {
+      "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+      "user": "1000:1001",
+      "network": "none",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "no_new_privileges": true,
+      "memory_bytes": 268435456,
+      "memory_swap_bytes": 268435456,
+      "tmpfs_bytes": 134217728,
+      "pids_limit": 256,
+      "GOMEMLIMIT": "64MiB",
+      "inspect_matches": true
+    },
+    "source_snapshot_sha256": "8db25cee66a6c53e31282a2241423e5f6f4c017df450ce6c24310bde30fb86fa",
+    "scope": "Public plugin services HTTP API, actual original RemoteIdentifiers SDK and loopback HTTP business, schedule/auth/lifecycle/uncertainty/time projection checks. Owned temporary data only. No production changes or original migration.",
+    "cleanup": {
+      "container_removed": true,
+      "owned_remote_stage_removed": true,
+      "services_unchanged": true
+    }
+  },
+  "nas_independent_cleanup": {
+    "container_absent": true,
+    "remote_owned_stage_absent": true,
+    "production_services_unchanged": true
+  },
+  "previous_failures": [
+    {
+      "scope": "round1/2 test fixtures",
+      "reason": "source config default retained trailing blank; partial storage timer manifest omitted required stop method",
+      "preserved": "work/_plugin_services_port/tests-round1-fixture-failed.jsonl and tests-round2.jsonl",
+      "product_change": "no business behavior weakened; source config flitter and valid complete fixture manifest corrected"
+    },
+    {
+      "scope": "production UI fixture round1",
+      "reason": "test driver used enabled instead of original enable field; strict configuration API correctly rejected400",
+      "preserved": "work/_plugin_services_port/ui-smoke-round1-fixture.py and ui-server-round1.log"
+    },
+    {
+      "scope": "NAS harness generation first attempt",
+      "reason": "wrong working directory; generation failed locally before remote allocation",
+      "product_change": "none"
+    }
+  ],
+  "limits": [
+    "Only actual registered plugin services are exposed; no invented system service rows.",
+    "PL-33 commands, workflows and full original progress remain incomplete.",
+    "No original plugin configs/KV/files migrated; no production service deployment."
+  ],
+  "original_sources": {
+    "MoviePilot-Frontend/src/views/system/ServiceView.vue": "bce4302f652ff7979b7602d95284704167276fc1ebab4079ea050bef88a75187",
+    "MoviePilot-Frontend/src/components/dialog/ShortcutToolDialog.vue": "2af3ddf3621dd4b7ce37354bae33237a3c4c8138378d0b9ec8ad2b77431643de",
+    "MoviePilot-Frontend/src/layouts/components/ShortcutBar.vue": "41dc5e29542f460bce0cf80b312799dd6f0ca7b4bd9fe846b5f012228e686f9b",
+    "MoviePilot/app/scheduler.py": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d"
+  }
+}

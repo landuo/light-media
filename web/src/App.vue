@@ -13,6 +13,7 @@ import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
 import AppIcon from './components/AppIcon.vue';
+const ShortcutTools = defineAsyncComponent(() => import('./components/ShortcutTools.vue'));
 const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
 function normalizeRoute(value: string) {
   if (['library', 'assets'].includes(value.split('?')[0]!.split('/')[0]!)) return 'files';
@@ -246,6 +247,7 @@ onUnmounted(() => {
           <kbd>⌘K</kbd>
         </form>
         <div class="topbar-actions">
+          <ShortcutTools />
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button
             class="bell-button"
