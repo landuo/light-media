@@ -1,0 +1,277 @@
+{
+  "normal.jsonl": {
+    "top": {
+      "pass": 30
+    },
+    "inclusive": {
+      "pass": 135
+    },
+    "package": [
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Action": "pass",
+        "Elapsed": 1.029
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Action": "pass",
+        "Elapsed": 43.208
+      }
+    ],
+    "sha256": "6728c37223202ecca933b1d0de21fbeccacfa756a3410335df75be3d26fed10b"
+  },
+  "race.jsonl": {
+    "top": {
+      "pass": 7
+    },
+    "inclusive": {
+      "pass": 15
+    },
+    "package": [
+      {
+        "Package": "light-media/internal/app",
+        "Action": "pass",
+        "Elapsed": 25.939
+      }
+    ],
+    "sha256": "e4c85a44ccc8fff7a010dfe73d2011b001e512954ed6cc45c2f2d98420aa4baf"
+  },
+  "core-race.jsonl": {
+    "top": {
+      "pass": 8
+    },
+    "inclusive": {
+      "pass": 276
+    },
+    "package": [
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Action": "pass",
+        "Elapsed": 2.421
+      }
+    ],
+    "sha256": "4e2f71f95b48662b459834637a75c7baa2b1b1347ccdd6569241035a97741880"
+  },
+  "builds": [
+    {
+      "name": "product",
+      "exit": 0
+    },
+    {
+      "name": "vet",
+      "exit": 0
+    },
+    {
+      "name": "linux",
+      "exit": 0
+    }
+  ],
+  "inputs": 3178,
+  "drift": [],
+  "all_handles_terminal": true,
+  "scope": "owned local actual SDK and SQLite only",
+  "focused": [
+    {
+      "path": "internal/app/plugin_brush_flow_admission.go",
+      "before": "155bdc1f35c96b302abef1cd5d78d1df48378ec2ca7148a539ed03e294dafee3",
+      "after": "d4f12664d613ff73ffb42edb787675b4a732b47e805a0406566f5a81e279fa9e"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_call.go",
+      "before": null,
+      "after": "a566c3e3e0acee55947ed2d1edc4515d77ddd6fb8adb4a9a895518fa1c6520f1"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_concurrency.go",
+      "before": null,
+      "after": "c527883283112df45cfd7f3e115608deb6ea6e6a3129e1f0ca71dffeabbf1c17"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_dispatch.go",
+      "before": "26e39aa0a1f06cfd4b9ed5adfbd2afe0deb3b0938e29d4a43ccb336e015edcfd",
+      "after": "8c782dbac0be6002ee68c02f6549c701d4ae78e262de66e0a35752ad04efd5b2"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_download.go",
+      "before": "cf2d361f57220bfc7416556b4506b1f7a70ab6e73caade544b682ce9dc55a9b6",
+      "after": "5fd842168126460e2af0560d3ac6a10905a51bf1806039e63849e243481bfa80"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_event.go",
+      "before": "3aa156206fecedacca71ce48b0ead02141c687bbdce021ddcaa48097a9cedef9",
+      "after": "d20f0c32b030d9f83d2ab61c4dabccc0432d43244ea6c2ce76af1d5bdc06d629"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_execution.go",
+      "before": "2658616b12b65f28b52dbc636cdbfa2f1735dcb93638266995fccb5dbd07d85a",
+      "after": "de310b78cf12bec909d5156a1a26a7539c7fa28a959881516f40380cafadb2cf"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_host.go",
+      "before": "05502ba299657c84da51a38fc139cdbd0a7b964e2c7cd34c371245484e49c35a",
+      "after": "49c6497159f6d7da51f64e41e1b4e169f0d52d6e1a916161933db3fe6740f9c3"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_journal.go",
+      "before": "80e3534129489e5b726540faf248fa4fcbaebe32a31b28232126e36e9f461d8d",
+      "after": "1a5e31292a25a5a5d851613188df9338b298593470d317fc31f2c2ff7fb65a3e"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_native.go",
+      "before": "b371ab9ce01933fbc07e7bd74036c6b91095f5298a19376caae70c082da58acc",
+      "after": "1a43a69a8ea77090f9548ac2933e8d9aa9f2525e4f67a0c265df0a0346c4e875"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_notice.go",
+      "before": "7b0090e82940863cb1d29c2f34b38337444073c148a263affd888e9da2992c98",
+      "after": "6135159ff2a53b40b1181e1ee509de0320a7f2194c7462c0da3a0a7881c7fb00"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_observation.go",
+      "before": "ec001e4e0e0809f7e271f6b832afb41df2d2a812989b355eafc3eef3b83d8259",
+      "after": "e0cf3fbd3906486d4daca7ba0f85cf1dc89245907742aec27f114278ea9574aa"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_parallel_test.go",
+      "before": null,
+      "after": "3d1b485875874abe5b13db7627841fa60ad6324076d88f76e2859bb93e9a4ee7"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pools.go",
+      "before": null,
+      "after": "fa0ddc718e70a6767e5566118909a4ed6e2d15f3123913536a373fda71e020b2"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pools_test.go",
+      "before": null,
+      "after": "04783a3ef850db5ce35c1de3ddc46b3ed905aa5e75838eddb1db50ad1d624bf2"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pre_sdk.go",
+      "before": null,
+      "after": "8ca0cd3e720acd0c7a6314dcf1d1491fc89bb297dfbdde5e3f0c09a6347c6825"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_queue.go",
+      "before": "deda449c67c7b5748f48fe1a2de5adb7014985dd462b06a10d14807c15a417ce",
+      "after": "74b1bb696b1c984973607efe7354a672e89cc0824468b1adcf504650a26e28d1"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_recovery.go",
+      "before": "c7dcb3d5c66a412e80c8aed2a6a2ff8bd467ee4fbce6a9421a339a7f88323b04",
+      "after": "d866a64ed92847c0ed1aaa62a012ce9ce8a4d1ec44a2f5922e3d4982a49117a8"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_root.go",
+      "before": "fb03cd2907967d60e73964535481ff73ec76f981a8231be43313392e0eb29d62",
+      "after": "8cb77371459e94335307147a9a862b3bdfbb5dbf29be48a5282543376602161f"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_schedules.go",
+      "before": "452fb327adc9648a29c5c5688c787c8728360365f9e84bb64d254cf777df08ed",
+      "after": "60b2e1e02703d145db30e22f64b07351a69dddf8e92f7a43814be3a06f2fad4b"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_sites.go",
+      "before": "94649bd39b78125970e878ea84b9c4f7e37b64ed1343931f822d310432179545",
+      "after": "b2f0604691d20b47daab1db9464f648d24bf92bd4ad7ef8af9dbd6688c0b8d09"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_test.go",
+      "before": "72f795ecfb27c188a7a4e3fef49d5f6294d00eba349cf0d00eb5cded2680cb9b",
+      "after": "25108e0f3efda5074b606ebd1c51d1064a2fe4bdc4f7fa455034ba62a9d7eb80"
+    },
+    {
+      "path": "internal/app/plugin_deferred.go",
+      "before": "54df7f230cb3e9af9b435cc9c4f69c08f1ecb6d601aaf23fc6028b30555259a9",
+      "after": "c8d3d851d8a1bf91e432be2718d0330947fb45676291a76df8d0ac7f38898b80"
+    },
+    {
+      "path": "internal/app/plugin_runs.go",
+      "before": "b0b462e3e3cd8c9219b2a5d84b172a3015aa7c32435683c329eb2143c5fd729d",
+      "after": "35c22e00458a2a45c80eacbf1f1ecf01799f0c0a5e97036289f8c118599c3438"
+    },
+    {
+      "path": "internal/app/plugin_runtime.go",
+      "before": "2b35fd4c8f711a517e13857f9dd5c10010c1ba7c145aded3c042fb7a90590df3",
+      "after": "994d15e5199c53dcc840e7e17e13ab3afb0ab1e04d8b0878d6467c0e8b6f57ab"
+    },
+    {
+      "path": "internal/app/plugin_store.go",
+      "before": "9531f42cffaa7be3effca8d0ecc2d7f9e10a19b17d212649e764fbdaeb41c392",
+      "after": "2393742298fa56d118ecb8c87f6c4dcfac94bab919e76f00178dd50187faba23"
+    },
+    {
+      "path": "internal/plugins/brushflow/core.go",
+      "before": "1fd2314590b0e96160f2c2a1e1a24cc894bd6f4d5bb8e295f6bfdc640408abf8",
+      "after": "de7a2c5f731e0fd8fd58f472e5ea0816036f9ef232295ed08f1a26751d4e155b"
+    },
+    {
+      "path": "internal/plugins/brushflow/parallel_test.go",
+      "before": null,
+      "after": "f8456eec856237fbac0f5ffd99c1ea3a64e1f8e06cd3032f039c50f46f7127de"
+    }
+  ],
+  "source_inputs": 3178,
+  "archives": [
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-normal.jsonl.gz",
+      "sha256": "5622dfc93fc261dc705b624d947f90274091bf4b07f3f4cf829120ed4db0be54",
+      "source_sha256": "6728c37223202ecca933b1d0de21fbeccacfa756a3410335df75be3d26fed10b"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-race.jsonl.gz",
+      "sha256": "7a880f487fbfed49d018c8139e590cef9285f3d495e233058fe6127f9e1d3f52",
+      "source_sha256": "e4c85a44ccc8fff7a010dfe73d2011b001e512954ed6cc45c2f2d98420aa4baf"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-core-race.jsonl.gz",
+      "sha256": "5b14101fc164bc60bd774a1f77e1151e5e2a5c5162e8d6563ed568b653bfd8e0",
+      "source_sha256": "4e2f71f95b48662b459834637a75c7baa2b1b1347ccdd6569241035a97741880"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-verification.json.gz",
+      "sha256": "7548e4e6c5fc6d8de4b8bf1508be6028fbbd30be2b5e284c92057b4cbe02465d",
+      "source_sha256": "af9001e88a9ba7eb42b5692a2417eb69565b959d96ea089d7b1115f926aa349e"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-composition.json.gz",
+      "sha256": "8788c91fdadac937174255c5d4a8e106c2ed160d46af10a0e75ee87a832709bf",
+      "source_sha256": "0df16ba75107a495be3d76c90b95b9bdb4d2e076b552682952cb84fe88ab7c45"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-inputs.json.gz",
+      "sha256": "f35144583ac4020fc4abc143880a80894b7455d426dc709401b8996a3acc9056",
+      "source_sha256": "dc465476f0fdafbf97b0cd5fad50e0b16522551926a404915f38a9988aae8a4e"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/root-focused.json.gz",
+      "sha256": "83bf5ca203e3ff9562c62b7f5a0a8482594564f3acb08ee1077c5668ef21df22",
+      "source_sha256": "18e9c08bac06a302fe309ec4db549c6678e14b77acb6605c1e732cff49623ae9"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/agent-VERIFICATION.json.gz",
+      "sha256": "9724271ef40e71b345c9cd012b9ad017441fb4ebb37a4f20c759a03ab2d81b2a",
+      "source_sha256": "d12a55a52ab78d36511e507ca38eadf2105fb5c72002c22d5ba3b1327cbd185b"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/agent-MANIFEST.json.gz",
+      "sha256": "34a62b15b203e1f2cff8a1d98aab66cda8a12c9c9e86a1554122d2eeb796cfda",
+      "source_sha256": "81218cbd4d339324b7ff1dc05b19c74aed08be141e3b22a6d2dbaec3578d8ea9"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-pools/verification/agent-focused.json.gz",
+      "sha256": "c1291bff5c6d7efe885623563968e6ddd0aeb4fbd2f1da3cabe6b4cd20a735e9",
+      "source_sha256": "48f75d4c7fbe8a702804ce855c3134528d8878d062977bc635f326ee2d56bc3c"
+    }
+  ],
+  "agent_manifest_sha256": "81218cbd4d339324b7ff1dc05b19c74aed08be141e3b22a6d2dbaec3578d8ea9",
+  "remaining": [
+    "global BIG_MEMORY_MODE host setting",
+    "independent sealed current-generation head",
+    "bounded history/index access"
+  ],
+  "registered_handlers": 20,
+  "actual_original_migrations": 0,
+  "deployed": false
+}

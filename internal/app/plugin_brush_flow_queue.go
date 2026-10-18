@@ -20,7 +20,7 @@ type brushFlowQueued struct {
 }
 
 func (o *pluginBrushFlowOwner) Queue(ctx context.Context, task, operation string) error {
-	c := o.active
+	c := o.call(ctx)
 	if c == nil {
 		return brushFlowEvidenceError()
 	}

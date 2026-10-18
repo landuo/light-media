@@ -25,20 +25,25 @@ func brushFlowBlockedResult() json.RawMessage {
 type pluginBrushFlowRuntime struct {
 	mu          sync.Mutex
 	owners      map[string]*pluginBrushFlowOwner
+	pools       *brushFlowSourcePools
 	now         func() time.Time
 	sleep       func(context.Context, time.Duration) error
 	loopbackAPI string
 	proxy       func(context.Context, string) (string, error)
 	afterEffect func(string) error
 	beforeRead  func(context.Context)
+	beforeHost  func(context.Context, PluginRun)
+	beforeLease func(context.Context, PluginRun)
 }
 type pluginBrushFlowOwner struct {
 	a                 *App
 	instance          string
 	generation        int64
-	gate              chan struct{}
+	gate              brushFlowGate
+	mu                sync.Mutex
+	apiGate           chan struct{}
+	live              map[string]*brushFlowLiveLease
 	machine           *bf.Core
-	active            *brushFlowCall
 	subscriptionMu    sync.Mutex
 	subscriptionNames map[string][]string
 }
@@ -302,6 +307,13 @@ func (a *App) brushFlowOwner(ctx context.Context, in PluginInstallation) (*plugi
 		return nil, bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流安装身份无效")
 	}
 	r := &a.pluginBrushFlow
+	a.pluginStore.brushFlowLiveMu.Lock()
+	if a.pluginStore.brushFlowRuntime != nil && a.pluginStore.brushFlowRuntime != r {
+		a.pluginStore.brushFlowLiveMu.Unlock()
+		return nil, brushFlowEvidenceError()
+	}
+	a.pluginStore.brushFlowRuntime = r
+	a.pluginStore.brushFlowLiveMu.Unlock()
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	if r.owners == nil {
@@ -311,24 +323,9 @@ func (a *App) brushFlowOwner(ctx context.Context, in PluginInstallation) (*plugi
 	if o := r.owners[key]; o != nil {
 		return o, nil
 	}
-	o := &pluginBrushFlowOwner{a: a, instance: in.InstanceID, generation: in.Generation, gate: make(chan struct{}, 1)}
+	o := &pluginBrushFlowOwner{a: a, instance: in.InstanceID, generation: in.Generation, apiGate: make(chan struct{}, 1), live: map[string]*brushFlowLiveLease{}}
 	r.owners[key] = o
 	return o, nil
 }
-func (o *pluginBrushFlowOwner) lock(ctx context.Context) error {
-	select {
-	case o.gate <- struct{}{}:
-		return nil
-	case <-ctx.Done():
-		return ctx.Err()
-	}
-}
-func (o *pluginBrushFlowOwner) unlock() { <-o.gate }
-func (o *pluginBrushFlowOwner) tryLock() bool {
-	select {
-	case o.gate <- struct{}{}:
-		return true
-	default:
-		return false
-	}
-}
+func (o *pluginBrushFlowOwner) lock(ctx context.Context) error { return o.gate.acquire(ctx, true) }
+func (o *pluginBrushFlowOwner) unlock()                        { o.gate.release(true) }

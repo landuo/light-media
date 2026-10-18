@@ -32,18 +32,24 @@ func (c *brushFlowCall) execute(ctx context.Context) (json.RawMessage, error) {
 			return nil, e
 		}
 		c.services = core.Services(ctx)
-		c.o.machine = core
+		c.o.setMachine(core)
 		return json.RawMessage(`{"configured":true}`), nil
 	}
-	core = c.o.machine
-	if core == nil || brushFlowCanonicalSHA(mustCleanSeedJSON(core.Config().Map())) != brushFlowCanonicalSHA(mustCleanSeedJSON(c.config)) {
-		cfg, e := bf.LoadApplied(c.config)
+	if c.run.Action == "api" {
+		cfg, err := bf.LoadApplied(c.config)
+		if err != nil {
+			return nil, err
+		}
+		// Original API changes publish config only after their SQL CAS commits.
+		// Active source tasks retain shared locks/runtime on the live machine.
+		core = bf.NewReadProjection(c.o, cfg)
+	} else {
+		core, e = c.o.runtimeMachine(c.config)
 		if e != nil {
 			return nil, e
 		}
-		core = bf.NewReadProjection(c.o, cfg)
-		c.o.machine = core
 	}
+
 	if e = c.projectRuntime(ctx, core); e != nil {
 		return nil, e
 	}
@@ -157,7 +163,7 @@ func (c *brushFlowCall) projectRuntime(ctx context.Context, core *bf.Core) error
 			return e
 		}
 		if state == "pending" || state == "running" {
-			core.SetRuntime(source.TaskID, bf.Row{"state": "queued", "operation": source.Operation, "last_error": nil})
+			core.SetRuntime(source.TaskID, bf.Row{"state": map[bool]string{true: "running", false: "queued"}[state == "running"], "operation": source.Operation, "last_error": nil})
 		}
 	}
 	return nil
@@ -192,7 +198,6 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 			return bad("BRUSH_FLOW_UNCERTAIN", "站点刷流外部操作尚未确认")
 		}
 	}
-	var nextRevision int64 = c.revision
 	guardPassed := true
 	if guard := c.guardTx(ctx, tx); guard != nil {
 		guardPassed = false
@@ -200,8 +205,8 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 		c.staged = nil
 		c.writes = map[string]json.RawMessage{}
 		c.queued = nil
-		c.o.machine = nil
 	}
+	var nextRevision int64 = c.revision
 	if c.staged != nil {
 		value, e := c.o.a.pluginStore.saveValueTx(ctx, tx, c.o.instance, "config", "main", c.revision, mustCleanSeedJSON(c.staged))
 		if e != nil {
@@ -213,6 +218,12 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 		s.AppliedRevision = nextRevision
 		s.AppliedConfigSHA = brushFlowCanonicalSHA(value.Value)
 		r.EffectiveRevision = nextRevision
+		for id, active := range s.Runs {
+			if id != c.run.ID && active.Phase == "started" && c.o.hasLive(s, active) {
+				active.EffectiveRevision = nextRevision
+				s.Runs[id] = active
+			}
+		}
 		if e = c.writeSchedulesTx(ctx, tx, nextRevision, c.staged); e != nil {
 			return e
 		}
@@ -253,6 +264,13 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 	c.revision = nextRevision
 	if c.staged != nil {
 		c.config = c.staged
+		cfg, err := bf.LoadApplied(c.staged)
+		if err != nil {
+			return err
+		}
+		if live := c.o.machineSnapshot(); live != nil {
+			live.ApplyConfig(cfg)
+		}
 	}
 	if len(c.queued) > 0 {
 		c.o.a.wakePlugins()

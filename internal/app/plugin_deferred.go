@@ -194,7 +194,7 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 		return (r.ErrorCode == "AUTO_BACKUP_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == autoBackupBlockedByUnknown && bytes.Equal(r.Result, autoBackupBlockedResult()))
 	}
 	if r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" {
-		return ((r.ErrorCode == "BRUSH_FLOW_SOURCE_FAILED" || r.ErrorCode == "BRUSH_FLOW_OBSERVED") && json.Valid(r.Result)) || (r.ErrorCode == brushFlowBlockedByUnknown && bytes.Equal(r.Result, brushFlowBlockedResult()))
+		return ((r.ErrorCode == "BRUSH_FLOW_SOURCE_FAILED" || r.ErrorCode == "BRUSH_FLOW_OBSERVED") && json.Valid(r.Result)) || (r.ErrorCode == brushFlowBlockedByUnknown && bytes.Equal(r.Result, brushFlowBlockedResult())) || (r.ErrorCode == "BRUSH_FLOW_NOT_STARTED" && bytes.Equal(r.Result, brushFlowNotStartedResult()))
 	}
 	if r.Plugin == "SeedRescue" && r.Version == "1.6.3" {
 		return ((r.ErrorCode == "SEED_RESCUE_SOURCE_FAILED" || r.ErrorCode == seedRescueObserved) && json.Valid(r.Result)) || (r.ErrorCode == seedRescueBlockedByUnknown && bytes.Equal(r.Result, seedRescueBlockedResult()))
@@ -431,6 +431,11 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 		return err
 	}
 	if current != 1 {
+		if r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" && r.Phase == "started" {
+			if err = p.brushFlowAcceptedRevisionTx(ctx, tx, r, run); err == nil {
+				return nil
+			}
+		}
 		return bad("PLUGIN_SNAPSHOT_STALE", "插件安装或配置已变化")
 	}
 	return nil
@@ -787,7 +792,7 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 			return err
 		}
 		_, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,result=COALESCE(?,result),updated_at=? WHERE id=? AND state IN ('pending','running','reconcile_pending','failed')`, state, code, result, now(), run.ID)
-		if err == nil && r.Phase == "terminal_failed" && (run.Action == "init" || run.Action == "reload") {
+		if err == nil && r.Phase == "terminal_failed" && (run.Action == "init" || run.Action == "reload") && !(r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" && r.ErrorCode == "BRUSH_FLOW_NOT_STARTED" && bytes.Equal(r.Result, brushFlowNotStartedResult())) {
 			// A crash between receipt and finishRun must not bypass the same
 			// startup replay block used by the ordinary confirmed-failure path.
 			_, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO plugin_run_startup_blocks(run_id) SELECT id FROM plugin_runs WHERE id=? AND state='failed'`, run.ID)

@@ -415,3 +415,31 @@ func (p *Core) lockAll() func() {
 		}
 	}
 }
+
+// TaskBusy also observes locks held by global deletion, which takes every task
+// lock even when only one task has a running queue entry.
+func (p *Core) TaskBusy(id string) bool { return p.busy(id) }
+
+// Publish a committed API config while preserving source task/global locks and
+// runtime records shared by already-running operations.
+func (p *Core) ApplyConfig(cfg Config) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.cfg = cfg
+	valid := map[string]bool{}
+	for _, t := range cfg.Tasks {
+		valid[t.ID()] = true
+		if p.locks[t.ID()] == nil {
+			p.locks[t.ID()] = &sync.Mutex{}
+		}
+		if p.runtime[t.ID()] == nil {
+			p.runtime[t.ID()] = Row{"state": "idle", "operation": nil, "last_error": nil}
+		}
+	}
+	for id := range p.locks {
+		if !valid[id] {
+			delete(p.locks, id)
+			delete(p.runtime, id)
+		}
+	}
+}

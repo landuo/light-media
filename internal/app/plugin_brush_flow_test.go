@@ -110,6 +110,8 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 	rssEncoding := kind == "qb-rss-declared-encoding"
 	rssRecover := kind == "qb-rss-recover"
 	rssLarge := kind == "qb-rss-large-number"
+	beforeHost := kind == "qb-before-host"
+	parallel := kind == "qb-parallel" || beforeHost
 	var metadataCalls atomic.Int32
 	rawHash, _ := hex.DecodeString(hash)
 	magnet := "magnet:?xt=urn:btih:" + strings.ToLower(base32.StdEncoding.EncodeToString(rawHash))
@@ -463,7 +465,12 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 	if submit["success"] != true {
 		t.Fatal(submit)
 	}
-	pending, e := a.pluginStore.claimRunForInstance(ctx, in.InstanceID)
+	var pending PluginRun
+	if parallel {
+		pending, e = a.pluginStore.scanPluginRun(a.Store.DB.QueryRow(`SELECT `+pluginRunColumns+` FROM plugin_runs WHERE instance_id=? AND action='task' AND state='pending' ORDER BY created_at,id LIMIT 1`, in.InstanceID))
+	} else {
+		pending, e = a.pluginStore.claimRunForInstance(ctx, in.InstanceID)
+	}
 	if e != nil {
 		t.Fatal("queued brush", e)
 	}
@@ -530,6 +537,9 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 	if busy {
 		entered := make(chan struct{})
 		release := make(chan struct{})
+		var releaseOnce sync.Once
+		unblock := func() { releaseOnce.Do(func() { close(release) }) }
+		defer unblock()
 		var once sync.Once
 		a.pluginBrushFlow.sleep = func(ctx context.Context, _ time.Duration) error {
 			once.Do(func() {
@@ -541,8 +551,45 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 			})
 			return ctx.Err()
 		}
+		if beforeHost {
+			var held atomic.Bool
+			a.pluginBrushFlow.sleep = func(context.Context, time.Duration) error { return nil }
+			a.pluginBrushFlow.beforeHost = func(ctx context.Context, run PluginRun) {
+				if run.Action == "task" && held.CompareAndSwap(false, true) {
+					close(entered)
+					select {
+					case <-release:
+					case <-ctx.Done():
+					}
+				}
+			}
+		}
 		done := make(chan struct{})
-		go func() { a.executePluginRun(ctx, pending); close(done) }()
+		stopWorker := func() {}
+		if parallel {
+			workerCtx, cancelWorker := context.WithCancel(ctx)
+			workerDone := make(chan struct{})
+			go func() { a.pluginWorker(workerCtx); close(workerDone) }()
+			var stopOnce sync.Once
+			stopWorker = func() { stopOnce.Do(func() { cancelWorker(); <-workerDone }) }
+			defer stopWorker()
+			go func() {
+				defer close(done)
+				for {
+					current, _ := a.pluginStore.Run(workerCtx, pending.ID)
+					if current.State != "pending" && current.State != "running" {
+						return
+					}
+					select {
+					case <-workerCtx.Done():
+						return
+					case <-time.After(10 * time.Millisecond):
+					}
+				}
+			}()
+		} else {
+			go func() { a.executePluginRun(ctx, pending); close(done) }()
+		}
 		select {
 		case <-entered:
 		case <-time.After(10 * time.Second):
@@ -558,7 +605,43 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 		if time.Since(start) > 5*time.Second {
 			t.Fatal("SDK read/busy waited behind native host")
 		}
-		close(release)
+		if parallel {
+			// A second task's config CRUD and real queued check must complete
+			// while the first SDK Host remains blocked in owned native IO.
+			second := map[string]any{"name": "Other task", "site_id": identity.SourceID, "downloader": "Owned qB", "notify": false, "rss_support": true, "freeleech": "", "except_subscribe": false, "seed_ratio": 1}
+			created := api("POST", "tasks", string(mustCleanSeedJSON(second)))
+			if created["success"] != true {
+				t.Fatal("other-task create blocked", created)
+			}
+			other := created["data"].(map[string]any)["task"].(map[string]any)["id"].(string)
+			second["name"] = "Updated other task"
+			if updated := api("PUT", "tasks/"+other, string(mustCleanSeedJSON(second))); updated["success"] != true {
+				t.Fatal("other-task update blocked", updated)
+			}
+			if submitted := api("POST", "tasks/"+other+"/check", ""); submitted["success"] != true {
+				t.Fatal("other task check not queued", submitted)
+			}
+			deadline := time.Now().Add(10 * time.Second)
+			for {
+				var rid, state string
+				err := a.Store.DB.QueryRow(`SELECT r.id,r.state FROM plugin_runs r WHERE r.instance_id=? AND r.action='task' AND r.id<>? ORDER BY r.created_at DESC,r.id DESC LIMIT 1`, in.InstanceID, pending.ID).Scan(&rid, &state)
+				if err == nil && state == "succeeded" {
+					break
+				}
+				if err == nil && state != "pending" && state != "running" {
+					t.Fatal("other task did not succeed", rid, state)
+				}
+				if time.Now().After(deadline) {
+					t.Fatal("worker serialized other task behind held native IO", err, state)
+				}
+				time.Sleep(10 * time.Millisecond)
+			}
+			first, err := a.pluginStore.Run(ctx, pending.ID)
+			if err != nil || first.State != "running" || adds.Load() != 0 {
+				t.Fatal("first source sample wait changed during compatible config writes", err, first.State, adds.Load())
+			}
+		}
+		unblock()
 		select {
 		case <-done:
 		case <-time.After(10 * time.Second):
@@ -568,6 +651,7 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 		if actual.State != "succeeded" {
 			t.Fatal(actual.State, actual.ErrorCode)
 		}
+		stopWorker()
 	} else {
 		brushFinish(t, a, pending)
 	}
@@ -720,4 +804,12 @@ func TestBrushFlowActualSDKAtomDeclaredEncodingAndRecovery(t *testing.T) {
 
 func TestBrushFlowActualSDKLargeRSSCandidateAndEventPreserveNumber(t *testing.T) {
 	brushActualFlow(t, false, "qb-rss-large-number", false, false)
+}
+
+func TestBrushFlowActualWorkerDifferentTaskAndConfigContinueDuringNativeIO(t *testing.T) {
+	brushActualFlow(t, false, "qb-parallel", false, true)
+}
+
+func TestBrushFlowActualAcceptedBeforeHostRetainsExactCompatibleRevision(t *testing.T) {
+	brushActualFlow(t, false, "qb-before-host", false, true)
 }

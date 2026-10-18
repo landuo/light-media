@@ -345,7 +345,8 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		if err != nil {
 			return PluginRun{}, err
 		}
-		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, afterCreated, afterCreated, afterID))
+		tasksFull, servicesFull := brushFlowClaimBlocked(ctx)
+		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND NOT(? AND action='task' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND NOT(? AND action='service' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, tasksFull, servicesFull, afterCreated, afterCreated, afterID))
 		if err != nil {
 			_ = tx.Rollback()
 			return PluginRun{}, err
@@ -440,12 +441,25 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 				return PluginRun{}, err
 			}
 		}
+		if state == "running" && !brushFlowReserveClaim(ctx, pluginID, run) {
+			tx.Rollback()
+			continue
+		}
+		releaseClaim := func() {
+			if v, _ := ctx.Value(brushFlowClaimBudgetKey{}).(*brushFlowClaimBudget); v != nil && v.release != nil {
+				v.release()
+				v.release = nil
+			}
+		}
+
 		_, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
 		if err != nil {
+			releaseClaim()
 			_ = tx.Rollback()
 			return PluginRun{}, err
 		}
 		if err = tx.Commit(); err != nil {
+			releaseClaim()
 			return PluginRun{}, err
 		}
 		if state == "canceled" {

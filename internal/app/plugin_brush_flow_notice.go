@@ -24,7 +24,7 @@ func (o *pluginBrushFlowOwner) Message(ctx context.Context, n bf.Notice) error {
 		return o.brushFlowSystemMessage(ctx, n)
 	}
 	payload := map[string]any{"mtype": "站点", "title": n.Title, "text": n.Text}
-	c := o.active
+	c := o.call(ctx)
 	if c == nil {
 		return brushFlowEvidenceError()
 	}
@@ -180,7 +180,7 @@ func (p *PluginStore) validateBrushFlowNotice(ctx context.Context, q pluginRemov
 }
 
 func (o *pluginBrushFlowOwner) brushFlowSystemMessage(ctx context.Context, n bf.Notice) error {
-	c := o.active
+	c := o.call(ctx)
 	if c == nil {
 		return brushFlowEvidenceError()
 	}

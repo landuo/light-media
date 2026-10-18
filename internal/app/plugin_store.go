@@ -14,6 +14,7 @@ import (
 	"io"
 	"regexp"
 	"strings"
+	"sync"
 
 	"light-media/internal/plugins"
 )
@@ -73,8 +74,10 @@ type PluginImport struct {
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
-	store   *Store
-	notices pluginNoticeRuntime
+	store            *Store
+	notices          pluginNoticeRuntime
+	brushFlowLiveMu  sync.Mutex
+	brushFlowRuntime *pluginBrushFlowRuntime
 }
 
 const pluginValueLimit = 1 << 20

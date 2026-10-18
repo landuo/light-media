@@ -20,7 +20,7 @@ type brushFlowEventProof struct {
 }
 
 func (o *pluginBrushFlowOwner) Event(ctx context.Context, event bf.Event) error {
-	c := o.active
+	c := o.call(ctx)
 	if event.Name != "brushflow_download_added" || event.Hash == "" || event.Downloader == "" {
 		return brushFlowEvidenceError()
 	}

@@ -37,7 +37,7 @@ func brushFlowDecodeNumbers(raw []byte, out any) error {
 	return nil
 }
 func (o *pluginBrushFlowOwner) metadata(ctx context.Context, task bf.Task, v bf.Row) ([]byte, string, error) {
-	c := o.active
+	c := o.call(ctx)
 	candidate, ok := c.candidates[brushFlowString(v["_brush_candidate"])]
 	if !ok || !brushFlowSameJSON(candidate.Row, v) {
 		return nil, "", brushFlowEvidenceError()
@@ -201,7 +201,7 @@ func brushFlowTruthy(v any) bool {
 	}
 }
 func (o *pluginBrushFlowOwner) Download(ctx context.Context, task bf.Task, v, record bf.Row, tag string) (hash string, err error) {
-	c := o.active
+	c := o.call(ctx)
 	if c == nil || task.ID() != c.taskID || c.operation != "brush" || len(tag) != 10 || record["task_id"] != task.ID() {
 		return "", brushFlowEvidenceError()
 	}

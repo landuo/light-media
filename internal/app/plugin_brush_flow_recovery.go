@@ -75,7 +75,7 @@ func (p *PluginStore) recoverBrushFlowUnentered(ctx context.Context) error {
 			}
 			return brushFlowEvidenceError()
 		}
-		if _, e = tx.ExecContext(ctx, `UPDATE plugin_runs SET state='failed',error_code='BRUSH_FLOW_NOT_STARTED',updated_at=? WHERE id=? AND state='reconcile_pending'`, now(), id); e == nil {
+		if e = p.brushFlowCloseNotStartedTx(cold, tx, run); e == nil {
 			_, e = tx.ExecContext(ctx, `DELETE FROM plugin_run_startup_blocks WHERE run_id=?`, id)
 		}
 		if e != nil {

@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"sync"
 	"time"
 
 	"light-media/internal/plugins"
@@ -188,15 +189,38 @@ WHERE instance_id=? AND generation=? AND config_revision=? AND (
 }
 
 func (a *App) pluginWorker(ctx context.Context) {
+	// Brush source tasks own task/global locks and exact durable run leases.
+	// Waiting for their native IO here would serialize unrelated source tasks.
+	var brush sync.WaitGroup
+	defer brush.Wait()
 	timer := time.NewTicker(5 * time.Second)
 	defer timer.Stop()
 	for {
 		if ctx.Err() != nil {
 			return
 		}
-		run, err := a.pluginStore.ClaimRun(ctx)
+		budget := &brushFlowClaimBudget{pools: a.brushFlowPools()}
+		claimCtx := context.WithValue(ctx, brushFlowClaimBudgetKey{}, budget)
+		run, err := a.pluginStore.ClaimRun(claimCtx)
 		if err == nil {
+			if a.brushFlowBackgroundRun(ctx, run) {
+				brush.Add(1)
+				go func() {
+					defer brush.Done()
+					defer func() {
+						if budget.release != nil {
+							budget.release()
+						}
+						a.wakePlugins()
+					}()
+					a.executePluginRun(ctx, run)
+				}()
+				continue
+			}
 			a.executePluginRun(ctx, run)
+			if budget.release != nil {
+				budget.release()
+			}
 			continue
 		}
 		if !errors.Is(err, sql.ErrNoRows) && ctx.Err() == nil {
@@ -231,6 +255,11 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	case a.pluginProcess <- struct{}{}:
 		processHeld = true
 	case <-ctx.Done():
+		finish, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
+		defer cancel()
+		if run.Version == bf.Version {
+			_ = a.pluginStore.brushFlowCancelBeforeSDK(finish, run)
+		}
 		return
 	}
 	installation, err := a.pluginStore.Installation(ctx, run.InstanceID)
@@ -342,6 +371,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	if (seedReadOnly || brushReadOnly) && err != nil && ctx.Err() != nil {
 		state, errorCode = "failed", "execution_canceled"
 	}
+	brushNotStarted := false
 	finishCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	if installation.PluginID == "PluginUnInstall" && installation.Version == "2.2" {
@@ -369,6 +399,11 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 		} else if stored.Phase == "terminal_failed" && deferredSameRun(stored, deferred.installation, deferred.run) && stored.Method == deferred.record.Method && bytes.Equal(stored.Ack, deferred.record.Ack) && bytes.Equal(stored.Raw, deferred.record.Raw) {
 			result.Result, state, errorCode = stored.Result, "failed", stored.ErrorCode
 			err = bad(errorCode, "插件操作失败，已保留确证结果")
+		} else if installation.PluginID == bf.PluginID && installation.Version == bf.Version && stored.Phase == "prepared" && deferredSameRun(stored, deferred.installation, deferred.run) && stored.Method == deferred.record.Method && bytes.Equal(stored.Ack, deferred.record.Ack) && bytes.Equal(stored.Raw, deferred.record.Raw) && a.pluginStore.brushFlowCancelBeforeSDK(finishCtx, run) == nil {
+			state, errorCode = "failed", "BRUSH_FLOW_NOT_STARTED"
+			result.Result = json.RawMessage(`{"version":1,"decision":"not_started","effects_started":false}`)
+			err = bad(errorCode, "站点刷流在业务宿主启动前已停止，本次没有执行外部操作")
+			brushNotStarted = true
 		} else if stored.Phase == "started" || stored.Phase == "uncertain" {
 			state = "reconcile_pending"
 		}
@@ -377,18 +412,20 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	// Preserve its diagnostic code while preventing a fresh startup init from
 	// repeating that exact generation/configuration. Cancellation recovery keeps
 	// using each plugin's existing reconciliation path.
-	blockStartup := !seedReadOnly && err != nil && state == "failed" && (result.HostCalls > 0 || deferred != nil)
-	if finishErr := a.pluginStore.finishRun(finishCtx, run.ID, state, errorCode, result.Result, blockStartup); finishErr != nil {
-		code := pluginResultFailureCode(finishErr)
-		fallbackCtx, fallbackCancel := context.WithTimeout(context.Background(), 3*time.Second)
-		fallbackErr := a.pluginStore.failPluginResult(fallbackCtx, run.ID, code)
-		fallbackCancel()
-		if fallbackErr != nil {
-			a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "插件结果及失败状态均无法保存，请检查存储并核对实际操作", "PLUGIN_FINISH_FAILED")
+	blockStartup := !seedReadOnly && !brushNotStarted && err != nil && state == "failed" && (result.HostCalls > 0 || deferred != nil)
+	if !brushNotStarted {
+		if finishErr := a.pluginStore.finishRun(finishCtx, run.ID, state, errorCode, result.Result, blockStartup); finishErr != nil {
+			code := pluginResultFailureCode(finishErr)
+			fallbackCtx, fallbackCancel := context.WithTimeout(context.Background(), 3*time.Second)
+			fallbackErr := a.pluginStore.failPluginResult(fallbackCtx, run.ID, code)
+			fallbackCancel()
+			if fallbackErr != nil {
+				a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "插件结果及失败状态均无法保存，请检查存储并核对实际操作", "PLUGIN_FINISH_FAILED")
+				return
+			}
+			a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，已阻止本次执行自动重放，请核对实际操作", code)
 			return
 		}
-		a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，已阻止本次执行自动重放，请核对实际操作", code)
-		return
 	}
 	if installation.PluginID == "MediaServerRefresh" {
 		a.wakeMediaVerification(finishCtx)

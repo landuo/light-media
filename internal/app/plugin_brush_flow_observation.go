@@ -32,7 +32,7 @@ func (o *pluginBrushFlowOwner) reconcileAdds(ctx context.Context) error {
 		return e
 	}
 	for id, r := range s.Runs {
-		if r.Phase != "started" || len(r.Effects) == 0 {
+		if r.Phase != "started" || len(r.Effects) == 0 || o.hasLive(s, r) {
 			continue
 		}
 		ordinal := len(r.Effects) - 1

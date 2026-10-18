@@ -65,7 +65,7 @@ func brushFlowAdmissionState(ctx context.Context, p *PluginStore, s brushFlowSta
 		}
 		s.Runs = copyRuns
 	}
-	if e := brushFlowNoUnknown(s); e != nil {
+	if e := brushFlowNoUnknown(p.brushFlowWithLiveState(s)); e != nil {
 		return fmt.Errorf("%w: %w", errBrushFlowUnknownAdmission, e)
 	}
 	return nil

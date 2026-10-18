@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"sync"
 	"time"
 
 	bf "light-media/internal/plugins/brushflow"
@@ -18,42 +19,67 @@ type brushFlowLease struct {
 }
 
 func (d *pluginDeferredCall) lockBrushFlow(ctx context.Context) (context.Context, func(), error) {
+	if hook := d.a.pluginBrushFlow.beforeLease; hook != nil {
+		hook(ctx, d.run)
+	}
 	o, e := d.a.brushFlowOwner(ctx, d.installation)
 	if e != nil {
 		return ctx, nil, e
 	}
+	exclusive := d.run.Action == "init" || d.run.Action == "reload"
+	if e = o.gate.acquire(ctx, exclusive); e != nil {
+		return ctx, nil, e
+	}
+	owned := &brushFlowLiveLease{d: d}
+	apiHeld := false
 	if d.run.Action == "api" {
-		if !o.tryLock() {
-			busy, e := d.a.pluginStore.brushFlowRequestBusy(ctx, d.run)
-			if e != nil {
-				return ctx, nil, e
-			}
-			if busy {
-				return ctx, nil, errBrushFlowBusy
-			}
-			if e = o.lock(ctx); e != nil {
-				return ctx, nil, e
-			}
+		select {
+		case o.apiGate <- struct{}{}:
+			apiHeld = true
+		case <-ctx.Done():
+			o.gate.release(exclusive)
+			return ctx, nil, ctx.Err()
 		}
-	} else if e = o.lock(ctx); e != nil {
-		return ctx, nil, e
 	}
+	var releaseOnce sync.Once
+	release := func() {
+		releaseOnce.Do(func() {
+			o.mu.Lock()
+			if o.live[d.run.ID] == owned {
+				delete(o.live, d.run.ID)
+			}
+			o.mu.Unlock()
+			if apiHeld {
+				<-o.apiGate
+			}
+			o.gate.release(exclusive)
+		})
+	}
+
 	if e = o.reconcileAdds(ctx); e != nil {
-		o.unlock()
+		release()
 		return ctx, nil, e
 	}
 	if d.run.Action == "api" {
-		busy, e := d.a.pluginStore.brushFlowRequestBusy(ctx, d.run)
-		if e != nil {
-			o.unlock()
-			return ctx, nil, e
+		busy, err := d.a.pluginStore.brushFlowRequestBusy(ctx, d.run)
+		if err != nil {
+			release()
+			return ctx, nil, err
 		}
 		if busy {
-			o.unlock()
+			release()
 			return ctx, nil, errBrushFlowBusy
 		}
 	}
-	return context.WithValue(ctx, brushFlowLeaseKey{}, brushFlowLease{d, o}), o.unlock, nil
+	o.mu.Lock()
+	if o.live[d.run.ID] != nil {
+		o.mu.Unlock()
+		release()
+		return ctx, nil, brushFlowEvidenceError()
+	}
+	o.live[d.run.ID] = owned
+	o.mu.Unlock()
+	return context.WithValue(ctx, brushFlowLeaseKey{}, brushFlowLease{d, o}), release, nil
 }
 
 var errBrushFlowBusy = errors.New("private BrushFlow busy decision")
@@ -71,7 +97,7 @@ func (d *pluginDeferredCall) brushFlowStartedTx(ctx context.Context, tx *sql.Tx)
 		return bad("BRUSH_FLOW_REPLAY_DENIED", "站点刷流执行身份已经登记")
 	}
 	r := brushFlowAction{RunID: d.run.ID, Action: d.run.Action, Revision: d.run.ConfigRevision, EffectiveRevision: d.run.ConfigRevision, InputSHA: deferredInputSHA(d.run.Input), Method: d.record.Method, Phase: "started"}
-	if brushFlowNoUnknown(s) != nil {
+	if brushFlowAdmissionState(ctx, d.a.pluginStore, s) != nil {
 		r.Phase = "failed"
 		r.ErrorCode = brushFlowBlockedByUnknown
 		r.Result = brushFlowBlockedResult()
@@ -167,6 +193,9 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 	if e != nil || want != method || !deferredPayloadEqual(raw, payload) {
 		return nil, brushFlowEvidenceError()
 	}
+	if hook := a.pluginBrushFlow.beforeHost; hook != nil {
+		hook(ctx, *run)
+	}
 	if e = a.requireDeferredExecution(ctx, run, method); e != nil {
 		return nil, e
 	}
@@ -184,8 +213,15 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 		return nil, e
 	}
 	c := &brushFlowCall{o: lease.o, run: *run, method: method, config: value, revision: cfg.Revision, writes: map[string]json.RawMessage{}, observations: map[string]map[string]bf.DownloadState{}}
-	lease.o.active = c
-	defer func() { lease.o.active = nil }()
+	lease.o.mu.Lock()
+	live := lease.o.live[run.ID]
+	if live == nil || live.d != d || live.c != nil {
+		lease.o.mu.Unlock()
+		return nil, brushFlowEvidenceError()
+	}
+	live.c = c
+	lease.o.mu.Unlock()
+	ctx = context.WithValue(ctx, brushFlowCallKey{}, c)
 	e = c.o.update(ctx, func(s *brushFlowState) error {
 		r, exists := s.Runs[run.ID]
 		if !exists {
@@ -259,6 +295,11 @@ func (p *PluginStore) brushFlowRequestBusy(ctx context.Context, run PluginRun) (
 	s, _, e := p.brushFlowRead(ctx, tx, run.InstanceID, run.Generation)
 	if e != nil {
 		return false, e
+	}
+	if owner := p.brushFlowRuntimeOwner(run.InstanceID, run.Generation); owner != nil {
+		if machine := owner.machineSnapshot(); machine != nil && machine.TaskBusy(target) {
+			return true, nil
+		}
 	}
 	for _, source := range s.Sources {
 		if source.TaskID != target || source.Operation != "brush" && source.Operation != "check" {

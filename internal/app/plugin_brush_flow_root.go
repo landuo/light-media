@@ -145,6 +145,10 @@ func (p *PluginStore) brushFlowValidateDeferred(ctx context.Context, q pluginRem
 		}
 		d, _, err := p.readDeferred(ctx, q, run)
 		if errors.Is(err, sql.ErrNoRows) {
+			if r, exists := s.Runs[id]; exists && brushFlowKnownNotStarted(r, run) {
+				seen[id] = true
+				continue
+			}
 			if _, exists := s.Runs[id]; exists || run.State == "succeeded" || (run.State == "reconcile_pending" && !brushFlowColdNoDeferred(ctx, p, q, run)) {
 				return brushFlowEvidenceError()
 			}
@@ -173,6 +177,9 @@ func (p *PluginStore) brushFlowValidateDeferred(ctx context.Context, q pluginRem
 
 		seen[id] = true
 		if action.RunID != run.ID || action.Action != run.Action || action.Revision != run.ConfigRevision || action.InputSHA != d.InputSHA || action.Method != d.Method {
+			return brushFlowEvidenceError()
+		}
+		if action.ErrorCode == "BRUSH_FLOW_NOT_STARTED" && !brushFlowKnownNotStarted(action, run) {
 			return brushFlowEvidenceError()
 		}
 		switch d.Phase {

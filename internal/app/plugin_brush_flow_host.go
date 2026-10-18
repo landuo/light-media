@@ -20,14 +20,40 @@ func (c *brushFlowCall) guardTx(ctx context.Context, tx *sql.Tx) error {
 	var plugin, version string
 	var gen, revision int64
 	var installed, enabled bool
-	e := tx.QueryRowContext(ctx, `SELECT i.plugin_id,i.version,i.generation,i.installed,i.desired_enabled,v.revision FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=?`, c.o.instance).Scan(&plugin, &version, &gen, &installed, &enabled, &revision)
-	if e != nil || plugin != bf.PluginID || version != bf.Version || gen != c.o.generation || !installed || !enabled || revision != c.revision {
+	var configSealed []byte
+	e := tx.QueryRowContext(ctx, `SELECT i.plugin_id,i.version,i.generation,i.installed,i.desired_enabled,v.revision,v.sealed FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=?`, c.o.instance).Scan(&plugin, &version, &gen, &installed, &enabled, &revision, &configSealed)
+	if e != nil || plugin != bf.PluginID || version != bf.Version || gen != c.o.generation || !installed || !enabled {
 		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流安装或配置已经变化")
 	}
 	r, e := c.o.a.pluginStore.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, c.run.ID))
 	if e != nil || r.State != "running" || r.InstanceID != c.run.InstanceID || r.Version != c.run.Version || r.Generation != c.run.Generation || r.ConfigRevision != c.run.ConfigRevision || r.Action != c.run.Action || !bytes.Equal(r.Input, c.run.Input) {
 		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流执行身份已经变化")
 	}
+	s, _, e := c.o.a.pluginStore.brushFlowRead(ctx, tx, c.o.instance, c.o.generation)
+	if e != nil {
+		return e
+	}
+	accepted, ok := s.Runs[c.run.ID]
+	if !ok || accepted.Phase != "started" || accepted.InputSHA != deferredInputSHA(c.run.Input) || accepted.Revision != c.run.ConfigRevision || accepted.EffectiveRevision != revision || accepted.Method != c.method || (c.run.Action != "init" && c.run.Action != "reload" && s.AppliedRevision != revision) {
+		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流接受配置证据已经变化")
+	}
+	if s.AppliedRevision == revision {
+		actual, err := c.o.a.pluginStore.unseal("config", c.o.instance, "main", configSealed)
+		if err != nil || !bytes.Equal(actual, s.Config) {
+			return brushFlowEvidenceError()
+		}
+	}
+	if e = brushFlowAdmissionState(ctx, c.o.a.pluginStore, s); e != nil {
+		return e
+	}
+	if revision != c.revision {
+		cfg, err := brushFlowConfig(s.Config)
+		if err != nil {
+			return err
+		}
+		c.revision, c.config = revision, cfg
+	}
+
 	if c.run.Action == "api" {
 		_, e = c.o.a.validatePluginHTTPRunTx(ctx, tx, c.run)
 	}
@@ -104,8 +130,8 @@ func (o *pluginBrushFlowOwner) Sleep(ctx context.Context, d time.Duration) error
 	}
 }
 func (o *pluginBrushFlowOwner) Log(ctx context.Context, level, s string) {
-	if o.active != nil {
-		o.a.pluginExecutionLog(PluginInstallation{PluginID: bf.PluginID, InstanceID: o.instance}, o.active.run, strings.ToUpper(level), "brush_flow_source", cleanWithSettings(s, o.a.Settings()), "")
+	if o.call(ctx) != nil {
+		o.a.pluginExecutionLog(PluginInstallation{PluginID: bf.PluginID, InstanceID: o.instance}, o.call(ctx).run, strings.ToUpper(level), "brush_flow_source", cleanWithSettings(s, o.a.Settings()), "")
 	}
 }
 func brushFlowTaskIDs(cfg bf.Row) []string {
@@ -147,8 +173,14 @@ func brushFlowDataKey(c *brushFlowCall, key string) bool {
 	return false
 }
 func (o *pluginBrushFlowOwner) Get(ctx context.Context, key string) (any, error) {
-	c := o.active
-	if c == nil || !brushFlowDataKey(c, key) {
+	c := o.call(ctx)
+	if c == nil {
+		return nil, brushFlowEvidenceError()
+	}
+	if e := c.Guard(ctx); e != nil {
+		return nil, e
+	}
+	if !brushFlowDataKey(c, key) {
 		return nil, brushFlowEvidenceError()
 	}
 	if value, ok := c.writes[key]; ok {
@@ -203,12 +235,15 @@ func (o *pluginBrushFlowOwner) Del(ctx context.Context, key string) error {
 	return o.write(ctx, key, nil)
 }
 func (o *pluginBrushFlowOwner) write(ctx context.Context, key string, raw json.RawMessage) error {
-	c := o.active
-	if c == nil || !brushFlowDataKey(c, key) || len(raw) > pluginDataValueLimit || raw != nil && !json.Valid(raw) {
+	c := o.call(ctx)
+	if c == nil || len(raw) > pluginDataValueLimit || raw != nil && !json.Valid(raw) {
 		return brushFlowEvidenceError()
 	}
 	if e := c.Guard(ctx); e != nil {
 		return e
+	}
+	if !brushFlowDataKey(c, key) {
+		return brushFlowEvidenceError()
 	}
 	if c.run.Action == "api" || c.run.Action == "init" || c.run.Action == "reload" {
 		c.writes[key] = raw
@@ -251,7 +286,7 @@ func (c *brushFlowCall) writeValueTx(ctx context.Context, tx *sql.Tx, s *brushFl
 	return nil
 }
 func (o *pluginBrushFlowOwner) SaveConfig(ctx context.Context, value bf.Row) error {
-	c := o.active
+	c := o.call(ctx)
 	if c == nil {
 		return brushFlowEvidenceError()
 	}
@@ -265,10 +300,10 @@ func (o *pluginBrushFlowOwner) SaveConfig(ctx context.Context, value bf.Row) err
 	return nil
 }
 func (o *pluginBrushFlowOwner) RefreshSchedules(ctx context.Context, services []bf.Service) error {
-	if o.active == nil {
+	if o.call(ctx) == nil {
 		return brushFlowEvidenceError()
 	}
-	o.active.services = services
+	o.call(ctx).services = services
 	return nil
 }
 func (a *App) brushFlowSidebar(ctx context.Context, in PluginInstallation) ([]map[string]any, error) {

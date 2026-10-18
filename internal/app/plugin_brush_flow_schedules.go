@@ -114,7 +114,7 @@ func (p *PluginStore) enqueueBrushFlowScheduleTx(ctx context.Context, tx *sql.Tx
 	if e != nil {
 		return PluginRun{}, true, e
 	}
-	if e = brushFlowNoUnknown(s); e != nil {
+	if e = brushFlowAdmissionState(ctx, p, s); e != nil {
 		return PluginRun{}, true, e
 	}
 	if _, e = brushFlowDefinitionOperation(s.Config, def); e != nil {
@@ -194,7 +194,7 @@ func (p *PluginStore) claimBrushFlowScheduleTx(ctx context.Context, tx *sql.Tx, 
 	if e != nil {
 		return "", e
 	}
-	if e = brushFlowNoUnknown(s); e != nil {
+	if e = brushFlowAdmissionState(ctx, p, s); e != nil {
 		return "BRUSH_FLOW_BLOCKED_BY_UNKNOWN", nil
 	}
 	if run.Action == "task" {

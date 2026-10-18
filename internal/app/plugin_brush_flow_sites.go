@@ -53,7 +53,7 @@ func (a *App) brushFlowSitesTx(ctx context.Context, tx *sql.Tx) ([]bf.Site, erro
 	return out, nil
 }
 func (o *pluginBrushFlowOwner) Sites(ctx context.Context) ([]bf.Site, error) {
-	if e := o.active.ioGuard(ctx); e != nil {
+	if e := o.callIOGuard(ctx); e != nil {
 		return nil, e
 	}
 	tx, e := o.a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
@@ -107,7 +107,7 @@ func (a *App) brushFlowUsersTx(ctx context.Context, tx *sql.Tx) ([]bf.UserData, 
 	return out, nil
 }
 func (o *pluginBrushFlowOwner) SiteUsers(ctx context.Context) ([]bf.UserData, error) {
-	if e := o.active.ioGuard(ctx); e != nil {
+	if e := o.callIOGuard(ctx); e != nil {
 		return nil, e
 	}
 	tx, e := o.a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
@@ -167,7 +167,7 @@ func (o *pluginBrushFlowOwner) siteTransport(ctx context.Context, s SiteConfig, 
 	}
 	stamp := tokenHash(string(mustCleanSeedJSON(s)))
 	guard := func(ctx context.Context) error {
-		if e := o.active.ioGuard(ctx); e != nil {
+		if e := o.callIOGuard(ctx); e != nil {
 			return e
 		}
 		current, _, e := o.site(ctx, v.ID)
@@ -246,16 +246,16 @@ func (o *pluginBrushFlowOwner) Browse(ctx context.Context, id int, rss bool) ([]
 				peers = r.Leechers
 			}
 			row := bf.Row{"site": site.ID, "site_name": site.Name, "title": r.Title, "description": r.Subtitle, "size": r.Size, "pubdate": published, "seeders": seeders, "peers": peers, "page_url": r.DetailsURL, "freedate": r.PromotionEnd, "downloadvolumefactor": r.DownloadFactor, "uploadvolumefactor": r.UploadFactor, "hit_and_run": r.HitAndRun, "enclosure": "native-resource:" + r.ID}
-			o.rememberCandidate(s, row, r.ID, "")
+			o.rememberCandidate(ctx, s, row, r.ID, "")
 			out = append(out, row)
 		}
 		return nil
 	})
 	return out, e
 }
-func (o *pluginBrushFlowOwner) rememberCandidate(s SiteConfig, row bf.Row, resource, enclosure string) {
+func (o *pluginBrushFlowOwner) rememberCandidate(ctx context.Context, s SiteConfig, row bf.Row, resource, enclosure string) {
 	brushFlowCandidateProperties(row, o.Now())
-	c := o.active
+	c := o.call(ctx)
 	if c.candidates == nil {
 		c.candidates = map[string]brushFlowCandidate{}
 	}
@@ -285,7 +285,7 @@ func (o *pluginBrushFlowOwner) browseRSS(ctx context.Context, s SiteConfig, v bf
 	}
 	stamp := tokenHash(string(mustCleanSeedJSON(s)))
 	t, e := iyuu.NewNativeSiteHTTP([]iyuu.SiteTransportBinding{{Ref: s.ID, Fields: map[string]any(v.Raw), AllowedOrigins: []string{u.Scheme + "://" + u.Host}, ProxyConfig: proxy}}, iyuu.SiteTransportOptions{Guard: func(ctx context.Context) error {
-		if e := o.active.ioGuard(ctx); e != nil {
+		if e := o.callIOGuard(ctx); e != nil {
 			return e
 		}
 		current, _, e := o.site(ctx, v.ID)
@@ -300,7 +300,7 @@ func (o *pluginBrushFlowOwner) browseRSS(ctx context.Context, s SiteConfig, v bf
 	defer t.Close()
 	response, e := t.BrushRSSRead(ctx, s.ID, s.RSS, seedRescueUA(s.UserAgent))
 	if e != nil {
-		if guard := o.active.ioGuard(ctx); guard != nil {
+		if guard := o.callIOGuard(ctx); guard != nil {
 			return nil, guard
 		}
 		var boundary interface{ StopExternalEffects() bool }
@@ -342,7 +342,7 @@ func (o *pluginBrushFlowOwner) browseRSS(ctx context.Context, s SiteConfig, v bf
 			published = nil
 		}
 		row := bf.Row{"site": v.ID, "site_name": v.Name, "title": r["title"], "description": nil, "page_url": r["link"], "pubdate": published, "size": r["size"], "seeders": 0, "peers": 0, "downloadvolumefactor": nil, "uploadvolumefactor": nil, "hit_and_run": false, "freedate": nil, "enclosure": r["enclosure"]}
-		o.rememberCandidate(s, row, "", brushFlowString(row["enclosure"]))
+		o.rememberCandidate(ctx, s, row, "", brushFlowString(row["enclosure"]))
 		out = append(out, row)
 	}
 	return out, nil
@@ -355,7 +355,7 @@ func brushFlowRSSTimeout(v int) int {
 }
 
 func (o *pluginBrushFlowOwner) SubscribeTitles(ctx context.Context) ([]string, error) {
-	if e := o.active.ioGuard(ctx); e != nil {
+	if e := o.callIOGuard(ctx); e != nil {
 		return nil, e
 	}
 	raw, e := o.a.Store.List(ctx, "subscriptions", 100000, 0)
@@ -381,15 +381,15 @@ func (o *pluginBrushFlowOwner) SubscribeTitles(ctx context.Context) ([]string, e
 			names = []string{v.Media.Title}
 			// The native P0 subscription identity is an explicit TMDB type/id.
 			// Source cache keys are id_name, including failed recognition until reload.
-			if e := o.active.ioGuard(ctx); e != nil {
+			if e := o.callIOGuard(ctx); e != nil {
 				return nil, e
 			}
 			found, err := o.a.catalog().SourceNames(ctx, v.Media.MediaType, v.Media.ID)
-			if e := o.active.ioGuard(ctx); e != nil {
+			if e := o.callIOGuard(ctx); e != nil {
 				return nil, e
 			}
 			if err != nil {
-				if e := o.active.ioGuard(ctx); e != nil {
+				if e := o.callIOGuard(ctx); e != nil {
 					return nil, e
 				}
 				o.Log(ctx, "error", "识别订阅 "+v.Media.Title+" 失败："+err.Error())
@@ -461,7 +461,7 @@ func (o *pluginBrushFlowOwner) nativeSiteGuard(s SiteConfig, id int) func(contex
 	stamp := tokenHash(string(mustCleanSeedJSON(s)))
 	proxy, initialErr := o.a.proxyConfig()
 	return func(ctx context.Context) error {
-		if e := o.active.ioGuard(ctx); e != nil {
+		if e := o.callIOGuard(ctx); e != nil {
 			return e
 		}
 		current, _, e := o.site(ctx, id)

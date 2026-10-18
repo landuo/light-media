@@ -1,0 +1,11 @@
+BrushFlowLanduo 5.2.15 native parallel source pools — incremental progress
+
+Original scheduler and ThreadHelper pools are independent: normal50/50, BIG_MEMORY_MODE100/100. Product currently selects original normal default50/50; global large-memory option is not yet wired. Pending over-capacity work stays in SQLite, while other plugins may claim work. Each reservation is released on rollback, completion or cancellation. Cold cleanup only seals proven pre-SDK zero-effect cancellations; retired ancestor owner/deferred evidence remains unchanged.
+
+Composition preserves existing Scrape/deferred semantics and original SystemProcess unlimited output. Exact focused source changes are28 paths (21modified,7new); all3178 frozen candidate inputs stayed byte-identical during checks. No Python runtime, user plugin config/KV/files migration, real seed operation or deployment.
+
+Root actual SDK checks: normal30 top135 inclusive, selected race7 top15 inclusive, core race8 top276 inclusive; no failure/skip. Default product, vet and Linux CGO0 product builds passed. Agent source independently recorded full App803 top1715 inclusive plus5 explicit opt-in skips and core8 top276 inclusive. This increment does not claim the final full App suite on the composed source.
+
+Remaining: independently sealed current-generation head to reject partial installation rollback, bounded history/index access and actual BIG_MEMORY_MODE host wiring continue separately. Full Brush behavior and the 23-plugin migration goal are not complete.
+
+Preserved workflow error: an initial Root focused audit guessed32 paths and failed before writes; deriving the reviewed22-path and10-path union correctly yields28. No commit was made by that failed audit.

@@ -20,13 +20,13 @@ func brushFlowDownloaderOptions(settings Settings) []bf.Downloader {
 	return out
 }
 func (o *pluginBrushFlowOwner) Downloaders(ctx context.Context) ([]bf.Downloader, error) {
-	if e := o.active.ioGuard(ctx); e != nil {
+	if e := o.callIOGuard(ctx); e != nil {
 		return nil, e
 	}
 	return brushFlowDownloaderOptions(o.a.Settings()), nil
 }
 func (o *pluginBrushFlowOwner) downloader(ctx context.Context, name string) (*native.IYUUClient, DownloaderConfig, error) {
-	c := o.active
+	c := o.call(ctx)
 	if c == nil {
 		return nil, DownloaderConfig{}, brushFlowEvidenceError()
 	}
@@ -100,9 +100,9 @@ func (o *pluginBrushFlowOwner) torrents(ctx context.Context, name string, hashes
 	if e != nil {
 		return nil, e
 	}
-	return o.decodeTorrents(d, name, raw)
+	return o.decodeTorrents(ctx, d, name, raw)
 }
-func (o *pluginBrushFlowOwner) decodeTorrents(d DownloaderConfig, name string, raw []byte) ([]bf.DownloadState, error) {
+func (o *pluginBrushFlowOwner) decodeTorrents(ctx context.Context, d DownloaderConfig, name string, raw []byte) ([]bf.DownloadState, error) {
 	var e error
 	var rows []bf.Row
 	decoder := json.NewDecoder(bytes.NewReader(raw))
@@ -110,7 +110,7 @@ func (o *pluginBrushFlowOwner) decodeTorrents(d DownloaderConfig, name string, r
 	if e = decoder.Decode(&rows); e != nil {
 		return nil, e
 	}
-	c := o.active
+	c := o.call(ctx)
 	if c.observations == nil {
 		c.observations = map[string]map[string]bf.DownloadState{}
 	}
@@ -145,13 +145,13 @@ func (o *pluginBrushFlowOwner) Downloading(ctx context.Context, name, tag string
 		if e != nil {
 			return nil, e
 		}
-		return o.decodeTorrents(d, name, raw)
+		return o.decodeTorrents(ctx, d, name, raw)
 	}
 	raw, e := client.Torrents(ctx, nil, false)
 	if e != nil {
 		return nil, e
 	}
-	rows, e := o.decodeTorrents(d, name, raw)
+	rows, e := o.decodeTorrents(ctx, d, name, raw)
 	if e != nil {
 		return nil, e
 	}
@@ -308,7 +308,7 @@ func (c *brushFlowCall) unknown(e error) error {
 	return &brushFlowBoundaryError{e}
 }
 func (o *pluginBrushFlowOwner) control(ctx context.Context, name, op string, hashes, tags []string, up, down *int64) (bool, error) {
-	c := o.active
+	c := o.call(ctx)
 	client, d, e := o.downloader(ctx, name)
 	if e != nil {
 		return false, e
@@ -401,10 +401,10 @@ func (o *pluginBrushFlowOwner) Tags(ctx context.Context, name string) ([]string,
 	defer client.Close()
 	tags, e := client.BrushFlowTags(ctx)
 	if e == nil {
-		if o.active.observedTags == nil {
-			o.active.observedTags = map[string][]string{}
+		if o.call(ctx).observedTags == nil {
+			o.call(ctx).observedTags = map[string][]string{}
 		}
-		o.active.observedTags[name] = tags
+		o.call(ctx).observedTags[name] = tags
 	}
 	return tags, e
 }
@@ -412,7 +412,7 @@ func (o *pluginBrushFlowOwner) DeleteTags(ctx context.Context, name string, tags
 	return o.control(ctx, name, "delete_tags", nil, tags, nil, nil)
 }
 func (o *pluginBrushFlowOwner) removeTemporaryTag(ctx context.Context, client *native.IYUUClient, d DownloaderConfig, hash, tag string) error {
-	c := o.active
+	c := o.call(ctx)
 	if c.temporaryTags[tag] != d.Name {
 		return brushFlowEvidenceError()
 	}
