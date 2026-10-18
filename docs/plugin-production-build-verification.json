@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "commit": "cb6fabfecc581fe5ae3bd3e0d9a8156ab7e21877",
+  "go_version": "go version go1.26.2 darwin/arm64",
+  "source_inputs": {
+    "path": "testdata/plugins/production-build-2026-10-18/verification/source-inputs.json.gz",
+    "sha256": "fc56bb72e8f7bbd0655ee95b2550cedbd8cbb51a22184e3ee3fe882515200fa4",
+    "uncompressed_sha256": "397a65657af3ba32445f7ae7fb17010ba519ffdb2b3f537bb2ea1a2c8a551e23"
+  },
+  "checks": {
+    "production_component": {
+      "command": "go build ./internal/plugins/autobackup",
+      "exit_code": 0,
+      "evidence": {
+        "path": "testdata/plugins/production-build-2026-10-18/verification/autobackup-build.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "all_formal_production": {
+      "command": "go build ./internal/... ./cmd/...",
+      "exit_code": 0,
+      "actual_repository_packages": 55,
+      "environment": {
+        "CGO_ENABLED": "1",
+        "GOARCH": "arm64",
+        "GOOS": "darwin"
+      },
+      "evidence": {
+        "path": "testdata/plugins/production-build-2026-10-18/verification/all-production-build.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "linux_server": {
+      "command": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags modernconly ./cmd/server",
+      "exit_code": 0,
+      "sha256": "d45314e34329de239a4be99e50644b365255887632824aacf51a9991af689aaa",
+      "actual_repository_packages": 36,
+      "evidence": {
+        "path": "testdata/plugins/production-build-2026-10-18/verification/server-linux-build.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "NAS_server_smoke": {
+    "report": {
+      "path": "testdata/plugins/production-build-2026-10-18/verification/nas-server-smoke.json",
+      "sha256": "eb1f56064c3b9f4a458fd645ce39beabb7f5ae14937ec24445722f876e64130d",
+      "uncompressed_sha256": "eb1f56064c3b9f4a458fd645ce39beabb7f5ae14937ec24445722f876e64130d"
+    },
+    "log": {
+      "path": "testdata/plugins/production-build-2026-10-18/verification/nas-server-smoke.log.gz",
+      "sha256": "778751304fc8eb19006a2fbcce7aab98568d4091aa299fad83efe3472fed6202",
+      "uncompressed_sha256": "9772dc911d18a72ec6d982589dfa8080d6b89699b66471b5ea3a6c3b0adbded0"
+    },
+    "services_before": {
+      "path": "testdata/plugins/production-build-2026-10-18/verification/services-before.txt",
+      "sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4",
+      "uncompressed_sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4"
+    },
+    "services_after": {
+      "path": "testdata/plugins/production-build-2026-10-18/verification/services-after.txt",
+      "sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4",
+      "uncompressed_sha256": "266f628650f7ecea430ed68c93e488607cc06d88d2f6671772e723cb7b483ed4"
+    },
+    "results": {
+      "date": "2026-10-18T03:24:39.072Z",
+      "sha256": "d45314e34329de239a4be99e50644b365255887632824aacf51a9991af689aaa",
+      "platform": "linux/amd64",
+      "CGO_ENABLED": "0",
+      "exit_code": 0,
+      "oom_killed": false,
+      "health": true,
+      "setup_required": true,
+      "embedded_frontend": true,
+      "second_owner_rejected": true,
+      "graceful_shutdown": true,
+      "isolation_matches": true,
+      "services_unchanged": true,
+      "scope": "Actual cmd/server cold start on a fresh owned empty App directory with embedded frontend and source notice worker. No user data, production plugin configuration, migration or deployment. Not a full functional application acceptance.",
+      "cleanup": {
+        "container_removed": true,
+        "owned_remote_stage_removed": true,
+        "services_unchanged": true
+      }
+    }
+  },
+  "scope": "Production compilation without *_test.go helpers, plus actual NAS cmd/server cold start on owned empty data with embedded frontend. Not configured plugin behavior, original config/data migration, real notification delivery, production deployment or complete application acceptance."
+}

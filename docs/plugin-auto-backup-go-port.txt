@@ -42,6 +42,8 @@ NAS实际执行同一份正式二进制：17通过、1跳过、0失败、无OOM�
 NAS使用独占只读/无网络/普通UID/256MiB/GOMEM64容器，只访问自有合成文件和
 本机TLS HTTP；容器和远端目录已清理，观察的生产服务身份及启动/重启计数未变。
 具体文件、转化、终态和日志见 plugin-auto-backup-verification.json。
+随后另做无测试文件的生产包构建、全部55个正式包构建与实际Linux服务冷启动，
+均通过；记录于 plugin-production-build-verification.json，不拿test binary替代。
 
 仍需完成
 
