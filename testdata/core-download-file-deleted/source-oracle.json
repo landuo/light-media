@@ -1,0 +1,317 @@
+{
+  "source_git": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "files": {
+    "app/chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/modules/qbittorrent/__init__.py": "9ad7ed04eb9b99876ee91fe505af5bfbe9c2c19504c2104d0000a67fa79b4055",
+    "app/modules/transmission/__init__.py": "def83e0be041d0b6f633a949c15aea122d15cfbc4bba4427eea59457ea4aa016",
+    "app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "app/modules/transmission/transmission.py": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+    "app/modules/__init__.py": "06cae6a5953b8dbd438affdb6a00ae1b065ba8549f3157e5253870c6f093831b",
+    "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "app/api/endpoints/history.py": "ce5dc4bcd2e3518f3afc3c31e81f61aaa84733a0f7489a9d679849a1292228a6"
+  },
+  "scope": "Exact AST core and module methods with isolated injected IO/MetaInfo; source schema defaults; separate Go real HTTP tests. Original tag role is MOVIEPILOT; existing independent product maps its built-in role to light-media without adopting old torrents.",
+  "core": [
+    {
+      "case": "no-event",
+      "input": null,
+      "list_hit": false,
+      "remove_return": null,
+      "calls": [],
+      "events": []
+    },
+    {
+      "case": "no-hash",
+      "input": {},
+      "list_hit": false,
+      "remove_return": null,
+      "calls": [],
+      "events": []
+    },
+    {
+      "case": "src-only",
+      "input": {
+        "src": "/owned/file"
+      },
+      "list_hit": false,
+      "remove_return": null,
+      "calls": [],
+      "events": []
+    },
+    {
+      "case": "empty-hash",
+      "input": {
+        "hash": ""
+      },
+      "list_hit": true,
+      "remove_return": true,
+      "calls": [],
+      "events": []
+    },
+    {
+      "case": "no-hit",
+      "input": {
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "list_hit": false,
+      "remove_return": true,
+      "calls": [
+        [
+          "list",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ]
+      ],
+      "events": []
+    },
+    {
+      "case": "success",
+      "input": {
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "list_hit": true,
+      "remove_return": true,
+      "calls": [
+        [
+          "list",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ],
+        [
+          "remove",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "delete_file": false
+          }
+        ]
+      ],
+      "events": [
+        [
+          "DownloadDeleted",
+          {
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "torrents": [
+              {
+                "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "title": "fixture"
+              }
+            ]
+          }
+        ]
+      ]
+    },
+    {
+      "case": "false",
+      "input": {
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "list_hit": true,
+      "remove_return": false,
+      "calls": [
+        [
+          "list",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ],
+        [
+          "remove",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "delete_file": false
+          }
+        ]
+      ],
+      "events": [
+        [
+          "DownloadDeleted",
+          {
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "torrents": [
+              {
+                "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "title": "fixture"
+              }
+            ]
+          }
+        ]
+      ]
+    },
+    {
+      "case": "none",
+      "input": {
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "list_hit": true,
+      "remove_return": null,
+      "calls": [
+        [
+          "list",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ],
+        [
+          "remove",
+          {
+            "hashs": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "delete_file": false
+          }
+        ]
+      ],
+      "events": [
+        [
+          "DownloadDeleted",
+          {
+            "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "torrents": [
+              {
+                "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "title": "fixture"
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  ],
+  "module_arbitration": [
+    {
+      "first_return": true,
+      "calls": [
+        1
+      ],
+      "result": true
+    },
+    {
+      "first_return": false,
+      "calls": [
+        1
+      ],
+      "result": false
+    },
+    {
+      "first_return": null,
+      "calls": [
+        1,
+        2
+      ],
+      "result": true
+    }
+  ],
+  "snapshots": [
+    {
+      "kind": "qb",
+      "input": {
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "name": "History (2024).mkv",
+        "state": "uploading",
+        "save_path": "/owned/downloads",
+        "content_path": "/owned/downloads/History (2024).mkv",
+        "total_size": 1024,
+        "completed": 1024,
+        "progress": 1,
+        "ratio": 1,
+        "tags": "light-media",
+        "upspeed": 1024,
+        "dlspeed": 0
+      },
+      "expected": [
+        {
+          "downloader": "owned",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "History (2024).mkv",
+          "site_name": null,
+          "name": "History",
+          "year": "2024",
+          "season_episode": "",
+          "path": "/owned/downloads/History (2024).mkv",
+          "size": 1024,
+          "progress": 100,
+          "state": "completed",
+          "upspeed": "1.0K",
+          "dlspeed": "0.0B",
+          "tags": "light-media",
+          "save_path": "/owned/downloads",
+          "content_path": "/owned/downloads/History (2024).mkv",
+          "category": null,
+          "download_limit": 0.0,
+          "upload_limit": 0.0,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": ""
+        }
+      ]
+    },
+    {
+      "kind": "tr",
+      "input": {
+        "hashString": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "name": "History (2024).mkv",
+        "status": "seeding",
+        "download_dir": "/owned/downloads",
+        "total_size": 1024,
+        "left_until_done": 0,
+        "progress": 100,
+        "labels": [
+          "light-media"
+        ],
+        "rate_download": 0,
+        "rate_upload": 0
+      },
+      "expected": [
+        {
+          "downloader": "owned",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "History (2024).mkv",
+          "site_name": null,
+          "name": "History",
+          "year": "2024",
+          "season_episode": "",
+          "path": "/owned/downloads/History (2024).mkv",
+          "size": 1024,
+          "progress": 100,
+          "state": "completed",
+          "upspeed": "0.0B",
+          "dlspeed": "0.0B",
+          "tags": "light-media",
+          "save_path": "/owned/downloads",
+          "content_path": "/owned/downloads/History (2024).mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": ""
+        }
+      ]
+    }
+  ]
+}

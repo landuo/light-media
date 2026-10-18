@@ -270,6 +270,16 @@ THE SOFTWARE.
   text-transform: none !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.text-subtitle-2),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.text-subtitle-2) {
+  font-size: 0.875rem !important;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.0071428571em !important;
+  font-family: inherit;
+  text-transform: none !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.text-body-2),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.text-body-2) {
   font-size: 0.875rem !important;
@@ -298,6 +308,11 @@ THE SOFTWARE.
   letter-spacing: 0.0333333333em !important;
   font-family: inherit;
   text-transform: none !important;
+}
+
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.font-weight-medium),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.font-weight-medium) {
+  font-weight: 500 !important;
 }
 
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.cursor-default),

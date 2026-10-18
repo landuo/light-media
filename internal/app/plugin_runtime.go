@@ -15,10 +15,12 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/autobackup"
+	bf "light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/cleaninvalidseed"
 	cf "light-media/internal/plugins/cloudflarespeedtest"
 	"light-media/internal/plugins/removelink"
+	"light-media/internal/plugins/scrapefileclean"
 	sr "light-media/internal/plugins/seedrescue"
 	transfer "light-media/internal/plugins/torrenttransfer"
 	"light-media/internal/plugins/uninstall"
@@ -74,6 +76,17 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+		if installation.PluginID == "ScrapeFileClean" {
+			initialize, err := a.shouldInitializeScrapeFileClean(ctx, installation, config)
+			if err != nil {
+				a.log("ERROR", "plugins", "cleanup_initialize_pending", "文件清理存在待核对状态，未重新初始化；其他插件继续启动", "", "")
+				continue
+			}
+			if !initialize {
+				continue
+			}
+		}
+
 		if installation.PluginID == "RemoveLink" {
 			initialize, err := a.shouldInitializeRemoveLink(ctx, installation, config)
 			if err != nil {
@@ -114,6 +127,16 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 				default:
 					return e
 				}
+			}
+			if !initialize {
+				continue
+			}
+		}
+		if installation.PluginID == bf.PluginID {
+			initialize, e := a.shouldInitializeBrushFlow(ctx, installation, config)
+			if e != nil {
+				a.log("ERROR", "plugins", "brush_flow_initialize_pending", "稀缺保种存在待核对状态或证据缺失，未重新初始化", "", "")
+				continue
 			}
 			if !initialize {
 				continue
@@ -252,6 +275,9 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	if err == nil && installation.PluginID == "AutoBackup" && run.Action == "api" {
 		workerInput, err = autoBackupWorkerInput(run)
 	}
+	if err == nil && installation.PluginID == bf.PluginID {
+		workerInput, err = brushFlowWorkerInput(run)
+	}
 	if err == nil && installation.PluginID == sr.PluginID {
 		workerInput, err = seedRescueWorkerInput(run)
 	}
@@ -311,8 +337,9 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	// SeedRescue's exact immutable GET status/job grant has no write capability
 	// reachable from its compiled handler. Canceling that real SDK read is a
 	// known terminal read failure, even after a reverse call has begun.
+	brushReadOnly := installation.PluginID == bf.PluginID && installation.Version == bf.Version && deferred == nil && brushFlowReadRun(run)
 	seedReadOnly := installation.PluginID == sr.PluginID && installation.Version == sr.Version && deferred == nil && seedRescueReadRun(run)
-	if seedReadOnly && err != nil && ctx.Err() != nil {
+	if (seedReadOnly || brushReadOnly) && err != nil && ctx.Err() != nil {
 		state, errorCode = "failed", "execution_canceled"
 	}
 	finishCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -418,6 +445,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == "subscriptions.rules.configure" || method == "subscriptions.rules.apply" {
 		return a.pluginSubscribeGroupHost(ctx, installation, run, method, raw)
 	}
+	if method == scrapefileclean.ConfigureCapability || method == scrapefileclean.ApplyCapability {
+		return a.pluginScrapeCleanHost(ctx, installation, run, method, raw)
+	}
 	if method == removelink.ConfigureCapability || method == removelink.ApplyCapability {
 		return a.pluginRemoveLinkHost(ctx, installation, run, method, raw)
 	}
@@ -446,6 +476,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == autobackup.ConfigureCapability || method == autobackup.ExecuteCapability || method == autobackup.APICapability || method == autobackup.FormCapability {
 		return a.pluginAutoBackupHost(ctx, installation, run, method, raw)
+	}
+	if method == bf.ConfigureCapability || method == bf.TaskCapability || method == bf.APICapability || method == bf.ReadCapability {
+		return a.pluginBrushFlowHost(ctx, installation, run, method, raw)
 	}
 	if method == sr.ConfigureCapability || method == sr.ScanCapability || method == sr.APICapability || method == sr.ReadCapability {
 		return a.pluginSeedRescueHost(ctx, installation, run, method, raw)

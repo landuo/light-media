@@ -13,7 +13,7 @@ import { loadPluginRemote } from '../features/plugin-federation';
 import { createPluginRemoteAPI } from '../features/plugin-remote-api';
 
 const props = defineProps<{ plugin: PluginCard }>();
-const emit = defineEmits<{ close: []; switch: [] }>();
+const emit = defineEmits<{ close: []; switch: []; changed: [] }>();
 const display = useDisplay();
 const renderMode = ref<'vuetify' | 'vue'>('vuetify');
 const remote = shallowRef<Component>();
@@ -22,6 +22,7 @@ const remoteAPI = createPluginRemoteAPI(
   props.plugin.plugin_id,
   props.plugin.instance_id,
   controller.signal,
+  props.plugin.plugin_id === 'BrushFlowLanduo' ? () => emit('changed') : undefined,
 );
 const loading = ref(true),
   error = ref(''),

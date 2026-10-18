@@ -15,28 +15,30 @@ import (
 // committed facts only, never arbitrary payloads, paths or private metainfo.
 // No plugin is started or granted authority by producing or reading an event.
 type DomainEvent struct {
-	Sequence         int64  `json:"sequence,omitempty"`
-	SchemaVersion    int    `json:"schema_version"`
-	EventID          string `json:"event_id"`
-	Type             string `json:"event_type"`
-	OccurredAt       string `json:"occurred_at"`
-	WorkflowID       string `json:"workflow_id"`
-	JobID            string `json:"job_id,omitempty"`
-	MediaID          string `json:"media_id"`
-	IntentID         string `json:"intent_id,omitempty"`
-	NativeDownloadID string `json:"native_download_id,omitempty"`
-	FileEventID      string `json:"file_event_id,omitempty"`
-	NoticeID         string `json:"notice_id,omitempty"`
-	AssetID          string `json:"asset_id,omitempty"`
-	SiteID           string `json:"site_id,omitempty"`
-	SourceSiteID     int64  `json:"source_site_id,omitempty"`
-	SubscriptionID   string `json:"subscription_id,omitempty"`
-	Purpose          string `json:"purpose"`
-	SubjectID        string `json:"subject_id"`
-	SubjectKind      string `json:"subject_kind"`
-	CausationID      string `json:"causation_id,omitempty"`
-	ParentJobID      string `json:"parent_job_id,omitempty"`
-	Origin           string `json:"origin"`
+	PluginTriggerID   string `json:"plugin_trigger_id,omitempty"`
+	Sequence          int64  `json:"sequence,omitempty"`
+	SchemaVersion     int    `json:"schema_version"`
+	EventID           string `json:"event_id"`
+	Type              string `json:"event_type"`
+	OccurredAt        string `json:"occurred_at"`
+	WorkflowID        string `json:"workflow_id"`
+	JobID             string `json:"job_id,omitempty"`
+	MediaID           string `json:"media_id"`
+	IntentID          string `json:"intent_id,omitempty"`
+	NativeDownloadID  string `json:"native_download_id,omitempty"`
+	DownloadDeletedID string `json:"download_deleted_id,omitempty"`
+	FileEventID       string `json:"file_event_id,omitempty"`
+	NoticeID          string `json:"notice_id,omitempty"`
+	AssetID           string `json:"asset_id,omitempty"`
+	SiteID            string `json:"site_id,omitempty"`
+	SourceSiteID      int64  `json:"source_site_id,omitempty"`
+	SubscriptionID    string `json:"subscription_id,omitempty"`
+	Purpose           string `json:"purpose"`
+	SubjectID         string `json:"subject_id"`
+	SubjectKind       string `json:"subject_kind"`
+	CausationID       string `json:"causation_id,omitempty"`
+	ParentJobID       string `json:"parent_job_id,omitempty"`
+	Origin            string `json:"origin"`
 }
 type DomainEventPage struct {
 	Events     []DomainEvent `json:"events"`
@@ -58,8 +60,23 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	invalid := func() (DomainEvent, error) {
 		return in, bad("INVALID_DOMAIN_EVENT", "域事件契约无效，业务结果未提交")
 	}
+	if in.Type == "download.deleted" {
+		if in.SchemaVersion == 0 {
+			in.SchemaVersion = 1
+		}
+		return validateDownloadDeletedDomainEvent(in)
+	}
+	if in.DownloadDeletedID != "" {
+		return invalid()
+	}
 	if in.SchemaVersion == 0 {
 		in.SchemaVersion = 1
+	}
+	if in.Type == "plugin.triggered" {
+		return validatePluginTriggeredDomainEvent(in)
+	}
+	if in.PluginTriggerID != "" {
+		return invalid()
 	}
 	if in.Type == "site.deleted" {
 		return validateSiteDeletedDomainEvent(in)
@@ -185,6 +202,11 @@ func recordDomainEventTx(ctx context.Context, tx *sql.Tx, in DomainEvent) error 
 	}
 	if event.Type == "site.deleted" {
 		if err = validateSiteDeletedBackingTx(ctx, tx, event); err != nil {
+			return err
+		}
+	}
+	if event.Type == "download.deleted" {
+		if err = validateDownloadDeletedBackingTx(ctx, tx, event); err != nil {
 			return err
 		}
 	}

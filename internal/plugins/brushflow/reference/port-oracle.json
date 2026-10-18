@@ -1,0 +1,4725 @@
+{
+  "source_sha256": "6bc93037f289b1ed0999eb140528927ef07c20a8bbc48a996969bf63f949bc9a",
+  "runtime": "3.14.4",
+  "runtime_bound": "local offline CPython source AST, no original3.12 claim",
+  "now": "2026-10-18T12:00:00+08:00",
+  "network": false,
+  "pydantic": "2.12.5",
+  "cases": [
+    {
+      "method": "task_config",
+      "args": {
+        "id": "task"
+      },
+      "expected": {
+        "value": {
+          "id": "task",
+          "name": "刷流任务",
+          "enabled": true,
+          "notify": true,
+          "site_id": 0,
+          "downloader": "",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "task_config",
+      "args": {
+        "id": "task",
+        "name": " A ",
+        "brush_interval": 0,
+        "check_interval": -2,
+        "enabled": "false",
+        "size": " "
+      },
+      "expected": {
+        "value": {
+          "id": "task",
+          "name": "A",
+          "enabled": true,
+          "notify": true,
+          "site_id": 0,
+          "downloader": "",
+          "brush_interval": 10,
+          "check_interval": 1,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "task_config",
+      "args": {
+        "id": "task",
+        "site_id": "2",
+        "disksize": "0",
+        "site_ratio_target": "12.5",
+        "timezone_offset": "-8"
+      },
+      "expected": {
+        "value": {
+          "id": "task",
+          "name": "刷流任务",
+          "enabled": true,
+          "notify": true,
+          "site_id": 2,
+          "downloader": "",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": 12.5,
+          "disksize": 0,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": -8.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "task_config",
+      "args": {
+        "id": "task",
+        "freeleech": "",
+        "del_no_free": true
+      },
+      "expected": {
+        "value": {
+          "id": "task",
+          "name": "刷流任务",
+          "enabled": true,
+          "notify": true,
+          "site_id": 0,
+          "downloader": "",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "task_config",
+      "args": {
+        "id": "task",
+        "freeleech": "2xfree",
+        "del_no_free": true,
+        "auto_archive_days": "bad"
+      },
+      "expected": {
+        "value": {
+          "id": "task",
+          "name": "刷流任务",
+          "enabled": true,
+          "notify": true,
+          "site_id": 0,
+          "downloader": "",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "2xfree",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": true,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "task_config",
+      "args": {
+        "id": "task",
+        "downloader": " qb ",
+        "include": " a ",
+        "maxdlcount": true
+      },
+      "expected": {
+        "value": {
+          "id": "task",
+          "name": "刷流任务",
+          "enabled": true,
+          "notify": true,
+          "site_id": 0,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": 1,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": "a",
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": null
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": ""
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "暂无"
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T23:59:59",
+          null
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026/9/3 8:30"
+      },
+      "expected": {
+        "value": [
+          "2026-09-03T08:30:00",
+          null
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026.9.3 08:30:59"
+      },
+      "expected": {
+        "value": [
+          "2026-09-03T08:30:59",
+          null
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          0.0
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20 12:00:00 +0800"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          28800.0
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "免费截止 2026-09-20 12:00:00"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          null
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-02-30"
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20 25:30"
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "２０２６-０９-２０ １２:００:００"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          null
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20 12:00+14:59"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          53940.0
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20 12:00+15:00"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          null
+        ]
+      }
+    },
+    {
+      "method": "deadline",
+      "args": {
+        "value": "2026-09-20 12:00 +12:60"
+      },
+      "expected": {
+        "value": [
+          "2026-09-20T12:00:00",
+          null
+        ]
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": null
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "--"
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "2天3小时5分"
+      },
+      "expected": {
+        "value": 183900
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "1 day, 2:03:04"
+      },
+      "expected": {
+        "value": 93784
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "02:59"
+      },
+      "expected": {
+        "value": 10740
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "24:01:59"
+      },
+      "expected": {
+        "value": 86519
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "1:60:00"
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "5hours30mins"
+      },
+      "expected": {
+        "value": 19800
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "０２小时３０分"
+      },
+      "expected": {
+        "value": 9000
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "1天 2:03"
+      },
+      "expected": {
+        "value": 93780
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "3"
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "5hr"
+      },
+      "expected": {
+        "value": 18000
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "2日"
+      },
+      "expected": {
+        "value": 172800
+      }
+    },
+    {
+      "method": "duration",
+      "args": {
+        "value": "45分钟"
+      },
+      "expected": {
+        "value": 2700
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "2026-09-20T12:00:00Z",
+        "offset": 0
+      },
+      "expected": {
+        "value": "2026-09-20T20:00:00+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "2026-09-20T12:00:00Z",
+        "offset": -8
+      },
+      "expected": {
+        "value": "2026-09-20T20:00:00+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "2026-09-20T12:00:00Z",
+        "offset": 8
+      },
+      "expected": {
+        "value": "2026-09-20T20:00:00+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "2026-09-20",
+        "offset": 0
+      },
+      "expected": {
+        "value": "2026-09-20T23:59:59+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "2026-09-20",
+        "offset": -8
+      },
+      "expected": {
+        "value": "2026-09-20T15:59:59+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "2026-09-20",
+        "offset": 8
+      },
+      "expected": {
+        "value": "2026-09-21T07:59:59+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "剩余 2小时30分",
+        "offset": 0
+      },
+      "expected": {
+        "value": "2026-10-18T14:30:00+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "剩余 2小时30分",
+        "offset": -8
+      },
+      "expected": {
+        "value": "2026-10-18T14:30:00+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "剩余 2小时30分",
+        "offset": 8
+      },
+      "expected": {
+        "value": "2026-10-18T14:30:00+08:00"
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "暂无",
+        "offset": 0
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "暂无",
+        "offset": -8
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "expiry_at",
+      "args": {
+        "value": "暂无",
+        "offset": 8
+      },
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "progress": 1,
+        "downloaded": 0,
+        "size": 100
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "progress": 1,
+        "downloaded": 0,
+        "size": 100
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "progress": 0.99,
+        "downloaded": 1000,
+        "size": 100
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "progress": 0.99,
+        "downloaded": 1000,
+        "size": 100
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "size": 100,
+        "downloaded": 100
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "size": 100,
+        "downloaded": 100
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "size": 0,
+        "downloaded": 0
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "size": 0,
+        "downloaded": 0
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "progress": null,
+        "total_size": 100,
+        "downloaded": "100"
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "progress": null,
+        "total_size": 100,
+        "downloaded": "100"
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "progress": "bad",
+        "size": 100,
+        "downloaded": 100
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "progress": "bad",
+        "size": 100,
+        "downloaded": 100
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "downloadvolumefactor": 0
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "downloadvolumefactor": 0
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "downloadvolumefactor": "0"
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "downloadvolumefactor": "0"
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "downloadvolumefactor": "bad",
+        "volume_factor": "免费"
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "downloadvolumefactor": "bad",
+        "volume_factor": "免费"
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "volume_factor": "4X免费"
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "volume_factor": "4X免费"
+      },
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "method": "complete",
+      "args": {
+        "volume_factor": "FREE"
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "added_free",
+      "args": {
+        "volume_factor": "FREE"
+      },
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "freeleech": "2xfree"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "freeleech": "2xfree"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "include": "movie"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "include": "movie"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "exclude": "MOVIE"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "符合排除规则"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "exclude": "MOVIE"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "include": "(?<=Movie )\\d+"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "include": "(?<=Movie )\\d+"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "size": "2"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "种子大小低于下限"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "size": "2"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "size": "1-2"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "size": "1-2"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "seeder": "2"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "做种人数超过上限"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "seeder": "2"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "seeder": "2-4"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "seeder": "2-4"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "pubtime": "10"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "发布时间超过上限"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "pubtime": "10"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "pubtime": "20-40"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "pubtime": "20-40"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "hr": "yes"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "hr": "yes"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "非免费种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "freeleech": ""
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task",
+          "freeleech": ""
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 1,
+          "uploadvolumefactor": 1,
+          "hit_and_run": true,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {}
+      },
+      "expected": {
+        "value": [
+          false,
+          "存在 H&R"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {
+          "old": {
+            "site_name": "S",
+            "page_url": "/details.php?id=1",
+            "title": "other"
+          }
+        }
+      },
+      "expected": {
+        "value": [
+          false,
+          "重复种子"
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {
+          "old": {
+            "site_name": "S",
+            "page_url": "/details.php?id=2",
+            "title": "Movie 2026"
+          }
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          null
+        ]
+      }
+    },
+    {
+      "method": "candidate",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "torrent": {
+          "site_name": "S",
+          "page_url": "/details.php?id=1",
+          "title": "Movie 2026",
+          "size": 1073741824,
+          "description": "电影",
+          "downloadvolumefactor": 0,
+          "uploadvolumefactor": 2,
+          "hit_and_run": false,
+          "seeders": 3,
+          "pubdate": "2026-10-18 11:30:00"
+        },
+        "records": {
+          "old": {
+            "site_name": "X",
+            "title": "Movie 2026",
+            "size": 100,
+            "downloaded": 0,
+            "progress": 0
+          }
+        }
+      },
+      "expected": {
+        "value": [
+          false,
+          "其他站点存在尚未下载完成的相同种子"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_time": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "做种时间达到 1 小时"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_time": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "做种时间达到 1 小时"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "hr_seed_time": 2,
+          "seed_ratio": 2
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "分享率达到 2"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "hr_seed_time": 2,
+          "seed_ratio": 2
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "H&R 分享率达到 2"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_ratio": 2
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "分享率达到 2"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_ratio": 2
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "H&R 分享率达到 2"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_size": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "上传量达到 1 GB"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_size": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "上传量达到 1 GB"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "download_time": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "下载耗时达到 1 小时"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "download_time": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "下载耗时达到 1 小时"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_avgspeed": 10
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "平均上传速度低于 10 KB/s"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_avgspeed": 10
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "平均上传速度低于 10 KB/s"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_inactivetime": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "未活动时间达到 1 分钟"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task",
+          "seed_inactivetime": 1
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          true,
+          "未活动时间达到 1 分钟"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": false
+        }
+      },
+      "expected": {
+        "value": [
+          false,
+          "尚未满足删除条件"
+        ]
+      }
+    },
+    {
+      "method": "delete_condition",
+      "args": {
+        "config": {
+          "id": "task"
+        },
+        "info": {
+          "progress": 0.5,
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 1073741824,
+          "downloaded": 0,
+          "dltime": 7200,
+          "avg_upspeed": 100,
+          "iatime": 60
+        },
+        "record": {
+          "hit_and_run": true
+        }
+      },
+      "expected": {
+        "value": [
+          false,
+          "尚未满足删除条件"
+        ]
+      }
+    },
+    {
+      "method": "torrent_info",
+      "args": {
+        "kind": "qbittorrent",
+        "raw": {
+          "hash": "a",
+          "name": "A",
+          "added_on": 1792288800.0,
+          "completion_on": 1792292400.0,
+          "last_activity": 1792295940.0,
+          "total_size": 1000,
+          "progress": 1,
+          "downloaded": 0,
+          "uploaded": 999,
+          "ratio": 2,
+          "tags": "a, b",
+          "tracker": "https://pt.example/announce"
+        }
+      },
+      "expected": {
+        "value": {
+          "hash": "a",
+          "title": "A",
+          "seeding_time": 3600.0,
+          "ratio": 2,
+          "uploaded": 999,
+          "downloaded": 0,
+          "progress": 1,
+          "avg_upspeed": 0,
+          "iatime": 60.0,
+          "dltime": 7200.0,
+          "total_size": 1000,
+          "add_time": "2026-10-18 10:00:00",
+          "add_on": 1792288800.0,
+          "tags": "a, b",
+          "tracker": "https://pt.example/announce"
+        }
+      }
+    },
+    {
+      "method": "torrent_info",
+      "args": {
+        "kind": "transmission",
+        "raw": {
+          "hashString": "b",
+          "name": "B",
+          "total_size": 1000,
+          "progress": 100,
+          "ratio": 2,
+          "done_date": 1792292400.0,
+          "added_date": 1792288800.0,
+          "activity_date": 1792295940.0,
+          "labels": [
+            "a",
+            "b"
+          ],
+          "tracker_list": [
+            "https://tr.example/announce"
+          ]
+        }
+      },
+      "expected": {
+        "value": {
+          "hash": "b",
+          "title": "B",
+          "seeding_time": 3600,
+          "ratio": 2,
+          "uploaded": 2000,
+          "downloaded": 1000,
+          "progress": 1.0,
+          "avg_upspeed": 0,
+          "iatime": 60,
+          "dltime": 7200,
+          "total_size": 1000,
+          "add_time": "2026-10-18 10:00:00",
+          "add_on": 1792288800,
+          "tags": [
+            "a",
+            "b"
+          ],
+          "tracker": "https://tr.example/announce"
+        }
+      }
+    },
+    {
+      "method": "global_select",
+      "args": {
+        "candidates": [
+          {
+            "task": {
+              "id": "t0",
+              "name": "T0",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "0",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "normal",
+            "proxy_delete": false,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 1
+          },
+          {
+            "task": {
+              "id": "t1",
+              "name": "T1",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "1",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "proxy",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 2
+          },
+          {
+            "task": {
+              "id": "t2",
+              "name": "T2",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "2",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 30
+          },
+          {
+            "task": {
+              "id": "t3",
+              "name": "T3",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "3",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "expired",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": false,
+            "hit_and_run": true,
+            "seeding_time": 3
+          }
+        ],
+        "total": 90,
+        "min": 50,
+        "max": 100
+      },
+      "expected": {
+        "value": {
+          "selected": [
+            {
+              "hash": "3",
+              "reason": "expired",
+              "task_reasons": {
+                "t3": "expired"
+              }
+            }
+          ],
+          "remaining": 60.0,
+          "threshold": false
+        }
+      }
+    },
+    {
+      "method": "global_select",
+      "args": {
+        "candidates": [
+          {
+            "task": {
+              "id": "t0",
+              "name": "T0",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "0",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "normal",
+            "proxy_delete": false,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 1
+          },
+          {
+            "task": {
+              "id": "t1",
+              "name": "T1",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "1",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "proxy",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 2
+          },
+          {
+            "task": {
+              "id": "t2",
+              "name": "T2",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "2",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 30
+          },
+          {
+            "task": {
+              "id": "t3",
+              "name": "T3",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "3",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "expired",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": false,
+            "hit_and_run": true,
+            "seeding_time": 3
+          }
+        ],
+        "total": 100,
+        "min": 50,
+        "max": 100
+      },
+      "expected": {
+        "value": {
+          "selected": [
+            {
+              "hash": "3",
+              "reason": "expired",
+              "task_reasons": {
+                "t3": "expired"
+              }
+            }
+          ],
+          "remaining": 70.0,
+          "threshold": false
+        }
+      }
+    },
+    {
+      "method": "global_select",
+      "args": {
+        "candidates": [
+          {
+            "task": {
+              "id": "t0",
+              "name": "T0",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "0",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "normal",
+            "proxy_delete": false,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 1
+          },
+          {
+            "task": {
+              "id": "t1",
+              "name": "T1",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "1",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "proxy",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 2
+          },
+          {
+            "task": {
+              "id": "t2",
+              "name": "T2",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "2",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 30
+          },
+          {
+            "task": {
+              "id": "t3",
+              "name": "T3",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "3",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "expired",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": false,
+            "hit_and_run": true,
+            "seeding_time": 3
+          }
+        ],
+        "total": 150,
+        "min": 50,
+        "max": 100
+      },
+      "expected": {
+        "value": {
+          "selected": [
+            {
+              "hash": "3",
+              "reason": "expired",
+              "task_reasons": {
+                "t3": "expired"
+              }
+            },
+            {
+              "hash": "0",
+              "reason": "normal",
+              "task_reasons": {
+                "t0": "normal"
+              }
+            },
+            {
+              "hash": "1",
+              "reason": "触发全局动态删除阈值，proxy",
+              "task_reasons": {
+                "t1": "触发全局动态删除阈值，触发全局动态删除阈值，proxy"
+              }
+            },
+            {
+              "hash": "2",
+              "reason": "触发全局动态删除阈值，系统按做种时间清理",
+              "task_reasons": {
+                "t2": "触发全局动态删除阈值，系统按做种时间清理"
+              }
+            }
+          ],
+          "remaining": 30.0,
+          "threshold": true
+        }
+      }
+    },
+    {
+      "method": "global_select",
+      "args": {
+        "candidates": [
+          {
+            "task": {
+              "id": "t0",
+              "name": "T0",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "0",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "normal",
+            "proxy_delete": false,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 1
+          },
+          {
+            "task": {
+              "id": "t1",
+              "name": "T1",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "1",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "proxy",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 2
+          },
+          {
+            "task": {
+              "id": "t2",
+              "name": "T2",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "2",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": true,
+            "hit_and_run": false,
+            "seeding_time": 30
+          },
+          {
+            "task": {
+              "id": "t3",
+              "name": "T3",
+              "enabled": true,
+              "notify": true,
+              "site_id": 0,
+              "downloader": "",
+              "brush_interval": 10,
+              "check_interval": 5,
+              "cron": null,
+              "active_time_range": null,
+              "site_ratio_control": false,
+              "site_ratio_target": null,
+              "disksize": null,
+              "maxupspeed": null,
+              "maxdlspeed": null,
+              "maxdlcount": null,
+              "freeleech": "free",
+              "hr": "yes",
+              "include": null,
+              "exclude": null,
+              "size": null,
+              "seeder": null,
+              "timezone_offset": 0.0,
+              "pubtime": null,
+              "seed_time": null,
+              "hr_seed_time": null,
+              "seed_ratio": null,
+              "seed_size": null,
+              "download_time": null,
+              "seed_avgspeed": null,
+              "seed_inactivetime": null,
+              "delete_size_range": null,
+              "up_speed": null,
+              "dl_speed": null,
+              "auto_archive_days": null,
+              "save_path": null,
+              "delete_except_tags": null,
+              "except_subscribe": true,
+              "proxy_delete": false,
+              "del_no_free": false,
+              "promo_max_hours": null,
+              "qb_category": null,
+              "site_hr_active": false,
+              "site_skip_tips": false,
+              "rss_support": false
+            },
+            "torrent_hash": "3",
+            "downloader_name": "qb",
+            "size": 30,
+            "pre_delete_reason": "expired",
+            "conditional_reason": "",
+            "proxy_delete": true,
+            "completed": false,
+            "hit_and_run": true,
+            "seeding_time": 3
+          }
+        ],
+        "total": 50,
+        "min": 50,
+        "max": 50
+      },
+      "expected": {
+        "value": {
+          "selected": [
+            {
+              "hash": "3",
+              "reason": "expired",
+              "task_reasons": {
+                "t3": "expired"
+              }
+            }
+          ],
+          "remaining": 20.0,
+          "threshold": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "  ",
+        "site_id": 1,
+        "downloader": "qb"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "site_id": 1,
+        "downloader": "qb"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 0,
+        "downloader": "qb"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": "1",
+        "downloader": "qb",
+        "maxdlcount": "2"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": 2,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "maxdlcount": "1.5"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "disksize": 0
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "disksize": ""
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "disksize": "-1"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "site_ratio_control": true
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "site_ratio_control": true,
+        "site_ratio_target": 2
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": true,
+          "site_ratio_target": 2.0,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "active_time_range": "23:00-06:00"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": "23:00-06:00",
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "active_time_range": "25:00-06:00"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "size": "10-80"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": "10-80",
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "size": "80-10"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": "80-10",
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "size": "0"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": "0",
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "freeleech": "bad"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "include": "(?<=a)b"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": "(?<=a)b",
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "include": "("
+      },
+      "expected": {
+        "error_class": "PatternError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "notify": "false"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": false,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "timezone_offset": -8
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": -8.0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "save_path": " /downloads "
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": "/downloads",
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {},
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": false,
+          "global_delete_size_range": null
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "enabled": "false"
+      },
+      "expected": {
+        "value": {
+          "enabled": false,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": false,
+          "global_delete_size_range": null
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_disksize": 0
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": false,
+          "global_delete_size_range": null
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_maxdlcount": "2"
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": 2,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": false,
+          "global_delete_size_range": null
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true,
+        "global_delete_size_range": "50-100"
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": true,
+          "global_delete_size_range": "50-100"
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true,
+        "global_delete_size_range": "100-50"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true,
+        "global_delete_size_range": "0"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": false,
+        "global_delete_size_range": "bad"
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": false,
+          "global_delete_size_range": null
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": "false",
+        "global_delete_size_range": "bad"
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": false,
+          "global_delete_size_range": null
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": "FALSE",
+        "global_delete_size_range": "bad"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true,
+        "global_delete_size_range": " 100 "
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": true,
+          "global_delete_size_range": "100"
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "size": "１.５-２.５"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": "１.５-２.５",
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "size": "١.٥-٢.٥"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": null,
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": "١.٥-٢.٥",
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "active_time_range": "0１:0２-12:3０"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": "0１:0２-12:3０",
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "active_time_range": "０1:02-12:30"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "active_time_range": "21:30-2３:00"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    },
+    {
+      "method": "model_task",
+      "args": {
+        "name": "Task",
+        "site_id": 1,
+        "downloader": "qb",
+        "active_time_range": "23:59-00:01"
+      },
+      "expected": {
+        "value": {
+          "id": null,
+          "name": "Task",
+          "enabled": true,
+          "notify": true,
+          "site_id": 1,
+          "downloader": "qb",
+          "brush_interval": 10,
+          "check_interval": 5,
+          "cron": null,
+          "active_time_range": "23:59-00:01",
+          "site_ratio_control": false,
+          "site_ratio_target": null,
+          "disksize": null,
+          "maxupspeed": null,
+          "maxdlspeed": null,
+          "maxdlcount": null,
+          "freeleech": "free",
+          "hr": "yes",
+          "include": null,
+          "exclude": null,
+          "size": null,
+          "seeder": null,
+          "timezone_offset": 0,
+          "pubtime": null,
+          "seed_time": null,
+          "hr_seed_time": null,
+          "seed_ratio": null,
+          "seed_size": null,
+          "download_time": null,
+          "seed_avgspeed": null,
+          "seed_inactivetime": null,
+          "delete_size_range": null,
+          "up_speed": null,
+          "dl_speed": null,
+          "auto_archive_days": null,
+          "save_path": null,
+          "delete_except_tags": null,
+          "except_subscribe": true,
+          "proxy_delete": false,
+          "del_no_free": false,
+          "promo_max_hours": null,
+          "qb_category": null,
+          "site_hr_active": false,
+          "site_skip_tips": false,
+          "rss_support": false
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true,
+        "global_delete_size_range": "５０-１００"
+      },
+      "expected": {
+        "value": {
+          "enabled": true,
+          "show_sidebar_nav": true,
+          "global_disksize": null,
+          "global_maxdlcount": null,
+          "global_maxupspeed": null,
+          "global_maxdlspeed": null,
+          "global_proxy_delete": true,
+          "global_delete_size_range": "５０-１００"
+        }
+      }
+    },
+    {
+      "method": "model_settings",
+      "args": {
+        "global_proxy_delete": true,
+        "global_delete_size_range": "١٠٠-٥٠"
+      },
+      "expected": {
+        "error_class": "ValidationError"
+      }
+    }
+  ]
+}

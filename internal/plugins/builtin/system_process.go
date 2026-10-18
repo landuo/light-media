@@ -130,7 +130,7 @@ func HandleSystemProcess(ctx context.Context, method string, raw json.RawMessage
 		return nil, err
 	}
 	var items []ProcessInfo
-	if json.Unmarshal(raw, &items) != nil || len(items) > 1024 {
+	if json.Unmarshal(raw, &items) != nil {
 		return nil, errors.New("invalid process snapshot")
 	}
 	elements := []any{systemProcessTable(items, method == "dashboard")}

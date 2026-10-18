@@ -1,0 +1,704 @@
+{
+  "lxml": [
+    6,
+    1,
+    1,
+    0
+  ],
+  "libxml2": [
+    2,
+    14,
+    6
+  ],
+  "runtime": "3.14.4",
+  "scope": "actual fixed RssHelper parse AST with public fixed lib; no app import/network, Rust disabled for fallback source comparison; dates full fixed strings",
+  "cases": [
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title> 中文 </title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": " 中文 ",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A &amp; B</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A & B",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A &unknown; B</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A ",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A &#65; B</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A A B",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A &#x1F600; B</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A 😀 B",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A &#0; B</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A  B",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A &#xD800; B</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><channel><item><title>A &bad</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A ",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title><![CDATA[ C <tag> ]]></title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": " C <tag> ",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A<b>B</b>C</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>A\r\nB</title><link>https://pt.invalid/1</link></item></channel></rss>",
+      "expected": [
+        {
+          "title": "A\nB",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><title>second</title></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"u\" length=\"-2\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "u",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"u\" length=\"+2\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "u",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"u\" length=\"١٢\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "u",
+          "size": 12,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"u\" length=\"9223372036854775808\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "u",
+          "size": 9223372036854775808,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"&bad;\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"u\" url=\"v\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "u",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><link href=\"x\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure url=\"u\"/><enclosure url=\"v\" length=\"4\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "u",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><enclosure length=\"4\"/><enclosure url=\"v\" length=\"5\"/></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 4,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><description>D <b>B</b> tail</description></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "D ",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><summary>S</summary><description>D</description></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "S",
+          "link": "https://pt.invalid/1",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>Movie</title><link>https://pt.invalid/1</link><dc:creator xmlns:dc=\"owned\">Nick</dc:creator></item></channel></rss>",
+      "expected": [
+        {
+          "title": "Movie",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "",
+          "nickname": "Nick"
+        }
+      ]
+    },
+    {
+      "text": "<feed><entry><title>A</title><link href=\"x\"/></entry></feed>",
+      "expected": [
+        {
+          "title": "A",
+          "enclosure": "x",
+          "size": 0,
+          "description": "",
+          "link": "x",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<root><ITEM><TITLE>U</TITLE><LINK>u</LINK></ITEM></root>",
+      "expected": []
+    },
+    {
+      "text": "<rss><item><title>A</title><link>x</link>",
+      "expected": [
+        {
+          "title": "A",
+          "enclosure": "x",
+          "size": 0,
+          "description": "",
+          "link": "x",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><item><title>A</link></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><item><title>A</title><link>x</link></item>",
+      "expected": [
+        {
+          "title": "A",
+          "enclosure": "x",
+          "size": 0,
+          "description": "",
+          "link": "x",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><item><title/><title>A</title><link>x</link></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><item><title></title><link>x</link></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><item><title>A</title></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><item><title>A</title><link href=\"x\">y</link></item></rss>",
+      "expected": [
+        {
+          "title": "A",
+          "enclosure": "y",
+          "size": 0,
+          "description": "",
+          "link": "y",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><item><title>A</title><link foo=\"&bad;\">x</link></item></rss>",
+      "expected": [
+        {
+          "title": "A",
+          "enclosure": "x",
+          "size": 0,
+          "description": "",
+          "link": "x",
+          "pubdate": ""
+        }
+      ]
+    },
+    {
+      "text": "<rss><item><title foo=bad>A</title><link>x</link></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><item><title>A</title><link href=x/></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<!DOCTYPE rss SYSTEM \"https://never.invalid/x\"><rss><item><title>&custom;</title><link>x</link></item></rss>",
+      "expected": []
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>Tue, 19 May 2026 08:30:00 GMT</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 16:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>Tue, 19 May 2026 08:30:00 +0800</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 08:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19T09:30:00Z</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 17:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19T09:30:00+08:00</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19 09:30:00 UTC</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 17:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>19 May 2026 09:30:00 GMT</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 17:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19T09:30:00 GMT</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 17:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19 09:30:00</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19 09:30</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026/05/19 09:30:00</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026/05/19 09:30</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>19 May 2026 09:30:00</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>Tue, 19 May 2026 09:30:00</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 09:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 00:00:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026/05/19</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 00:00:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>19 May 2026</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 00:00:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>bad</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": null
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>Wed, 19 May 2026 08:30:00 GMT</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 16:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-5-9 1:02:03</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-09 01:02:03"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19T09:30:00.123Z</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": "2026-05-19 17:30:00"
+        }
+      ]
+    },
+    {
+      "text": "<rss><channel><item><title>D</title><link>https://pt.invalid/1</link><pubDate>2026-05-19T09:30:60Z</pubDate></item></channel></rss>",
+      "expected": [
+        {
+          "title": "D",
+          "enclosure": "https://pt.invalid/1",
+          "size": 0,
+          "description": "",
+          "link": "https://pt.invalid/1",
+          "pubdate": null
+        }
+      ]
+    }
+  ]
+}

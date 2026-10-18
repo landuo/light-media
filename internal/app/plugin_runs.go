@@ -108,6 +108,14 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	defer tx.Rollback()
+	var nativeID string
+	if err = tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&nativeID); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
+	if nativeID == "ScrapeFileClean" {
+		return PluginStoredValue{}, PluginRun{}, bad("SCRAPE_CLEAN_OWNER_REQUIRED", "请通过实际源文件清理宿主保存配置")
+	}
+
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -208,6 +216,9 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
 	}
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
+		return PluginRun{}, err
+	}
+	if err := p.brushFlowQueueAdmissionTx(ctx, tx, instanceID, pluginID, action, input); err != nil {
 		return PluginRun{}, err
 	}
 	if err := p.pluginNativeQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
@@ -357,7 +368,17 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			_ = tx.Rollback()
 			return PluginRun{}, err
 		}
-		if e := p.pluginNativeQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID); e != nil {
+		admissionErr := p.brushFlowQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID, run.Action, func() json.RawMessage {
+			var v struct {
+				Input json.RawMessage `json:"input"`
+			}
+			json.Unmarshal(run.Input, &v)
+			return v.Input
+		}())
+		if admissionErr == nil {
+			admissionErr = p.pluginNativeQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID)
+		}
+		if e := admissionErr; e != nil {
 			_ = tx.Rollback()
 			if pluginNativeUnconfirmedQueueAdmission(e) {
 				continue // Keep this original pending identity; advance the cursor.
@@ -378,6 +399,15 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			}
 		} else if p.isAutoBackupRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimAutoBackupScheduleTx(ctx, tx, run, time.Now())
+			if err != nil {
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
+			if errorCode != "" {
+				state = "canceled"
+			}
+		} else if p.isBrushFlowRun(ctx, tx, run) && (run.Action == "task" || run.Action == "service") {
+			errorCode, err = p.claimBrushFlowScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
 				_ = tx.Rollback()
 				return PluginRun{}, err
@@ -496,10 +526,16 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 		err = p.recoverUninstallRuns(ctx)
 	}
 	if err == nil {
-		err = p.recoverDeferredRuns(ctx)
+		err = p.recoverBrushFlowUnentered(ctx)
+		if err == nil {
+			err = p.recoverDeferredRuns(ctx)
+		}
 	}
 	if err == nil {
-		err = p.recoverSeedRescueReads(ctx)
+		err = p.recoverBrushFlowReads(ctx)
+		if err == nil {
+			err = p.recoverSeedRescueReads(ctx)
+		}
 	}
 	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)

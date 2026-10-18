@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regexp"
+	"strings"
 	"time"
 
 	cleanuphost "light-media/internal/plugins/removelink/host"
@@ -24,12 +25,13 @@ CREATE TABLE IF NOT EXISTS plugin_cleanup_outbox_handoffs(
  instance_id TEXT NOT NULL,generation INTEGER NOT NULL,token TEXT NOT NULL,sealed BLOB NOT NULL,
  PRIMARY KEY(instance_id,generation,token));`
 
-var pluginFileEventIDPattern = regexp.MustCompile(`^pfe_[a-f0-9]{64}$`)
+var pluginFileEventIDPattern = regexp.MustCompile(`^(pfe|sfe|hfe)_[a-f0-9]{64}$`)
 
 type pluginDownloadFileEvent struct {
 	Version                int
 	ID, Instance, EffectID string
 	Generation, Revision   int64
+	Hash                   string `json:",omitempty"`
 	Src                    string
 }
 
@@ -101,6 +103,12 @@ func validateDownloadFileEventBackingTx(ctx context.Context, tx *sql.Tx, event D
 
 func (p *PluginStore) downloadFileEvent(ctx context.Context, q pluginRemoveLinkJournalReader, eventID string) (pluginDownloadFileEvent, error) {
 	var out pluginDownloadFileEvent
+	if strings.HasPrefix(eventID, "hfe_") {
+		return p.historyFileEvent(ctx, q, eventID)
+	}
+	if strings.HasPrefix(eventID, "sfe_") {
+		return p.scrapeDownloadFileEvent(ctx, q, eventID)
+	}
 	if !pluginFileEventIDPattern.MatchString(eventID) {
 		return out, cleanuphost.ErrUnsafe
 	}
@@ -114,7 +122,7 @@ func (p *PluginStore) downloadFileEvent(ctx context.Context, q pluginRemoveLinkJ
 	if err != nil {
 		return out, err
 	}
-	if cleanupJournalStrict(raw, &out) != nil || out.Version != 1 || out.ID != eventID || out.Instance != instance || !pluginStorageID.MatchString(instance) || out.Generation != generation || generation < 1 || out.Revision < 1 || out.EffectID == "" || !importPath(out.Src) {
+	if cleanupJournalStrict(raw, &out) != nil || out.Version != 1 || out.Hash != "" || out.ID != eventID || out.Instance != instance || !pluginStorageID.MatchString(instance) || out.Generation != generation || generation < 1 || out.Revision < 1 || out.EffectID == "" || !importPath(out.Src) {
 		return out, cleanuphost.ErrUnsafe
 	}
 	return out, nil

@@ -1,0 +1,1740 @@
+{
+  "source_sha256": "6bc93037f289b1ed0999eb140528927ef07c20a8bbc48a996969bf63f949bc9a",
+  "functions": [
+    {
+      "class": "BrushTaskConfig",
+      "name": "__init__",
+      "line": 134,
+      "end_line": 180,
+      "doc": "读取并标准化一项刷流任务配置",
+      "self_attributes": [
+        "_clean_text",
+        "_parse_number",
+        "active_time_range",
+        "auto_archive_days",
+        "brush_interval",
+        "check_interval",
+        "cron",
+        "del_no_free",
+        "delete_except_tags",
+        "delete_size_range",
+        "disksize",
+        "dl_speed",
+        "download_time",
+        "downloader",
+        "enabled",
+        "except_subscribe",
+        "exclude",
+        "freeleech",
+        "hr",
+        "hr_seed_time",
+        "id",
+        "include",
+        "maxdlcount",
+        "maxdlspeed",
+        "maxupspeed",
+        "name",
+        "notify",
+        "promo_max_hours",
+        "proxy_delete",
+        "pubtime",
+        "qb_category",
+        "rss_support",
+        "save_path",
+        "seed_avgspeed",
+        "seed_inactivetime",
+        "seed_ratio",
+        "seed_size",
+        "seed_time",
+        "seeder",
+        "site_hr_active",
+        "site_id",
+        "site_ratio_control",
+        "site_ratio_target",
+        "site_skip_tips",
+        "size",
+        "timezone_offset",
+        "up_speed"
+      ]
+    },
+    {
+      "class": "BrushTaskConfig",
+      "name": "brush_tag",
+      "line": 183,
+      "end_line": 185,
+      "doc": "返回当前任务在下载器中使用的唯一标签",
+      "self_attributes": [
+        "id"
+      ]
+    },
+    {
+      "class": "BrushTaskConfig",
+      "name": "_clean_text",
+      "line": 188,
+      "end_line": 193,
+      "doc": "把空白文本标准化为 None",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushTaskConfig",
+      "name": "_parse_number",
+      "line": 196,
+      "end_line": 204,
+      "doc": "兼容解析历史配置中的整数、浮点数和空值",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushTaskConfig",
+      "name": "to_dict",
+      "line": 206,
+      "end_line": 210,
+      "doc": "返回可持久化和供前端编辑的任务配置",
+      "self_attributes": [
+        "id",
+        "name"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "init_plugin",
+      "line": 233,
+      "end_line": 296,
+      "doc": "初始化全局开关、任务配置、运行锁和历史数据迁移",
+      "self_attributes": [
+        "_brush_lock",
+        "_cleanup_unused_task_tags",
+        "_current_config",
+        "_enabled",
+        "_global_delete_lock",
+        "_global_delete_size_range",
+        "_global_proxy_delete",
+        "_migrate_legacy_config",
+        "_migrate_legacy_data",
+        "_runtime",
+        "_runtime_lock",
+        "_show_sidebar_nav",
+        "_subscribe_infos",
+        "_task_configs",
+        "_task_context",
+        "_task_locks",
+        "_validate_global_dynamic_delete_config",
+        "_validate_task_reference",
+        "brush",
+        "check",
+        "update_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_state",
+      "line": 298,
+      "end_line": 300,
+      "doc": "返回插件全局启用状态",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_command",
+      "line": 303,
+      "end_line": 305,
+      "doc": "当前插件不注册远程命令",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_render_mode",
+      "line": 308,
+      "end_line": 310,
+      "doc": "声明使用 Vue 联邦组件渲染插件界面",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_sidebar_nav",
+      "line": 312,
+      "end_line": 325,
+      "doc": "向主界面整理分组注册刷流任务入口",
+      "self_attributes": [
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_api",
+      "line": 327,
+      "end_line": 400,
+      "doc": "注册 Vue 工作台使用的刷流任务 API",
+      "self_attributes": [
+        "check_task",
+        "clear_task_data",
+        "create_task",
+        "delete_task",
+        "get_status",
+        "get_task_detail",
+        "run_task",
+        "update_settings",
+        "update_task",
+        "update_task_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_form",
+      "line": 402,
+      "end_line": 404,
+      "doc": "Vue 配置组件只需要接收当前配置模型",
+      "self_attributes": [
+        "_current_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_page",
+      "line": 406,
+      "end_line": 408,
+      "doc": "Vue 详情组件自行通过插件 API 获取页面数据",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_dashboard",
+      "line": 410,
+      "end_line": 423,
+      "doc": "保留原有仪表板入口并改由 Vue 组件渲染",
+      "self_attributes": [
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_service",
+      "line": 425,
+      "end_line": 475,
+      "doc": "为每个启用任务注册独立的刷流刷新和状态检查服务",
+      "self_attributes": [
+        "_check_promotion_expiry",
+        "_task_configs",
+        "brush",
+        "check",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "stop_service",
+      "line": 477,
+      "end_line": 481,
+      "doc": "插件不再维护私有调度器，公共服务由宿主统一停止",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "service_info",
+      "line": 484,
+      "end_line": 496,
+      "doc": "获取当前任务绑定的下载器服务",
+      "self_attributes": [
+        "_get_task_config",
+        "_log_and_notify_error"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "downloader",
+      "line": 499,
+      "end_line": 502,
+      "doc": "返回当前任务绑定的下载器实例",
+      "self_attributes": [
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_status",
+      "line": 504,
+      "end_line": 506,
+      "doc": "返回全局设置、任务摘要和前端可选项",
+      "self_attributes": [
+        "_build_status_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "update_settings",
+      "line": 508,
+      "end_line": 523,
+      "doc": "更新插件全局开关并刷新宿主任务调度",
+      "self_attributes": [
+        "_build_status_data",
+        "_enabled",
+        "_global_dynamic_delete_enabled",
+        "_refresh_scheduler",
+        "_save_config",
+        "_show_sidebar_nav",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "create_task",
+      "line": 525,
+      "end_line": 537,
+      "doc": "创建一个站点与下载器均独立的刷流任务",
+      "self_attributes": [
+        "_build_task_detail",
+        "_refresh_scheduler",
+        "_runtime",
+        "_save_config",
+        "_task_configs",
+        "_task_locks",
+        "_validate_task_reference"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "get_task_detail",
+      "line": 539,
+      "end_line": 552,
+      "doc": "分页返回任务配置、统计、诊断记录和种子明细",
+      "self_attributes": [
+        "_build_task_detail",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "update_task",
+      "line": 554,
+      "end_line": 568,
+      "doc": "更新任务配置并保持原任务 ID 与历史数据关联",
+      "self_attributes": [
+        "_build_task_detail",
+        "_is_task_busy",
+        "_refresh_scheduler",
+        "_save_config",
+        "_task_configs",
+        "_validate_task_reference"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "delete_task",
+      "line": 570,
+      "end_line": 593,
+      "doc": "删除没有活跃种子的任务及其独立历史数据",
+      "self_attributes": [
+        "TASK_DATA_NAMES",
+        "_build_status_data",
+        "_cleanup_unused_task_tag",
+        "_get_task_data",
+        "_is_task_busy",
+        "_refresh_scheduler",
+        "_runtime",
+        "_save_config",
+        "_task_configs",
+        "_task_data_key",
+        "_task_locks",
+        "del_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "update_task_state",
+      "line": 595,
+      "end_line": 603,
+      "doc": "启用或暂停单个任务并更新对应宿主调度",
+      "self_attributes": [
+        "_build_task_detail",
+        "_refresh_scheduler",
+        "_save_config",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "run_task",
+      "line": 605,
+      "end_line": 607,
+      "doc": "异步提交单个任务的立即刷流刷新",
+      "self_attributes": [
+        "_submit_task_operation"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "check_task",
+      "line": 609,
+      "end_line": 611,
+      "doc": "异步提交单个任务的立即状态检查",
+      "self_attributes": [
+        "_submit_task_operation"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "clear_task_data",
+      "line": 613,
+      "end_line": 621,
+      "doc": "清除单个任务的统计、历史与托管记录",
+      "self_attributes": [
+        "TASK_DATA_NAMES",
+        "_build_task_detail",
+        "_is_task_busy",
+        "_save_task_data",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "reload",
+      "line": 624,
+      "end_line": 628,
+      "doc": "插件重载后重新注册动态 API 和任务调度",
+      "self_attributes": [
+        "__class__"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_current_config",
+      "line": 630,
+      "end_line": 640,
+      "doc": "返回插件当前可持久化配置快照",
+      "self_attributes": [
+        "DATA_SCHEMA_VERSION"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_save_config",
+      "line": 642,
+      "end_line": 644,
+      "doc": "保存全局设置和全部任务配置",
+      "self_attributes": [
+        "_current_config",
+        "update_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_refresh_scheduler",
+      "line": 646,
+      "end_line": 651,
+      "doc": "通知宿主按最新任务列表重建插件服务",
+      "self_attributes": [
+        "__class__"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_global_dynamic_delete_enabled",
+      "line": 653,
+      "end_line": 658,
+      "doc": "返回全局动态删种开关与阈值是否同时有效",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_validate_global_dynamic_delete_config",
+      "line": 661,
+      "end_line": 673,
+      "doc": "复用设置模型校验持久化或迁移得到的全局动态删种配置。",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_parse_promotion_deadline",
+      "line": 718,
+      "end_line": 742,
+      "doc": "解析站点给出的促销截止文本，返回挂钟时间与文本中显式声明的时区",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_parse_promotion_zone",
+      "line": 745,
+      "end_line": 759,
+      "doc": "把 Z/UTC/GMT/+0800 等时区标记转换为 UTC 偏移",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_promotion_duration_seconds",
+      "line": 762,
+      "end_line": 788,
+      "doc": "解析“2天3小时”“5小时30分”这类剩余时间文本",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_promotion_expiry_from_diff",
+      "line": 791,
+      "end_line": 803,
+      "doc": "用剩余时间文本和加入下载器的时刻还原促销截止时间",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_inferred_site_clock_offset",
+      "line": 806,
+      "end_line": 833,
+      "doc": "按站点发布时间与下载器加入时间的差值推导站点时间与宿主时间的偏差（分钟）",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_promotion_expiry_at",
+      "line": 836,
+      "end_line": 852,
+      "doc": "把站点促销截止时间换算为宿主时区中的实际到期时刻",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_resolve_promotion_expiry",
+      "line": 854,
+      "end_line": 871,
+      "doc": "按本地已有信息解析促销截止时间",
+      "self_attributes": [
+        "_parse_promotion_deadline",
+        "_promotion_expiry_at",
+        "_promotion_expiry_from_diff"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_promotion_verify_due",
+      "line": 874,
+      "end_line": 890,
+      "doc": "判断已拿到截止时间的种子是否该复核站点促销是否仍在进行",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_promotion_expiry",
+      "line": 892,
+      "end_line": 937,
+      "doc": "解析单个种子的促销截止时间，必要时按发布/加入时间校正时区并复核站点促销状态",
+      "self_attributes": [
+        "_inferred_site_clock_offset",
+        "_parse_promotion_deadline",
+        "_parse_pubdate",
+        "_promotion_expiry_at",
+        "_promotion_verify_due",
+        "_refresh_promotion_from_site",
+        "_resolve_promotion_expiry"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_parse_pubdate",
+      "line": 940,
+      "end_line": 943,
+      "doc": "解析站点发布时间文本，无法识别时返回 None",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_refresh_promotion_from_site",
+      "line": 945,
+      "end_line": 1019,
+      "doc": "读取当前种子详情页并更新促销状态；无法验证时保持保守状态",
+      "self_attributes": [
+        "PROMOTION_PAGE_OTHER_VERSIONS_PATTERN",
+        "PROMOTION_PROBE_INTERVAL",
+        "__parse_site_promotion_deadline",
+        "__site_cookie",
+        "__site_page_has_promotion",
+        "__site_page_has_promotion_countdown",
+        "__site_page_is_torrent",
+        "__site_page_says_no_promotion",
+        "_get_task_site",
+        "_record_added_as_free",
+        "_refresh_mteam_promotion"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_refresh_mteam_promotion",
+      "line": 1021,
+      "end_line": 1077,
+      "doc": "用 M-Team 官方 API 复核动态详情页对应种子的实时优惠。",
+      "self_attributes": [
+        "_parse_promotion_deadline",
+        "_promotion_expiry_at"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_record_added_as_free",
+      "line": 1080,
+      "end_line": 1088,
+      "doc": "判断任务记录是否来自免费促销（记录未标记时按任务促销配置判断）",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__site_cookie",
+      "line": 1091,
+      "end_line": 1100,
+      "doc": "把站点 Cookie 字符串转换为请求工具需要的字典",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__parse_site_promotion_deadline",
+      "line": 1103,
+      "end_line": 1112,
+      "doc": "从站点页面提取促销剩余时间里的绝对截止时间",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__site_page_has_promotion",
+      "line": 1115,
+      "end_line": 1117,
+      "doc": "页面仍显示免费促销标记时返回 True，避免把无关页面当成促销结束",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__site_page_says_no_promotion",
+      "line": 1120,
+      "end_line": 1122,
+      "doc": "站点明确声明当前没有优惠时返回 True（例如 ubits 的“盒子促销：无优惠”）",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__site_page_has_promotion_countdown",
+      "line": 1125,
+      "end_line": 1127,
+      "doc": "页面出现了促销剩余时间标记，说明该种子本身带限时促销",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__site_page_is_torrent",
+      "line": 1130,
+      "end_line": 1132,
+      "doc": "确认读到的是站点种子页面，而不是登录页、RSS 或错误页",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_get_task_site",
+      "line": 1134,
+      "end_line": 1139,
+      "doc": "返回当前任务绑定的站点对象",
+      "self_attributes": [
+        "_get_task_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_next_promotion_expiry",
+      "line": 1141,
+      "end_line": 1172,
+      "doc": "返回下一项需要检查的提前停下载或详情页复核时刻",
+      "self_attributes": [
+        "PROMOTION_STOP_MARGIN",
+        "PROMOTION_VERIFY_INTERVAL",
+        "_get_task_data",
+        "_promotion_expiry",
+        "_torrent_complete"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_check_promotion_expiry",
+      "line": 1174,
+      "end_line": 1181,
+      "doc": "仅用本地记录检查截止和复核时间；到期时才运行种子检查。",
+      "self_attributes": [
+        "_get_task_config",
+        "_next_promotion_expiry",
+        "check",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_validate_task_reference",
+      "line": 1183,
+      "end_line": 1195,
+      "doc": "校验任务引用的私有站点和下载器是否仍然存在",
+      "self_attributes": [
+        "_log_and_notify_error"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_torrent_has_tag",
+      "line": 1198,
+      "end_line": 1207,
+      "doc": "判断 qBittorrent 种子是否仍绑定指定标签",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_delete_qbittorrent_tags",
+      "line": 1210,
+      "end_line": 1216,
+      "doc": "删除 qBittorrent 全局标签定义，不调用需要种子 Hash 的 removeTags。",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_cleanup_temporary_qbittorrent_tag",
+      "line": 1218,
+      "end_line": 1223,
+      "doc": "Hash 查询结束后删除一次性 qBittorrent 标签，失败不影响加种结果。",
+      "self_attributes": [
+        "_delete_qbittorrent_tags"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_cleanup_unused_task_tag",
+      "line": 1225,
+      "end_line": 1249,
+      "doc": "仅删除不再被任何 qBittorrent 种子使用的任务唯一标签",
+      "self_attributes": [
+        "_delete_qbittorrent_tags",
+        "_torrent_has_tag"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_cleanup_unused_task_tags",
+      "line": 1251,
+      "end_line": 1284,
+      "doc": "扫描全部 qBittorrent 下载器，清理历史遗留的刷流唯一标签",
+      "self_attributes": [
+        "_delete_qbittorrent_tags"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_migrate_legacy_config",
+      "line": 1286,
+      "end_line": 1312,
+      "doc": "把旧全局配置和站点覆盖 JSON 拆分为一站点一任务",
+      "self_attributes": [
+        "_parse_legacy_site_overrides"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_parse_legacy_site_overrides",
+      "line": 1315,
+      "end_line": 1332,
+      "doc": "解析旧版允许注释的站点覆盖 JSON",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_migrate_legacy_data",
+      "line": 1334,
+      "end_line": 1361,
+      "doc": "按站点把旧全局种子、归档和未托管记录迁移到任务命名空间",
+      "self_attributes": [
+        "DATA_SCHEMA_VERSION",
+        "_get_site_name",
+        "_get_task_data",
+        "_recalculate_statistics",
+        "_save_task_data",
+        "_task_configs",
+        "get_data",
+        "save_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_get_site_name",
+      "line": 1364,
+      "end_line": 1367,
+      "doc": "按站点 ID 获取名称并兼容已删除站点",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_task_scope",
+      "line": 1370,
+      "end_line": 1384,
+      "doc": "在当前线程中绑定任务上下文，供深层核心逻辑读取",
+      "self_attributes": [
+        "_task_configs",
+        "_task_context"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_all_task_locks_scope",
+      "line": 1387,
+      "end_line": 1398,
+      "doc": "按任务 ID 顺序锁定全部任务，保护跨任务删种的数据一致性",
+      "self_attributes": [
+        "_task_configs",
+        "_task_locks"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_get_task_config",
+      "line": 1400,
+      "end_line": 1403,
+      "doc": "获取显式任务或当前线程绑定的任务配置",
+      "self_attributes": [
+        "_task_configs",
+        "_task_context"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_brush_config",
+      "line": 1405,
+      "end_line": 1413,
+      "doc": "兼容核心逻辑获取当前任务配置",
+      "self_attributes": [
+        "_get_site_name",
+        "_get_task_config",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_task_data_key",
+      "line": 1416,
+      "end_line": 1418,
+      "doc": "生成任务独立的插件数据键",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_get_task_data",
+      "line": 1420,
+      "end_line": 1422,
+      "doc": "读取指定任务的独立持久化数据",
+      "self_attributes": [
+        "_task_data_key",
+        "get_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_save_task_data",
+      "line": 1424,
+      "end_line": 1426,
+      "doc": "保存指定任务的独立持久化数据",
+      "self_attributes": [
+        "_task_data_key",
+        "save_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_current_task_data",
+      "line": 1428,
+      "end_line": 1434,
+      "doc": "读取当前线程任务的数据并提供缺省值",
+      "self_attributes": [
+        "_get_task_config",
+        "_get_task_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_save_current_task_data",
+      "line": 1436,
+      "end_line": 1440,
+      "doc": "保存当前线程任务的数据",
+      "self_attributes": [
+        "_get_task_config",
+        "_save_task_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_submit_task_operation",
+      "line": 1442,
+      "end_line": 1458,
+      "doc": "校验运行条件后把手动操作提交到宿主线程池",
+      "self_attributes": [
+        "_mark_task_queued",
+        "_set_runtime",
+        "_task_configs",
+        "_task_summary",
+        "brush",
+        "check",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_is_task_busy",
+      "line": 1460,
+      "end_line": 1468,
+      "doc": "判断任务是否已经排队或正在执行，保护运行中的配置与数据",
+      "self_attributes": [
+        "_runtime",
+        "_runtime_lock",
+        "_task_locks"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_mark_task_queued",
+      "line": 1470,
+      "end_line": 1480,
+      "doc": "以原子方式把空闲任务标记为排队，避免重复提交手动操作",
+      "self_attributes": [
+        "_runtime",
+        "_runtime_lock"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_set_runtime",
+      "line": 1482,
+      "end_line": 1486,
+      "doc": "线程安全地更新任务瞬时运行状态",
+      "self_attributes": [
+        "_runtime",
+        "_runtime_lock"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_append_run",
+      "line": 1488,
+      "end_line": 1496,
+      "doc": "保存最近的刷流或检查诊断记录",
+      "self_attributes": [
+        "MAX_RUN_HISTORY",
+        "_get_task_data",
+        "_save_task_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_build_status_data",
+      "line": 1498,
+      "end_line": 1537,
+      "doc": "组装工作台总览、任务摘要和可选站点下载器",
+      "self_attributes": [
+        "_latest_site_user_data_by_domain",
+        "_show_sidebar_nav",
+        "_task_configs",
+        "_task_summary",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_task_summary",
+      "line": 1539,
+      "end_line": 1588,
+      "doc": "组装单个任务在左侧任务列表和仪表板中的摘要",
+      "self_attributes": [
+        "__calculate_seeding_torrents_size",
+        "_build_site_ratio_status",
+        "_get_site_name",
+        "_get_statistic_info",
+        "_get_task_data",
+        "_is_current_time_in_range",
+        "_next_run_at",
+        "_runtime",
+        "_task_configs",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_latest_site_user_data_by_domain",
+      "line": 1591,
+      "end_line": 1598,
+      "doc": "按标准化域名索引各站点最新一条有效用户统计。",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_build_site_ratio_status",
+      "line": 1600,
+      "end_line": 1644,
+      "doc": "组装任务绑定站点的当前分享率、目标值和控制状态。",
+      "self_attributes": [
+        "_latest_site_user_data_by_domain"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_evaluate_site_ratio_control",
+      "line": 1646,
+      "end_line": 1664,
+      "doc": "判断站点分享率是否允许当前任务继续新增种子。",
+      "self_attributes": [
+        "_build_site_ratio_status"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_build_task_detail",
+      "line": 1666,
+      "end_line": 1699,
+      "doc": "组装任务编辑、概览、诊断与分页种子数据",
+      "self_attributes": [
+        "_get_task_data",
+        "_task_configs",
+        "_task_summary"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_next_run_at",
+      "line": 1702,
+      "end_line": 1717,
+      "doc": "按 CRON 或固定间隔估算任务下一次刷新时间",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "brush",
+      "line": 1719,
+      "end_line": 1742,
+      "doc": "执行单个任务的站点刷新、选种和下载流程",
+      "self_attributes": [
+        "_append_run",
+        "_brush_lock",
+        "_get_task_config",
+        "_new_run_report",
+        "_now_iso",
+        "_run_brush",
+        "_set_runtime",
+        "_task_locks",
+        "_task_scope",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_run_brush",
+      "line": 1744,
+      "end_line": 1795,
+      "doc": "在已绑定任务上下文中执行刷流核心流程",
+      "self_attributes": [
+        "__brush_site_torrents",
+        "__calculate_seeding_torrents_size",
+        "__evaluate_pre_conditions_for_brush",
+        "__evaluate_size_condition_for_brush",
+        "__get_subscribe_titles",
+        "_calculate_global_downloader_size",
+        "_current_task_data",
+        "_evaluate_site_ratio_control",
+        "_is_current_time_in_range",
+        "_load_all_torrent_tasks",
+        "_recalculate_statistics",
+        "_save_current_task_data",
+        "_validate_task_reference",
+        "downloader"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_load_all_torrent_tasks",
+      "line": 1797,
+      "end_line": 1803,
+      "doc": "聚合所有任务的当前记录以保持跨站点重复种子保护",
+      "self_attributes": [
+        "_get_task_data",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_calculate_global_downloader_size",
+      "line": 1805,
+      "end_line": 1821,
+      "doc": "按下载器去重汇总全部种子的实时总体积。",
+      "self_attributes": [
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__brush_site_torrents",
+      "line": 1823,
+      "end_line": 1893,
+      "doc": "获取当前任务站点候选并逐项执行保留的选种规则",
+      "self_attributes": [
+        "__calculate_seeding_torrents_size",
+        "__class__",
+        "__download",
+        "__evaluate_conditions_for_brush",
+        "__evaluate_pre_conditions_for_brush",
+        "__evaluate_size_condition_for_brush",
+        "__filter_torrents_contains_subscribe",
+        "__send_add_message",
+        "_get_task_config",
+        "_torrent_to_task_record",
+        "_verify_candidate_promotion",
+        "eventmanager",
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_verify_candidate_promotion",
+      "line": 1895,
+      "end_line": 1910,
+      "doc": "添加下载前复核当前种子的免费促销及安全截止时间。",
+      "self_attributes": [
+        "PROMOTION_STOP_MARGIN",
+        "_inferred_site_clock_offset",
+        "_parse_pubdate",
+        "_refresh_promotion_from_site",
+        "_resolve_promotion_expiry"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_torrent_to_task_record",
+      "line": 1913,
+      "end_line": 1940,
+      "doc": "把站点候选种子转换为可持久化的任务记录",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_new_run_report",
+      "line": 1943,
+      "end_line": 1963,
+      "doc": "创建一条结构稳定的运行诊断记录",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_now_iso",
+      "line": 1966,
+      "end_line": 1968,
+      "doc": "返回带本地时区且精确到秒的时间文本",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__evaluate_size_condition_for_brush",
+      "line": 1970,
+      "end_line": 1997,
+      "doc": "校验当前任务及下载器实际种子体积是否已达到上限。",
+      "self_attributes": [
+        "__bytes_to_gb",
+        "_calculate_global_downloader_size",
+        "_get_task_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__evaluate_pre_conditions_for_brush",
+      "line": 1999,
+      "end_line": 2027,
+      "doc": "校验单任务与全局下载并发及上传下载带宽。",
+      "self_attributes": [
+        "__get_average_bandwidth",
+        "__get_downloading_count",
+        "__get_global_downloading_count",
+        "_get_task_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__evaluate_conditions_for_brush",
+      "line": 2029,
+      "end_line": 2100,
+      "doc": "按原有促销、H&R、规则、体积、人数和发布时间筛选候选",
+      "self_attributes": [
+        "__get_pubminutes",
+        "_get_task_config",
+        "_torrent_complete"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "check",
+      "line": 2102,
+      "end_line": 2134,
+      "doc": "执行状态同步、删种和归档，到期检查可等待同任务的当前操作",
+      "self_attributes": [
+        "_append_run",
+        "_get_task_config",
+        "_global_dynamic_delete_enabled",
+        "_new_run_report",
+        "_now_iso",
+        "_run_check",
+        "_run_global_dynamic_delete",
+        "_set_runtime",
+        "_task_locks",
+        "_task_scope",
+        "get_state"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_run_check",
+      "line": 2136,
+      "end_line": 2204,
+      "doc": "在已绑定任务上下文中执行刷流种子检查",
+      "self_attributes": [
+        "__auto_archive_tasks",
+        "__delete_torrent_for_evaluate_conditions",
+        "__delete_torrent_for_proxy",
+        "__filter_torrents_by_tag",
+        "__get_hash",
+        "__qb_torrents_reannounce",
+        "__update_seeding_tasks_based_on_tags",
+        "__update_torrent_tasks_state",
+        "__update_undeleted_torrents_missing_in_downloader",
+        "_cleanup_unused_task_tag",
+        "_current_task_data",
+        "_global_dynamic_delete_enabled",
+        "_protect_promotion_downloads",
+        "_recalculate_statistics",
+        "_save_current_task_data",
+        "_validate_task_reference",
+        "downloader",
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_protect_promotion_downloads",
+      "line": 2206,
+      "end_line": 2252,
+      "doc": "过期提前删；详情页无法核实时先停下载，暂停失败则交给删除兜底。",
+      "self_attributes": [
+        "__get_hash",
+        "__get_torrent_info",
+        "__promotion_expired",
+        "__send_delete_message",
+        "_record_added_as_free",
+        "_torrent_complete",
+        "downloader"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__update_torrent_tasks_state",
+      "line": 2254,
+      "end_line": 2274,
+      "doc": "更新当前任务种子的上下传、分享率和做种时间",
+      "self_attributes": [
+        "__get_hash",
+        "__get_torrent_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__update_seeding_tasks_based_on_tags",
+      "line": 2276,
+      "end_line": 2326,
+      "doc": "按任务唯一标签同步 qBittorrent 中的纳管和移除状态",
+      "self_attributes": [
+        "GLOBAL_BRUSH_TAG",
+        "__convert_torrent_info_to_task",
+        "__get_label",
+        "__log_and_send_torrent_task_update_message",
+        "_get_task_config",
+        "_is_primary_task_for_torrent",
+        "_save_current_task_data",
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_is_primary_task_for_torrent",
+      "line": 2328,
+      "end_line": 2334,
+      "doc": "仅让同站点第一项任务接管没有唯一标签的旧版刷流种子",
+      "self_attributes": [
+        "__get_site_by_torrent",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__evaluate_conditions_for_delete",
+      "line": 2336,
+      "end_line": 2375,
+      "doc": "评估普通与 H&R 种子的原有删除条件",
+      "self_attributes": [
+        "__promotion_expired",
+        "_get_task_config",
+        "_torrent_complete"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__promotion_expired",
+      "line": 2377,
+      "end_line": 2405,
+      "doc": "判断免费促销是否结束且种子仍未完成下载",
+      "self_attributes": [
+        "PROMOTION_STOP_MARGIN",
+        "__log_promotion_unverified",
+        "_get_task_config",
+        "_promotion_expiry",
+        "_torrent_complete"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__log_promotion_unverified",
+      "line": 2407,
+      "end_line": 2425,
+      "doc": "促销截止时间缺失或无法解析时限频提示，避免用户误以为删除功能已经生效",
+      "self_attributes": [
+        "_promotion_warn_lock",
+        "_promotion_warned_at"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__delete_torrent_for_evaluate_conditions",
+      "line": 2427,
+      "end_line": 2449,
+      "doc": "找出满足用户删除条件的种子并发送对应通知",
+      "self_attributes": [
+        "__evaluate_conditions_for_delete",
+        "__get_hash",
+        "__get_torrent_info",
+        "__send_delete_message"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__delete_torrent_for_evaluate_proxy_pre_conditions",
+      "line": 2451,
+      "end_line": 2477,
+      "doc": "动态删种前优先清理促销过期或下载超时的非 H&R 种子",
+      "self_attributes": [
+        "__get_hash",
+        "__get_torrent_info",
+        "__promotion_expired",
+        "__send_delete_message",
+        "_get_task_config",
+        "_torrent_complete"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_select_global_dynamic_deletions",
+      "line": 2480,
+      "end_line": 2578,
+      "doc": "按 V4 优先级从跨任务候选中生成全局动态删种计划",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_collect_global_dynamic_delete_candidates",
+      "line": 2580,
+      "end_line": 2727,
+      "doc": "汇总启用任务的最新下载器状态、做种体积和全局删种候选",
+      "self_attributes": [
+        "__evaluate_conditions_for_delete",
+        "__filter_torrents_by_tag",
+        "__get_hash",
+        "__get_torrent_info",
+        "__promotion_expired",
+        "__update_torrent_tasks_state",
+        "__update_undeleted_torrents_missing_in_downloader",
+        "_get_task_data",
+        "_save_task_data",
+        "_task_configs",
+        "_task_scope",
+        "_torrent_complete"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_send_global_dynamic_delete_summary",
+      "line": 2729,
+      "end_line": 2755,
+      "doc": "按受影响任务通知开关发送全局区间删种汇总",
+      "self_attributes": [
+        "__bytes_to_gb",
+        "post_message"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_run_global_dynamic_delete",
+      "line": 2757,
+      "end_line": 2877,
+      "doc": "串行执行跨任务、跨下载器的全局动态删种并返回成功删除数",
+      "self_attributes": [
+        "__bytes_to_gb",
+        "__send_delete_message",
+        "_all_task_locks_scope",
+        "_collect_global_dynamic_delete_candidates",
+        "_global_delete_lock",
+        "_global_delete_size_range",
+        "_global_dynamic_delete_enabled",
+        "_recalculate_statistics",
+        "_save_task_data",
+        "_select_global_dynamic_deletions",
+        "_send_global_dynamic_delete_summary",
+        "_task_scope"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__delete_torrent_for_proxy",
+      "line": 2879,
+      "end_line": 2937,
+      "doc": "按动态体积阈值执行前置、条件和兜底删种",
+      "self_attributes": [
+        "__bytes_to_gb",
+        "__calculate_seeding_torrents_size",
+        "__delete_torrent_for_evaluate_conditions",
+        "__delete_torrent_for_evaluate_proxy_pre_conditions",
+        "__get_hash",
+        "__get_torrent_info",
+        "__send_delete_message",
+        "__send_message",
+        "_get_task_config",
+        "downloader"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__update_undeleted_torrents_missing_in_downloader",
+      "line": 2939,
+      "end_line": 2959,
+      "doc": "把下载器中已不存在但仍标记正常的记录更新为已删除",
+      "self_attributes": [
+        "__get_all_hashes",
+        "__log_and_send_torrent_task_update_message"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__convert_torrent_info_to_task",
+      "line": 2961,
+      "end_line": 2991,
+      "doc": "把下载器种子转换为当前任务的托管记录",
+      "self_attributes": [
+        "__get_site_by_torrent",
+        "__get_torrent_info",
+        "_get_task_config"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_redict_url",
+      "line": 2994,
+      "end_line": 3044,
+      "doc": "解析带请求参数的跳转下载链接并返回真实地址",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__reset_download_url",
+      "line": 3047,
+      "end_line": 3064,
+      "doc": "为支持的 NexusPHP 站点追加跳过下载提示参数",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__download",
+      "line": 3066,
+      "end_line": 3143,
+      "doc": "按当前任务配置向 qBittorrent 或 Transmission 添加种子",
+      "self_attributes": [
+        "GLOBAL_BRUSH_TAG",
+        "__get_redict_url",
+        "__reset_download_url",
+        "_cleanup_temporary_qbittorrent_tag",
+        "_get_task_config",
+        "downloader",
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__qb_torrents_reannounce",
+      "line": 3145,
+      "end_line": 3153,
+      "doc": "删除 qBittorrent 种子前强制重新汇报 Tracker",
+      "self_attributes": [
+        "downloader"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_hash",
+      "line": 3155,
+      "end_line": 3164,
+      "doc": "兼容获取 qBittorrent 与 Transmission 种子 Hash",
+      "self_attributes": [
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_all_hashes",
+      "line": 3166,
+      "end_line": 3168,
+      "doc": "提取下载器种子列表中的全部有效 Hash",
+      "self_attributes": [
+        "__get_hash"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_label",
+      "line": 3170,
+      "end_line": 3179,
+      "doc": "兼容获取 qBittorrent 标签和 Transmission Labels",
+      "self_attributes": [
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_torrent_complete",
+      "line": 3182,
+      "end_line": 3192,
+      "doc": "按下载器实际完成度判断，旧记录缺少进度时兼容原下载量判断。",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_torrent_info",
+      "line": 3194,
+      "end_line": 3256,
+      "doc": "统一提取 qBittorrent 与 transmission-rpc v7 种子状态",
+      "self_attributes": [
+        "service_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_average_bandwidth",
+      "line": 3258,
+      "end_line": 3275,
+      "doc": "多次采样所有下载器带宽并返回平均值",
+      "self_attributes": [
+        "__get_downloader_info"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_downloader_info",
+      "line": 3277,
+      "end_line": 3286,
+      "doc": "通过插件链汇总当前所有下载器的实时传输信息",
+      "self_attributes": [
+        "chain"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_downloading_count",
+      "line": 3288,
+      "end_line": 3299,
+      "doc": "获取带当前任务唯一标签的下载中种子数量",
+      "self_attributes": [
+        "_get_task_config",
+        "downloader"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_global_downloading_count",
+      "line": 3301,
+      "end_line": 3315,
+      "doc": "按下载器去重汇总带全局刷流标签的下载中种子数量。",
+      "self_attributes": [
+        "GLOBAL_BRUSH_TAG",
+        "_task_configs"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_pubminutes",
+      "line": 3318,
+      "end_line": 3327,
+      "doc": "计算站点发布时间距当前时间的分钟数",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__filter_torrents_by_tag",
+      "line": 3329,
+      "end_line": 3337,
+      "doc": "过滤包含任一删除排除标签的种子",
+      "self_attributes": [
+        "__get_label"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_subscribe_titles",
+      "line": 3339,
+      "end_line": 3370,
+      "doc": "识别并缓存当前订阅可用于排除匹配的标题集合",
+      "self_attributes": [
+        "_get_task_config",
+        "_subscribe_infos",
+        "chain"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__filter_torrents_contains_subscribe",
+      "line": 3373,
+      "end_line": 3388,
+      "doc": "排除标题或描述命中任一订阅名称的候选种子",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__bytes_to_gb",
+      "line": 3391,
+      "end_line": 3393,
+      "doc": "把字节数转换为 GB",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__calculate_seeding_torrents_size",
+      "line": 3396,
+      "end_line": 3402,
+      "doc": "计算未删除托管种子的总做种体积",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__auto_archive_tasks",
+      "line": 3404,
+      "end_line": 3424,
+      "doc": "按当前任务保留天数归档已删除种子记录",
+      "self_attributes": [
+        "_current_task_data",
+        "_get_task_config",
+        "_save_current_task_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_recalculate_statistics",
+      "line": 3426,
+      "end_line": 3446,
+      "doc": "从当前和归档记录重新计算单任务统计",
+      "self_attributes": [
+        "_get_task_data",
+        "_save_task_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_get_statistic_info",
+      "line": 3448,
+      "end_line": 3461,
+      "doc": "读取单任务统计并为历史空数据补齐字段",
+      "self_attributes": [
+        "_get_task_data"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_is_valid_time_range",
+      "line": 3464,
+      "end_line": 3474,
+      "doc": "校验 HH:MM-HH:MM 格式的每日时间段",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_is_current_time_in_range",
+      "line": 3476,
+      "end_line": 3487,
+      "doc": "判断当前时间是否处于任务允许的每日开启区间",
+      "self_attributes": [
+        "_get_task_config",
+        "_is_valid_time_range"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__get_site_by_torrent",
+      "line": 3490,
+      "end_line": 3519,
+      "doc": "根据 Tracker 或磁力链接识别种子所属站点",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "_log_and_notify_error",
+      "line": 3521,
+      "end_line": 3524,
+      "doc": "记录错误并写入系统消息中心",
+      "self_attributes": [
+        "systemmessage"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__send_delete_message",
+      "line": 3526,
+      "end_line": 3537,
+      "doc": "发送包含任务、站点、种子和原因的删种通知",
+      "self_attributes": [
+        "_get_task_config",
+        "post_message"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__build_add_message_text",
+      "line": 3540,
+      "end_line": 3563,
+      "doc": "兼容候选对象和任务字典构建新增通知文本",
+      "self_attributes": []
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__send_add_message",
+      "line": 3565,
+      "end_line": 3574,
+      "doc": "发送当前任务新增刷流种子的通知",
+      "self_attributes": [
+        "__build_add_message_text",
+        "_get_task_config",
+        "post_message"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__send_message",
+      "line": 3576,
+      "end_line": 3580,
+      "doc": "按当前任务通知开关发送通用站点消息",
+      "self_attributes": [
+        "_get_task_config",
+        "post_message"
+      ]
+    },
+    {
+      "class": "BrushFlowLanduo",
+      "name": "__log_and_send_torrent_task_update_message",
+      "line": 3582,
+      "end_line": 3600,
+      "doc": "记录并汇总发送标签同步导致的任务状态变更",
+      "self_attributes": [
+        "__send_message",
+        "_get_task_config"
+      ]
+    }
+  ]
+}

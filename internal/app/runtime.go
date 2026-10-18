@@ -71,16 +71,19 @@ type App struct {
 	pluginProcessStats      pluginProcessSnapshotter
 	pluginServerStatus      pluginServerStatusRuntime
 	pluginRemoveLink        pluginRemoveLinkRuntime
+	pluginScrapeClean       pluginScrapeCleanRuntime
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime
 	pluginIYUU              pluginIYUURuntime
 	pluginTransfer          pluginTransferRuntime
 	pluginCloudflare        pluginCloudflareRuntime
 	pluginSeedRescue        pluginSeedRescueRuntime
+	pluginBrushFlow         pluginBrushFlowRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 
 	pluginCleanupOutboxAudit pluginCleanupAuditCursor // pluginMu; bounded integrity audit, never an execution cursor.
+	pluginScrapeOutboxAudit  pluginScrapeAuditCursor
 }
 
 type subscribeGroupCache struct {
@@ -171,6 +174,9 @@ func New(opts Options) (*App, error) {
 func (a *App) Start(parent context.Context) {
 	ctx, cancel := context.WithCancel(parent)
 	a.cancel = cancel
+	if err := a.restoreScrapeFileCleanOwners(ctx); err != nil {
+		a.log("ERROR", "plugins", "scrape_restore_pending", "刮削清理状态待核对", "", "")
+	}
 	if err := a.restoreRemoveLinkOwners(ctx); err != nil {
 		a.log("ERROR", "plugins", "cleanup_restore_pending", "文件清理监听尚未恢复，已保留执行状态，请核对插件记录", "", "")
 	}
@@ -202,6 +208,7 @@ func (a *App) Close() error {
 		a.cancel()
 	}
 	a.wg.Wait()
+	a.stopScrapeFileCleanPlugins()
 	a.stopRemoveLinkPlugins()
 	a.stopCleanInvalidSeedPlugins()
 	if a.cancel != nil {

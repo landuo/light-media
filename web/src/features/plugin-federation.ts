@@ -1,5 +1,7 @@
 import * as Vue from 'vue';
+import * as Vuetify from 'vuetify';
 import { apiURL } from '../base-path.ts';
+import { hasOriginalPluginUI } from './plugin-remote-contract.ts';
 
 type ComponentName = 'Config' | 'Page' | 'Dashboard' | 'AppPage';
 type FederationEntry = {
@@ -11,12 +13,25 @@ const entries = new Map<string, Promise<FederationEntry>>();
 
 export function pluginFederationEntry(pluginID: string, instance: string, name: string) {
   if (
-    pluginID !== 'SeedRescue' ||
+    !hasOriginalPluginUI(pluginID) ||
     !components.has(name) ||
     !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,95}$/.test(instance)
   )
     throw new Error('此插件尚未提供原版 Vue 界面');
   return apiURL('/plugins/' + encodeURIComponent(instance) + '/frontend/assets/remoteEntry.js');
+}
+
+export function pluginRemoteSharedScope(pluginID: string) {
+  if (!hasOriginalPluginUI(pluginID)) throw new Error('此插件尚未提供原版 Vue 界面');
+  const scope: Record<string, unknown> = {
+    vue: { [Vue.version]: { get: async () => () => Vue, loaded: true, scope: 'default' } },
+  };
+  if (pluginID === 'BrushFlowLanduo') {
+    scope.vuetify = {
+      [Vuetify.version]: { get: async () => () => Vuetify, loaded: true, scope: 'default' },
+    };
+  }
+  return scope;
 }
 
 export async function loadPluginRemote(pluginID: string, instance: string, name: ComponentName) {
@@ -28,9 +43,7 @@ export async function loadPluginRemote(pluginID: string, instance: string, name:
         throw new Error('插件界面入口无效');
       // The unchanged original assets importShared('vue'). Supply exactly the
       // application's Vue module so reactivity and component context are shared.
-      entry.init({
-        vue: { [Vue.version]: { get: async () => () => Vue, loaded: true, scope: 'default' } },
-      });
+      entry.init(pluginRemoteSharedScope(pluginID));
       return entry;
     });
     entries.set(entryURL, pending);

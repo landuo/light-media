@@ -33,6 +33,10 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		(in.FileID == "" && (in.DeleteSource || in.DeleteTarget) && item.executionFileID() != item.ID) {
 		return nil, bad("HISTORY_CHANGED", "整理记录已更新，请刷新后重新确认删除")
 	}
+	if in.DeleteSource {
+		a.downloadMu.Lock()
+		defer a.downloadMu.Unlock()
+	}
 	var active int
 	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, item.PlanID).Scan(&active); e != nil {
 		return nil, e
@@ -58,6 +62,11 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 	}
 	if in.DeleteSource && sourceExists {
 		if e := a.removeHistorySource(ctx, item, sourceSnapshot); e != nil {
+			return nil, e
+		}
+	}
+	if in.DeleteSource {
+		if e := a.publishHistoryDownloadFileDeleted(ctx, item); e != nil {
 			return nil, e
 		}
 	}
@@ -129,6 +138,9 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	if e := a.Store.Get(ctx, "import_plan", item.PlanID, &plan); e != nil {
 		return importSnapshot{}, false, e
 	}
+	if _, e := a.historyDownloadIdentity(ctx, item); e != nil {
+		return importSnapshot{}, false, e
+	}
 	var expected importSnapshot
 	for _, file := range plan.Files {
 		if file.ID == item.executionFileID() {
@@ -148,7 +160,7 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 				return importSnapshot{}, false, checkErr
 			}
 			if location != "gone" {
-				if guardErr := a.guardHistoryDownloaderSource(ctx, item.Source); guardErr != nil {
+				if guardErr := a.guardHistoryDownloaderSource(ctx, item); guardErr != nil {
 					return importSnapshot{}, false, guardErr
 				}
 				return expected, true, nil
@@ -162,7 +174,7 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	if expected != actual {
 		return importSnapshot{}, false, bad("FILE_SNAPSHOT_CHANGED", "源文件在整理后发生变化，不能按旧历史删除")
 	}
-	if e = a.guardHistoryDownloaderSource(ctx, item.Source); e != nil {
+	if e = a.guardHistoryDownloaderSource(ctx, item); e != nil {
 		return importSnapshot{}, false, e
 	}
 	var busy int
@@ -177,7 +189,8 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 
 // Downloaders no longer need configured save paths: their actual task paths
 // are the only reliable evidence that a selected source is still in use.
-func (a *App) guardHistoryDownloaderSource(ctx context.Context, path string) error {
+func (a *App) guardHistoryDownloaderSource(ctx context.Context, item transferHistoryItem) error {
+	path := item.Source
 	for _, configured := range a.Settings().Downloaders {
 		client, err := download.New(configured.Config)
 		if err != nil {
@@ -193,6 +206,13 @@ func (a *App) guardHistoryDownloaderSource(ctx context.Context, path string) err
 				return bad("FILE_DOWNLOADER_UNVERIFIED", "下载器返回了无法核对的任务目录，已停止删除源文件")
 			}
 			if _, overlap := sharedDirectoryPath(directory, path); overlap {
+				authorized, checkErr := a.historyDownloadTaskAuthorized(ctx, item, configured, task)
+				if checkErr != nil {
+					return checkErr
+				}
+				if authorized {
+					continue
+				}
 				return bad("FILE_DOWNLOADER_SOURCE_PROTECTED", "源文件位于现有下载任务目录中，请先在下载器中处理该任务")
 			}
 		}

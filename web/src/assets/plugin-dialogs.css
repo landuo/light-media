@@ -2,6 +2,15 @@
   /* Vuetify main.css normally supplies this root value. Keep its original
      value scoped here so menu/active overlays do not become opaque. */
   --v-theme-overlay-multiplier: 1;
+  /* Original MoviePilot styles/common.scss default surface tokens. Keep them
+     on plugin hosts; unchanged remote assets consume the same variables. */
+  --app-theme-surface-radius: 8px;
+  --app-surface-radius: var(--app-theme-surface-radius);
+  --app-field-radius: var(--app-theme-surface-radius);
+  --app-surface-border-opacity: 0.06;
+  --app-surface-border: 1px solid rgba(var(--v-theme-on-surface), var(--app-surface-border-opacity));
+  --app-surface-shadow: none;
+  --app-surface-hover-shadow: none;
 }
 .plugin-dialog-surface {
   color: var(--text);
@@ -62,4 +71,24 @@
   padding: 0;
   border: 0;
   box-shadow: none;
+}
+
+/* Original remote components also use native buttons. Recreate the original
+   Tailwind/preflight baseline instead of inheriting the host's centered app
+   button layout. Component classes and their scoped styles take precedence. */
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) button:not(.v-btn) {
+  display: inline-block;
+  min-height: 0;
+  align-items: normal;
+  justify-content: normal;
+  white-space: normal;
+  letter-spacing: normal;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  border: 0 solid;
+  border-radius: 0;
+  background: transparent;
+  gap: normal;
+  transition: none;
 }

@@ -41,6 +41,7 @@ export const pluginUI = createVuetify({
           warning: '#FFB400',
           error: '#FF4C51',
           background: '#F4F5FA',
+          'on-background': '#3A3541',
           surface: '#FFFFFF',
           'on-surface': '#3A3541',
           // Original Vue plugins use these semantic colors directly. Vuetify's

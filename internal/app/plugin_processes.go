@@ -42,9 +42,6 @@ func (s *pluginProcessSnapshotter) snapshot(ctx context.Context) ([]builtin.Proc
 	if err != nil {
 		return nil, bad("PLUGIN_PROCESS_READ_FAILED", "读取当前容器进程失败")
 	}
-	if len(pids) > 1024 {
-		return nil, bad("PLUGIN_PROCESS_LIMIT", "当前可见进程超过1024个，请检查容器进程隔离设置")
-	}
 	items := []builtin.ProcessInfo{}
 	current := make(map[int32]pluginCPUSample, len(pids))
 	for _, pid := range pids {

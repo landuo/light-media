@@ -12,6 +12,7 @@ import (
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/schedule"
+	"light-media/internal/plugins/scrapefileclean"
 	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/subscribegroup"
 	"light-media/internal/plugins/uninstall"
@@ -237,11 +238,17 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	if a.cloudflareLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginCloudflareLifecycleHTTP(w, r, path)
 	}
+	if a.brushFlowLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginBrushFlowLifecycleHTTP(w, r, path)
+	}
 	if a.seedRescueLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginSeedRescueLifecycleHTTP(w, r, path)
 	}
 	if a.autoBackupLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginAutoBackupLifecycleHTTP(w, r, path)
+	}
+	if a.scrapeCleanLifecycleRequest(r.Context(), path, r.Method) {
+		return a.pluginScrapeCleanLifecycleHTTP(w, r, path)
 	}
 	if a.removeLinkLifecycleRequest(r.Context(), path, r.Method) {
 		return a.pluginRemoveLinkLifecycleHTTP(w, r, path)
@@ -460,6 +467,12 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 	case "CleanInvalidSeed":
 		if _, err := cleanSeedConfigMap(raw); err != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "清理无效做种配置必须是有效对象")
+		}
+		return append(json.RawMessage(nil), raw...), nil
+	case "ScrapeFileClean":
+		config := scrapefileclean.NewConfig()
+		if config.Apply(raw) != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "清理媒体文件配置格式无效")
 		}
 		return append(json.RawMessage(nil), raw...), nil
 	case "RemoveLink":

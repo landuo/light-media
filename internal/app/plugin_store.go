@@ -177,7 +177,7 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, siteReferenceProtocolSchema); err != nil {
 		return nil, err
 	}
-	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema+cloudflareSchema+cloudflareRootSchema+cloudflareCommandSchema+cloudflareNoticeSchema+seedRescueSchema+seedRescueRootSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema+cloudflareSchema+cloudflareRootSchema+cloudflareCommandSchema+cloudflareNoticeSchema+seedRescueSchema+seedRescueRootSchema+brushFlowSchema+brushFlowRootSchema+brushFlowEventSchema); err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
@@ -186,7 +186,7 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, pluginNoticeSchema); err != nil {
 		return nil, err
 	}
-	if _, err = tx.ExecContext(ctx, pluginCleanupOutboxSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, pluginCleanupOutboxSchema+pluginScrapeOutboxSchema+pluginScrapeCleanRootSchema+pluginScrapeCleanJournalSchema); err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, pluginUninstallSchema); err != nil {
@@ -259,7 +259,7 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 		return nil, err
 	}
 	limit := pluginValueLimit
-	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" {
+	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" || kind == "scrape_journal" {
 		limit = pluginDataValueLimit
 	}
 	if kind == "clean_seed_journal" || kind == "notice_journal" {
@@ -305,6 +305,14 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 		cfParent, err = p.cloudflareTransitionParentTx(ctx, tx, in.InstanceID)
 		if err != nil {
 			return err
+		}
+	}
+	var brushParent brushFlowParent
+	if in.PluginID == "BrushFlowLanduo" {
+		var e error
+		brushParent, e = p.brushFlowTransitionParentTx(ctx, tx, in.InstanceID)
+		if e != nil {
+			return e
 		}
 	}
 	var rescueParent seedRescueParent
@@ -370,8 +378,18 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 			return err
 		}
 	}
+	if in.PluginID == "BrushFlowLanduo" {
+		if err = p.brushFlowGenesisTx(ctx, tx, in.InstanceID, "install", brushParent); err != nil {
+			return err
+		}
+	}
 	if in.PluginID == "SeedRescue" {
 		if err = p.seedRescueGenesisTx(ctx, tx, in.InstanceID, "install", rescueParent); err != nil {
+			return err
+		}
+	}
+	if in.PluginID == "ScrapeFileClean" {
+		if err = p.scrapeCleanGenesisTx(ctx, tx, in.InstanceID, "install"); err != nil {
 			return err
 		}
 	}
@@ -500,6 +518,10 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 		return err
 	}
 	defer tx.Rollback()
+	brushParent, isBrush, e := p.brushFlowLifecycleParentTx(ctx, tx, instanceID)
+	if e != nil {
+		return e
+	}
 	rescueParent, isRescue, e := p.seedRescueLifecycleParentTx(ctx, tx, instanceID)
 	if e != nil {
 		return e
@@ -539,6 +561,15 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 	if err := p.removeOrganizationMemberTx(ctx, tx, instanceID); err != nil {
 		return err
 	}
+	var scrapeID string
+	if err = tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&scrapeID); err != nil {
+		return err
+	}
+	if scrapeID == "ScrapeFileClean" {
+		if err = p.scrapeCleanGenesisTx(ctx, tx, instanceID, "uninstall"); err != nil {
+			return err
+		}
+	}
 	if isAuto {
 		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "uninstall", autoParent); err != nil {
 			return err
@@ -564,6 +595,11 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 			return err
 		}
 	}
+	if isBrush {
+		if err = p.brushFlowGenesisTx(ctx, tx, instanceID, "uninstall", brushParent); err != nil {
+			return err
+		}
+	}
 	if isRescue {
 		if err = p.seedRescueGenesisTx(ctx, tx, instanceID, "uninstall", rescueParent); err != nil {
 			return err
@@ -581,6 +617,10 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 		return err
 	}
 	defer tx.Rollback()
+	brushParent, isBrush, e := p.brushFlowLifecycleParentTx(ctx, tx, instanceID)
+	if e != nil {
+		return e
+	}
 	rescueParent, isRescue, e := p.seedRescueLifecycleParentTx(ctx, tx, instanceID)
 	if e != nil {
 		return e
@@ -623,6 +663,15 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	if err := p.markInstalledSiteReferencesTx(ctx, tx, instanceID, "reset-empty/v1"); err != nil {
 		return err
 	}
+	var scrapeID string
+	if err = tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&scrapeID); err != nil {
+		return err
+	}
+	if scrapeID == "ScrapeFileClean" {
+		if err = p.scrapeCleanGenesisTx(ctx, tx, instanceID, "reset"); err != nil {
+			return err
+		}
+	}
 	if isAuto {
 		if err = p.autoBackupGenesisTx(ctx, tx, instanceID, "reset", autoParent); err != nil {
 			return err
@@ -645,6 +694,11 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	}
 	if effect != nil {
 		if err := effect(ctx, tx); err != nil {
+			return err
+		}
+	}
+	if isBrush {
+		if err = p.brushFlowGenesisTx(ctx, tx, instanceID, "reset", brushParent); err != nil {
 			return err
 		}
 	}

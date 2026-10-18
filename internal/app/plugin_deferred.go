@@ -16,6 +16,7 @@ import (
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/removelink"
+	"light-media/internal/plugins/scrapefileclean"
 	"light-media/internal/plugins/uninstall"
 )
 
@@ -72,6 +73,22 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 			return uninstall.ApplyCapability, json.RawMessage(`{}`), nil
 		}
 	}
+	if in.PluginID == "ScrapeFileClean" && in.Version == "1.0.7" {
+		switch run.Action {
+		case "init", "reload":
+			return scrapefileclean.ConfigureCapability, json.RawMessage(`{}`), nil
+		case "event":
+			var invocation plugins.Invocation
+			var event struct {
+				ID string `json:"event_id"`
+			}
+			if json.Unmarshal(run.Input, &invocation) != nil || json.Unmarshal(invocation.Input, &event) != nil || event.ID == "" {
+				return "", nil, bad("PLUGIN_RUN_SCOPE_DENIED", "清理事件没有绑定持久执行")
+			}
+			raw, _ := json.Marshal(event)
+			return scrapefileclean.ApplyCapability, raw, nil
+		}
+	}
 	if in.PluginID == "RemoveLink" && in.Version == "2.17" {
 		switch run.Action {
 		case "init", "reload":
@@ -116,6 +133,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 	}
 	if in.PluginID == "AutoBackup" && in.Version == "2.1.4" {
 		return autoBackupDeferredSpec(run)
+	}
+	if in.PluginID == "BrushFlowLanduo" && in.Version == "5.2.15" {
+		return brushFlowDeferredSpec(run)
 	}
 	if in.PluginID == "SeedRescue" && in.Version == "1.6.3" {
 		return seedRescueDeferredSpec(run)
@@ -172,6 +192,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 	}
 	if r.Plugin == "AutoBackup" && r.Version == "2.1.4" {
 		return (r.ErrorCode == "AUTO_BACKUP_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == autoBackupBlockedByUnknown && bytes.Equal(r.Result, autoBackupBlockedResult()))
+	}
+	if r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" {
+		return ((r.ErrorCode == "BRUSH_FLOW_SOURCE_FAILED" || r.ErrorCode == "BRUSH_FLOW_OBSERVED") && json.Valid(r.Result)) || (r.ErrorCode == brushFlowBlockedByUnknown && bytes.Equal(r.Result, brushFlowBlockedResult()))
 	}
 	if r.Plugin == "SeedRescue" && r.Version == "1.6.3" {
 		return ((r.ErrorCode == "SEED_RESCUE_SOURCE_FAILED" || r.ErrorCode == seedRescueObserved) && json.Valid(r.Result)) || (r.ErrorCode == seedRescueBlockedByUnknown && bytes.Equal(r.Result, seedRescueBlockedResult()))
@@ -328,11 +351,17 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 			return err
 		}
 	}
+	if from == "prepared" && to == "started" && r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" {
+		if err = d.brushFlowStartedTx(ctx, tx); err != nil {
+			return err
+		}
+	}
 	if from == "prepared" && to == "started" && r.Plugin == "SeedRescue" && r.Version == "1.6.3" {
 		if err = d.seedRescueStartedTx(ctx, tx); err != nil {
 			return err
 		}
 	}
+
 	r.Phase, r.Result, r.ErrorCode = to, result, code
 	if err = d.a.pluginStore.writeDeferred(ctx, tx, r, sealed); err != nil {
 		return err
@@ -346,6 +375,11 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 	if from == "prepared" && to == "started" && r.Plugin == "IYUUAutoSeed" {
 		admission := context.WithValue(ctx, iyuuAdmissionKey{}, iyuuAdmissionFromRun(d.run, r.Method))
 		if err = d.a.pluginStore.iyuuAcceptRunTx(admission, tx, d.run); err != nil {
+			return err
+		}
+	}
+	if from == "prepared" && to == "started" && r.Plugin == "ScrapeFileClean" {
+		if err = d.a.pluginStore.scrapeCleanAcceptTx(ctx, tx, d.run, r.Method); err != nil {
 			return err
 		}
 	}
@@ -432,6 +466,20 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 		}
 		defer release()
 	}
+	if d.record.Plugin == "BrushFlowLanduo" && d.record.Version == "5.2.15" {
+		held, release, e := d.lockBrushFlow(ctx)
+		if errors.Is(e, errBrushFlowUnknownAdmission) {
+			return d.brushFlowBlocked(ctx)
+		}
+		if errors.Is(e, errBrushFlowBusy) {
+			return d.brushFlowBusy(ctx)
+		}
+		if e != nil {
+			return nil, e
+		}
+		defer release()
+		ctx = held
+	}
 	if d.record.Plugin == "SeedRescue" && d.record.Version == "1.6.3" {
 		held, release, e := d.lockSeedRescue(ctx)
 		if errors.Is(e, errSeedRescueBusy) {
@@ -509,6 +557,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 			if knownCode != "" {
 				phase, code = "terminal_failed", knownCode
 				err = bad(code, "插件操作失败，已保留确证结果")
+			}
+		}
+	}
+	if d.record.Plugin == "BrushFlowLanduo" && d.record.Version == "5.2.15" {
+		known, knownCode, found, proofErr := d.a.pluginStore.brushFlowOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "稀缺保种结果尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "稀缺保种操作失败，已保留确证结果")
 			}
 		}
 	}
@@ -638,25 +699,32 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "SeedRescue" {
+			if r.Plugin == "BrushFlowLanduo" {
+				result, code, found, proofErr = p.brushFlowOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "SeedRescue" {
 				result, code, found, proofErr = p.seedRescueOutcome(ctx, run, r.Method)
 			} else if r.Plugin == "CloudflareSpeedTest" {
 				result, code, found, proofErr = p.cloudflareOutcome(ctx, run, r.Method)
 			} else if r.Plugin == "AutoBackup" {
 				result, code, found, proofErr = p.autoBackupOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "ScrapeFileClean" {
+				result, found, proofErr = p.scrapeCleanDeferredOutcome(ctx, run, r.Method)
 			} else if r.Plugin == "RemoveLink" {
 				result, found, proofErr = p.removeLinkDeferredOutcome(ctx, run, r.Method)
 			} else {
 				result, code, found, proofErr = p.cleanInvalidSeedDeferredOutcome(ctx, run, r.Method)
 			}
 			if proofErr != nil {
-				if (r.Plugin == "AutoBackup" && autoBackupErrorCode(proofErr) == "AUTO_BACKUP_EVIDENCE_MISSING") || (r.Plugin == "CloudflareSpeedTest" && cloudflareErrorCode(proofErr) == "CLOUDFLARE_EVIDENCE_MISSING") {
+				if (r.Plugin == "AutoBackup" && autoBackupErrorCode(proofErr) == "AUTO_BACKUP_EVIDENCE_MISSING") || (r.Plugin == "CloudflareSpeedTest" && cloudflareErrorCode(proofErr) == "CLOUDFLARE_EVIDENCE_MISSING") || (r.Plugin == "BrushFlowLanduo" && brushFlowErrorCode(proofErr) == "BRUSH_FLOW_EVIDENCE_MISSING") {
 					code := "AUTO_BACKUP_EVIDENCE_MISSING"
+					if r.Plugin == "BrushFlowLanduo" {
+						code = "BRUSH_FLOW_EVIDENCE_MISSING"
+					}
 					if r.Plugin == "CloudflareSpeedTest" {
 						code = "CLOUDFLARE_EVIDENCE_MISSING"
 					}
@@ -759,6 +827,11 @@ func (a *App) retryPluginDeferred(ctx context.Context, instance, runID string) (
 	}
 	if r.Phase != "prepared" || !deferredSameRun(r, installation, run) {
 		return PluginRun{}, bad("PLUGIN_RETRY_DENIED", "操作已开始或配置已变化，不能直接重试")
+	}
+	if installation.PluginID == "ScrapeFileClean" {
+		if err = a.validateScrapeFileCleanDeferredRetry(ctx, run); err != nil {
+			return PluginRun{}, err
+		}
 	}
 	if installation.PluginID == "RemoveLink" {
 		if err = a.validateRemoveLinkDeferredRetry(ctx, run); err != nil {

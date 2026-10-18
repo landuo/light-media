@@ -18,14 +18,20 @@ func (a *App) pluginNavigation(ctx context.Context) (any, error) {
 	}
 	items := []map[string]any{}
 	for _, in := range installed {
-		if in.PluginID != "SeedRescue" || !in.Installed || !in.DesiredEnabled {
+		if (in.PluginID != "SeedRescue" && in.PluginID != "BrushFlowLanduo") || !in.Installed || !in.DesiredEnabled {
 			continue
 		}
 		manifest, _, exists := builtin.Lookup(in.PluginID)
 		if !exists || manifest.Version != in.Version {
 			continue
 		}
-		entries, err := a.seedRescueSidebar(ctx, in)
+		var entries []map[string]any
+		switch in.PluginID {
+		case "SeedRescue":
+			entries, err = a.seedRescueSidebar(ctx, in)
+		case "BrushFlowLanduo":
+			entries, err = a.brushFlowSidebar(ctx, in)
+		}
 		if err != nil {
 			a.log("ERROR", "plugins", "plugin_sidebar_failed", fmt.Sprintf("获取插件[%s]侧栏导航出错，未展示未经确认的入口", in.InstanceID), "", "")
 			continue

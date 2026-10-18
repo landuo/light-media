@@ -38,7 +38,7 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "site.deleted", "subscription.added", "notice.message"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "download.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "site.deleted", "subscription.added", "notice.message", "plugin.triggered"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true
@@ -163,6 +163,21 @@ func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription
 		cursor = event.Sequence
 		if !slices.Contains(subscription.Types, event.Type) {
 			continue
+		}
+		if event.Type == "plugin.triggered" {
+			if err := p.validateBrushFlowTriggered(ctx, tx, event); err != nil {
+				return err
+			}
+		}
+		if event.Type == "download.deleted" {
+			if _, err := (&App{Store: p.store, pluginStore: p}).downloadDeletedSourceData(ctx, tx, event.DownloadDeletedID); err != nil {
+				return err
+			}
+		}
+		if event.Type == "downloadfile.deleted" {
+			if _, err := p.downloadFileEvent(ctx, tx, event.FileEventID); err != nil {
+				return err
+			}
 		}
 		if event.Type == "notice.message" {
 			if _, err := p.noticeMessage(ctx, tx, event.NoticeID); err != nil {
@@ -304,6 +319,16 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 	if err := rows.Err(); err != nil {
 		return out, err
 	}
+	// Release the cursor before checking owner proofs through the database.
+	// The App may deliberately run with one SQLite connection.
+	rows.Close()
+	for _, event := range out.Events {
+		if event.Type == "plugin.triggered" {
+			if err := p.validateBrushFlowTriggered(ctx, p.store.DB, event); err != nil {
+				return out, err
+			}
+		}
+	}
 	out.Complete = len(out.Events) <= limit
 	if !out.Complete {
 		out.Events = out.Events[:limit]
@@ -323,6 +348,14 @@ func (a *App) dispatchPluginEvents(ctx context.Context, at time.Time) error {
 	if outboxError == nil {
 		a.pluginCleanupOutboxAudit = nextAudit
 		outboxError = a.dispatchRemoveLinkOutboxes(ctx, 200)
+	}
+	scrapeCursor, scrapeErr := a.auditScrapeFileCleanHandoffs(ctx, a.pluginScrapeOutboxAudit, 200)
+	if scrapeErr == nil {
+		a.pluginScrapeOutboxAudit = scrapeCursor
+		scrapeErr = a.dispatchScrapeFileCleanOutboxes(ctx, 200)
+	}
+	if scrapeErr != nil && outboxError == nil {
+		outboxError = scrapeErr
 	}
 	consumers, err := a.pluginStore.activeEventSubscriptions(ctx)
 	if err != nil {

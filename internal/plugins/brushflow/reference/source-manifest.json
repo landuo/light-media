@@ -1,0 +1,827 @@
+{
+  "source_repository": "/Users/accidia/projects/MoviePilot-Plugins",
+  "source_commit": "5a5e8e3ac4c5cd75ac66cf3ef5ef04144ca90c32",
+  "declared_version": "5.2.15",
+  "installed_equivalence": {
+    "scope": "2026-10-18 exact fixed source hashes via read-only Python -B no application import, config or KV",
+    "files": [
+      {
+        "path": "__init__.py",
+        "sha256": "6bc93037f289b1ed0999eb140528927ef07c20a8bbc48a996969bf63f949bc9a",
+        "installed_sha256": "6bc93037f289b1ed0999eb140528927ef07c20a8bbc48a996969bf63f949bc9a",
+        "byte_equal": true
+      },
+      {
+        "path": "models.py",
+        "sha256": "4b292809c13557614c5ac2448936e7c8f774e22e9f866dd2d3fe53e56b7ebaa7",
+        "installed_sha256": "4b292809c13557614c5ac2448936e7c8f774e22e9f866dd2d3fe53e56b7ebaa7",
+        "byte_equal": true
+      }
+    ]
+  },
+  "scope": "read-only source capture; no config/KV/media/seeds read or changed",
+  "files": [
+    {
+      "path": "reference/__init__.py",
+      "sha256": "6bc93037f289b1ed0999eb140528927ef07c20a8bbc48a996969bf63f949bc9a",
+      "bytes": 171058
+    },
+    {
+      "path": "reference/models.py",
+      "sha256": "4b292809c13557614c5ac2448936e7c8f774e22e9f866dd2d3fe53e56b7ebaa7",
+      "bytes": 8346
+    },
+    {
+      "path": "reference/original-tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reference/original-tests/__pycache__/__init__.cpython-314.pyc",
+      "sha256": "808b69896b4d07d52bb7fb580dca76caf05c58cd3b9a5e2dd1fa3367b3db9e1a",
+      "bytes": 178
+    },
+    {
+      "path": "reference/original-tests/__pycache__/test_promotion_expiry.cpython-314.pyc",
+      "sha256": "697473015c263f90fd6493a8ef7271e320d8c70d65022faacaf547ec5b3c5304",
+      "bytes": 101966
+    },
+    {
+      "path": "reference/original-tests/__pycache__/test_size_limits.cpython-314.pyc",
+      "sha256": "a401ced1cf4c5d86fc481a261529d2b76c89e13f83e015a004dd56f8f7b42d55",
+      "bytes": 7252
+    },
+    {
+      "path": "reference/original-tests/__pycache__/test_temporary_tags.cpython-314.pyc",
+      "sha256": "e1819931f9b1ea0ffdb3ae1a4f2cb396f83678aca71d946859b037d12ede3491",
+      "bytes": 13009
+    },
+    {
+      "path": "reference/original-tests/test_promotion_expiry.py",
+      "sha256": "461e5ca9832367209fe35a0c0398791fa5ed05b9eb86aa93d93daf437e218649",
+      "bytes": 64610
+    },
+    {
+      "path": "reference/original-tests/test_size_limits.py",
+      "sha256": "d2f6ffd0aa737ddbbf409051a4ae5ead37ad60112fe5899f144dd63f34805c70",
+      "bytes": 3439
+    },
+    {
+      "path": "reference/original-tests/test_temporary_tags.py",
+      "sha256": "12cd1c5bc1dac60764b4d64c292d9e5e13d2b728b689ec4dab64f8768e0ebaa0",
+      "bytes": 7128
+    }
+  ],
+  "classes": [
+    {
+      "name": "BrushTaskConfig",
+      "functions": [
+        {
+          "name": "__init__",
+          "line": 134,
+          "end_line": 180
+        },
+        {
+          "name": "brush_tag",
+          "line": 183,
+          "end_line": 185
+        },
+        {
+          "name": "_clean_text",
+          "line": 188,
+          "end_line": 193
+        },
+        {
+          "name": "_parse_number",
+          "line": 196,
+          "end_line": 204
+        },
+        {
+          "name": "to_dict",
+          "line": 206,
+          "end_line": 210
+        }
+      ]
+    },
+    {
+      "name": "BrushFlowLanduo",
+      "functions": [
+        {
+          "name": "init_plugin",
+          "line": 233,
+          "end_line": 296
+        },
+        {
+          "name": "get_state",
+          "line": 298,
+          "end_line": 300
+        },
+        {
+          "name": "get_command",
+          "line": 303,
+          "end_line": 305
+        },
+        {
+          "name": "get_render_mode",
+          "line": 308,
+          "end_line": 310
+        },
+        {
+          "name": "get_sidebar_nav",
+          "line": 312,
+          "end_line": 325
+        },
+        {
+          "name": "get_api",
+          "line": 327,
+          "end_line": 400
+        },
+        {
+          "name": "get_form",
+          "line": 402,
+          "end_line": 404
+        },
+        {
+          "name": "get_page",
+          "line": 406,
+          "end_line": 408
+        },
+        {
+          "name": "get_dashboard",
+          "line": 410,
+          "end_line": 423
+        },
+        {
+          "name": "get_service",
+          "line": 425,
+          "end_line": 475
+        },
+        {
+          "name": "stop_service",
+          "line": 477,
+          "end_line": 481
+        },
+        {
+          "name": "service_info",
+          "line": 484,
+          "end_line": 496
+        },
+        {
+          "name": "downloader",
+          "line": 499,
+          "end_line": 502
+        },
+        {
+          "name": "get_status",
+          "line": 504,
+          "end_line": 506
+        },
+        {
+          "name": "update_settings",
+          "line": 508,
+          "end_line": 523
+        },
+        {
+          "name": "create_task",
+          "line": 525,
+          "end_line": 537
+        },
+        {
+          "name": "get_task_detail",
+          "line": 539,
+          "end_line": 552
+        },
+        {
+          "name": "update_task",
+          "line": 554,
+          "end_line": 568
+        },
+        {
+          "name": "delete_task",
+          "line": 570,
+          "end_line": 593
+        },
+        {
+          "name": "update_task_state",
+          "line": 595,
+          "end_line": 603
+        },
+        {
+          "name": "run_task",
+          "line": 605,
+          "end_line": 607
+        },
+        {
+          "name": "check_task",
+          "line": 609,
+          "end_line": 611
+        },
+        {
+          "name": "clear_task_data",
+          "line": 613,
+          "end_line": 621
+        },
+        {
+          "name": "reload",
+          "line": 624,
+          "end_line": 628
+        },
+        {
+          "name": "_current_config",
+          "line": 630,
+          "end_line": 640
+        },
+        {
+          "name": "_save_config",
+          "line": 642,
+          "end_line": 644
+        },
+        {
+          "name": "_refresh_scheduler",
+          "line": 646,
+          "end_line": 651
+        },
+        {
+          "name": "_global_dynamic_delete_enabled",
+          "line": 653,
+          "end_line": 658
+        },
+        {
+          "name": "_validate_global_dynamic_delete_config",
+          "line": 661,
+          "end_line": 673
+        },
+        {
+          "name": "_parse_promotion_deadline",
+          "line": 718,
+          "end_line": 742
+        },
+        {
+          "name": "_parse_promotion_zone",
+          "line": 745,
+          "end_line": 759
+        },
+        {
+          "name": "_promotion_duration_seconds",
+          "line": 762,
+          "end_line": 788
+        },
+        {
+          "name": "_promotion_expiry_from_diff",
+          "line": 791,
+          "end_line": 803
+        },
+        {
+          "name": "_inferred_site_clock_offset",
+          "line": 806,
+          "end_line": 833
+        },
+        {
+          "name": "_promotion_expiry_at",
+          "line": 836,
+          "end_line": 852
+        },
+        {
+          "name": "_resolve_promotion_expiry",
+          "line": 854,
+          "end_line": 871
+        },
+        {
+          "name": "_promotion_verify_due",
+          "line": 874,
+          "end_line": 890
+        },
+        {
+          "name": "_promotion_expiry",
+          "line": 892,
+          "end_line": 937
+        },
+        {
+          "name": "_parse_pubdate",
+          "line": 940,
+          "end_line": 943
+        },
+        {
+          "name": "_refresh_promotion_from_site",
+          "line": 945,
+          "end_line": 1019
+        },
+        {
+          "name": "_refresh_mteam_promotion",
+          "line": 1021,
+          "end_line": 1077
+        },
+        {
+          "name": "_record_added_as_free",
+          "line": 1080,
+          "end_line": 1088
+        },
+        {
+          "name": "__site_cookie",
+          "line": 1091,
+          "end_line": 1100
+        },
+        {
+          "name": "__parse_site_promotion_deadline",
+          "line": 1103,
+          "end_line": 1112
+        },
+        {
+          "name": "__site_page_has_promotion",
+          "line": 1115,
+          "end_line": 1117
+        },
+        {
+          "name": "__site_page_says_no_promotion",
+          "line": 1120,
+          "end_line": 1122
+        },
+        {
+          "name": "__site_page_has_promotion_countdown",
+          "line": 1125,
+          "end_line": 1127
+        },
+        {
+          "name": "__site_page_is_torrent",
+          "line": 1130,
+          "end_line": 1132
+        },
+        {
+          "name": "_get_task_site",
+          "line": 1134,
+          "end_line": 1139
+        },
+        {
+          "name": "_next_promotion_expiry",
+          "line": 1141,
+          "end_line": 1172
+        },
+        {
+          "name": "_check_promotion_expiry",
+          "line": 1174,
+          "end_line": 1181
+        },
+        {
+          "name": "_validate_task_reference",
+          "line": 1183,
+          "end_line": 1195
+        },
+        {
+          "name": "_torrent_has_tag",
+          "line": 1198,
+          "end_line": 1207
+        },
+        {
+          "name": "_delete_qbittorrent_tags",
+          "line": 1210,
+          "end_line": 1216
+        },
+        {
+          "name": "_cleanup_temporary_qbittorrent_tag",
+          "line": 1218,
+          "end_line": 1223
+        },
+        {
+          "name": "_cleanup_unused_task_tag",
+          "line": 1225,
+          "end_line": 1249
+        },
+        {
+          "name": "_cleanup_unused_task_tags",
+          "line": 1251,
+          "end_line": 1284
+        },
+        {
+          "name": "_migrate_legacy_config",
+          "line": 1286,
+          "end_line": 1312
+        },
+        {
+          "name": "_parse_legacy_site_overrides",
+          "line": 1315,
+          "end_line": 1332
+        },
+        {
+          "name": "_migrate_legacy_data",
+          "line": 1334,
+          "end_line": 1361
+        },
+        {
+          "name": "_get_site_name",
+          "line": 1364,
+          "end_line": 1367
+        },
+        {
+          "name": "_task_scope",
+          "line": 1370,
+          "end_line": 1384
+        },
+        {
+          "name": "_all_task_locks_scope",
+          "line": 1387,
+          "end_line": 1398
+        },
+        {
+          "name": "_get_task_config",
+          "line": 1400,
+          "end_line": 1403
+        },
+        {
+          "name": "__get_brush_config",
+          "line": 1405,
+          "end_line": 1413
+        },
+        {
+          "name": "_task_data_key",
+          "line": 1416,
+          "end_line": 1418
+        },
+        {
+          "name": "_get_task_data",
+          "line": 1420,
+          "end_line": 1422
+        },
+        {
+          "name": "_save_task_data",
+          "line": 1424,
+          "end_line": 1426
+        },
+        {
+          "name": "_current_task_data",
+          "line": 1428,
+          "end_line": 1434
+        },
+        {
+          "name": "_save_current_task_data",
+          "line": 1436,
+          "end_line": 1440
+        },
+        {
+          "name": "_submit_task_operation",
+          "line": 1442,
+          "end_line": 1458
+        },
+        {
+          "name": "_is_task_busy",
+          "line": 1460,
+          "end_line": 1468
+        },
+        {
+          "name": "_mark_task_queued",
+          "line": 1470,
+          "end_line": 1480
+        },
+        {
+          "name": "_set_runtime",
+          "line": 1482,
+          "end_line": 1486
+        },
+        {
+          "name": "_append_run",
+          "line": 1488,
+          "end_line": 1496
+        },
+        {
+          "name": "_build_status_data",
+          "line": 1498,
+          "end_line": 1537
+        },
+        {
+          "name": "_task_summary",
+          "line": 1539,
+          "end_line": 1588
+        },
+        {
+          "name": "_latest_site_user_data_by_domain",
+          "line": 1591,
+          "end_line": 1598
+        },
+        {
+          "name": "_build_site_ratio_status",
+          "line": 1600,
+          "end_line": 1644
+        },
+        {
+          "name": "_evaluate_site_ratio_control",
+          "line": 1646,
+          "end_line": 1664
+        },
+        {
+          "name": "_build_task_detail",
+          "line": 1666,
+          "end_line": 1699
+        },
+        {
+          "name": "_next_run_at",
+          "line": 1702,
+          "end_line": 1717
+        },
+        {
+          "name": "brush",
+          "line": 1719,
+          "end_line": 1742
+        },
+        {
+          "name": "_run_brush",
+          "line": 1744,
+          "end_line": 1795
+        },
+        {
+          "name": "_load_all_torrent_tasks",
+          "line": 1797,
+          "end_line": 1803
+        },
+        {
+          "name": "_calculate_global_downloader_size",
+          "line": 1805,
+          "end_line": 1821
+        },
+        {
+          "name": "__brush_site_torrents",
+          "line": 1823,
+          "end_line": 1893
+        },
+        {
+          "name": "_verify_candidate_promotion",
+          "line": 1895,
+          "end_line": 1910
+        },
+        {
+          "name": "_torrent_to_task_record",
+          "line": 1913,
+          "end_line": 1940
+        },
+        {
+          "name": "_new_run_report",
+          "line": 1943,
+          "end_line": 1963
+        },
+        {
+          "name": "_now_iso",
+          "line": 1966,
+          "end_line": 1968
+        },
+        {
+          "name": "__evaluate_size_condition_for_brush",
+          "line": 1970,
+          "end_line": 1997
+        },
+        {
+          "name": "__evaluate_pre_conditions_for_brush",
+          "line": 1999,
+          "end_line": 2027
+        },
+        {
+          "name": "__evaluate_conditions_for_brush",
+          "line": 2029,
+          "end_line": 2100
+        },
+        {
+          "name": "check",
+          "line": 2102,
+          "end_line": 2134
+        },
+        {
+          "name": "_run_check",
+          "line": 2136,
+          "end_line": 2204
+        },
+        {
+          "name": "_protect_promotion_downloads",
+          "line": 2206,
+          "end_line": 2252
+        },
+        {
+          "name": "__update_torrent_tasks_state",
+          "line": 2254,
+          "end_line": 2274
+        },
+        {
+          "name": "__update_seeding_tasks_based_on_tags",
+          "line": 2276,
+          "end_line": 2326
+        },
+        {
+          "name": "_is_primary_task_for_torrent",
+          "line": 2328,
+          "end_line": 2334
+        },
+        {
+          "name": "__evaluate_conditions_for_delete",
+          "line": 2336,
+          "end_line": 2375
+        },
+        {
+          "name": "__promotion_expired",
+          "line": 2377,
+          "end_line": 2405
+        },
+        {
+          "name": "__log_promotion_unverified",
+          "line": 2407,
+          "end_line": 2425
+        },
+        {
+          "name": "__delete_torrent_for_evaluate_conditions",
+          "line": 2427,
+          "end_line": 2449
+        },
+        {
+          "name": "__delete_torrent_for_evaluate_proxy_pre_conditions",
+          "line": 2451,
+          "end_line": 2477
+        },
+        {
+          "name": "_select_global_dynamic_deletions",
+          "line": 2480,
+          "end_line": 2578
+        },
+        {
+          "name": "_collect_global_dynamic_delete_candidates",
+          "line": 2580,
+          "end_line": 2727
+        },
+        {
+          "name": "_send_global_dynamic_delete_summary",
+          "line": 2729,
+          "end_line": 2755
+        },
+        {
+          "name": "_run_global_dynamic_delete",
+          "line": 2757,
+          "end_line": 2877
+        },
+        {
+          "name": "__delete_torrent_for_proxy",
+          "line": 2879,
+          "end_line": 2937
+        },
+        {
+          "name": "__update_undeleted_torrents_missing_in_downloader",
+          "line": 2939,
+          "end_line": 2959
+        },
+        {
+          "name": "__convert_torrent_info_to_task",
+          "line": 2961,
+          "end_line": 2991
+        },
+        {
+          "name": "__get_redict_url",
+          "line": 2994,
+          "end_line": 3044
+        },
+        {
+          "name": "__reset_download_url",
+          "line": 3047,
+          "end_line": 3064
+        },
+        {
+          "name": "__download",
+          "line": 3066,
+          "end_line": 3143
+        },
+        {
+          "name": "__qb_torrents_reannounce",
+          "line": 3145,
+          "end_line": 3153
+        },
+        {
+          "name": "__get_hash",
+          "line": 3155,
+          "end_line": 3164
+        },
+        {
+          "name": "__get_all_hashes",
+          "line": 3166,
+          "end_line": 3168
+        },
+        {
+          "name": "__get_label",
+          "line": 3170,
+          "end_line": 3179
+        },
+        {
+          "name": "_torrent_complete",
+          "line": 3182,
+          "end_line": 3192
+        },
+        {
+          "name": "__get_torrent_info",
+          "line": 3194,
+          "end_line": 3256
+        },
+        {
+          "name": "__get_average_bandwidth",
+          "line": 3258,
+          "end_line": 3275
+        },
+        {
+          "name": "__get_downloader_info",
+          "line": 3277,
+          "end_line": 3286
+        },
+        {
+          "name": "__get_downloading_count",
+          "line": 3288,
+          "end_line": 3299
+        },
+        {
+          "name": "__get_global_downloading_count",
+          "line": 3301,
+          "end_line": 3315
+        },
+        {
+          "name": "__get_pubminutes",
+          "line": 3318,
+          "end_line": 3327
+        },
+        {
+          "name": "__filter_torrents_by_tag",
+          "line": 3329,
+          "end_line": 3337
+        },
+        {
+          "name": "__get_subscribe_titles",
+          "line": 3339,
+          "end_line": 3370
+        },
+        {
+          "name": "__filter_torrents_contains_subscribe",
+          "line": 3373,
+          "end_line": 3388
+        },
+        {
+          "name": "__bytes_to_gb",
+          "line": 3391,
+          "end_line": 3393
+        },
+        {
+          "name": "__calculate_seeding_torrents_size",
+          "line": 3396,
+          "end_line": 3402
+        },
+        {
+          "name": "__auto_archive_tasks",
+          "line": 3404,
+          "end_line": 3424
+        },
+        {
+          "name": "_recalculate_statistics",
+          "line": 3426,
+          "end_line": 3446
+        },
+        {
+          "name": "_get_statistic_info",
+          "line": 3448,
+          "end_line": 3461
+        },
+        {
+          "name": "_is_valid_time_range",
+          "line": 3464,
+          "end_line": 3474
+        },
+        {
+          "name": "_is_current_time_in_range",
+          "line": 3476,
+          "end_line": 3487
+        },
+        {
+          "name": "__get_site_by_torrent",
+          "line": 3490,
+          "end_line": 3519
+        },
+        {
+          "name": "_log_and_notify_error",
+          "line": 3521,
+          "end_line": 3524
+        },
+        {
+          "name": "__send_delete_message",
+          "line": 3526,
+          "end_line": 3537
+        },
+        {
+          "name": "__build_add_message_text",
+          "line": 3540,
+          "end_line": 3563
+        },
+        {
+          "name": "__send_add_message",
+          "line": 3565,
+          "end_line": 3574
+        },
+        {
+          "name": "__send_message",
+          "line": 3576,
+          "end_line": 3580
+        },
+        {
+          "name": "__log_and_send_torrent_task_update_message",
+          "line": 3582,
+          "end_line": 3600
+        }
+      ]
+    }
+  ]
+}

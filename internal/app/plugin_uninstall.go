@@ -12,6 +12,7 @@ import (
 
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 	cleanuphost "light-media/internal/plugins/removelink/host"
+	scrapehost "light-media/internal/plugins/scrapefileclean/host"
 	"light-media/internal/plugins/uninstall"
 )
 
@@ -306,6 +307,10 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if !found || o.removed[instance] {
 		return bad("PLUGIN_RUN_SCOPE_DENIED", "卸载目标不属于当前已安装快照")
 	}
+	brushParent, isBrush, e := o.p.brushFlowLifecycleParentTx(ctx, o.tx, instance)
+	if e != nil {
+		return e
+	}
 	rescueParent, isRescue, e := o.p.seedRescueLifecycleParentTx(ctx, o.tx, instance)
 	if e != nil {
 		return e
@@ -352,6 +357,16 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if err := o.p.removeOrganizationMemberTx(ctx, o.tx, instance); err != nil {
 		return err
 	}
+	var scrapeID string
+	if err = o.tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instance).Scan(&scrapeID); err != nil {
+		return err
+	}
+	if scrapeID == "ScrapeFileClean" {
+		if err = o.p.scrapeCleanGenesisTx(ctx, o.tx, instance, "bulk_uninstall"); err != nil {
+			return err
+		}
+	}
+
 	if isAuto {
 		if err = o.p.autoBackupGenesisTx(ctx, o.tx, instance, "bulk_uninstall", autoParent); err != nil {
 			return err
@@ -369,6 +384,11 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	}
 	if isCF {
 		if err = o.p.cloudflareGenesisTx(ctx, o.tx, instance, "bulk_uninstall", cfParent); err != nil {
+			return err
+		}
+	}
+	if isBrush {
+		if err = o.p.brushFlowGenesisTx(ctx, o.tx, instance, "bulk_uninstall", brushParent); err != nil {
 			return err
 		}
 	}
@@ -416,17 +436,27 @@ type pluginUninstallCleanupPrepared struct {
 	from              cleanuphost.Binding
 	pluginID, version string
 	remove            *pluginRemoveLinkPrepared
+	scrape            *pluginScrapeCleanPrepared
 	seed              *pluginCleanInvalidSeedPrepared
 	auto              *pluginAutoBackupPrepared
 	iyuu              *pluginIYUUPrepared
 	transfer          *pluginTransferPrepared
 	cloudflare        *pluginCloudflarePrepared
 	rescue            *pluginSeedRescuePrepared
+	brush             *pluginBrushFlowPrepared
 }
 
 func (p *pluginUninstallCleanupPrepared) release() {
+	if p.scrape != nil {
+		p.scrape.release()
+		return
+	}
 	if p.cloudflare != nil {
 		p.cloudflare.o.unlock()
+		return
+	}
+	if p.brush != nil {
+		p.brush.o.unlock()
 		return
 	}
 	if p.rescue != nil {
@@ -448,7 +478,13 @@ func (p *pluginUninstallCleanupPrepared) release() {
 	}
 }
 func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
+	if p.scrape != nil {
+		return p.scrape.drain(ctx)
+	}
 	if p.cloudflare != nil {
+		return nil
+	}
+	if p.brush != nil {
 		return nil
 	}
 	if p.rescue != nil {
@@ -472,8 +508,14 @@ func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
 func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.Tx, to cleanuphost.Binding, runID string) error {
+	if p.scrape != nil {
+		return p.scrape.publishTx(ctx, tx, scrapehost.Binding{InstanceID: to.InstanceID, Generation: to.Generation, Revision: to.Revision}, runID)
+	}
 	if p.cloudflare != nil {
 		return p.cloudflare.publishTx(ctx, tx)
+	}
+	if p.brush != nil {
+		return p.brush.publishTx(ctx, tx)
 	}
 	if p.rescue != nil {
 		return p.rescue.publishTx(ctx, tx)
@@ -496,8 +538,15 @@ func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.
 	return bad("PLUGIN_SNAPSHOT_STALE", "清理宿主预留无效")
 }
 func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committed bool) error {
+	if p.scrape != nil {
+		return resolveScrapeFileCleanPrepared(p.scrape, committed)
+	}
 	if p.cloudflare != nil {
 		p.cloudflare.resolve(committed)
+		return nil
+	}
+	if p.brush != nil {
+		p.brush.resolve(committed)
 		return nil
 	}
 	if p.rescue != nil {
@@ -546,6 +595,11 @@ func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []Plu
 			if err == nil {
 				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.cloudflare.fromRevision}
 			}
+		case "BrushFlowLanduo":
+			p.brush, err = a.prepareBrushFlowTransition(ctx, in)
+			if err == nil {
+				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.brush.fromRevision}
+			}
 		case "SeedRescue":
 			p.rescue, err = a.prepareSeedRescueTransition(ctx, in)
 			if err == nil {
@@ -565,6 +619,11 @@ func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []Plu
 			p.iyuu, err = a.prepareIYUUTransition(ctx, in, "uninstall")
 			if err == nil {
 				p.from = p.iyuu.from
+			}
+		case "ScrapeFileClean":
+			p.scrape, err = a.prepareScrapeFileCleanTransition(ctx, in, "uninstall")
+			if err == nil {
+				p.from = cleanuphost.Binding{InstanceID: p.scrape.from.InstanceID, Generation: p.scrape.from.Generation, Revision: p.scrape.from.Revision}
 			}
 		case "RemoveLink":
 			p.remove, err = a.prepareRemoveLinkTransition(ctx, in, "uninstall")
@@ -655,7 +714,7 @@ func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([
 	}
 	selected := []PluginInstallation{}
 	for _, in := range inventory {
-		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest" || in.PluginID == "SeedRescue" || isTorrentTransfer(in.PluginID)) {
+		if plan.removed[in.InstanceID] && (in.PluginID == "ScrapeFileClean" || in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest" || in.PluginID == "SeedRescue" || in.PluginID == "BrushFlowLanduo" || isTorrentTransfer(in.PluginID)) {
 			selected = append(selected, in)
 		}
 	}
@@ -711,7 +770,7 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 		return json.RawMessage(`null`), nil
 	}
 	for _, instance := range planned.Removed {
-		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" || target.PluginID == "SeedRescue" || isTorrentTransfer(target.PluginID) {
+		if target := targets[instance]; target.PluginID == "ScrapeFileClean" || target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" || target.PluginID == "SeedRescue" || target.PluginID == "BrushFlowLanduo" || isTorrentTransfer(target.PluginID) {
 			matched := false
 			for _, p := range prepared {
 				if p.from.InstanceID == instance && p.from.Generation == target.Generation && p.pluginID == target.PluginID && p.version == target.Version {

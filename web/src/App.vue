@@ -346,7 +346,12 @@ onUnmounted(() => {
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
         <Plugins v-else-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
-        <PluginAppPage v-else-if="pageKey === 'plugin-app'" :key="route" :route="route" />
+        <PluginAppPage
+          v-else-if="pageKey === 'plugin-app'"
+          :key="route"
+          :route="route"
+          @changed="pluginNavigation.ensure(true)"
+        />
         <FileManager
           v-else-if="pageKey === 'files' || pageKey === 'organize'"
           :key="route"

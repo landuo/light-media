@@ -1,0 +1,400 @@
+{
+  "scope": "original AST three business functions under controlled read-only host fixtures; not actual downloaders or full BrushFlow",
+  "cases": [
+    {
+      "name": "task-None-size-0",
+      "task_limit": null,
+      "task_size": 0,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-None-size-1073741823",
+      "task_limit": null,
+      "task_size": 1073741823,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-None-size-1073741824",
+      "task_limit": null,
+      "task_size": 1073741824,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-None-size-1610612736",
+      "task_limit": null,
+      "task_size": 1610612736,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-None-size-2147483648",
+      "task_limit": null,
+      "task_size": 2147483648,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-0-size-0",
+      "task_limit": 0,
+      "task_size": 0,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-0-size-1073741823",
+      "task_limit": 0,
+      "task_size": 1073741823,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-0-size-1073741824",
+      "task_limit": 0,
+      "task_size": 1073741824,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-0-size-1610612736",
+      "task_limit": 0,
+      "task_size": 1610612736,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-0-size-2147483648",
+      "task_limit": 0,
+      "task_size": 2147483648,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1-size-0",
+      "task_limit": 1,
+      "task_size": 0,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1-size-1073741823",
+      "task_limit": 1,
+      "task_size": 1073741823,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1-size-1073741824",
+      "task_limit": 1,
+      "task_size": 1073741824,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": false,
+        "reason": "当前做种体积 1.0 GB，已达到任务保种上限 1 GB",
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1-size-1610612736",
+      "task_limit": 1,
+      "task_size": 1610612736,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": false,
+        "reason": "当前做种体积 1.5 GB，已达到任务保种上限 1 GB",
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1-size-2147483648",
+      "task_limit": 1,
+      "task_size": 2147483648,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": false,
+        "reason": "当前做种体积 2.0 GB，已达到任务保种上限 1 GB",
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1.5-size-0",
+      "task_limit": 1.5,
+      "task_size": 0,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1.5-size-1073741823",
+      "task_limit": 1.5,
+      "task_size": 1073741823,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1.5-size-1073741824",
+      "task_limit": 1.5,
+      "task_size": 1073741824,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1.5-size-1610612736",
+      "task_limit": 1.5,
+      "task_size": 1610612736,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": false,
+        "reason": "当前做种体积 1.5 GB，已达到任务保种上限 1.5 GB",
+        "calls": []
+      }
+    },
+    {
+      "name": "task-1.5-size-2147483648",
+      "task_limit": 1.5,
+      "task_size": 2147483648,
+      "global_limit": 2,
+      "global_size": 2147483647,
+      "expected": {
+        "passed": false,
+        "reason": "当前做种体积 2.0 GB，已达到任务保种上限 1.5 GB",
+        "calls": []
+      }
+    },
+    {
+      "name": "missing-task",
+      "task_missing": true,
+      "expected": {
+        "passed": false,
+        "reason": "任务配置不存在",
+        "calls": []
+      }
+    },
+    {
+      "name": "global-boundary",
+      "global_limit": 2,
+      "global_size": 2147483648,
+      "expected": {
+        "passed": false,
+        "reason": "下载器当前种子总体积 2.0 GB，已达到全局保种上限 2 GB",
+        "calls": []
+      }
+    },
+    {
+      "name": "no-limits",
+      "task_size": 107374182400,
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "dedup-entire-downloader",
+      "global_limit": 2,
+      "tasks": [
+        "qb",
+        "qb",
+        "",
+        "tr"
+      ],
+      "downloaders": {
+        "qb": {
+          "sizes": [
+            1073741824,
+            536870912.0
+          ]
+        },
+        "tr": {
+          "sizes": [
+            536870912.0
+          ]
+        }
+      },
+      "expected": {
+        "passed": false,
+        "reason": "下载器当前种子总体积 2.0 GB，已达到全局保种上限 2 GB",
+        "calls": [
+          "qb",
+          "tr"
+        ]
+      }
+    },
+    {
+      "name": "empty-downloaders",
+      "global_limit": 1,
+      "tasks": [
+        "qb"
+      ],
+      "downloaders": {
+        "qb": {
+          "sizes": []
+        }
+      },
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": [
+          "qb"
+        ]
+      }
+    },
+    {
+      "name": "missing-downloader",
+      "global_limit": 1,
+      "tasks": [
+        "missing"
+      ],
+      "downloaders": {},
+      "expected": {
+        "error": "无法获取下载器 [missing] 实时种子体积",
+        "calls": [
+          "missing"
+        ]
+      }
+    },
+    {
+      "name": "inactive-downloader",
+      "global_limit": 1,
+      "tasks": [
+        "qb"
+      ],
+      "downloaders": {
+        "qb": {
+          "inactive": true
+        }
+      },
+      "expected": {
+        "error": "无法获取下载器 [qb] 实时种子体积",
+        "calls": [
+          "qb"
+        ]
+      }
+    },
+    {
+      "name": "failed-downloader",
+      "global_limit": 1,
+      "tasks": [
+        "qb"
+      ],
+      "downloaders": {
+        "qb": {
+          "error": true
+        }
+      },
+      "expected": {
+        "error": "获取下载器 [qb] 种子失败",
+        "calls": [
+          "qb"
+        ]
+      }
+    },
+    {
+      "name": "supplied-snapshot-avoids-read",
+      "global_limit": 1,
+      "global_size": 0,
+      "tasks": [
+        "missing"
+      ],
+      "expected": {
+        "passed": true,
+        "reason": null,
+        "calls": []
+      }
+    },
+    {
+      "name": "task-limit-precedes-global-read",
+      "task_limit": 1,
+      "task_size": 1073741824,
+      "global_limit": 1,
+      "tasks": [
+        "missing"
+      ],
+      "expected": {
+        "passed": false,
+        "reason": "当前做种体积 1.0 GB，已达到任务保种上限 1 GB",
+        "calls": []
+      }
+    }
+  ]
+}

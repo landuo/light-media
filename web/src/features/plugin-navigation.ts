@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+import { hasOriginalPluginUI } from './plugin-remote-contract.ts';
 
 export type PluginNavigationItem = {
   plugin_id: string;
@@ -53,7 +54,7 @@ export function createPluginNavigation(fetchItems: () => Promise<PluginNavigatio
 
 export function pluginNavigationTarget(item: PluginNavigationItem) {
   if (
-    item.plugin_id !== 'SeedRescue' ||
+    !hasOriginalPluginUI(item.plugin_id) ||
     item.nav_key !== 'main' ||
     !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,95}$/.test(item.instance_id)
   )

@@ -7,11 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/seedrescue"
 )
 
-// This is the fixed, compiled original SeedRescue federation graph. Runtime
+// These are the fixed, compiled original plugin federation graphs. Runtime
 // manifests, configuration, workers and request paths cannot register assets.
 var pluginFrontendFiles = map[string]string{
 	"remoteEntry.js":                            "text/javascript; charset=utf-8",
@@ -24,6 +25,19 @@ var pluginFrontendFiles = map[string]string{
 	"SeedRescueWorkbench-C0MKqaDa.css":          "text/css; charset=utf-8",
 }
 
+var brushFlowFrontendFiles = map[string]string{
+	"remoteEntry.js":                             "text/javascript; charset=utf-8",
+	"__federation_fn_import-JrT3xvdd.js":         "text/javascript; charset=utf-8",
+	"__federation_expose_Config-CEnA3JSm.js":     "text/javascript; charset=utf-8",
+	"__federation_expose_Page-DWtJDoX0.js":       "text/javascript; charset=utf-8",
+	"__federation_expose_Dashboard-DeCNUr-1.js":  "text/javascript; charset=utf-8",
+	"__federation_expose_Dashboard-BF4A7g-y.css": "text/css; charset=utf-8",
+	"__federation_expose_AppPage-CM8LIrza.js":    "text/javascript; charset=utf-8",
+	"_plugin-vue_export-helper-L2psG6M3.js":      "text/javascript; charset=utf-8",
+	"BrushFlowWorkbench-Bm62dbu_.js":             "text/javascript; charset=utf-8",
+	"BrushFlowWorkbench-Cm4ufV31.css":            "text/css; charset=utf-8",
+}
+
 func (a *App) pluginFrontendHTTP(w http.ResponseWriter, r *http.Request, path string) bool {
 	parts := strings.Split(path, "/")
 	if len(parts) < 3 || parts[0] != "plugins" || parts[2] != "frontend" {
@@ -33,8 +47,26 @@ func (a *App) pluginFrontendHTTP(w http.ResponseWriter, r *http.Request, path st
 	if len(parts) != 5 || !pluginStorageID.MatchString(parts[1]) || parts[3] != "assets" {
 		return deny()
 	}
-	contentType, exists := pluginFrontendFiles[parts[4]]
-	if !exists || !sameRequestOrigin(r) || r.Header.Get("Sec-Fetch-Site") == "cross-site" {
+	if !sameRequestOrigin(r) || r.Header.Get("Sec-Fetch-Site") == "cross-site" {
+		return deny()
+	}
+	in, err := a.pluginStore.Installation(r.Context(), parts[1])
+	if err != nil || !in.Installed {
+		return deny()
+	}
+	var assets fs.FS
+	var files map[string]string
+	var version string
+	switch in.PluginID {
+	case "SeedRescue":
+		assets, files, version = seedrescue.FrontendAssets(), pluginFrontendFiles, "1.6.3"
+	case "BrushFlowLanduo":
+		assets, files, version = brushflow.FrontendAssets(), brushFlowFrontendFiles, "5.2.15"
+	default:
+		return deny()
+	}
+	contentType, exists := files[parts[4]]
+	if !exists || in.Version != version {
 		return deny()
 	}
 	if r.Method != "GET" && r.Method != "HEAD" {
@@ -42,15 +74,11 @@ func (a *App) pluginFrontendHTTP(w http.ResponseWriter, r *http.Request, path st
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return true
 	}
-	in, err := a.pluginStore.Installation(r.Context(), parts[1])
-	if err != nil || !in.Installed || in.PluginID != "SeedRescue" || in.Version != "1.6.3" {
-		return deny()
-	}
 	manifest, _, registered := builtin.Lookup(in.PluginID)
 	if !registered || manifest.Version != in.Version {
 		return deny()
 	}
-	data, err := fs.ReadFile(seedrescue.FrontendAssets(), "assets/"+parts[4])
+	data, err := fs.ReadFile(assets, "assets/"+parts[4])
 	if err != nil {
 		return deny()
 	}

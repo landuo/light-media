@@ -268,7 +268,10 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 						run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
 					}
 					if !handled && err == nil {
-						run, handled, err = p.enqueueSeedRescueScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+						run, handled, err = p.enqueueBrushFlowScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+						if err == nil && !handled {
+							run, handled, err = p.enqueueSeedRescueScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+						}
 					}
 				}
 				if !handled && err == nil {
@@ -411,7 +414,10 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 			run, handled, err = p.enqueueAutoBackupScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
 		}
 		if !handled && err == nil {
-			run, handled, err = p.enqueueSeedRescueScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+			run, handled, err = p.enqueueBrushFlowScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+			if err == nil && !handled {
+				run, handled, err = p.enqueueSeedRescueScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+			}
 		}
 	}
 	if !handled && err == nil {

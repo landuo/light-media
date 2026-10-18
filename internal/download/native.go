@@ -23,12 +23,30 @@ import (
 // field names, adapting known 4.1 snake_case keys only in the torrent and
 // trackerStats domains. Unknown keys/values and JSON numbers remain intact.
 func (c *Client) NativeTorrents(ctx context.Context) (json.RawMessage, error) {
+	return c.nativeTorrentSnapshots(ctx, "")
+}
+
+// SourceTorrentSnapshots reads complete source fields for exactly one original
+// hash selector. An empty selector cannot widen the core deletion consumer.
+func (c *Client) SourceTorrentSnapshots(ctx context.Context, hash string) (json.RawMessage, error) {
+	hash, err := c.validHash(hash)
+	if err != nil {
+		return nil, err
+	}
+	return c.nativeTorrentSnapshots(ctx, hash)
+}
+
+func (c *Client) nativeTorrentSnapshots(ctx context.Context, hash string) (json.RawMessage, error) {
 	if err := c.nativeLock(ctx); err != nil {
 		return nil, err
 	}
 	defer c.mu.Unlock()
 	if c.config.Kind == "qbittorrent" {
-		body, err := c.qb(ctx, http.MethodGet, "torrents/info", "", "")
+		endpoint := "torrents/info"
+		if hash != "" {
+			endpoint += "?" + url.Values{"hashes": {hash}}.Encode()
+		}
+		body, err := c.qb(ctx, http.MethodGet, endpoint, "", "")
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +58,7 @@ func (c *Client) NativeTorrents(ctx context.Context) (json.RawMessage, error) {
 	if err := c.trConnect(ctx); err != nil {
 		return nil, err
 	}
-	body, err := c.trNativeTorrents(ctx)
+	body, err := c.trNativeTorrentSnapshots(ctx, hash)
 	if err != nil {
 		return nil, err
 	}
@@ -220,6 +238,10 @@ func nativeAliasKeys(row map[string]any, aliases map[string]string) error {
 // session state, request IDs, origin and the only retry (HTTP409 rejection) use
 // the existing Client helpers and the same envelope checks.
 func (c *Client) trNativeTorrents(ctx context.Context) (json.RawMessage, error) {
+	return c.trNativeTorrentSnapshots(ctx, "")
+}
+
+func (c *Client) trNativeTorrentSnapshots(ctx context.Context, hash string) (json.RawMessage, error) {
 	fields := append([]string(nil), nativeTRFields...)
 	if c.trDialect == "jsonrpc" {
 		for i, f := range fields {
@@ -233,11 +255,15 @@ func (c *Client) trNativeTorrents(ctx context.Context) (json.RawMessage, error) 
 	}
 	c.requestID++
 	id := c.requestID
+	args := map[string]any{"fields": fields}
+	if hash != "" {
+		args["ids"] = []string{hash}
+	}
 	var request any
 	if c.trDialect == "legacy" {
-		request = map[string]any{"method": "torrent-get", "arguments": map[string]any{"fields": fields}, "tag": id}
+		request = map[string]any{"method": "torrent-get", "arguments": args, "tag": id}
 	} else {
-		request = map[string]any{"jsonrpc": "2.0", "method": "torrent_get", "params": map[string]any{"fields": fields}, "id": id}
+		request = map[string]any{"jsonrpc": "2.0", "method": "torrent_get", "params": args, "id": id}
 	}
 	payload, err := json.Marshal(request)
 	if err != nil {

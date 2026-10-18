@@ -1,0 +1,289 @@
+{
+  "scope": "intermediate native Brush v5 + Scrape stage6/source core + original UI + Lark private journal/KV foundation; not complete23 or migrated",
+  "formal_base": "b10760fdc19667124cabd1618ca08b6b9f75c8cd",
+  "source_input_count": 3061,
+  "source_input_sha256": "a48ee481cd11c2c5df73b1533ffd682c843c575952e04b4521c921216ea728c6",
+  "counts_by_actual_source_layer": {
+    "corrected-app-normal.log": {
+      "top_pass": 801,
+      "all_pass": 1641,
+      "skip": 5,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "corrected-app-race-pending.log": {
+      "top_pass": 25,
+      "all_pass": 54,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "corrected-builtin-race-final.log": {
+      "top_pass": 2,
+      "all_pass": 4,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "final-pre-core-focused.log": {
+      "top_pass": 18,
+      "all_pass": 40,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "final-pre-core-journal-race.log": {
+      "top_pass": 8,
+      "all_pass": 13,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "final-app-focused-race.log": {
+      "top_pass": 18,
+      "all_pass": 40,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "integrated-helper-focused.log": {
+      "top_pass": 3,
+      "all_pass": 23,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "integrated-core-normal.log": {
+      "top_pass": 49,
+      "all_pass": 120,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "integrated-core-race.log": {
+      "top_pass": 48,
+      "all_pass": 119,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "combined-final-affected-normal.log": {
+      "top_pass": 7,
+      "all_pass": 66,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "combined-final-core-race.log": {
+      "top_pass": 37,
+      "all_pass": 368,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 2
+    },
+    "combined-actual-atom-normal.log": {
+      "top_pass": 1,
+      "all_pass": 5,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    },
+    "combined-rss-names-race.log": {
+      "top_pass": 2,
+      "all_pass": 6,
+      "skip": 0,
+      "fail": 0,
+      "package_pass": 1
+    }
+  },
+  "full_app_source_layer": "corrected3012 frozen source801top/1641incl+5skip; subsequent exact deltas use affected checks separately, not an assertion that final3061 ran fullApp",
+  "selected_race_prior_layer": "prior65top passed+1 optin skip; original total88 selected,22unfinished/assertion failed rerun plus3changed process tests=25top passed. Original timeout and failures preserved.",
+  "web_tests": 157,
+  "actual_ui": "32Brush+2Scrape actual SDK calls all succeeded, same binary cold both configs identical; created/edited/deleted empty paused task, original11field Scrape save; both serversSIGTERM0 and own data/tab removed",
+  "remaining": [
+    "Brush per-task/config concurrency and long-running capacity",
+    "AutoSignIn actual full browser/owner/event chain",
+    "Lark actual module/API/core commands host",
+    "MergeMessageNotify full dependencies/native host",
+    "complete plugin platform acceptance",
+    "all23 original config/KV/files/references import and final deployment"
+  ],
+  "migrated_instances": 0,
+  "nas_operations_this_root_batch": "readonly original code6hashes and installed rust0.2.6METADATA only; no user data or service mutations",
+  "deployed": false,
+  "production_version": "0.3.21",
+  "postcheck_noncompiler_updates": [
+    "docs/plugin-scrape-file-clean-go-port.md",
+    "docs/plugin-lark-go-port.txt",
+    "docs/plugin-brush-scrape-native-progress.txt",
+    "docs/plugin-installed-migration-baseline.md",
+    ".gitattributes"
+  ],
+  "evidence": [
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-final-inputs.json.gz",
+      "raw_sha256": "a48ee481cd11c2c5df73b1533ffd682c843c575952e04b4521c921216ea728c6",
+      "gzip_sha256": "5d2af64f700bcaae2f6b09ab0b36c6c62ebeaef9a335480c2219af438d4a742a"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/corrected-inputs.json.gz",
+      "raw_sha256": "21f35dba63760ac450e755ffc55c96f83a9f2a4bafba7657ca1a8e6f49dcfae5",
+      "gzip_sha256": "bb315c17de230e3c77d38e5833ab186f8f77710d1e4ca13e7b0d9070effd2fbe"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/integrated-core-inputs.json.gz",
+      "raw_sha256": "d3819a21121ccef04bdfbd2a464754c31038974a40195135c0f74521c09d0d8b",
+      "gzip_sha256": "a12c64120a067f7fbe31d35b04625ed48018d35c2e098982b4f2bb9184fc395c"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/checks-normal.json.gz",
+      "raw_sha256": "7bb34cd004309242551f803f07f54cbcd135c2d0de714bc321bcacd37026f37f",
+      "gzip_sha256": "ccf889986ce05523d295a097aa89ef35bf4c5a291a4ada333b10fdc681843dc0"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/checks-package-path-corrected.json.gz",
+      "raw_sha256": "38a70934bcb743a957c6001e4c26b69c1c1e5fb4a3bf1ec1c19c54aa83a2621c",
+      "gzip_sha256": "a6701936958a9a3c4406f5c5d5136c9ed3e21c0c3523a3dea52383d1914e13ea"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/corrected-app-race-pending.json.gz",
+      "raw_sha256": "16668ff5a34f7ee3c043ad1fe657aa72527bc6d6b884e80d4f9aa65c9735d7e5",
+      "gzip_sha256": "5af70e58959e51cac9949266b2a0a224380f3d39e3b1d173740e02a87da2f284"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-build-verification.json.gz",
+      "raw_sha256": "6ea815629def4415f4ab9b83be3a9035fe6005040008d01708732f65a76ce7e6",
+      "gzip_sha256": "7879dcd4f7fce3a272ce48632830d5b5a84f09dd1865b39eef552dd8f0a8f76e"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-rss-names-checks.json.gz",
+      "raw_sha256": "bd7402129c198703699c7e30d23b939d691c9f81debeb0cb032b6d16a283fa7c",
+      "gzip_sha256": "07f9289050b642013e96af02680f66f3f8b362ac93466699439ae04b703b92ff"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/web-verification.json.gz",
+      "raw_sha256": "f0e2ad81661866eeacd8879978a11be128e8e05d40e8fd008d5dad11af856b26",
+      "gzip_sha256": "8edb6ec7b088f5322b9d78a1ea76dd9657145f2de6fd2a79b3310cfd1c9f275f"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/web-generated-audit.json.gz",
+      "raw_sha256": "479e11c8d3cbec4fefe24627ba5b336cfcb1cb990102c862ea66f377a0d15494",
+      "gzip_sha256": "4ec71bc8e737ef5a2d69aff26dc342c5bdf0dcf4660374ff0006e9082d57710b"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/joint-actual-ui-verification.json.gz",
+      "raw_sha256": "afd889aab90aa8c1373cd0402bafeeea9dfbfb24a8f04b35b5e56c63e9119e81",
+      "gzip_sha256": "b485a85452501c5c14d10aee9912adfcda1324e709cf1012bd64db7d6056bce7"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/core-stage6-composition-resolved.json.gz",
+      "raw_sha256": "0a62a88c4bcd507340ae182f840377831d5523247a5f971444fc6a649e78a798",
+      "gzip_sha256": "b04ca2f8e707fd03db13fd19ef08f982e3b41db3b0840393884c6d614d2a982a"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/rss-v5-composition.json.gz",
+      "raw_sha256": "216cd5027f8e1120b098c38006e9a99e57cbcd34df2764a804b028e9525ed1b3",
+      "gzip_sha256": "c9b4b7fb8b0b13d66f00902b7cc7e5d920ed2105d4d3601e261120aba1d6437c"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/helper-companion-composition.json.gz",
+      "raw_sha256": "a4a50920872a47201afd44e3ec54b0fd8f17d59ce4d741d7b3e72da4d1dd1212",
+      "gzip_sha256": "a964e300170269bbe72b1c4d3e8e8b9c774a1a3ab962d4cbf4868930a1e22e68"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/corrections-scope.json.gz",
+      "raw_sha256": "b1792504d74fe6c127d5919ecce1ad304caaedf66c5be0415931495096dea648",
+      "gzip_sha256": "5deba11a96a6bd0cc6756115d166b0c9617071ceca6cae78c31485d996cad917"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/app-normal.log.gz",
+      "raw_sha256": "3557077b8d0e42e5645d0678b0c0a9530f883575eaa85a93e11a2d083731bce3",
+      "gzip_sha256": "41b53c04f7407c53cf150a5ac0b3f2eecdf90ec9f80396f88f7de5008cace86b"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/app-race.log.gz",
+      "raw_sha256": "40f2f1cf51c510659be28557703f2a8a506b8f26195079c59d18ccfaa3f6fdd6",
+      "gzip_sha256": "f4d622b7b5a5a95394b4763b248ad1065d222da96966b1fd4acadd3758ef1662"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/process-limit-before.log.gz",
+      "raw_sha256": "bfb931132de4440849d26caad385646fb108cfae3deea87fce5a31000a0c7473",
+      "gzip_sha256": "09cfb7cefa3012f1bbb6eab9f5af23dd792b2e4698d3e4b08cc592bbb64efeb6"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/helper-canonical-before.log.gz",
+      "raw_sha256": "cc6d9cd9ebb59ee30d771f917f3a78769b3d14e3565a7e267458601255ef8889",
+      "gzip_sha256": "4078fc290bf75a5e1c67c52d6c0a4c925802d304aec29c23a103923c025db427"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/core-brush-foreign-before.log.gz",
+      "raw_sha256": "ab432637426b085fa589920d371b01ca5f67aa5d8459a1a9c9bd43896e281b16",
+      "gzip_sha256": "627da33cb232a6ad4528a8796933b2658d956f3f32c5a12adf351a0fe470618b"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/corrected-app-normal.log.gz",
+      "raw_sha256": "bac78aa8e82ce64ae5cfe391e5df473a0afebb2330e59fefda8ec30836e2fdc1",
+      "gzip_sha256": "960d6ea39076e45c426c5271c5c3ce83b516dd26af031300cf3952da405cd176"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/corrected-app-race-pending.log.gz",
+      "raw_sha256": "c6cd5661c42ad9365bb206672420852a8d26bd3c4b1fbb447a2846c0f4cddef4",
+      "gzip_sha256": "e97cfffd0ba98b2d1af8ec067b771087ae3aed145ee73690429bef0b8bbff39b"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/corrected-builtin-race-final.log.gz",
+      "raw_sha256": "6be4ed7a055946010590cb9926e1fdcf12659f0d078bc5632e76b06b3381b655",
+      "gzip_sha256": "6878642fde056d2393503b2f148bbc2a75771da71cf8325f910ffc5c90c5362c"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/final-pre-core-focused.log.gz",
+      "raw_sha256": "1474bfe0d561c77eb050ad2bbb29fd38de08e80aa95b595cf8795cb3fefb86b6",
+      "gzip_sha256": "c3ec8a4dc98a604498c1da691166e440d15467d5e6362559f91009c80befc170"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/final-pre-core-journal-race.log.gz",
+      "raw_sha256": "d32687b25c21f8ee74e49dd8e16a81a7a3a1322a02272db09732adafcbf3f193",
+      "gzip_sha256": "4ebe937631d5a104bda10814a6e1e1a8dc22aaee2a77e4ffea1354d8efb9a65d"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/final-app-focused-race.log.gz",
+      "raw_sha256": "8d4aed82cdf2cbd0853770cce3bd9b41cadc6d449088966d843ffd45d652311c",
+      "gzip_sha256": "717fa2c49f026ea76b9659a1bfcd2bed8d0c18e7650840768bd6acdd8b4ac474"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/integrated-helper-focused.log.gz",
+      "raw_sha256": "273ffa851cdb6f5f0dd56431840844d7a136cb31f3c1f46ffcd904b8a8976759",
+      "gzip_sha256": "e05a2f3bb5b4ecec4d1699b2a1d7e86b0363837cda551d0e60c0eca9ce4c5892"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/integrated-core-normal.log.gz",
+      "raw_sha256": "30c039015db4c4cfcbd90ac0848a248050cdc373500ca228d134959c21df62a1",
+      "gzip_sha256": "39e3041c0062109ce59efb45b30d58d989ff8a5fde4f4d5ad4e9b70bf2804305"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/integrated-core-race.log.gz",
+      "raw_sha256": "7f9b028a5a9c6d377083518146c298603d62341c485c323da2705d8134ab73d4",
+      "gzip_sha256": "c40f76159b348a365dc9758963b7b3feac093150075832a06d7709bba07e217e"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-final-affected-normal.log.gz",
+      "raw_sha256": "cb2affa7908b2a327678e7f32e657b5e1bc8465a264e67c52bbdc95714c3fb97",
+      "gzip_sha256": "9836fcbf6988a5695f9282882946144763a9fd30e96d87e614549827020791ab"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-final-core-race.log.gz",
+      "raw_sha256": "7a5dfc314fa828bacee604266e6f6142a569f2e837003317dec5588d8693d609",
+      "gzip_sha256": "f9cacbee38366ae9f76e444d1ff5d8dc5a31db904896180bab3a343cf8144f28"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-actual-atom-normal.log.gz",
+      "raw_sha256": "ae87b441466b3872ef47032cea4d0191d67357b99d7c88aeaa247e9f7ae7cf40",
+      "gzip_sha256": "65cd2e311a5ab9b2d5f9dc29560ec6199dbb1d105010548103da4a7d4ad8d65b"
+    },
+    {
+      "file": "testdata/plugins/brush-scrape-native/verification/combined-rss-names-race.log.gz",
+      "raw_sha256": "eea5ea131ea05a8fb4939e08416c6eb8c1c33f632958fbb34b990a7decac7ad7",
+      "gzip_sha256": "5eb045256f379bca2677101f4ab9eea84b4e889e506b0127482b65ccc377518b"
+    }
+  ]
+}

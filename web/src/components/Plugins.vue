@@ -645,6 +645,7 @@ onUnmounted(() => clearInterval(timer));
       v-if="detail"
       :key="detail.instance_id"
       :plugin="detail"
+      @changed="load"
       @close="detail = undefined"
       @switch="
         selected = detail;
@@ -655,6 +656,7 @@ onUnmounted(() => clearInterval(timer));
       v-if="selected"
       :key="selected.instance_id"
       :plugin="selected"
+      @changed="load"
       @close="selected = undefined"
       @switch="detail = selected; selected = undefined"
       @saved="

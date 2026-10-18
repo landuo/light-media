@@ -225,6 +225,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 	switch j.Kind {
 	case "site_refresh":
 		return a.runSiteRefresh(ctx, j)
+	case "download_file_deleted":
+		return a.runDownloadFileDeleted(ctx, j, p.ID)
 	case "native_download":
 		return a.runNativeDownload(ctx, j, p.ID)
 	case "download":

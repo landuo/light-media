@@ -1,0 +1,641 @@
+{
+  "source_sha256": "6606d2cee1c26780386e96798a0b2dd779dcde1d9b6c78c20ff69b95d6048585",
+  "runtime": "3.14.4",
+  "scope": "fixed TmdbApi.__get_names AST, local offline CPython, no actual3.12 claim",
+  "cases": [
+    {
+      "kind": "movie",
+      "raw": {
+        "id": 123,
+        "media_type": "movie"
+      },
+      "expected": []
+    },
+    {
+      "kind": "movie",
+      "raw": {
+        "id": 123,
+        "media_type": "movie",
+        "alternative_titles": {
+          "titles": [
+            {
+              "title": "wrong movie"
+            }
+          ],
+          "results": [
+            {
+              "title": "wrong tv"
+            }
+          ]
+        }
+      },
+      "expected": [
+        "wrong movie"
+      ]
+    },
+    {
+      "kind": "movie",
+      "raw": {
+        "id": 123,
+        "media_type": "movie",
+        "alternative_titles": {
+          "titles": [
+            {
+              "title": " A "
+            },
+            {
+              "title": "A"
+            },
+            {
+              "title": "a"
+            },
+            {
+              "title": "A"
+            },
+            {
+              "title": ""
+            }
+          ],
+          "results": [
+            {
+              "title": " A "
+            },
+            {
+              "title": "A"
+            },
+            {
+              "title": "a"
+            },
+            {
+              "title": "A"
+            }
+          ]
+        }
+      },
+      "expected": [
+        " A ",
+        "A",
+        "a"
+      ]
+    },
+    {
+      "kind": "movie",
+      "raw": {
+        "id": 123,
+        "media_type": "movie",
+        "alternative_titles": {
+          "titles": [
+            {
+              "title": "foreign0",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign1",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign2",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign3",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign4",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign5",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign6",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign7",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign8",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign9",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign10",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign11",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign12",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign13",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign14",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign15",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign16",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign17",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign18",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign19",
+              "iso_3166_1": "RU"
+            }
+          ],
+          "results": [
+            {
+              "title": "foreign0",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign1",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign2",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign3",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign4",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign5",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign6",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign7",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign8",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign9",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign10",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign11",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign12",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign13",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign14",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign15",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign16",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign17",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign18",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign19",
+              "iso_3166_1": "RU"
+            }
+          ]
+        },
+        "translations": {
+          "translations": [
+            {
+              "data": {
+                "title": "电影译名",
+                "name": "剧集译名"
+              }
+            },
+            {
+              "data": {
+                "title": "foreign1",
+                "name": "foreign1"
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        "foreign0",
+        "foreign1",
+        "foreign2",
+        "foreign3",
+        "foreign4",
+        "foreign5",
+        "foreign6",
+        "foreign7",
+        "foreign8",
+        "foreign9",
+        "foreign10",
+        "foreign11",
+        "foreign12",
+        "foreign13",
+        "foreign14",
+        "foreign15",
+        "foreign16",
+        "foreign17",
+        "foreign18",
+        "foreign19",
+        "电影译名"
+      ]
+    },
+    {
+      "kind": "movie",
+      "raw": {
+        "id": 123,
+        "media_type": "movie",
+        "translations": {
+          "translations": [
+            {
+              "data": {
+                "title": "中文",
+                "name": "中文"
+              }
+            },
+            {
+              "data": {}
+            },
+            {
+              "data": {
+                "title": "English",
+                "name": "English"
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        "中文",
+        "English"
+      ]
+    },
+    {
+      "kind": "tv",
+      "raw": {
+        "id": 123,
+        "media_type": "tv"
+      },
+      "expected": []
+    },
+    {
+      "kind": "tv",
+      "raw": {
+        "id": 123,
+        "media_type": "tv",
+        "alternative_titles": {
+          "titles": [
+            {
+              "title": "wrong movie"
+            }
+          ],
+          "results": [
+            {
+              "title": "wrong tv"
+            }
+          ]
+        }
+      },
+      "expected": [
+        "wrong tv"
+      ]
+    },
+    {
+      "kind": "tv",
+      "raw": {
+        "id": 123,
+        "media_type": "tv",
+        "alternative_titles": {
+          "titles": [
+            {
+              "title": " A "
+            },
+            {
+              "title": "A"
+            },
+            {
+              "title": "a"
+            },
+            {
+              "title": "A"
+            },
+            {
+              "title": ""
+            }
+          ],
+          "results": [
+            {
+              "title": " A "
+            },
+            {
+              "title": "A"
+            },
+            {
+              "title": "a"
+            },
+            {
+              "title": "A"
+            }
+          ]
+        }
+      },
+      "expected": [
+        " A ",
+        "A",
+        "a"
+      ]
+    },
+    {
+      "kind": "tv",
+      "raw": {
+        "id": 123,
+        "media_type": "tv",
+        "alternative_titles": {
+          "titles": [
+            {
+              "title": "foreign0",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign1",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign2",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign3",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign4",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign5",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign6",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign7",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign8",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign9",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign10",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign11",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign12",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign13",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign14",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign15",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign16",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign17",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign18",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign19",
+              "iso_3166_1": "RU"
+            }
+          ],
+          "results": [
+            {
+              "title": "foreign0",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign1",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign2",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign3",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign4",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign5",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign6",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign7",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign8",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign9",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign10",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign11",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign12",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign13",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign14",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign15",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign16",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign17",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign18",
+              "iso_3166_1": "RU"
+            },
+            {
+              "title": "foreign19",
+              "iso_3166_1": "RU"
+            }
+          ]
+        },
+        "translations": {
+          "translations": [
+            {
+              "data": {
+                "title": "电影译名",
+                "name": "剧集译名"
+              }
+            },
+            {
+              "data": {
+                "title": "foreign1",
+                "name": "foreign1"
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        "foreign0",
+        "foreign1",
+        "foreign2",
+        "foreign3",
+        "foreign4",
+        "foreign5",
+        "foreign6",
+        "foreign7",
+        "foreign8",
+        "foreign9",
+        "foreign10",
+        "foreign11",
+        "foreign12",
+        "foreign13",
+        "foreign14",
+        "foreign15",
+        "foreign16",
+        "foreign17",
+        "foreign18",
+        "foreign19",
+        "剧集译名"
+      ]
+    },
+    {
+      "kind": "tv",
+      "raw": {
+        "id": 123,
+        "media_type": "tv",
+        "translations": {
+          "translations": [
+            {
+              "data": {
+                "title": "中文",
+                "name": "中文"
+              }
+            },
+            {
+              "data": {}
+            },
+            {
+              "data": {
+                "title": "English",
+                "name": "English"
+              }
+            }
+          ]
+        }
+      },
+      "expected": [
+        "中文",
+        "English"
+      ]
+    }
+  ]
+}

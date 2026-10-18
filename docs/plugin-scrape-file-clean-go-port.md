@@ -1,6 +1,6 @@
 # 源文件联动清理 1.0.7 的 Go 移植
 
-状态：正式纯算法及 SDK 包已落入 `internal/plugins/scrapefileclean`。未注册 App、未启用生产监听、未迁移配置，不计入已迁移或可安装插件数量。与 `RemoveLink` 不是同一个算法。
+状态：正式纯算法、SDK 与 App 原生监听宿主已接入，可安装入口已注册。原配置/KV/文件尚未正式迁移，未部署或启用用户目录监听；完整业务与平台验收仍在进行。当前范围和证据见[原生宿主集成进展](plugin-brush-scrape-native-progress.txt)。与 `RemoveLink` 不是同一个算法。
 
 ## 来源与范围
 
@@ -31,7 +31,7 @@
 
 唯一 `ScrapeFileClean@1.0.7` 使用正式 Runner/Serve 协议。能力是 `scrape_clean.configure` 与 `scrape_clean.apply`：初始化只提交空对象，配置由宿主的冻结执行读取；文件事件只接受单一 `event_id`。工作器不能传入路径、另一实例或任意删除参数。短工作器的协议 stop 不调用长期 Machine.Stop。
 
-`Ops` 接口提供有限文件操作、整理记录、事件和通知。唯一实现为未导出的测试 fixture，仅接受自建临时根，不用于生产。待接入：原生监听及 stop/join、长期实例、真实 timer、受限文件身份核对和删除收据、SQL 历史绑定、持久 outbox、下载器助手消费者。发出 DownloadFileDeleted 事件不等于种子已删除。
+`Ops` 接口提供有限文件操作、整理记录、事件和通知。现已接入 App 原生长期实例、真实监听和 timer、stop/join、文件身份核对及操作收据、SQL 历史与通知/事件 outbox。源码的 `DownloadFileDeleted` 仅有 src，原 core 缺 hash 时直接返回；不得擅自从路径推导 hash。发出该事件不等于种子已删除，下载器消费者的实际接线与确认结果按[集成进展](plugin-brush-scrape-native-progress.txt)另列。
 
 单个状态机方法有互斥锁；宿主仍须串行派发原事件批次，不允许外部并发修改公开状态字段。不能把算法测试扩大为生产文件删除能力。
 

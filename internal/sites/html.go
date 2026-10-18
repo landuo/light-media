@@ -363,6 +363,9 @@ func (c *Client) parseRow(row *html.Node, pageURL *url.URL, columns *nexusColumn
 		}
 	}
 	for _, n := range find(row, func(n *html.Node) bool { return n.Data == "img" || n.Data == "span" }) {
+		if strings.EqualFold(attribute(n, "alt"), "Hit and Run") || strings.EqualFold(attribute(n, "title"), "Hit and Run") || strings.EqualFold(attribute(n, "alt"), "H&R") || strings.Contains(strings.ToLower(attribute(n, "src")), "hitandrun") || hasClass(n, "hitandrun") {
+			r.HitAndRun = true
+		}
 		for _, class := range strings.Fields(attribute(n, "class")) {
 			promo := strings.TrimPrefix(strings.TrimPrefix(class, "pro_"), "promotion-tag-")
 			switch promo {

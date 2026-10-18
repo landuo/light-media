@@ -1,0 +1,104 @@
+{
+  "scope": "actual fixed RequestUtils XML default decoding AST, public original chardet7.4.3, no requests/network/user config",
+  "python": "3.14.4",
+  "punycode": "actual captured CPython3.12 source; subclass changed in local3.14 stdlib",
+  "chardet": "7.4.3",
+  "cases": [
+    {
+      "name": "empty",
+      "raw_hex": "",
+      "content_type": "text/xml",
+      "expected": {
+        "text": ""
+      }
+    },
+    {
+      "name": "utf8",
+      "raw_hex": "3c7273733ee6b58be8af953c2f7273733e",
+      "content_type": "text/xml; charset=ISO-8859-1",
+      "expected": {
+        "text": "<rss>测试</rss>"
+      }
+    },
+    {
+      "name": "gb18030",
+      "raw_hex": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d2267623138303330223f3e3c7273733eb2e2cad43c2f7273733e",
+      "content_type": "text/xml; charset=ISO-8859-1",
+      "expected": {
+        "text": "<?xml version=\"1.0\" encoding=\"gb18030\"?><rss>测试</rss>"
+      }
+    },
+    {
+      "name": "decl_lookup",
+      "raw_hex": "3c3f786d6c20656e636f64696e673d22646f65735f6e6f745f6578697374223f3e3c7273733e783c2f7273733e",
+      "content_type": "application/xml",
+      "expected": {
+        "text": "<?xml encoding=\"does_not_exist\"?><rss>x</rss>"
+      }
+    },
+    {
+      "name": "decl_unicode",
+      "raw_hex": "3c3f786d6c20656e636f64696e673d22756e646566696e6564223f3e3c7273733e783c2f7273733e",
+      "content_type": "application/xml",
+      "expected": {
+        "error_class": "UnicodeError"
+      }
+    },
+    {
+      "name": "decl_punycode",
+      "raw_hex": "3c3f786d6c20656e636f64696e673d2270756e79636f6465223f3e3c7273733e783c2f7273733e",
+      "content_type": "application/xml",
+      "expected": {
+        "error_class": "UnicodeError"
+      }
+    },
+    {
+      "name": "badutf8",
+      "raw_hex": "3c3f786d6c20656e636f64696e673d227574662d38223f3e3c7273733eff3c2f7273733e",
+      "content_type": "text/xml; charset=cp1252",
+      "expected": {
+        "text": "<?xml encoding=\"utf-8\"?><rss>ÿ</rss>"
+      }
+    },
+    {
+      "name": "bom16",
+      "raw_hex": "fffe3c007200730073003e004b6dd58b3c002f007200730073003e00",
+      "content_type": "application/xml",
+      "expected": {
+        "text": "<rss>测试</rss>"
+      }
+    },
+    {
+      "name": "be16",
+      "raw_hex": "003c003f0078006d006c00200065006e0063006f00640069006e0067003d0022007500740066002d00310036002d006200650022003f003e003c007200730073003e6d4b8bd5003c002f007200730073003e",
+      "content_type": "application/xml",
+      "expected": {
+        "text": "<?xml encoding=\"utf-16-be\"?><rss>测试</rss>"
+      }
+    },
+    {
+      "name": "latin1",
+      "raw_hex": "3c7273733e636166e93c2f7273733e",
+      "content_type": "text/xml; charset=latin1",
+      "expected": {
+        "text": "<rss>café</rss>"
+      }
+    },
+    {
+      "name": "highbytes",
+      "raw_hex": "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "content_type": "text/xml; charset=undefined",
+      "expected": {
+        "text": "��������������������������������������������������������������������������������������������������������������������������������"
+      }
+    },
+    {
+      "name": "http_unicode",
+      "raw_hex": "003c007200730073003e6d4b8bd5003c002f007200730073003e",
+      "content_type": "text/xml; charset=undefined",
+      "expected": {
+        "text": "<rss>测试</rss>"
+      }
+    }
+  ]
+}

@@ -2,7 +2,7 @@ LarkMessager 0.9.1 正式纯 Go 叶包迁入记录
 
 位置与完成口径
 
-internal/plugins/larkmessager 已迁入正式源码；testdata/plugins/lark-messager-0.9.1/input/_lark_messager_port 保留冻结候选的全部126份文件。没有注册到目录，没有 App/用户配置/数据迁移，没有部署或向真实 Lark 发送消息。叶包测试通过不代表整个插件可安装使用，正式接线和全范围仍须完成。
+internal/plugins/larkmessager 已迁入正式源码；testdata/plugins/lark-messager-0.9.1/input/_lark_messager_port 保留冻结候选的全部126份文件。没有注册到目录；App仅新增私有投递收据和原Page/Status的加密KV基础，完整owner/模块/API/命令接线仍待完成。没有用户配置/数据迁移，没有部署或向真实 Lark 发送消息。叶包测试通过不代表整个插件可安装使用，正式接线和全范围仍须完成。
 
 固定来源与迁入差异
 
@@ -49,3 +49,7 @@ New(PluginHost)、Init(Object)→epoch、Stop/State/Modules、SyncAdmins；Parse
 来源许可
 
 原作者ui-beam-9信息和六份源完整保留。实际安装六文件没有独立原仓库LICENSE，分发许可来源尚未确认，不能把MoviePilot主仓库GPL推断为第三方插件许可。NOTICE明确该边界；PSF、Pydantic、jiter完整许可已在纯包和input参考中保留。input里的MoviePilot主LICENSE只作主仓库来源参考，不是本插件的许可声明。
+
+2026-10-18 原生宿主基础进展
+
+新增私有SQL收据库 internal/plugins/larkmessager/host 与实际App加密KV适配器。前者需要实际installation authority和运行guard，不能由worker初始化缺失root；后者在同SQL事务验证实例/版本/代际，保留原Page的displayed写回与Status清除结果、未知字段/大整数及冷启动数据。它们不是市场注册或通知投递证明；完整边界和测试见 plugin-brush-scrape-native-progress.txt 及对应验证收据。

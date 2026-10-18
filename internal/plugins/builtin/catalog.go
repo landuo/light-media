@@ -5,10 +5,12 @@ package builtin
 import (
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/autobackup"
+	"light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/cloudflarespeedtest"
 	iyuu "light-media/internal/plugins/iyuuautoseed"
 	"light-media/internal/plugins/removelink"
+	"light-media/internal/plugins/scrapefileclean"
 	"light-media/internal/plugins/seedrescue"
 	serverstatus "light-media/internal/plugins/serverstatus"
 	transfer "light-media/internal/plugins/torrenttransfer"
@@ -21,6 +23,8 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 		return transfer.Manifest(pluginID), transfer.Handle, true
 	case "CloudflareSpeedTest":
 		return cloudflarespeedtest.NativeManifest(), cloudflarespeedtest.NativeHandle, true
+	case "BrushFlowLanduo":
+		return brushflow.NativeManifest(), brushflow.NativeHandle, true
 	case "SeedRescue":
 		return seedrescue.NativeManifest(), seedrescue.NativeHandle, true
 	case "AutoBackup":
@@ -29,6 +33,8 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 		return iyuu.Manifest(), iyuu.Handle, true
 	case "CleanInvalidSeed":
 		return cleaninvalidseed.Manifest(), cleaninvalidseed.Handle, true
+	case "ScrapeFileClean":
+		return scrapefileclean.Manifest(), scrapefileclean.Handle, true
 	case "RemoveLink":
 		return removelink.Manifest(), removelink.Handle, true
 	case "CategoryEditor":
@@ -57,5 +63,5 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{transfer.Manifest("TorrentTransfer"), transfer.Manifest("TorrentTransfermusic"), seedrescue.NativeManifest(), cloudflarespeedtest.NativeManifest(), iyuu.Manifest(), autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
+	return []plugins.Manifest{scrapefileclean.Manifest(), brushflow.NativeManifest(), transfer.Manifest("TorrentTransfer"), transfer.Manifest("TorrentTransfermusic"), seedrescue.NativeManifest(), cloudflarespeedtest.NativeManifest(), iyuu.Manifest(), autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
 }

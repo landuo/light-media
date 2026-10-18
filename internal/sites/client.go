@@ -32,6 +32,7 @@ type Config struct {
 }
 
 type Resource struct {
+	HitAndRun      bool     `json:"hit_and_run"`
 	Labels         []string `json:"labels,omitempty"`
 	SourceSubtitle *string  `json:"source_subtitle,omitempty"`
 	PriorityOrder  int      `json:"pri_order,omitempty"`
