@@ -187,10 +187,14 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err := p.noticeUnseal("route", id, sealed, &r); err != nil {
 		return r, nil, err
 	}
-	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || (r.Kind != "clean_seed" && r.Kind != "auto_backup" && r.Kind != "iyuu" && r.Kind != "cloudflare" && r.Kind != "seed_rescue") || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
+	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || (r.Kind != "clean_seed" && r.Kind != "auto_backup" && r.Kind != "iyuu" && r.Kind != "cloudflare" && r.Kind != "seed_rescue" && r.Kind != "transfer") || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
-	if r.Kind == "seed_rescue" {
+	if r.Kind == "transfer" {
+		if err := p.validateTransferNotice(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else if r.Kind == "seed_rescue" {
 		if err := p.validateSeedRescueNotice(ctx, q, r); err != nil {
 			return r, nil, err
 		}

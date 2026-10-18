@@ -327,7 +327,7 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginRunHistory(ctx, installation.InstanceID)
 	case parts[1] == "config" && r.Method == "PUT":
-		if installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
+		if !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -442,6 +442,19 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 			return nil, err
 		}
 		return append(json.RawMessage(nil), raw...), nil
+	case "TorrentTransfer", "TorrentTransfermusic":
+		fields, e := transferSourceMap(raw)
+		if e != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "转移做种配置必须为有效对象")
+		}
+		for _, key := range []string{"cron", "nolabels", "includelabels", "includecategory", "frompath", "topath", "fromdownloader", "todownloader", "fromtorrentpath", "nopaths", "add_torrent_tags"} {
+			if value := fields[key]; value != nil {
+				if _, ok := value.(string); !ok {
+					return nil, bad("INVALID_PLUGIN_CONFIG", "转移做种文本字段必须是字符串或空值")
+				}
+			}
+		}
+		return append(json.RawMessage{}, raw...), nil
 	case "IYUUAutoSeed":
 		return iyuuTypedConfig(raw)
 	case "CleanInvalidSeed":

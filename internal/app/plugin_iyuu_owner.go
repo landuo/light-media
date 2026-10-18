@@ -295,6 +295,9 @@ func (a *App) configureIYUU(ctx context.Context, owner *pluginIYUUOwner, run *Pl
 func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	if r.Method != "GET" {
 		instance := strings.Split(path, "/")[0]
+		if in, e := a.pluginStore.Installation(r.Context(), instance); e == nil && isTorrentTransfer(in.PluginID) && in.Installed {
+			return a.transferAPIWithBarrier(w, r, path, in)
+		}
 		if in, e := a.pluginStore.Installation(r.Context(), instance); e == nil && in.PluginID == "IYUUAutoSeed" && in.Installed {
 			if parts := strings.Split(path, "/"); r.Method == "POST" && len(parts) == 2 && (parts[1] == "reset" || parts[1] == "uninstall") {
 				return a.iyuuLifecycleHTTP(r.Context(), in, parts[1])

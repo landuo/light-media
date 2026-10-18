@@ -1,0 +1,378 @@
+[
+  {
+    "component": "VForm",
+    "content": [
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "enabled",
+                  "label": "启用插件"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "notify",
+                  "label": "发送通知"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "transferemptylabel",
+                  "label": "转移无标签种子"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "onlyonce",
+                  "label": "立即运行一次"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 4
+            },
+            "content": [
+              {
+                "component": "VCronField",
+                "props": {
+                  "model": "cron",
+                  "label": "执行周期",
+                  "placeholder": "0 0 0 ? *"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 4
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "add_torrent_tags",
+                  "label": "添加种子标签",
+                  "placeholder": "已整理,转移做种"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 4
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "includecategory",
+                  "label": "转移种子分类"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "nolabels",
+                  "label": "不转移种子标签"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "includelabels",
+                  "label": "转移种子标签"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "fromdownloader",
+                  "label": "源下载器",
+                  "items": []
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "fromtorrentpath",
+                  "label": "源下载器种子文件路径",
+                  "placeholder": "BT_backup、torrents"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 6
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "frompath",
+                  "label": "源数据文件根路径",
+                  "placeholder": "根路径，留空不进行路径转换"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12
+            },
+            "content": [
+              {
+                "component": "VSelect",
+                "props": {
+                  "model": "todownloader",
+                  "label": "目的下载器",
+                  "items": []
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12
+            },
+            "content": [
+              {
+                "component": "VTextField",
+                "props": {
+                  "model": "topath",
+                  "label": "目的数据文件根路径",
+                  "placeholder": "根路径，留空不进行路径转换"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12
+            },
+            "content": [
+              {
+                "component": "VTextarea",
+                "props": {
+                  "model": "nopaths",
+                  "label": "不转移数据文件目录",
+                  "rows": 3,
+                  "placeholder": "每一行一个目录"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "component": "VRow",
+        "content": [
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "autostart",
+                  "label": "校验完成后自动开始"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "skipverify",
+                  "label": "跳过校验(仅QB有效)"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "deletesource",
+                  "label": "删除源种子"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "deleteduplicate",
+                  "label": "删除重复种子"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "remainoldcat",
+                  "label": "保留原分类"
+                }
+              }
+            ]
+          },
+          {
+            "component": "VCol",
+            "props": {
+              "cols": 12,
+              "md": 3
+            },
+            "content": [
+              {
+                "component": "VSwitch",
+                "props": {
+                  "model": "remainoldtag",
+                  "label": "保留原标签"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

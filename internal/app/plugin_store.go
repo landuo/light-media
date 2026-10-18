@@ -331,6 +331,13 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 			return rootErr
 		}
 	}
+	var transferParent transferOwnerParent
+	if isTorrentTransfer(in.PluginID) {
+		transferParent, err = p.transferTransitionParentTx(ctx, tx, in.InstanceID)
+		if err != nil {
+			return err
+		}
+	}
 	sealed, err := p.seal("manifest", in.InstanceID, "main", in.Manifest)
 	if err != nil {
 		return err
@@ -357,6 +364,11 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 	}
 	if err != nil {
 		return err
+	}
+	if isTorrentTransfer(in.PluginID) {
+		if err = p.transferGenesisTx(ctx, tx, in.InstanceID, "install", transferParent); err != nil {
+			return err
+		}
 	}
 	if in.PluginID == "SeedRescue" {
 		if err = p.seedRescueGenesisTx(ctx, tx, in.InstanceID, "install", rescueParent); err != nil {
@@ -427,7 +439,7 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 		return PluginStoredValue{}, bad("PLUGIN_NOT_INSTALLED", "插件已卸载，保留数据只读")
 	}
 	if kind == "config" && key == "main" {
-		if err := p.iyuuConfigWriteTx(ctx, tx, instanceID, expectedRevision, raw); err != nil {
+		if err := p.pluginNativeConfigWriteTx(ctx, tx, instanceID, expectedRevision, raw); err != nil {
 			return PluginStoredValue{}, err
 		}
 	}
@@ -504,6 +516,10 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 	if err != nil {
 		return err
 	}
+	transferParent, isTransfer, err := p.transferLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
 	result, err := tx.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=?`, now(), instanceID)
 	if err != nil {
 		return err
@@ -530,6 +546,11 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 	}
 	if isIYUU {
 		if err = p.iyuuGenesisTx(ctx, tx, instanceID, "uninstall", iyuuParent); err != nil {
+			return err
+		}
+	}
+	if isTransfer {
+		if err = p.transferGenesisTx(ctx, tx, instanceID, "uninstall", transferParent); err != nil {
 			return err
 		}
 	}
@@ -576,6 +597,10 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	if err != nil {
 		return err
 	}
+	transferParent, isTransfer, err := p.transferLifecycleParentTx(ctx, tx, instanceID)
+	if err != nil {
+		return err
+	}
 	result, err := tx.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=?`, now(), instanceID)
 	if err != nil {
 		return err
@@ -605,6 +630,11 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	}
 	if isIYUU {
 		if err = p.iyuuGenesisTx(ctx, tx, instanceID, "reset", iyuuParent); err != nil {
+			return err
+		}
+	}
+	if isTransfer {
+		if err = p.transferGenesisTx(ctx, tx, instanceID, "reset", transferParent); err != nil {
 			return err
 		}
 	}
@@ -767,7 +797,13 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if err = p.stageImportedSiteReferencesTx(ctx, tx, installation.InstanceID, run.ID); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
+	if err = p.stageImportedTransferReferencesTx(ctx, tx, installation.InstanceID, run.ID); err != nil {
+		return PluginMigrationReceipt{}, err
+	}
 	importCtx := ctx
+	if isTorrentTransfer(installation.PluginID) {
+		importCtx = context.WithValue(ctx, transferOriginalImportKey{}, transferOriginalImportAdmission{Instance: installation.InstanceID, Migration: run.ID, ConfigSHA: tokenHash(string(config))})
+	}
 	if installation.PluginID == "IYUUAutoSeed" {
 		importCtx = context.WithValue(ctx, iyuuOriginalImportKey{}, iyuuOriginalImportAdmission{Instance: installation.InstanceID, Migration: run.ID, ConfigSHA: tokenHash(string(config))})
 	}

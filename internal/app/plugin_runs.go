@@ -210,7 +210,7 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
 		return PluginRun{}, err
 	}
-	if err := p.iyuuQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
+	if err := p.pluginNativeQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
 		return PluginRun{}, err
 	}
 	if pluginID == "MediaServerRefresh" && (action == "init" || action == "reload") && len(input) == 0 {
@@ -357,9 +357,9 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			_ = tx.Rollback()
 			return PluginRun{}, err
 		}
-		if e := p.iyuuQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID); e != nil {
+		if e := p.pluginNativeQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID); e != nil {
 			_ = tx.Rollback()
-			if iyuuUnconfirmedQueueAdmission(e) {
+			if pluginNativeUnconfirmedQueueAdmission(e) {
 				continue // Keep this original pending identity; advance the cursor.
 			}
 			return PluginRun{}, e

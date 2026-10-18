@@ -49,6 +49,9 @@ func deferredInputSHA(raw []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawMessage, error) {
+	if isTorrentTransfer(in.PluginID) && in.Version == "1.10.3" {
+		return transferDeferredSpec(run)
+	}
 	if in.PluginID == "IYUUAutoSeed" && in.Version == "2.19" {
 		return iyuuDeferredSpec(run)
 	}
@@ -160,6 +163,10 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 	if r.Phase != "terminal_failed" {
 		return r.ErrorCode == ""
 	}
+	if isTorrentTransfer(r.Plugin) && r.Version == "1.10.3" {
+		return r.ErrorCode == transferSourceFailed && transferResultErrorCode(r.Result) == r.ErrorCode
+	}
+
 	if r.Plugin == "CloudflareSpeedTest" && r.Version == "1.5.1" {
 		return (r.ErrorCode == "CLOUDFLARE_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == cloudflareBlockedByUnknown && bytes.Equal(r.Result, cloudflareBlockedResult()))
 	}
@@ -219,7 +226,7 @@ func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, 
 	if err != nil || persisted.State != "running" || !bytes.Equal(persisted.Input, run.Input) || persisted.Version != run.Version || persisted.Generation != run.Generation || persisted.ConfigRevision != run.ConfigRevision || persisted.InstanceID != run.InstanceID || persisted.Action != run.Action {
 		return nil, bad("PLUGIN_RUN_SCOPE_DENIED", "插件执行身份已变化")
 	}
-	if err = a.pluginStore.iyuuQueueAdmissionTx(ctx, tx, run.InstanceID, in.PluginID); err != nil {
+	if err = a.pluginStore.pluginNativeQueueAdmissionTx(ctx, tx, run.InstanceID, in.PluginID); err != nil {
 		return nil, err
 	}
 	r, _, err := a.pluginStore.readDeferred(ctx, tx, run)
@@ -317,7 +324,7 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 				return err
 			}
 		}
-		if err = d.a.pluginStore.iyuuQueueAdmissionTx(ctx, tx, r.Instance, r.Plugin); err != nil {
+		if err = d.a.pluginStore.pluginNativeQueueAdmissionTx(ctx, tx, r.Instance, r.Plugin); err != nil {
 			return err
 		}
 	}
@@ -329,6 +336,12 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 	r.Phase, r.Result, r.ErrorCode = to, result, code
 	if err = d.a.pluginStore.writeDeferred(ctx, tx, r, sealed); err != nil {
 		return err
+	}
+	if from == "prepared" && to == "started" && isTorrentTransfer(r.Plugin) {
+		admission := context.WithValue(ctx, transferAdmissionKey{}, transferAdmissionFromRun(d.run, r.Method))
+		if err = d.a.pluginStore.transferAcceptRunTx(admission, tx, d.run); err != nil {
+			return err
+		}
 	}
 	if from == "prepared" && to == "started" && r.Plugin == "IYUUAutoSeed" {
 		admission := context.WithValue(ctx, iyuuAdmissionKey{}, iyuuAdmissionFromRun(d.run, r.Method))
@@ -399,6 +412,15 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 		}
 		defer release()
 	}
+	if isTorrentTransfer(d.installation.PluginID) {
+		var release func()
+		var err error
+		ctx, release, err = d.lockTransferDeferred(ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer release()
+	}
 	if d.installation.PluginID == "IYUUAutoSeed" {
 		// No worker/global/SQL lock is held while waiting. This owner gate
 		// spans admission, started, actual effects and the final receipt.
@@ -434,6 +456,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 	if err != nil {
 		phase = "uncertain"
 		result = nil
+	}
+	if isTorrentTransfer(d.record.Plugin) && d.record.Version == "1.10.3" {
+		known, found, proofErr := d.a.pluginStore.transferDeferredOutcome(finish, *run, d.record)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "转移做种结果尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode := transferResultErrorCode(known); knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "转移做种源流程失败，已保留确定结果")
+			}
+		}
 	}
 	if d.record.Plugin == "CloudflareSpeedTest" && d.record.Version == "1.5.1" {
 		known, knownCode, found, proofErr := d.a.pluginStore.cloudflareOutcome(finish, d.run, d.record.Method)
@@ -534,6 +569,40 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		// already completed above; an unfinished deferred record stays conservative.
 		if r.Run != run.ID || r.Instance != run.InstanceID || r.Version != run.Version || r.Generation != run.Generation || r.Action != run.Action || r.InputSHA != deferredInputSHA(run.Input) {
 			return bad("PLUGIN_DEFERRED_INVALID", "插件操作恢复身份不匹配")
+		}
+
+		if isTorrentTransfer(r.Plugin) && (r.Phase == "started" || r.Phase == "uncertain") {
+			result, found, e := p.transferDeferredOutcome(ctx, run, r)
+			if e != nil {
+				if code := transferRecoveryErrorCode(e); code != "" {
+					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code=?,updated_at=? WHERE id=? AND state IN ('running','reconcile_pending','failed')`, code, now(), run.ID); err != nil {
+						return err
+					}
+					continue
+				}
+				return e
+			}
+			if found {
+				r.Phase, r.Result = "confirmed", result
+				if code := transferResultErrorCode(result); code != "" {
+					r.Phase, r.ErrorCode = "terminal_failed", code
+				}
+				tx, e := p.store.DB.BeginTx(ctx, nil)
+				if e != nil {
+					return e
+				}
+				if e = p.writeDeferred(ctx, tx, r, previous); e != nil {
+					tx.Rollback()
+					return e
+				}
+				if e = tx.Commit(); e != nil {
+					return e
+				}
+				r, previous, e = p.readDeferred(ctx, p.store.DB, run)
+				if e != nil {
+					return e
+				}
+			}
 		}
 
 		if r.Plugin == "IYUUAutoSeed" && (r.Phase == "started" || r.Phase == "uncertain") {

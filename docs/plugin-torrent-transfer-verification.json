@@ -1,0 +1,366 @@
+{
+  "date": "2026-10-18",
+  "base": "c9c6ec2764716ed38b0c951cb719aa1cadfbca8b",
+  "patch_sha256": "8e4cb0ceecd8edf39338c12ad9dd4953ca4b3c6239224d949524d6f202bcf3e9",
+  "source_manifest_sha256": "514883a5fd8d004f516df48a439e2a12403988a6e3c7c7ad76c6fa79864b3087",
+  "frozen_inputs": 2681,
+  "formal_source_match_before_build": true,
+  "existing_baseline_files_preserved": 2826,
+  "focused_files": 59,
+  "shared_files": 11,
+  "new_files": 48,
+  "evidence": {
+    "composition-audit.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/composition-audit.json.gz",
+      "sha256_original": "3072f9e725e488b15d16299f2712f3d34481bc584bd7fa4d1985381cbe33de29",
+      "sha256_gzip": "a331e4d669cb97547c2082c1469e3dde1cdbd0192ab178e2ffe04cbfdcfab0f3",
+      "bytes_original": 409
+    },
+    "HANDOFF.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/HANDOFF.txt.gz",
+      "sha256_original": "61586c8ef5085059f0d57a6d2aa9b883af3aad222695b808bc68380de2c17d20",
+      "sha256_gzip": "3cd21e88f9fbb25679dab581917e680343a96763af32928dd252ced790008aca",
+      "bytes_original": 7436
+    },
+    "focused-plan.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/focused-plan.json.gz",
+      "sha256_original": "8c931cc7e2b3cd994f48fff705a3cb37692ddb80ba98c82d1d934f5130244a20",
+      "sha256_gzip": "86ed8096c87968d66295500957cc159b915f159546112ad1f046308b719a02ee",
+      "bytes_original": 14100
+    },
+    "fresh-apply-proof.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/fresh-apply-proof.json.gz",
+      "sha256_original": "5cd1294b2642c27c5ca32b4b1e2ff1116de87b9d4d59331112c3ca62640c3e9d",
+      "sha256_gzip": "3d8b378c88989eeca5e8a95e2d9ab7d2854ad085b09317951d44d8672e52da83",
+      "bytes_original": 198
+    },
+    "verification.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/verification.json.gz",
+      "sha256_original": "82193418aa97068d47d2a1fae470e867dc3b8276ec2ad342776eb75299fbf927",
+      "sha256_gzip": "e8a8e4604110924135d14cf51cfcfc94032e8d0d8041779f5927aa7947752665",
+      "bytes_original": 25307
+    },
+    "stage3-all-app-normal.jsonl": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-all-app-normal.jsonl.gz",
+      "sha256_original": "557013d6e77ee47e05e4ba2e8a26e4ef0ae6a42fca689379bd53f16519415fa4",
+      "sha256_gzip": "211238da40c09a570feeaeb8a284b7159a9ab587234738adaf3dc197911eddeb",
+      "bytes_original": 5346726
+    },
+    "stage3-final-core-native-normal.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-core-native-normal.txt.gz",
+      "sha256_original": "406c6e99fd0d57cfcced2a5ba955e45f0cf97ebd5d6f2dde6216a754cc93494d",
+      "sha256_gzip": "8486eb67a0fede9fcb6932c5df11e08942fba040e3d7848b906193214dd289a3",
+      "bytes_original": 396288
+    },
+    "stage3-final-core-native-race.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-core-native-race.txt.gz",
+      "sha256_original": "e0749bd8006dc982029e275c5f1a627531c9e5aa3b632ee74c9938638d7b2401",
+      "sha256_gzip": "40a36d48d2e53a2d352b0b4e47f83f172652e3ec66a1854b3001251cbd4c55b3",
+      "bytes_original": 396358
+    },
+    "stage3-final-darwin-server.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-darwin-server.txt.gz",
+      "sha256_original": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256_gzip": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes_original": 0
+    },
+    "stage3-final-linux-app-tests.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-linux-app-tests.txt.gz",
+      "sha256_original": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256_gzip": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes_original": 0
+    },
+    "stage3-final-linux-server.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-linux-server.txt.gz",
+      "sha256_original": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256_gzip": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes_original": 0
+    },
+    "stage3-final-product.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-product.txt.gz",
+      "sha256_original": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256_gzip": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes_original": 0
+    },
+    "stage3-final-vet.txt": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-final-vet.txt.gz",
+      "sha256_original": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256_gzip": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes_original": 0
+    },
+    "stage3-focused-app-race.jsonl": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-focused-app-race.jsonl.gz",
+      "sha256_original": "9c51c4fb74ba27a796a39d1f4453d351b8847708e72ba17ba304bb57299eeee2",
+      "sha256_gzip": "cb9a750ca4be6e5b8e847f271e75f5c74911cfc743f97ee2e2d71afd890429b3",
+      "bytes_original": 555902
+    },
+    "stage3-inputs.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-inputs.json.gz",
+      "sha256_original": "514883a5fd8d004f516df48a439e2a12403988a6e3c7c7ad76c6fa79864b3087",
+      "sha256_gzip": "1ad6bfc5f9e4ac57a04ae81ff41e0e387b91e43dec7f4709269e69361f65c209",
+      "bytes_original": 387398
+    },
+    "stage3-ui-cleanup.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-ui-cleanup.json.gz",
+      "sha256_original": "d5c2b6afcbdf2bafd4baf5dc9e88b733d0d638900d0700dceec9ab83524ad742",
+      "sha256_gzip": "8698c1817f90577048f8425283702df37e7cfa0f685aaf30cc0956cc89072100",
+      "bytes_original": 485
+    },
+    "stage3-ui-final-proof.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-ui-final-proof.json.gz",
+      "sha256_original": "b35d172a211acba1d8ed68b6146964c04171f7a128052eeb2e1c52e5e1a40ea4",
+      "sha256_gzip": "48a084f214d6b4cb8f949231a9c7fb7a8eef03cb613e6e5f4a60467e2173e76b",
+      "bytes_original": 1679
+    },
+    "stage3-source-review.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-source-review.json.gz",
+      "sha256_original": "fb87a93134029997fbbfcf2ec71050382cdafe51c09f45e637a865df377f8d33",
+      "sha256_gzip": "265cc54b84db00ce6aae150769e0e67fdb32697d489da70dbf7727a3a824b845",
+      "bytes_original": 769
+    },
+    "stage3-terminal-review.json": {
+      "path": "testdata/plugins/torrent-transfer-app-verification/stage3-terminal-review.json.gz",
+      "sha256_original": "7550f8797d8c98b42dfc1a2abd7d26efa7dd63c4782365f426ddc457e0fef89a",
+      "sha256_gzip": "fdd35ff98d91fd192bb01cafe672a0f7a99009dbb301bcef6d96f50622caf182",
+      "bytes_original": 1747
+    }
+  },
+  "checks": {
+    "production": {
+      "handle": 98088,
+      "exit_code": 0,
+      "command": "go build ./...",
+      "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-product.txt"
+    },
+    "all_app_normal": {
+      "handle": 93667,
+      "exit_code": 0,
+      "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-all-app-normal.jsonl",
+      "log_sha256": "557013d6e77ee47e05e4ba2e8a26e4ef0ae6a42fca689379bd53f16519415fa4",
+      "packages": {
+        "light-media/internal/app": {
+          "pass_top": 774,
+          "pass_including_subtests": 1589,
+          "skip_top": 5,
+          "skip_including_subtests": 5,
+          "fail": [],
+          "elapsed_seconds": 260.01,
+          "terminal": "pass"
+        }
+      },
+      "skips": [
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+      ]
+    },
+    "actual_app_race": {
+      "handle": 28115,
+      "exit_code": 0,
+      "selection": "^TestTransfer (includes 9 existing transfer-history regressions) plus 3 IYUU APIKey/default/directory actual SDK top-level functions; SeedRescue App name alternative matched no cases, so no SeedRescue race rerun claimed",
+      "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-focused-app-race.jsonl",
+      "log_sha256": "9c51c4fb74ba27a796a39d1f4453d351b8847708e72ba17ba304bb57299eeee2",
+      "packages": {
+        "light-media/internal/app": {
+          "pass_top": 25,
+          "pass_including_subtests": 63,
+          "skip_top": 0,
+          "skip_including_subtests": 0,
+          "fail": [],
+          "elapsed_seconds": 381.952,
+          "terminal": "pass"
+        }
+      },
+      "skips": []
+    },
+    "core_native_normal": {
+      "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-core-native-normal.txt",
+      "log_sha256": "406c6e99fd0d57cfcced2a5ba955e45f0cf97ebd5d6f2dde6216a754cc93494d",
+      "packages": {
+        "light-media/internal/plugins/torrenttransfer": {
+          "pass_top": 16,
+          "pass_including_subtests": 138,
+          "skip_top": 0,
+          "skip_including_subtests": 0,
+          "fail": [],
+          "elapsed_seconds": 1.179,
+          "terminal": "pass"
+        },
+        "light-media/internal/plugins/iyuuautoseed/native": {
+          "pass_top": 46,
+          "pass_including_subtests": 273,
+          "skip_top": 0,
+          "skip_including_subtests": 0,
+          "fail": [],
+          "elapsed_seconds": 0.745,
+          "terminal": "pass"
+        }
+      },
+      "skips": []
+    },
+    "core_native_race": {
+      "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-core-native-race.txt",
+      "log_sha256": "e0749bd8006dc982029e275c5f1a627531c9e5aa3b632ee74c9938638d7b2401",
+      "packages": {
+        "light-media/internal/plugins/torrenttransfer": {
+          "pass_top": 16,
+          "pass_including_subtests": 138,
+          "skip_top": 0,
+          "skip_including_subtests": 0,
+          "fail": [],
+          "elapsed_seconds": 4.968,
+          "terminal": "pass"
+        },
+        "light-media/internal/plugins/iyuuautoseed/native": {
+          "pass_top": 46,
+          "pass_including_subtests": 273,
+          "skip_top": 0,
+          "skip_including_subtests": 0,
+          "fail": [],
+          "elapsed_seconds": 2.089,
+          "terminal": "pass"
+        }
+      },
+      "skips": []
+    },
+    "other_build_vet": {
+      "handle": 30457,
+      "exit_code": 0,
+      "stages": [
+        {
+          "name": "core-native-normal",
+          "args": [
+            "go",
+            "test",
+            "-json",
+            "./internal/plugins/torrenttransfer",
+            "./internal/plugins/iyuuautoseed/native",
+            "-count=1"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.945,
+          "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-core-native-normal.txt",
+          "environment": null
+        },
+        {
+          "name": "core-native-race",
+          "args": [
+            "go",
+            "test",
+            "-race",
+            "-json",
+            "./internal/plugins/torrenttransfer",
+            "./internal/plugins/iyuuautoseed/native",
+            "-count=1"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 5.979,
+          "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-core-native-race.txt",
+          "environment": null
+        },
+        {
+          "name": "vet",
+          "args": [
+            "go",
+            "vet",
+            "./..."
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.924,
+          "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-vet.txt",
+          "environment": null
+        },
+        {
+          "name": "darwin-server",
+          "args": [
+            "go",
+            "build",
+            "-o",
+            "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-server-final",
+            "./cmd/server"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.085,
+          "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-darwin-server.txt",
+          "environment": null
+        },
+        {
+          "name": "linux-server",
+          "args": [
+            "go",
+            "build",
+            "-o",
+            "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-server-linux",
+            "./cmd/server"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 5.517,
+          "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-linux-server.txt",
+          "environment": {
+            "GOOS": "linux",
+            "GOARCH": "amd64",
+            "CGO_ENABLED": "0"
+          }
+        },
+        {
+          "name": "linux-app-tests",
+          "args": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-app-linux.test",
+            "./internal/app"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 5.678,
+          "log": "/Users/accidia/projects/light-media/work/_torrent_transfer_port/next/reference/stage3-final-linux-app-tests.txt",
+          "environment": {
+            "GOOS": "linux",
+            "GOARCH": "amd64",
+            "CGO_ENABLED": "0"
+          }
+        }
+      ]
+    }
+  },
+  "root_formal_product": {
+    "command": [
+      "go",
+      "build",
+      "-o",
+      "/Users/accidia/projects/light-media/work/_torrent_transfer_final_composition/formal-server",
+      "./cmd/server"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 3.929,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "binary_sha256": "b4669a3b56bdbbe8b2db19e4184a062f7a2d7d9c2ff8b18d85abdd6e576c0765"
+  },
+  "registered_handlers": 18,
+  "original_instances_migrated": 0,
+  "production_version": "0.3.21",
+  "deployed": false,
+  "scope_limits": [
+    "No original configuration/KV/file import",
+    "No actual user download/seed mutation",
+    "No real external notice delivery",
+    "No NAS deployment; runtime business uses synthetic local protocol fixtures",
+    "Full23-plugin and45-platform acceptance remains unfinished"
+  ],
+  "bencode_oracle": {
+    "cases": 25,
+    "ordinary": 22,
+    "source_C_crash_safely_rejected": 1,
+    "source_C_undefined_safely_rejected": 2,
+    "no_crash_or_UB_emulation": true
+  },
+  "known_fixed_failures": [
+    "Actual init result incorrectly reconciled against stale pre-publication d.run config revision; use actual updated run pointer, retain original immutable record.Revision.",
+    "Fuzzy whole-line catalog hunk removed existing SeedRescue from market while retaining Lookup; fixed with exact current baseline order and guard for all 16 prior entries plus both transfer identities.",
+    "Owned fixture compile return-value counts/ParseTime symbol and date action expectation corrected; original failed logs retained.",
+    "Patch new-file metadata initially missing, git apply check rejected /dev/null; metadata corrected with no product-source change and final check 0."
+  ]
+}

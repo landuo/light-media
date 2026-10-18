@@ -74,6 +74,7 @@ type App struct {
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime
 	pluginIYUU              pluginIYUURuntime
+	pluginTransfer          pluginTransferRuntime
 	pluginCloudflare        pluginCloudflareRuntime
 	pluginSeedRescue        pluginSeedRescueRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.

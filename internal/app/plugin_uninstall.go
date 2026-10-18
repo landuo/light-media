@@ -322,6 +322,10 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if err != nil {
 		return err
 	}
+	transferParent, isTransfer, err := o.p.transferLifecycleParentTx(ctx, o.tx, instance)
+	if err != nil {
+		return err
+	}
 	changed, err := o.tx.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=0,generation=generation+1,updated_at=? WHERE instance_id=? AND plugin_id=? AND version=? AND generation=? AND installed=1`, now(), instance, target.PluginID, target.Version, target.Generation)
 	if err != nil {
 		return err
@@ -355,6 +359,11 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	}
 	if isIYUU {
 		if err = o.p.iyuuGenesisTx(ctx, o.tx, instance, "bulk_uninstall", iyuuParent); err != nil {
+			return err
+		}
+	}
+	if isTransfer {
+		if err = o.p.transferGenesisTx(ctx, o.tx, instance, "bulk_uninstall", transferParent); err != nil {
 			return err
 		}
 	}
@@ -410,6 +419,7 @@ type pluginUninstallCleanupPrepared struct {
 	seed              *pluginCleanInvalidSeedPrepared
 	auto              *pluginAutoBackupPrepared
 	iyuu              *pluginIYUUPrepared
+	transfer          *pluginTransferPrepared
 	cloudflare        *pluginCloudflarePrepared
 	rescue            *pluginSeedRescuePrepared
 }
@@ -431,6 +441,8 @@ func (p *pluginUninstallCleanupPrepared) release() {
 		p.remove.release()
 	} else if p.seed != nil {
 		p.seed.release()
+	} else if p.transfer != nil {
+		p.transfer.release()
 	} else if p.iyuu != nil {
 		p.iyuu.release()
 	}
@@ -450,6 +462,9 @@ func (p *pluginUninstallCleanupPrepared) drain(ctx context.Context) error {
 	}
 	if p.seed != nil {
 		return p.seed.drain(ctx)
+	}
+	if p.transfer != nil {
+		return p.transfer.drain(ctx)
 	}
 	if p.iyuu != nil {
 		return p.iyuu.drain(ctx)
@@ -471,6 +486,9 @@ func (p *pluginUninstallCleanupPrepared) publishTx(ctx context.Context, tx *sql.
 	}
 	if p.seed != nil {
 		return p.seed.publishTx(ctx, tx, seedhost.Binding{InstanceID: to.InstanceID, Generation: to.Generation, Revision: to.Revision}, runID)
+	}
+	if p.transfer != nil {
+		return p.transfer.publishTx(ctx, tx, to, runID)
 	}
 	if p.iyuu != nil {
 		return p.iyuu.publishTx(ctx, tx, to, runID)
@@ -496,6 +514,9 @@ func resolveUninstallCleanupPrepared(p *pluginUninstallCleanupPrepared, committe
 	}
 	if p.seed != nil {
 		return p.seed.resolve(ctx, committed)
+	}
+	if p.transfer != nil {
+		return p.transfer.resolve(ctx, committed)
 	}
 	if p.iyuu != nil {
 		return p.iyuu.resolve(ctx, committed)
@@ -534,6 +555,11 @@ func (a *App) prepareUninstallCleanupTargets(ctx context.Context, selected []Plu
 			p.auto, err = a.prepareAutoBackupTransition(ctx, in)
 			if err == nil {
 				p.from = cleanuphost.Binding{InstanceID: in.InstanceID, Generation: in.Generation, Revision: p.auto.fromRevision}
+			}
+		case "TorrentTransfer", "TorrentTransfermusic":
+			p.transfer, err = a.prepareTransferTransition(ctx, in, "uninstall")
+			if err == nil {
+				p.from = p.transfer.from
 			}
 		case "IYUUAutoSeed":
 			p.iyuu, err = a.prepareIYUUTransition(ctx, in, "uninstall")
@@ -629,7 +655,7 @@ func (a *App) removeLinkUninstallTargets(ctx context.Context, run *PluginRun) ([
 	}
 	selected := []PluginInstallation{}
 	for _, in := range inventory {
-		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest" || in.PluginID == "SeedRescue") {
+		if plan.removed[in.InstanceID] && (in.PluginID == "RemoveLink" || in.PluginID == "CleanInvalidSeed" || in.PluginID == "AutoBackup" || in.PluginID == "IYUUAutoSeed" || in.PluginID == "CloudflareSpeedTest" || in.PluginID == "SeedRescue" || isTorrentTransfer(in.PluginID)) {
 			selected = append(selected, in)
 		}
 	}
@@ -685,7 +711,7 @@ func (a *App) applyPluginUninstallSQL(ctx context.Context, run *PluginRun, prepa
 		return json.RawMessage(`null`), nil
 	}
 	for _, instance := range planned.Removed {
-		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" || target.PluginID == "SeedRescue" {
+		if target := targets[instance]; target.PluginID == "RemoveLink" || target.PluginID == "CleanInvalidSeed" || target.PluginID == "AutoBackup" || target.PluginID == "IYUUAutoSeed" || target.PluginID == "CloudflareSpeedTest" || target.PluginID == "SeedRescue" || isTorrentTransfer(target.PluginID) {
 			matched := false
 			for _, p := range prepared {
 				if p.from.InstanceID == instance && p.from.Generation == target.Generation && p.pluginID == target.PluginID && p.version == target.Version {

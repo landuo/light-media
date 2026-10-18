@@ -243,7 +243,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 			}
 			// Check before misfire/busy handling too: neither can consume a due
 			// instant belonging to an unresolved authenticated IYUU timeline.
-			if err := p.iyuuQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
+			if err := p.pluginNativeQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
 				return err
 			}
 			latest, next := latestPluginScheduleDue(trigger, due, at)
@@ -297,7 +297,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		}()
 		if applyErr != nil {
 			_ = tx.Rollback()
-			if iyuuUnconfirmedQueueAdmission(applyErr) {
+			if pluginNativeUnconfirmedQueueAdmission(applyErr) {
 				blocked = append(blocked, instanceID)
 				continue
 			}

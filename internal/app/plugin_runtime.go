@@ -20,6 +20,7 @@ import (
 	cf "light-media/internal/plugins/cloudflarespeedtest"
 	"light-media/internal/plugins/removelink"
 	sr "light-media/internal/plugins/seedrescue"
+	transfer "light-media/internal/plugins/torrenttransfer"
 	"light-media/internal/plugins/uninstall"
 )
 
@@ -430,6 +431,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == "server.status.configure" {
 		return a.pluginServerStatusConfigure(ctx, installation, run, raw)
+	}
+	if method == transfer.ConfigureCapability || method == transfer.ExecuteCapability || method == transfer.FormCapability {
+		return a.pluginTransferHost(ctx, installation, run, method, raw)
 	}
 	if method == iyuu.ConfigureCapability || method == iyuu.ExecuteCapability || method == iyuu.FormCapability {
 		return a.pluginIYUUHost(ctx, installation, run, method, raw)
