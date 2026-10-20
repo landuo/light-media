@@ -144,10 +144,11 @@ onUnmounted(() => {
   min-height: 160px;
 }
 .plugin-data-settings {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Installed PluginDataDialog uses VFab location="bottom" app: its default
+     end alignment and 12px app margin place the action at the viewport edge. */
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
   z-index: 2;
 }
 .plugin-data-content :deep(.v-table) {
