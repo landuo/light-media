@@ -1,6 +1,6 @@
 # 已安装插件迁移基线
 
-最新交付（2026-10-20）：新服务已部署v0.4.0，**二级分类策略1.3已完成正式迁移，保持原停用状态；当前1/23完成**。实际冷启动/生产页面和加密导入收据见 [CategoryEditor交付](plugin-category-editor-delivery.md) 与 [正式迁移收据](plugin-category-editor-deployment.json)。其余22项未完成；下方带旧日期的开发记录保留历史口径，不代表当前全部可用。
+最新交付（2026-10-20）：新服务已部署v0.4.1，**二级分类策略1.3、插件彻底卸载2.2均已完成正式迁移，保持原停用状态；当前2/23完成**。实际冷启动、生产页面及加密导入收据见 [CategoryEditor交付](plugin-category-editor-delivery.md)、[分类迁移收据](plugin-category-editor-deployment.json)、[卸载插件交付](plugin-uninstall-delivery.md) 与 [卸载迁移收据](plugin-uninstall-deployment.json)。其余21项未完成；下方带旧日期的开发记录保留历史口径，不代表当前全部可用。
 
 核查日期：2026-10-16（Asia/Shanghai）。来源：NAS 原版 MoviePilot 的只读 SQLite 查询 UserInstalledPlugins，与 /app/app/plugins、/config/plugins 已安装源码的 AST 元数据对应；未导入配置值或运行数据。23/23 插件源码已找到，合计 36717 行 Python（不含前端静态包）。此清单是迁移范围，不是完成声明。
 
@@ -11,7 +11,7 @@
 | SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | Go 快照统计、原版表单/卡片/饼图/明细、一次性刷新、持久站内通知及按域名刷新 API 已接入；通知通道、完整账户字段/域名别名、历史/配置正式迁移和仪表板布局仍待完成 |
 | RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；NoticeMessage路由与外发、正式迁移和部署未完成 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
-| PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | Go 原算法/表单、真实卸载宿主、自卸载收据与恢复、安装/重装及合成网页操作已验证；保留安装版清配置/KV的非强制 guard，待正式迁移和部署 |
+| PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | 2026-10-20 已随v0.4.1部署并正式迁移；原true/true及空选择保留，安装与收据各1、0运行/KV/计划/事件/卸载步骤，实际生产表单已核对；失败后的warm/durable、连续新执行、重装及自卸载已在独占实例验证；原全局顺序/布局仍待后续独立迁移 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类适配、原表单/详情及逐效果StateJournal已迁入正式Go包；实际SQLite分行/owner、内部配置CAS与旧admission归档切换已有NAS证据。实际Manager/调度/消息及Browser/OCR接线、资源按需加载/回收、注册、配置/KV迁移和实机验收未完成 |
 | MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 主流程/17渠道构造/SDK及SMTP依赖已迁入正式Go包，28项NAS隔离测试通过。原表单页签/子弹窗/点号键已用实际ConfigDialog验证；完整Mako/Apprise、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
 | IYUUAutoSeed | IYUU自动辅种 | 2.19 | 启用 | 325 | 2026-10-18 已接正式 Go handler、实际 SDK/原生下载器宿主、持久队列和原日志；默认目录/ATM 落点及无需整理路径映射的原生授权已验证并纳入正式代码，325 项 KV、配置、引用尚未迁移，未部署 |
