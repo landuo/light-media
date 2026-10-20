@@ -226,6 +226,12 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 	if installation.PluginID == "SeedRescue" {
 		projectSeedRescueSecrets(form.Model)
 	}
+	if installation.PluginID == "IYUUAutoSeed" {
+		form.Conf, err = projectIYUUForm(form.Conf, form.Model)
+		if err != nil {
+			return nil, err
+		}
+	}
 	response := map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}
 	if form.RenderMode != "" {
 		if form.RenderMode != "vue" && form.RenderMode != "vuetify" {
@@ -380,6 +386,11 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		stored, err := a.pluginStore.Config(ctx, installation.InstanceID)
 		if err != nil && !missingPluginValue(err) {
 			return nil, err
+		}
+		if installation.PluginID == "IYUUAutoSeed" {
+			if err := retainIYUUToken(configValue.(map[string]any), stored); err != nil {
+				return nil, err
+			}
 		}
 		if installation.PluginID == "RemoteIdentifiers" {
 			var fields map[string]json.RawMessage

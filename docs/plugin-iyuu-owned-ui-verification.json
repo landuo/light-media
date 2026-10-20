@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-21",
+  "scope": "owned loopback instance only; no production deployment or original-system writes",
+  "base_commit": "1f36702856bb37489e7e9143ea5a5c8c7e50316e",
+  "source": {
+    "files": 3995,
+    "sha256": "17df5cd7b6f5a9ffd7d9388a585632fa37db74206a20ebd213e898bfa209dde5",
+    "drift": []
+  },
+  "product_changes": [
+    "internal/app/plugin_http.go",
+    "internal/app/plugin_iyuu_form.go",
+    "internal/app/plugin_iyuu_form_test.go"
+  ],
+  "validation": {
+    "normal": {
+      "exit": 0,
+      "top_level_pass": 5,
+      "including_subtests_pass": 11
+    },
+    "race": {
+      "exit": 0,
+      "top_level_pass": 5,
+      "including_subtests_pass": 11
+    },
+    "native_build_exit": 0,
+    "linux_amd64_cgo0_build_exit": 0,
+    "vet_exit": 0,
+    "mod_verify_exit": 0
+  },
+  "actual_ui": {
+    "selected_sites": 17,
+    "native_site_ids": [
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116
+    ],
+    "selected_downloaders": 2,
+    "token_returned_to_browser": false,
+    "saved_token_placeholder_verified": true,
+    "bottom_options_and_fixed_actions_verified": true,
+    "save_clicked": false,
+    "original_data_rows": 329,
+    "config_revision": 1,
+    "desired_enabled": false,
+    "selected_database_tables_unchanged": true
+  },
+  "db_snapshots": {
+    "UI-DB-before.json": {
+      "plugin_installations": {
+        "rows": 1,
+        "sha256": "51d64ba5f0285f5ca82b132f9109aa681ce232d48b65eaa4e58f922820f2f984"
+      },
+      "plugin_values": {
+        "rows": 330,
+        "sha256": "cac7e22f5d325431bdc0bd1de3e9ba4d0d7323eefd75cb05e0f28b1181c6abd8"
+      },
+      "plugin_migration_runs": {
+        "rows": 1,
+        "sha256": "56c01618f4da95de6379c47c4d5c1cc9e0519fdc9712c231902a49281e3b399b"
+      },
+      "plugin_migration_receipts": {
+        "rows": 1,
+        "sha256": "b46558980c3f3da8090b9b98004343c5a6163da422283dc88cdf0089d498b1dd"
+      },
+      "plugin_runs": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugin_schedules": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "reference_and_core_records": {
+        "rows": 2,
+        "sha256": "00a56c9fe30e54746ef10f9c021c2af388e814d0c79db6630d91b044690810d7"
+      },
+      "desired_enabled": 0,
+      "config_revision": 1,
+      "history_rows": 329
+    },
+    "UI-DB-after-close.json": {
+      "plugin_installations": {
+        "rows": 1,
+        "sha256": "51d64ba5f0285f5ca82b132f9109aa681ce232d48b65eaa4e58f922820f2f984"
+      },
+      "plugin_values": {
+        "rows": 330,
+        "sha256": "cac7e22f5d325431bdc0bd1de3e9ba4d0d7323eefd75cb05e0f28b1181c6abd8"
+      },
+      "plugin_migration_runs": {
+        "rows": 1,
+        "sha256": "56c01618f4da95de6379c47c4d5c1cc9e0519fdc9712c231902a49281e3b399b"
+      },
+      "plugin_migration_receipts": {
+        "rows": 1,
+        "sha256": "b46558980c3f3da8090b9b98004343c5a6163da422283dc88cdf0089d498b1dd"
+      },
+      "plugin_runs": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "plugin_schedules": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "reference_and_core_records": {
+        "rows": 2,
+        "sha256": "00a56c9fe30e54746ef10f9c021c2af388e814d0c79db6630d91b044690810d7"
+      },
+      "desired_enabled": 0,
+      "config_revision": 1,
+      "history_rows": 329
+    }
+  },
+  "artifacts": {
+    "app.test": {
+      "bytes": 69368594,
+      "sha256": "09c6fc9d192910aabc5b661825d686fcc9afdbfb52ea98ed5b89b9677a0989ef"
+    },
+    "app-race.test": {
+      "bytes": 89331426,
+      "sha256": "16e23150643d5f3b8e0066f8717261d2208024282650e04dab328fac339a74d6"
+    },
+    "light-media-native": {
+      "bytes": 57394274,
+      "sha256": "b40c3c41785106faa7d580fba4f3d2f2d4f3b5fb49283a97b250ad9feb4756a6"
+    },
+    "light-media-linux": {
+      "bytes": 59657601,
+      "sha256": "dad2f93f4ef9fc29a38ed2ef142d3d660bd0d181aaac86b6b23dd744962be45e"
+    },
+    "test-normal.log": {
+      "bytes": 12187,
+      "sha256": "a3ae0d8f21410d019510b1838ea3e980b49e4426f4f96080ecb8e3a5d7c0d4bb"
+    },
+    "test-race.log": {
+      "bytes": 12206,
+      "sha256": "3f90947fb332b0aecb161a5f206b68ef5853f500ef3453bfa982ea999a1962ab"
+    },
+    "build-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-linux.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-test.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-race.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vet.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "mod-verify.log": {
+      "bytes": 21,
+      "sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    },
+    "iyuu-go-owned-form-2026-10-21.png": {
+      "bytes": 57113,
+      "sha256": "0f60470489d5e20d558e9e8991cf3f8945c53003bbd6e83c8fe7cdbb33b4f0b3"
+    },
+    "iyuu-go-private-token-2026-10-21.png": {
+      "bytes": 59374,
+      "sha256": "19043defd4e6049ef49633ccdb68995d73d94f515efe8f99bd391e83c7f8bcad"
+    },
+    "iyuu-go-owned-form-options-2026-10-21.png": {
+      "bytes": 51291,
+      "sha256": "fdf8bbcb166e970e33062a8330241fdde49a42c86ad702a3c0ab8bf70bb13585"
+    }
+  }
+}
