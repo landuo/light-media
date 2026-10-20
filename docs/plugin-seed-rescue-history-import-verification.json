@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "state": "partial_verified_not_migrated",
+  "base_commit": "120ad3abf571105c7665abb2ffdc17feee3f53f0",
+  "scope": "SeedRescue 1.6.3 history import owner proof; no runtime reference conversion or production migration",
+  "actual_migrated": 7,
+  "remaining": 16,
+  "production_version": "0.4.8",
+  "production_writes_performed": 0,
+  "original_writes_performed": 0,
+  "python_runtime_dependency_added": false,
+  "source": {
+    "files": 3983,
+    "sha256": "e4889f8817021556058cc6ddde9f738bea2b6864c08b6bfa96a9b5ce36e5e670",
+    "compiler_inputs": 5143,
+    "compiler_sha256": "a477b609f8c8cd1ccf99b540058c622f913ded1e64e0280f7dff7e5a96cb0f32",
+    "drift": 0,
+    "focus": [
+      {
+        "path": "internal/app/plugin_store.go",
+        "sha256": "b8d19baef8854a963d359be0a6a9fbdee39901e8beb4f70fe34c0c2e908fa646"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_import.go",
+        "sha256": "118971c3b1ebf1cef8e50c5324e0975c60f2c439f810cf8c0829ce7dac3774f2"
+      },
+      {
+        "path": "internal/app/seed_rescue_import_test.go",
+        "sha256": "560cf81b1272405136bb60c20e93849a788e3570833ae10e88e1d2214c83b6f9"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_import_selected_test.go",
+        "sha256": "b0d9e4b5d3dc0708554e4d53dffac623b5ce672c0eadd4d1b9bacbea6c8145db"
+      }
+    ]
+  },
+  "baseline": {
+    "fixture_compile_error_retained": true,
+    "corrected_regression_failed": true,
+    "error": "SEED_RESCUE_EVIDENCE_MISSING"
+  },
+  "checks": {
+    "affected-normal": {
+      "exit": 0,
+      "top_level_passed": 85,
+      "including_subtests_passed": 156,
+      "skipped": [
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestSeedRescueHistoryImportSelectedStdin"
+      ]
+    },
+    "affected-race": {
+      "exit": 0,
+      "top_level_passed": 85,
+      "including_subtests_passed": 156,
+      "skipped": [
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestSeedRescueHistoryImportSelectedStdin"
+      ]
+    }
+  },
+  "actual_selected": {
+    "state": "passed",
+    "source": "actual installed MoviePilot SeedRescue",
+    "scope": "owned encrypted store, cold owner and read-only business views only; references and external effects not validated",
+    "payload_saved": false,
+    "runs": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "passed": true,
+        "log_sha256": "d18ea355382396a1531d8b9aa1ec7fda5f5ef8acf9f38e244080aa6097cf6a42"
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "passed": true,
+        "log_sha256": "4056c2fd72c1b61165310c8886f262876dff251b637b12b93753bea95ba06afd"
+      }
+    ],
+    "KV": 3,
+    "tasks": 1140
+  },
+  "builds": {
+    "vet_exit": 0,
+    "native_exit": 0,
+    "linux_amd64_cgo0_exit": 0,
+    "mod_verify_exit": 0,
+    "native_sha256": "847d788c8c9d9613eb5c4c15f4b65e44cfe9978f7a65210553f6bd5c1bec0dd1",
+    "linux_sha256": "47072906a35e568fa172d1cf088e265097fd806ed469b5eae04283a89914debf"
+  },
+  "read_only_reference_review": {
+    "typed_site_ids": 17,
+    "origin_matches": 17,
+    "identical_cookie_count": 11,
+    "identical_api_key_count": 17,
+    "downloader_endpoint_account_equal": true,
+    "native_reference_mappings_written": 0,
+    "connectivity_test": false,
+    "source_flags": {
+      "enabled": true,
+      "notify": false,
+      "onlyonce": false,
+      "selection_mode": "manual"
+    }
+  },
+  "remaining_requirements": [
+    "Authenticated legacy site namespace and stable downloader binding; preserve job/candidate/RSS identities",
+    "IYUUAutoSeed migration and enabled dependency before full scan verification",
+    "Owned end-to-end referenced scan/download/recovery and actual UI validation",
+    "Production offline migration and safe activation without duplicate original schedules"
+  ],
+  "evidence_archive": "testdata/plugins/seed-rescue-history-import-verification.json.gz",
+  "evidence_archive_sha256": "fe3e0b69b4fc539cfcee7393f39db2aafcdadd36f882cd0f39b7cf6f266c0dd2"
+}

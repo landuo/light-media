@@ -1039,9 +1039,15 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 			return PluginMigrationReceipt{}, err
 		}
 	}
-	for key, value := range in.Data {
-		if _, err = p.saveValueTx(ctx, tx, installation.InstanceID, "data", key, 0, value); err != nil {
+	if installation.PluginID == "SeedRescue" {
+		if err = p.importSeedRescueDataTx(ctx, tx, installation.InstanceID, in.Data); err != nil {
 			return PluginMigrationReceipt{}, err
+		}
+	} else {
+		for key, value := range in.Data {
+			if _, err = p.saveValueTx(ctx, tx, installation.InstanceID, "data", key, 0, value); err != nil {
+				return PluginMigrationReceipt{}, err
+			}
 		}
 	}
 	for key, value := range in.systemProcessDashboard {
