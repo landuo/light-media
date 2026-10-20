@@ -62,7 +62,7 @@ func (p *PluginStore) recoverBrushFlowUnentered(ctx context.Context) error {
 			}
 			continue
 		}
-		if _, exists := s.Runs[id]; exists {
+		if _, exists := s.lookupRun(id); exists {
 			tx.Rollback()
 			return brushFlowEvidenceError()
 		}

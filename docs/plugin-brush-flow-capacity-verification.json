@@ -1,0 +1,386 @@
+{
+  "app-normal.jsonl": {
+    "top": {
+      "('light-media/internal/app', 'pass')": 40
+    },
+    "inclusive": {
+      "('light-media/internal/app', 'pass')": 154
+    },
+    "terminal": [
+      {
+        "Package": "light-media/internal/app",
+        "Action": "pass",
+        "Elapsed": 60.241
+      }
+    ],
+    "sha256": "3a680e827fbfbd554a0a9a421c6cfb3d4668bec0fe0720eb40b18b40d9fc175d"
+  },
+  "app-race.jsonl": {
+    "top": {
+      "('light-media/internal/app', 'pass')": 12
+    },
+    "inclusive": {
+      "('light-media/internal/app', 'pass')": 29
+    },
+    "terminal": [
+      {
+        "Package": "light-media/internal/app",
+        "Action": "pass",
+        "Elapsed": 96.049
+      }
+    ],
+    "sha256": "83d593d71ad177df3ed7f8db94eb2ff10d056397dbeb3c0660a4d50462faf281"
+  },
+  "core.jsonl": {
+    "top": {
+      "('light-media/internal/plugins/brushflow', 'pass')": 8,
+      "('light-media/internal/plugins/brushflow/ledger', 'pass')": 7,
+      "('light-media/cmd/server', 'pass')": 1
+    },
+    "inclusive": {
+      "('light-media/internal/plugins/brushflow', 'pass')": 276,
+      "('light-media/internal/plugins/brushflow/ledger', 'pass')": 17,
+      "('light-media/cmd/server', 'pass')": 1
+    },
+    "terminal": [
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Action": "pass",
+        "Elapsed": 4.266
+      },
+      {
+        "Package": "light-media/cmd/server",
+        "Action": "pass",
+        "Elapsed": 2.363
+      },
+      {
+        "Package": "light-media/internal/plugins/brushflow/ledger",
+        "Action": "pass",
+        "Elapsed": 15.925
+      }
+    ],
+    "sha256": "7eff6a438fa20b5cd7a10128ff0ad27888557c2ceb95409ff3ff213a8d8580de"
+  },
+  "builds": [
+    {
+      "name": "core",
+      "exit": 0
+    },
+    {
+      "name": "product",
+      "exit": 0
+    },
+    {
+      "name": "vet",
+      "exit": 0
+    },
+    {
+      "name": "linux",
+      "exit": 0
+    }
+  ],
+  "all_handles_terminal": true,
+  "frozen_inputs": 3202,
+  "drift": [],
+  "verified_at": "2026-10-20T18:11:21.335440+08:00",
+  "focused": [
+    {
+      "path": "cmd/server/big_memory_test.go",
+      "before": null,
+      "after": "10068ba20b6178bcf8f6c4e194f9814882e4715c10a0a2c5c76ea734f036b799",
+      "kind": "exact"
+    },
+    {
+      "path": "cmd/server/main.go",
+      "before": "a5cf81f76237c30bb4ea190b461d601cce35d2e15d2920040091dc1489af2814",
+      "after": "8b0debd2683d7d4ee867a10c2bcfb57a237a41cb38443af9e02d4d30deb71f77",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_admission.go",
+      "before": "d4f12664d613ff73ffb42edb787675b4a732b47e805a0406566f5a81e279fa9e",
+      "after": "afbc3584ef55449efea0093c506d16c83abeaad1624b072d89b2c2c75432ea10",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_api.go",
+      "before": "9d5d04953813923c77966ccbf9b1ebc6e82cbd76263e382324a0c6dae8ee1064",
+      "after": "845754309563521ceca3c03c14ace6143280a136a0ebb99dafd41c1d15de4af6",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_concurrency.go",
+      "before": "c527883283112df45cfd7f3e115608deb6ea6e6a3129e1f0ca71dffeabbf1c17",
+      "after": "a5d13fa02eb7cfc5967f4134081e6456578d89088876fdf63958bad892261e51",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_dispatch.go",
+      "before": "8c782dbac0be6002ee68c02f6549c701d4ae78e262de66e0a35752ad04efd5b2",
+      "after": "f1df18b8ed0ea368ccb2eaf275b5ed3d0766db7dac0f989b203d4f75f6b28d84",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_download.go",
+      "before": "5fd842168126460e2af0560d3ac6a10905a51bf1806039e63849e243481bfa80",
+      "after": "90894c3309404e94925ce7e040a81f19ea3fb8e4a4550ff653545b7b13c43189",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_event.go",
+      "before": "d20f0c32b030d9f83d2ab61c4dabccc0432d43244ea6c2ce76af1d5bdc06d629",
+      "after": "a2565681b6cea6fefba507b9d5758e8cfd177180fd3bfd7169b486b66ec6e7c2",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_execution.go",
+      "before": "de310b78cf12bec909d5156a1a26a7539c7fa28a959881516f40380cafadb2cf",
+      "after": "33d3fc674a31d7762bf3c53aae8407c98c6a0b75ee266a5d02152bad37d40cd9",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_head.go",
+      "before": null,
+      "after": "7da080502d731d0465d45ad9534363e6e5501d78fe04851036363f5c6b7a2b96",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_head_test.go",
+      "before": null,
+      "after": "7d4d899d3b6b6add3dc1b2fa4e2564d623f702709bb7dcfe17db5dff72f82d15",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_host.go",
+      "before": "49c6497159f6d7da51f64e41e1b4e169f0d52d6e1a916161933db3fe6740f9c3",
+      "after": "fa188daf3200dfbc2ac6cfd826a331dd8e2c8c09ce0e72484e057691ae117617",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_integrity_test.go",
+      "before": "cdca265c9c05338959f73f57093a0474d2fdf79af3b9698d9be03114c24af853",
+      "after": "4d503894316f320947eaa7eaf15130c1b2e79f40db1c64be542e41bd865e646d",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_journal.go",
+      "before": "1a5e31292a25a5a5d851613188df9338b298593470d317fc31f2c2ff7fb65a3e",
+      "after": "48c5a4e2f64a7bc3d52057dab2b2fb83e9211e32a73ec329cd127d1ac96e191a",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_native.go",
+      "before": "1a43a69a8ea77090f9548ac2933e8d9aa9f2525e4f67a0c265df0a0346c4e875",
+      "after": "913e21bbdf5e42cc8c368a88873524c6a156e5a2bbbd134ca0d01193a58b2954",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_notice.go",
+      "before": "6135159ff2a53b40b1181e1ee509de0320a7f2194c7462c0da3a0a7881c7fb00",
+      "after": "31af0e2dd75e64ae9360b449427874d7d7296294b0feea9af138dce992790612",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_observation.go",
+      "before": "e0cf3fbd3906486d4daca7ba0f85cf1dc89245907742aec27f114278ea9574aa",
+      "after": "86b09383faecdfdad590666a01338d8c8bca1275762fbf9b6948f2f522ce6203",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pages.go",
+      "before": null,
+      "after": "d554f19e813f7cf399b5be62641af30014432bc9979347ca12d2467be88c9109",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pages_test.go",
+      "before": null,
+      "after": "c105a8e97cf52c3332502100e73ab2effa0fce0564c8ffa0b3263ffbd85b490b",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_parallel_test.go",
+      "before": "3d1b485875874abe5b13db7627841fa60ad6324076d88f76e2859bb93e9a4ee7",
+      "after": "bfc54390ff43b38bba27668d429f2efe89cc6e9907a550af22ca86aaa5ae98d9",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pending_sources.go",
+      "before": null,
+      "after": "93dcf94cae97bb625bad824d6720e9fe59bc806d9fa940d9d48a6b63eb4511f0",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pending_sources_test.go",
+      "before": null,
+      "after": "70b5b7f59bcb4d3d2370d51db00d80adec12bd62d1a98dea49a3c098b876692a",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_point.go",
+      "before": null,
+      "after": "a01460f4f0ae78faf7a7454b3ed64fbb91eb4888b1bd190087b00e26e1317600",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pools.go",
+      "before": "fa0ddc718e70a6767e5566118909a4ed6e2d15f3123913536a373fda71e020b2",
+      "after": "cb08a49129c1a6ab38adec5564efbe2cfd48540f9a0c82f650596ad4cc691222",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pools_test.go",
+      "before": "04783a3ef850db5ce35c1de3ddc46b3ed905aa5e75838eddb1db50ad1d624bf2",
+      "after": "d201247d5578409995c86c5e58cf22f949080544362fa91937020d0f54c0e97e",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_pre_sdk.go",
+      "before": "8ca0cd3e720acd0c7a6314dcf1d1491fc89bb297dfbdde5e3f0c09a6347c6825",
+      "after": "27a0923b7c9f68b5d4d7478ce43912d830569fa7586a5e6def80e7cdbac3696a",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_queue.go",
+      "before": "74b1bb696b1c984973607efe7354a672e89cc0824468b1adcf504650a26e28d1",
+      "after": "46a785b8020a1b02a5f599aebe3d3c2800c11b8fa7e918f851fadbdc3c16ef46",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_recovery.go",
+      "before": "d866a64ed92847c0ed1aaa62a012ce9ce8a4d1ec44a2f5922e3d4982a49117a8",
+      "after": "3a1d354e2627b3a845ac7df151ce6dade7e5b45b93efd49d4dd99859da76037c",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_root.go",
+      "before": "8cb77371459e94335307147a9a862b3bdfbb5dbf29be48a5282543376602161f",
+      "after": "044f4f474c8fdea36b46a17a89971fb52a522e4dd2f7a5c7bc2c2f0c89d8c30b",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_schedules.go",
+      "before": "60b2e1e02703d145db30e22f64b07351a69dddf8e92f7a43814be3a06f2fad4b",
+      "after": "087e6ab0edf272b322f75803cae57c28a3aa785721813e27f0a1b98118696d70",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_brush_flow_test.go",
+      "before": "25108e0f3efda5074b606ebd1c51d1064a2fe4bdc4f7fa455034ba62a9d7eb80",
+      "after": "7d847493bd5c24477c2cb84e4cae1b5f11a7462340bc31f64f07dbfd00452d5b",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/app/plugin_runs.go",
+      "before": "35c22e00458a2a45c80eacbf1f1ecf01799f0c0a5e97036289f8c118599c3438",
+      "after": "344656cb200c49b709b119f933b0f7de2502fe933136a17ac5559288f9875c9f",
+      "kind": "threeway"
+    },
+    {
+      "path": "internal/app/runtime.go",
+      "before": "f2f2c65011cbdf9b85889c8a6bd09904452fd24559a3da269e096482a28d13a8",
+      "after": "1c37c1b87d3af771ed2b6b32ebfebdd0ce755a2c857dfe9967d0fe7a9d3da034",
+      "kind": "threeway"
+    },
+    {
+      "path": "internal/plugins/brushflow/ledger/cursor.go",
+      "before": null,
+      "after": "d45cc1846dd06042be2c665a045b122f839bffe6d352787e636b12d683bec6d7",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/plugins/brushflow/ledger/cursor_test.go",
+      "before": null,
+      "after": "ca15a547d3293e643ed6aecb7e86d785b7bc7264e083281107c84246bfca645b",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/plugins/brushflow/ledger/ledger.go",
+      "before": null,
+      "after": "4137b08ce1c1baad87a0ce9bdc231eb5e7e3a1eb79357cbd7b95ba1154b162a1",
+      "kind": "exact"
+    },
+    {
+      "path": "internal/plugins/brushflow/ledger/ledger_test.go",
+      "before": null,
+      "after": "775b06cc31e8f6b8be042c32ad3789de7048c59c12ca4ba9482da303433836c2",
+      "kind": "exact"
+    }
+  ],
+  "archives": [
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-app-normal.jsonl.gz",
+      "sha256": "b7892c6e78a02047e186bb440b182a53ca3ae7fb58751c4e53b1ce607a47d9f9",
+      "source_sha256": "3a680e827fbfbd554a0a9a421c6cfb3d4668bec0fe0720eb40b18b40d9fc175d"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-app-race.jsonl.gz",
+      "sha256": "20a788685cb61ce462353e3a0e79fe21e445e14556bc6328310f22afb1aaf407",
+      "source_sha256": "83d593d71ad177df3ed7f8db94eb2ff10d056397dbeb3c0660a4d50462faf281"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-core.jsonl.gz",
+      "sha256": "f9af57d4881c953a8e65a3e2478fb4c3c845b57e4796f8e16b9d1030ecc41f10",
+      "source_sha256": "7eff6a438fa20b5cd7a10128ff0ad27888557c2ceb95409ff3ff213a8d8580de"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-VERIFICATION.json.gz",
+      "sha256": "c97b1e044d65500cbc526592d28147f62ad6b798462bc2e5efd3ed9b4a919f47",
+      "source_sha256": "54ada9084d74f65b7a452b63d620cc7a3cd0b6681febed872e23a6b07aa24ddf"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-COMPOSITION.json.gz",
+      "sha256": "b239ba376de15120b66e0324078911fb69c8e5efcdbba219b0405a73640e0041",
+      "source_sha256": "db9f21cfdedbd4798306e75bf32e9320b382a15fbc262392b2746714c3da4e01"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-FOCUSED.json.gz",
+      "sha256": "94fb0f696211cc2690a10598cd61fd74a01a79c7a28606b23c225c9d1f3cf0cd",
+      "source_sha256": "b8bdec3cc589380e731523578d6ab112492fde288484a376c2c80b28261aeaa9"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/root-SOURCE-INPUTS.json.gz",
+      "sha256": "28923cc539d62656f9f3a0f8bba9f16e8b8bc98d8c7c053713817ef186420c58",
+      "source_sha256": "43953f664bee66681ca48ee38f19bcdc4e6af9579144474233d92f71abf8ea5d"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/agent-MANIFEST.json.gz",
+      "sha256": "f22782f8341a67c78893faa3c983547e0aa93b5bc377144d6d75d8d6f49ef1f2",
+      "source_sha256": "083444415f34f9b007adb069024fee22edef5762ed8e30ce3ef484a9d5fcbf57"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/agent-focused.json.gz",
+      "sha256": "6009c83f2d623de86d5bd33be46800c8dd889a3377e2a24847dcf059cb208fd9",
+      "source_sha256": "8ef824b316d7cdd3c2154ca88e1e0dfc2867341913888eb8a7a23201fd29d8e4"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/agent-all-brush-normal.jsonl.gz",
+      "sha256": "4f0bc5d5ec408ec3c7b173ae31d605f0c9c312b225db15ccfcb52dfca872094c",
+      "source_sha256": "631cea9a34d73c360f26f6bb8b8a84fe515ccabe98d469911ebe348911e9ab90"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/agent-all-brush-race.jsonl.gz",
+      "sha256": "3fc4d5a64755c596b568cf54d56d3235f741b3bfb3ebe6d46e0c51c5a6442df0",
+      "source_sha256": "e052f7bd8c8e699dbd9e86213b809993df4eb846c9ab2fe71a4d2c3de4179774"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/agent-core-normal.jsonl.gz",
+      "sha256": "71026d6cbb3f02aaaf5e60cf449f8afbb0dd8b78e4795b8534c85d49d8fb09da",
+      "source_sha256": "8f947661a94e5bd435ae3e27f2c770276e76ddffbcf3915506cd9bff1e87caa7"
+    },
+    {
+      "path": "testdata/plugins/brush-flow-capacity/verification/agent-core-race.jsonl.gz",
+      "sha256": "5f85b17e860257fb520d8733b00988f8c69fc4f4b837806505650dd4396234c7",
+      "source_sha256": "c0bcf121a7f153a8249ef9befed9a26ada8d3458757d220e507431df83cdbffd"
+    }
+  ],
+  "agent_manifest_sha256": "083444415f34f9b007adb069024fee22edef5762ed8e30ce3ef484a9d5fcbf57",
+  "registered_handlers": 20,
+  "original_migrations": 0,
+  "deployed": false,
+  "remaining": [
+    "shared1MiB/config descriptor and1000/10000 artificial host limits",
+    "unreachable COW page GC",
+    "wholeDB+authority rollback external anchor"
+  ]
+}

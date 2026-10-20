@@ -33,11 +33,11 @@ func (o *pluginBrushFlowOwner) Event(ctx context.Context, event bf.Event) error 
 		return e
 	}
 	p := o.a.pluginStore
-	s, b, e := p.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, b, e := p.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
-	r := s.Runs[c.run.ID]
+	r := s.run(c.run.ID)
 	if r.Phase != "started" {
 		return brushFlowEvidenceError()
 	}
@@ -79,7 +79,7 @@ func (o *pluginBrushFlowOwner) Event(ctx context.Context, event bf.Event) error 
 	proof := brushFlowEventProof{Version: 1, ID: id, Event: fact, AddOrdinal: add, Payload: payload}
 	ordinal := len(r.Effects)
 	r.Effects = append(r.Effects, brushFlowEffect{Kind: "plugin_triggered", Phase: "confirmed", Args: mustCleanSeedJSON(proof), Result: mustCleanSeedJSON(map[string]string{"event_id": fact.EventID})})
-	s.Runs[c.run.ID] = r
+	s.setRun(c.run.ID, r)
 	if _, e = tx.ExecContext(ctx, `INSERT INTO plugin_trigger_sources VALUES(?,?,?,?,?)`, id, o.instance, o.generation, c.run.ID, ordinal); e != nil {
 		return e
 	}
@@ -136,20 +136,29 @@ func (p *PluginStore) validateBrushFlowTriggered(ctx context.Context, q pluginRe
 	if e := q.QueryRowContext(ctx, `SELECT instance_id,generation,run_id,ordinal FROM plugin_trigger_sources WHERE id=?`, event.PluginTriggerID).Scan(&instance, &generation, &run, &ordinal); e != nil {
 		return brushFlowEvidenceError()
 	}
-	s, _, e := p.brushFlowRead(ctx, q, instance, generation)
+	s, _, e := p.brushFlowReadCurrent(ctx, q, instance, generation)
 	if e != nil {
 		return e
 	}
-	r, ok := s.Runs[run]
-	if !ok || ordinal < 0 || ordinal >= len(r.Effects) {
+	r, count, ok := s.lookupRunSummary(run)
+	if !ok || ordinal < 0 || ordinal >= count {
 		return brushFlowEvidenceError()
 	}
-	effect := r.Effects[ordinal]
+	if e = p.brushFlowValidateAction(ctx, q, s, r); e != nil {
+		return e
+	}
+	effect, exists := s.lookupEffect(run, ordinal)
+	if !exists {
+		return brushFlowEvidenceError()
+	}
 	var proof brushFlowEventProof
 	if effect.Kind != "plugin_triggered" || effect.Phase != "confirmed" || cleanupJournalStrict(effect.Args, &proof) != nil || proof.Version != 1 || proof.ID != event.PluginTriggerID || !brushFlowSameJSON(proof.Event, event) || proof.AddOrdinal < 0 || proof.AddOrdinal >= ordinal {
 		return brushFlowEvidenceError()
 	}
-	add := r.Effects[proof.AddOrdinal]
+	add, exists := s.lookupEffect(run, proof.AddOrdinal)
+	if !exists {
+		return brushFlowEvidenceError()
+	}
 	if add.Kind != "add_torrent" || add.Phase != "confirmed" || proof.ID != p.noticeID("brush-flow-trigger", instance, generation, run, proof.AddOrdinal) {
 		return brushFlowEvidenceError()
 	}
@@ -169,7 +178,11 @@ func (p *PluginStore) validateBrushFlowTriggered(ctx context.Context, q pluginRe
 	if !brushFlowSameJSON(want, json.RawMessage(proof.Payload)) || !brushFlowSameJSON(effect.Result, map[string]string{"event_id": event.EventID}) {
 		return brushFlowEvidenceError()
 	}
-	return nil
+	var recorded []byte
+	if q.QueryRowContext(ctx, `SELECT payload FROM domain_events WHERE event_id=?`, event.EventID).Scan(&recorded) != nil || !brushFlowSameJSON(json.RawMessage(recorded), proof.Event) {
+		return brushFlowEvidenceError()
+	}
+	return s.check()
 }
 
 // This resolver is only for the real registered PluginTriggered receiver host.
@@ -192,11 +205,15 @@ func (p *PluginStore) brushFlowTriggeredPayload(ctx context.Context, q pluginRem
 	if e := q.QueryRowContext(ctx, `SELECT instance_id,generation,run_id,ordinal FROM plugin_trigger_sources WHERE id=?`, event.PluginTriggerID).Scan(&instance, &generation, &run, &ordinal); e != nil {
 		return nil, e
 	}
-	s, _, e := p.brushFlowRead(ctx, q, instance, generation)
+	s, _, e := p.brushFlowReadCurrent(ctx, q, instance, generation)
 	if e != nil {
 		return nil, e
 	}
 	var proof brushFlowEventProof
-	json.Unmarshal(s.Runs[run].Effects[ordinal].Args, &proof)
+	effect, ok := s.lookupEffect(run, ordinal)
+	if !ok {
+		return nil, brushFlowEvidenceError()
+	}
+	json.Unmarshal(effect.Args, &proof)
 	return proof.Payload, nil
 }

@@ -42,7 +42,7 @@ func (p *PluginStore) brushFlowCloseNotStartedTx(ctx context.Context, tx *sql.Tx
 	if e != nil {
 		return e
 	}
-	if _, ok := s.Runs[run.ID]; ok {
+	if _, ok := s.lookupRun(run.ID); ok {
 		return brushFlowEvidenceError()
 	}
 	method, raw, specErr := brushFlowDeferredSpec(actual)
@@ -74,7 +74,7 @@ func (p *PluginStore) brushFlowCloseNotStartedTx(ctx context.Context, tx *sql.Tx
 	// Known cancellation has its own authenticated terminal identity. It must
 	// never become a fresh authorization if a plaintext run.state is rolled back.
 	if !brushFlowReadRun(actual) && currentGeneration == run.Generation {
-		s.Runs[run.ID] = brushFlowAction{RunID: run.ID, Action: run.Action, InputSHA: deferredInputSHA(run.Input), Method: method, Phase: "failed", ErrorCode: "BRUSH_FLOW_NOT_STARTED", Decision: "not_started", Revision: run.ConfigRevision, EffectiveRevision: run.ConfigRevision, Result: brushFlowNotStartedResult()}
+		s.setRun(run.ID, brushFlowAction{RunID: run.ID, Action: run.Action, InputSHA: deferredInputSHA(run.Input), Method: method, Phase: "failed", ErrorCode: "BRUSH_FLOW_NOT_STARTED", Decision: "not_started", Revision: run.ConfigRevision, EffectiveRevision: run.ConfigRevision, Result: brushFlowNotStartedResult()})
 		if e = p.brushFlowSave(ctx, tx, s, previous); e != nil {
 			return e
 		}

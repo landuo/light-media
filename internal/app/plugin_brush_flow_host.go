@@ -29,11 +29,16 @@ func (c *brushFlowCall) guardTx(ctx context.Context, tx *sql.Tx) error {
 	if e != nil || r.State != "running" || r.InstanceID != c.run.InstanceID || r.Version != c.run.Version || r.Generation != c.run.Generation || r.ConfigRevision != c.run.ConfigRevision || r.Action != c.run.Action || !bytes.Equal(r.Input, c.run.Input) {
 		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流执行身份已经变化")
 	}
-	s, _, e := c.o.a.pluginStore.brushFlowRead(ctx, tx, c.o.instance, c.o.generation)
+	s, _, e := c.o.a.pluginStore.brushFlowReadCurrent(ctx, tx, c.o.instance, c.o.generation)
 	if e != nil {
 		return e
 	}
-	accepted, ok := s.Runs[c.run.ID]
+	accepted, ok := s.lookupRun(c.run.ID)
+	if ok {
+		if e := c.o.a.pluginStore.brushFlowValidateAction(ctx, tx, s, accepted); e != nil {
+			return e
+		}
+	}
 	if !ok || accepted.Phase != "started" || accepted.InputSHA != deferredInputSHA(c.run.Input) || accepted.Revision != c.run.ConfigRevision || accepted.EffectiveRevision != revision || accepted.Method != c.method || (c.run.Action != "init" && c.run.Action != "reload" && s.AppliedRevision != revision) {
 		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流接受配置证据已经变化")
 	}
@@ -197,20 +202,16 @@ func (o *pluginBrushFlowOwner) Get(ctx context.Context, key string) (any, error)
 	if e = c.guardTx(ctx, tx); e != nil {
 		return nil, e
 	}
-	s, _, e := o.a.pluginStore.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, _, e := o.a.pluginStore.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e != nil {
 		return nil, e
 	}
-	if _, ok := s.Values[key]; !ok {
+	raw, exists, e := o.a.pluginStore.brushFlowValueProof(ctx, tx, s, key)
+	if e != nil {
+		return nil, e
+	}
+	if !exists {
 		return nil, nil
-	}
-	var sealed []byte
-	if e = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, o.instance, key).Scan(&sealed); e != nil {
-		return nil, e
-	}
-	raw, e := o.a.pluginStore.unseal("data", o.instance, key, sealed)
-	if e != nil {
-		return nil, e
 	}
 	return brushFlowDecodeValue(raw)
 }
@@ -257,7 +258,7 @@ func (o *pluginBrushFlowOwner) write(ctx context.Context, key string, raw json.R
 	if e = c.guardTx(ctx, tx); e != nil {
 		return e
 	}
-	s, b, e := o.a.pluginStore.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, b, e := o.a.pluginStore.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
@@ -270,19 +271,22 @@ func (o *pluginBrushFlowOwner) write(ctx context.Context, key string, raw json.R
 	return tx.Commit()
 }
 func (c *brushFlowCall) writeValueTx(ctx context.Context, tx *sql.Tx, s *brushFlowState, key string, raw json.RawMessage) error {
+	if _, _, e := c.o.a.pluginStore.brushFlowValueProof(ctx, tx, *s, key); e != nil {
+		return e
+	}
 	if raw == nil {
 		if _, e := tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, c.o.instance, key); e != nil {
 			return e
 		}
-		delete(s.Values, key)
+		s.deleteValue(key)
 		return nil
 	}
-	revision := s.Values[key].Revision
+	revision := s.value(key).Revision
 	v, e := c.o.a.pluginStore.saveValueTx(ctx, tx, c.o.instance, "data", key, revision, raw)
 	if e != nil {
 		return e
 	}
-	s.Values[key] = brushFlowValue{v.Revision, tokenHash(string(raw))}
+	s.setValue(key, brushFlowValue{v.Revision, tokenHash(string(raw))})
 	return nil
 }
 func (o *pluginBrushFlowOwner) SaveConfig(ctx context.Context, value bf.Row) error {
@@ -316,7 +320,7 @@ func (a *App) brushFlowSidebar(ctx context.Context, in PluginInstallation) ([]ma
 		return nil, e
 	}
 	defer tx.Rollback()
-	s, _, e := a.pluginStore.brushFlowRead(ctx, tx, in.InstanceID, in.Generation)
+	s, _, e := a.pluginStore.brushFlowReadCurrent(ctx, tx, in.InstanceID, in.Generation)
 	if e != nil {
 		return nil, e
 	}
@@ -363,11 +367,11 @@ func (a *App) brushFlowHTTPRevisionTx(ctx context.Context, tx *sql.Tx, r PluginR
 	if rev == r.ConfigRevision {
 		return nil
 	}
-	s, _, e := a.pluginStore.brushFlowRead(ctx, tx, r.InstanceID, r.Generation)
+	s, _, e := a.pluginStore.brushFlowReadCurrent(ctx, tx, r.InstanceID, r.Generation)
 	if e != nil {
 		return e
 	}
-	action, ok := s.Runs[r.ID]
+	action, ok := s.lookupRun(r.ID)
 	if !ok || action.Revision != r.ConfigRevision || action.EffectiveRevision != rev || action.InputSHA != deferredInputSHA(r.Input) || action.Action != r.Action {
 		return bad("PLUGIN_API_SCOPE_DENIED", "站点刷流API配置证据已失效")
 	}

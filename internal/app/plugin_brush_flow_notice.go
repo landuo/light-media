@@ -6,6 +6,8 @@ import (
 
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"light-media/internal/notice"
@@ -55,11 +57,11 @@ func (o *pluginBrushFlowOwner) Message(ctx context.Context, n bf.Notice) error {
 	if e = c.guardTx(ctx, tx); e != nil {
 		return e
 	}
-	s, b, e := o.a.pluginStore.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, b, e := o.a.pluginStore.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
-	r := s.Runs[c.run.ID]
+	r := s.run(c.run.ID)
 	if r.Phase != "started" {
 		return brushFlowEvidenceError()
 	}
@@ -91,7 +93,7 @@ func (o *pluginBrushFlowOwner) Message(ctx context.Context, n bf.Notice) error {
 	route := pluginNoticeRoute{Version: 1, ID: p.noticeID("route", o.instance, o.generation, token), Kind: "brush_flow", Instance: o.instance, Generation: o.generation, Token: token, EffectID: fmt.Sprintf("%s:%d", c.run.ID, ordinal), AcceptedSHA: tokenHash(string(raw)), Envelope: envelope, CreatedAt: proof.CreatedAt, CurrentTime: proof.CurrentTime, HistoryID: proof.HistoryID, HistoryDigest: []byte(proof.HistoryDigest)}
 	proof.InitialSHA = noticeInitialSHA(route)
 	r.Effects = append(r.Effects, brushFlowEffect{Kind: "notice", Phase: "confirmed", Args: mustCleanSeedJSON(proof), Result: mustCleanSeedJSON(map[string]string{"route_id": route.ID, "initial_sha": proof.InitialSHA})})
-	s.Runs[c.run.ID] = r
+	s.setRun(c.run.ID, r)
 	if e = p.brushFlowSave(ctx, tx, s, b); e != nil {
 		return e
 	}
@@ -116,67 +118,83 @@ func (o *pluginBrushFlowOwner) Message(ctx context.Context, n bf.Notice) error {
 	return e
 }
 func (p *PluginStore) validateBrushFlowNotice(ctx context.Context, q pluginRemoveLinkJournalReader, route pluginNoticeRoute) error {
-	s, _, e := p.brushFlowRead(ctx, q, route.Instance, route.Generation)
+	s, _, e := p.brushFlowReadCurrent(ctx, q, route.Instance, route.Generation)
 	if e != nil {
 		return e
 	}
-	for _, r := range s.Runs {
-		for ordinal, effect := range r.Effects {
-			if effect.Kind != "notice" {
-				continue
-			}
-			token := p.noticeID("brush-flow-source", route.Instance, route.Generation, r.RunID, ordinal)
-			if token != route.Token {
-				continue
-			}
-			var proof brushFlowNoticeProof
-			if effect.Phase != "confirmed" || cleanupJournalStrict(effect.Args, &proof) != nil || proof.Version != 1 || proof.Run != r.RunID || proof.InputSHA != r.InputSHA || proof.Ordinal != ordinal || proof.PayloadSHA != tokenHash(string(proof.Payload)) {
-				return brushFlowEvidenceError()
-			}
-			var input notice.Object
-			if json.Unmarshal(proof.Payload, &input) != nil {
-				return brushFlowEvidenceError()
-			}
-			if input["mtype"] == "SiteMessage" {
-				input["mtype"] = "站点"
-			}
-			env, e := notice.NewEnvelope(input)
-			if e != nil || !bytes.Equal(mustCleanSeedJSON(env.Dump()), proof.Envelope) {
-				return brushFlowEvidenceError()
-			}
-			at, e := time.Parse(time.RFC3339Nano, proof.CreatedAt)
-			zone, ze := time.LoadLocation(proof.Timezone)
-			if e != nil || ze != nil || proof.CurrentTime != at.In(zone).Format("2006-01-02 15:04:05") {
-				return brushFlowEvidenceError()
-			}
-			if route.EffectID != fmt.Sprintf("%s:%d", r.RunID, ordinal) || route.AcceptedSHA != proof.PayloadSHA || !bytes.Equal(route.Envelope, proof.Envelope) || route.CreatedAt != proof.CreatedAt || route.CurrentTime != proof.CurrentTime || route.HistoryID != proof.HistoryID || !bytes.Equal(route.HistoryDigest, []byte(proof.HistoryDigest)) || noticeInitialSHA(route) != proof.InitialSHA {
-				return brushFlowEvidenceError()
-			}
-			var result struct {
-				ID  string `json:"route_id"`
-				SHA string `json:"initial_sha"`
-			}
-			if cleanupJournalStrict(effect.Result, &result) != nil || result.ID != route.ID || result.SHA != proof.InitialSHA {
-				return brushFlowEvidenceError()
-			}
-			if proof.HistoryID != "" {
-				var raw []byte
-				if e = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='notification' AND id=?`, proof.HistoryID).Scan(&raw); e != nil {
-					return e
-				}
-				var n Notification
-				if json.Unmarshal(raw, &n) != nil {
-					return brushFlowEvidenceError()
-				}
-				n.Read = false
-				if p.noticeID("brush-flow-history-value", n) != proof.HistoryDigest {
-					return brushFlowEvidenceError()
-				}
-			}
-			return nil
-		}
+	parts := strings.Split(route.EffectID, ":")
+	if len(parts) != 2 {
+		return brushFlowEvidenceError()
 	}
-	return brushFlowEvidenceError()
+	ordinal, err := strconv.Atoi(parts[1])
+	if err != nil || strconv.Itoa(ordinal) != parts[1] {
+		return brushFlowEvidenceError()
+	}
+	r, count, ok := s.lookupRunSummary(parts[0])
+	if !ok || ordinal < 0 || ordinal >= count {
+		return brushFlowEvidenceError()
+	}
+	if e = p.brushFlowValidateAction(ctx, q, s, r); e != nil {
+		return e
+	}
+	effect, exists := s.lookupEffect(r.RunID, ordinal)
+	if !exists {
+		return brushFlowEvidenceError()
+	}
+	{
+		if effect.Kind != "notice" {
+			return brushFlowEvidenceError()
+		}
+		token := p.noticeID("brush-flow-source", route.Instance, route.Generation, r.RunID, ordinal)
+		if token != route.Token {
+			return brushFlowEvidenceError()
+		}
+		var proof brushFlowNoticeProof
+		if effect.Phase != "confirmed" || cleanupJournalStrict(effect.Args, &proof) != nil || proof.Version != 1 || proof.Run != r.RunID || proof.InputSHA != r.InputSHA || proof.Ordinal != ordinal || proof.PayloadSHA != tokenHash(string(proof.Payload)) {
+			return brushFlowEvidenceError()
+		}
+		var input notice.Object
+		if json.Unmarshal(proof.Payload, &input) != nil {
+			return brushFlowEvidenceError()
+		}
+		if input["mtype"] == "SiteMessage" {
+			input["mtype"] = "站点"
+		}
+		env, e := notice.NewEnvelope(input)
+		if e != nil || !bytes.Equal(mustCleanSeedJSON(env.Dump()), proof.Envelope) {
+			return brushFlowEvidenceError()
+		}
+		at, e := time.Parse(time.RFC3339Nano, proof.CreatedAt)
+		zone, ze := time.LoadLocation(proof.Timezone)
+		if e != nil || ze != nil || proof.CurrentTime != at.In(zone).Format("2006-01-02 15:04:05") {
+			return brushFlowEvidenceError()
+		}
+		if route.EffectID != fmt.Sprintf("%s:%d", r.RunID, ordinal) || route.AcceptedSHA != proof.PayloadSHA || !bytes.Equal(route.Envelope, proof.Envelope) || route.CreatedAt != proof.CreatedAt || route.CurrentTime != proof.CurrentTime || route.HistoryID != proof.HistoryID || !bytes.Equal(route.HistoryDigest, []byte(proof.HistoryDigest)) || noticeInitialSHA(route) != proof.InitialSHA {
+			return brushFlowEvidenceError()
+		}
+		var result struct {
+			ID  string `json:"route_id"`
+			SHA string `json:"initial_sha"`
+		}
+		if cleanupJournalStrict(effect.Result, &result) != nil || result.ID != route.ID || result.SHA != proof.InitialSHA {
+			return brushFlowEvidenceError()
+		}
+		if proof.HistoryID != "" {
+			var raw []byte
+			if e = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='notification' AND id=?`, proof.HistoryID).Scan(&raw); e != nil {
+				return e
+			}
+			var n Notification
+			if json.Unmarshal(raw, &n) != nil {
+				return brushFlowEvidenceError()
+			}
+			n.Read = false
+			if p.noticeID("brush-flow-history-value", n) != proof.HistoryDigest {
+				return brushFlowEvidenceError()
+			}
+		}
+		return nil
+	}
 }
 
 func (o *pluginBrushFlowOwner) brushFlowSystemMessage(ctx context.Context, n bf.Notice) error {
@@ -193,11 +211,11 @@ func (o *pluginBrushFlowOwner) brushFlowSystemMessage(ctx context.Context, n bf.
 		return e
 	}
 	p := o.a.pluginStore
-	s, b, e := p.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, b, e := p.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
-	r := s.Runs[c.run.ID]
+	r := s.run(c.run.ID)
 	ordinal := len(r.Effects)
 	id := "notice_" + p.noticeID("brush-flow-system", o.instance, o.generation, c.run.ID, ordinal)
 	notice := Notification{ID: id, Title: cleanWithSettings(n.Title, o.a.Settings()), Message: cleanWithSettings(n.Text, o.a.Settings()), MType: "站点", CreatedAt: o.Now().UTC().Format(time.RFC3339Nano)}
@@ -205,7 +223,7 @@ func (o *pluginBrushFlowOwner) brushFlowSystemMessage(ctx context.Context, n bf.
 		return e
 	}
 	r.Effects = append(r.Effects, brushFlowEffect{Kind: "system_message", Phase: "confirmed", Args: mustCleanSeedJSON(notice), Result: mustCleanSeedJSON(map[string]string{"history_id": id, "digest": p.noticeID("brush-flow-system-value", notice)})})
-	s.Runs[c.run.ID] = r
+	s.setRun(c.run.ID, r)
 	if e = p.brushFlowSave(ctx, tx, s, b); e != nil {
 		return e
 	}

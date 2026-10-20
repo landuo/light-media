@@ -110,7 +110,7 @@ func (p *PluginStore) enqueueBrushFlowScheduleTx(ctx context.Context, tx *sql.Tx
 	if plugin != bf.PluginID || version != bf.Version || def.MisfireGraceMS != 1000 {
 		return PluginRun{}, true, brushFlowEvidenceError()
 	}
-	s, _, e := p.brushFlowRead(ctx, tx, instance, gen)
+	s, _, e := p.brushFlowReadCurrent(ctx, tx, instance, gen)
 	if e != nil {
 		return PluginRun{}, true, e
 	}
@@ -190,7 +190,7 @@ func (c *brushFlowCall) readScheduleOperation(ctx context.Context) (brushFlowQue
 	return brushFlowDefinitionOperation(mustCleanSeedJSON(c.config), def)
 }
 func (p *PluginStore) claimBrushFlowScheduleTx(ctx context.Context, tx *sql.Tx, run PluginRun, at time.Time) (string, error) {
-	s, _, e := p.brushFlowRead(ctx, tx, run.InstanceID, run.Generation)
+	s, _, e := p.brushFlowReadCurrent(ctx, tx, run.InstanceID, run.Generation)
 	if e != nil {
 		return "", e
 	}
@@ -198,12 +198,24 @@ func (p *PluginStore) claimBrushFlowScheduleTx(ctx context.Context, tx *sql.Tx, 
 		return "BRUSH_FLOW_BLOCKED_BY_UNKNOWN", nil
 	}
 	if run.Action == "task" {
-		for _, source := range s.Sources {
-			if source.Run == run.ID && source.Revision == run.ConfigRevision {
-				return "", nil
-			}
+		var inv plugins.Invocation
+		var token struct {
+			ID string `json:"event_id"`
 		}
-		return "PLUGIN_SCHEDULE_SCOPE_DENIED", nil
+		if cleanupJournalStrict(run.Input, &inv) != nil || cleanupJournalStrict(inv.Input, &token) != nil {
+			return "PLUGIN_SCHEDULE_SCOPE_DENIED", nil
+		}
+		source, ok := s.lookupSource(token.ID)
+		if !ok || source.Run != run.ID || source.Revision != run.ConfigRevision {
+			if e = s.check(); e != nil {
+				return "", e
+			}
+			return "PLUGIN_SCHEDULE_SCOPE_DENIED", nil
+		}
+		if e = p.brushFlowValidateSource(ctx, tx, s, token.ID, source); e != nil {
+			return "", e
+		}
+		return "", nil
 	}
 	var inv plugins.Invocation
 	var token struct {

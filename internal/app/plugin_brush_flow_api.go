@@ -137,7 +137,7 @@ func (a *App) brushFlowReadAPI(ctx context.Context, in PluginInstallation, run P
 	if h := a.pluginBrushFlow.beforeRead; h != nil {
 		h(ctx)
 	}
-	s, _, e := a.pluginStore.brushFlowRead(ctx, tx, in.InstanceID, in.Generation)
+	s, _, e := a.pluginStore.brushFlowReadCurrent(ctx, tx, in.InstanceID, in.Generation)
 	if e != nil {
 		return nil, e
 	}
@@ -153,16 +153,17 @@ func (a *App) brushFlowReadAPI(ctx context.Context, in PluginInstallation, run P
 		return nil, e
 	}
 	data := map[string]json.RawMessage{}
-	for k := range s.Values {
-		var sealed []byte
-		if e = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, in.InstanceID, k).Scan(&sealed); e != nil {
-			return nil, e
+	for k := range s.allValues() {
+		raw, _, err := a.pluginStore.brushFlowValueProof(ctx, tx, s, k)
+		if err != nil {
+			return nil, err
 		}
-		data[k], e = a.pluginStore.unseal("data", in.InstanceID, k, sealed)
-		if e != nil {
-			return nil, e
-		}
+		data[k] = raw
 	}
+	if e = s.check(); e != nil {
+		return nil, e
+	}
+
 	sites, e := a.brushFlowSitesTx(ctx, tx)
 	if e != nil {
 		return nil, e
@@ -173,7 +174,7 @@ func (a *App) brushFlowReadAPI(ctx context.Context, in PluginInstallation, run P
 	}
 	ds := brushFlowDownloaderOptions(a.Settings())
 	runtime := map[string]bf.Row{}
-	for _, source := range s.Sources {
+	for _, source := range s.pendingSources(ctx, tx) {
 		var state string
 		if e = tx.QueryRowContext(ctx, `SELECT state FROM plugin_runs WHERE id=?`, source.Run).Scan(&state); e != nil {
 			return nil, e
@@ -181,6 +182,9 @@ func (a *App) brushFlowReadAPI(ctx context.Context, in PluginInstallation, run P
 		if state == "pending" || state == "running" {
 			runtime[source.TaskID] = bf.Row{"state": "queued", "operation": source.Operation, "last_error": nil}
 		}
+	}
+	if e = s.check(); e != nil {
+		return nil, e
 	}
 	if e = tx.Commit(); e != nil {
 		return nil, e

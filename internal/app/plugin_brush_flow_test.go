@@ -49,7 +49,7 @@ func TestBrushFlowActualSDKConfigureAPIAndCold(t *testing.T) {
 	in, r := brushInstall(t, a, cfg)
 	brushFinish(t, a, r)
 	s, _, e := a.pluginStore.brushFlowRead(context.Background(), a.Store.DB, in.InstanceID, in.Generation)
-	if e != nil || s.AppliedRevision < 1 || len(s.Runs) != 1 {
+	if e != nil || s.AppliedRevision < 1 || brushFlowTestRunCount(s) != 1 {
 		t.Fatal(s, e)
 	}
 	form := callTest(t, a.Handler(), "GET", "/api/plugins/BrushFlowLanduo/form", "", cookie, "")
@@ -110,8 +110,9 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 	rssEncoding := kind == "qb-rss-declared-encoding"
 	rssRecover := kind == "qb-rss-recover"
 	rssLarge := kind == "qb-rss-large-number"
+	selectedHold := kind == "qb-selected-effect"
 	beforeHost := kind == "qb-before-host"
-	parallel := kind == "qb-parallel" || beforeHost
+	parallel := kind == "qb-parallel" || beforeHost || selectedHold
 	var metadataCalls atomic.Int32
 	rawHash, _ := hex.DecodeString(hash)
 	magnet := "magnet:?xt=urn:btih:" + strings.ToLower(base32.StdEncoding.EncodeToString(rawHash))
@@ -551,6 +552,15 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 			})
 			return ctx.Err()
 		}
+		if selectedHold {
+			a.pluginBrushFlow.sleep = func(context.Context, time.Duration) error { return nil }
+			a.pluginBrushFlow.afterEffect = func(kind string) error {
+				if kind == "add_torrent" {
+					once.Do(func() { close(entered); <-release })
+				}
+				return nil
+			}
+		}
 		if beforeHost {
 			var held atomic.Bool
 			a.pluginBrushFlow.sleep = func(context.Context, time.Duration) error { return nil }
@@ -637,7 +647,7 @@ func brushActualFlow(t *testing.T, lost bool, kind string, observe, busy bool) {
 				time.Sleep(10 * time.Millisecond)
 			}
 			first, err := a.pluginStore.Run(ctx, pending.ID)
-			if err != nil || first.State != "running" || adds.Load() != 0 {
+			if err != nil || first.State != "running" || adds.Load() != map[bool]int32{true: 1, false: 0}[selectedHold] {
 				t.Fatal("first source sample wait changed during compatible config writes", err, first.State, adds.Load())
 			}
 		}
@@ -812,4 +822,8 @@ func TestBrushFlowActualWorkerDifferentTaskAndConfigContinueDuringNativeIO(t *te
 
 func TestBrushFlowActualAcceptedBeforeHostRetainsExactCompatibleRevision(t *testing.T) {
 	brushActualFlow(t, false, "qb-before-host", false, true)
+}
+
+func TestBrushFlowActualConfigDuringSelectedAddPreservesEffects(t *testing.T) {
+	brushActualFlow(t, false, "qb-selected-effect", false, true)
 }

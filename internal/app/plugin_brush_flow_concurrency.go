@@ -107,14 +107,16 @@ func (p *PluginStore) brushFlowWithLiveState(s brushFlowState) brushFlowState {
 	if o == nil {
 		return s
 	}
-	copyRuns := make(map[string]brushFlowAction, len(s.Runs))
-	for id, r := range s.Runs {
-		if r.Phase == "started" && o.hasLive(s, r) {
-			continue
-		}
-		copyRuns[id] = r
+	ignored := map[string]bool{}
+	for id, skip := range s.ignoredRuns {
+		ignored[id] = skip
 	}
-	s.Runs = copyRuns
+	for id, r := range s.pendingRuns() {
+		if r.Phase == "started" && o.hasLive(s, r) {
+			ignored[id] = true
+		}
+	}
+	s.ignoredRuns = ignored
 	return s
 }
 
@@ -156,11 +158,11 @@ func (p *PluginStore) brushFlowAcceptedRevisionTx(ctx context.Context, tx *sql.T
 	if record.Plugin != bf.PluginID || record.Version != bf.Version || record.Phase != "started" {
 		return brushFlowEvidenceError()
 	}
-	s, _, err := p.brushFlowRead(ctx, tx, record.Instance, record.Generation)
+	s, _, err := p.brushFlowReadCurrent(ctx, tx, record.Instance, record.Generation)
 	if err != nil {
 		return err
 	}
-	r, ok := s.Runs[run.ID]
+	r, ok := s.lookupRun(run.ID)
 	o := p.brushFlowRuntimeOwner(record.Instance, record.Generation)
 	if !ok || o == nil || !o.hasLive(s, r) || r.Phase != "started" || r.RunID != record.Run || r.Action != record.Action || r.Revision != record.Revision || r.InputSHA != record.InputSHA || r.Method != record.Method {
 		return brushFlowEvidenceError()
@@ -188,11 +190,11 @@ func (p *PluginStore) brushFlowPreparedNoEffect(ctx context.Context, record plug
 	if err != nil || method != record.Method || !deferredPayloadEqual(record.Raw, payload) {
 		return brushFlowEvidenceError()
 	}
-	s, _, err := p.brushFlowRead(ctx, p.store.DB, run.InstanceID, run.Generation)
+	s, _, err := p.brushFlowReadCurrent(ctx, p.store.DB, run.InstanceID, run.Generation)
 	if err != nil {
 		return err
 	}
-	if _, exists := s.Runs[run.ID]; exists {
+	if _, exists := s.lookupRun(run.ID); exists {
 		return brushFlowEvidenceError()
 	}
 	return nil

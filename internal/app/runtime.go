@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	bigMemoryMode           bool // Trusted startup option; not worker or plugin configuration.
 	recognitionMu           sync.Mutex
 	recognitionMatcher      atomic.Pointer[words.Matcher]
 	directoryFileMu         sync.Mutex
@@ -91,8 +92,9 @@ type subscribeGroupCache struct {
 	Rules                map[string]subscribegroup.Rule
 }
 type Options struct {
-	DataDir string
-	Web     http.Handler
+	BigMemoryMode bool // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
+	DataDir       string
+	Web           http.Handler
 }
 
 const appVersion = "0.3.21"
@@ -110,7 +112,7 @@ func New(opts Options) (*App, error) {
 	if e != nil {
 		return nil, e
 	}
-	a := &App{RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a := &App{bigMemoryMode: opts.BigMemoryMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
 	var raw []byte
 	e = s.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&raw)
 	if e == nil {

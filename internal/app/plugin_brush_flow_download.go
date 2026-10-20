@@ -380,13 +380,13 @@ func (c *brushFlowCall) confirmAddedRecord(ctx context.Context, task, hash strin
 	if e = c.guardTx(ctx, tx); e != nil {
 		return e
 	}
-	s, b, e := c.o.a.pluginStore.brushFlowRead(ctx, tx, c.o.instance, c.o.generation)
+	s, b, e := c.o.a.pluginStore.brushFlowReadCurrent(ctx, tx, c.o.instance, c.o.generation)
 	if e != nil {
 		return e
 	}
 	key := "task." + task + ".torrents"
 	records := bf.NewRecords()
-	if _, ok := s.Values[key]; ok {
+	if _, ok := s.lookupValue(key); ok {
 		var sealed []byte
 		if e = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, c.o.instance, key).Scan(&sealed); e != nil {
 			return e

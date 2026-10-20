@@ -27,7 +27,7 @@ func (a *App) brushFlowPools() *brushFlowSourcePools {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	if r.pools == nil {
-		r.pools = newBrushFlowSourcePools(false)
+		r.pools = newBrushFlowSourcePools(a.bigMemoryMode)
 	}
 	return r.pools
 }

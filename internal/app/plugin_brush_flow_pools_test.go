@@ -53,7 +53,24 @@ func TestBrushFlowSourcePoolsActualDefaultsAndIndependentReservations(t *testing
 }
 
 func TestBrushFlowActualWorkerKeepsOverCapacityInSQLAndRunsOtherPlugin(t *testing.T) {
-	a, in := brushDefault(t)
+	for _, large := range []bool{false, true} {
+		t.Run(map[bool]string{false: "normal50", true: "large100"}[large], func(t *testing.T) { brushFlowActualWorkerPoolBound(t, large) })
+	}
+}
+func brushFlowActualWorkerPoolBound(t *testing.T, large bool) {
+	a, e := New(Options{DataDir: t.TempDir(), BigMemoryMode: large})
+	if e != nil {
+		t.Fatal(e)
+	}
+	t.Cleanup(func() { a.Close() })
+	useBuiltInPluginProcess(t, a)
+	in, initial := brushInstall(t, a, bf.DefaultConfig())
+	brushFinish(t, a, initial)
+	bound := 50
+	if large {
+		bound = 100
+	}
+	occupied := bound - 3
 	ctx := context.Background()
 	p := a.pluginStore
 	state, _, e := p.brushFlowRead(ctx, a.Store.DB, in.InstanceID, in.Generation)
@@ -61,7 +78,7 @@ func TestBrushFlowActualWorkerKeepsOverCapacityInSQLAndRunsOtherPlugin(t *testin
 		t.Fatal(e)
 	}
 	var origin string
-	for id, r := range state.Runs {
+	for id, r := range state.allRuns() {
 		if r.Action == "init" {
 			origin = id
 		}
@@ -96,14 +113,14 @@ func TestBrushFlowActualWorkerKeepsOverCapacityInSQLAndRunsOtherPlugin(t *testin
 	if e = tx.Commit(); e != nil {
 		t.Fatal(e)
 	}
-	// Explicit synthetic reservations stand for 47 occupied ThreadHelper slots and
-	// 50 scheduler slots. The remaining three execute actual compiled SDKs below;
+	// Explicit synthetic reservations occupy all but three ThreadHelper slots
+	// and all scheduler slots. The remaining three execute compiled SDKs below;
 	// this is a queue/memory boundary fixture, not 100 invented native successes.
 	pools := a.brushFlowPools()
-	for i := 0; i < 47; i++ {
+	for i := 0; i < occupied; i++ {
 		pools.tasks <- struct{}{}
 	}
-	for i := 0; i < 50; i++ {
+	for i := 0; i < bound; i++ {
 		pools.services <- struct{}{}
 	}
 	// A failed actual SQL claim must release its source reservation atomically.
@@ -112,7 +129,7 @@ func TestBrushFlowActualWorkerKeepsOverCapacityInSQLAndRunsOtherPlugin(t *testin
 	}
 	budget := &brushFlowClaimBudget{pools: pools}
 	_, e = p.ClaimRun(context.WithValue(ctx, brushFlowClaimBudgetKey{}, budget))
-	if e == nil || len(pools.tasks) != 47 {
+	if e == nil || len(pools.tasks) != occupied {
 		t.Fatal("failed SQL claim consumed source slot", e, len(pools.tasks))
 	}
 	if _, e = a.Store.DB.Exec(`DROP TRIGGER owned_pool_rollback`); e != nil {
@@ -173,7 +190,7 @@ func TestBrushFlowActualWorkerKeepsOverCapacityInSQLAndRunsOtherPlugin(t *testin
 	}
 	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_runs WHERE instance_id=? AND action='task' AND state='running'`, in.InstanceID).Scan(&running)
 	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_deferred_operations d JOIN plugin_runs r ON r.id=d.run_id WHERE r.instance_id=? AND r.action='task'`, in.InstanceID).Scan(&prepared)
-	if pending != 62 || running != 3 || prepared != 3 || len(pools.tasks) != 50 || len(pools.services) != 50 {
+	if pending != 62 || running != 3 || prepared != 3 || len(pools.tasks) != bound || len(pools.services) != bound {
 		t.Fatal("eager claim/goroutine escaped source bounds", pending, running, prepared, len(pools.tasks), len(pools.services))
 	}
 	select {
@@ -182,13 +199,13 @@ func TestBrushFlowActualWorkerKeepsOverCapacityInSQLAndRunsOtherPlugin(t *testin
 	default:
 	}
 	stop()
-	if len(pools.tasks) != 47 || len(pools.services) != 50 {
+	if len(pools.tasks) != occupied || len(pools.services) != bound {
 		t.Fatal("actual claimed task reservations did not release")
 	}
-	for i := 0; i < 47; i++ {
+	for i := 0; i < occupied; i++ {
 		<-pools.tasks
 	}
-	for i := 0; i < 50; i++ {
+	for i := 0; i < bound; i++ {
 		<-pools.services
 	}
 }
@@ -226,7 +243,7 @@ func TestBrushFlowActualCancelWhileWaitingSDKSlotIsKnownZeroEffect(t *testing.T)
 	if e != nil || brushFlowNoUnknown(s) != nil {
 		t.Fatal(e)
 	}
-	if r, ok := s.Runs[run.ID]; !ok || !brushFlowKnownNotStarted(r, actual) {
+	if r, ok := s.lookupRun(run.ID); !ok || !brushFlowKnownNotStarted(r, actual) {
 		t.Fatal("pre-SDK wait lacks authenticated zero-effect terminal")
 	}
 	if _, e = a.Store.DB.Exec(`UPDATE plugin_runs SET state='pending' WHERE id=?`, run.ID); e != nil {
@@ -297,5 +314,23 @@ func TestBrushFlowActualPreSDKCancelAfterRetirementNeverChangesAncestor(t *testi
 				t.Fatal("retired scope was not rejected", actual.State, actual.ErrorCode, e)
 			}
 		})
+	}
+}
+
+func TestBrushFlowTrustedStartupLargeMemorySelectsActualPools(t *testing.T) {
+	a, e := New(Options{DataDir: t.TempDir(), BigMemoryMode: true})
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer a.Close()
+	p := a.brushFlowPools()
+	if cap(p.tasks) != 100 || cap(p.services) != 100 {
+		t.Fatal("trusted startup ignored BIG_MEMORY_MODE")
+	}
+	// A plugin request cannot create its own pool or change a running App mode.
+	ordinary := newTestApp(t)
+	q := ordinary.brushFlowPools()
+	if cap(q.tasks) != 50 || cap(q.services) != 50 {
+		t.Fatal("default pool changed")
 	}
 }

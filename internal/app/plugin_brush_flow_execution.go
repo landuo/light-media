@@ -89,11 +89,11 @@ func (d *pluginDeferredCall) brushFlowStartedTx(ctx context.Context, tx *sql.Tx)
 	if !ok || lease.d != d || lease.o == nil || lease.o.a != d.a || lease.o.instance != d.run.InstanceID || lease.o.generation != d.run.Generation {
 		return brushFlowEvidenceError()
 	}
-	s, b, e := d.a.pluginStore.brushFlowRead(ctx, tx, d.run.InstanceID, d.run.Generation)
+	s, b, e := d.a.pluginStore.brushFlowReadCurrent(ctx, tx, d.run.InstanceID, d.run.Generation)
 	if e != nil {
 		return e
 	}
-	if _, exists := s.Runs[d.run.ID]; exists {
+	if _, exists := s.lookupRun(d.run.ID); exists {
 		return bad("BRUSH_FLOW_REPLAY_DENIED", "站点刷流执行身份已经登记")
 	}
 	r := brushFlowAction{RunID: d.run.ID, Action: d.run.Action, Revision: d.run.ConfigRevision, EffectiveRevision: d.run.ConfigRevision, InputSHA: deferredInputSHA(d.run.Input), Method: d.record.Method, Phase: "started"}
@@ -102,7 +102,7 @@ func (d *pluginDeferredCall) brushFlowStartedTx(ctx context.Context, tx *sql.Tx)
 		r.ErrorCode = brushFlowBlockedByUnknown
 		r.Result = brushFlowBlockedResult()
 	}
-	s.Runs[r.RunID] = r
+	s.setRun(r.RunID, r)
 	return d.a.pluginStore.brushFlowSave(ctx, tx, s, b)
 }
 func (d *pluginDeferredCall) brushFlowBusy(ctx context.Context) (json.RawMessage, error) {
@@ -130,11 +130,11 @@ func (d *pluginDeferredCall) brushFlowZeroEffect(ctx context.Context, blocked bo
 	if _, e = d.a.validatePluginHTTPRunTx(ctx, tx, d.run); e != nil {
 		return nil, e
 	}
-	s, b, e := d.a.pluginStore.brushFlowRead(ctx, tx, d.run.InstanceID, d.run.Generation)
+	s, b, e := d.a.pluginStore.brushFlowReadCurrent(ctx, tx, d.run.InstanceID, d.run.Generation)
 	if e != nil {
 		return nil, e
 	}
-	if _, ok := s.Runs[d.run.ID]; ok {
+	if _, ok := s.lookupRun(d.run.ID); ok {
 		return nil, brushFlowEvidenceError()
 	}
 	msg := "插件正在执行其他操作，请稍后重试"
@@ -142,15 +142,15 @@ func (d *pluginDeferredCall) brushFlowZeroEffect(ctx context.Context, blocked bo
 		msg = "任务已有操作正在执行"
 	}
 	out := brushFlowHTTPResponse(bf.Response{Message: msg})
-	s.Runs[d.run.ID] = brushFlowAction{RunID: d.run.ID, Action: d.run.Action, Revision: d.run.ConfigRevision, EffectiveRevision: d.run.ConfigRevision, InputSHA: deferredInputSHA(d.run.Input), Method: r.Method, Phase: "confirmed", Decision: "busy", Result: out}
+	s.setRun(d.run.ID, brushFlowAction{RunID: d.run.ID, Action: d.run.Action, Revision: d.run.ConfigRevision, EffectiveRevision: d.run.ConfigRevision, InputSHA: deferredInputSHA(d.run.Input), Method: r.Method, Phase: "confirmed", Decision: "busy", Result: out})
 	if blocked {
 		out = brushFlowBlockedResult()
-		value := s.Runs[d.run.ID]
+		value := s.run(d.run.ID)
 		value.Phase = "failed"
 		value.ErrorCode = brushFlowBlockedByUnknown
 		value.Decision = "blocked_by_unknown"
 		value.Result = out
-		s.Runs[d.run.ID] = value
+		s.setRun(d.run.ID, value)
 	}
 	if e = d.a.pluginStore.brushFlowSave(ctx, tx, s, b); e != nil {
 		return nil, e
@@ -223,7 +223,7 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 	lease.o.mu.Unlock()
 	ctx = context.WithValue(ctx, brushFlowCallKey{}, c)
 	e = c.o.update(ctx, func(s *brushFlowState) error {
-		r, exists := s.Runs[run.ID]
+		r, exists := s.lookupRun(run.ID)
 		if !exists {
 			return brushFlowEvidenceError()
 		}
@@ -234,7 +234,7 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 			return brushFlowEvidenceError()
 		}
 		r.Entered = true
-		s.Runs[run.ID] = r
+		s.setRun(run.ID, r)
 		return nil
 	})
 	if e != nil {
@@ -256,13 +256,23 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 }
 
 func (p *PluginStore) brushFlowOutcome(ctx context.Context, run PluginRun, method string) (json.RawMessage, string, bool, error) {
-	s, _, e := p.brushFlowRead(ctx, p.store.DB, run.InstanceID, run.Generation)
+	s, _, e := p.brushFlowReadCurrent(ctx, p.store.DB, run.InstanceID, run.Generation)
 	if e != nil {
 		return nil, "", false, e
 	}
-	r, ok := s.Runs[run.ID]
+	r, ok := s.lookupRun(run.ID)
+	if ok {
+		tx, e := p.store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if e != nil {
+			return nil, "", false, e
+		}
+		defer tx.Rollback()
+		if e = p.brushFlowValidateAction(ctx, tx, s, r); e != nil {
+			return nil, "", false, e
+		}
+	}
 	if !ok {
-		return nil, "", false, nil
+		return nil, "", false, s.check()
 	}
 	if r.Action != run.Action || r.Revision != run.ConfigRevision || r.InputSHA != deferredInputSHA(run.Input) || r.Method != method {
 		return nil, "", false, brushFlowEvidenceError()
@@ -292,7 +302,7 @@ func (p *PluginStore) brushFlowRequestBusy(ctx context.Context, run PluginRun) (
 		return false, e
 	}
 	defer tx.Rollback()
-	s, _, e := p.brushFlowRead(ctx, tx, run.InstanceID, run.Generation)
+	s, _, e := p.brushFlowReadCurrent(ctx, tx, run.InstanceID, run.Generation)
 	if e != nil {
 		return false, e
 	}
@@ -301,7 +311,7 @@ func (p *PluginStore) brushFlowRequestBusy(ctx context.Context, run PluginRun) (
 			return true, nil
 		}
 	}
-	for _, source := range s.Sources {
+	for _, source := range s.pendingSources(ctx, tx) {
 		if source.TaskID != target || source.Operation != "brush" && source.Operation != "check" {
 			continue
 		}
@@ -313,7 +323,7 @@ func (p *PluginStore) brushFlowRequestBusy(ctx context.Context, run PluginRun) (
 			return true, nil
 		}
 	}
-	for _, r := range s.Runs {
+	for _, r := range s.pendingRuns() {
 		if r.Action != "service" || r.Phase != "started" {
 			continue
 		}
@@ -344,5 +354,5 @@ func (p *PluginStore) brushFlowRequestBusy(ctx context.Context, run PluginRun) (
 			return true, nil
 		}
 	}
-	return false, nil
+	return false, s.check()
 }

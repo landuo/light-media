@@ -100,7 +100,7 @@ func TestBrushFlowStartedAndOwnerFactAreAtomicAndColdNotReplayed(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, ok := state.Runs[run.ID]; ok {
+	if _, ok := state.lookupRun(run.ID); ok {
 		t.Fatal("rolled back owner survived")
 	}
 	receipt, _, _ := a.pluginStore.readDeferred(ctx, a.Store.DB, run)
@@ -113,7 +113,7 @@ func TestBrushFlowStartedAndOwnerFactAreAtomicAndColdNotReplayed(t *testing.T) {
 	}
 	release()
 	state, _, e = a.pluginStore.brushFlowRead(ctx, a.Store.DB, in.InstanceID, in.Generation)
-	if e != nil || state.Runs[run.ID].Entered || state.Runs[run.ID].Phase != "started" {
+	if e != nil || state.run(run.ID).Entered || state.run(run.ID).Phase != "started" {
 		t.Fatal("accepted fact missing before Host", e)
 	}
 	dir := a.Dir

@@ -369,6 +369,10 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			_ = tx.Rollback()
 			return PluginRun{}, err
 		}
+		if e := p.brushFlowClaimIdentityTx(ctx, tx, pluginID, run); e != nil {
+			_ = tx.Rollback()
+			return PluginRun{}, e
+		}
 		admissionErr := p.brushFlowQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID, run.Action, func() json.RawMessage {
 			var v struct {
 				Input json.RawMessage `json:"input"`
@@ -436,6 +440,10 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			}
 		}
 		if state == "canceled" {
+			if e := p.brushFlowCancelQueuedClaimTx(ctx, tx, run); e != nil {
+				tx.Rollback()
+				return PluginRun{}, e
+			}
 			if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=CASE WHEN state='missed' THEN state ELSE 'canceled' END WHERE run_id=? AND state IN ('queued','running','missed')`, run.ID); err != nil {
 				_ = tx.Rollback()
 				return PluginRun{}, err
@@ -498,6 +506,11 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 		return err
 	}
 	defer tx.Rollback()
+	if consumed, e := p.brushFlowFinishUnenteredTaskTx(ctx, tx, run, state); e != nil {
+		return e
+	} else if consumed {
+		return tx.Commit()
+	}
 	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,result=?,error_code=?,updated_at=? WHERE id=? AND state='running'`, state, sealed, errorCode, now(), runID)
 	if err != nil {
 		return err

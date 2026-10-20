@@ -42,7 +42,7 @@ func TestBrushFlowActualCanceledSDKBeforeOwnerLeaseIsKnownNoEffect(t *testing.T)
 	if err != nil || brushFlowNoUnknown(s) != nil {
 		t.Fatal("unentered SDK polluted owner", err)
 	}
-	if r, exists := s.Runs[run.ID]; !exists || !brushFlowKnownNotStarted(r, actual) {
+	if r, exists := s.lookupRun(run.ID); !exists || !brushFlowKnownNotStarted(r, actual) {
 		t.Fatal("pre-Host cancellation lacks exact authenticated zero-effect terminal")
 	}
 	if _, err = a.Store.DB.Exec(`UPDATE plugin_runs SET state='pending' WHERE id=?`, run.ID); err != nil {

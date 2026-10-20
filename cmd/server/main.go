@@ -13,6 +13,8 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"syscall"
 	"time"
 	_ "time/tzdata"
@@ -55,13 +57,17 @@ func main() {
 	if e = os.MkdirAll(absolute, 0700); e != nil {
 		fatal("data_directory_unavailable")
 	}
+	large, e := bigMemoryMode(os.LookupEnv)
+	if e != nil {
+		fatal("invalid_big_memory_mode")
+	}
 	parent, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 	for {
 		if e = applyRestore(absolute); e != nil {
 			fatal(e.Error())
 		}
-		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler()})
+		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler(), BigMemoryMode: large})
 		if e != nil {
 			fatal(e.Error())
 		}
@@ -116,3 +122,19 @@ func applyRestore(dir string) error {
 	return app.ApplyPendingRestore(dir)
 }
 func fatal(message string) { fmt.Fprintln(os.Stderr, message); os.Exit(1) }
+
+// Pydantic bool strings accepted by the original core/config.py setting. An
+// invalid startup value is rejected; plugin HTTP payloads cannot change pools.
+func bigMemoryMode(lookup func(string) (string, bool)) (bool, error) {
+	s, ok := lookup("BIG_MEMORY_MODE")
+	if !ok {
+		return false, nil
+	}
+	switch strings.ToLower(s) {
+	case "1", "true", "t", "yes", "y", "on":
+		return true, nil
+	case "0", "false", "f", "no", "n", "off":
+		return false, nil
+	}
+	return false, strconv.ErrSyntax
+}

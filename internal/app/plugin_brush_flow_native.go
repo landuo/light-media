@@ -273,13 +273,13 @@ func (c *brushFlowCall) beginEffect(ctx context.Context, kind string, args any) 
 	}
 	ordinal := 0
 	e := c.o.update(ctx, func(s *brushFlowState) error {
-		r, ok := s.Runs[c.run.ID]
+		r, ok := s.lookupRun(c.run.ID)
 		if !ok || r.Phase != "started" {
 			return brushFlowEvidenceError()
 		}
 		ordinal = len(r.Effects)
 		r.Effects = append(r.Effects, brushFlowEffect{Kind: kind, Phase: "started", Args: mustCleanSeedJSON(args)})
-		s.Runs[c.run.ID] = r
+		s.setRun(c.run.ID, r)
 		return nil
 	})
 	return ordinal, e
@@ -294,13 +294,13 @@ func (c *brushFlowCall) finishEffect(ctx context.Context, ordinal int, kind stri
 	return e
 }
 func (c *brushFlowCall) finishEffectState(s *brushFlowState, ordinal int, kind string, result any) error {
-	r := s.Runs[c.run.ID]
+	r := s.run(c.run.ID)
 	if ordinal < 0 || ordinal >= len(r.Effects) || r.Effects[ordinal].Kind != kind || r.Effects[ordinal].Phase != "started" {
 		return brushFlowEvidenceError()
 	}
 	r.Effects[ordinal].Phase = "confirmed"
 	r.Effects[ordinal].Result = mustCleanSeedJSON(result)
-	s.Runs[c.run.ID] = r
+	s.setRun(c.run.ID, r)
 	return nil
 }
 func (c *brushFlowCall) unknown(e error) error {

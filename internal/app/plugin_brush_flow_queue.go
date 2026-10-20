@@ -13,6 +13,7 @@ type brushFlowScanSource struct {
 	Token, OriginRun, Run, InputSHA, TaskID, Operation string
 	Generation, Revision                               int64
 	TaskSnapshot                                       json.RawMessage
+	OriginOrdinal                                      *int `json:",omitempty"`
 }
 type brushFlowQueued struct {
 	TaskID, Operation string
@@ -81,11 +82,12 @@ func (c *brushFlowCall) publishQueuedTx(ctx context.Context, tx *sql.Tx, s *brus
 		if e != nil {
 			return e
 		}
-		source := brushFlowScanSource{Token: token, OriginRun: c.run.ID, Run: run.ID, InputSHA: deferredInputSHA(run.Input), TaskID: q.TaskID, Operation: q.Operation, Generation: run.Generation, Revision: run.ConfigRevision, TaskSnapshot: q.Snapshot}
-		s.Sources[token] = source
-		r := s.Runs[c.run.ID]
+		r := s.run(c.run.ID)
+		ordinal := len(r.Effects)
+		source := brushFlowScanSource{Token: token, OriginRun: c.run.ID, Run: run.ID, InputSHA: deferredInputSHA(run.Input), TaskID: q.TaskID, Operation: q.Operation, Generation: run.Generation, Revision: run.ConfigRevision, TaskSnapshot: q.Snapshot, OriginOrdinal: &ordinal}
+		s.setSource(token, source)
 		r.Effects = append(r.Effects, brushFlowEffect{Kind: "queue", Phase: "confirmed", Args: mustCleanSeedJSON(source), Result: json.RawMessage(`null`)})
-		s.Runs[c.run.ID] = r
+		s.setRun(c.run.ID, r)
 	}
 	return nil
 }
@@ -93,39 +95,72 @@ func (p *PluginStore) brushFlowValidateSources(ctx context.Context, q pluginRemo
 	if s.Sources == nil {
 		return brushFlowEvidenceError()
 	}
-	for token, source := range s.Sources {
-		if token != source.Token || !pluginStorageID.MatchString(token) || source.Generation != s.Generation || !pluginStorageID.MatchString(source.OriginRun) {
+	for token, source := range s.allSources() {
+		if e := p.brushFlowValidateSource(ctx, q, s, token, source); e != nil {
+			return e
+		}
+		if e := p.brushFlowAuditSourceMembership(ctx, q, s, source); e != nil {
+			return e
+		}
+	}
+	if s.pages != nil && s.pages.liveSourceIndex {
+		for range s.pendingSources(ctx, q) {
+		}
+	}
+	return s.check()
+}
+func (p *PluginStore) brushFlowValidateSource(ctx context.Context, q pluginRemoveLinkJournalReader, s brushFlowState, token string, source brushFlowScanSource) error {
+	if token != source.Token || !pluginStorageID.MatchString(token) || source.Generation != s.Generation || !pluginStorageID.MatchString(source.OriginRun) {
+		return brushFlowEvidenceError()
+	}
+	origin, count, ok := s.lookupRunSummary(source.OriginRun)
+	if !ok || (origin.Phase != "confirmed" && !(origin.Phase == "failed" && origin.ErrorCode == "BRUSH_FLOW_SOURCE_FAILED")) || (origin.Method != bf.APICapability && origin.Method != bf.ConfigureCapability) {
+		return brushFlowEvidenceError()
+	}
+	if e := p.brushFlowValidateAction(ctx, q, s, origin); e != nil {
+		return e
+	}
+	matches := func(effect brushFlowEffect) bool {
+		return effect.Kind == "queue" && effect.Phase == "confirmed" && bytes.Equal(effect.Args, mustCleanSeedJSON(source)) && string(effect.Result) == "null"
+	}
+	found := false
+	if source.OriginOrdinal != nil {
+		ordinal := *source.OriginOrdinal
+		if ordinal < 0 || ordinal >= count {
 			return brushFlowEvidenceError()
 		}
-		origin, ok := s.Runs[source.OriginRun]
-		if !ok || (origin.Phase != "confirmed" && !(origin.Phase == "failed" && origin.ErrorCode == "BRUSH_FLOW_SOURCE_FAILED")) || (origin.Method != bf.APICapability && origin.Method != bf.ConfigureCapability) {
-			return brushFlowEvidenceError()
-		}
-		found := false
-		for _, effect := range origin.Effects {
-			if effect.Kind == "queue" && effect.Phase == "confirmed" && bytes.Equal(effect.Args, mustCleanSeedJSON(source)) && string(effect.Result) == "null" {
+		effect, ok := s.lookupEffect(source.OriginRun, ordinal)
+		found = ok && matches(effect)
+	} else {
+		// Authenticated old records predate the ordinal field; preserve their bytes.
+		for i := 0; i < count; i++ {
+			f, ok := s.lookupEffect(source.OriginRun, i)
+			if !ok {
+				return brushFlowEvidenceError()
+			}
+			if matches(f) {
 				found = true
 			}
 		}
-		if !found {
-			return brushFlowEvidenceError()
-		}
-		run, e := p.scanPluginRun(q.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, source.Run))
-		if e != nil {
-			return brushFlowEvidenceError()
-		}
-		var inv plugins.Invocation
-		var tokenInput struct {
-			ID string `json:"event_id"`
-		}
-		if cleanupJournalStrict(run.Input, &inv) != nil || cleanupJournalStrict(inv.Input, &tokenInput) != nil || tokenInput.ID != token || run.Action != "task" || inv.Action != "task" || run.InstanceID != s.Instance || run.Generation != source.Generation || run.ConfigRevision != source.Revision || deferredInputSHA(run.Input) != source.InputSHA {
-			return brushFlowEvidenceError()
-		}
 	}
-	return nil
+	if !found {
+		return brushFlowEvidenceError()
+	}
+	run, e := p.scanPluginRun(q.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, source.Run))
+	if e != nil {
+		return brushFlowEvidenceError()
+	}
+	var inv plugins.Invocation
+	var input struct {
+		ID string `json:"event_id"`
+	}
+	if cleanupJournalStrict(run.Input, &inv) != nil || cleanupJournalStrict(inv.Input, &input) != nil || input.ID != token || run.Action != "task" || inv.Action != "task" || run.InstanceID != s.Instance || run.Generation != source.Generation || run.ConfigRevision != source.Revision || deferredInputSHA(run.Input) != source.InputSHA {
+		return brushFlowEvidenceError()
+	}
+	return s.check()
 }
 func brushFlowHasPendingSource(ctx context.Context, q pluginRemoveLinkJournalReader, s brushFlowState, except string) (bool, error) {
-	for _, source := range s.Sources {
+	for _, source := range s.pendingSources(ctx, q) {
 		if source.Run == except {
 			continue
 		}
@@ -137,7 +172,7 @@ func brushFlowHasPendingSource(ctx context.Context, q pluginRemoveLinkJournalRea
 			return true, nil
 		}
 	}
-	return false, nil
+	return false, s.check()
 }
 func (c *brushFlowCall) sourceOperation(ctx context.Context) (brushFlowQueued, error) {
 	var inv plugins.Invocation
@@ -152,11 +187,16 @@ func (c *brushFlowCall) sourceOperation(ctx context.Context) (brushFlowQueued, e
 		return brushFlowQueued{}, e
 	}
 	defer tx.Rollback()
-	s, _, e := c.o.a.pluginStore.brushFlowRead(ctx, tx, c.o.instance, c.o.generation)
+	s, _, e := c.o.a.pluginStore.brushFlowReadCurrent(ctx, tx, c.o.instance, c.o.generation)
 	if e != nil {
 		return brushFlowQueued{}, e
 	}
-	source, ok := s.Sources[token.ID]
+	source, ok := s.lookupSource(token.ID)
+	if ok {
+		if e := c.o.a.pluginStore.brushFlowValidateSource(ctx, tx, s, token.ID, source); e != nil {
+			return brushFlowQueued{}, e
+		}
+	}
 	if !ok || source.Run != c.run.ID || source.InputSHA != deferredInputSHA(c.run.Input) || source.Revision != c.run.ConfigRevision {
 		return brushFlowQueued{}, brushFlowEvidenceError()
 	}

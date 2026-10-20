@@ -13,7 +13,7 @@ func (c *brushFlowCall) execute(ctx context.Context) (json.RawMessage, error) {
 		return nil, e
 	}
 	if c.run.Action != "init" && c.run.Action != "reload" {
-		s, _, e := c.o.a.pluginStore.brushFlowRead(ctx, c.o.a.Store.DB, c.o.instance, c.o.generation)
+		s, _, e := c.o.a.pluginStore.brushFlowReadCurrent(ctx, c.o.a.Store.DB, c.o.instance, c.o.generation)
 		if e != nil {
 			return nil, e
 		}
@@ -147,14 +147,14 @@ func (c *brushFlowCall) projectRuntime(ctx context.Context, core *bf.Core) error
 		return e
 	}
 	defer tx.Rollback()
-	s, _, e := c.o.a.pluginStore.brushFlowRead(ctx, tx, c.o.instance, c.o.generation)
+	s, _, e := c.o.a.pluginStore.brushFlowReadCurrent(ctx, tx, c.o.instance, c.o.generation)
 	if e != nil {
 		return e
 	}
 	for _, task := range core.Config().Tasks {
 		core.SetRuntime(task.ID(), bf.Row{"state": "idle", "operation": nil})
 	}
-	for _, source := range s.Sources {
+	for _, source := range s.pendingSources(ctx, tx) {
 		if source.Run == c.run.ID || source.Operation != "brush" && source.Operation != "check" {
 			continue
 		}
@@ -166,7 +166,7 @@ func (c *brushFlowCall) projectRuntime(ctx context.Context, core *bf.Core) error
 			core.SetRuntime(source.TaskID, bf.Row{"state": map[bool]string{true: "running", false: "queued"}[state == "running"], "operation": source.Operation, "last_error": nil})
 		}
 	}
-	return nil
+	return s.check()
 }
 func brushFlowSourceErrorClass(e error) string {
 	if errors.Is(e, context.Canceled) {
@@ -184,12 +184,12 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 		return e
 	}
 	defer tx.Rollback()
-	s, b, e := c.o.a.pluginStore.brushFlowRead(ctx, tx, c.o.instance, c.o.generation)
+	s, b, e := c.o.a.pluginStore.brushFlowReadCurrent(ctx, tx, c.o.instance, c.o.generation)
 	if e != nil {
 		return e
 	}
 	ctx = context.WithValue(ctx, brushFlowLocalCommitKey{}, &brushFlowLocalTransaction{c, tx, &s})
-	r := s.Runs[c.run.ID]
+	r := s.run(c.run.ID)
 	if r.Phase != "started" {
 		return brushFlowEvidenceError()
 	}
@@ -218,10 +218,17 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 		s.AppliedRevision = nextRevision
 		s.AppliedConfigSHA = brushFlowCanonicalSHA(value.Value)
 		r.EffectiveRevision = nextRevision
-		for id, active := range s.Runs {
+		for id, active := range s.pendingRuns() {
 			if id != c.run.ID && active.Phase == "started" && c.o.hasLive(s, active) {
+				// pendingRuns yields metadata only. Updating a live action must
+				// preserve and authenticate its complete selected effect sequence.
+				full, ok := s.lookupRun(id)
+				if !ok {
+					return brushFlowEvidenceError()
+				}
+				active = full
 				active.EffectiveRevision = nextRevision
-				s.Runs[id] = active
+				s.setRun(id, active)
 			}
 		}
 		if e = c.writeSchedulesTx(ctx, tx, nextRevision, c.staged); e != nil {
@@ -250,7 +257,7 @@ func (c *brushFlowCall) commitResult(ctx context.Context, result json.RawMessage
 		r.ErrorCode = "BRUSH_FLOW_SOURCE_FAILED"
 		r.Result = mustCleanSeedJSON(map[string]any{"source_failed": true, "error_type": brushFlowSourceErrorClass(sourceErr)})
 	}
-	s.Runs[c.run.ID] = r
+	s.setRun(c.run.ID, r)
 	if e = c.publishQueuedTx(ctx, tx, &s); e != nil {
 		return e
 	}

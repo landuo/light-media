@@ -9,7 +9,8 @@ import (
 	"strconv"
 )
 
-const brushFlowRootSchema = `CREATE TABLE IF NOT EXISTS plugin_brush_flow_roots(instance_id TEXT NOT NULL,generation INTEGER NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(instance_id,generation));`
+const brushFlowRootSchema = `CREATE TABLE IF NOT EXISTS plugin_brush_flow_roots(instance_id TEXT NOT NULL,generation INTEGER NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(instance_id,generation));
+CREATE TABLE IF NOT EXISTS plugin_brush_flow_heads(instance_id TEXT PRIMARY KEY,sealed BLOB NOT NULL);`
 
 type brushFlowRoot struct {
 	Version                                       int
@@ -67,7 +68,23 @@ func (p *PluginStore) brushFlowRootRead(ctx context.Context, q pluginRemoveLinkJ
 	return out, sealed, nil
 }
 func (p *PluginStore) brushFlowValidateRootChain(ctx context.Context, q pluginRemoveLinkJournalReader, s brushFlowState, raw json.RawMessage) error {
-	instance, g := s.Instance, s.Generation
+	return p.brushFlowValidateRootChainMode(ctx, q, s, raw, true)
+}
+func (p *PluginStore) brushFlowValidateRootChainMode(ctx context.Context, q pluginRemoveLinkJournalReader, s brushFlowState, raw json.RawMessage, audit bool) error {
+	instance := s.Instance
+	head, _, err := p.brushFlowHeadRead(ctx, q, instance)
+	if err != nil {
+		return brushFlowHeadMissing(err)
+	}
+	var installed int64
+	if q.QueryRowContext(ctx, `SELECT generation FROM plugin_installations WHERE instance_id=?`, instance).Scan(&installed) != nil || installed != head.Generation || s.Generation > head.Generation {
+		return brushFlowEvidenceError()
+	}
+	current, _, err := p.brushFlowRootRead(ctx, q, instance, head.Generation)
+	if err != nil || (head.IdentitySHA != brushFlowRootIdentity(current) || head.RootSHA != tokenHash(string(mustCleanSeedJSON(current)))) {
+		return brushFlowEvidenceError()
+	}
+	g := head.Generation
 	expected := ""
 	for g > 0 {
 		root, _, err := p.brushFlowRootRead(ctx, q, instance, g)
@@ -96,11 +113,14 @@ func (p *PluginStore) brushFlowValidateRootChain(ctx context.Context, q pluginRe
 		}
 		if g != s.Generation {
 			var parent brushFlowState
-			if cleanupJournalStrict(stateRaw, &parent) != nil || parent.Version != 1 || parent.Instance != instance || parent.Generation != g || parent.Runs == nil {
+			parent, err = p.brushFlowDecodeState(ctx, q.(*sql.Tx), instance, g, stateRaw)
+			if err != nil {
 				return brushFlowEvidenceError()
 			}
-			if err = p.brushFlowValidateDeferred(ctx, q, parent); err != nil {
-				return err
+			if audit {
+				if err = p.brushFlowValidateDeferred(ctx, q, parent); err != nil {
+					return err
+				}
 			}
 		}
 
@@ -113,43 +133,33 @@ func (p *PluginStore) brushFlowValidateRootChain(ctx context.Context, q pluginRe
 // the current exact trusted Host call. Public reads and lifecycle methods never
 // receive this admission capability. Prepared means no native effect started.
 func (p *PluginStore) brushFlowValidateDeferred(ctx context.Context, q pluginRemoveLinkJournalReader, s brushFlowState) error {
-	rows, err := q.QueryContext(ctx, `SELECT id FROM plugin_runs WHERE instance_id=? AND generation=? ORDER BY id`, s.Instance, s.Generation)
-	if err != nil {
-		return err
-	}
-	ids := []string{}
-	for rows.Next() {
+	last := ""
+	for {
 		var id string
-		if err = rows.Scan(&id); err != nil {
-			rows.Close()
+		err := q.QueryRowContext(ctx, `SELECT id FROM plugin_runs WHERE instance_id=? AND generation=? AND id>? ORDER BY id LIMIT 1`, s.Instance, s.Generation, last).Scan(&id)
+		if errors.Is(err, sql.ErrNoRows) {
+			break
+		}
+		if err != nil {
 			return err
 		}
-		ids = append(ids, id)
-	}
-	err = rows.Err()
-	rows.Close()
-	if err != nil {
-		return err
-	}
-	seen := map[string]bool{}
-	for _, id := range ids {
+		last = id
 		run, err := p.scanPluginRun(q.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, id))
 		if err != nil {
 			return err
 		}
 		if brushFlowReadRun(run) {
-			if _, exists := s.Runs[id]; exists {
+			if _, exists := s.lookupRun(id); exists {
 				return brushFlowEvidenceError()
 			}
 			continue
 		}
 		d, _, err := p.readDeferred(ctx, q, run)
 		if errors.Is(err, sql.ErrNoRows) {
-			if r, exists := s.Runs[id]; exists && brushFlowKnownNotStarted(r, run) {
-				seen[id] = true
+			if r, exists := s.lookupRun(id); exists && brushFlowKnownNotStarted(r, run) {
 				continue
 			}
-			if _, exists := s.Runs[id]; exists || run.State == "succeeded" || (run.State == "reconcile_pending" && !brushFlowColdNoDeferred(ctx, p, q, run)) {
+			if _, exists := s.lookupRun(id); exists || run.State == "succeeded" || (run.State == "reconcile_pending" && !brushFlowColdNoDeferred(ctx, p, q, run)) {
 				return brushFlowEvidenceError()
 			}
 			continue // Pending or a rejected pre-Host admission has no native effect.
@@ -164,7 +174,7 @@ func (p *PluginStore) brushFlowValidateDeferred(ctx context.Context, q pluginRem
 		if specErr != nil || d.Plugin != "BrushFlowLanduo" || d.Version != "5.2.15" || d.Version != run.Version || d.Generation != s.Generation || d.Revision != run.ConfigRevision || d.Action != run.Action || d.InputSHA != deferredInputSHA(run.Input) || d.Method != method || !deferredPayloadEqual(d.Raw, payload) {
 			return brushFlowEvidenceError()
 		}
-		action, exists := s.Runs[id]
+		action, exists := s.lookupRun(id)
 		if d.Phase == "prepared" && !exists {
 			if run.State == "succeeded" {
 				return brushFlowEvidenceError()
@@ -175,7 +185,6 @@ func (p *PluginStore) brushFlowValidateDeferred(ctx context.Context, q pluginRem
 			return brushFlowEvidenceError()
 		}
 
-		seen[id] = true
 		if action.RunID != run.ID || action.Action != run.Action || action.Revision != run.ConfigRevision || action.InputSHA != d.InputSHA || action.Method != d.Method {
 			return brushFlowEvidenceError()
 		}
@@ -200,12 +209,13 @@ func (p *PluginStore) brushFlowValidateDeferred(ctx context.Context, q pluginRem
 			return brushFlowEvidenceError()
 		}
 	}
-	for id := range s.Runs {
-		if !seen[id] {
+	for id := range s.allRuns() {
+		var found string
+		if q.QueryRowContext(ctx, `SELECT id FROM plugin_runs WHERE id=? AND instance_id=? AND generation=?`, id, s.Instance, s.Generation).Scan(&found) != nil || found != id {
 			return brushFlowEvidenceError()
 		}
 	}
-	return nil
+	return s.check()
 }
 
 // Only the installation/lifecycle SQL transaction can create a generation.
@@ -215,6 +225,13 @@ func (p *PluginStore) brushFlowTransitionParentTx(ctx context.Context, tx *sql.T
 	var generation int64
 	err := tx.QueryRowContext(ctx, `SELECT plugin_id,version,generation FROM plugin_installations WHERE instance_id=?`, instance).Scan(&id, &version, &generation)
 	if errors.Is(err, sql.ErrNoRows) {
+		// A surviving authenticated head forbids resurrection even if all
+		// plaintext installation metadata was removed. Complete authority
+		// deletion/rollback still requires an external anchor to detect.
+		var sealed []byte
+		if e := tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_brush_flow_heads WHERE instance_id=?`, instance).Scan(&sealed); !errors.Is(e, sql.ErrNoRows) {
+			return brushFlowParent{}, brushFlowEvidenceError()
+		}
 		var count int
 		err = tx.QueryRowContext(ctx, `SELECT (SELECT COUNT(*) FROM plugin_brush_flow_roots WHERE instance_id=?)+(SELECT COUNT(*) FROM plugin_brush_flow_state WHERE instance_id=?)+(SELECT COUNT(*) FROM plugin_runs WHERE instance_id=?)`, instance, instance, instance).Scan(&count)
 		if err != nil {
@@ -253,6 +270,22 @@ func (p *PluginStore) brushFlowGenesisTx(ctx context.Context, tx *sql.Tx, instan
 	if plugin != "BrushFlowLanduo" || version != "5.2.15" || generation != parent.Generation+1 {
 		return brushFlowEvidenceError()
 	}
+	var priorHead []byte
+	if parent.Generation == 0 {
+		if _, _, e := p.brushFlowHeadRead(ctx, tx, instance); !errors.Is(e, sql.ErrNoRows) {
+			return brushFlowEvidenceError()
+		}
+	} else {
+		head, prior, e := p.brushFlowHeadRead(ctx, tx, instance)
+		if e != nil || head.Generation != parent.Generation {
+			return brushFlowEvidenceError()
+		}
+		old, _, e := p.brushFlowRootRead(ctx, tx, instance, parent.Generation)
+		if e != nil || (head.IdentitySHA != brushFlowRootIdentity(old) || head.RootSHA != tokenHash(string(mustCleanSeedJSON(old)))) || parent.SHA != tokenHash(string(mustCleanSeedJSON(old))) {
+			return brushFlowEvidenceError()
+		}
+		priorHead = prior
+	}
 	state := brushFlowState{Version: 1, Instance: instance, Generation: generation, Runs: map[string]brushFlowAction{}, Values: map[string]brushFlowValue{}, Sources: map[string]brushFlowScanSource{}}
 	rows, err := tx.QueryContext(ctx, `SELECT item_key,revision,sealed FROM plugin_values WHERE instance_id=? AND kind='data'`, instance)
 	if err != nil {
@@ -278,7 +311,10 @@ func (p *PluginStore) brushFlowGenesisTx(ctx context.Context, tx *sql.Tx, instan
 		return err
 	}
 	rows.Close()
-	raw := mustCleanSeedJSON(state)
+	raw, err := p.brushFlowEncodeState(ctx, tx, state)
+	if err != nil {
+		return err
+	}
 	sealed, err := p.seal("run_result", instance, brushFlowKey(generation), raw)
 	if err != nil {
 		return err
@@ -291,8 +327,10 @@ func (p *PluginStore) brushFlowGenesisTx(ctx context.Context, tx *sql.Tx, instan
 	if err != nil {
 		return err
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_brush_flow_roots VALUES(?,?,?)`, instance, generation, sealed)
-	return err
+	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_brush_flow_roots VALUES(?,?,?)`, instance, generation, sealed); err != nil {
+		return err
+	}
+	return p.brushFlowHeadWriteTx(ctx, tx, root, priorHead)
 }
 func (p *PluginStore) brushFlowLifecycleParentTx(ctx context.Context, tx *sql.Tx, instance string) (brushFlowParent, bool, error) {
 	var plugin string

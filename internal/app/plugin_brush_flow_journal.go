@@ -71,6 +71,8 @@ type brushFlowState struct {
 	Values                      map[string]brushFlowValue
 	Runs                        map[string]brushFlowAction
 	Sources                     map[string]brushFlowScanSource
+	pages                       *brushFlowPageView
+	ignoredRuns                 map[string]bool
 }
 type brushFlowCall struct {
 	o                 *pluginBrushFlowOwner
@@ -109,13 +111,27 @@ func (p *PluginStore) isBrushFlowRun(ctx context.Context, tx *sql.Tx, r PluginRu
 	return tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, r.InstanceID).Scan(&plugin) == nil && plugin == bf.PluginID
 }
 func (p *PluginStore) brushFlowRead(ctx context.Context, q pluginRemoveLinkJournalReader, instance string, g int64) (brushFlowState, []byte, error) {
+	return p.brushFlowReadMode(ctx, q, instance, g, true)
+}
+
+// Ordinary calls verify fixed roots, every unresolved identity and the exact
+// records they consume. Cold/lifecycle/audit uses brushFlowRead's complete scan.
+// Unvisited archived physical pages are not asserted to exist by a point read.
+func (p *PluginStore) brushFlowReadCurrent(ctx context.Context, q pluginRemoveLinkJournalReader, instance string, g int64) (brushFlowState, []byte, error) {
+	return p.brushFlowReadMode(ctx, q, instance, g, false)
+}
+func (p *PluginStore) brushFlowReadMode(ctx context.Context, q pluginRemoveLinkJournalReader, instance string, g int64, audit bool) (brushFlowState, []byte, error) {
 	if db, ok := q.(*sql.DB); ok {
 		tx, e := db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 		if e != nil {
 			return brushFlowState{}, nil, e
 		}
 		defer tx.Rollback()
-		s, b, e := p.brushFlowRead(ctx, tx, instance, g)
+		s, b, e := p.brushFlowReadMode(ctx, tx, instance, g, audit)
+		if s.pages != nil {
+			s.pages.tx = nil
+			s.pages.db = db
+		}
 		if e != nil {
 			return s, nil, e
 		}
@@ -137,11 +153,31 @@ func (p *PluginStore) brushFlowRead(ctx context.Context, q pluginRemoveLinkJourn
 	if e != nil {
 		return s, nil, brushFlowEvidenceError()
 	}
-	if cleanupJournalStrict(raw, &s) != nil || s.Version != 1 || s.Instance != instance || s.Generation != g || s.Runs == nil || s.Values == nil {
+	s, e = p.brushFlowDecodeState(ctx, q.(*sql.Tx), instance, g, raw)
+	if e != nil {
 		return s, nil, brushFlowEvidenceError()
 	}
-	if e = p.brushFlowValidateRootChain(ctx, q, s, raw); e != nil {
+	if e = p.brushFlowValidateRootChainMode(ctx, q, s, raw, audit || s.Version == 1); e != nil {
 		return s, nil, e
+	}
+	if !audit && s.Version == 2 && s.pages.liveSourceIndex {
+		var current int64
+		if e = q.QueryRowContext(ctx, `SELECT generation FROM plugin_installations WHERE instance_id=?`, instance).Scan(&current); e != nil {
+			return s, nil, e
+		}
+		if current == g {
+			for _, r := range s.pendingRuns() {
+				if e = p.brushFlowValidateAction(ctx, q, s, r); e != nil {
+					return s, nil, e
+				}
+			}
+			for range s.pendingSources(ctx, q) {
+			}
+			if e = s.check(); e != nil {
+				return s, nil, e
+			}
+			return s, sealed, nil
+		}
 	}
 	if e = p.brushFlowValidateSources(ctx, q, s); e != nil {
 		return s, nil, e
@@ -149,7 +185,7 @@ func (p *PluginStore) brushFlowRead(ctx context.Context, q pluginRemoveLinkJourn
 	if e = p.brushFlowValidateDeferred(ctx, q, s); e != nil {
 		return s, nil, e
 	}
-	for id, r := range s.Runs {
+	for id, r := range s.allRuns() {
 		if id != r.RunID || !pluginStorageID.MatchString(id) || !pluginStorageDigest.MatchString(r.InputSHA) || r.Revision < 1 || r.EffectiveRevision < r.Revision {
 			return s, nil, brushFlowEvidenceError()
 		}
@@ -162,7 +198,7 @@ func (p *PluginStore) brushFlowRead(ctx context.Context, q pluginRemoveLinkJourn
 			}
 		}
 	}
-	for _, r := range s.Runs {
+	for _, r := range s.allRuns() {
 		for ordinal, f := range r.Effects {
 			if f.Kind != "plugin_triggered" {
 				continue
@@ -193,6 +229,9 @@ func (p *PluginStore) brushFlowRead(ctx context.Context, q pluginRemoveLinkJourn
 			return s, nil, e
 		}
 	}
+	if e = s.check(); e != nil {
+		return s, nil, e
+	}
 	return s, sealed, nil
 }
 func (p *PluginStore) brushFlowValidateValues(ctx context.Context, q pluginRemoveLinkJournalReader, s brushFlowState) error {
@@ -209,7 +248,7 @@ func (p *PluginStore) brushFlowValidateValues(ctx context.Context, q pluginRemov
 		if e = rows.Scan(&key, &rev, &sealed); e != nil {
 			return e
 		}
-		proof, ok := s.Values[key]
+		proof, ok := s.lookupValue(key)
 		if !ok || proof.Revision != rev || !pluginStorageDigest.MatchString(proof.SHA) {
 			return brushFlowEvidenceError()
 		}
@@ -222,7 +261,7 @@ func (p *PluginStore) brushFlowValidateValues(ctx context.Context, q pluginRemov
 	if e = rows.Err(); e != nil {
 		return e
 	}
-	for k := range s.Values {
+	for k := range s.allValues() {
 		if !seen[k] {
 			return brushFlowEvidenceError()
 		}
@@ -233,13 +272,23 @@ func (p *PluginStore) brushFlowSave(ctx context.Context, tx *sql.Tx, s brushFlow
 	if previous == nil {
 		return brushFlowEvidenceError()
 	}
-	raw, e := json.Marshal(s)
-	if e != nil || len(raw) > pluginDataValueLimit {
+	raw, e := p.brushFlowEncodeState(ctx, tx, s)
+	if e != nil {
+		return e
+	}
+	if len(raw) > pluginDataValueLimit {
 		return bad("BRUSH_FLOW_JOURNAL_LIMIT", "站点刷流执行证据超出容量")
+	}
+	head, priorHead, e := p.brushFlowHeadRead(ctx, tx, s.Instance)
+	if e != nil || head.Generation != s.Generation {
+		return brushFlowEvidenceError()
 	}
 	root, priorRoot, e := p.brushFlowRootRead(ctx, tx, s.Instance, s.Generation)
 	if e != nil {
 		return e
+	}
+	if head.IdentitySHA != brushFlowRootIdentity(root) || head.RootSHA != tokenHash(string(mustCleanSeedJSON(root))) {
+		return brushFlowEvidenceError()
 	}
 	old, e := p.unseal("run_result", s.Instance, brushFlowKey(s.Generation), previous)
 	if e != nil || root.StateSHA != tokenHash(string(old)) {
@@ -269,7 +318,7 @@ func (p *PluginStore) brushFlowSave(ctx context.Context, tx *sql.Tx, s brushFlow
 	if n, e := changed.RowsAffected(); e != nil || n != 1 {
 		return brushFlowEvidenceError()
 	}
-	return nil
+	return p.brushFlowHeadWriteTx(ctx, tx, root, priorHead)
 }
 func (o *pluginBrushFlowOwner) update(ctx context.Context, fn func(*brushFlowState) error) error {
 	tx, e := o.a.Store.DB.BeginTx(ctx, nil)
@@ -277,7 +326,7 @@ func (o *pluginBrushFlowOwner) update(ctx context.Context, fn func(*brushFlowSta
 		return e
 	}
 	defer tx.Rollback()
-	s, b, e := o.a.pluginStore.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, b, e := o.a.pluginStore.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e == nil {
 		e = fn(&s)
 	}
@@ -290,7 +339,10 @@ func (o *pluginBrushFlowOwner) update(ctx context.Context, fn func(*brushFlowSta
 	return tx.Commit()
 }
 func brushFlowNoUnknown(s brushFlowState) error {
-	for _, r := range s.Runs {
+	if e := s.check(); e != nil {
+		return e
+	}
+	for _, r := range s.pendingRuns() {
 		if r.Phase == "started" {
 			return bad("BRUSH_FLOW_UNCERTAIN", "站点刷流存在待核对写操作，未重复执行")
 		}
@@ -300,7 +352,7 @@ func brushFlowNoUnknown(s brushFlowState) error {
 			}
 		}
 	}
-	return nil
+	return s.check()
 }
 func (a *App) brushFlowOwner(ctx context.Context, in PluginInstallation) (*pluginBrushFlowOwner, error) {
 	if in.PluginID != bf.PluginID || in.Version != bf.Version || !in.Installed || in.Generation < 1 {

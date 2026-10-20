@@ -44,7 +44,7 @@ func (p *PluginStore) brushFlowQueueAdmissionTx(ctx context.Context, tx *sql.Tx,
 	if e := tx.QueryRowContext(ctx, `SELECT generation FROM plugin_installations WHERE instance_id=?`, instance).Scan(&gen); e != nil {
 		return e
 	}
-	s, _, e := p.brushFlowRead(ctx, tx, instance, gen)
+	s, _, e := p.brushFlowReadCurrent(ctx, tx, instance, gen)
 	if e != nil {
 		return e
 	}
@@ -53,17 +53,16 @@ func (p *PluginStore) brushFlowQueueAdmissionTx(ctx context.Context, tx *sql.Tx,
 func brushFlowAdmissionState(ctx context.Context, p *PluginStore, s brushFlowState) error {
 	if local, ok := ctx.Value(brushFlowLocalCommitKey{}).(*brushFlowLocalTransaction); ok && local != nil && local.c != nil && local.c.o.a.pluginStore == p && local.s != nil && local.s.Instance == s.Instance && local.s.Generation == s.Generation {
 		c := local.c
-		r, ok := s.Runs[c.run.ID]
+		r, ok := s.lookupRun(c.run.ID)
 		if !ok || (r.Phase != "started" && r.Phase != "confirmed" && r.Phase != "failed") || !r.Entered || r.InputSHA != deferredInputSHA(c.run.Input) || r.Revision != c.run.ConfigRevision {
 			return brushFlowEvidenceError()
 		}
-		copyRuns := map[string]brushFlowAction{}
-		for id, v := range s.Runs {
-			if id != c.run.ID {
-				copyRuns[id] = v
-			}
+		ignored := map[string]bool{}
+		for id, skip := range s.ignoredRuns {
+			ignored[id] = skip
 		}
-		s.Runs = copyRuns
+		ignored[c.run.ID] = true
+		s.ignoredRuns = ignored
 	}
 	if e := brushFlowNoUnknown(p.brushFlowWithLiveState(s)); e != nil {
 		return fmt.Errorf("%w: %w", errBrushFlowUnknownAdmission, e)
@@ -78,7 +77,7 @@ func (p *PluginStore) brushFlowConfigAdmissionTx(ctx context.Context, tx *sql.Tx
 	if e := tx.QueryRowContext(ctx, `SELECT generation FROM plugin_installations WHERE instance_id=?`, instance).Scan(&gen); e != nil {
 		return e
 	}
-	s, _, e := p.brushFlowRead(ctx, tx, instance, gen)
+	s, _, e := p.brushFlowReadCurrent(ctx, tx, instance, gen)
 	if e != nil {
 		return e
 	}

@@ -27,12 +27,20 @@ type brushFlowAddIntent struct {
 func (o *pluginBrushFlowOwner) reconcileAdds(ctx context.Context) error {
 	// The owner gate is held by the real deferred caller. Only a last, unresolved
 	// add can be observed. Never replay its write, tag cleanup, limits or event.
-	s, _, e := o.a.pluginStore.brushFlowRead(ctx, o.a.Store.DB, o.instance, o.generation)
+	s, _, e := o.a.pluginStore.brushFlowReadCurrent(ctx, o.a.Store.DB, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
-	for id, r := range s.Runs {
-		if r.Phase != "started" || len(r.Effects) == 0 || o.hasLive(s, r) {
+	for id, r := range s.pendingRuns() {
+		if r.Phase != "started" || o.hasLive(s, r) {
+			continue
+		}
+		full, ok := s.lookupRun(id)
+		if !ok {
+			return brushFlowEvidenceError()
+		}
+		r = full
+		if len(r.Effects) == 0 {
 			continue
 		}
 		ordinal := len(r.Effects) - 1
@@ -129,7 +137,7 @@ func (o *pluginBrushFlowOwner) reconcileAdds(ctx context.Context) error {
 			}
 		}
 	}
-	s, _, e = o.a.pluginStore.brushFlowRead(ctx, o.a.Store.DB, o.instance, o.generation)
+	s, _, e = o.a.pluginStore.brushFlowReadCurrent(ctx, o.a.Store.DB, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
@@ -151,11 +159,11 @@ func (o *pluginBrushFlowOwner) brushFlowObservationGuard(ctx context.Context, ru
 	return o.brushFlowObservationGuardTx(ctx, tx, run, ordinal, f)
 }
 func (o *pluginBrushFlowOwner) brushFlowObservationGuardTx(ctx context.Context, tx *sql.Tx, run string, ordinal int, f brushFlowEffect) error {
-	s, _, e := o.a.pluginStore.brushFlowRead(ctx, tx, o.instance, o.generation)
+	s, _, e := o.a.pluginStore.brushFlowReadCurrent(ctx, tx, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
-	r, ok := s.Runs[run]
+	r, ok := s.lookupRun(run)
 	if !ok || r.Phase != "started" || !r.Entered || ordinal != len(r.Effects)-1 || ordinal < 0 || !bytes.Equal(mustCleanSeedJSON(r.Effects[ordinal]), mustCleanSeedJSON(f)) {
 		return brushFlowEvidenceError()
 	}
@@ -184,7 +192,7 @@ func (o *pluginBrushFlowOwner) confirmBrushFlowObservation(ctx context.Context, 
 		return brushFlowEvidenceError()
 	}
 	p := o.a.pluginStore
-	s, b, e := p.brushFlowRead(finish, tx, o.instance, o.generation)
+	s, b, e := p.brushFlowReadCurrent(finish, tx, o.instance, o.generation)
 	if e != nil {
 		return e
 	}
@@ -198,7 +206,7 @@ func (o *pluginBrushFlowOwner) confirmBrushFlowObservation(ctx context.Context, 
 	}
 	key := "task." + intent.Task + ".torrents"
 	records := bf.NewRecords()
-	if _, ok := s.Values[key]; ok {
+	if _, ok := s.lookupValue(key); ok {
 		var sealed []byte
 		if e = tx.QueryRowContext(finish, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, o.instance, key).Scan(&sealed); e != nil {
 			return e
@@ -217,13 +225,13 @@ func (o *pluginBrushFlowOwner) confirmBrushFlowObservation(ctx context.Context, 
 	if e = call.writeValueTx(finish, tx, &s, key, raw); e != nil {
 		return e
 	}
-	r := s.Runs[id]
+	r := s.run(id)
 	r.Effects[ordinal].Phase = "confirmed"
 	r.Effects[ordinal].Result = mustCleanSeedJSON(bf.Row{"observed": true, "hash": intent.Hash, "write_replayed": false})
 	r.Phase = "failed"
 	r.ErrorCode = "BRUSH_FLOW_OBSERVED"
 	r.Result = mustCleanSeedJSON(bf.Row{"decision": "observed_without_replay", "hash": intent.Hash, "effects_replayed": false, "plugin_triggered_emitted": false})
-	s.Runs[id] = r
+	s.setRun(id, r)
 	if e = p.brushFlowSave(finish, tx, s, b); e != nil {
 		return e
 	}
