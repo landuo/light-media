@@ -1,0 +1,134 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "af3630e",
+  "scope": "owned stores/SDK/loopback services; original configuration/history read-only through RAM/stdin; no production deployment",
+  "change": "SeedRescue participates in authenticated site-reference protocol at import/save/enqueue/claim/startup and per-IO owner guard; ordinary source IDs remain unclaimed",
+  "source_inputs": {
+    "before": {
+      "files": 4001,
+      "sha256": "b446f3e066a31c6f8176d9e2cecd48e35c4875ad313529a1beb286aad2852bd7",
+      "drift": []
+    },
+    "after": {
+      "files": 4001,
+      "sha256": "8597c6827bc159b011cb143687b9e7ba6969d26f397db416da23693941c08da4",
+      "drift": []
+    }
+  },
+  "validation": {
+    "before": {
+      "exit": 1,
+      "reproduced": "ordinary source save activated a coincident native integer without a reviewed mapping",
+      "log_sha256": "e928778c9ac15a1a0b5f20153edc477b6a17950c7a63b84f99c24f2c7bead5f0"
+    },
+    "normal": {
+      "exit": 0,
+      "top_level_pass": 44,
+      "including_subtests_pass": 85,
+      "skip": [
+        "TestSeedRescueHistoryImportSelectedStdin"
+      ],
+      "log_sha256": "09d78f197f7b802117263e175ce21ef8549f97451cc83a684c7ee1432674ef14"
+    },
+    "race": {
+      "exit": 0,
+      "top_level_pass": 44,
+      "including_subtests_pass": 85,
+      "skip": [
+        "TestSeedRescueHistoryImportSelectedStdin"
+      ],
+      "log_sha256": "e4d6d4d029035e86f022570595124d2acf750a5fdb2cb710f4dc6b5042496f96"
+    },
+    "native_cgo0_build_exit": 0,
+    "linux_amd64_cgo0_build_exit": 0,
+    "vet_exit": 0,
+    "mod_verify_exit": 0
+  },
+  "selected_source": {
+    "scope": "read-only original config/KV through RAM/stdin into owned AES stores; no business IO",
+    "private_payload_saved": false,
+    "runs": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "passed": true,
+        "log_sha256": "b55893b2a0a101c78fd8a906d9ddb9664cd58e540e05168d1ba1acbe3eccd370"
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "passed": true,
+        "log_sha256": "1c76f33c7ad8e2c4825e955890119dded72f5c0a2fe1224e671be5f9f6be047e"
+      }
+    ]
+  },
+  "production_delivery": {
+    "migrated_count": 7,
+    "installed_original_instances": 23,
+    "version": "0.4.8",
+    "deployed_this_round": false
+  },
+  "remaining": [
+    "reviewed legacy alias mapping and stable downloader binding",
+    "same imported instance owned business/recovery and actual Vue acceptance",
+    "production migration and schedule handoff"
+  ],
+  "artifacts": {
+    "app.test": {
+      "bytes": 69385522,
+      "sha256": "7cfaa65cec2a7b4c41e17b40385ac1cf6d855819191eae89d3a139d36d968cc5"
+    },
+    "app-race.test": {
+      "bytes": 89364882,
+      "sha256": "41c4669c0fcd48611d7f7151e85312cc342cfb8f136f88a6240a437aef9869f2"
+    },
+    "light-media-native": {
+      "bytes": 57410786,
+      "sha256": "88ce2fc94ce065c52eedde2745ba86e0a19d955bdec8700b5f2e1b374d4441ff"
+    },
+    "light-media-linux": {
+      "bytes": 59671265,
+      "sha256": "e84505c0b93dbf969ae7c4a09d488648045082e1aa07c2b86205be11616db2e5"
+    },
+    "test-normal.log": {
+      "bytes": 188842,
+      "sha256": "09d78f197f7b802117263e175ce21ef8549f97451cc83a684c7ee1432674ef14"
+    },
+    "test-race.log": {
+      "bytes": 189074,
+      "sha256": "e4d6d4d029035e86f022570595124d2acf750a5fdb2cb710f4dc6b5042496f96"
+    },
+    "normal-selected.log": {
+      "bytes": 324,
+      "sha256": "b55893b2a0a101c78fd8a906d9ddb9664cd58e540e05168d1ba1acbe3eccd370"
+    },
+    "race-selected.log": {
+      "bytes": 325,
+      "sha256": "1c76f33c7ad8e2c4825e955890119dded72f5c0a2fe1224e671be5f9f6be047e"
+    },
+    "build-test.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-race.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build-linux.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vet.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "mod-verify.log": {
+      "bytes": 21,
+      "sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd"
+    }
+  }
+}
