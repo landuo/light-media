@@ -1,5 +1,5 @@
 {
-  "state": "passed_candidate_not_yet_deployed",
+  "state": "deployed_migrated_and_production_ui_verified",
   "date": "2026-10-21",
   "base": "d24f5cd776ffd9f6d38466d098ed65b43d31971d",
   "source_files": 3442,
@@ -186,6 +186,22 @@
     "light-media-linux-owned": "f1763c0c477cb5004bf3fd44b4c61d073cdd3f8dfe743cb9194c22e702e27204",
     "custom-hosts-migrate-linux-owned": "9425fe0e0d9ff65b5ab1a795f90526240285e5d438cea35096b7966c34e12502"
   },
-  "actual_completed": 5,
-  "remaining": 18
+  "actual_completed": 6,
+  "remaining": 17,
+  "production": {
+    "version": "0.4.6",
+    "code_commit": "ea24595cdbf2768ede6df2692029680a9efba6da",
+    "dedicated_container_hosts": true,
+    "runtime_file_matches_original_simulation": true,
+    "runtime_decrypted_config_matches_original": true,
+    "prior_configuration_and_five_preferences_unchanged": true,
+    "source_and_qb_container_identities_unchanged": true,
+    "source_hosts_unchanged": true,
+    "execution_record": "\u5e94\u7528\u914d\u7f6e \u5df2\u5b8c\u6210",
+    "screenshot": "/Users/accidia/Documents/Codex/2026-10-14/s/outputs/light-media-custom-hosts-migrated-v046.png"
+  },
+  "deployment_observations": [
+    "NAS inherited ACL gives requested0600 file initial0700; fchmod0600 applied, first pre-import attempt rolled back and old version health verified",
+    "PluginReload uses existing durable control queue, not generic domain-event SQL subscription; corrected expected subscription count from1 to0 by readonly re-audit, no production modification"
+  ]
 }

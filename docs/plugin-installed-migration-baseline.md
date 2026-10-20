@@ -1,6 +1,6 @@
 # 已安装插件迁移基线
 
-最新交付（2026-10-21）：新服务已部署 v0.4.5，**二级分类策略 1.3、插件彻底卸载 2.2、共享识别词 2.4.1、系统进程 1.1、MoviePilot服务监控 1.4 已完成正式迁移；当前 5/23 完成，其余 18 项未完成**。服务监控保留原配置和五份仪表板偏好，生产表单、真实公共状态采样/刷新与冷启动已核对。详见 [本轮交付](plugin-server-status-delivery.txt)、[最新迁移收据](plugin-server-status-deployment.json)；系统进程历史交付见 [系统进程](plugin-system-process-delivery.md)。v0.4.4 的共享详情按钮修正见 [界面修正](release-v0.4.4-progress.txt)。下方带旧日期的记录保留历史口径，不代表全部可用。
+最新交付（2026-10-21）：新服务已部署 v0.4.6，**二级分类策略 1.3、插件彻底卸载 2.2、共享识别词 2.4.1、系统进程 1.1、MoviePilot服务监控 1.4、自定义Hosts 1.2.1 已完成正式迁移；当前 6/23 完成，其余 17 项未完成**。自定义Hosts保留原启用配置，使用新容器独占可写文件；原插件内存模拟、实际生效文件、配置、原版表单与成功执行记录均核对，旧服务和既有配置/五份偏好保留。详见 [本轮交付](plugin-custom-hosts-delivery.txt)、[最新迁移收据](plugin-custom-hosts-deployment.json)；服务监控及此前交付保留历史记录。下方带旧日期的记录不代表全部可用。
 
 2026-10-20 共享基础补充：[原版请求与调度设置](source-settings-migration.md)已随 v0.4.2 部署，并正式导入 4 条密文记录，区分配置 TZ 和本地时区。代理认证修复亦已部署；共享配置迁移不额外增加插件完成数量。
 
@@ -30,7 +30,7 @@
 | CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 已接正式catalog、真实SDK终态/owner/Core、配置生命周期与调度；下载器写前拒绝与未知写分开留证，源通知路由、私有事件和持久队列已接入。本轮107项联合NAS保留独立证据；原43/148项及mutation98项证据保留。可信远程五命令入口、真实通知渠道/完整依赖及正式迁移未完成 |
 | SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 2026-10-18 已接正式 Go 宿主、真实 SDK、原六 API、持久扫描及原版 Vue 配置/数据/全页工作台和侧栏；配置与3项KV、用户引用/布局未迁移，未部署 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 2026-10-18 已接正式 Go handler、实际 CLI/下载校验/hosts 宿主、原表单和持久 once/cron/API；统一认证消息命令入口待接，配置及12个文件尚未迁移，未部署 |
-| CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | Go 写入/停用恢复及实际域名连接已在 NAS 隔离容器验证；待正式可写挂载和配置迁移 |
+| CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | 2026-10-21 已随 v0.4.6 正式迁移；启用配置1条AEAD导入，独占容器Hosts可写挂载，原模拟文件与运行配置一致；生产原版表单和1次成功初始化已核对，0其他运行/计划/KV。真实域名连接及停用恢复在NAS独占容器验证，原服务/Hosts/既有配置与偏好保留 |
 
 包含独立的 TorrentTransfermusic 分身，不与原实例合并。未安装但留有历史配置/数据的旧插件不混入已安装范围；需在迁移包中另行标记。迁移前须按实际 URL/实例/路径建立站点、下载器、媒体服务和目录引用映射。配置及缓存中的凭据只能以应用密文落盘，日志、普通 API 和报告不得含原值。
 
@@ -110,4 +110,4 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 
 2026-10-18 刷流与源文件联动清理原生入口集成：新增两个实际Go宿主和原版配置/应用界面，可安装处理器入口增至20。当前业务范围、验证分层及仍未完成的RSS/TMDB/并行、消费者、Lark/自动签到/聚合通知与完整平台接线见[集成进展](plugin-brush-scrape-native-progress.txt)。入口增加不等于全部业务已完成；本批未部署，原23个实例配置、KV、独立文件正式迁移仍为0。
 
-最新服务监控交付见 [交付记录](plugin-server-status-delivery.txt)，总体实际完成 5/23；此前系统进程见 [历史交付](plugin-system-process-delivery.md)；共享识别词的 v0.4.2 历史交付见 [识别词记录](plugin-remote-identifiers-delivery.md)。
+最新自定义Hosts交付见 [交付记录](plugin-custom-hosts-delivery.txt)，总体实际完成 6/23；服务监控历史见 [服务监控](plugin-server-status-delivery.txt)；此前系统进程见 [历史交付](plugin-system-process-delivery.md)；共享识别词的 v0.4.2 历史交付见 [识别词记录](plugin-remote-identifiers-delivery.md)。
