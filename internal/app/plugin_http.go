@@ -338,6 +338,9 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	}
 	switch {
 	case parts[1] == "page" && r.Method == "GET":
+		if installation.PluginID == "LarkMessager" {
+			return a.larkPage(ctx, installation)
+		}
 		return a.pluginView(ctx, installation, "page", "")
 	case parts[1] == "dashboard" && r.Method == "GET":
 		if !installation.DesiredEnabled {
@@ -360,7 +363,7 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginRunHistory(ctx, installation.InstanceID)
 	case parts[1] == "config" && r.Method == "PUT":
-		if !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" {
+		if !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" && installation.PluginID != "LarkMessager" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {

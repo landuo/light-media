@@ -94,7 +94,12 @@ func Parse(title string, subtitle *string, options Options) (result Metadata, pa
 	}
 	title, explicit := explicitTitle(preparedTitle, options.SourceMode)
 	isfile := false
-	if extension := strings.ToLower(filepath.Ext(title)); configuredMediaExtension(extension, options) {
+	if options.SourceMode == "legacy" {
+		if stem, extension, ok := metaTitleSuffix(title); ok && configuredMediaExtension(fullLower(extension, "legacy"), options) {
+			isfile = true
+			title = stem
+		}
+	} else if extension := strings.ToLower(filepath.Ext(title)); configuredMediaExtension(extension, options) {
 		isfile = true
 		title = strings.TrimSuffix(filepath.Base(title), filepath.Ext(title))
 	}
@@ -160,11 +165,17 @@ func mediaExtension(extension string) bool {
 }
 
 func configuredMediaExtension(extension string, options Options) bool {
+	// The original legacy wrapper lowercases Path.suffix, then performs exact
+	// membership against unnormalized configured values. A trailing dot is not a
+	// Python3.13 suffix. Rust's independent existing comparison stays separate.
+	if options.SourceMode == "legacy" && extension == "." {
+		return false
+	}
 	if options.MediaExts == nil {
 		return mediaExtension(extension)
 	}
 	for _, configured := range options.MediaExts {
-		if strings.EqualFold(configured, extension) {
+		if options.SourceMode == "legacy" && configured == extension || options.SourceMode != "legacy" && strings.EqualFold(configured, extension) {
 			return true
 		}
 	}

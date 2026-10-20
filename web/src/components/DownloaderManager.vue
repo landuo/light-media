@@ -34,6 +34,7 @@ function create(kind: string) {
       auto_category: false,
       sequential: false,
       first_last_piece: false,
+      force_resume: false,
       enabled: false,
     },
     default: false,

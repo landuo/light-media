@@ -1,0 +1,242 @@
+[
+  {
+    "name": "0",
+    "raw": "null",
+    "result": "null"
+  },
+  {
+    "name": "1",
+    "raw": "true",
+    "result": "true"
+  },
+  {
+    "name": "2",
+    "raw": "false",
+    "result": "false"
+  },
+  {
+    "name": "3",
+    "raw": "0",
+    "result": "0"
+  },
+  {
+    "name": "4",
+    "raw": "-0",
+    "result": "0"
+  },
+  {
+    "name": "5",
+    "raw": "1.0",
+    "result": "1.0"
+  },
+  {
+    "name": "6",
+    "raw": "-0.0",
+    "result": "-0.0"
+  },
+  {
+    "name": "7",
+    "raw": "1e9999",
+    "result": "Infinity"
+  },
+  {
+    "name": "8",
+    "raw": "-1e9999",
+    "result": "-Infinity"
+  },
+  {
+    "name": "9",
+    "raw": "NaN",
+    "result": "NaN"
+  },
+  {
+    "name": "10",
+    "raw": "Infinity",
+    "result": "Infinity"
+  },
+  {
+    "name": "11",
+    "raw": "-Infinity",
+    "result": "-Infinity"
+  },
+  {
+    "name": "12",
+    "raw": "[NaN,Infinity,-Infinity]",
+    "result": "[NaN, Infinity, -Infinity]"
+  },
+  {
+    "name": "13",
+    "raw": "{\"a\":NaN,\"b\":Infinity,\"c\":-Infinity}",
+    "result": "{\"a\": NaN, \"b\": Infinity, \"c\": -Infinity}"
+  },
+  {
+    "name": "14",
+    "raw": "{\"NaN\": \"NaN\", \"Infinity\": \"-Infinity\"}",
+    "result": "{\"NaN\": \"NaN\", \"Infinity\": \"-Infinity\"}"
+  },
+  {
+    "name": "15",
+    "raw": "{\"a\":1,\"b\":2,\"a\":3}",
+    "result": "{\"a\": 3, \"b\": 2}"
+  },
+  {
+    "name": "16",
+    "raw": "10000000000000000000000000000000000000000",
+    "result": "10000000000000000000000000000000000000000"
+  },
+  {
+    "name": "17",
+    "raw": "\"\\u4e2d\"",
+    "result": "\"中\""
+  },
+  {
+    "name": "18",
+    "raw": "\"\\n\"",
+    "result": "\"\\n\""
+  },
+  {
+    "name": "19",
+    "raw": "[\"x\\\"NaN\",NaN]",
+    "result": "[\"x\\\"NaN\", NaN]"
+  },
+  {
+    "name": "20",
+    "raw": "{\"x\": [Infinity, {\"n\":NaN}]}",
+    "result": "{\"x\": [Infinity, {\"n\": NaN}]}"
+  },
+  {
+    "name": "21",
+    "raw": "NaN",
+    "result": "NaN"
+  },
+  {
+    "name": "22",
+    "raw": "  NaN\n",
+    "result": "NaN"
+  },
+  {
+    "name": "23",
+    "raw": "[NaN]",
+    "result": "[NaN]"
+  },
+  {
+    "name": "24",
+    "raw": "{\"v\":NaN}",
+    "result": "{\"v\": NaN}"
+  },
+  {
+    "name": "25",
+    "raw": "\"NaN\"",
+    "result": "\"NaN\""
+  },
+  {
+    "name": "26",
+    "raw": "Infinity",
+    "result": "Infinity"
+  },
+  {
+    "name": "27",
+    "raw": "  Infinity\n",
+    "result": "Infinity"
+  },
+  {
+    "name": "28",
+    "raw": "[Infinity]",
+    "result": "[Infinity]"
+  },
+  {
+    "name": "29",
+    "raw": "{\"v\":Infinity}",
+    "result": "{\"v\": Infinity}"
+  },
+  {
+    "name": "30",
+    "raw": "\"Infinity\"",
+    "result": "\"Infinity\""
+  },
+  {
+    "name": "31",
+    "raw": "-Infinity",
+    "result": "-Infinity"
+  },
+  {
+    "name": "32",
+    "raw": "  -Infinity\n",
+    "result": "-Infinity"
+  },
+  {
+    "name": "33",
+    "raw": "[-Infinity]",
+    "result": "[-Infinity]"
+  },
+  {
+    "name": "34",
+    "raw": "{\"v\":-Infinity}",
+    "result": "{\"v\": -Infinity}"
+  },
+  {
+    "name": "35",
+    "raw": "\"-Infinity\"",
+    "result": "\"-Infinity\""
+  },
+  {
+    "name": "36",
+    "raw": "NaNx",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "37",
+    "raw": "xNaN",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "38",
+    "raw": "-NaN",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "39",
+    "raw": "+Infinity",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "40",
+    "raw": "NaN Infinity",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "41",
+    "raw": "NaN,1",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "42",
+    "raw": "[NaN NaN]",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "43",
+    "raw": "{\"v\":NaN:\"x\"}",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "44",
+    "raw": "[Infinityx]",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "45",
+    "raw": "[nan]",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "46",
+    "raw": "[infinity]",
+    "error": "JSONDecodeError"
+  },
+  {
+    "name": "47",
+    "raw": "[NaN,]",
+    "error": "JSONDecodeError"
+  }
+]

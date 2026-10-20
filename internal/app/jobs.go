@@ -115,7 +115,7 @@ func (a *App) claim(ctx context.Context) (Job, error) {
 		return Job{}, e
 	}
 	defer tx.Rollback()
-	j, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE state IN ('queued','retry_wait') AND run_at<=? ORDER BY run_at,created_at LIMIT 1`, time.Now().Unix()))
+	j, e := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE state IN ('queued','retry_wait') AND kind NOT IN ('lark_download','subscription_download') AND run_at<=? ORDER BY run_at,created_at LIMIT 1`, time.Now().Unix()))
 	if e != nil {
 		return Job{}, e
 	}
@@ -223,6 +223,8 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return bad("INVALID_JOB", "任务参数无效")
 	}
 	switch j.Kind {
+	case "lark_message":
+		return a.runLarkMessage(ctx, j, p.ID)
 	case "site_refresh":
 		return a.runSiteRefresh(ctx, j)
 	case "download_file_deleted":
@@ -233,12 +235,24 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 		return a.runDownload(ctx, j, p.ID)
 	case "import":
 		return a.runImport(ctx, j, p.ID, p.FileIDs)
+	case "quality_cleanup":
+		return a.runQualityCleanup(ctx, j, p.ID)
 	case "reorganize_cleanup":
 		return a.runReorganizeCleanup(ctx, j, p.ID)
 	case "scrape":
 		return a.runScrape(ctx, j, p.ID)
 	case "fnos_sync":
 		return a.runFNOSSync(ctx, j, p.ID)
+	case "subscription_add":
+		return a.runUISubscriptionAdd(ctx, j, p.ID)
+	case "subscription_acquisition_receipt":
+		return a.runAcquisitionReceipt(ctx, j, p.ID)
+	case "subscription_stats":
+		return a.runSubscriptionStats(ctx, j, p.ID)
+	case "subscription_completion_prepare":
+		return a.prepareSubscriptionCompletion(ctx, j, p.ID, p.Revision)
+	case "subscription_completion":
+		return a.runSubscriptionCompletion(ctx, j, p.ID)
 	case "subscription":
 		return a.checkSubscription(ctx, j, p.ID, p.Revision)
 	case "library_scan":

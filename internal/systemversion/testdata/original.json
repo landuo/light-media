@@ -1,0 +1,1309 @@
+{
+  "source": {
+    "system.py": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+    "http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "selected_methods": [
+      "__get_front_release_version",
+      "__get_server_release_version",
+      "__get_version_message",
+      "get_frontend_version",
+      "get_server_local_version",
+      "version"
+    ]
+  },
+  "release_cases": [
+    {
+      "name": "numeric_order",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.9.99\"}, {\"tag_name\": \"v2.12.1\"}, {\"tag_name\": \"v3.99.1\"}, {\"tag_name\": \"v2.10.9\"}]",
+        "status": 200
+      },
+      "version": "v2.12.1",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "stable_equal",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.01.0-first\"}, {\"tag_name\": \"v2.1.00-last\"}]",
+        "status": 200
+      },
+      "version": "v2.1.00-last",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "all_digits",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.1-rc10\"}, {\"tag_name\": \"v2.1-rc2\"}]",
+        "status": 200
+      },
+      "version": "v2.1-rc10",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "unicode_digits",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.\\u0661\\u0662.\\u0663\"}, {\"tag_name\": \"v2.9.8\"}]",
+        "status": 200
+      },
+      "version": "v2.\u0661\u0662.\u0663",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "unicode_math",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.\\ud835\\udfd9\\ud835\\udfda.\\ud835\\udfdb\"}, {\"tag_name\": \"v2.9.8\"}]",
+        "status": 200
+      },
+      "version": "v2.\ud835\udfd9\ud835\udfda.\ud835\udfdb",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "prefix_case",
+      "input": {
+        "body": "[{\"tag_name\": \"V2.99\"}, {\"tag_name\": \"v2x.99\"}, {\"tag_name\": \"v2.\"}]",
+        "status": 200
+      },
+      "version": "v2.",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "empty",
+      "input": {
+        "body": "[]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "warn"
+      ]
+    },
+    {
+      "name": "no_v2",
+      "input": {
+        "body": "[{\"tag_name\": \"v1.99\"}, {\"tag_name\": \"v3.1\"}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "warn"
+      ]
+    },
+    {
+      "name": "missing_tag",
+      "input": {
+        "body": "[{\"name\": \"v2.1\"}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "null_tag",
+      "input": {
+        "body": "[{\"tag_name\": null}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "number_tag",
+      "input": {
+        "body": "[{\"tag_name\": 2}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "list_tag",
+      "input": {
+        "body": "[{\"tag_name\": [\"v2.9\"]}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "release_null",
+      "input": {
+        "body": "[null]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "release_string",
+      "input": {
+        "body": "[\"v2.99\"]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "root_dict",
+      "input": {
+        "body": "{\"tag_name\": \"v2.1\"}",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "root_null",
+      "input": {
+        "body": "null",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "root_number",
+      "input": {
+        "body": "2",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "broken",
+      "input": {
+        "body": "{"
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "trailing",
+      "input": {
+        "body": "[] []"
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "status500",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.99\"}]",
+        "status": 500
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "status302_no_location",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.99\"}]",
+        "status": 302
+      },
+      "version": "v2.99",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "request_exception",
+      "input": {
+        "error": true
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "response_none",
+      "input": {
+        "none": true
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "nonfinite_extra",
+      "input": {
+        "body": "[{\"tag_name\":\"v2.9\",\"unused\":NaN}]"
+      },
+      "version": "v2.9",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "nonfinite_tag",
+      "input": {
+        "body": "[{\"tag_name\":Infinity}]"
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "large_integer",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.99999999999999999999999999999999999999999999999999999999999999999999999999999999\"}, {\"tag_name\": \"v2.1000\"}]",
+        "status": 200
+      },
+      "version": "v2.99999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    },
+    {
+      "name": "int_limit",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999\"}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "leading_zero_limit",
+      "input": {
+        "body": "[{\"tag_name\": \"v2.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"}]",
+        "status": 200
+      },
+      "version": null,
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "error"
+      ]
+    },
+    {
+      "name": "escaped_surrogate",
+      "input": {
+        "body": "[{\"tag_name\":\"v2.1\\ud800\"}]"
+      },
+      "version": "v2.1\ud800",
+      "request": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ],
+      "log_levels": [
+        "info"
+      ]
+    }
+  ],
+  "frontend_cases": [
+    {
+      "name": "missing",
+      "input": {},
+      "fallback": "0.3.21-web",
+      "version": "0.3.21-web"
+    },
+    {
+      "name": "trim",
+      "input": {
+        "exists": true,
+        "file_hex": "20202076322e312e320a"
+      },
+      "fallback": "0.3.21-web",
+      "version": "v2.1.2"
+    },
+    {
+      "name": "empty",
+      "input": {
+        "exists": true,
+        "file_hex": ""
+      },
+      "fallback": "0.3.21-web",
+      "version": ""
+    },
+    {
+      "name": "read_error",
+      "input": {
+        "exists": true,
+        "read_error": true
+      },
+      "fallback": "0.3.21-web",
+      "version": "0.3.21-web"
+    },
+    {
+      "name": "unicode_strip",
+      "input": {
+        "exists": true,
+        "file_hex": "c28576322e322e33e38080"
+      },
+      "fallback": "0.3.21-web",
+      "version": "v2.2.3"
+    },
+    {
+      "name": "invalid_ff",
+      "input": {
+        "exists": true,
+        "file_hex": "fffe"
+      },
+      "fallback": "0.3.21-web",
+      "version": "\ufffd\ufffd"
+    },
+    {
+      "name": "truncated_utf8",
+      "input": {
+        "exists": true,
+        "file_hex": "e180"
+      },
+      "fallback": "0.3.21-web",
+      "version": "\ufffd"
+    },
+    {
+      "name": "invalid_second",
+      "input": {
+        "exists": true,
+        "file_hex": "e028a1"
+      },
+      "fallback": "0.3.21-web",
+      "version": "\ufffd(\ufffd"
+    },
+    {
+      "name": "windows_frozen",
+      "input": {
+        "exists": true,
+        "file_hex": "76322e34",
+        "frozen": true,
+        "windows": true
+      },
+      "fallback": "0.3.21-web",
+      "version": "v2.4"
+    }
+  ],
+  "message_cases": [
+    {
+      "name": "different",
+      "server": {
+        "body": "[{\"tag_name\": \"v2.12.1\"}]",
+        "status": 200
+      },
+      "front": {
+        "body": "[{\"tag_name\": \"v2.11.2\"}]",
+        "status": 200
+      },
+      "local_server": "0.3.21",
+      "local_front": "0.3.21-web",
+      "notification": {
+        "channel": "\u98de\u4e66",
+        "source": "Lark",
+        "title": "\u5f53\u524d\u540e\u7aef\u7248\u672c\uff1a0.3.21\uff0c\u8fdc\u7a0b\u7248\u672c\uff1av2.12.1\n\u5f53\u524d\u524d\u7aef\u7248\u672c\uff1a0.3.21-web\uff0c\u8fdc\u7a0b\u7248\u672c\uff1av2.11.2",
+        "userid": "ou_owned",
+        "save_history": false
+      },
+      "requests": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "equal",
+      "server": {
+        "body": "[{\"tag_name\": \"v2.2\"}]",
+        "status": 200
+      },
+      "front": {
+        "body": "[{\"tag_name\": \"v2.3\"}]",
+        "status": 200
+      },
+      "local_server": "v2.2",
+      "local_front": "v2.3",
+      "notification": {
+        "channel": "\u98de\u4e66",
+        "source": "Lark",
+        "title": "\u5f53\u524d\u540e\u7aef\u7248\u672c\uff1av2.2\uff0c\u5df2\u662f\u6700\u65b0\u7248\u672c\n\u5f53\u524d\u524d\u7aef\u7248\u672c\uff1av2.3\uff0c\u5df2\u662f\u6700\u65b0\u7248\u672c",
+        "userid": "ou_owned",
+        "save_history": false
+      },
+      "requests": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "both_fail",
+      "server": {
+        "error": true
+      },
+      "front": {
+        "body": "{"
+      },
+      "local_server": "0.3.21",
+      "local_front": "",
+      "notification": {
+        "channel": "\u98de\u4e66",
+        "source": "Lark",
+        "title": "\u5f53\u524d\u540e\u7aef\u7248\u672c\uff1a0.3.21\uff0c\u8fdc\u7a0b\u7248\u672c\uff1aNone\n\u5f53\u524d\u524d\u7aef\u7248\u672c\uff1a\uff0c\u8fdc\u7a0b\u7248\u672c\uff1aNone",
+        "userid": "ou_owned",
+        "save_history": false
+      },
+      "requests": [
+        {
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        },
+        {
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases",
+          "kwargs": {
+            "proxies": {
+              "http": "http://owned.invalid:1",
+              "https": "http://owned.invalid:1"
+            },
+            "headers": {
+              "User-Agent": "owned-source"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "counters": {
+    "app_imports": 0,
+    "network": 0,
+    "writes": 0,
+    "process": 0
+  },
+  "boundary": "AST-selected actual installed methods; requests.Response real JSON/truthiness; RequestUtils network and filesystem are owned deterministic fakes; local runtime versions are synthetic Go-host samples, not source-global migration"
+}

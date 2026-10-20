@@ -100,7 +100,7 @@ func TestImportCompletionQueuesOnlyCurrentActiveSubscription(t *testing.T) {
 				t.Fatal(err)
 			}
 			plan := ImportPlan{ID: "plan", IntentID: intent.ID, RootID: "root", Media: identity, WorkflowID: "wf"}
-			if err = importCompleteIntent(context.Background(), tx, plan); err != nil {
+			if err = a.importCompleteIntent(context.Background(), tx, plan); err != nil {
 				tx.Rollback()
 				t.Fatal(err)
 			}

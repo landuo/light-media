@@ -35,9 +35,11 @@ type jobView struct {
 }
 
 var jobTypeLabels = map[string]string{
-	"native_download": "提交资源下载", "download": "提交影视下载",
-	"import": "整理文件", "reorganize_cleanup": "清理旧整理文件",
-	"scrape": "刮削元数据", "fnos_sync": "飞牛入库核对",
+	"native_download": "提交资源下载", "download": "提交影视下载", "lark_download": "提交影视下载",
+	"import": "整理文件", "reorganize_cleanup": "清理旧整理文件", "quality_cleanup": "清理洗版旧文件", "subscription_completion_prepare": "判定订阅完成", "subscription_completion": "发送订阅完成通知", "subscription_stats": "提交订阅统计", "subscription_add": "新增订阅通知与统计",
+	"subscription_download":            "提交订阅资源下载",
+	"subscription_acquisition_receipt": "登记已接收下载",
+	"scrape":                           "刮削元数据", "fnos_sync": "飞牛入库核对",
 	"subscription": "检查订阅", "library_scan": "核对媒体目录", "asset_check": "检查媒体文件",
 	"site_refresh": "刷新站点数据", "download_file_deleted": "处理源文件删除通知",
 }
@@ -92,7 +94,7 @@ func (a *App) jobView(ctx context.Context, job Job) (jobView, error) {
 			s.Subject = "核对下载任务并请求默认下载器保留数据删种"
 		case "site_refresh":
 			s.Subject = "所有启用站点"
-		case "download":
+		case "download", "lark_download", "subscription_download", "subscription_acquisition_receipt":
 			var item Intent
 			if err := read("intent", payload.ID, &item); err != nil {
 				return jobView{}, err
@@ -276,7 +278,7 @@ func jobSummaryStage(j Job) string {
 	case "failed":
 		return verb + "失败"
 	case "succeeded":
-		if j.Kind == "download" || j.Kind == "native_download" {
+		if j.Kind == "download" || j.Kind == "native_download" || j.Kind == "lark_download" || j.Kind == "subscription_download" {
 			return "已提交下载器"
 		}
 		return verb + "完成"

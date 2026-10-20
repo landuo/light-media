@@ -450,7 +450,14 @@ func TestSubscribeGroupFillDoesNotBlessIntentsInvalidatedByUserEdit(t *testing.T
 	if _, err = a.finishJob(ctx, oldJob, "failed", "REVIEW_SUBSCRIPTION_CHANGED", "test user edit", time.Now().Unix()); err != nil {
 		t.Fatal(err)
 	}
-	freshJob, choice := subscribeContinuationClaim(t, f)
+	// The source now also queues completion preparation after actual Add.
+	// Claim this already selected real download, rather than assuming it is the
+	// only job in the generic queue.
+	freshJob := qualityRunningJob(t, a, reorgJob(t, a, "download", fresh.ID))
+	var choice Intent
+	if err = a.Store.Get(ctx, "intent", fresh.ID, &choice); err != nil {
+		t.Fatal(err)
+	}
 	if choice.ID != fresh.ID {
 		t.Fatal("wrong current selection claimed")
 	}

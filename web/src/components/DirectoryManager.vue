@@ -42,6 +42,8 @@ function add() {
     library_path: '',
     media_type: 'mixed',
     mode: 'hardlink',
+    overwrite_mode: null,
+    overwrite_mode_known: true,
     monitor_type: 'none',
     enabled: false,
     include_existing: false,
@@ -94,6 +96,8 @@ async function save() {
       library_path: directory.library_path || '',
       media_type: directory.media_type,
       mode: directory.mode,
+      overwrite_mode: directory.overwrite_mode ?? null,
+      overwrite_mode_known: !!directory.overwrite_mode_known,
       monitor_type: directory.monitor_type || 'none',
       enabled: directory.monitor_type !== 'none',
       include_existing: !!directory.include_existing,
@@ -187,6 +191,18 @@ onMounted(load);
                   <option value="hardlink">硬链接</option>
                   <option value="copy">复制</option>
                   <option value="auto">自动</option>
+                </select></label
+              >
+              <label
+                >覆盖模式<select
+                  v-model="directory.overwrite_mode"
+                  @change="directory.overwrite_mode_known = true"
+                >
+                  <option :value="null" disabled>请选择</option>
+                  <option value="never">从不</option>
+                  <option value="always">总是</option>
+                  <option value="size">按文件大小</option>
+                  <option value="latest">仅保留最新</option>
                 </select></label
               >
               <PathPicker

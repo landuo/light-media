@@ -20,6 +20,7 @@ import (
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/cleaninvalidseed"
 	cf "light-media/internal/plugins/cloudflarespeedtest"
+	lark "light-media/internal/plugins/larkmessager"
 	"light-media/internal/plugins/removelink"
 	"light-media/internal/plugins/scrapefileclean"
 	sr "light-media/internal/plugins/seedrescue"
@@ -297,7 +298,11 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 		// may outlive that deadline; shutdown/drain cancellation still applies.
 		ctx = lifecycleCtx
 	}
+	workerMethod := "invoke"
 	workerInput := run.Input
+	if err == nil && installation.PluginID == "LarkMessager" {
+		workerMethod, workerInput, err = larkWorkerInput(run)
+	}
 	if err == nil && installation.PluginID == cf.PluginID && run.Action == "api" {
 		workerInput, err = cloudflareWorkerInput(run)
 	}
@@ -313,7 +318,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	result := plugins.RunResult{}
 	hostErrorCode := ""
 	if err == nil {
-		result, err = (plugins.Runner{Timeout: policy.WorkerTimeout, ExcludeHostTime: policy.ExcludeHostTime}).Run(ctx, command, manifest, installation.InstanceID, "invoke", workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+		result, err = (plugins.Runner{Timeout: policy.WorkerTimeout, ExcludeHostTime: policy.ExcludeHostTime}).Run(ctx, command, manifest, installation.InstanceID, workerMethod, workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 			var value json.RawMessage
 			var hostErr error
 			if deferred != nil {
@@ -485,6 +490,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	}
 	if method == "subscriptions.rules.configure" || method == "subscriptions.rules.apply" {
 		return a.pluginSubscribeGroupHost(ctx, installation, run, method, raw)
+	}
+	if method == lark.ConfigureCapability || method == lark.ModuleCapability || method == lark.EventCapability || method == lark.FormCapability || method == lark.PageCapability || method == lark.APICapability {
+		return a.pluginLarkHost(ctx, installation, run, method, raw)
 	}
 	if method == scrapefileclean.ConfigureCapability || method == scrapefileclean.ApplyCapability {
 		return a.pluginScrapeCleanHost(ctx, installation, run, method, raw)

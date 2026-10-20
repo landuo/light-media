@@ -17,6 +17,7 @@ import (
 // The parsed fields are frozen too, so later parser/configuration changes
 // cannot reinterpret an accepted download. Raw inputs stay private for audit.
 type downloadContextSnapshot struct {
+	SourceMeta   json.RawMessage          `json:"source_meta,omitempty"`
 	DownloadID   string                   `json:"download_id"`
 	DownloadKind string                   `json:"download_kind"`
 	Hash         string                   `json:"hash"`

@@ -170,7 +170,7 @@ func TestManualImportInheritsDirectoryOptionsAndExplicitOverrides(t *testing.T) 
 	importFixture(t, a, "movie")
 	path := filepath.Join(source, "Original.Movie.2024.mkv")
 	importWrite(t, path, []byte("manual option fixture"))
-	a.config.Directories = []DirectoryRule{{ID: "options", SourcePath: source, RootID: "root", MediaType: "movie", Mode: "copy", Renaming: importFlag(false), Scraping: importFlag(false), LibraryTypeFolder: importFlag(true)}}
+	a.config.Directories = []DirectoryRule{{ID: "options", Enabled: true, MonitorType: "monitor", SourcePath: source, RootID: "root", MediaType: "movie", Mode: "copy", Renaming: importFlag(false), Scraping: importFlag(false), LibraryTypeFolder: importFlag(true)}}
 	request := ImportRequest{MediaType: "movie", TMDBID: 123, Files: []ImportFileRequest{{Path: path}}}
 	plan, e := a.previewImport(context.Background(), request)
 	if e != nil {

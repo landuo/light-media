@@ -445,7 +445,7 @@ func (a *App) confirmDownloadReview(ctx context.Context, key, planID string, con
 		if err = importExcludedTx(ctx, tx, plan, file); err != nil {
 			return Job{}, err
 		}
-		if err = importReserve(ctx, tx, plan, file); err != nil {
+		if err = a.importReserve(ctx, tx, plan, file); err != nil {
 			return Job{}, err
 		}
 	}

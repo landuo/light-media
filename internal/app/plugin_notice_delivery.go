@@ -239,20 +239,11 @@ func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, opera
 	return nil
 }
 
-// No real module is registered by this bridge. An empty actual registry has the
-// original Chain's no-module result. A staged Lark install is explicitly not
-// operational until its native owner/transport is wired; it is never sent via
-// a guessed target or silently acknowledged as delivered.
+// Actual registered MessageChain modules consume the authenticated queue call.
+// Their private producers freeze recipients; neither queue JSON nor an SDK can
+// select a transport or acquire a native owner grant.
 func (a *App) sendPluginMessageModules(ctx context.Context, q pluginNoticeQueueEntry) (int, error) {
-	var staged int
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations WHERE installed=1 AND desired_enabled=1 AND plugin_id='LarkMessager'`).Scan(&staged)
-	if err != nil {
-		return 0, err
-	}
-	if staged != 0 {
-		return 0, notice.ErrDependency
-	}
-	return 0, nil
+	return a.larkMessageModules(ctx, q)
 }
 func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	release, err := a.pluginStore.noticeLock(ctx, "queue/"+id)
@@ -288,10 +279,11 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	}
 	q.State = "intent"
 	q.AttemptAt = a.pluginStore.noticeNow().UTC().Format(time.RFC3339Nano)
-	if err = a.pluginStore.savePluginMessageTx(ctx, tx, q); err != nil {
+	intent, err := a.pluginStore.writePluginMessageIntentTx(ctx, tx, q)
+	if err != nil {
 		return seedhost.ErrUnknown
 	}
-	if err = a.pluginStore.commitPluginMessage(ctx, tx, "queue_intent", q); err != nil {
+	if err = a.pluginStore.commitPluginMessageRow(ctx, tx, "queue_intent", intent); err != nil {
 		return seedhost.ErrUnknown
 	}
 	// This is deliberately after Commit and outside lifecycle/SQL locks. Only a
@@ -323,14 +315,14 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 		return seedhost.ErrUnknown
 	}
 	defer finish.Rollback()
-	old, err := a.pluginStore.readPluginMessage(finishCtx, finish, id)
-	if err != nil || old.State != "intent" || !bytes.Equal(mustCleanSeedJSON(old.Call), mustCleanSeedJSON(q.Call)) {
+	// The external result belongs to this exact already authenticated intent.
+	// Re-parsing its full provider/route here would spend the bounded receipt
+	// deadline on unrelated business data and could discard a known response.
+	result, err := a.pluginStore.finishPluginMessageRowTx(finishCtx, finish, intent, q)
+	if err != nil {
 		return seedhost.ErrUnknown
 	}
-	if err = a.pluginStore.savePluginMessageTx(finishCtx, finish, q); err != nil {
-		return seedhost.ErrUnknown
-	}
-	if err = a.pluginStore.commitPluginMessage(finishCtx, finish, "queue_finish", q); err != nil {
+	if err = a.pluginStore.commitPluginMessageRow(finishCtx, finish, "queue_finish", result); err != nil {
 		return seedhost.ErrUnknown
 	}
 	return nil // Original MessageQueue._send consumes callback errors.

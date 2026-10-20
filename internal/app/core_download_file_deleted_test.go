@@ -611,11 +611,18 @@ func TestCoreDownloadFileDeletedQueuedSecondSourceCannotReplayUnknownHash(t *tes
 	d := DownloaderConfig{Config: download.Config{ID: "owned", Kind: "qb", BaseURL: server.URL}}
 	a.config.Downloaders = []DownloaderConfig{d}
 	a.config.DefaultDownloader = d.ID
-	plan, e := a.previewImport(ctx, ImportRequest{MediaType: m.MediaType, TMDBID: m.ID, RootID: "root", Mode: "hardlink", Files: requests})
+	in := Intent{ID: "core-owned-accepted", WorkflowID: "core-owned-workflow", Media: m, RootID: "root", DownloaderID: d.ID, DownloaderSnapshot: downloaderSnapshot(d), Hash: coreFileHash, State: "accepted", Purpose: "core_download", SiteID: "core-owned-site"}
+	if e := a.acceptDownload(ctx, in, Job{ID: "job_owned_accepted"}); e != nil {
+		t.Fatal(e)
+	}
+	plan, e := a.previewImport(ctx, ImportRequest{MediaType: m.MediaType, TMDBID: m.ID, RootID: "root", IntentID: in.ID, WorkflowID: in.WorkflowID, Mode: "hardlink", Files: requests})
 	if e != nil {
 		t.Fatal(e)
 	}
-	coreHistoryAccepted(t, a, transferHistoryItem{PlanID: plan.ID}, d)
+	in.ImportPlanID, in.State = plan.ID, "imported"
+	if e := a.Store.Put(ctx, "intent", in.ID, in); e != nil {
+		t.Fatal(e)
+	}
 	j, e := a.executeImport(ctx, plan.ID, nil)
 	if e != nil {
 		t.Fatal(e)

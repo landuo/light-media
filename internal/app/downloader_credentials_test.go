@@ -23,7 +23,7 @@ func TestDownloaderAPIKeySettingsProjectionRetentionClearAndBinding(t *testing.T
 		}
 		return w.Body.String()
 	}
-	request("POST", "/api/downloaders/manage", `{"id":"owned-qb","kind":"qbittorrent","name":"Owned qB","base_url":"http://127.0.0.1:19080","username":"owned-user","password":"owned-password","api_key":"owned-downloader-api-secret","auto_category":true,"sequential":true,"first_last_piece":true}`)
+	request("POST", "/api/downloaders/manage", `{"id":"owned-qb","kind":"qbittorrent","name":"Owned qB","base_url":"http://127.0.0.1:19080","username":"owned-user","password":"owned-password","api_key":"owned-downloader-api-secret","auto_category":true,"sequential":true,"first_last_piece":true,"force_resume":true}`)
 	for _, path := range []string{"/api/settings", "/api/downloaders/manage"} {
 		body := request("GET", path, "")
 		if strings.Contains(body, "owned-downloader-api-secret") || strings.Contains(body, "owned-password") {
@@ -31,7 +31,7 @@ func TestDownloaderAPIKeySettingsProjectionRetentionClearAndBinding(t *testing.T
 		}
 	}
 	body := request("GET", "/api/downloaders/manage", "")
-	if !strings.Contains(body, `"api_key":true`) || !strings.Contains(body, `"auto_category":true`) || !strings.Contains(body, `"sequential":true`) || !strings.Contains(body, `"first_last_piece":true`) {
+	if !strings.Contains(body, `"api_key":true`) || !strings.Contains(body, `"auto_category":true`) || !strings.Contains(body, `"sequential":true`) || !strings.Contains(body, `"first_last_piece":true`) || !strings.Contains(body, `"force_resume":true`) {
 		t.Fatal("metadata/options missing", body)
 	}
 	var projection struct {
@@ -43,7 +43,7 @@ func TestDownloaderAPIKeySettingsProjectionRetentionClearAndBinding(t *testing.T
 	raw, _ := json.Marshal(projection.Data)
 	request("PUT", "/api/settings", string(raw))
 	saved, err := a.configuredDownloader("owned-qb")
-	if err != nil || saved.APIKey != "owned-downloader-api-secret" || saved.Password != "owned-password" {
+	if err != nil || saved.APIKey != "owned-downloader-api-secret" || saved.Password != "owned-password" || !saved.ForceResume {
 		t.Fatal("unrelated section lost secret", err)
 	}
 	if strings.Contains(a.clean("failed key owned-downloader-api-secret"), "owned-downloader-api-secret") {
@@ -101,6 +101,11 @@ func TestDownloaderDestinationSnapshotIncludesAutoManagementButPreservesLegacy(t
 	d.AutoCategory = true
 	if downloaderSnapshot(d) == legacy {
 		t.Fatal("automatic category management changed destination without snapshot change")
+	}
+	d.AutoCategory = false
+	d.ForceResume = true
+	if downloaderSnapshot(d) == legacy {
+		t.Fatal("force-resume changed reviewed post-Add behavior without snapshot change")
 	}
 }
 

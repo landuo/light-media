@@ -4,6 +4,8 @@
 
 2026-10-20 共享基础补充：[原版请求与调度设置](source-settings-migration.md)已随 v0.4.2 部署，并正式导入 4 条密文记录，区分配置 TZ 和本地时区。代理认证修复亦已部署；共享配置迁移不额外增加插件完成数量。
 
+2026-10-21 开发集成补充：[订阅、目录整理与消息通知 Go 集成记录](plugin-business-source-integration.txt)已合入正式代码，包含完整回归和实际来源配置的独占迁移验证；本轮未部署、未新增插件正式迁移，完成数仍为 6/23。Lark 等未完成项保留原状态。
+
 核查日期：2026-10-16（Asia/Shanghai）。来源：NAS 原版 MoviePilot 的只读 SQLite 查询 UserInstalledPlugins，与 /app/app/plugins、/config/plugins 已安装源码的 AST 元数据对应；未导入配置值或运行数据。23/23 插件源码已找到，合计 36717 行 Python（不含前端静态包）。此清单是迁移范围，不是完成声明。
 
 | ID | 名称 | 原版本 | 原状态 | 数据键数量 | 状态 |

@@ -86,6 +86,7 @@ type PluginStore struct {
 	notices          pluginNoticeRuntime
 	brushFlowLiveMu  sync.Mutex
 	brushFlowRuntime *pluginBrushFlowRuntime
+	larkLive         pluginLarkLive
 }
 
 const pluginValueLimit = 1 << 20
@@ -191,6 +192,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, autoBackupSchema+autoBackupRootSchema+cloudflareSchema+cloudflareRootSchema+cloudflareCommandSchema+cloudflareNoticeSchema+seedRescueSchema+seedRescueRootSchema+brushFlowSchema+brushFlowRootSchema+brushFlowEventSchema); err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, pluginLarkOwnerSchema); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, pluginDeferredSchema); err != nil {
 		return nil, err
 	}
@@ -236,6 +240,12 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, `CREATE INDEX IF NOT EXISTS plugin_domain_asset_events ON domain_events(json_extract(payload,'$.asset_id'),json_extract(payload,'$.event_type'),seq)`); err != nil {
+		return nil, err
+	}
+	if err = (&PluginStore{store: store}).initNotificationTemplatesTx(ctx, tx); err != nil {
+		return nil, err
+	}
+	if err = (&PluginStore{store: store}).initNotificationChannelsTx(ctx, tx); err != nil {
 		return nil, err
 	}
 	if err = tx.Commit(); err != nil {
@@ -302,7 +312,7 @@ func (p *PluginStore) unsealBound(kind, instanceID, key string, sealed []byte, b
 		return nil, err
 	}
 	limit := pluginValueLimit
-	if kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" || kind == "scrape_journal" {
+	if kind == "native_directory_selection" || kind == "download_season_scope" || kind == "subscription_acquisition" || kind == "subscription_download_failure" || kind == "source_subscription_origin" || kind == "subscription_add" || kind == "subscription_stats" || kind == "subscription_completion_ordinary" || kind == "subscription_completion" || kind == "subscription_history" || kind == "source_chain_event" || kind == "source_subscribe_complete" || kind == "subscription_quality_download" || kind == "subscription_quality_import" || kind == "subscription_quality_swap" || kind == "subscription_quality_cleanup" || kind == "data" || kind == "core_words" || kind == "download_context" || kind == "download_added" || kind == "subscription_words" || kind == "run_result" || kind == "cleanup_journal" || kind == "scrape_journal" {
 		limit = pluginDataValueLimit
 	}
 	if kind == "clean_seed_journal" || kind == "notice_journal" {
@@ -335,6 +345,9 @@ func validatePluginInstallation(in PluginInstallation) (PluginInstallation, erro
 }
 
 func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstallation) error {
+	if _, e := p.larkTransitionTx(ctx, tx, in.InstanceID); e != nil {
+		return e
+	}
 	var previousID string
 	var wasInstalled bool
 	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &wasInstalled)
@@ -444,6 +457,11 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 	if in.PluginID == "ScrapeFileClean" {
 		if err = p.scrapeCleanGenesisTx(ctx, tx, in.InstanceID, "install"); err != nil {
 			return err
+		}
+	}
+	if in.PluginID == "LarkMessager" && in.Version == "0.9.1" {
+		if e := p.larkGenesisTx(ctx, tx, in.InstanceID, "install"); e != nil {
+			return e
 		}
 	}
 	return p.markInstalledSiteReferencesTx(ctx, tx, in.InstanceID, "host-install/v1")
@@ -585,6 +603,10 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 		return err
 	}
 	defer tx.Rollback()
+	isLark, larkErr := p.larkTransitionTx(ctx, tx, instanceID)
+	if larkErr != nil {
+		return larkErr
+	}
 	brushParent, isBrush, e := p.brushFlowLifecycleParentTx(ctx, tx, instanceID)
 	if e != nil {
 		return e
@@ -675,6 +697,11 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 			return err
 		}
 	}
+	if isLark {
+		if e := p.larkGenesisTx(ctx, tx, instanceID, "uninstall"); e != nil {
+			return e
+		}
+	}
 	return tx.Commit()
 }
 
@@ -687,6 +714,10 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 		return err
 	}
 	defer tx.Rollback()
+	isLark, larkErr := p.larkTransitionTx(ctx, tx, instanceID)
+	if larkErr != nil {
+		return larkErr
+	}
 	brushParent, isBrush, e := p.brushFlowLifecycleParentTx(ctx, tx, instanceID)
 	if e != nil {
 		return e
@@ -775,6 +806,11 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	if isRescue {
 		if err = p.seedRescueGenesisTx(ctx, tx, instanceID, "reset", rescueParent); err != nil {
 			return err
+		}
+	}
+	if isLark {
+		if e := p.larkGenesisTx(ctx, tx, instanceID, "reset"); e != nil {
+			return e
 		}
 	}
 	return tx.Commit()

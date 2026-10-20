@@ -28,6 +28,8 @@ import (
 
 type App struct {
 	bigMemoryMode           bool // Trusted startup option; not worker or plugin configuration.
+	transferExtensions      nativeTransferExtensionRuntime
+	subscriptionStats       subscriptionStatsRuntime
 	recognitionMu           sync.Mutex
 	recognitionMatcher      atomic.Pointer[words.Matcher]
 	directoryFileMu         sync.Mutex
@@ -57,6 +59,8 @@ type App struct {
 	jobWake                 chan struct{}
 	wg                      sync.WaitGroup
 	importMu                sync.Mutex
+	importSourceLink        func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
+	importAutoCommit        func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
 	subMu                   sync.Mutex
 	downloadMu              sync.Mutex
 	materialMu              sync.Mutex
@@ -82,6 +86,7 @@ type App struct {
 	pluginCloudflare        pluginCloudflareRuntime
 	pluginSeedRescue        pluginSeedRescueRuntime
 	pluginBrushFlow         pluginBrushFlowRuntime
+	pluginLark              pluginLarkRuntime
 	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
 	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 
@@ -214,7 +219,9 @@ func (a *App) Close() error {
 	if a.cancel != nil {
 		a.cancel()
 	}
+	a.stopSubscriptionStatistics()
 	a.wg.Wait()
+	a.closeSubscriptionStatisticsHTTP()
 	a.stopScrapeFileCleanPlugins()
 	a.stopRemoveLinkPlugins()
 	a.stopCleanInvalidSeedPlugins()

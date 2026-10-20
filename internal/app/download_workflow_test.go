@@ -540,8 +540,12 @@ func TestImportedMovieSubscriptionCompletesWithoutFurtherSiteChecks(t *testing.T
 	if e = a.Store.Get(ctx, "subscription", s.ID, &current); e != nil {
 		t.Fatal(e)
 	}
-	if current.State != "completed" || current.NextCheck != "" {
-		t.Fatalf("movie remained subscribed after import: %+v", current)
+	if current.State != "active" {
+		t.Fatalf("inventory bypassed original completion workflow: %+v", current)
+	}
+	var completionJobs int
+	if e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=?`, s.ID).Scan(&completionJobs); e != nil || completionJobs != 1 {
+		t.Fatal("inventory did not queue original source completion", completionJobs, e)
 	}
 	var usage int
 	_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM site_usage`).Scan(&usage)

@@ -39,6 +39,13 @@ func TestOriginalSubscriptionFiltersPersistAndAffectRealSearchBeforeProgress(t *
 		t.Fatal(err)
 	}
 	request := subscriptionRequest(t)
+	media, err := a.media(ctx, request.MediaType, request.TMDBID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Media = media
+	installNoticeSourceFixtures(t, a, media, request.Season, 5)
+	subscriptionStatsInstallSettings(t, a, "http://127.0.0.1:1", false)
 	request.Policy = Policy{Resolution: "1080p", Source: "BluRay", HDR: "sdr", FilterParams: &torrentfilter.Parameters{Resolution: priorityText("4K|2160p|x2160"), Quality: priorityText("WEB-?DL|WEB-?RIP"), Effect: priorityText("HDR10|HDR10\\+")}}
 	raw, _ := json.Marshal(request)
 	w := callTest(t, a.Handler(), "POST", "/api/subscriptions", string(raw), cookie, "")

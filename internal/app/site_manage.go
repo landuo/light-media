@@ -398,7 +398,7 @@ func (a *App) managedDownloaders(ctx context.Context) (any, error) {
 			observed.Status = "disabled"
 			observed.Error = ""
 		}
-		rows = append(rows, map[string]any{"config": map[string]any{"id": d.ID, "name": d.Name, "kind": d.Kind, "base_url": d.BaseURL, "username": d.Username, "enabled": downloaderEnabled(d), "auto_category": d.AutoCategory, "sequential": d.Sequential, "first_last_piece": d.FirstLast}, "credential_configured": configured, "credential_state": credentials, "default": d.ID == c.DefaultDownloader, "connection": observed.managedConnection})
+		rows = append(rows, map[string]any{"config": map[string]any{"id": d.ID, "name": d.Name, "kind": d.Kind, "base_url": d.BaseURL, "username": d.Username, "enabled": downloaderEnabled(d), "auto_category": d.AutoCategory, "sequential": d.Sequential, "first_last_piece": d.FirstLast, "force_resume": d.ForceResume}, "credential_configured": configured, "credential_state": credentials, "default": d.ID == c.DefaultDownloader, "connection": observed.managedConnection})
 	}
 	return map[string]any{"downloaders": rows, "default_downloader": c.DefaultDownloader}, nil
 }

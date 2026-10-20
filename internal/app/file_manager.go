@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"light-media/internal/transferextensions"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -228,6 +229,14 @@ func (a *App) fileManagerAPI(r *http.Request, p string) (any, error) {
 	}
 }
 func (a *App) browserList(ctx context.Context, rootID, path, sorting, order string) (any, error) {
+	extensions, e := a.sourceFileExtensions(ctx)
+	if e != nil {
+		return nil, e
+	}
+	display, e := transferextensions.New(extensions)
+	if e != nil {
+		return nil, e
+	}
 	root, e := a.browserRoot(rootID, path)
 	if e != nil {
 		return nil, e
@@ -271,7 +280,8 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 			if protected == "" {
 				protected = a.browserStaticProtection(name)
 			}
-			entries = append(entries, browserEntry{item.Name(), name, kind, info.Size(), info.ModTime().UTC().Format(time.RFC3339), isVideo(name), protected})
+			video, _ := display.Media(transferextensions.PathFile(name))
+			entries = append(entries, browserEntry{item.Name(), name, kind, info.Size(), info.ModTime().UTC().Format(time.RFC3339), video, protected})
 		}
 		if truncated || err == io.EOF {
 			break
@@ -310,6 +320,10 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 	if len(paths) == 0 || len(paths) > 200 {
 		return nil, bad("INVALID_SELECTION", "请选择 1–200 个文件或目录")
 	}
+	classifier, e := a.transferMediaClassifier(ctx)
+	if e != nil {
+		return nil, e
+	}
 	files := []importScanFile{}
 	seen := map[string]bool{}
 	truncated := false
@@ -337,7 +351,7 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 					files = append(files, f)
 				}
 			}
-		} else if isVideo(path) && !seen[path] {
+		} else if video, _ := classifier.Media(transferextensions.PathFile(path)); video && !seen[path] {
 			seen[path] = true
 			f := importScanFile{Path: path, Size: stamp.Size, Parsed: a.parseMediaName(filepath.Base(path))}
 			f.InferredMedia, f.Numbering, f.IdentityReason = a.importNFOEvidence(path)
@@ -355,6 +369,10 @@ func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (
 }
 
 func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bool) ([]importScanFile, bool, error) {
+	classifier, e := a.transferMediaClassifier(ctx)
+	if e != nil {
+		return nil, false, e
+	}
 	files := []importScanFile{}
 	visited := 0
 	truncated := false
@@ -392,7 +410,7 @@ func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bo
 					}
 					continue
 				}
-				if !isVideo(name) {
+				if media, _ := classifier.Media(transferextensions.PathFile(name)); !media {
 					continue
 				}
 				stamp, e := snapshotPath(name)
@@ -414,7 +432,7 @@ func (a *App) browserCollectFiles(ctx context.Context, path string, recursive bo
 			}
 		}
 	}
-	e := walk(path, 0)
+	e = walk(path, 0)
 	return files, truncated, e
 }
 

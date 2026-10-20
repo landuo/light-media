@@ -1,0 +1,8718 @@
+{
+  "provenance": "actual installed source methods executed independently from AST, no app imports/no current config values observed",
+  "sources": {
+    "transfer": {
+      "path": "/app/app/chain/transfer.py",
+      "sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37"
+    },
+    "handler": {
+      "path": "/app/app/modules/filemanager/transhandler.py",
+      "sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36"
+    }
+  },
+  "constructor_assignments": [
+    "self._media_exts = settings.RMT_MEDIAEXT",
+    "self._subtitle_exts = settings.RMT_SUBEXT",
+    "self._audio_exts = settings.RMT_AUDIOEXT",
+    "self._allowed_exts = self._media_exts + self._audio_exts + self._subtitle_exts"
+  ],
+  "config_watch": [
+    "CONFIG_WATCH = {'TRANSFER_THREADS'}"
+  ],
+  "on_config_changed": "def on_config_changed(self):\n    \"\"\"配置变更时重启文件整理线程。\"\"\"\n    self.__stop()\n    self.__init()",
+  "live_handler_settings_attributes": [
+    "RMT_AUDIOEXT",
+    "RMT_MEDIAEXT",
+    "RMT_SUBEXT"
+  ],
+  "configs": [
+    {
+      "media": [
+        ".i̇",
+        ".ος",
+        ".οσ"
+      ],
+      "subtitle": [
+        ".İ"
+      ],
+      "audio": []
+    },
+    {
+      "media": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ],
+      "subtitle": [
+        ".srt",
+        ".ass",
+        ".ssa",
+        ".sup"
+      ],
+      "audio": [
+        ".aac",
+        ".ac3",
+        ".amr",
+        ".caf",
+        ".cda",
+        ".dsf",
+        ".dff",
+        ".kar",
+        ".m4a",
+        ".mp1",
+        ".mp2",
+        ".mp3",
+        ".mid",
+        ".mod",
+        ".mka",
+        ".mpc",
+        ".nsf",
+        ".ogg",
+        ".pcm",
+        ".rmi",
+        ".s3m",
+        ".snd",
+        ".spx",
+        ".tak",
+        ".tta",
+        ".vqf",
+        ".wav",
+        ".wma",
+        ".aifc",
+        ".aiff",
+        ".alac",
+        ".adif",
+        ".adts",
+        ".flac",
+        ".midi",
+        ".opus",
+        ".sfalc"
+      ]
+    },
+    {
+      "media": [],
+      "subtitle": [],
+      "audio": []
+    },
+    {
+      "media": [
+        ".custom",
+        ".MKV",
+        ".custom"
+      ],
+      "subtitle": [
+        ".subs",
+        ".SRT"
+      ],
+      "audio": [
+        ".au"
+      ]
+    },
+    {
+      "media": [
+        ".srt"
+      ],
+      "subtitle": [
+        ".srt",
+        ".mkv"
+      ],
+      "audio": [
+        ".mkv"
+      ]
+    },
+    {
+      "media": [
+        "mkv",
+        "..mkv",
+        "."
+      ],
+      "subtitle": [
+        "."
+      ],
+      "audio": [
+        ""
+      ]
+    },
+    {
+      "media": [
+        ".视频"
+      ],
+      "subtitle": [
+        ".字幕"
+      ],
+      "audio": [
+        ".音频"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "config": 0,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 0,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 1,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 1,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 2,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 3,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 3,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 3,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 3,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 3,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 3,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 3,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 4,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 4,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 5,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "İ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "İ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ΟΣ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ΟΣ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ΟΣΑ",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ΟΣΑ",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": null,
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": null,
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": null,
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "MKV",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "MKV",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "Mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "Mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mp4",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mp4",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "iso",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "iso",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "strm",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "strm",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "srt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "srt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "SRT",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "SRT",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "vtt",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "vtt",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "sub",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "sub",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "idx",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "idx",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ass",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "ass",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "aac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "aac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "flac",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "flac",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "custom",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "custom",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "subs",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "subs",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "au",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "au",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "au",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": ".mkv",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": ".mkv",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mkv.",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "mkv.",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": false,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "视频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "视频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": false
+      }
+    },
+    {
+      "config": 6,
+      "extension": "字幕",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 6,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 6,
+      "extension": "字幕",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": true,
+        "audio": false,
+        "allowed": true,
+        "handler_subtitle": true,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 6,
+      "extension": "音频",
+      "type": "file",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 6,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": false,
+      "expected": {
+        "media": false,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    },
+    {
+      "config": 6,
+      "extension": "音频",
+      "type": "dir",
+      "bluray": true,
+      "expected": {
+        "media": true,
+        "subtitle": false,
+        "audio": true,
+        "allowed": true,
+        "handler_subtitle": false,
+        "handler_extra": true
+      }
+    }
+  ],
+  "subtitle_stem_tags": [
+    "cc",
+    "chi",
+    "chs",
+    "cht",
+    "cn",
+    "default",
+    "en",
+    "eng",
+    "english",
+    "forced",
+    "gb",
+    "gb2312",
+    "hk",
+    "ja",
+    "jap",
+    "japanese",
+    "jp",
+    "jpn",
+    "sc",
+    "sdh",
+    "tc",
+    "zh",
+    "zh-cn",
+    "zh-hans",
+    "zh-hant",
+    "zh-tw",
+    "zh_cn",
+    "zh_hans",
+    "zh_hant",
+    "zh_tw",
+    "zho",
+    "中字",
+    "中英",
+    "双语",
+    "简中",
+    "简体",
+    "繁中",
+    "繁体"
+  ],
+  "association_cases": [
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.zh-cn.srt",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.eng.default.srt",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.random.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "movie.2024.ASS",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.flac",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.chi.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.subs",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.zh.SUBS",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "Movie.2024.au",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "İ.SRT",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "i̇.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "ΟΣ.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv"
+      ],
+      "extra": "ος.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.zh-cn.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.eng.default.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.random.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "movie.2024.ASS",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.chi.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.subs",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.zh.SUBS",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "Movie.2024.au",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "İ.SRT",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "i̇.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "ΟΣ.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Movie.2024.mp4"
+      ],
+      "extra": "ος.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.zh-cn.srt",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.eng.default.srt",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.random.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "movie.2024.ASS",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.flac",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.chi.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.subs",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.zh.SUBS",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "Movie.2024.au",
+      "expected": [
+        "local",
+        "/owned/Movie.2024.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "İ.SRT",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "i̇.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "ΟΣ.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "Movie.2024.mkv",
+        "Other.mkv"
+      ],
+      "extra": "ος.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.zh-cn.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.eng.default.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.random.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "movie.2024.ASS",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.chi.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.subs",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.zh.SUBS",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "Movie.2024.au",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "İ.SRT",
+      "expected": [
+        "local",
+        "/owned/İ.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "i̇.srt",
+      "expected": [
+        "local",
+        "/owned/İ.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "ΟΣ.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "İ.mkv"
+      ],
+      "extra": "ος.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.zh-cn.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.eng.default.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.random.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "movie.2024.ASS",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.chi.flac",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.subs",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.zh.SUBS",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "Movie.2024.au",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "İ.SRT",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "i̇.srt",
+      "expected": null
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "ΟΣ.srt",
+      "expected": [
+        "local",
+        "/owned/ΟΣ.mkv"
+      ]
+    },
+    {
+      "mains": [
+        "ΟΣ.mkv"
+      ],
+      "extra": "ος.srt",
+      "expected": [
+        "local",
+        "/owned/ΟΣ.mkv"
+      ]
+    }
+  ],
+  "path_extensions": [
+    {
+      "name": "movie.MKV",
+      "extension": "MKV"
+    },
+    {
+      "name": ".mkv",
+      "extension": ""
+    },
+    {
+      "name": "..mkv",
+      "extension": "mkv"
+    },
+    {
+      "name": "movie.",
+      "extension": ""
+    },
+    {
+      "name": "movie..MKV",
+      "extension": "MKV"
+    },
+    {
+      "name": "movie",
+      "extension": ""
+    },
+    {
+      "name": "movie.视频",
+      "extension": "视频"
+    },
+    {
+      "name": "dir.with.dot/movie",
+      "extension": ""
+    },
+    {
+      "name": "/dir/.hidden.mp4",
+      "extension": "mp4"
+    }
+  ]
+}

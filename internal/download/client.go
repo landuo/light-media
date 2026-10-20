@@ -40,6 +40,7 @@ type Config struct {
 	AutoCategory bool   `json:"auto_category,omitempty"`
 	Sequential   bool   `json:"sequential,omitempty"`
 	FirstLast    bool   `json:"first_last_piece,omitempty"`
+	ForceResume  bool   `json:"force_resume,omitempty"`
 }
 
 type Task struct {
@@ -75,8 +76,9 @@ type AddRequest struct {
 }
 
 type AddResult struct {
-	Hash      string `json:"hash"`
-	Duplicate bool   `json:"duplicate"`
+	Hash          string `json:"hash"`
+	Duplicate     bool   `json:"duplicate"`
+	sourceReceipt *sourceAddReceipt
 }
 
 // Error deliberately excludes remote bodies, URLs, headers and credentials.
@@ -221,14 +223,14 @@ func (c *Client) DefaultSavePath(ctx context.Context) (string, error) {
 // Uncertain transport failures are not automatically retried.
 func (c *Client) Add(ctx context.Context, in AddRequest) (AddResult, error) {
 	if !absolutePath(in.SavePath) {
-		return AddResult{}, failure("add", "invalid_save_path")
+		return AddResult{}, beforeMutation(failure("add", "invalid_save_path"))
 	}
 	if !validTags(in.Tags) {
-		return AddResult{}, failure("add", "invalid_tags")
+		return AddResult{}, beforeMutation(failure("add", "invalid_tags"))
 	}
 	hashes, err := torrentHashes(in.Torrent, c.config.Kind)
 	if err != nil {
-		return AddResult{}, err
+		return AddResult{}, beforeMutation(err)
 	}
 	key := c.config.Kind + "|" + c.base.Scheme + "|" + strings.ToLower(c.base.Host) + c.base.Path
 	shared, _ := endpointAddLocks.LoadOrStore(key, new(sync.Mutex))
@@ -238,13 +240,15 @@ func (c *Client) Add(ctx context.Context, in AddRequest) (AddResult, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.config.Kind == "qbittorrent" {
-		return c.qbAdd(ctx, in, hashes)
+		result, err := c.qbAdd(ctx, in, hashes)
+		return c.sourceAddResult(result, in.Paused, err)
 	}
 	hash := hashes[0]
 	if err := c.trConnect(ctx); err != nil {
-		return AddResult{Hash: hash}, err
+		return AddResult{Hash: hash}, beforeMutation(err)
 	}
-	return c.trAdd(ctx, in, hash)
+	result, err := c.trAdd(ctx, in, hash)
+	return c.sourceAddResult(result, in.Paused, err)
 }
 
 // Control accepts exactly one hash, never wildcard selectors or numeric daemon IDs.

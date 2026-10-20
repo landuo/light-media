@@ -33,6 +33,13 @@ func subscriptionWordsAPIWrite(t *testing.T, a *App, cookie *http.Cookie, key st
 	method, path := "POST", "/api/subscriptions"
 	if key != "" {
 		method, path = "PUT", path+"/"+key
+	} else {
+		media, err := a.media(context.Background(), request.MediaType, request.TMDBID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		installNoticeSourceFixtures(t, a, media, request.Season, 5)
+		subscriptionStatsInstallSettings(t, a, "http://127.0.0.1:1", false)
 	}
 	response := callTest(t, a.Handler(), method, path, subscriptionWordsRequestBody(t, request), cookie, "")
 	var envelope struct {
@@ -104,17 +111,23 @@ func TestSubscriptionWordsEditorRawRoundTripOmissionAndExplicitClear(t *testing.
 	}
 	ordinary, _ := json.Marshal(sub)
 	page, err := a.domainEvents(ctx, 0, 100)
-	if err != nil || len(page.Events) != 1 || page.Events[0].Type != "subscription.added" {
+	var added []DomainEvent
+	for _, event := range page.Events {
+		if event.Type == "subscription.added" && event.SubscriptionID == sub.ID {
+			added = append(added, event)
+		}
+	}
+	if err != nil || len(added) != 1 {
 		t.Fatal("real creation fact missing", err)
 	}
-	snapshot, err := a.subscriptionAddedSnapshot(ctx, page.Events[0])
+	snapshot, err := a.subscriptionAddedSnapshot(ctx, added[0])
 	if err != nil {
 		t.Fatal(err)
 	}
 	identity, _ := json.Marshal(snapshot)
 	outbox, _ := json.Marshal(page)
 	var sealedIdentity []byte
-	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, page.Events[0].EventID).Scan(&sealedIdentity); err != nil {
+	if err := a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, added[0].EventID).Scan(&sealedIdentity); err != nil {
 		t.Fatal(err)
 	}
 	for name, raw := range map[string][]byte{"core row": core, "ordinary subscription JSON": ordinary, "outbox": outbox, "decrypted event identity": identity, "sealed event identity": sealedIdentity} {

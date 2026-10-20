@@ -1,0 +1,108 @@
+{
+  "source_http_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "urllib3_request_source_sha256": "751c8aa0eb50e741d66f4a78eee02bbb20815e63b72a895b9e96f0d3f8446fa5",
+  "cases": [
+    {
+      "name": "empty",
+      "headers": {},
+      "proxy": null,
+      "capture": {
+        "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+        "method": "GET",
+        "prepared_headers": {
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        },
+        "wire_headers": {
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "User-Agent": "python-urllib3/2.7.0"
+        },
+        "kwargs": {
+          "timeout": 20,
+          "proxies": {},
+          "stream": false,
+          "verify": false,
+          "cert": null
+        }
+      },
+      "source_status": 200
+    },
+    {
+      "name": "github",
+      "headers": {
+        "Authorization": "Bearer owned",
+        "User-Agent": "Owned UA"
+      },
+      "proxy": null,
+      "capture": {
+        "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+        "method": "GET",
+        "prepared_headers": {
+          "User-Agent": "Owned UA",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Accept": "*/*",
+          "Connection": "keep-alive",
+          "Authorization": "Bearer owned"
+        },
+        "wire_headers": {
+          "User-Agent": "Owned UA",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Accept": "*/*",
+          "Connection": "keep-alive",
+          "Authorization": "Bearer owned"
+        },
+        "kwargs": {
+          "timeout": 20,
+          "proxies": {},
+          "stream": false,
+          "verify": false,
+          "cert": null
+        }
+      },
+      "source_status": 200
+    },
+    {
+      "name": "empty_explicit_proxy",
+      "headers": {},
+      "proxy": {
+        "http": "http://127.0.0.1:9",
+        "https": "http://127.0.0.1:9"
+      },
+      "capture": {
+        "url": "https://api.github.com/repos/landuo/MoviePilot/releases",
+        "method": "GET",
+        "prepared_headers": {
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        },
+        "wire_headers": {
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "User-Agent": "python-urllib3/2.7.0"
+        },
+        "kwargs": {
+          "timeout": 20,
+          "proxies": {
+            "http": "http://127.0.0.1:9",
+            "https": "http://127.0.0.1:9"
+          },
+          "stream": false,
+          "verify": false,
+          "cert": null
+        }
+      },
+      "source_status": 200
+    }
+  ],
+  "counters": {
+    "network": 0,
+    "writes": 0,
+    "app_imports": 0
+  },
+  "boundary": "actual selected RequestUtils and installed requests Session prepare/merge with owned Adapter, environment/netrc controlled empty; missing prepared UA uses installed urllib3 default-UA branch; no socket/TCP executed by source oracle"
+}

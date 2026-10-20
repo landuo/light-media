@@ -37,6 +37,10 @@ func (p *PluginStore) transferQueueAdmissionTx(ctx context.Context, tx *sql.Tx, 
 	return nil
 }
 func (p *PluginStore) pluginNativeQueueAdmissionTx(ctx context.Context, tx *sql.Tx, instance, plugin string) error {
+	if plugin == "LarkMessager" {
+		_, e := p.larkTransitionTx(context.WithValue(ctx, pluginLarkQueueKey{}, true), tx, instance)
+		return e
+	}
 	if plugin == "ScrapeFileClean" {
 		return p.scrapeCleanQueueAdmissionTx(ctx, tx, instance, plugin)
 	}
@@ -46,11 +50,15 @@ func (p *PluginStore) pluginNativeQueueAdmissionTx(ctx context.Context, tx *sql.
 	return p.iyuuQueueAdmissionTx(ctx, tx, instance, plugin)
 }
 func pluginNativeUnconfirmedQueueAdmission(e error) bool {
-	return scrapeQueueRejected(e) || errors.Is(e, errBrushFlowUnknownAdmission) || iyuuUnconfirmedQueueAdmission(e) || (pluginErrorCodeInternal(e) == "TORRENT_TRANSFER_UNCONFIRMED" && errors.Is(e, transfer.ErrUnconfirmed) && !errors.Is(e, transfer.ErrJournalIntegrity) && !errors.Is(e, transfer.ErrReplayDiverged))
+	return pluginErrorCodeInternal(e) == "LARK_UNCONFIRMED" || scrapeQueueRejected(e) || errors.Is(e, errBrushFlowUnknownAdmission) || iyuuUnconfirmedQueueAdmission(e) || (pluginErrorCodeInternal(e) == "TORRENT_TRANSFER_UNCONFIRMED" && errors.Is(e, transfer.ErrUnconfirmed) && !errors.Is(e, transfer.ErrJournalIntegrity) && !errors.Is(e, transfer.ErrReplayDiverged))
 }
 func (p *PluginStore) pluginNativeConfigWriteTx(ctx context.Context, tx *sql.Tx, instance string, revision int64, raw json.RawMessage) error {
 	var plugin string
 	if e := tx.QueryRowContext(ctx, "SELECT plugin_id FROM plugin_installations WHERE instance_id=?", instance).Scan(&plugin); e != nil {
+		return e
+	}
+	if plugin == "LarkMessager" {
+		_, e := p.larkTransitionTx(ctx, tx, instance)
 		return e
 	}
 	if plugin == "BrushFlowLanduo" {

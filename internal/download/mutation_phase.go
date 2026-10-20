@@ -30,3 +30,21 @@ func MutationNotStarted(err error) bool {
 	e, ok := err.(*mutationNotStarted)
 	return ok && e != nil && e.cause != nil && e.seal == mutationNotStartedSeal
 }
+
+// A fixed protocol response can acknowledge rejection without acknowledging an
+// Add. This separate private proof never classifies transport/malformed/lost ACK
+// as a rejection and cannot be manufactured with an exported Error code.
+type mutationRejected struct {
+	cause error
+	seal  *mutationPhaseSeal
+}
+
+var mutationRejectedSeal = &mutationPhaseSeal{marker: 2}
+
+func (e *mutationRejected) Error() string { return e.cause.Error() }
+func (e *mutationRejected) Unwrap() error { return e.cause }
+func rejectedMutation(err error) error    { return &mutationRejected{err, mutationRejectedSeal} }
+func MutationRejected(err error) bool {
+	e, ok := err.(*mutationRejected)
+	return ok && e != nil && e.cause != nil && e.seal == mutationRejectedSeal
+}

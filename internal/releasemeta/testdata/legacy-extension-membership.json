@@ -1,0 +1,678 @@
+{
+  "provenance": "actual installed wrapper AST segment executed without app import or config read",
+  "source": "/app/app/core/metainfo.py",
+  "source_sha256": "7c76f962f792a480615e0aa0ffd84fae16eecf62cae0ed3d8a0261f7283d59a9",
+  "segment": [
+    "media_exts = settings.RMT_MEDIAEXT + settings.RMT_SUBEXT + settings.RMT_AUDIOEXT",
+    "title_path = Path(title) if title else None",
+    "if title_path and title_path.suffix.lower() in media_exts:\n    isfile = True\n    title = title_path.stem\nelse:\n    isfile = False"
+  ],
+  "cases": [
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        "."
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".MKV"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".i̇"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".İ"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".mkv",
+        ".MKV",
+        ".mkv"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.ΟΣ"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".subs",
+        ".au"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.mkv",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.mkv"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.MKV",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.MKV"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.İ",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.İ"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.ΟΣ",
+      "isfile": true,
+      "stripped": "Owned.S01-S03"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.subs",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.subs"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.au",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.au"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.random",
+      "isfile": false,
+      "stripped": "Owned.S01-S03.random"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": ".mkv",
+      "isfile": false,
+      "stripped": ".mkv"
+    },
+    {
+      "extensions": [
+        ".οσ",
+        ".ος"
+      ],
+      "title": "Owned.S01-S03.",
+      "isfile": false,
+      "stripped": "Owned.S01-S03."
+    }
+  ]
+}

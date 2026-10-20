@@ -196,8 +196,20 @@ func TestCheckCompletedSubscriptionDoesNotSearchAgain(t *testing.T) {
 	if e = a.Store.Get(ctx, "subscription", s.ID, &current); e != nil {
 		t.Fatal(e)
 	}
-	if current.LastReason != "目标已入库，不会重复获取" || current.LastCheck == "" || current.NextCheck == "" {
+	if current.LastReason != "目标已满足，等待原订阅完成判定、历史与通知流程" || current.LastCheck == "" || current.State != "active" {
 		t.Fatalf("completed %+v", current)
+	}
+	// Rechecking a coverage observation must neither search again nor
+	// multiply preparation. An orphan slot is not a completed source history.
+	if e = a.checkSubscription(ctx, j, s.ID, s.Revision); e != nil {
+		t.Fatal(e)
+	}
+	var preparation, histories, stats int
+	a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=?`, s.ID).Scan(&preparation)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_history'`).Scan(&histories)
+	a.Store.DB.QueryRow(`SELECT count(*) FROM jobs WHERE kind='subscription_stats'`).Scan(&stats)
+	if preparation != 1 || histories != 0 || stats != 0 {
+		t.Fatal("coverage observation fabricated completion or duplicated preparation", preparation, histories, stats)
 	}
 	var usage int
 	_ = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM site_usage`).Scan(&usage)

@@ -1,0 +1,648 @@
+{
+  "status": "passed: exact physical composition; not deployed or newly migrated",
+  "formal_base": "59ddbb9f107962c643f8c5d89f5df3694e2309a3",
+  "original_anchor": "8eafd0ef91e637fc6680908363c2a29a8c739056",
+  "source_inputs": {
+    "count": 3880,
+    "path": "SOURCE-INPUTS.json",
+    "sha256": "9b23695a0c7d7ec1d76ed50e9cd833d160baef9cd21bcfc1b18bb100856826f4"
+  },
+  "compiler_inputs": {
+    "count": 5836,
+    "path": "COMPILER-INPUTS.json",
+    "sha256": "b84479178c03abacd6262c3de9420800512dbbd64aa2cb0f8223d4fcb4d2db2a"
+  },
+  "focus": {
+    "count": 503,
+    "path": "FOCUSED.json",
+    "sha256": "298dc6cbe602a4f60050ba3e664af6cfd106f029f6ce273c8afd6858d5874195"
+  },
+  "composition": [
+    {
+      "path": "/Users/accidia/projects/light-media/work/_plugin_business_composition_v1/lark12-composition.json",
+      "sha256": "0ae536deea0b4b96f1d83e44c5fb85c7cb37979854402bc77e3c1063216378f4"
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/_plugin_business_composition_v1/quality-composition.json",
+      "sha256": "7b0648ccd61fb14fd2170ad24094d204f1dbe83039ce2a5ed9446ccb5be1d7e7"
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/_plugin_business_composition_v1/lark12-manual-resolutions.json",
+      "sha256": "ffa6c8776ca9c529c109536dbfd9fc897bf1798f7676402193ac9cb284589bab"
+    }
+  ],
+  "fixed_fixture": {
+    "production_guard_changes": 0,
+    "source_diff": "internal/app/core_download_file_deleted_test.go",
+    "reason": "Actual accepted intent precedes sealed preview. The unknown downloader mutation remains blocked for second source and cold replay.",
+    "normal_exit": 0,
+    "race_exit": 0,
+    "failed_v1_and_v2_retained": true
+  },
+  "inherited_verification": {
+    "proof": "build-inheritance.json",
+    "reason": "All v1/v3 production and frontend bytes equal; only corrected test fixture differs.",
+    "vet_exit": 0,
+    "native_server_build_exit": 0,
+    "linux_amd64_cgo0_build_exit": 0,
+    "mod_verify_exit": 0,
+    "frontend_tests": 167,
+    "frontend_build_exit": 0
+  },
+  "explicit_scope": {
+    "no_runtime_python": true,
+    "source_oracles_are_offline_test_evidence": true,
+    "lark_registered": false,
+    "new_migrations": 0,
+    "new_deployments": 0,
+    "actual_completed_migrations": 6,
+    "remaining_plugins": 17,
+    "production_version": "0.4.6"
+  },
+  "remaining": [
+    "Lark other12 built-in consumers and full13 modules/4 APIs/source cache/browser/AI interactions.",
+    "Native original Config/runtime directory and file-extension values require separately reviewed capture and migration.",
+    "Remaining directory/parser caller roles and independent category/library folder semantics; original full subtitle templates, BluRay/symlink/source-target boundary require full-source implementation evidence.",
+    "Every remaining installed plugin still needs full original config/KV/files/reference mapping and actual production migration evidence."
+  ],
+  "root_preservation": [
+    "CustomHosts32 preservation:28 byte-equal and4 reviewed additive shared-file merges with actual selected-source normal/race migration.",
+    "Original Brush pools/head/pages/ledger + trusted startup options retained; source capacity guards unaffected.",
+    "Prior full Mako/Apprise, requests transport, RemoteIdentifiers, service/imported layout/preferences retained."
+  ],
+  "operational_effects": {
+    "original_service_writes": 0,
+    "media_writes": 0,
+    "real_torrent_writes": 0,
+    "real_site_actions": 0,
+    "real_notification_sends": 0,
+    "private_input_plaintext_files": 0
+  },
+  "readers": {
+    "all_terminal": true
+  },
+  "checks": {
+    "full_normal": {
+      "counts": {
+        "skip_pkg": 40,
+        "pass_top": 2005,
+        "pass_sub": 52473,
+        "pass_pkg": 77,
+        "skip_top": 8
+      },
+      "inclusive_pass": 54478,
+      "failures": [],
+      "skipped_tests": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+        "TestPluginServerStatusOwnedUIFixture",
+        "TestPluginSystemProcessOwnedUIFixture"
+      ],
+      "terminal_packages": {
+        "light-media/cmd/custom-hosts-migrate-owned": "skip",
+        "light-media/cmd/fnoscheck": "skip",
+        "light-media/cmd/fnosprovidercheck": "skip",
+        "light-media/cmd/mediacheck": "skip",
+        "light-media/cmd/metadatacheck": "skip",
+        "light-media/cmd/metainfocheck": "skip",
+        "light-media/cmd/integrationcheck": "pass",
+        "light-media/cmd/pathcheck": "skip",
+        "light-media/cmd/remote-identifiers-migrate-owned": "skip",
+        "light-media/cmd/server": "pass",
+        "light-media/cmd/server-status-migrate-owned": "skip",
+        "light-media/cmd/source-settings-migrate-owned": "skip",
+        "light-media/cmd/sqlitebench": "skip",
+        "light-media/cmd/system-process-migrate-owned": "skip",
+        "light-media/cmd/nasbench": "pass",
+        "light-media/experiments/internal/fixturelayout": "pass",
+        "light-media/experiments/fnos-nfo": "pass",
+        "light-media/experiments/metadata-nfo": "pass",
+        "light-media/experiments/nfo-compare": "pass",
+        "light-media/experiments/nfo-fixtures": "pass",
+        "light-media/experiments/real-nfo-compare": "pass",
+        "light-media/internal/acquisitionbatch": "pass",
+        "light-media/internal/catalog": "pass",
+        "light-media/internal/commandrouter": "pass",
+        "light-media/internal/decision": "pass",
+        "light-media/internal/directorysource": "pass",
+        "light-media/internal/download": "pass",
+        "light-media/internal/downloadersource": "pass",
+        "light-media/internal/fileextensions": "pass",
+        "light-media/internal/fnos": "pass",
+        "light-media/internal/fnosprovider": "pass",
+        "light-media/internal/integrations": "pass",
+        "light-media/internal/jinja": "skip",
+        "light-media/internal/jinja/builtins": "skip",
+        "light-media/internal/jinja/builtins/control_structures": "skip",
+        "light-media/internal/jinja/builtins/methods": "skip",
+        "light-media/internal/jinja/builtins/methods/pybool": "skip",
+        "light-media/internal/jinja/builtins/methods/pyerrors": "skip",
+        "light-media/internal/jinja/builtins/methods/pyfloat": "skip",
+        "light-media/internal/jinja/builtins/methods/pyint": "skip",
+        "light-media/internal/jinja/builtins/methods/pystring": "skip",
+        "light-media/internal/jinja/config": "skip",
+        "light-media/internal/jinja/docs": "skip",
+        "light-media/internal/jinja/examples/advanced_configuration": "skip",
+        "light-media/internal/jinja/examples/configuration": "skip",
+        "light-media/internal/jinja/examples/custom_filter": "skip",
+        "light-media/internal/jinja/exec": "skip",
+        "light-media/internal/jinja/loaders": "skip",
+        "light-media/internal/jinja/logging": "skip",
+        "light-media/internal/jinja/nodes": "skip",
+        "light-media/internal/jinja/parser": "skip",
+        "light-media/internal/jinja/tokens": "skip",
+        "light-media/internal/jinja/utils": "skip",
+        "light-media/internal/logging": "pass",
+        "light-media/internal/media": "pass",
+        "light-media/internal/media/words": "pass",
+        "light-media/internal/metadata": "pass",
+        "light-media/internal/metainfo": "pass",
+        "light-media/internal/networkproxy": "pass",
+        "light-media/internal/notice": "pass",
+        "light-media/internal/noticetemplate": "pass",
+        "light-media/internal/pathprobe": "pass",
+        "light-media/internal/plugins": "pass",
+        "light-media/internal/plugins/autobackup": "pass",
+        "light-media/internal/plugins/autosignin": "pass",
+        "light-media/internal/plugins/autosignin/durable": "pass",
+        "light-media/internal/plugins/autosignin/imagehash": "pass",
+        "light-media/internal/plugins/autosignin/imagehash/jpegport": "skip",
+        "light-media/internal/plugins/brushflow": "pass",
+        "light-media/internal/plugins/brushflow/ledger": "pass",
+        "light-media/internal/plugins/builtin": "pass",
+        "light-media/internal/plugins/cleaninvalidseed": "pass",
+        "light-media/internal/plugins/cleaninvalidseed/host": "pass",
+        "light-media/internal/plugins/cloudflarespeedtest": "pass",
+        "light-media/internal/plugins/iyuuautoseed": "pass",
+        "light-media/internal/plugins/iyuuautoseed/compat/encodingdetector": "skip",
+        "light-media/internal/plugins/iyuuautoseed/compat/htmlextract": "skip",
+        "light-media/internal/plugins/iyuuautoseed/compat/pythonre": "skip",
+        "light-media/internal/plugins/iyuuautoseed/compat/urlprep": "skip",
+        "light-media/internal/plugins/iyuuautoseed/native": "pass",
+        "light-media/internal/plugins/larkmessager": "pass",
+        "light-media/internal/plugins/larkmessager/host": "pass",
+        "light-media/internal/plugins/mergemessagenotify": "pass",
+        "light-media/internal/plugins/mergemessagenotify/apprise": "pass",
+        "light-media/internal/plugins/mergemessagenotify/mako": "pass",
+        "light-media/internal/plugins/mergemessagenotify/smtp": "pass",
+        "light-media/internal/plugins/remoteidentifiers": "skip",
+        "light-media/internal/plugins/removelink": "pass",
+        "light-media/internal/plugins/removelink/host": "pass",
+        "light-media/internal/plugins/schedule": "pass",
+        "light-media/internal/plugins/scrapefileclean": "pass",
+        "light-media/internal/plugins/scrapefileclean/host": "pass",
+        "light-media/internal/plugins/seedrescue": "pass",
+        "light-media/internal/plugins/serverstatus": "pass",
+        "light-media/internal/plugins/statistic": "pass",
+        "light-media/internal/plugins/subscribegroup": "pass",
+        "light-media/internal/plugins/torrenttransfer": "pass",
+        "light-media/internal/plugins/uninstall": "pass",
+        "light-media/internal/priorityrules": "pass",
+        "light-media/internal/pyregex": "skip",
+        "light-media/internal/pythonidna": "pass",
+        "light-media/internal/releasemeta": "pass",
+        "light-media/internal/releasemeta/legacyanime": "pass",
+        "light-media/internal/releasemeta/pinyin": "pass",
+        "light-media/internal/releasemeta/rustanime": "pass",
+        "light-media/internal/rsscontext": "pass",
+        "light-media/internal/sites": "pass",
+        "light-media/internal/sqlitebaseline": "pass",
+        "light-media/internal/subscriptiondefaults": "pass",
+        "light-media/internal/subscriptionquality": "pass",
+        "light-media/internal/subscriptionstats": "pass",
+        "light-media/internal/systemversion": "pass",
+        "light-media/internal/torrentfilter": "pass",
+        "light-media/internal/transferextensions": "pass",
+        "light-media/internal/transferoverwrite": "pass",
+        "light-media/web": "pass",
+        "light-media/internal/app": "pass"
+      },
+      "log_sha256": "0b1beaa6775550456eb9e05db010a06c82f9dc79acf2f43e355428aa9c301542"
+    },
+    "affected_app_race": {
+      "counts": {
+        "pass_top": 79,
+        "skip_top": 1,
+        "pass_sub": 251,
+        "pass_pkg": 1
+      },
+      "inclusive_pass": 330,
+      "failures": [],
+      "skipped_tests": [
+        "TestReviewedCustomHostsSelectedStdin"
+      ],
+      "terminal_packages": {
+        "light-media/internal/app": "pass"
+      },
+      "log_sha256": "19b8394e24eeaa3ee754c2c0d8e3c350dc88ad49866f0befff1b55f653ec7437"
+    },
+    "affected_core_race": {
+      "counts": {
+        "pass_sub": 16072,
+        "pass_top": 138,
+        "pass_pkg": 15
+      },
+      "inclusive_pass": 16210,
+      "failures": [],
+      "skipped_tests": [],
+      "terminal_packages": {
+        "light-media/internal/commandrouter": "pass",
+        "light-media/internal/acquisitionbatch": "pass",
+        "light-media/internal/downloadersource": "pass",
+        "light-media/internal/directorysource": "pass",
+        "light-media/internal/download": "pass",
+        "light-media/internal/fileextensions": "pass",
+        "light-media/internal/transferextensions": "pass",
+        "light-media/internal/subscriptionquality": "pass",
+        "light-media/internal/subscriptiondefaults": "pass",
+        "light-media/internal/transferoverwrite": "pass",
+        "light-media/internal/systemversion": "pass",
+        "light-media/internal/noticetemplate": "pass",
+        "light-media/internal/notice": "pass",
+        "light-media/internal/subscriptionstats": "pass",
+        "light-media/internal/releasemeta": "pass"
+      },
+      "log_sha256": "43d15d85ffebeb307e916e3abe420b2f1b1002b654082c9de8383c76fcca3b7f"
+    },
+    "fixed_fixture": [
+      {
+        "counts": {
+          "pass_top": 1,
+          "pass_pkg": 1
+        },
+        "inclusive_pass": 1,
+        "failures": [],
+        "skipped_tests": [],
+        "terminal_packages": {
+          "light-media/internal/app": "pass"
+        },
+        "log_sha256": "ad382cf868d6eeb467730a049650cc129c565b5e8defaf46506646c4347d8f15"
+      },
+      {
+        "counts": {
+          "pass_top": 1,
+          "pass_pkg": 1
+        },
+        "inclusive_pass": 1,
+        "failures": [],
+        "skipped_tests": [],
+        "terminal_packages": {
+          "light-media/internal/app": "pass"
+        },
+        "log_sha256": "75a15ea1fcbc3aa0224a3be3ef02c235c710ae9895e87bd2f90a0705974ab012"
+      }
+    ],
+    "selected_actual_custom_hosts": {
+      "state": "passed",
+      "source_private_input_saved": false,
+      "source_private_config_sha256": "e304545981b55e031afcdbedd617cd778b15d76224f6b8d63128df8f7aa09463",
+      "selected_config_aead_and_cold_replay": true,
+      "user_edit_preserved": true,
+      "receipt_failure_rollback": true,
+      "wrong_source_rejected": true,
+      "tests": [
+        {
+          "binary": "app-selected-owned.test",
+          "exit": 0,
+          "sha256": "0159a47ed82619d2520edaf469b1e4b6b906808caade7e2abdf87018d12beb8c"
+        },
+        {
+          "binary": "app-selected-owned-race.test",
+          "exit": 0,
+          "sha256": "e9bdaee20ec324f0b52bf5a123fce6d0fff25f48d519e697747115acaa9b6eba"
+        }
+      ],
+      "cli_validate": {
+        "network_calls": 0,
+        "plugin": "CustomHosts",
+        "preferences_written": 0,
+        "state": "validated",
+        "writes": 0
+      },
+      "workers": 0,
+      "hosts_writes": 0,
+      "network_business_calls": 0
+    },
+    "source_drift": [],
+    "compiler_drift": []
+  },
+  "root_protection_review": {
+    "base": "59ddbb9f107962c643f8c5d89f5df3694e2309a3",
+    "protected_paths": [
+      {
+        "path": "cmd/custom-hosts-migrate-owned/main.go",
+        "expected_sha256": "d09c7beb4bd1a157a7d02125a93f965d7ce79744310f66ac4c26f6d159296b59",
+        "actual_sha256": "d09c7beb4bd1a157a7d02125a93f965d7ce79744310f66ac4c26f6d159296b59",
+        "equal": true
+      },
+      {
+        "path": "internal/app/custom_hosts_migration.go",
+        "expected_sha256": "4c1ddfc4ca731ee07bbe4eb388a686b9292515b8df166b68a08cef793cd93a24",
+        "actual_sha256": "4c1ddfc4ca731ee07bbe4eb388a686b9292515b8df166b68a08cef793cd93a24",
+        "equal": true
+      },
+      {
+        "path": "internal/app/custom_hosts_migration_test.go",
+        "expected_sha256": "189b0734021f04b104bb6988cea469f646a0ab1356f2090c5ff99ea3b713f5ca",
+        "actual_sha256": "189b0734021f04b104bb6988cea469f646a0ab1356f2090c5ff99ea3b713f5ca",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_head.go",
+        "expected_sha256": "7da080502d731d0465d45ad9534363e6e5501d78fe04851036363f5c6b7a2b96",
+        "actual_sha256": "7da080502d731d0465d45ad9534363e6e5501d78fe04851036363f5c6b7a2b96",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_head_test.go",
+        "expected_sha256": "7d4d899d3b6b6add3dc1b2fa4e2564d623f702709bb7dcfe17db5dff72f82d15",
+        "actual_sha256": "7d4d899d3b6b6add3dc1b2fa4e2564d623f702709bb7dcfe17db5dff72f82d15",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_pages.go",
+        "expected_sha256": "eae666f0f6d7270ce62d01e59037667f365aed210c4a7429991a515279ef2dd2",
+        "actual_sha256": "eae666f0f6d7270ce62d01e59037667f365aed210c4a7429991a515279ef2dd2",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_pages_test.go",
+        "expected_sha256": "c105a8e97cf52c3332502100e73ab2effa0fce0564c8ffa0b3263ffbd85b490b",
+        "actual_sha256": "c105a8e97cf52c3332502100e73ab2effa0fce0564c8ffa0b3263ffbd85b490b",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_point.go",
+        "expected_sha256": "3d50d5f11b03641f7af9ed2f9d9f1023778231f7393cf535890feaf25a3f7a93",
+        "actual_sha256": "3d50d5f11b03641f7af9ed2f9d9f1023778231f7393cf535890feaf25a3f7a93",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_pools.go",
+        "expected_sha256": "cb08a49129c1a6ab38adec5564efbe2cfd48540f9a0c82f650596ad4cc691222",
+        "actual_sha256": "cb08a49129c1a6ab38adec5564efbe2cfd48540f9a0c82f650596ad4cc691222",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_brush_flow_pools_test.go",
+        "expected_sha256": "d201247d5578409995c86c5e58cf22f949080544362fa91937020d0f54c0e97e",
+        "actual_sha256": "d201247d5578409995c86c5e58cf22f949080544362fa91937020d0f54c0e97e",
+        "equal": true
+      },
+      {
+        "path": "internal/app/plugin_hosts.go",
+        "expected_sha256": "cb8465abca27a5790b0afef50ba84df85f18a73936a8547f667be67b647629e9",
+        "actual_sha256": "cb8465abca27a5790b0afef50ba84df85f18a73936a8547f667be67b647629e9",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/LICENSE.Go",
+        "expected_sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+        "actual_sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/LICENSE.PSF",
+        "expected_sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+        "actual_sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/LICENSE.Unicode",
+        "expected_sha256": "f5062c9a188d81dfe66b56db4182dcf9e4b17c0d9b0d311a8e20b3a1b075c443",
+        "actual_sha256": "f5062c9a188d81dfe66b56db4182dcf9e4b17c0d9b0d311a8e20b3a1b075c443",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/NOTICE.txt",
+        "expected_sha256": "0542007117aea7ef7e720ef49f22d007726e9508666d4165ebc6ad60f4d8dd89",
+        "actual_sha256": "0542007117aea7ef7e720ef49f22d007726e9508666d4165ebc6ad60f4d8dd89",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/idna.go",
+        "expected_sha256": "4df7cd46525dfd9f05a88ccdf0a1b1ba9224d5e64f637c037042e1b9a915fb86",
+        "actual_sha256": "4df7cd46525dfd9f05a88ccdf0a1b1ba9224d5e64f637c037042e1b9a915fb86",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/idna_test.go",
+        "expected_sha256": "e4a1a600c98580d9283aa36f9f3d072b00362934b540dd0c9c36a72ea835015d",
+        "actual_sha256": "e4a1a600c98580d9283aa36f9f3d072b00362934b540dd0c9c36a72ea835015d",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/profile_data.go",
+        "expected_sha256": "99b066e015f0ecf2c7ae010baca62bc0315b3247a3929b9e97be76613458b5cc",
+        "actual_sha256": "99b066e015f0ecf2c7ae010baca62bc0315b3247a3929b9e97be76613458b5cc",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/punycode.go",
+        "expected_sha256": "e2bcadbfd1049220f831bede8991b42c97b31b362748e2f516d0bc49d5401fe3",
+        "actual_sha256": "e2bcadbfd1049220f831bede8991b42c97b31b362748e2f516d0bc49d5401fe3",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/testdata/original-idna.json",
+        "expected_sha256": "637954287205d3c6f0a7b6917d00204dda006fd230af982f60c26979fd3205cc",
+        "actual_sha256": "637954287205d3c6f0a7b6917d00204dda006fd230af982f60c26979fd3205cc",
+        "equal": true
+      },
+      {
+        "path": "internal/pythonidna/testdata/original-normalization.json",
+        "expected_sha256": "3a4b9b5529a4104dd2cd3b1f3f48f4241886dd909837146e37d7296b25eb31da",
+        "actual_sha256": "3a4b9b5529a4104dd2cd3b1f3f48f4241886dd909837146e37d7296b25eb31da",
+        "equal": true
+      }
+    ],
+    "preserved": true,
+    "no_runtime_python_added": true
+  },
+  "prior_custom_hosts_32_preservation": {
+    "source": "/Users/accidia/projects/light-media/work/_custom_hosts_formal_v046_r2",
+    "paths": [
+      {
+        "path": "cmd/custom-hosts-migrate-owned/main.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/custom_hosts_migration.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/custom_hosts_migration_test.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/plugin_hosts.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/plugin_hosts_test.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/plugin_http.go",
+        "same": false,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/plugin_runtime.go",
+        "same": false,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/plugin_store.go",
+        "same": false,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/app/runtime.go",
+        "same": false,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/plugins/builtin/custom_hosts.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/plugins/builtin/custom_hosts_source_test.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/plugins/builtin/custom_hosts_test.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/plugins/builtin/testdata/custom-hosts-original.json",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/LICENSE.Go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/LICENSE.PSF",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/LICENSE.Unicode",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/NOTICE.txt",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/idna.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/idna_test.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/profile_data.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/punycode.go",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/testdata/original-idna.json",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "internal/pythonidna/testdata/original-normalization.json",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/original.py",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/python-hosts-__init__.py",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/python-hosts-exception.py",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/python-hosts-hosts.py",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/python-hosts-unicode_utils.py",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/python-hosts-utils.py",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "testdata/plugins/custom-hosts-source/source-audit.json",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "web/package-lock.json",
+        "same": true,
+        "candidate_present": true
+      },
+      {
+        "path": "web/package.json",
+        "same": true,
+        "candidate_present": true
+      }
+    ],
+    "semantic_review": {
+      "unchanged_byte_count": 28,
+      "shared_union_paths": [
+        "internal/app/plugin_http.go",
+        "internal/app/plugin_runtime.go",
+        "internal/app/plugin_store.go",
+        "internal/app/runtime.go"
+      ],
+      "shared_union_review": "Exact diff reviewed: adds Lark page/config/worker dispatch and runtime fields/lifecycle, preserves CustomHosts config allowlist and all existing exact cases. Keeps source InstalledImport gate and Store limits; adds explicit new seal namespaces, no changes to old migration digest. Preserves Root brush runtime/pools and trusted bigMemory flag. Default notice templates/channels use seed-only-preserve-explicit tests.",
+      "actual_composed_source_private_input_fixture": "selected-owned-verification.json: normal+race, unchanged source private config in RAM/stdin, zero workers/hosts writes/network business calls"
+    }
+  },
+  "formal_product_build": {
+    "exit": 0,
+    "binary_sha256": "eece6f48b9b4901c777866fe0c81b0856600eff04206c9055db6273544cba79d",
+    "source_paths_after_promotion": 503,
+    "unexpected_staged_paths": 0
+  }
+}

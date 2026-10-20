@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"light-media/internal/notice"
+	"light-media/internal/noticetemplate"
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 )
 
@@ -47,7 +48,8 @@ type pluginNoticeRuntime struct {
 	// no SDK/event/config value can install a callback or provide authority.
 	send func(context.Context, pluginNoticeQueueEntry) (int, error)
 	// Native fault injection runs after an actual commit; SDK data cannot set it.
-	afterCommit func(string) error
+	afterCommit    func(string) error
+	templateHelper *noticetemplate.Helper
 }
 
 func (p *PluginStore) commitNoticeTx(tx *sql.Tx, operation string) error {
@@ -103,6 +105,7 @@ func (p *PluginStore) noticeID(kind string, v ...any) string {
 }
 
 type pluginNoticeRoute struct {
+	BusinessV2                                                               *pluginNoticeV2Business `json:",omitempty"`
 	Version                                                                  int
 	ID, Instance, Token, Kind, EffectID, AcceptedSHA, CreatedAt, CurrentTime string
 	Generation                                                               int64
@@ -187,10 +190,16 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err := p.noticeUnseal("route", id, sealed, &r); err != nil {
 		return r, nil, err
 	}
-	if r.Version != 1 || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || (r.Kind != "clean_seed" && r.Kind != "auto_backup" && r.Kind != "iyuu" && r.Kind != "cloudflare" && r.Kind != "brush_flow" && r.Kind != "seed_rescue" && r.Kind != "transfer" && r.Kind != "scrape_clean") || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
+	v1Kind := r.Version == 1 && r.BusinessV2 == nil && (r.Kind == "clean_seed" || r.Kind == "auto_backup" || r.Kind == "iyuu" || r.Kind == "cloudflare" || r.Kind == "brush_flow" || r.Kind == "seed_rescue" || r.Kind == "transfer" || r.Kind == "scrape_clean")
+	v2Kind := r.Version == 2 && r.Kind == "business" && r.BusinessV2 != nil
+	if (!v1Kind && !v2Kind) || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
-	if r.Kind == "scrape_clean" {
+	if v2Kind {
+		if err := p.validateNoticeBusinessV2(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else if r.Kind == "scrape_clean" {
 		if err := p.validateScrapeNotice(ctx, q, r); err != nil {
 			return r, nil, err
 		}
@@ -264,6 +273,11 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if len(steps) != r.Count || previous != r.LastSHA || r.SourceError != "" && !r.Complete {
 		return r, nil, seedhost.ErrUnsafe
 	}
+	if v2Kind {
+		if err := p.validateNoticeBusinessV2Steps(ctx, q, r, steps); err != nil {
+			return r, nil, err
+		}
+	}
 	return r, steps, nil
 }
 func (p *PluginStore) saveNoticeRouteTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute) error {
@@ -286,7 +300,7 @@ func (p *PluginStore) saveNoticeRouteTx(ctx context.Context, tx *sql.Tx, r plugi
 // These methods are host-only; importing real settings still requires its own
 // authenticated source/reference migration receipt and management UI.
 func (p *PluginStore) putNoticePreferenceTx(ctx context.Context, tx *sql.Tx, kind, key string, value any) error {
-	if kind != "switch" && kind != "user" && kind != "window" && kind != "superuser" {
+	if kind != "switch" && kind != "user" && kind != "window" && kind != "superuser" && kind != "templates" {
 		return seedhost.ErrUnsafe
 	}
 	token := p.noticeID("preference", kind, key)

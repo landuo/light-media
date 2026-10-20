@@ -93,12 +93,25 @@ func TestManualImportDefaultTargetUsesSourceRuleAndAmbiguityDoesNotWrite(t *test
 	if _, err := a.previewImport(context.Background(), ImportRequest{Files: []ImportFileRequest{{Path: p}}}); err == nil {
 		t.Fatal("unknown identity was silently selected")
 	}
-	plan, err := a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: 123, Files: []ImportFileRequest{{Path: p}}})
+	if _, err := a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: 123, Files: []ImportFileRequest{{Path: p}}}); pluginErrorCode(err) != "DIRECTORY_TARGET_REQUIRED" {
+		t.Fatal("unsorted source rule supplied an original automatic target", err)
+	}
+	plan, err := a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: 123, TargetPath: target, Mode: "copy", Files: []ImportFileRequest{{Path: p}}})
 	if err != nil || !within(target, plan.Files[0].Target) || plan.Files[0].Method != "copy" {
 		t.Fatalf("automatic physical target failed: %+v %v", plan, err)
 	}
 	if _, err = os.Stat(plan.Files[0].Target); !os.IsNotExist(err) {
 		t.Fatal("preview wrote destination")
+	}
+	rule := a.Settings().Directories[0]
+	rule.Enabled = true
+	rule.MonitorType = "monitor"
+	if _, err = a.saveManagedDirectory(context.Background(), rule); err != nil {
+		t.Fatal(err)
+	}
+	plan, err = a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: 123, Files: []ImportFileRequest{{Path: p}}})
+	if err != nil || !within(target, plan.Files[0].Target) || plan.Files[0].Method != "copy" {
+		t.Fatal("actual monitored original source rule did not supply default", plan, err)
 	}
 }
 

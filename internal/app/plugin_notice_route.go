@@ -71,6 +71,9 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	if ordinal != r.Count || r.Complete || ordinal >= pluginNoticeStepLimit {
 		return nil, seedhost.ErrUnknown
 	}
+	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
+		return nil, err
+	}
 	value, err := apply(tx, r, ordinal)
 	if err != nil {
 		return nil, err
@@ -118,6 +121,9 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	if r.Count != d.cursor {
 		return seedhost.ErrUnknown
 	}
+	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
+		return err
+	}
 	r.Complete = true
 	r.SourceError = sourceNoticeError(sourceErr)
 	if err = d.a.pluginStore.saveNoticeRouteTx(ctx, tx, r); err != nil {
@@ -159,6 +165,9 @@ func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
 			return &seed.SourceError{Type: initial.SourceError, Operation: "post_message"}
 		}
 		return nil
+	}
+	if initial.Version == 2 {
+		return a.runNoticeBusinessV2(ctx, initial)
 	}
 	var fields notice.Object
 	if cleanupJournalStrict(initial.Envelope, &fields) != nil {

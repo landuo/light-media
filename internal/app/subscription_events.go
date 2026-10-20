@@ -12,9 +12,10 @@ import (
 // silently reinterpret the event using a different subscription or a newly
 // changed media identity. Public outbox events remain references only.
 type subscriptionAddedSnapshot struct {
-	SubscriptionID string        `json:"subscription_id"`
-	Revision       int           `json:"revision"`
-	Media          catalog.Media `json:"media"`
+	Username       json.RawMessage `json:"username,omitempty"`
+	SubscriptionID string          `json:"subscription_id"`
+	Revision       int             `json:"revision"`
+	Media          catalog.Media   `json:"media"`
 }
 
 func (a *App) recordSubscriptionAddedTx(ctx context.Context, tx *sql.Tx, subscription Subscription) error {

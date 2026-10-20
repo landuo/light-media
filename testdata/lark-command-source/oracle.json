@@ -1,0 +1,3621 @@
+{
+  "source": "selected installed AST plus actual Pydantic/transmission_rpc; no app imports/network/writes; metadata fields stub only to isolate builder",
+  "sources": {
+    "app/command.py": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+    "app/modules/qbittorrent/__init__.py": "9ad7ed04eb9b99876ee91fe505af5bfbe9c2c19504c2104d0000a67fa79b4055",
+    "app/modules/qbittorrent/qbittorrent.py": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+    "app/modules/transmission/__init__.py": "def83e0be041d0b6f633a949c15aea122d15cfbc4bba4427eea59457ea4aa016",
+    "app/modules/transmission/transmission.py": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676",
+    "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a"
+  },
+  "commands": {
+    "/cookiecloud": {
+      "id": "cookiecloud",
+      "type": "scheduler",
+      "description": "同步站点",
+      "category": "站点"
+    },
+    "/sites": {
+      "source_callable": "SiteChain().remote_list",
+      "arguments": 4,
+      "description": "管理站点",
+      "category": "站点"
+    },
+    "/mediaserver_sync": {
+      "id": "mediaserver_sync",
+      "type": "scheduler",
+      "description": "同步媒体服务器",
+      "category": "管理"
+    },
+    "/subscribes": {
+      "source_callable": "SubscribeChain().remote_list",
+      "arguments": 4,
+      "description": "管理订阅",
+      "category": "订阅"
+    },
+    "/downloading": {
+      "source_callable": "DownloadChain().remote_downloading",
+      "arguments": 3,
+      "description": "正在下载",
+      "category": "管理"
+    },
+    "/transfer": {
+      "id": "transfer",
+      "type": "scheduler",
+      "description": "下载文件整理",
+      "category": "管理"
+    },
+    "/redo": {
+      "source_callable": "TransferChain().remote_transfer",
+      "arguments": 4,
+      "description": "手动整理"
+    },
+    "/clear_cache": {
+      "source_callable": "SystemChain().remote_clear_cache",
+      "arguments": 3,
+      "description": "清理缓存",
+      "category": "管理"
+    },
+    "/restart": {
+      "source_callable": "SystemChain().restart",
+      "arguments": 3,
+      "description": "重启系统",
+      "category": "管理"
+    },
+    "/version": {
+      "source_callable": "SystemChain().version",
+      "arguments": 3,
+      "description": "当前版本",
+      "category": "管理"
+    },
+    "/clear_session": {
+      "source_callable": "MessageChain().remote_clear_session",
+      "arguments": 3,
+      "description": "清除会话",
+      "category": "管理"
+    },
+    "/stop_agent": {
+      "source_callable": "MessageChain().remote_stop_agent",
+      "arguments": 3,
+      "description": "停止推理",
+      "category": "管理"
+    },
+    "/session_status": {
+      "source_callable": "MessageChain().remote_session_status",
+      "arguments": 3,
+      "description": "会话状态",
+      "category": "智能体"
+    },
+    "/skills": {
+      "source_callable": "SkillsChain().remote_manage",
+      "arguments": 4,
+      "description": "管理技能",
+      "category": "智能体"
+    }
+  },
+  "routes": [
+    {
+      "text": "/cookiecloud",
+      "expected": [
+        {
+          "cmd": "/cookiecloud",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/sites",
+      "expected": [
+        {
+          "cmd": "/sites",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/mediaserver_sync",
+      "expected": [
+        {
+          "cmd": "/mediaserver_sync",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/subscribes",
+      "expected": [
+        {
+          "cmd": "/subscribes",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/downloading",
+      "expected": [
+        {
+          "cmd": "/downloading",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/transfer",
+      "expected": [
+        {
+          "cmd": "/transfer",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/redo",
+      "expected": [
+        {
+          "cmd": "/redo",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/clear_cache",
+      "expected": [
+        {
+          "cmd": "/clear_cache",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/restart",
+      "expected": [
+        {
+          "cmd": "/restart",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/version",
+      "expected": [
+        {
+          "cmd": "/version",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/clear_session",
+      "expected": [
+        {
+          "cmd": "/clear_session",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/stop_agent",
+      "expected": [
+        {
+          "cmd": "/stop_agent",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/session_status",
+      "expected": [
+        {
+          "cmd": "/session_status",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/skills",
+      "expected": [
+        {
+          "cmd": "/skills",
+          "data_str": "",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/downloading a  b",
+      "expected": [
+        {
+          "cmd": "/downloading",
+          "data_str": "a b",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/downloading\u001ca\t\nb",
+      "expected": [
+        {
+          "cmd": "/downloading",
+          "data_str": "a b",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/DOWNLOADING",
+      "expected": [
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/missing",
+      "expected": [
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "",
+      "expected": [
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "  ",
+      "error": "IndexError",
+      "expected": [
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/skills 刷新",
+      "expected": [
+        {
+          "cmd": "/skills",
+          "data_str": "刷新",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    },
+    {
+      "text": "/sites 站点",
+      "expected": [
+        {
+          "cmd": "/sites",
+          "data_str": "站点",
+          "channel": "飞书",
+          "source": "Lark",
+          "userid": "ou_owned"
+        },
+        {
+          "finished": {
+            "owned": true
+          },
+          "user_id": "ou_owned"
+        }
+      ]
+    }
+  ],
+  "torrent_cases": [
+    {
+      "kind": "qbittorrent",
+      "name": "base",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-downloading",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-queuedDL",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "queuedDL",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-forcedMetaDL",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "forcedMetaDL",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "completed",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-uploading",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "uploading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "completed",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-stoppedDL",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "stoppedDL",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "paused",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-unknown",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "unknown",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "completed",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 0.0,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.012345",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.012345,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 1.2345,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.123456",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.1255",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.1255,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.55,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.999999",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.999999,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 99.9999,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-1",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 1,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 100.0,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-light-media",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-Light-Media",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "Light-Media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-other",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-light-media, x",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "light-media, x",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "light-media, x",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "optional",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 0,
+          "progress": null,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": null,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": null,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2,
+          "content_path": "/other/content"
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/other/content",
+          "size": 0.0,
+          "progress": 0.0,
+          "state": "downloading",
+          "upspeed": "",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/other/content",
+          "category": "owned",
+          "download_limit": 0.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "-1时59分56秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "empty",
+      "rows": [],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "empty-save",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": null,
+          "content_path": "Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "parent-save",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/a/../b",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/a/../b/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/a/../b",
+          "content_path": "/a/../b/Synthetic.Show.S01E02.2024.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "absolute-name",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "/absolute/item.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "/absolute/item.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/absolute/item.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "/absolute/item.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "double-slash-content",
+      "rows": [
+        {
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "state": "downloading",
+          "save_path": "/owned",
+          "total_size": 1024,
+          "progress": 0.123456,
+          "completed": 32,
+          "dlspeed": 8,
+          "upspeed": 5,
+          "tags": "other, light-media",
+          "category": "owned",
+          "dl_limit": 2048,
+          "up_limit": 1024,
+          "ratio_limit": -2,
+          "seeding_time_limit": -2,
+          "content_path": "//root//folder/./item.mkv"
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "//root/folder/item.mkv",
+          "size": 1024.0,
+          "progress": 12.3456,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other, light-media",
+          "save_path": "/owned",
+          "content_path": "//root/folder/item.mkv",
+          "category": "owned",
+          "download_limit": 2.0,
+          "upload_limit": 1.0,
+          "ratio_limit": -2.0,
+          "seeding_time_limit": -2,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "base",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-0",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 0,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "state-1",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 1,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "state-2",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 2,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "state-3",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 3,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "state-4",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-5",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 5,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "state-6",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 6,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 0.0,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.012345",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.012345,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 1.23,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.123456",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.1255",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.1255,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.55,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.999999",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.999999,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 100.0,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-1",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 1,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 100.0,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-light-media",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-Light-Media",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "Light-Media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-other",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-light-media, x",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "light-media",
+            "x"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "light-media,x",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            ""
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "optional",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ],
+          "downloadLimit": 100,
+          "uploadLimit": 50,
+          "seedRatioLimit": 2.5,
+          "seedIdleLimit": 8
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": 100.0,
+          "upload_limit": 50.0,
+          "ratio_limit": 2.5,
+          "seeding_time_limit": 8,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "empty",
+      "rows": [],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": []
+    },
+    {
+      "kind": "transmission",
+      "name": "empty-save",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": null,
+          "content_path": "Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "parent-save",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/a/../b",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/a/../b/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/a/../b",
+          "content_path": "/a/../b/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "absolute-name",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "/absolute/item.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": 0.123456,
+          "leftUntilDone": 992,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ]
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "/absolute/item.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/absolute/item.mkv",
+          "size": 1024.0,
+          "progress": 12.35,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/absolute/item.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "2分4秒"
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "null-progress-with-size-fallback",
+      "rows": [
+        {
+          "id": 1,
+          "hashString": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "name": "Synthetic.Show.S01E02.2024.mkv",
+          "status": 4,
+          "downloadDir": "/owned",
+          "totalSize": 1024,
+          "percentDone": null,
+          "leftUntilDone": 512,
+          "rateDownload": 8,
+          "rateUpload": 5,
+          "labels": [
+            "other",
+            "light-media"
+          ],
+          "sizeWhenDone": 2048
+        }
+      ],
+      "meta": {
+        "name": "Actual source builder synthetic meta",
+        "year": "2024",
+        "season_episode": "S01E02"
+      },
+      "expected": [
+        {
+          "downloader": "Native synthetic",
+          "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "Synthetic.Show.S01E02.2024.mkv",
+          "site_name": null,
+          "name": "Actual source builder synthetic meta",
+          "year": "2024",
+          "season_episode": "S01E02",
+          "path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "size": 1024.0,
+          "progress": 0.0,
+          "state": "downloading",
+          "upspeed": "5.0B",
+          "dlspeed": "8.0B",
+          "tags": "other,light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Synthetic.Show.S01E02.2024.mkv",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {},
+          "userid": null,
+          "username": null,
+          "left_time": "1分4秒"
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "kind": "qbittorrent",
+      "name": "base",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-downloading",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-queuedDL",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-forcedMetaDL",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-uploading",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-stoppedDL",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "state-unknown",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 0.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.012345",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 1.2%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.123456",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.1255",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.6%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-0.999999",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 100.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "progress-1",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 100.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-light-media",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-Light-Media",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-other",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-light-media, x",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "tags-",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "optional",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 0.0B 0.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "empty",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "empty-save",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "parent-save",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "absolute-name",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. /absolute/item.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "qbittorrent",
+      "name": "double-slash-content",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "base",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-0",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-1",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-2",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-3",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-4",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-5",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "state-6",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 0.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.012345",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 1.2%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.123456",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.1255",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.6%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-0.999999",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 100.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "progress-1",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 100.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-light-media",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-Light-Media",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-other",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-light-media, x",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "tags-",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "optional",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "empty",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "没有正在下载的任务！",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "empty-save",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "parent-save",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "absolute-name",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. /absolute/item.mkv 1.0K 12.3%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    },
+    {
+      "kind": "transmission",
+      "name": "null-progress-with-size-fallback",
+      "expected": [
+        {
+          "channel": "飞书",
+          "source": "Lark",
+          "mtype": "资源下载",
+          "title": "共 1 个任务正在下载：",
+          "text": "1. Synthetic.Show.S01E02.2024.mkv 1.0K 0.0%",
+          "userid": "ou_owned",
+          "link": "owned-domain/#/downloading",
+          "save_history": false
+        }
+      ]
+    }
+  ]
+}

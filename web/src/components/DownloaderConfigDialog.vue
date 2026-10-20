@@ -142,6 +142,8 @@ const hostRules = [
                   ><VSwitch v-model="value.sequential" label="顺序下载" /></VCol
                 ><VCol cols="12" md="6"
                   ><VSwitch v-model="value.first_last_piece" label="优先首尾文件" /></VCol
+                ><VCol cols="12" md="6"
+                  ><VSwitch v-model="value.force_resume" label="强制继续下载" /></VCol
               ></template>
             </VRow> </VForm
         ></VCardText>

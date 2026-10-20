@@ -352,6 +352,15 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			return PluginRun{}, err
 		}
 		afterCreated, afterID = run.CreatedAt, run.ID
+		privateCore, e := p.larkPrivateCoreRunTx(ctx, tx, run)
+		if e != nil {
+			_ = tx.Rollback()
+			return PluginRun{}, e
+		}
+		if privateCore {
+			_ = tx.Rollback()
+			continue
+		}
 		// Preserve old admissions, including stale revisions, until a private
 		// source transition can bind their original input and terminal outcome.
 		// They must not prevent unrelated proven plugins from being claimed.

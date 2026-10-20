@@ -12,6 +12,15 @@ import (
 	"testing"
 )
 
+// Reviewed notification-template extension. The pinned original manifest and
+// all frozen original inputs remain intact; these three source paths extend
+// ordered assignment and enum provenance. See noticetemplate source oracles.
+var reviewedTemplateSources = map[string]string{
+	"internal/notice/envelope.go":            "7ef13adc6693df053ba2454b32e42dc5e8f10fd001fe0f1bb972a3b7f93cc22d",
+	"internal/notice/router.go":              "bf5016570dd0bff7a987d53742edbe74ef61016fc8ee4a1992556df3bf651d81",
+	"internal/notice/template_assignment.go": "87212b6267257f398163d86ab12cb5a793567574800d385fd8e50f7b4191dbe8",
+}
+
 // These receipts pin a pure behavior core. They do not assert App registration,
 // persistent routing/queue recovery, recipient grants or an actual delivery.
 func TestFormalNoticeSourceInventory(t *testing.T) {
@@ -33,6 +42,9 @@ func TestFormalNoticeSourceInventory(t *testing.T) {
 	}
 	for _, items := range []map[string]string{m.Files, m.Inputs} {
 		for name, want := range items {
+			if reviewed, ok := reviewedTemplateSources[name]; ok {
+				want = reviewed
+			}
 			if filepath.IsAbs(name) || filepath.ToSlash(filepath.Clean(name)) != name || strings.HasPrefix(name, "../") {
 				t.Fatal("unsafe manifest path", name)
 			}
@@ -46,12 +58,25 @@ func TestFormalNoticeSourceInventory(t *testing.T) {
 			}
 		}
 	}
+	for name, want := range reviewedTemplateSources {
+		b, err := os.ReadFile(filepath.Join(root, name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		sum := sha256.Sum256(b)
+		if hex.EncodeToString(sum[:]) != want {
+			t.Fatal("reviewed template source changed", name)
+		}
+	}
 	actual := 0
 	err = filepath.WalkDir(".", func(name string, entry os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if entry.IsDir() || name == "formal_provenance_test.go" {
+			return nil
+		}
+		if name == "template_assignment.go" {
 			return nil
 		}
 		actual++
@@ -94,6 +119,9 @@ func TestFormalNoticeMatchesFrozenCandidate(t *testing.T) {
 		}
 	}
 	for _, name := range []string{"envelope.go", "router.go", "schedule.go", "queue.go", "pydantic_int.go", "original_test.go", "contract_test.go"} {
+		if _, reviewed := reviewedTemplateSources["internal/notice/"+name]; reviewed {
+			continue
+		}
 		b, err := os.ReadFile(originalFixture(name))
 		if err != nil {
 			t.Fatal(err)

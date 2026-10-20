@@ -1,0 +1,33 @@
+{
+  "source_repository": "https://github.com/jxxghp/MoviePilot",
+  "local_reference_head": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "runtime": "CPython3.12.14 Unicode15 (original NAS3.12.13; same actual source)",
+  "source_only_oracle_python": true,
+  "product_python_runtime": false,
+  "pip_distributions": {
+    "cn2an": "0.5.24",
+    "proces": "0.1.7"
+  },
+  "oracle_sha256": "9fd9ceea9eed7e430514712c98db28cd30e7812d48d843c5c848e9f65fdf88dd",
+  "generator_sha256": "e3b44489291c98884fe63eb4ade124af3e8697ad7b15699c6c51ee316200f275",
+  "phase3_sources": [
+    {
+      "path": "app/modules/themoviedb/tmdbapi.py",
+      "sha256": "6606d2cee1c26780386e96798a0b2dd779dcde1d9b6c78c20ff69b95d6048585"
+    },
+    {
+      "path": "app/modules/themoviedb/__init__.py",
+      "sha256": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6"
+    },
+    {
+      "path": "app/modules/themoviedb/tmdbv3api/objs/search.py",
+      "sha256": "cd8438e3dd2c07fdc087971e048acd56688c1d65837a50c38311e6651fa9954f"
+    },
+    {
+      "path": "app/chain/media.py",
+      "sha256": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa"
+    }
+  ],
+  "phase3_cn2an_integer_oracle_sha256": "aeba968bce55192fc7e646502ab148b62e5b11f5a6aa2790efe2f8cd8acc8052",
+  "cn2an_integer_scope": "only original integer argument and mode low consumed by season titles; not entire unrelated cn2an API"
+}

@@ -255,12 +255,27 @@ func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
 		return e
 	}
 	defer tx.Rollback()
+	if e = a.saveSourceEpisodeSelectionTx(ctx, tx, in); e != nil {
+		return e
+	}
 	if e = txPut(ctx, tx, "intent", in.ID, in); e != nil {
+		return e
+	}
+	if e = a.acceptSubscriptionQualityTx(ctx, tx, in); e != nil {
 		return e
 	}
 	event := DomainEvent{SchemaVersion: 1, EventID: domainEventID("download.accepted", in.ID), Type: "download.accepted", OccurredAt: now(), WorkflowID: in.WorkflowID, JobID: j.ID, MediaID: mediaKey(in.Media), IntentID: in.ID, Purpose: in.Purpose}
 	snapshot := downloadAddedSnapshot{DownloadID: in.ID, DownloadKind: "intent", Hash: in.Hash, SiteID: in.SiteID, MediaType: in.Media.MediaType, TMDBID: in.Media.ID, HasContext: source != nil, HasHistory: true, Context: source}
 	if e = a.recordDownloadAddedTx(ctx, tx, event, snapshot); e != nil {
+		return e
+	}
+	if e = a.larkAcceptDownloadChildTx(ctx, tx, in, j); e != nil {
+		return e
+	}
+	if e = a.acceptAcquisitionChildTx(ctx, tx, j, in); e != nil {
+		return e
+	}
+	if e = a.enqueueSubscriptionCompletionPreparationTx(ctx, tx, in); e != nil {
 		return e
 	}
 	return tx.Commit()

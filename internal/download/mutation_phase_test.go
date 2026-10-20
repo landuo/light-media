@@ -13,6 +13,47 @@ import (
 	"testing"
 )
 
+func TestAddRejectionProofOnlyAcceptsAcknowledgedFixedProtocolRejection(t *testing.T) {
+	for _, body := range []string{"Fails.", "proxy-generated response", ""} {
+		t.Run(fmt.Sprintf("body_%q", body), func(t *testing.T) {
+			var adds atomic.Int32
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				switch r.URL.Path {
+				case "/api/v2/torrents/info":
+					reply(w, []any{})
+				case "/api/v2/torrents/add":
+					adds.Add(1)
+					io.WriteString(w, body)
+				default:
+					t.Error("ungranted endpoint", r.URL.Path)
+					w.WriteHeader(400)
+				}
+			}))
+			defer server.Close()
+			client, e := New(Config{ID: "owned", Kind: "qb", BaseURL: server.URL})
+			if e != nil {
+				t.Fatal(e)
+			}
+			torrent, _ := testTorrent()
+			_, e = client.Add(context.Background(), AddRequest{Torrent: torrent, SavePath: "/downloads"})
+			if e == nil || adds.Load() != 1 || MutationNotStarted(e) || MutationRejected(e) != (body == "Fails.") {
+				t.Fatal("unknown daemon response forged fixed rejection proof", e, adds.Load())
+			}
+			if MutationRejected(fmt.Errorf("wrapped %w", e)) || MutationRejected(errors.Join(e, errors.New("other effect"))) || MutationRejected(&Error{Operation: "add", Code: "torrent_rejected"}) {
+				t.Fatal("public/aggregate error forged rejection")
+			}
+		})
+	}
+	client, e := New(Config{ID: "owned", Kind: "qb", BaseURL: "http://127.0.0.1:1"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	_, e = client.Add(context.Background(), AddRequest{SavePath: "relative"})
+	if !MutationNotStarted(e) || MutationRejected(e) {
+		t.Fatal("local pre-Add validation did not retain exact no-write proof", e)
+	}
+}
+
 func TestMutationPhaseLocalProofCannotComeFromJSONOrErrorCode(t *testing.T) {
 	c := mustClient(t, "qb", "http://127.0.0.1:1")
 	for _, err := range []error{c.Control(context.Background(), "bad-hash", "pause"), c.Control(context.Background(), nativeHash, "wildcard"), c.SetTorrentTags(context.Background(), nativeHash, []string{string([]byte{0xff})})} {

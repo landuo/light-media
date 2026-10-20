@@ -76,7 +76,10 @@ func (c *Client) trRPC(ctx context.Context, method string, args map[string]any, 
 			if json.Unmarshal(envelope["tag"], &tag) != nil || tag != id {
 				return nil, failure("rpc", "response_id_mismatch")
 			}
-			if json.Unmarshal(envelope["result"], &result) != nil || result != "success" {
+			if json.Unmarshal(envelope["result"], &result) != nil || result == "" {
+				return nil, failure("rpc", "invalid_result")
+			}
+			if result != "success" {
 				return nil, failure("rpc", "rpc_rejected")
 			}
 			var values map[string]json.RawMessage
@@ -95,6 +98,16 @@ func (c *Client) trRPC(ctx context.Context, method string, args map[string]any, 
 			return nil, failure("rpc", "response_id_mismatch")
 		}
 		if e, ok := envelope["error"]; ok && string(e) != "null" {
+			var rejected struct {
+				Code    *json.Number `json:"code"`
+				Message *string      `json:"message"`
+			}
+			if json.Unmarshal(e, &rejected) != nil || rejected.Code == nil || rejected.Message == nil {
+				return nil, failure("rpc", "invalid_error_response")
+			}
+			if _, err := rejected.Code.Int64(); err != nil {
+				return nil, failure("rpc", "invalid_error_response")
+			}
 			return nil, failure("rpc", "rpc_rejected")
 		}
 		var values map[string]json.RawMessage
@@ -282,7 +295,7 @@ func (c *Client) trAdd(ctx context.Context, in AddRequest, hash string) (AddResu
 	out := AddResult{Hash: hash}
 	tasks, err := c.trList(ctx, hash)
 	if err != nil {
-		return out, err
+		return out, beforeMutation(err)
 	}
 	if len(tasks) == 1 {
 		out.Duplicate = true
@@ -294,6 +307,9 @@ func (c *Client) trAdd(ctx context.Context, in AddRequest, hash string) (AddResu
 	}
 	values, err := c.trRPC(ctx, "torrent_add", args, c.trDialect)
 	if err != nil {
+		if typed, ok := err.(*Error); ok && typed.Operation == "rpc" && typed.Code == "rpc_rejected" {
+			return out, rejectedMutation(err)
+		}
 		return out, err
 	}
 	raw, ok := values["torrent_added"]

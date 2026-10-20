@@ -234,7 +234,7 @@ func (c *Client) qbAdd(ctx context.Context, in AddRequest, hashes []string) (Add
 	out := AddResult{Hash: hashes[0]}
 	found, err := c.qbFind(ctx, hashes)
 	if err != nil {
-		return out, err
+		return out, beforeMutation(err)
 	}
 	if found != "" {
 		out.Hash = found
@@ -245,24 +245,27 @@ func (c *Client) qbAdd(ctx context.Context, in AddRequest, hashes []string) (Add
 	w := multipart.NewWriter(&body)
 	f, err := w.CreateFormFile("torrents", "resource.torrent")
 	if err != nil {
-		return out, failure("add", "multipart_failed")
+		return out, beforeMutation(failure("add", "multipart_failed"))
 	}
 	_, _ = f.Write(in.Torrent)
 	for key, value := range map[string]string{"savepath": in.SavePath, "stopped": strconv.FormatBool(in.Paused), "tags": strings.Join(in.Tags, ","), "autoTMM": strconv.FormatBool(c.config.AutoCategory), "sequentialDownload": strconv.FormatBool(c.config.Sequential), "firstLastPiecePrio": strconv.FormatBool(c.config.FirstLast), "skip_checking": "false", "contentLayout": "Original"} {
 		if err := w.WriteField(key, value); err != nil {
-			return out, failure("add", "multipart_failed")
+			return out, beforeMutation(failure("add", "multipart_failed"))
 		}
 	}
 	if err := w.Close(); err != nil {
-		return out, failure("add", "multipart_failed")
+		return out, beforeMutation(failure("add", "multipart_failed"))
 	}
 	response, err := c.qb(ctx, http.MethodPost, "torrents/add", body.String(), w.FormDataContentType())
 	if err != nil {
 		return out, err
 	}
 	// qB returns HTTP 200 for business rejection as well as acceptance.
-	if strings.TrimSpace(string(response)) != "Ok." {
-		return out, failure("add", "torrent_rejected")
+	if body := strings.TrimSpace(string(response)); body != "Ok." {
+		if body == "Fails." {
+			return out, rejectedMutation(failure("add", "torrent_rejected"))
+		}
+		return out, failure("add", "invalid_add_response")
 	}
 	for attempt := 0; attempt < 5; attempt++ {
 		if attempt > 0 {

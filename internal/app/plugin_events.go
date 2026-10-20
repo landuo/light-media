@@ -38,7 +38,7 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "download.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "site.deleted", "subscription.added", "notice.message", "plugin.triggered"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "download.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "site.deleted", "subscription.added", "subscription.completed", "notice.message", "plugin.triggered"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true

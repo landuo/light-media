@@ -347,7 +347,11 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		e = decodeSubscriptionBody(w, r, &in)
 		if e == nil {
 			var saved Subscription
-			saved, e = a.saveSubscription(ctx, "", in)
+			var username string
+			e = a.Store.DB.QueryRowContext(ctx, `SELECT username FROM admin WHERE id=1`).Scan(&username)
+			if e == nil {
+				saved, e = a.createUISubscription(ctx, in, username)
+			}
 			if e == nil {
 				out, e = a.subscriptionEditorValue(ctx, saved)
 			}

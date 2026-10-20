@@ -1,0 +1,107 @@
+{
+  "provenance": "actual installed AST expression independently evaluated; no app import/current config read",
+  "source": "/app/app/core/metainfo.py",
+  "source_sha256": "7c76f962f792a480615e0aa0ffd84fae16eecf62cae0ed3d8a0261f7283d59a9",
+  "expression": "settings.RMT_MEDIAEXT + settings.RMT_SUBEXT + settings.RMT_AUDIOEXT",
+  "cases": [
+    {
+      "input": {
+        "media": [],
+        "subtitle": [],
+        "audio": []
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "media": [
+          ".mkv",
+          ".mp4"
+        ],
+        "subtitle": [
+          ".srt"
+        ],
+        "audio": [
+          ".flac"
+        ]
+      },
+      "expected": [
+        ".mkv",
+        ".mp4",
+        ".srt",
+        ".flac"
+      ]
+    },
+    {
+      "input": {
+        "media": [
+          ".dup",
+          ".UPPER",
+          ".dup"
+        ],
+        "subtitle": [
+          ".dup",
+          ".SUB"
+        ],
+        "audio": [
+          ".dup",
+          ".AUDIO"
+        ]
+      },
+      "expected": [
+        ".dup",
+        ".UPPER",
+        ".dup",
+        ".dup",
+        ".SUB",
+        ".dup",
+        ".AUDIO"
+      ]
+    },
+    {
+      "input": {
+        "media": [
+          ".视频"
+        ],
+        "subtitle": [
+          ".字幕"
+        ],
+        "audio": [
+          ".音频"
+        ]
+      },
+      "expected": [
+        ".视频",
+        ".字幕",
+        ".音频"
+      ]
+    },
+    {
+      "input": {
+        "media": [],
+        "subtitle": [
+          ".srt"
+        ],
+        "audio": [
+          ".flac"
+        ]
+      },
+      "expected": [
+        ".srt",
+        ".flac"
+      ]
+    },
+    {
+      "input": {
+        "media": [
+          ".iso"
+        ],
+        "subtitle": [],
+        "audio": []
+      },
+      "expected": [
+        ".iso"
+      ]
+    }
+  ]
+}

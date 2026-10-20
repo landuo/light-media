@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"light-media/internal/transferextensions"
 	"path/filepath"
 	"strings"
 )
@@ -75,7 +76,7 @@ func ruleLibraryPath(c Settings, rule DirectoryRule) string {
 
 func publicDirectory(c Settings, rule DirectoryRule) map[string]any {
 	source, _ := directorySourceWithSettings(c, rule)
-	return map[string]any{"id": rule.ID, "name": rule.Name, "source_path": source, "library_path": ruleLibraryPath(c, rule), "media_type": rule.MediaType, "mode": rule.Mode, "monitor_type": rule.MonitorType, "enabled": rule.Enabled, "include_existing": rule.IncludeExisting, "renaming": importBool(rule.Renaming, true), "scraping": importBool(rule.Scraping, true), "library_type_folder": importBool(rule.LibraryTypeFolder, false)}
+	return map[string]any{"id": rule.ID, "name": rule.Name, "source_path": source, "library_path": ruleLibraryPath(c, rule), "media_type": rule.MediaType, "mode": rule.Mode, "overwrite_mode": rule.OverwriteMode, "overwrite_mode_known": rule.OverwriteModeKnown, "monitor_type": rule.MonitorType, "enabled": rule.Enabled, "include_existing": rule.IncludeExisting, "renaming": importBool(rule.Renaming, true), "scraping": importBool(rule.Scraping, true), "library_type_folder": importBool(rule.LibraryTypeFolder, false)}
 }
 
 func preparePhysicalDirectory(c *Settings, rule *DirectoryRule) error {
@@ -83,6 +84,11 @@ func preparePhysicalDirectory(c *Settings, rule *DirectoryRule) error {
 	rule.SourcePath = cleanDirectoryInput(rule.SourcePath)
 	rule.LibraryPath = cleanDirectoryInput(rule.LibraryPath)
 	if rule.ID == "" {
+		// New native directory: source TransferDirectoryConf defaults to None.
+		// Existing IDs lacking the marker remain explicitly unmigrated.
+		if rule.OverwriteMode == nil {
+			rule.OverwriteModeKnown = true
+		}
 		rule.ID = id("directory_")
 	}
 	if rule.MediaType == "" {
@@ -132,9 +138,14 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 	if len(request.Files) == 0 || len(request.Files) > 2000 {
 		return request, bad("INVALID_IMPORT", "请选择1至2000个视频文件")
 	}
+	classifier, err := a.transferMediaClassifier(ctx)
+	if err != nil {
+		return request, err
+	}
 	if !validMedia(request.MediaType, request.TMDBID) {
 		for i, file := range request.Files {
-			if !a.importSourceAllowed(file.Path, request.Manual) || !isVideo(file.Path) {
+			video, _ := classifier.Media(transferextensions.PathFile(file.Path))
+			if !a.importSourceAllowed(file.Path, request.Manual) || !video {
 				return request, bad("INVALID_SOURCE", "请选择容器媒体目录内的视频文件")
 			}
 			hint, numbering, reason := a.importNFOEvidence(file.Path)
@@ -162,28 +173,18 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 			}
 		}
 	}
-	var matchedRule *DirectoryRule
-	if request.Mode == "" || request.TargetPath == "" && request.RootID == "" || request.Renaming == nil || request.Scraping == nil || request.LibraryTypeFolder == nil {
-		c := a.Settings()
-		for _, rule := range c.Directories {
-			if rule.MediaType != "mixed" && rule.MediaType != request.MediaType {
-				continue
-			}
-			source, err := directorySourceWithSettings(c, rule)
-			if err != nil {
-				continue
-			}
-			matched := true
-			for _, file := range request.Files {
-				if !sharedDirectoryContains(source, file.Path) {
-					matched = false
-					break
-				}
-			}
-			if matched {
-				matchedRule = &rule
-				break
-			}
+	selection, matchedRule, err := a.selectNativeImportDirectory(ctx, request)
+	if err != nil {
+		return request, err
+	}
+	request.directorySelection = selection
+	if request.IntentID != "" && request.TargetPath == "" && request.RootID != "" && matchedRule != nil {
+		root, e := a.importRoot(request.RootID)
+		if e != nil {
+			return request, e
+		}
+		if ruleLibraryPath(a.Settings(), *matchedRule) != root.Path {
+			return request, bad("REVIEW_DIRECTORY_SELECTION", "实际目录规则选择了不同媒体库，不能借用旧下载的目标权限")
 		}
 	}
 	if request.Mode == "" {
@@ -193,15 +194,6 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 		}
 	}
 	optionsRule := matchedRule
-	if request.TargetPath != "" {
-		optionsRule = nil
-		for _, rule := range a.Settings().Directories {
-			if ruleLibraryPath(a.Settings(), rule) == cleanDirectoryInput(request.TargetPath) && (rule.MediaType == "mixed" || rule.MediaType == request.MediaType) {
-				optionsRule = &rule
-				break
-			}
-		}
-	}
 	if optionsRule != nil {
 		if request.Renaming == nil {
 			request.Renaming = optionsRule.Renaming

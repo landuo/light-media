@@ -24,7 +24,12 @@ func (e *ValidationError) Error() string {
 	return fmt.Sprintf("notification validation: %d issue(s)", len(e.Issues))
 }
 
-type Envelope struct{ fields Object }
+type Envelope struct {
+	fields Object
+	// Python post-construction assignment does not coerce strings back into
+	// enum instances. Preserve that distinction across host-owned clones.
+	assignedEnums map[string]bool
+}
 
 var fieldOrder = []string{"channel", "source", "mtype", "ctype", "title", "text", "image", "voice_path", "file_path", "file_name", "voice_caption", "link", "userid", "username", "date", "action", "targets", "buttons", "force_reply", "original_message_id", "original_chat_id", "disable_web_page_preview", "parse_mode", "save_history"}
 var enumValues = map[string][]string{
@@ -171,7 +176,7 @@ func NewEnvelope(input Object) (*Envelope, error) {
 	if len(issues) > 0 {
 		return nil, &ValidationError{issues}
 	}
-	return &Envelope{out}, nil
+	return &Envelope{fields: out}, nil
 }
 func (e *Envelope) Dump() Object {
 	if e == nil || e.fields == nil {
@@ -191,7 +196,14 @@ func (e *Envelope) clone() *Envelope {
 	if e == nil {
 		return nil
 	}
-	return &Envelope{e.Dump()}
+	out := &Envelope{fields: e.Dump()}
+	if e.assignedEnums != nil {
+		out.assignedEnums = make(map[string]bool, len(e.assignedEnums))
+		for key, value := range e.assignedEnums {
+			out.assignedEnums[key] = value
+		}
+	}
+	return out
 }
 func jsonCopy(v any) (any, error) {
 	if v == nil {

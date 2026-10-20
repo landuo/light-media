@@ -1,0 +1,524 @@
+{
+  "source_sha256": "f19111073a7ef25ecd0b7e9d53dab343d76fe64ff3ad821f4ff39a790c104033",
+  "methods": [
+    "generic_type_converter",
+    "generic_type_validator"
+  ],
+  "cases": [
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": null,
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": [],
+      "values": []
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": [
+        ".mkv"
+      ],
+      "values": [
+        ".mkv"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ],
+      "values": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": [
+        1,
+        null,
+        true
+      ],
+      "values": [
+        1,
+        null,
+        true
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": {},
+      "values": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": 0,
+      "values": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": false,
+      "values": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": "[\".custom\"]",
+      "values": [
+        ".custom"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": "[]",
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": "null",
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": "broken",
+      "values": [
+        ".mp4",
+        ".mkv",
+        ".ts",
+        ".iso",
+        ".rmvb",
+        ".avi",
+        ".mov",
+        ".mpeg",
+        ".mpg",
+        ".wmv",
+        ".3gp",
+        ".asf",
+        ".m4v",
+        ".flv",
+        ".m2ts",
+        ".strm",
+        ".tp",
+        ".f4v"
+      ]
+    },
+    {
+      "key": "RMT_MEDIAEXT",
+      "input": "  [\".srt\"]  ",
+      "values": [
+        ".srt"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": null,
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": [],
+      "values": []
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": [
+        ".mkv"
+      ],
+      "values": [
+        ".mkv"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ],
+      "values": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": [
+        1,
+        null,
+        true
+      ],
+      "values": [
+        1,
+        null,
+        true
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": {},
+      "values": [
+        ".srt",
+        ".ass",
+        ".ssa",
+        ".sup"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": 0,
+      "values": [
+        ".srt",
+        ".ass",
+        ".ssa",
+        ".sup"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": false,
+      "values": [
+        ".srt",
+        ".ass",
+        ".ssa",
+        ".sup"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": "[\".custom\"]",
+      "values": [
+        ".custom"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": "[]",
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": "null",
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": "broken",
+      "values": [
+        ".srt",
+        ".ass",
+        ".ssa",
+        ".sup"
+      ]
+    },
+    {
+      "key": "RMT_SUBEXT",
+      "input": "  [\".srt\"]  ",
+      "values": [
+        ".srt"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": null,
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": [],
+      "values": []
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": [
+        ".mkv"
+      ],
+      "values": [
+        ".mkv"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ],
+      "values": [
+        ".UPPER",
+        ".mkv",
+        ".mkv"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": [
+        1,
+        null,
+        true
+      ],
+      "values": [
+        1,
+        null,
+        true
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": {},
+      "values": [
+        ".aac",
+        ".ac3",
+        ".amr",
+        ".caf",
+        ".cda",
+        ".dsf",
+        ".dff",
+        ".kar",
+        ".m4a",
+        ".mp1",
+        ".mp2",
+        ".mp3",
+        ".mid",
+        ".mod",
+        ".mka",
+        ".mpc",
+        ".nsf",
+        ".ogg",
+        ".pcm",
+        ".rmi",
+        ".s3m",
+        ".snd",
+        ".spx",
+        ".tak",
+        ".tta",
+        ".vqf",
+        ".wav",
+        ".wma",
+        ".aifc",
+        ".aiff",
+        ".alac",
+        ".adif",
+        ".adts",
+        ".flac",
+        ".midi",
+        ".opus",
+        ".sfalc"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": 0,
+      "values": [
+        ".aac",
+        ".ac3",
+        ".amr",
+        ".caf",
+        ".cda",
+        ".dsf",
+        ".dff",
+        ".kar",
+        ".m4a",
+        ".mp1",
+        ".mp2",
+        ".mp3",
+        ".mid",
+        ".mod",
+        ".mka",
+        ".mpc",
+        ".nsf",
+        ".ogg",
+        ".pcm",
+        ".rmi",
+        ".s3m",
+        ".snd",
+        ".spx",
+        ".tak",
+        ".tta",
+        ".vqf",
+        ".wav",
+        ".wma",
+        ".aifc",
+        ".aiff",
+        ".alac",
+        ".adif",
+        ".adts",
+        ".flac",
+        ".midi",
+        ".opus",
+        ".sfalc"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": false,
+      "values": [
+        ".aac",
+        ".ac3",
+        ".amr",
+        ".caf",
+        ".cda",
+        ".dsf",
+        ".dff",
+        ".kar",
+        ".m4a",
+        ".mp1",
+        ".mp2",
+        ".mp3",
+        ".mid",
+        ".mod",
+        ".mka",
+        ".mpc",
+        ".nsf",
+        ".ogg",
+        ".pcm",
+        ".rmi",
+        ".s3m",
+        ".snd",
+        ".spx",
+        ".tak",
+        ".tta",
+        ".vqf",
+        ".wav",
+        ".wma",
+        ".aifc",
+        ".aiff",
+        ".alac",
+        ".adif",
+        ".adts",
+        ".flac",
+        ".midi",
+        ".opus",
+        ".sfalc"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": "[\".custom\"]",
+      "values": [
+        ".custom"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": "[]",
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": "null",
+      "error": "ValidationError"
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": "broken",
+      "values": [
+        ".aac",
+        ".ac3",
+        ".amr",
+        ".caf",
+        ".cda",
+        ".dsf",
+        ".dff",
+        ".kar",
+        ".m4a",
+        ".mp1",
+        ".mp2",
+        ".mp3",
+        ".mid",
+        ".mod",
+        ".mka",
+        ".mpc",
+        ".nsf",
+        ".ogg",
+        ".pcm",
+        ".rmi",
+        ".s3m",
+        ".snd",
+        ".spx",
+        ".tak",
+        ".tta",
+        ".vqf",
+        ".wav",
+        ".wma",
+        ".aifc",
+        ".aiff",
+        ".alac",
+        ".adif",
+        ".adts",
+        ".flac",
+        ".midi",
+        ".opus",
+        ".sfalc"
+      ]
+    },
+    {
+      "key": "RMT_AUDIOEXT",
+      "input": "  [\".srt\"]  ",
+      "values": [
+        ".srt"
+      ]
+    }
+  ]
+}

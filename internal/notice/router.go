@@ -68,6 +68,11 @@ func (r Router) Post(ctx context.Context, message *Envelope, business Business, 
 	if message.fields == nil {
 		return ErrInvalidEnvelope
 	}
+	if message.RequiresNativeEnumRouting() {
+		// Plain JSON queue calls cannot preserve an enum replaced by an
+		// unvalidated Python value. Do not send a subtly revalidated message.
+		return ErrTemplateDependency
+	}
 	if truth(message.fields["save_history"]) {
 		if r.SaveHistory == nil {
 			return ErrDependency

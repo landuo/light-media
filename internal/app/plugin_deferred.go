@@ -62,6 +62,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 		return "identifiers.refresh", raw, nil
 	}
 
+	if in.PluginID == "LarkMessager" && in.Version == "0.9.1" {
+		return larkDeferredSpec(run)
+	}
 	if isTorrentTransfer(in.PluginID) && in.Version == "1.10.3" {
 		return transferDeferredSpec(run)
 	}
@@ -202,6 +205,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 		return r.ErrorCode == transferSourceFailed && transferResultErrorCode(r.Result) == r.ErrorCode
 	}
 
+	if r.Plugin == "LarkMessager" && r.Version == "0.9.1" {
+		return r.ErrorCode == "LARK_SOURCE_FAILED" && json.Valid(r.Result)
+	}
 	if r.Plugin == "CloudflareSpeedTest" && r.Version == "1.5.1" {
 		return (r.ErrorCode == "CLOUDFLARE_SOURCE_FAILED" && json.Valid(r.Result)) || (r.ErrorCode == cloudflareBlockedByUnknown && bytes.Equal(r.Result, cloudflareBlockedResult()))
 	}
@@ -393,6 +399,11 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 			return err
 		}
 	}
+	if from == "prepared" && to == "started" && r.Plugin == "LarkMessager" {
+		if err = d.larkStartedTx(ctx, tx); err != nil {
+			return err
+		}
+	}
 	if from == "prepared" && to == "started" && r.Plugin == "ScrapeFileClean" {
 		if err = d.a.pluginStore.scrapeCleanAcceptTx(ctx, tx, d.run, r.Method); err != nil {
 			return err
@@ -457,6 +468,15 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 }
 
 func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.RawMessage, error) {
+	if d.installation.PluginID == "LarkMessager" {
+		var release func()
+		var err error
+		ctx, release, err = d.lockLarkDeferred(ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer release()
+	}
 	if d.installation.PluginID == "CloudflareSpeedTest" {
 		var release func()
 		var err error
@@ -638,6 +658,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 			}
 		}
 	}
+	if d.record.Plugin == "LarkMessager" && d.record.Version == "0.9.1" {
+		known, knownCode, found, proofErr := d.a.pluginStore.larkOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "Lark操作尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "Lark源流程失败，已保留确定结果")
+			}
+		}
+	}
 	saveErr := d.changeOutcome(finish, "started", phase, result, code)
 	if saveErr != nil {
 		return nil, bad("PLUGIN_DEFERRED_UNCERTAIN", "插件操作结果尚未持久确认，请核对执行记录")
@@ -758,6 +791,39 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 			}
 			if found {
 				r.Phase, r.Result = "confirmed", result
+				tx, e := p.store.DB.BeginTx(ctx, nil)
+				if e != nil {
+					return e
+				}
+				if e = p.writeDeferred(ctx, tx, r, previous); e != nil {
+					tx.Rollback()
+					return e
+				}
+				if e = tx.Commit(); e != nil {
+					return e
+				}
+				r, previous, e = p.readDeferred(ctx, p.store.DB, run)
+				if e != nil {
+					return e
+				}
+			}
+		}
+		if r.Plugin == "LarkMessager" && (r.Phase == "started" || r.Phase == "uncertain") {
+			result, code, found, e := p.larkOutcome(ctx, run, r.Method)
+			if e != nil {
+				if c := larkRecoveryErrorCode(e); c != "" {
+					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code=?,updated_at=? WHERE id=?`, c, now(), run.ID); err != nil {
+						return err
+					}
+					continue
+				}
+				return e
+			}
+			if found {
+				r.Phase, r.Result, r.ErrorCode = "confirmed", result, code
+				if code != "" {
+					r.Phase = "terminal_failed"
+				}
 				tx, e := p.store.DB.BeginTx(ctx, nil)
 				if e != nil {
 					return e

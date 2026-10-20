@@ -60,6 +60,9 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	invalid := func() (DomainEvent, error) {
 		return in, bad("INVALID_DOMAIN_EVENT", "域事件契约无效，业务结果未提交")
 	}
+	if in.Type == "subscription.completed" {
+		return validateSubscriptionCompletedDomainEvent(in)
+	}
 	if in.Type == "download.deleted" {
 		if in.SchemaVersion == 0 {
 			in.SchemaVersion = 1
@@ -151,7 +154,7 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 			return invalid()
 		}
 		subject, kind = in.SiteID, "site"
-	case "subscription.added":
+	case "subscription.added", "subscription.completed":
 		if in.SubscriptionID == "" || !domainMediaPattern.MatchString(in.MediaID) {
 			return invalid()
 		}
@@ -194,6 +197,11 @@ func recordDomainEventTx(ctx context.Context, tx *sql.Tx, in DomainEvent) error 
 	event, err := validateDomainEvent(in)
 	if err != nil {
 		return err
+	}
+	if event.Type == "subscription.completed" {
+		if err = validateSubscriptionCompletedBackingTx(ctx, tx, event); err != nil {
+			return err
+		}
 	}
 	if event.Type == "notice.message" {
 		if err = validateNoticeMessageBackingTx(ctx, tx, event); err != nil {

@@ -240,6 +240,9 @@ func (a *App) applySubscribeGroupDownload(ctx context.Context, run PluginRun, ba
 		}
 		after, _ := json.Marshal(sub)
 		if !bytes.Equal(before, after) {
+			if err = a.advancePlannedQualityRevisionTx(ctx, tx, *sub); err != nil {
+				return nil, err
+			}
 			if err = advanceSubscribeGroupRevisionTx(ctx, tx, sub); err != nil {
 				return nil, err
 			}

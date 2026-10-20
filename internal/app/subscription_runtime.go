@@ -15,33 +15,42 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
+	"light-media/internal/subscriptiondefaults"
 	"light-media/internal/torrentfilter"
 )
 
 type SubscriptionRequest struct {
-	CustomWords   json.RawMessage     `json:"custom_words,omitempty"`
-	Keyword       string              `json:"keyword"`
-	SiteIDs       []string            `json:"site_ids"`
-	TotalEpisodes int                 `json:"total_episodes"`
-	DirectoryID   string              `json:"directory_id"`
-	DownloadPath  string              `json:"download_path"`
-	TargetScope   string              `json:"target_scope"`
-	StartEpisode  int                 `json:"start_episode"`
-	MediaType     string              `json:"media_type"`
-	TMDBID        int64               `json:"tmdb_id"`
-	Media         catalog.Media       `json:"media"`
-	Season        int                 `json:"season"`
-	Episodes      []int               `json:"episodes"`
-	Excluded      []int               `json:"excluded"`
-	Policy        Policy              `json:"policy"`
-	Schedule      Schedule            `json:"schedule"`
-	Mappings      []media.MappingRule `json:"mappings"`
-	DownloaderID  string              `json:"downloader_id"`
-	RootID        string              `json:"root_id"`
-	State         string              `json:"state"`
-	EpisodeDates  map[int]string      `json:"episode_dates"`
-	AllowEarly    []int               `json:"allow_early"`
-	Revision      int                 `json:"revision"`
+	SourceName         json.RawMessage `json:"name,omitempty"`
+	SourceYear         json.RawMessage `json:"year,omitempty"`
+	source             *sourceSubscriptionOrigin
+	BestVersion        *bool `json:"best_version"`
+	BestVersionFull    *bool `json:"best_version_full"`
+	SearchIMDbID       *bool `json:"search_imdbid"`
+	ManualTotalEpisode *bool `json:"manual_total_episode"`
+	qualityDefaults    subscriptiondefaults.Object
+	CustomWords        json.RawMessage     `json:"custom_words,omitempty"`
+	Keyword            string              `json:"keyword"`
+	SiteIDs            []string            `json:"site_ids"`
+	TotalEpisodes      int                 `json:"total_episodes"`
+	DirectoryID        string              `json:"directory_id"`
+	DownloadPath       string              `json:"download_path"`
+	TargetScope        string              `json:"target_scope"`
+	StartEpisode       int                 `json:"start_episode"`
+	MediaType          string              `json:"media_type"`
+	TMDBID             int64               `json:"tmdb_id"`
+	Media              catalog.Media       `json:"media"`
+	Season             int                 `json:"season"`
+	Episodes           []int               `json:"episodes"`
+	Excluded           []int               `json:"excluded"`
+	Policy             Policy              `json:"policy"`
+	Schedule           Schedule            `json:"schedule"`
+	Mappings           []media.MappingRule `json:"mappings"`
+	DownloaderID       string              `json:"downloader_id"`
+	RootID             string              `json:"root_id"`
+	State              string              `json:"state"`
+	EpisodeDates       map[int]string      `json:"episode_dates"`
+	AllowEarly         []int               `json:"allow_early"`
+	Revision           int                 `json:"revision"`
 }
 type subscriptionGuardKey struct{}
 type subscriptionIdentity struct {
@@ -121,7 +130,10 @@ func validateSubscriptionPolicy(p Policy) error {
 	}
 	return nil
 }
-func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionRequest) (Subscription, error) {
+func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionRequest) (saved Subscription, resultErr error) {
+	sourceInputSHA := tokenHash(string(mustCleanSeedJSON(larkSourceSubscriptionInput(in))))
+	commitAttempted := false
+	defer func() { resultErr = larkP0Failure(ctx, commitAttempted, resultErr) }()
 	customWords, wordsErr := subscriptionWordsInput(in.CustomWords)
 	if wordsErr != nil {
 		return Subscription{}, wordsErr
@@ -154,7 +166,12 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	}
 	var m catalog.Media
 	var e error
-	if in.State == "paused" && snapshot.ID != "" {
+	if in.source != nil && len(in.source.MediaInfo) > 0 {
+		if in.Media.ID != in.TMDBID || in.Media.MediaType != in.MediaType {
+			return Subscription{}, larkEvidenceError()
+		}
+		m = in.Media
+	} else if in.State == "paused" && snapshot.ID != "" {
 		m = snapshot.Media
 	} else {
 		m, e = a.media(ctx, in.MediaType, in.TMDBID)
@@ -164,6 +181,17 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	}
 	if e = normalizeSubscriptionScope(&in, snapshot, m.MediaType); e != nil {
 		return Subscription{}, e
+	}
+	if snapshot.ID == "" {
+		if e = validateSubscriptionPolicy(in.Policy); e != nil {
+			return Subscription{}, e
+		}
+		if in.source != nil {
+			in.qualityDefaults = in.source.Defaults
+		}
+		if e = a.applySubscriptionQualityDefaults(ctx, &in, m.MediaType); e != nil {
+			return Subscription{}, e
+		}
 	}
 	if in.TotalEpisodes < 0 || in.TotalEpisodes > 9999 || in.TotalEpisodes > 0 && in.TotalEpisodes < in.StartEpisode {
 		return Subscription{}, bad("INVALID_TOTAL_EPISODES", "总集数须大于等于开始集数，且不超过9999")
@@ -330,6 +358,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	}
 	count := 0
 	duplicate := false
+	var duplicateSubscription Subscription
 	for rows.Next() {
 		count++
 		var b []byte
@@ -340,6 +369,7 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		var other Subscription
 		if json.Unmarshal(b, &other) == nil && other.ID != key && other.State != "cancelled" && mediaKey(other.Media) == mediaKey(m) && other.Season == in.Season {
 			duplicate = true
+			duplicateSubscription = other
 		}
 	}
 	e = rows.Err()
@@ -348,6 +378,19 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 		return old, e
 	}
 	if duplicate {
+		if in.source != nil {
+			if e = a.guardSourceSubscriptionMutationTx(ctx, tx, in.source, sourceInputSHA); e != nil {
+				return old, e
+			}
+			if e = a.commitUISubscriptionSaveTx(ctx, tx, sourceInputSHA, duplicateSubscription, true); e != nil {
+				return old, e
+			}
+			if e = a.larkP0CommitTx(ctx, tx, "subscription.save", duplicateSubscription); e != nil {
+				return old, e
+			}
+			commitAttempted = true
+			return duplicateSubscription, tx.Commit()
+		}
 		return old, bad("DUPLICATE_SUBSCRIPTION", "该作品及季已有订阅，请编辑现有订阅")
 	}
 	if old.ID == "" && count >= 500 {
@@ -355,7 +398,13 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	}
 	s := Subscription{ID: key, TargetScope: in.TargetScope, StartEpisode: in.StartEpisode, Media: m, Season: in.Season, Episodes: episodes, Excluded: excluded, EpisodeDates: in.EpisodeDates, AllowEarly: early, Policy: in.Policy, Schedule: schedule, Mappings: in.Mappings, DownloaderID: in.DownloaderID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, State: state, Revision: old.Revision + 1, CreatedAt: old.CreatedAt}
 	s.SiteIDs, s.TotalEpisodes = append([]string{}, in.SiteIDs...), in.TotalEpisodes
+	applySubscriptionQualityState(&s, old, in)
 	s.Keyword = in.Keyword
+	if in.source != nil {
+		s.SourceContextSHA = tokenHash(string(mustCleanSeedJSON(in.source)))
+		s.SourceState, s.SourceNote = in.source.State, sourceSubscriptionNoteClone(in.source.Note)
+		s.SourceSearchIMDb = sourceSubscriptionTruth(in.source.Defaults["search_imdbid"])
+	}
 	if in.DownloadPath == "" && in.DirectoryID == "" && destination.Rule.ID == "" && destination.Root != "" {
 		s.DownloadPath = ""
 	}
@@ -381,6 +430,9 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 			s.LastReason = "仅手动检查"
 		}
 	}
+	if e = a.saveSourceSubscriptionOriginTx(ctx, tx, s, in.source, sourceInputSHA); e != nil {
+		return s, e
+	}
 	if e = txPut(ctx, tx, "subscription", key, s); e != nil {
 		return s, e
 	}
@@ -390,11 +442,18 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), key); e != nil {
 		return s, e
 	}
-	if old.ID == "" {
+	if old.ID == "" && in.source == nil {
 		if e = a.recordSubscriptionAddedTx(ctx, tx, s); e != nil {
 			return s, e
 		}
 	}
+	if e = a.commitUISubscriptionSaveTx(ctx, tx, sourceInputSHA, s, false); e != nil {
+		return s, e
+	}
+	if e = a.larkP0CommitTx(ctx, tx, "subscription.save", s); e != nil {
+		return s, e
+	}
+	commitAttempted = true
 	if e = tx.Commit(); e != nil {
 		return s, e
 	}
@@ -616,7 +675,9 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
 	var current Subscription
-	if e := a.Store.Get(ctx, "subscription", s.ID, &current); e != nil {
+	if e := a.Store.Get(ctx, "subscription", s.ID, &current); errors.Is(e, sql.ErrNoRows) {
+		return nil
+	} else if e != nil {
 		return e
 	}
 	if current.Revision != s.Revision || current.State != "active" {
@@ -635,22 +696,6 @@ func (a *App) recordSubscriptionCheck(ctx context.Context, s Subscription, reaso
 	return a.Store.Put(ctx, "subscription", s.ID, current)
 }
 
-func (a *App) completeMovieSubscription(ctx context.Context, key string, revision int) error {
-	a.subMu.Lock()
-	defer a.subMu.Unlock()
-	var current Subscription
-	if e := a.Store.Get(ctx, "subscription", key, &current); e != nil {
-		return e
-	}
-	if current.Revision != revision || current.State != "active" || current.Media.MediaType != "movie" {
-		return nil
-	}
-	current.State = "completed"
-	current.LastCheck = now()
-	current.NextCheck = ""
-	current.LastReason = "电影已入库，订阅完成"
-	return a.Store.Put(ctx, "subscription", key, current)
-}
 func (a *App) quotaReset(ctx context.Context, siteIDs []string) time.Time {
 	var earliest int64
 	for _, site := range siteIDs {
@@ -684,6 +729,9 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 	if recognitionErr != nil {
 		return recognitionErr
 	}
+	if s.BestVersion {
+		return a.checkQualitySubscription(ctx, j, s)
+	}
 	known := []int{}
 	available := map[int]bool{}
 	dates := map[int]string{}
@@ -716,6 +764,13 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			}
 		}
 	}
+	if s.Media.MediaType == "tv" {
+		var e error
+		s, e = a.refreshOrdinaryCompletionScope(ctx, s)
+		if e != nil {
+			return e
+		}
+	}
 	coverage, e := a.subscriptionCoverage(ctx, s, known)
 	if e != nil {
 		return e
@@ -727,8 +782,8 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		}
 	}
 	if len(missing) == 0 {
-		if s.Media.MediaType == "movie" && len(coverage.Library) > 0 {
-			return a.completeMovieSubscription(ctx, s.ID, s.Revision)
+		if len(coverage.Missing) == 0 && (len(coverage.Library) > 0 || len(coverage.Reserved) > 0) {
+			return a.requestOrdinarySubscriptionCompletion(ctx, j, s)
 		}
 		reason := "当前没有已播缺集；继续等待元数据和更新窗口"
 		if len(coverage.Library) > 0 && len(coverage.Missing) == 0 {
@@ -765,18 +820,11 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 		if scheduled[ep] {
 			continue
 		}
-		if created >= 4 {
-			reason = "本轮已安排4个下载，剩余缺集下轮继续"
-			break
-		}
 		episodes := []int{}
 		if s.Media.MediaType == "tv" {
 			episodes = []int{ep}
 		}
 		for _, site := range a.Settings().Sites {
-			if created >= 4 {
-				break
-			}
 			if !site.Enabled || len(selectedSiteIDs) > 0 && !slices.Contains(selectedSiteIDs, site.ID) {
 				continue
 			}
@@ -786,7 +834,11 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 			if e := a.jobCancelled(ctx, j); e != nil {
 				return e
 			}
-			request := SearchRequest{Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: episodes, Policy: s.Policy, SiteIDs: []string{site.ID}, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
+			query := s.Keyword
+			if s.SourceSearchIMDb && s.Media.IMDbID != "" {
+				query = s.Media.IMDbID
+			}
+			request := SearchRequest{Query: query, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: episodes, Policy: s.Policy, SiteIDs: []string{site.ID}, Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
 			result, e := a.search(ctx, request, true)
 			if e != nil {
 				reason = "站点检查失败，详见任务日志"
@@ -807,9 +859,6 @@ func (a *App) checkSubscription(ctx context.Context, j Job, key string, revision
 				pack := s.Media.MediaType == "tv" && automaticPackCandidate(candidate, s.Season)
 				if (!candidate.Accepted || candidate.NeedsConfirmation) && !pack {
 					continue
-				}
-				if created >= 4 {
-					break
 				}
 				previewRequest := request
 				if pack {

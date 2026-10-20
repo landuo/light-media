@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"light-media/internal/fileextensions"
 	"light-media/internal/media/words"
 	"light-media/internal/releasemeta"
 )
@@ -40,7 +41,15 @@ func (a *App) globalRecognitionOptions(ctx context.Context) (releasemeta.Options
 	if err != nil {
 		return releasemeta.Options{}, err
 	}
-	return releasemeta.Options{SourceMode: config.SourceMode, CustomWords: rules, ReleaseGroups: config.ReleaseGroups, Customization: config.Customization}, nil
+	extensions, err := a.sourceFileExtensions(ctx)
+	if err != nil {
+		return releasemeta.Options{}, err
+	}
+	parserExtensions, err := fileextensions.ParserMediaExtensions(extensions)
+	if err != nil {
+		return releasemeta.Options{}, err
+	}
+	return releasemeta.Options{SourceMode: config.SourceMode, CustomWords: rules, ReleaseGroups: config.ReleaseGroups, Customization: config.Customization, MediaExts: parserExtensions}, nil
 }
 
 func (a *App) ensureResourceRecognition(ctx context.Context) (context.Context, error) {

@@ -71,6 +71,9 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		return Job{}, err
 	}
 	defer tx.Rollback()
+	if err = a.requireNativeDirectoryAuthorizationTx(ctx, tx, plan, meta); err != nil {
+		return Job{}, err
+	}
 	// A lost HTTP response must not turn the same confirmation into another
 	// execution or a misleading error. Different selections remain separate.
 	existing, findErr := scanJob(tx.QueryRowContext(ctx, `SELECT `+jobColumns+` FROM jobs WHERE kind='import' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused','succeeded') ORDER BY created_at DESC LIMIT 1`, plan.ID))
@@ -101,7 +104,7 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 		if err = importExcludedTx(ctx, tx, plan, file); err != nil {
 			return Job{}, err
 		}
-		if err = importReserve(ctx, tx, plan, file); err != nil {
+		if err = a.importReserve(ctx, tx, plan, file); err != nil {
 			return Job{}, err
 		}
 	}
@@ -166,9 +169,26 @@ func selectImportFiles(plan ImportPlan, requested []string) ([]int, error) {
 	return result, nil
 }
 
-func importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFile) error {
+func (a *App) importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFile) error {
+	quality, e := a.qualityPlanProof(ctx, tx, plan)
+	if e != nil {
+		return e
+	}
+	if quality != nil {
+		if e = a.guardQualityImportFile(ctx, tx, plan, file, quality, false); e != nil {
+			return e
+		}
+	}
 	if err := reorganizeReserveTx(ctx, tx, plan); err != nil {
 		return err
+	}
+	var overwriteMeta importMetadata
+	var overwriteRaw []byte
+	if err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='import_meta' AND id=?`, plan.ID).Scan(&overwriteRaw); err != nil {
+		return err
+	}
+	if json.Unmarshal(overwriteRaw, &overwriteMeta) != nil {
+		return bad("REVIEW_OVERWRITE_RECEIPT", "整理目录策略不可读")
 	}
 	owner := plan.ID
 	if plan.IntentID != "" {
@@ -179,7 +199,7 @@ func importReserve(ctx context.Context, tx *sql.Tx, plan ImportPlan, file PlanFi
 		if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(plan.Media), file.Season, episode, plan.ReorganizeAssetID).Scan(&count); err != nil {
 			return err
 		}
-		if count > 0 {
+		if count > 0 && quality == nil && overwriteMeta.Overwrite == nil {
 			return bad("IMPORT_CONFLICT", "影片或季集已存在资产")
 		}
 		var current string
@@ -240,6 +260,13 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	if err := a.Store.Get(ctx, "import_meta", planID, &meta); err != nil {
 		return err
 	}
+	quality, err := a.qualityPlanProof(ctx, a.Store.DB, plan)
+	if err != nil {
+		return err
+	}
+	if err := a.requireNativeDirectoryAuthorizationTx(ctx, a.Store.DB, plan, meta); err != nil {
+		return err
+	}
 	root, err := a.importRoot(plan.RootID)
 	if err != nil {
 		return err
@@ -257,6 +284,10 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	}
 	defer func() {
 		if returnErr != nil {
+			var uncertain *importAutoCopyUnknown
+			if errors.As(returnErr, &uncertain) {
+				return
+			}
 			plan.State = "partial"
 			cleanupCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
@@ -266,6 +297,11 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	for _, index := range indices {
 		file := &plan.Files[index]
 		if file.Status == "imported" || file.Status == "already_imported" {
+			if file.Status == "imported" {
+				if err = a.finishImportOverwrites(ctx, plan, *file, meta); err != nil {
+					return err
+				}
+			}
 			continue
 		}
 		if err = a.jobCancelled(ctx, job); err != nil {
@@ -291,12 +327,17 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err := a.Store.Put(ctx, "import_plan", plan.ID, plan); err != nil {
 				return err
 			}
-			baseCheck := a.importCheck(ctx, job)
 			check := func() error {
-				if e := baseCheck(); e != nil {
+				// Each new publication step needs current admission. A throttled
+				// stream-progress check could otherwise miss cancellation between
+				// the failed link and a separately authorized copy action.
+				if e := a.jobCancelled(ctx, job); e != nil {
 					return e
 				}
 				return a.guardImportDirectory(ctx, plan)
+			}
+			if err := a.preflightQualityDirectoryOverwrite(ctx, plan, *file, quality, meta); err != nil {
+				return err
 			}
 			inPlace := meta.Reorganize != nil && file.Target == meta.Reorganize.Asset.Path
 			var receipt importReceipt
@@ -308,17 +349,24 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				}
 				receipt = importReceipt{Target: file.Target, Source: file.Source, SourceSnapshot: planSnapshot(*file), StageSnapshot: meta.Reorganize.Video.Snapshot, SHA256: meta.Reorganize.Video.SHA256, State: "published"}
 			} else {
-				receipt, err = a.publishImport(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, planSnapshot(*file), meta.Methods[file.ID], check)
+				if meta.Overwrite != nil {
+					receipt, err = a.publishDirectoryOverwrite(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, plan.RootID, meta.Methods[file.ID], planSnapshot(*file), *meta.Overwrite, check)
+				} else {
+					receipt, err = a.publishQualityImport(ctx, plan, *file, quality, meta.Methods[file.ID], check)
+				}
 			}
-			var linkErr *APIError
-			if err != nil && plan.Mode == "auto" && errors.As(err, &linkErr) && linkErr.Code == "IMPORT_LINK_CROSS_DEVICE" {
-				meta.Methods[file.ID] = "copy"
-				file.Method = "copy"
-				if saveErr := a.Store.Put(ctx, "import_meta", plan.ID, meta); saveErr != nil {
+			var linkErr *importEXDEVFailure
+			if err != nil && plan.Mode == "auto" && errors.As(err, &linkErr) {
+				if saveErr := a.adoptImportAutoCopy(ctx, job, &plan, index, &meta, quality, linkErr, check); saveErr != nil {
 					return saveErr
 				}
+				file = &plan.Files[index]
 				a.event(ctx, job, "WARN", "import", "copy_fallback", "目标文件系统与预览时不同，按自动模式回退复制，源文件保留")
-				receipt, err = a.publishImport(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, planSnapshot(*file), "copy", check)
+				if meta.Overwrite != nil {
+					receipt, err = a.publishDirectoryOverwrite(ctx, plan.ID+"/"+file.ID, file.Source, file.Target, plan.RootID, "copy", planSnapshot(*file), *meta.Overwrite, check)
+				} else {
+					receipt, err = a.publishQualityImport(ctx, plan, *file, quality, "copy", check)
+				}
 			}
 			if err != nil {
 				return err
@@ -334,7 +382,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			owned := []managedFile{{Path: file.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: "video", Snapshot: receipt.StageSnapshot, SourceSnapshot: planSnapshot(*file), SHA256: receipt.SHA256}}
 			if inPlace {
 				for _, prior := range meta.Reorganize.Owned {
-					if prior.Kind == "subtitle" {
+					if auxiliaryMaterialKind(prior.Kind) {
 						if actual, e := snapshotPath(prior.Path); e == nil && actual == prior.Snapshot {
 							prior.AssetID, prior.RootID, prior.MediaKey = assetID, root.ID, mediaKey(plan.Media)
 							owned = append(owned, prior)
@@ -346,11 +394,17 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				if err = check(); err != nil {
 					return err
 				}
-				sideReceipt, err := a.publishImport(ctx, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, sideIndex), sidecar.Source, sidecar.Target, sidecar.Snapshot, "copy", check)
+				var sideReceipt importReceipt
+				var err error
+				if meta.Overwrite != nil {
+					sideReceipt, err = a.publishDirectoryOverwrite(ctx, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, sideIndex), sidecar.Source, sidecar.Target, plan.RootID, meta.Methods[file.ID], sidecar.Snapshot, *meta.Overwrite, check)
+				} else {
+					sideReceipt, err = a.publishQualitySidecar(ctx, plan, *file, quality, sideIndex, sidecar, check)
+				}
 				if err != nil {
 					return err
 				}
-				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: "subtitle", Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256})
+				owned = append(owned, managedFile{Path: sidecar.Target, RootID: root.ID, AssetID: assetID, MediaKey: mediaKey(plan.Media), Kind: sidecarMaterialKind(sidecar), Snapshot: sideReceipt.StageSnapshot, SourceSnapshot: sidecar.Snapshot, SHA256: sideReceipt.SHA256})
 			}
 			asset := Asset{ID: assetID, Media: plan.Media, Season: file.Season, Episodes: append([]int(nil), file.Episodes...), RootID: root.ID, Path: file.Target, SourcePath: file.Source, Size: file.Size, State: "present", ScrapeState: "pending", FNOSState: "pending", IntentID: plan.IntentID, CreatedAt: now()}
 			asset.Part = file.Part
@@ -373,7 +427,31 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				return err
 			}
 			defer tx.Rollback()
+			if err = a.requireNativeDirectoryAuthorizationTx(ctx, tx, plan, meta); err != nil {
+				return err
+			}
+			if err = a.commitQualityReplacementTx(ctx, tx, plan, *file, asset, owned); err != nil {
+				return err
+			}
+			for i, sidecar := range meta.Sidecars[file.ID] {
+				var material *managedFile
+				for j := range owned {
+					if owned[j].Path == sidecar.Target && owned[j].Kind == sidecarMaterialKind(sidecar) {
+						material = &owned[j]
+						break
+					}
+				}
+				if material == nil {
+					return bad("REVIEW_OVERWRITE_RECEIPT", "实际字幕发布记录缺失")
+				}
+				if err = a.commitDirectoryOverwriteExtraTx(ctx, tx, fmt.Sprintf("%s/%s/side-%d", plan.ID, file.ID, i), asset, *material); err != nil {
+					return err
+				}
+			}
 			if err = commitImportReorganizeTx(ctx, tx, plan, meta, asset, owned); err != nil {
+				return err
+			}
+			if err = a.commitDirectoryOverwriteTx(ctx, tx, plan.ID+"/"+file.ID, asset); err != nil {
 				return err
 			}
 			for _, episode := range importEpisodes(file.Episodes) {
@@ -409,7 +487,11 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 				return err
 			}
-			if importBool(plan.Scraping, true) && meta.Reorganize == nil {
+			var qualityCleanupCount int
+			if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='subscription_quality_cleanup' AND id=?`, plan.ID+"/"+file.ID).Scan(&qualityCleanupCount); err != nil {
+				return err
+			}
+			if importBool(plan.Scraping, true) && meta.Reorganize == nil && qualityCleanupCount == 0 {
 				if _, err = enqueueTx(ctx, tx, "scrape", map[string]string{"id": assetID}, job.WorkflowID); err != nil {
 					return err
 				}
@@ -420,7 +502,10 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err = tx.Commit(); err != nil {
 				return err
 			}
-			a.event(ctx, job, "INFO", "import", "published", "视频和字幕已无覆盖发布；源文件保留，资产已登记")
+			if err = a.finishImportOverwrites(ctx, plan, *file, meta); err != nil {
+				return err
+			}
+			a.event(ctx, job, "INFO", "import", "published", "视频和字幕已按目录策略发布；源文件保留，资产已登记")
 			return nil
 		}()
 		if err != nil {
@@ -443,7 +528,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 	if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 		return err
 	}
-	if err = importCompleteIntent(ctx, tx, plan); err != nil {
+	if err = a.importCompleteIntent(ctx, tx, plan); err != nil {
 		return err
 	}
 	return tx.Commit()
@@ -464,6 +549,9 @@ func (a *App) importIntentActive(ctx context.Context, plan ImportPlan) error {
 		if err := a.guardDownloaderSnapshot(ctx, intent); err != nil {
 			return err
 		}
+	}
+	if e := a.guardSeasonImportPlan(ctx, intent, plan); e != nil {
+		return e
 	}
 	return validImportIntent(plan, intent)
 }
@@ -496,7 +584,7 @@ func importIntentTx(ctx context.Context, tx *sql.Tx, plan ImportPlan) (Intent, e
 	return intent, validImportIntent(plan, intent)
 }
 
-func importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportPlan) error {
+func (a *App) importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportPlan) error {
 	if plan.IntentID == "" {
 		return nil
 	}
@@ -517,14 +605,24 @@ func importCompleteIntent(ctx context.Context, tx *sql.Tx, plan ImportPlan) erro
 	if intent.Media.MediaType == "tv" && len(intent.Episodes) == 0 {
 		return nil
 	}
-	for _, episode := range importEpisodes(intent.Episodes) {
-		var count int
-		err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots s JOIN records r ON r.kind='asset' AND r.id=s.asset_id WHERE s.media_key=? AND s.season=? AND s.episode=? AND json_extract(r.payload,'$.state') IN ('present','external')`, mediaKey(intent.Media), intent.Season, episode).Scan(&count)
-		if err != nil {
-			return err
-		}
-		if count == 0 {
-			return nil
+	seasonProof, e := a.intentSeasonProof(ctx, tx, intent)
+	if e != nil {
+		return e
+	}
+	scopes := []downloadSeasonScope{{intent.Season, importEpisodes(intent.Episodes)}}
+	if seasonProof != nil {
+		scopes = seasonProof.Scopes
+	}
+	for _, scope := range scopes {
+		for _, episode := range scope.Episodes {
+			var count int
+			err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots s JOIN records r ON r.kind='asset' AND r.id=s.asset_id WHERE s.media_key=? AND s.season=? AND s.episode=? AND json_extract(r.payload,'$.state') IN ('present','external')`, mediaKey(intent.Media), scope.Season, episode).Scan(&count)
+			if err != nil {
+				return err
+			}
+			if count == 0 {
+				return nil
+			}
 		}
 	}
 	intent.State = "imported"
@@ -668,11 +766,15 @@ func (a *App) publishImport(ctx context.Context, key, source, target string, loc
 		if err != nil {
 			return receipt, err
 		}
-		err = unix.Linkat(int(sourceDir.Fd()), filepath.Base(source), int(parent.Fd()), receipt.Stage, 0)
+		linkSource := a.importSourceLink
+		if linkSource == nil {
+			linkSource = unix.Linkat
+		}
+		err = linkSource(int(sourceDir.Fd()), filepath.Base(source), int(parent.Fd()), receipt.Stage, 0)
 		sourceDir.Close()
 		if err != nil {
 			if errors.Is(err, unix.EXDEV) {
-				return receipt, bad("IMPORT_LINK_CROSS_DEVICE", "实际目标跨文件系统，硬链接不可用")
+				return receipt, &importEXDEVFailure{app: a, receipt: receipt, cause: bad("IMPORT_LINK_CROSS_DEVICE", "实际目标跨文件系统，硬链接不可用")}
 			}
 			return receipt, bad("IMPORT_LINK_FAILED", "硬链接失败，未回退复制，请核对文件系统和权限")
 		}

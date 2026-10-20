@@ -451,6 +451,9 @@ func (a *App) applySubscribeGroupAdded(ctx context.Context, run PluginRun, batch
 		}
 		after, _ := json.Marshal(current)
 		if !reflect.DeepEqual(before, after) {
+			if err = a.advancePlannedQualityRevisionTx(ctx, tx, current); err != nil {
+				return nil, err
+			}
 			if err = advanceSubscribeGroupRevisionTx(ctx, tx, &current); err != nil {
 				return nil, err
 			}

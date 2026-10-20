@@ -293,6 +293,9 @@ func (a *App) saveManagedDirectory(ctx context.Context, in DirectoryRule) (any, 
 	in.DownloadPath = cleanDirectoryInput(in.DownloadPath)
 	in.SourcePath = cleanDirectoryInput(in.SourcePath)
 	if in.ID == "" {
+		if in.OverwriteMode == nil {
+			in.OverwriteModeKnown = true
+		}
 		in.ID = id("directory_")
 	}
 	if in.MediaType == "" {

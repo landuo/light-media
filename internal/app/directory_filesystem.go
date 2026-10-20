@@ -538,6 +538,10 @@ func directoryTitle(s string) string {
 }
 func (a *App) directoryFileIdentity(ctx context.Context, rule DirectoryRule, file importScanFile) (ImportRequest, error) {
 	request := ImportRequest{RootID: rule.RootID, Mode: rule.Mode, Renaming: rule.Renaming, Scraping: rule.Scraping, LibraryTypeFolder: rule.LibraryTypeFolder, WorkflowID: id("wf_"), Files: []ImportFileRequest{{Path: file.Path}}}
+	if rule.ID != "" {
+		copyRule := rule
+		request.directoryRule = &copyRule
+	}
 	var numbering *media.Numbering
 	if file.IdentityReason != "" {
 		return request, bad("DIRECTORY_IDENTITY_REVIEW", "NFO身份存在疑问，请在“手动整理”中选择电影或电视剧类型，并查询或填写TheMovieDb编号")

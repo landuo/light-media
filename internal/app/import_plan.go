@@ -15,6 +15,7 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
+	"light-media/internal/transferextensions"
 )
 
 type ImportFileRequest struct {
@@ -27,35 +28,41 @@ type ImportFileRequest struct {
 }
 
 type ImportRequest struct {
-	HistorySource     string              `json:"-"`
-	Manual            bool                `json:"-"`
-	ReorganizeAssetID string              `json:"-"`
-	Renaming          *bool               `json:"renaming,omitempty"`
-	Scraping          *bool               `json:"scraping,omitempty"`
-	LibraryTypeFolder *bool               `json:"library_type_folder,omitempty"`
-	MediaType         string              `json:"media_type"`
-	TMDBID            int64               `json:"tmdb_id"`
-	RootID            string              `json:"root_id"`
-	TargetPath        string              `json:"target_path,omitempty"`
-	Mode              string              `json:"mode"`
-	IntentID          string              `json:"intent_id"`
-	WorkflowID        string              `json:"workflow_id"`
-	Files             []ImportFileRequest `json:"files"`
-	Mappings          []media.MappingRule `json:"mappings"`
+	directoryRule      *DirectoryRule
+	directorySelection *nativeDirectorySelection
+	qualityReplacement bool
+	HistorySource      string              `json:"-"`
+	Manual             bool                `json:"-"`
+	ReorganizeAssetID  string              `json:"-"`
+	Renaming           *bool               `json:"renaming,omitempty"`
+	Scraping           *bool               `json:"scraping,omitempty"`
+	LibraryTypeFolder  *bool               `json:"library_type_folder,omitempty"`
+	MediaType          string              `json:"media_type"`
+	TMDBID             int64               `json:"tmdb_id"`
+	RootID             string              `json:"root_id"`
+	TargetPath         string              `json:"target_path,omitempty"`
+	Mode               string              `json:"mode"`
+	IntentID           string              `json:"intent_id"`
+	WorkflowID         string              `json:"workflow_id"`
+	Files              []ImportFileRequest `json:"files"`
+	Mappings           []media.MappingRule `json:"mappings"`
 }
 
 type importSidecar struct {
+	Kind     string         `json:"kind,omitempty"`
 	Source   string         `json:"source"`
 	Target   string         `json:"target"`
 	Snapshot importSnapshot `json:"snapshot"`
 }
 
 type importMetadata struct {
-	Reorganize *importReorganize          `json:"reorganize,omitempty"`
-	RootPath   string                     `json:"root_path"`
-	Methods    map[string]string          `json:"methods"`
-	Episodes   map[string]catalog.Episode `json:"episodes"`
-	Sidecars   map[string][]importSidecar `json:"sidecars"`
+	ExtensionInputSHA string                     `json:"extension_input_sha,omitempty"`
+	Overwrite         *importOverwritePolicy     `json:"overwrite,omitempty"`
+	Reorganize        *importReorganize          `json:"reorganize,omitempty"`
+	RootPath          string                     `json:"root_path"`
+	Methods           map[string]string          `json:"methods"`
+	Episodes          map[string]catalog.Episode `json:"episodes"`
+	Sidecars          map[string][]importSidecar `json:"sidecars"`
 }
 
 type importScanFile struct {
@@ -115,6 +122,10 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 		return nil, err
 	}
 	root.Close()
+	classifier, err := a.transferMediaClassifier(ctx)
+	if err != nil {
+		return nil, err
+	}
 	files, visited, truncated := []importScanFile{}, 0, false
 	var walk func(string, int) error
 	walk = func(dir string, depth int) error {
@@ -148,7 +159,7 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 							return err
 						}
 					}
-				} else if isVideo(name) {
+				} else if matched, _ := classifier.Media(transferextensions.PathFile(name)); matched {
 					locked, err := snapshotPath(name)
 					if err != nil {
 						return err
@@ -178,6 +189,14 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
 	var prepareErr error
+	ctx, extensions, prepareErr := a.observeTransferExtensions(ctx)
+	if prepareErr != nil {
+		return ImportPlan{}, prepareErr
+	}
+	classifier, prepareErr := transferextensions.New(extensions.Constructor)
+	if prepareErr != nil {
+		return ImportPlan{}, prepareErr
+	}
 	ctx, prepareErr = a.ensureResourceRecognition(ctx)
 	if prepareErr != nil {
 		return ImportPlan{}, prepareErr
@@ -246,11 +265,16 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			return ImportPlan{}, err
 		}
 	}
+	qualityDownload, err := a.qualityImportDownload(ctx, request)
+	if err != nil {
+		return ImportPlan{}, err
+	}
 	reorganize, err := a.prepareImportReorganize(ctx, request)
 	if err != nil {
 		return ImportPlan{}, err
 	}
 	plan := ImportPlan{ID: id("plan_"), WorkflowID: request.WorkflowID, Media: identity, RootID: root.ID, Mode: request.Mode, Renaming: request.Renaming, Scraping: request.Scraping, LibraryTypeFolder: request.LibraryTypeFolder, Files: []PlanFile{}, State: "preview", IntentID: request.IntentID, CreatedAt: now()}
+	plan.DirectorySourceVersion = 2
 	plan.Manual, plan.ReorganizeAssetID = request.Manual, request.ReorganizeAssetID
 	if plan.WorkflowID == "" {
 		plan.WorkflowID = id("wf_")
@@ -262,6 +286,15 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	plan.Warnings = []string{"空间是视频、字幕及有上限的刮削图片的保守预估；实际写入前仍会复核可用空间。"}
 	meta := importMetadata{RootPath: root.Path, Methods: map[string]string{}, Episodes: map[string]catalog.Episode{}, Sidecars: map[string][]importSidecar{}}
 	meta.Reorganize = reorganize
+	meta.ExtensionInputSHA = extensions.InputSHA
+	policy, policyErr := a.resolveImportOverwrite(ctx, request)
+	if policyErr != nil {
+		return ImportPlan{}, policyErr
+	}
+	if policy.Selection != nil {
+		policy.Selection.Plan = plan.ID
+	}
+	meta.Overwrite = &policy
 	seasons := map[int]catalog.Season{}
 	seenSources, seenTargets, seenSlots := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	seenSourceInodes := map[string]bool{}
@@ -274,7 +307,8 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		if len([]rune(file.Part)) > 64 || importName(file.Part) != file.Part {
 			block("Part 必须是有效的文件名片段，不能包含路径或特殊控制字符")
 		}
-		if !a.importSourceAllowed(file.Source, request.Manual) || !isVideo(file.Source) || seenSources[file.Source] {
+		video, _ := classifier.Media(transferextensions.PathFile(file.Source))
+		if !a.importSourceAllowed(file.Source, request.Manual) || !video || seenSources[file.Source] {
 			block("源路径未获允许、不是视频或重复选择")
 		} else if !request.Manual {
 			for _, configured := range a.Settings().Roots {
@@ -441,8 +475,21 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			if method == "hardlink" && file.Device != uint64(rootStat.Dev) {
 				block("源与目标跨文件系统，硬链接不可用；请选择复制或自动")
 			}
+			var qualityOwner *qualityAssetSnapshot
+			var qualityOwnerErr error
+			if meta.Overwrite == nil {
+				qualityOwner, qualityOwnerErr = qualityTargetOwner(qualityDownload, file)
+			}
+			if qualityOwnerErr != nil {
+				block(qualityOwnerErr.Error())
+			}
 			if _, e := os.Lstat(file.Target); e == nil {
-				if inPlace {
+				if qualityOwner != nil && file.Status == "ready" {
+					stamp, inspectErr := snapshotPath(file.Target)
+					if inspectErr != nil || stamp != qualityOwner.Video.Snapshot {
+						block("洗版原视频在预览时已变化")
+					}
+				} else if inPlace {
 					actual, inspectErr := snapshotPath(file.Target)
 					if inspectErr != nil || actual != reorganize.Video.Snapshot {
 						block("原整理目标已被外部修改，不能原位重新整理")
@@ -457,7 +504,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 						file.Status = "already_imported"
 						file.AssetID = existing.ID
 					} else {
-						block("目标已存在，禁止覆盖")
+						if meta.Overwrite == nil {
+							block("目标已存在，禁止覆盖")
+						}
 					}
 				}
 			} else if !os.IsNotExist(e) {
@@ -475,7 +524,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=? AND asset_id!=?`, mediaKey(identity), file.Season, episode, request.ReorganizeAssetID).Scan(&count); e != nil {
 						return ImportPlan{}, e
 					}
-					if count > 0 {
+					if count > 0 && qualityDownload == nil && meta.Overwrite == nil {
 						block("该影片或季集已存在资产，需先核对冲突")
 						break
 					}
@@ -491,7 +540,13 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				}
 			}
 			if file.Status == "ready" && !inPlace {
-				sidecars, e := importSidecars(file)
+				var sidecars []importSidecar
+				var e error
+				if meta.Overwrite != nil {
+					sidecars, e = a.sourceImportSidecars(ctx, file, true)
+				} else {
+					sidecars, e = a.qualityImportSidecars(ctx, file, qualityDownload)
+				}
 				if e != nil {
 					block("字幕旁车不可访问或发生冲突")
 				} else {
@@ -522,6 +577,12 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if err != nil {
 		return ImportPlan{}, err
 	}
+	if err = a.saveQualityImportProofTx(ctx, tx, plan, meta, qualityDownload); err != nil {
+		return ImportPlan{}, err
+	}
+	if err = a.saveNativeDirectoryAuthorizationTx(ctx, tx, plan, meta, request.directorySelection); err != nil {
+		return ImportPlan{}, err
+	}
 	return plan, tx.Commit()
 }
 
@@ -532,7 +593,15 @@ func importEpisodes(episodes []int) []int {
 	return episodes
 }
 
-func importSidecars(file PlanFile) ([]importSidecar, error) {
+func importSidecars(file PlanFile, allowOverwrite ...bool) ([]importSidecar, error) {
+	var existing func(string) error
+	if len(allowOverwrite) > 0 && allowOverwrite[0] {
+		existing = func(string) error { return nil }
+	}
+	return scanImportSidecars(file, existing)
+}
+
+func scanImportSidecars(file PlanFile, existing func(string) error) ([]importSidecar, error) {
 	dir, err := importDir(filepath.Dir(file.Source), false)
 	if err != nil {
 		return nil, err
@@ -554,7 +623,7 @@ func importSidecars(file PlanFile) ([]importSidecar, error) {
 		}
 		ext := strings.ToLower(filepath.Ext(entry.Name()))
 		switch ext {
-		case ".srt", ".ass", ".ssa", ".vtt", ".sub", ".idx":
+		case ".srt", ".ass", ".ssa", ".sup", ".vtt", ".sub", ".idx":
 		default:
 			continue
 		}
@@ -569,7 +638,14 @@ func importSidecars(file PlanFile) ([]importSidecar, error) {
 		}
 		target := targetStem + strings.TrimPrefix(entry.Name(), stem)
 		if _, e = os.Lstat(target); e == nil {
-			return nil, bad("IMPORT_CONFLICT", "字幕目标已存在")
+			if existing == nil {
+				return nil, bad("IMPORT_CONFLICT", "字幕目标已存在")
+			}
+			if e = existing(target); e != nil {
+				return nil, e
+			}
+		} else if !os.IsNotExist(e) {
+			return nil, bad("REVIEW_SIDECARS", "无法检查字幕目标")
 		}
 		result = append(result, importSidecar{Source: name, Target: target, Snapshot: locked})
 		if len(result) > 32 {

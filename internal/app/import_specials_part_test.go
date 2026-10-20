@@ -71,13 +71,47 @@ func TestExplicitSpecialsPartPublishesOneSourceAndScrapesActualEpisodeID(t *test
 			if err != nil || id != episode.ID || id == identity.ID || nfo.Season == nil || *nfo.Season != 0 || nfo.Episode == nil || *nfo.Episode != 3 {
 				t.Fatalf("NFO did not preserve real special episode identity: %+v id=%d err=%v", nfo, id, err)
 			}
-			// A second part still claims the same episode slot. It cannot fake a
-			// second episode or overwrite the first published asset.
-			request.Files[0].Part = "part2"
+			// Different parts may coexist under the original per-file directory
+			// policy. Presence slots do not grant deletion of the earlier part,
+			// and a second file must retain this same actual episode identity.
+			secondInput := filepath.Join(source, "Original.Show.S00E03.WEB-DL.part2.mkv")
+			importWrite(t, secondInput, []byte("second synthetic special part"))
+			importWrite(t, strings.TrimSuffix(secondInput, ".mkv")+".zh.srt", []byte("second part subtitle"))
+			request.Files[0].Path, request.Files[0].Part = secondInput, "part2"
 			second, err := a.previewImport(ctx, request)
-			if err != nil || second.Files[0].Status != "blocked" {
-				t.Fatalf("same episode part bypassed unique asset slot: %+v %v", second, err)
+			if err != nil || len(second.Files) != 1 || second.Files[0].Status != "ready" || second.Files[0].Target == file.Target {
+				t.Fatalf("original distinct-part coexistence was blocked: %+v %v", second, err)
 			}
+			secondJob, err := a.executeImport(ctx, second.ID, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			reorgRunJob(t, a, secondJob)
+			var next, previous Asset
+			if err = a.assetAtPath(ctx, second.Files[0].Target, &next); err != nil || next.ID == asset.ID || next.Part != "part2" || next.Season != 0 {
+				t.Fatal("second real part asset missing", next, err)
+			}
+			if err = a.Store.Get(ctx, "asset", asset.ID, &previous); err != nil || previous.State != "present" || previous.Path != file.Target {
+				t.Fatal("part2 falsely superseded part1", previous, err)
+			}
+			reorgRunJob(t, a, reorgJob(t, a, "scrape", next.ID))
+			partNFO, partID, err := readAssetNFO(strings.TrimSuffix(next.Path, ".mkv") + ".nfo")
+			if err != nil || partID != episode.ID || partNFO.Season == nil || *partNFO.Season != 0 || partNFO.Episode == nil || *partNFO.Episode != 3 {
+				t.Fatal("part2 invented another episode", partID, partNFO, err)
+			}
+			for _, path := range []string{file.Target, next.Path, input, secondInput, strings.TrimSuffix(file.Target, ".mkv") + ".zh.srt", strings.TrimSuffix(next.Path, ".mkv") + ".zh.srt"} {
+				if _, err = os.Stat(path); err != nil {
+					t.Fatal("coexisting part or source was removed", path, err)
+				}
+			}
+			var count int
+			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=0 AND episode=3 AND asset_id=?`, mediaKey(identity), next.ID).Scan(&count); err != nil || count != 1 {
+				t.Fatal("actual episode presence not rebound to new part", count, err)
+			}
+			if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND (season!=0 OR episode!=3)`, mediaKey(identity)).Scan(&count); err != nil || count != 0 {
+				t.Fatal("part2 created imaginary episode presence", count, err)
+			}
+			qualityRequireDirectoryOverwriteComplete(t, a, second.ID+"/"+second.Files[0].ID)
 		})
 	}
 }

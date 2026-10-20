@@ -214,6 +214,35 @@ func Attach(ctx context.Context, db *sql.DB, key []byte, group Group, authority 
 	return s, tx.Commit()
 }
 
+// RunProof exposes only authenticated native scope and uncertainty to the real
+// lifecycle authority. It contains no response body or dispatch capability.
+type RunProof struct {
+	Scope     Scope
+	Uncertain bool
+}
+
+// AuditTx verifies the existing namespace in the caller's exact transaction.
+// It never attaches a pool transaction or creates missing evidence.
+func AuditTx(ctx context.Context, db *sql.DB, tx *sql.Tx, key []byte, group Group, authority Authority) ([]RunProof, error) {
+	if tx == nil || authority == nil {
+		return nil, lark.ErrDenied
+	}
+	s, err := newStore(db, key, group)
+	if err != nil {
+		return nil, err
+	}
+	s.authority = authority
+	root, _, cells, err := s.load(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]RunProof, 0, len(root.Runs))
+	for _, run := range root.Runs {
+		out = append(out, RunProof{run.Scope, uncertain(cells, run.Scope)})
+	}
+	return out, nil
+}
+
 func (s *Store) load(ctx context.Context, tx *sql.Tx) (*root, []byte, map[string]cell, error) {
 	var sealed []byte
 	if e := tx.QueryRowContext(ctx, `SELECT sealed FROM lark_native_roots WHERE namespace=?`, s.namespace).Scan(&sealed); e != nil {
