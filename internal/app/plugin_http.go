@@ -53,6 +53,12 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				}
 				_ = json.Unmarshal(config.Value, &flags)
 				state = flags.Enabled
+				if installation.PluginID == "CustomHosts" {
+					var value builtin.CustomHostsConfiguration
+					if json.Unmarshal(config.Value, &value) == nil {
+						state = value.Enabled
+					}
+				}
 				if installation.PluginID == "CloudflareSpeedTest" {
 					effective := config.Value
 					if owned, _, e := a.pluginStore.cloudflareRead(ctx, a.Store.DB, installation.InstanceID, installation.Generation); e == nil && len(owned.Config) > 0 {

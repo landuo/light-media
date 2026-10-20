@@ -6,17 +6,17 @@ import (
 	"testing"
 )
 
-func TestCustomHostsRejectsNonTextErrorRecords(t *testing.T) {
+func TestCustomHostsDoesNotInterpretUnusedErrorRecords(t *testing.T) {
 	for _, raw := range []string{`{"enabled":true,"hosts":"","err_hosts":{}}`, `{"err_hosts":[1]}`} {
 		var config CustomHostsConfiguration
-		if json.Unmarshal([]byte(raw), &config) != nil || config.Validate() == nil {
-			t.Fatal("invalid error field accepted")
+		if json.Unmarshal([]byte(raw), &config) != nil || config.Validate() != nil {
+			t.Fatal("unused source error field incorrectly interpreted")
 		}
 	}
 }
 
 func TestCustomHostsPreservesPrefixAndOriginalDuplicateRules(t *testing.T) {
-	original := "# baseline\n127.0.0.1 localhost\n203.0.113.7 old.example\n" + CustomHostsMarker + "\n192.0.2.1 stale.example\n"
+	original := "# baseline\n127.0.0.1\tlocalhost\n203.0.113.7\told.example\n" + CustomHostsMarker + "\n192.0.2.1 stale.example\n"
 	content, normalized, invalid, valid := BuildCustomHosts(original, []string{
 		"203.0.113.7 new.example",                        // Existing address: skip, even with a new name.
 		"203.0.113.8 old.example",                        // Existing name: skip.

@@ -7,31 +7,42 @@ import (
 	"net/netip"
 	"strings"
 
-	"golang.org/x/net/idna"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 	"light-media/internal/plugins"
+	"light-media/internal/pythonidna"
+	"light-media/internal/releasemeta/legacyanime"
 )
 
 const CustomHostsMarker = "# CustomHostsPlugin"
 const MaxCustomHostsBytes = 128 << 10
 
 type CustomHostsConfiguration struct {
-	Enabled  bool            `json:"enabled"`
-	Hosts    json.RawMessage `json:"hosts"`
-	ErrHosts json.RawMessage `json:"err_hosts"`
+	emptySource bool
+	Enabled     bool            `json:"enabled"`
+	Hosts       json.RawMessage `json:"hosts"`
+	ErrHosts    json.RawMessage `json:"err_hosts"`
 }
 
 func (c CustomHostsConfiguration) Lines() ([]string, error) {
 	return customHostsLines(c.Hosts)
 }
 
-func (c CustomHostsConfiguration) Validate() error {
-	if _, err := c.Lines(); err != nil {
-		return err
+func (c *CustomHostsConfiguration) UnmarshalJSON(raw []byte) error {
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil {
+		return errors.New("invalid_custom_hosts_config")
 	}
-	_, err := customHostsLines(c.ErrHosts)
-	return err
+	c.emptySource = len(fields) == 0
+	c.Enabled = systemProcessTruth(fields["enabled"])
+	c.Hosts = fields["hosts"]
+	c.ErrHosts = fields["err_hosts"]
+	return nil
+}
+func (c CustomHostsConfiguration) Validate() error {
+	if !c.Enabled {
+		return nil
+	}
+	_, e := c.Lines()
+	return e
 }
 
 func customHostsLines(raw json.RawMessage) ([]string, error) {
@@ -49,12 +60,26 @@ func customHostsLines(raw json.RawMessage) ([]string, error) {
 		}
 		return lines, nil
 	}
-	var lines []string
-	if json.Unmarshal(raw, &lines) != nil {
+	if !systemProcessTruth(raw) {
+		return nil, nil
+	}
+	var values []json.RawMessage
+	if json.Unmarshal(raw, &values) != nil {
 		return nil, errors.New("hosts must be text or lines")
 	}
-	if len(lines) > 4096 {
+	if len(values) > 4096 {
 		return nil, errors.New("hosts line limit")
+	}
+	lines := []string{}
+	for _, value := range values {
+		if !systemProcessTruth(value) {
+			continue
+		}
+		var line string
+		if json.Unmarshal(value, &line) != nil {
+			return nil, errors.New("source_hosts_replace_type_error")
+		}
+		lines = append(lines, line)
 	}
 	return lines, nil
 }
@@ -76,18 +101,16 @@ type customHostEntry struct {
 	comment string
 }
 
-var customHostsIDNA = idna.New(idna.MapForLookup(), idna.Transitional(true), idna.StrictDomainName(false), idna.ValidateLabels(false), idna.VerifyDNSLength(false))
-
 func customHostsName(value string) string {
-	value = cases.Lower(language.Und).String(strings.TrimSpace(value))
-	if normalized, err := customHostsIDNA.ToASCII(value); err == nil {
+	value = legacyanime.LowerCase(legacyanime.Strip(value))
+	if normalized, e := pythonidna.ToASCII(value); e == nil {
 		return normalized
 	}
 	return value
 }
 
 func customHostsEntry(line string) (customHostEntry, bool) {
-	fields := strings.Fields(line)
+	fields := legacyanime.Fields(line)
 	if len(fields) < 2 {
 		return customHostEntry{}, false
 	}
@@ -105,7 +128,7 @@ func customHostsEntry(line string) (customHostEntry, bool) {
 func CustomHostsBase(text string) string {
 	offset := 0
 	for _, line := range strings.SplitAfter(text, "\n") {
-		if strings.TrimSpace(line) == CustomHostsMarker {
+		if legacyanime.Strip(line) == CustomHostsMarker {
 			return text[:offset]
 		}
 		offset += len(line)
@@ -113,15 +136,76 @@ func CustomHostsBase(text string) string {
 	return text
 }
 
-// BuildCustomHosts follows the installed python_hosts defaults too: duplicate
-// addresses/names are skipped, except 0.0.0.0/127.0.0.1 allow address reuse.
-// Invalid rows stay in the config and are returned in err_hosts, not written.
+// CustomHostsCanonicalBase reproduces python_hosts parsing/serialization up to
+// the managed marker. The full source file is parsed first, including its tail.
+func CustomHostsCanonicalBase(original string) (string, error) {
+	original = strings.NewReplacer("\r\n", "\n", "\r", "\n").Replace(original)
+	entries := []customHostEntry{}
+	for _, line := range strings.SplitAfter(original, "\n") {
+		if line == "" {
+			continue
+		}
+		trimmed := legacyanime.Strip(line)
+		if trimmed == "" {
+			entries = append(entries, customHostEntry{})
+			continue
+		}
+		if strings.HasPrefix(trimmed, "#") {
+			entries = append(entries, customHostEntry{comment: trimmed})
+			continue
+		}
+		all := legacyanime.Fields(trimmed)
+		if len(all) == 0 {
+			continue
+		}
+		address, e := netip.ParseAddr(all[0])
+		if e != nil || address.Zone() != "" {
+			continue
+		}
+		head, comment, hasComment := strings.Cut(line, "#")
+		fields := legacyanime.Fields(head)
+		if len(fields) < 2 {
+			return "", errors.New("source_invalid_hosts_entry")
+		}
+		entry := customHostEntry{address: fields[0]}
+		for _, name := range fields[1:] {
+			entry.names = append(entry.names, customHostsName(name))
+		}
+		if hasComment {
+			entry.comment = legacyanime.Strip(comment)
+		}
+		entries = append(entries, entry)
+	}
+	var out strings.Builder
+	for _, entry := range entries {
+		if entry.address == "" && entry.comment == CustomHostsMarker {
+			break
+		}
+		if entry.address != "" {
+			out.WriteString(entry.address + "\t" + strings.Join(entry.names, " "))
+			if entry.comment != "" {
+				out.WriteString(" # " + entry.comment)
+			}
+		} else {
+			out.WriteString(entry.comment)
+		}
+		out.WriteByte('\n')
+	}
+	return out.String(), nil
+}
 func BuildCustomHosts(original string, lines []string) (content, normalized string, invalid []string, hasValid bool) {
-	base := CustomHostsBase(original)
+	content, normalized, invalid, hasValid, _ = buildCustomHostsSource(original, lines)
+	return
+}
+func buildCustomHostsSource(original string, lines []string) (content, normalized string, invalid []string, hasValid bool, err error) {
+	base, err := CustomHostsCanonicalBase(original)
+	if err != nil {
+		return original, "", nil, false, err
+	}
 	addresses, names := map[string]bool{}, map[string]bool{}
-	for _, row := range strings.Split(base, "\n") {
-		row, _, _ = strings.Cut(row, "#")
-		if entry, valid := customHostsEntry(row); valid {
+	for _, line := range strings.Split(base, "\n") {
+		head, _, _ := strings.Cut(line, "#")
+		if entry, ok := customHostsEntry(head); ok {
 			addresses[entry.address] = true
 			for _, name := range entry.names {
 				names[name] = true
@@ -129,30 +213,27 @@ func BuildCustomHosts(original string, lines []string) (content, normalized stri
 		}
 	}
 	var added []customHostEntry
-	var normalizedText strings.Builder
+	var config strings.Builder
 	invalid = []string{}
-	for _, line := range lines {
-		if line == "" || line == "\n" {
+	for _, raw := range lines {
+		if raw == "" || raw == "\n" {
 			continue
 		}
-		line = strings.ReplaceAll(line, "\n", "")
-		normalizedText.WriteString(line + "\n")
-		line = strings.TrimSpace(line)
+		raw = strings.ReplaceAll(raw, "\n", "")
+		config.WriteString(raw + "\n")
+		line := legacyanime.Strip(raw)
 		if strings.HasPrefix(line, "#") {
 			added = append(added, customHostEntry{comment: line})
 			hasValid = true
 			continue
 		}
-		entry, valid := customHostsEntry(line)
-		if !valid {
+		entry, ok := customHostsEntry(line)
+		if !ok {
 			invalid = append(invalid, line+"\n")
 			continue
 		}
 		hasValid = true
-		duplicate := false
-		if entry.address != "0.0.0.0" && entry.address != "127.0.0.1" {
-			duplicate = addresses[entry.address]
-		}
+		duplicate := entry.address != "0.0.0.0" && entry.address != "127.0.0.1" && addresses[entry.address]
 		for _, name := range entry.names {
 			duplicate = duplicate || names[name]
 		}
@@ -165,24 +246,22 @@ func BuildCustomHosts(original string, lines []string) (content, normalized stri
 			names[name] = true
 		}
 	}
-	normalized = normalizedText.String()
+	normalized = config.String()
 	if !hasValid {
-		return original, normalized, invalid, false
-	}
-	if base != "" && !strings.HasSuffix(base, "\n") {
-		base += "\n"
+		return original, normalized, invalid, false, nil
 	}
 	var out strings.Builder
 	out.WriteString(base)
 	out.WriteString(CustomHostsMarker + "\n")
 	for _, entry := range added {
 		if entry.comment != "" {
-			out.WriteString(entry.comment + "\n")
+			out.WriteString(entry.comment)
 		} else {
-			out.WriteString(entry.address + "\t" + strings.Join(entry.names, " ") + "\n")
+			out.WriteString(entry.address + "\t" + strings.Join(entry.names, " "))
 		}
+		out.WriteByte('\n')
 	}
-	return out.String(), normalized, invalid, true
+	return out.String(), normalized, invalid, true, nil
 }
 
 func HandleCustomHosts(ctx context.Context, method string, payload json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
@@ -197,9 +276,16 @@ func HandleCustomHosts(ctx context.Context, method string, payload json.RawMessa
 	if method != "invoke" || json.Unmarshal(payload, &input) != nil || (input.Action != "init" && input.Action != "reload") || json.Unmarshal(input.Config, &config) != nil {
 		return nil, errors.New("invalid custom hosts invocation")
 	}
-	lines, err := config.Lines()
-	if err != nil {
-		return nil, err
+	if config.emptySource {
+		return json.Marshal(map[string]any{"enabled": false, "applied": false, "invalid_count": 0})
+	}
+	var lines []string
+	var err error
+	if config.Enabled {
+		lines, err = config.Lines()
+		if err != nil {
+			return nil, err
+		}
 	}
 	raw, err := host(ctx, "hosts.read", json.RawMessage(`{}`))
 	if err != nil {
@@ -212,43 +298,61 @@ func HandleCustomHosts(ctx context.Context, method string, payload json.RawMessa
 	if json.Unmarshal(raw, &snapshot) != nil {
 		return nil, errors.New("invalid hosts snapshot")
 	}
-	content := CustomHostsBase(snapshot.Content)
+	content, err := CustomHostsCanonicalBase(snapshot.Content)
+	if err != nil {
+		return nil, err
+	}
 	normalized, invalid := "", []string{}
 	apply := config.Enabled && len(lines) > 0
+	write := !apply
 	if apply {
-		content, normalized, invalid, _ = BuildCustomHosts(snapshot.Content, lines)
+		var valid bool
+		content, normalized, invalid, valid, err = buildCustomHostsSource(snapshot.Content, lines)
+		if err != nil {
+			return nil, err
+		}
+		write = valid
+	}
+	if len(invalid) > 0 {
+		messages := []string{}
+		for _, line := range invalid {
+			reason := ""
+			n := len(legacyanime.Fields(line))
+			if n == 0 {
+				reason = "list index out of range"
+			} else if n < 2 {
+				reason = "Address and Name(s) must be specified."
+			}
+			messages = append(messages, "[HOST] 格式转换错误："+reason)
+		}
+		notice, _ := json.Marshal(map[string]any{"title": "自定义Hosts", "messages": messages})
+		if _, err = host(ctx, "notification.post", notice); err != nil {
+			return nil, err
+		}
 	}
 	var writeErr error
-	if content != snapshot.Content {
+	if write {
 		request, _ := json.Marshal(map[string]string{"content": content, "expected_digest": snapshot.Digest})
 		_, writeErr = host(ctx, "hosts.replace", request)
 	}
-	if apply {
-		patch, _ := json.Marshal(map[string]any{"enabled": config.Enabled && writeErr == nil, "hosts": normalized, "err_hosts": invalid})
-		if _, err := host(ctx, "config.patch", patch); err != nil {
+	if writeErr != nil {
+		message := "恢复系统hosts文件失败：请检查权限"
+		if apply {
+			message = "更新系统hosts文件失败：请检查权限"
+		}
+		notice, _ := json.Marshal(map[string]string{"title": "自定义Hosts", "message": message})
+		if _, err = host(ctx, "notification.post", notice); err != nil {
 			return nil, err
 		}
-		if len(invalid) > 0 {
-			messages := make([]string, 0, len(invalid))
-			for _, row := range invalid {
-				reason := ""
-				if len(strings.Fields(row)) == 0 {
-					reason = "list index out of range"
-				} else if len(strings.Fields(row)) < 2 {
-					reason = "Address and Name(s) must be specified."
-				}
-				messages = append(messages, "[HOST] 格式转换错误："+reason)
-			}
-			notice, _ := json.Marshal(map[string]any{"title": "自定义Hosts", "messages": messages})
-			if _, err := host(ctx, "notification.post", notice); err != nil {
-				return nil, err
-			}
+	}
+	if apply {
+		patch, _ := json.Marshal(map[string]any{"enabled": config.Enabled && writeErr == nil, "hosts": normalized, "err_hosts": invalid})
+		if _, err = host(ctx, "config.patch", patch); err != nil {
+			return nil, err
 		}
 	}
 	if writeErr != nil {
-		notice, _ := json.Marshal(map[string]string{"title": "自定义Hosts", "message": "写入系统hosts文件失败，请检查容器挂载及文件权限。"})
-		_, _ = host(ctx, "notification.post", notice)
 		return nil, writeErr
 	}
-	return json.Marshal(map[string]any{"enabled": config.Enabled, "applied": content != snapshot.Content, "invalid_count": len(invalid)})
+	return json.Marshal(map[string]any{"enabled": config.Enabled, "applied": write, "invalid_count": len(invalid)})
 }

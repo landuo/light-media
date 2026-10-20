@@ -48,7 +48,7 @@ func executeCustomHostsConfig(t *testing.T, a *App, revision int64, enabled bool
 func TestPluginCustomHostsRealProcessWritesNormalizesAndRestoresOwnedFile(t *testing.T) {
 	a := newTestApp(t)
 	a.pluginHostsFile = filepath.Join(t.TempDir(), "hosts")
-	base := "# owned fixture\n127.0.0.1 localhost\n"
+	base := "# owned fixture\n127.0.0.1\tlocalhost\n"
 	if err := os.WriteFile(a.pluginHostsFile, []byte(base), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -90,7 +90,7 @@ func TestPluginCustomHostsFileWriteFailureDisablesAndDoesNotReportSuccess(t *tes
 	}
 	a := newTestApp(t)
 	a.pluginHostsFile = filepath.Join(t.TempDir(), "hosts")
-	base := "127.0.0.1 localhost\n"
+	base := "127.0.0.1\tlocalhost\n"
 	if err := os.WriteFile(a.pluginHostsFile, []byte(base), 0400); err != nil {
 		t.Fatal(err)
 	}
@@ -113,7 +113,7 @@ func TestPluginCustomHostsFileWriteFailureDisablesAndDoesNotReportSuccess(t *tes
 func TestPluginCustomHostsRejectsChangedSnapshotAndOutsideScope(t *testing.T) {
 	a := newTestApp(t)
 	a.pluginHostsFile = filepath.Join(t.TempDir(), "hosts")
-	base := "127.0.0.1 localhost\n"
+	base := "127.0.0.1\tlocalhost\n"
 	if err := os.WriteFile(a.pluginHostsFile, []byte(base), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -143,7 +143,7 @@ func TestPluginCustomHostsRejectsChangedSnapshotAndOutsideScope(t *testing.T) {
 func TestPluginCustomHostsStartupRestoresActiveConfigAndSkipsMigrationStaging(t *testing.T) {
 	a := newTestApp(t)
 	a.pluginHostsFile = filepath.Join(t.TempDir(), "hosts")
-	base := "127.0.0.1 localhost\n"
+	base := "127.0.0.1\tlocalhost\n"
 	if err := os.WriteFile(a.pluginHostsFile, []byte(base), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -238,4 +238,42 @@ func TestIsolatedCustomHostsNetwork(t *testing.T) {
 		t.Fatal("container hosts not restored", run.State, run.ErrorCode)
 	}
 	t.Log("owned_container_hosts_write_go_http_and_restore_verified")
+}
+
+func TestPluginCustomHostsSourceFullReplacementAndCanonicalPrefix(t *testing.T) {
+	a := newTestApp(t)
+	a.pluginHostsFile = filepath.Join(t.TempDir(), "hosts")
+	before := "# owned fixture\n127.0.0.1 localhost # base comment\n"
+	if e := os.WriteFile(a.pluginHostsFile, []byte(before), 0600); e != nil {
+		t.Fatal(e)
+	}
+	installCustomHostsFixture(t, a)
+	if _, _, e := a.pluginStore.SaveConfigAndQueue(context.Background(), "CustomHosts", 0, map[string]any{"enabled": "source-truthy", "hosts": "192.0.2.9 名称.测试", "err_hosts": map[string]any{"ignored": true}, "unknown_source_field": 42}); e != nil {
+		t.Fatal(e)
+	}
+	run, e := a.pluginStore.ClaimRun(context.Background())
+	if e != nil {
+		t.Fatal(e)
+	}
+	a.executePluginRun(context.Background(), run)
+	done, e := a.pluginStore.Run(context.Background(), run.ID)
+	if e != nil || done.State != "succeeded" {
+		t.Fatal(done.State, done.ErrorCode, e)
+	}
+	value, e := a.pluginStore.Config(context.Background(), "CustomHosts")
+	if e != nil {
+		t.Fatal(e)
+	}
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(value.Value, &fields) != nil || len(fields) != 3 || string(fields["enabled"]) != "true" {
+		t.Fatal("source whole config replacement not preserved")
+	}
+	content, e := os.ReadFile(a.pluginHostsFile)
+	if e != nil || !strings.HasPrefix(string(content), "# owned fixture\n127.0.0.1\tlocalhost # base comment\n") || !strings.Contains(string(content), "192.0.2.9\txn--") {
+		t.Fatal("source parser/IDNA/canonical prefix differs", e)
+	}
+	request, _ := json.Marshal(map[string]string{"content": "# owned fixture\n127.0.0.2\tlocalhost # base comment\n", "expected_digest": hostsDigest(content)})
+	if _, e = a.replaceContainerHosts(context.Background(), request); pluginErrorCode(e) != "HOSTS_SCOPE_DENIED" {
+		t.Fatal("canonicalization allowed changing system addresses", e)
+	}
 }

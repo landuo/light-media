@@ -1,0 +1,191 @@
+{
+  "state": "passed_candidate_not_yet_deployed",
+  "date": "2026-10-21",
+  "base": "d24f5cd776ffd9f6d38466d098ed65b43d31971d",
+  "source_files": 3442,
+  "source_sha256": "b771abacf3deb037cabfe7a73069a42c5bb77241ee93185dac8073e875746761",
+  "focused_paths": 32,
+  "focused_sha256": "c20a1c3d445ffd78a90c674cfe9bc91ec4b7dc3e9716c1cc2ef09f44d996d7ca",
+  "compiler_inputs": 5322,
+  "source_drift": 0,
+  "compiler_drift": 0,
+  "core": {
+    "normal_top": 6,
+    "normal_inclusive": 55,
+    "race_top": 6,
+    "race_inclusive": 55,
+    "source_plugin_cases": 49,
+    "idna_cases": 5674,
+    "normalization_cases": 12892
+  },
+  "app": {
+    "normal_top": 24,
+    "normal_inclusive": 68,
+    "race_top": 24,
+    "race_inclusive": 68,
+    "default_skip": [
+      "TestReviewedCustomHostsSelectedStdin"
+    ],
+    "opt_in_actual_selected_stdin_normal_and_race": "independently passed",
+    "vet": "passed",
+    "native_build": "passed",
+    "linux_cgo0_build": "passed"
+  },
+  "frontend": {
+    "tests": 163,
+    "failures": 0,
+    "build": "passed",
+    "source": "identical candidate frontend; initial stale node_modules missing gridstack resolved by pinned npm ci"
+  },
+  "selected": {
+    "state": "passed",
+    "source_private_input_saved": false,
+    "source_private_config_sha256": "e304545981b55e031afcdbedd617cd778b15d76224f6b8d63128df8f7aa09463",
+    "selected_config_aead_and_cold_replay": true,
+    "user_edit_preserved": true,
+    "receipt_failure_rollback": true,
+    "wrong_source_rejected": true,
+    "tests": [
+      {
+        "binary": "app-selected-owned.test",
+        "exit": 0,
+        "sha256": "99a0ab4c2c247d8a73a6b96a901365b5165f1cf5789a90ac8202d3ffa4e411d2"
+      },
+      {
+        "binary": "app-selected-owned-race.test",
+        "exit": 0,
+        "sha256": "db9cb464d5e380669ed78dae583ec381110513da1bccc45f11b5e20b4cb542df"
+      }
+    ],
+    "cli_validate": {
+      "network_calls": 0,
+      "plugin": "CustomHosts",
+      "preferences_written": 0,
+      "state": "validated",
+      "writes": 0
+    },
+    "workers": 0,
+    "hosts_writes": 0,
+    "network_business_calls": 0
+  },
+  "cli": {
+    "state": "passed",
+    "active_target_lock_enforced": true,
+    "actual_product_clean_start_stop": true,
+    "actual_cli_dry_apply_replay": true,
+    "hosts_unchanged": true,
+    "source_private_input_saved": false,
+    "workers": 0,
+    "schedules": 0,
+    "owned_directory_cleaned": true
+  },
+  "nas": {
+    "fixture": "dd93b7a9-b2c6-4a42-8e27-d345305f291b",
+    "name": "lm-hosts-source-dd93b7a9-b2c6-4a42-8e27-d345305f291b",
+    "base": "/vol2/1000/docker/light-media/work/lm-hosts-source-dd93b7a9-b2c6-4a42-8e27-d345305f291b",
+    "image": "sha256:c83674e1999044d33d751661371b873539f47e5b5c5ca3320c7e0377acca6238",
+    "binary_sha256": "187aa64ebafb9b025a0700b2eb654b8922fb5a982b88b8382d644b3ae6db04df",
+    "state": "passed",
+    "gate": {
+      "uid": 1000,
+      "gid": 1001,
+      "memory_available": 4039966720,
+      "load": 2.69970703125,
+      "disk_available": 4388866404352,
+      "originals": {
+        "moviepilot": {
+          "Pid": 6411,
+          "StartedAt": "2026-10-17T04:55:22.891471526Z",
+          "Running": true,
+          "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+          "restart": 0
+        },
+        "qb": {
+          "Pid": 1448620,
+          "StartedAt": "2026-10-19T21:30:08.317594824Z",
+          "Running": true,
+          "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+          "restart": 3
+        },
+        "light-media": {
+          "Pid": 1844503,
+          "StartedAt": "2026-10-20T17:19:46.285352323Z",
+          "Running": true,
+          "id": "28ace504eeb607a808a947ead449142b6d58ebb9826b0acd92f56d273da3849b",
+          "restart": 0
+        }
+      },
+      "allowed": true,
+      "created": true
+    },
+    "after": {
+      "exit": 0,
+      "oom": false,
+      "originals": {
+        "moviepilot": {
+          "Pid": 6411,
+          "StartedAt": "2026-10-17T04:55:22.891471526Z",
+          "Running": true,
+          "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+          "restart": 0
+        },
+        "qb": {
+          "Pid": 1448620,
+          "StartedAt": "2026-10-19T21:30:08.317594824Z",
+          "Running": true,
+          "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+          "restart": 3
+        },
+        "light-media": {
+          "Pid": 1844503,
+          "StartedAt": "2026-10-20T17:19:46.285352323Z",
+          "Running": true,
+          "id": "28ace504eeb607a808a947ead449142b6d58ebb9826b0acd92f56d273da3849b",
+          "restart": 0
+        }
+      },
+      "hosts_sha256": "133e4f393ddba39d4c6d600ab3d62ee08d965af44099a5c9e5401375f4b54ef2"
+    },
+    "actual_go_sdk_write_resolver_http_restore": true,
+    "source_or_production_writes": 0,
+    "cleanup": {
+      "owned_directory_absent": true,
+      "owned_container_absent": true,
+      "originals": {
+        "moviepilot": {
+          "Pid": 6411,
+          "StartedAt": "2026-10-17T04:55:22.891471526Z",
+          "Running": true,
+          "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+          "restart": 0
+        },
+        "qb": {
+          "Pid": 1448620,
+          "StartedAt": "2026-10-19T21:30:08.317594824Z",
+          "Running": true,
+          "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+          "restart": 3
+        },
+        "light-media": {
+          "Pid": 1844503,
+          "StartedAt": "2026-10-20T17:19:46.285352323Z",
+          "Running": true,
+          "id": "28ace504eeb607a808a947ead449142b6d58ebb9826b0acd92f56d273da3849b",
+          "restart": 0
+        }
+      }
+    }
+  },
+  "known_before_failures": [
+    "original 49 source oracle had 15 subcase differences, corrected and retained before log",
+    "first NAS preparation used unavailable sudo chown; no container started, exclusively owned files removed; retry used actual uid1000 matching target",
+    "first selected import test compared JSON key order, not values; production config was preserved, new r2 test compares canonical values"
+  ],
+  "binary": {
+    "light-media-native-owned": "c50c97702214b6b172f46c7307c31f3249d78f0ee592a76d1a65c46e338087a0",
+    "light-media-linux-owned": "f1763c0c477cb5004bf3fd44b4c61d073cdd3f8dfe743cb9194c22e702e27204",
+    "custom-hosts-migrate-linux-owned": "9425fe0e0d9ff65b5ab1a795f90526240285e5d438cea35096b7966c34e12502"
+  },
+  "actual_completed": 5,
+  "remaining": 18
+}

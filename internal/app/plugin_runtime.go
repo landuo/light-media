@@ -581,8 +581,14 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		} else {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "此插件尚无配置写回授权")
 		}
-		if err := a.pluginStore.patchRunConfig(ctx, run, fields); err != nil {
-			return nil, err
+		if installation.PluginID == "CustomHosts" {
+			if err := a.replaceCustomHostsRunConfig(ctx, run, fields); err != nil {
+				return nil, err
+			}
+		} else {
+			if err := a.pluginStore.patchRunConfig(ctx, run, fields); err != nil {
+				return nil, err
+			}
 		}
 		return json.RawMessage(`{"saved":true}`), nil
 	case "notification.post":
@@ -595,7 +601,7 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件通知格式无效")
 		}
 		categoryNotice := installation.PluginID == "CategoryEditor" && notice.Title == "二级分类策略" && notice.Message == "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
-		hostsNotice := installation.PluginID == "CustomHosts" && notice.Title == "自定义Hosts" && notice.Message == "写入系统hosts文件失败，请检查容器挂载及文件权限。"
+		hostsNotice := installation.PluginID == "CustomHosts" && notice.Title == "自定义Hosts" && (notice.Message == "写入系统hosts文件失败，请检查容器挂载及文件权限。" || notice.Message == "更新系统hosts文件失败：请检查权限" || notice.Message == "恢复系统hosts文件失败：请检查权限")
 		if installation.PluginID == "CustomHosts" && notice.Title == "自定义Hosts" && notice.Message == "" && len(notice.Messages) > 0 && len(notice.Messages) <= 4096 {
 			for _, message := range notice.Messages {
 				if message != "[HOST] 格式转换错误：" && message != "[HOST] 格式转换错误：list index out of range" && message != "[HOST] 格式转换错误：Address and Name(s) must be specified." {

@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedCustomHosts    bool                       // Only the pinned, explicit CustomHosts offline migration.
 	reviewedServerStatus   bool                       // Pinned read-only MPServerStatus offline import only.
 	systemProcessDashboard map[string]json.RawMessage // Only the reviewed offline SystemProcess importer.
 	SourceConfigAbsent     bool                       // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
@@ -863,6 +864,12 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		}
 		installation.DesiredEnabled = true // The reviewed package only probes its fixed public endpoint on page reads.
 	}
+	if in.reviewedCustomHosts {
+		if !validReviewedCustomHostsImport(installation, in.Config, in.Data, in.SourceConfigAbsent) {
+			return PluginMigrationReceipt{}, errors.New("invalid_reviewed_custom_hosts_import")
+		}
+		installation.DesiredEnabled = true // Only this container owns the reviewed writable Hosts file.
+	}
 	var config json.RawMessage
 	if in.SourceConfigAbsent {
 		if !identifiersCanonicalAbsentImport(installation, in.Config, in.Data) {
@@ -900,7 +907,8 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		SourceConfigAbsent     bool                       `json:",omitempty"`
 		SystemProcessDashboard map[string]json.RawMessage `json:",omitempty"`
 		ReviewedServerStatus   bool                       `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus})
+		ReviewedCustomHosts    bool                       `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -923,6 +931,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedServerStatus && run.SourcePluginID != "MPServerStatus" {
 		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_server_status_import")
+	}
+	if in.reviewedCustomHosts && run.SourcePluginID != "CustomHosts" {
+		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_custom_hosts_import")
 	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string

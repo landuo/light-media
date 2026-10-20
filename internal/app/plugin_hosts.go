@@ -65,7 +65,8 @@ func writeHostsFile(file *os.File, raw []byte) error {
 }
 
 // A Docker /etc/hosts bind mount cannot be atomically renamed. Keep the system
-// prefix byte-for-byte, write before truncating, lock/check the same fd and
+// prefix semantically unchanged through the original parser, write before
+// truncating, lock/check the same fd and
 // restore the old bytes on an I/O error. A restart can reapply the managed tail.
 func (a *App) replaceContainerHosts(ctx context.Context, raw json.RawMessage) (json.RawMessage, error) {
 	var in struct {
@@ -92,7 +93,10 @@ func (a *App) replaceContainerHosts(ctx context.Context, raw json.RawMessage) (j
 	if hostsDigest(before) != in.ExpectedDigest {
 		return nil, bad("HOSTS_CHANGED", "容器hosts已变化，未覆盖其他修改，请重新加载插件")
 	}
-	base := builtin.CustomHostsBase(string(before))
+	base, sourceErr := builtin.CustomHostsCanonicalBase(string(before))
+	if sourceErr != nil {
+		return nil, bad("HOSTS_FILE_UNSAFE", "容器hosts无法按原版规则解析，未写入")
+	}
 	if !strings.HasPrefix(in.Content, base) {
 		return nil, bad("HOSTS_SCOPE_DENIED", "插件不能修改自身标记之前的系统hosts内容")
 	}
@@ -110,4 +114,27 @@ func (a *App) replaceContainerHosts(ctx context.Context, raw json.RawMessage) (j
 		return nil, bad("HOSTS_WRITE_FAILED", "hosts写入失败，已恢复原文件")
 	}
 	return json.RawMessage(`{"applied":true}`), nil
+}
+
+// The installed plugin's update_config replaces the whole three-field object.
+// Reuse the store's exact-generation/revision propagation for queued snapshots.
+func (a *App) replaceCustomHostsRunConfig(ctx context.Context, run *PluginRun, fields map[string]json.RawMessage) error {
+	raw, err := json.Marshal(fields)
+	if err != nil {
+		return err
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	updated := *run
+	if err = a.pluginStore.replaceRunConfigTx(ctx, tx, &updated, raw); err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	*run = updated
+	return nil
 }

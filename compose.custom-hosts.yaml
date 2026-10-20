@@ -1,0 +1,11 @@
+# Optional override for CustomHosts. Prepare this regular file before use and
+# give uid 1000/gid 1001 read/write permission. Never bind the NAS /etc/hosts.
+services:
+  light-media:
+    volumes:
+      - type: bind
+        source: ./container-hosts
+        target: /etc/hosts
+        read_only: false
+        bind:
+          create_host_path: false
