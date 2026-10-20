@@ -79,6 +79,7 @@ func (c *Client) searchMTeam(ctx context.Context, query string, page int) (Searc
 
 func (c *Client) parseMTeam(b []byte, page int) (SearchResult, error) {
 	result := SearchResult{Resources: []Resource{}, Page: page}
+	sourceExact := sourceJSONLossless(b)
 	data, err := envelope(b)
 	if err != nil {
 		return result, err
@@ -148,6 +149,9 @@ func (c *Client) parseMTeam(b []byte, page int) (SearchResult, error) {
 			r.DetailsURL = "https://kp.m-team.io/detail/" + id
 		}
 		classify(&r)
+		if sourceExact {
+			c.captureMTeamSource(&r, row)
+		}
 		result.Resources = append(result.Resources, r)
 	}
 	result.HasMore = len(result.Resources) == pageSize

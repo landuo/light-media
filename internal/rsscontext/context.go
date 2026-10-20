@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"light-media/internal/releasemeta"
+	"time"
 )
 
 // Frame records GLOBAL defaults, not a precomputed effective local list. Revision
@@ -72,6 +73,20 @@ type Context struct {
 func NewContext(meta *releasemeta.MetaObject, media *MediaInfo, torrent *TorrentInfo, frame Frame) *Context {
 	return &Context{Meta: meta, Media: media, Torrent: torrent, Fields: deep(contextDefaults).(map[string]any), MetaFrame: cloneFrame(frame)}
 }
+
+// NewContextWithFields supplies the seven scalar/set constructor arguments in
+// addition to the three complete native source objects. Unknown constructor
+// keywords fail; explicit nil and the allowed-episode empty set stay present.
+func NewContextWithFields(meta *releasemeta.MetaObject, media *MediaInfo, torrent *TorrentInfo, fields map[string]any, frame Frame) (*Context, error) {
+	c := NewContext(meta, media, torrent, frame)
+	for key, value := range fields {
+		if _, ok := contextDefaults[key]; !ok {
+			return nil, errors.New("TypeError")
+		}
+		c.Set(key, value)
+	}
+	return c, nil
+}
 func (c *Context) Get(k string) any {
 	if v, ok := c.Fields[k]; ok {
 		return v
@@ -123,6 +138,12 @@ func (f LocalFrame) WordsPointer() *[]string {
 	return &words
 }
 func (c *Context) ToDict() (map[string]any, error) {
+	return c.ToDictAt(time.Now())
+}
+
+// ToDictAt freezes the wall-clock input used by the source TorrentInfo property;
+// it does not replace or reduce the native MetaInfo/MediaInfo/TorrentInfo objects.
+func (c *Context) ToDictAt(now time.Time) (map[string]any, error) {
 	var meta map[string]any
 	var e error
 	if c.Meta != nil {
@@ -131,7 +152,7 @@ func (c *Context) ToDict() (map[string]any, error) {
 			return nil, e
 		}
 	}
-	torrent, e := c.Torrent.ToDict()
+	torrent, e := c.Torrent.ToDictAt(now)
 	if e != nil {
 		return nil, e
 	}

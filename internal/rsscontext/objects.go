@@ -10,6 +10,7 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //go:embed schema.json
@@ -422,25 +423,5 @@ func (t *TorrentInfo) DeepCopy() *TorrentInfo {
 	return &TorrentInfo{Fields: deep(t.Fields).(map[string]any)}
 }
 func (t *TorrentInfo) ToDict() (map[string]any, error) {
-	if t == nil {
-		return nil, nil
-	}
-	if truth(t.Get("freedate")) {
-		return nil, errors.New("freedate_clock_adapter_required")
-	}
-	out := map[string]any{}
-	for k, v := range t.Fields {
-		out[k] = v
-	}
-	factor := "未知"
-	if t.Get("uploadvolumefactor") != nil && t.Get("downloadvolumefactor") != nil {
-		u, _ := strconv.ParseFloat(pyString(t.Get("uploadvolumefactor")), 64)
-		d, _ := strconv.ParseFloat(pyString(t.Get("downloadvolumefactor")), 64)
-		factor = map[string]string{"1.00 1.00": "普通", "1.00 0.00": "免费", "2.00 1.00": "2X", "4.00 1.00": "4X", "2.00 0.00": "2X免费", "4.00 0.00": "4X免费", "1.00 0.50": "50%", "2.00 0.50": "2X 50%", "1.00 0.70": "70%", "1.00 0.30": "30%", "1.00 0.75": "75%", "1.00 0.25": "25%"}[fmt.Sprintf("%.2f %.2f", u, d)]
-		if factor == "" {
-			factor = "未知"
-		}
-	}
-	out["volume_factor"], out["freedate_diff"] = factor, ""
-	return out, nil
+	return t.ToDictAt(time.Now())
 }
