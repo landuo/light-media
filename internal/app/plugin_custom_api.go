@@ -231,7 +231,11 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		}
 	}
 	if api.Body != "" && r.Body != nil {
-		body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 512<<10))
+		bodyReader := io.Reader(http.MaxBytesReader(w, r.Body, 512<<10))
+		if brushFlowSnapshotOwner(installation.PluginID, installation.Version) {
+			bodyReader = r.Body
+		}
+		body, err := io.ReadAll(bodyReader)
 		if err != nil {
 			pluginHTTPError(w, &pluginHTTPFailure{413, "Request body too large"})
 			return true
@@ -439,7 +443,18 @@ func (a *App) waitPluginHTTP(ctx context.Context, run PluginRun) (plugins.HTTPRe
 				return plugins.HTTPResponse{}, err
 			}
 			var response plugins.HTTPResponse
-			if !pluginStrictJSON(current.Result, &response) || response.Validate() != nil {
+			if !pluginStrictJSON(current.Result, &response) {
+				return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件API响应无效")
+			}
+			responseErr := response.Validate()
+			owner, ownerErr := a.pluginStore.Installation(ctx, current.InstanceID)
+			if ownerErr != nil {
+				return response, ownerErr
+			}
+			if brushFlowSnapshotOwner(owner.PluginID, owner.Version) {
+				responseErr = validateBrushFlowHTTPResponse(response)
+			}
+			if responseErr != nil {
 				return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件API响应无效")
 			}
 			return response, nil

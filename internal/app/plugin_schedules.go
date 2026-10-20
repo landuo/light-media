@@ -147,7 +147,13 @@ func (p *PluginStore) configurePluginSchedulesWithEffect(ctx context.Context, ru
 		return err
 	}
 	if total > 10000 {
-		return bad("PLUGIN_SCHEDULE_CAPACITY", "插件定时服务数量已达上限，注册未提交")
+		exempt, err := p.brushFlowExemptScheduleCountTx(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if total-exempt > 10000 {
+			return bad("PLUGIN_SCHEDULE_CAPACITY", "插件定时服务数量已达上限，注册未提交")
+		}
 	}
 	updated := *run
 	if effect != nil {

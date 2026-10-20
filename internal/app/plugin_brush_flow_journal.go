@@ -34,6 +34,7 @@ type pluginBrushFlowRuntime struct {
 	beforeRead  func(context.Context)
 	beforeHost  func(context.Context, PluginRun)
 	beforeLease func(context.Context, PluginRun)
+	afterProof  func(context.Context, *brushFlowCall)
 }
 type pluginBrushFlowOwner struct {
 	a                 *App
@@ -90,6 +91,8 @@ type brushFlowCall struct {
 	observations      map[string]map[string]bf.DownloadState
 	candidates        map[string]brushFlowCandidate
 	temporaryTags     map[string]string
+	dataKeys          map[string]bool
+	runCipherSHA      string
 	observedTags      map[string][]string
 }
 

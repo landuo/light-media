@@ -15,7 +15,7 @@ func (p *PluginStore) brushFlowValidateAction(ctx context.Context, q pluginRemov
 	if !pluginStorageID.MatchString(r.RunID) || !pluginStorageDigest.MatchString(r.InputSHA) || r.Revision < 1 || r.EffectiveRevision < r.Revision || (r.Phase != "started" && r.Phase != "confirmed" && r.Phase != "failed") {
 		return brushFlowEvidenceError()
 	}
-	run, e := p.scanPluginRun(q.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, r.RunID))
+	run, e := p.brushFlowLoadRun(ctx, q, r.RunID)
 	if e != nil {
 		return brushFlowEvidenceError()
 	}
@@ -32,7 +32,7 @@ func (p *PluginStore) brushFlowValidateAction(ctx context.Context, q pluginRemov
 	if r.ErrorCode == "BRUSH_FLOW_NOT_STARTED" && !brushFlowKnownNotStarted(r, run) {
 		return brushFlowEvidenceError()
 	}
-	method, raw, e := brushFlowDeferredSpec(run)
+	method, raw, e := p.brushFlowActionSpec(ctx, run)
 	if e != nil || d.Plugin != "BrushFlowLanduo" || d.Version != "5.2.15" || d.Generation != run.Generation || d.Revision != r.Revision || d.InputSHA != r.InputSHA || d.Method != method || r.Method != method || d.Action != r.Action || !deferredPayloadEqual(d.Raw, raw) {
 		return brushFlowEvidenceError()
 	}
@@ -110,4 +110,18 @@ func (p *PluginStore) brushFlowClaimIdentityTx(ctx context.Context, tx *sql.Tx, 
 		}
 	}
 	return s.check()
+}
+
+// A live native call has already passed the complete strict invocation parser
+// and accepted private deferred binding. Reuse that exact specification only
+// for this same immutable input; SQL identities, ciphertext and receipts are
+// still validated above on every point read. Cold/history paths parse normally.
+func (p *PluginStore) brushFlowActionSpec(ctx context.Context, run PluginRun) (string, json.RawMessage, error) {
+	c, ok := ctx.Value(brushFlowCallKey{}).(*brushFlowCall)
+	d, bound := ctx.Value(pluginDeferredExecutionKey{}).(*pluginDeferredCall)
+	lease, leased := ctx.Value(brushFlowLeaseKey{}).(brushFlowLease)
+	if ok && bound && leased && lease.d == d && c != nil && lease.o == c.o && d != nil && c.o != nil && c.o.a.pluginStore == p && d.a == c.o.a && d.run.ID == c.run.ID && run.ID == c.run.ID && run.InstanceID == c.run.InstanceID && run.Version == c.run.Version && run.Generation == c.run.Generation && run.ConfigRevision == c.run.ConfigRevision && run.Action == c.run.Action && bytes.Equal(run.Input, c.run.Input) && bytes.Equal(d.run.Input, c.run.Input) && d.record.Method == c.method {
+		return d.record.Method, d.record.Raw, nil
+	}
+	return brushFlowDeferredSpec(run)
 }

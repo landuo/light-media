@@ -37,7 +37,7 @@ func (p *PluginStore) InstallAndQueue(ctx context.Context, in PluginInstallation
 	if err != nil {
 		return PluginRun{}, err
 	}
-	raw, err := pluginJSON(defaults, true)
+	raw, err := pluginSnapshotJSON(in.PluginID, in.Version, defaults, true)
 	if err != nil {
 		return PluginRun{}, err
 	}
@@ -99,7 +99,7 @@ func (p *PluginStore) Installations(ctx context.Context) ([]PluginInstallation, 
 // SaveConfigAndQueue commits the user's config and its init invocation together.
 // This explicit user save releases migration staging, not config.enabled.
 func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string, revision int64, config any) (PluginStoredValue, PluginRun, error) {
-	raw, err := pluginJSON(config, true)
+	raw, err := p.pluginSnapshotJSON(ctx, p.store.DB, instanceID, config, true)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -251,7 +251,7 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err != nil {
 		return PluginRun{}, err
 	}
-	run.Input, err = pluginJSON(struct {
+	run.Input, err = pluginSnapshotJSON(pluginID, run.Version, struct {
 		Action string          `json:"action"`
 		Config json.RawMessage `json:"config"`
 		Input  json.RawMessage `json:"input,omitempty"`
@@ -259,7 +259,7 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err != nil {
 		return PluginRun{}, err
 	}
-	sealed, err := p.seal("run", instanceID, run.ID, run.Input)
+	sealed, err := p.sealPluginSnapshot("run", instanceID, run.ID, pluginID, run.Version, run.Input)
 	if err != nil {
 		return PluginRun{}, err
 	}
@@ -615,7 +615,7 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 	for key, value := range patch {
 		fields[key] = value
 	}
-	raw, err = pluginJSON(fields, true)
+	raw, err = p.pluginSnapshotJSON(ctx, tx, run.InstanceID, fields, true)
 	if err != nil {
 		return err
 	}
@@ -625,7 +625,7 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 // Internal full replacements share the same snapshot propagation as patches.
 // Only trusted host adapters choose a replacement; it is not a worker method.
 func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, raw json.RawMessage) error {
-	checked, err := pluginJSON(raw, true)
+	checked, err := p.pluginSnapshotJSON(ctx, tx, run.InstanceID, raw, true)
 	if err != nil {
 		return err
 	}
@@ -664,11 +664,15 @@ func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *P
 			return bad("INVALID_PLUGIN_RUN", "排队插件执行快照无效")
 		}
 		invocation["config"] = raw
-		pendingRaw, err = pluginJSON(invocation, false)
+		pendingRaw, err = p.pluginSnapshotJSON(ctx, tx, run.InstanceID, invocation, false)
 		if err != nil {
 			return err
 		}
-		pendingSealed, err = p.seal("run", run.InstanceID, pendingID, pendingRaw)
+		plugin, version, scopeErr := p.pluginSnapshotOwner(ctx, tx, run.InstanceID)
+		if scopeErr != nil {
+			return scopeErr
+		}
+		pendingSealed, err = p.sealPluginSnapshot("run", run.InstanceID, pendingID, plugin, version, pendingRaw)
 		if err != nil {
 			return err
 		}

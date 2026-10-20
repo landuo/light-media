@@ -28,7 +28,7 @@ func brushFinish(t *testing.T, a *App, r PluginRun) PluginRun {
 	done, e := a.pluginStore.Run(context.Background(), r.ID)
 	if e != nil || done.State != "succeeded" {
 		state, _, stateErr := a.pluginStore.brushFlowRead(context.Background(), a.Store.DB, r.InstanceID, r.Generation)
-		t.Fatalf("SDK %s state=%s code=%s error=%v owner=%+v ownerErr=%v", r.Action, done.State, done.ErrorCode, e, state, stateErr)
+		t.Fatalf("SDK %s state=%s code=%s error=%v owner_generation=%d applied_revision=%d config_bytes=%d ownerErr=%v", r.Action, done.State, done.ErrorCode, e, state.Generation, state.AppliedRevision, len(state.Config), stateErr)
 	}
 	return done
 }

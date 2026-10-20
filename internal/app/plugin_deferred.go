@@ -504,6 +504,10 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 	// A cancellation or a lost storage reply after starting is not proof that
 	// nothing happened. Persist only the known outcome using a fresh context.
 	finish, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	if brushFlowSnapshotOwner(d.record.Plugin, d.record.Version) && ctx.Err() == nil {
+		cancel()
+		finish, cancel = brushFlowCompletionContext(ctx)
+	}
 	defer cancel()
 	phase, code := "confirmed", ""
 	if err != nil {

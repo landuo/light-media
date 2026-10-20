@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"crypto/aes"
 	"crypto/cipher"
@@ -253,6 +254,15 @@ func (p *PluginStore) seal(kind, instanceID, key string, raw []byte) ([]byte, er
 }
 
 func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.RawMessage, error) {
+	if bytes.HasPrefix(sealed, []byte(brushFlowSnapshotPrefix)) {
+		if kind != "config" && kind != "run" {
+			return nil, bad("PLUGIN_DATA_CORRUPT", "插件数据无法通过完整性校验")
+		}
+		return p.unsealBound("BrushFlowLanduo@5.2.15/snapshot/"+kind, instanceID, key, sealed[len(brushFlowSnapshotPrefix):], 0)
+	}
+	return p.unsealBound(kind, instanceID, key, sealed, -1)
+}
+func (p *PluginStore) unsealBound(kind, instanceID, key string, sealed []byte, bound int) (json.RawMessage, error) {
 	block, err := aes.NewCipher(p.store.key)
 	if err != nil {
 		return nil, err
@@ -268,7 +278,10 @@ func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.
 	if kind == "clean_seed_journal" || kind == "notice_journal" {
 		limit = pluginCleanInvalidSeedJournalLimit
 	}
-	if len(sealed) < aead.NonceSize()+aead.Overhead() || len(sealed) > limit+aead.NonceSize()+aead.Overhead() {
+	if bound >= 0 {
+		limit = bound
+	}
+	if len(sealed) < aead.NonceSize()+aead.Overhead() || limit > 0 && len(sealed) > limit+aead.NonceSize()+aead.Overhead() {
 		return nil, bad("PLUGIN_DATA_CORRUPT", "插件数据无法通过完整性校验")
 	}
 	aad, _ := json.Marshal([]string{"light-media/plugins/v1", kind, instanceID, key})
@@ -453,11 +466,15 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 		return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", "插件数据命名空间或修订无效")
 	}
 	var installed bool
-	if err := tx.QueryRowContext(ctx, `SELECT installed FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&installed); err != nil {
+	var plugin, version string
+	if err := tx.QueryRowContext(ctx, `SELECT installed,plugin_id,version FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&installed, &plugin, &version); err != nil {
 		return PluginStoredValue{}, err
 	}
 	if !installed {
 		return PluginStoredValue{}, bad("PLUGIN_NOT_INSTALLED", "插件已卸载，保留数据只读")
+	}
+	if kind == "config" && len(raw) > pluginValueLimit && !brushFlowSnapshotOwner(plugin, version) {
+		return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", "插件数据不是有效JSON或超过大小上限")
 	}
 	if kind == "config" && key == "main" {
 		if err := p.pluginNativeConfigWriteTx(ctx, tx, instanceID, expectedRevision, raw); err != nil {
@@ -472,7 +489,7 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 	if revision != expectedRevision {
 		return PluginStoredValue{}, bad("PLUGIN_REVISION_CONFLICT", "插件数据已变化，请重新读取后保存")
 	}
-	sealed, err := p.seal(kind, instanceID, key, raw)
+	sealed, err := p.sealPluginSnapshot(kind, instanceID, key, plugin, version, raw)
 	if err != nil {
 		return PluginStoredValue{}, err
 	}
@@ -486,7 +503,13 @@ func (p *PluginStore) saveValue(ctx context.Context, instanceID, kind, key strin
 	if kind == "data" {
 		limit = pluginDataValueLimit
 	}
-	raw, err := pluginJSONLimit(value, kind == "config", limit)
+	var raw json.RawMessage
+	var err error
+	if kind == "config" {
+		raw, err = p.pluginSnapshotJSON(ctx, p.store.DB, instanceID, value, true)
+	} else {
+		raw, err = pluginJSONLimit(value, false, limit)
+	}
 	if err != nil {
 		return PluginStoredValue{}, err
 	}

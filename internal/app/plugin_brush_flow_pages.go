@@ -20,6 +20,7 @@ type brushFlowDescriptor struct {
 	Instance                    string
 	Generation, AppliedRevision int64
 	Config                      json.RawMessage
+	ConfigRoot                  bl.Root `json:"ConfigRoot,omitempty"`
 	AppliedConfigSHA            string
 	Roots                       bl.Roots
 	LiveSourceIndex             bool
@@ -29,16 +30,19 @@ type brushFlowRunPage struct {
 	Effects int
 }
 type brushFlowPageView struct {
-	p               *PluginStore
-	ctx             context.Context
-	tx              *sql.Tx
-	db              *sql.DB
-	store           *bl.Store
-	roots           bl.Roots
-	deletedValues   map[string]bool
-	closedSources   map[string]bool
-	liveSourceIndex bool
-	err             error
+	p                *PluginStore
+	ctx              context.Context
+	tx               *sql.Tx
+	db               *sql.DB
+	store            *bl.Store
+	roots            bl.Roots
+	deletedValues    map[string]bool
+	closedSources    map[string]bool
+	liveSourceIndex  bool
+	configRoot       bl.Root
+	configSHA        string
+	configGeneration int64
+	err              error
 }
 
 func (v *brushFlowPageView) fail(err error) {
@@ -363,7 +367,17 @@ func (p *PluginStore) brushFlowDecodeState(ctx context.Context, tx *sql.Tx, inst
 			return s, brushFlowEvidenceError()
 		}
 	}
-	s = brushFlowState{Version: 2, Instance: instance, Generation: g, AppliedRevision: d.AppliedRevision, Config: d.Config, AppliedConfigSHA: d.AppliedConfigSHA, Runs: map[string]brushFlowAction{}, Sources: map[string]brushFlowScanSource{}, Values: map[string]brushFlowValue{}, pages: &brushFlowPageView{p: p, ctx: ctx, tx: tx, store: store, roots: d.Roots, deletedValues: map[string]bool{}, closedSources: map[string]bool{}, liveSourceIndex: d.LiveSourceIndex}}
+	if d.ConfigRoot != "" {
+		if !pluginStorageDigest.MatchString(string(d.ConfigRoot)) || len(d.Config) > 0 && !bytes.Equal(d.Config, []byte("null")) {
+			return s, brushFlowEvidenceError()
+		}
+		config, ok, err := store.Lookup(ctx, tx, bl.AppliedConfig, d.ConfigRoot, "main")
+		if err != nil || !ok || !json.Valid(config) {
+			return s, brushFlowEvidenceError()
+		}
+		d.Config = config
+	}
+	s = brushFlowState{Version: 2, Instance: instance, Generation: g, AppliedRevision: d.AppliedRevision, Config: d.Config, AppliedConfigSHA: d.AppliedConfigSHA, Runs: map[string]brushFlowAction{}, Sources: map[string]brushFlowScanSource{}, Values: map[string]brushFlowValue{}, pages: &brushFlowPageView{p: p, ctx: ctx, tx: tx, store: store, roots: d.Roots, deletedValues: map[string]bool{}, closedSources: map[string]bool{}, liveSourceIndex: d.LiveSourceIndex, configRoot: d.ConfigRoot, configSHA: tokenHash(string(d.Config)), configGeneration: g}}
 	return s, nil
 }
 func (p *PluginStore) brushFlowEncodeState(ctx context.Context, tx *sql.Tx, s brushFlowState) ([]byte, error) {
@@ -507,7 +521,19 @@ func (p *PluginStore) brushFlowEncodeState(ctx context.Context, tx *sql.Tx, s br
 			}
 		}
 	}
-	return json.Marshal(brushFlowDescriptor{2, s.Instance, s.Generation, s.AppliedRevision, s.Config, s.AppliedConfigSHA, roots, true})
+	descriptor := brushFlowDescriptor{Version: 2, Instance: s.Instance, Generation: s.Generation, AppliedRevision: s.AppliedRevision, Config: s.Config, AppliedConfigSHA: s.AppliedConfigSHA, Roots: roots, LiveSourceIndex: true}
+	if len(s.Config) > pluginValueLimit {
+		if s.pages != nil && s.pages.configGeneration == s.Generation && s.pages.configRoot != "" && s.pages.configSHA == tokenHash(string(s.Config)) {
+			descriptor.ConfigRoot = s.pages.configRoot
+		} else {
+			descriptor.ConfigRoot, e = store.Put(ctx, tx, bl.AppliedConfig, store.Empty(bl.AppliedConfig), "main", s.Config)
+			if e != nil {
+				return nil, e
+			}
+		}
+		descriptor.Config = nil
+	}
+	return json.Marshal(descriptor)
 }
 
 func (v *brushFlowPageView) iterate(c bl.Collection, root bl.Root, fn func(string, []byte) error) error {

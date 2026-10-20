@@ -12,9 +12,6 @@ import (
 )
 
 func (c *brushFlowCall) writeSchedulesTx(ctx context.Context, tx *sql.Tx, revision int64, config bf.Row) error {
-	if len(c.services) > 1000 {
-		return bad("INVALID_PLUGIN_SCHEDULE", "刷流任务定时服务超出上限")
-	}
 	zone, e := autoBackupHostTimezone()
 	if e != nil {
 		return e
@@ -88,13 +85,6 @@ func (c *brushFlowCall) writeSchedulesTx(ctx context.Context, tx *sql.Tx, revisi
 		if _, e = tx.ExecContext(ctx, `UPDATE plugin_schedules SET active=0,updated_at=? WHERE instance_id=? AND service_id=?`, now(), c.o.instance, id); e != nil {
 			return e
 		}
-	}
-	var total int
-	if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_schedules WHERE active=1`).Scan(&total); e != nil {
-		return e
-	}
-	if total > 10000 {
-		return bad("PLUGIN_SCHEDULE_CAPACITY", "插件定时服务数量已达上限")
 	}
 	return nil
 }

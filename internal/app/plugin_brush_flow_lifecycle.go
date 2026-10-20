@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -50,7 +51,12 @@ func (a *App) pluginBrushFlowLifecycleHTTP(w http.ResponseWriter, r *http.Reques
 			Revision int64           `json:"revision"`
 			Config   json.RawMessage `json:"config"`
 		}
-		if err = decodePluginBody(w, r, &body); err != nil {
+		decoder := json.NewDecoder(r.Body)
+		decoder.DisallowUnknownFields()
+		if decoder.Decode(&body) != nil || decoder.Decode(new(any)) != io.EOF {
+			err = bad("INVALID_PLUGIN_JSON", "插件请求含无效或尚未支持的字段")
+		}
+		if err != nil {
 			return nil, err
 		}
 		value, e := brushFlowConfig(body.Config)

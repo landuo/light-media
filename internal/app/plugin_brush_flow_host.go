@@ -25,7 +25,7 @@ func (c *brushFlowCall) guardTx(ctx context.Context, tx *sql.Tx) error {
 	if e != nil || plugin != bf.PluginID || version != bf.Version || gen != c.o.generation || !installed || !enabled {
 		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流安装或配置已经变化")
 	}
-	r, e := c.o.a.pluginStore.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, c.run.ID))
+	r, e := c.o.a.pluginStore.brushFlowLoadRun(ctx, tx, c.run.ID)
 	if e != nil || r.State != "running" || r.InstanceID != c.run.InstanceID || r.Version != c.run.Version || r.Generation != c.run.Generation || r.ConfigRevision != c.run.ConfigRevision || r.Action != c.run.Action || !bytes.Equal(r.Input, c.run.Input) {
 		return bad("BRUSH_FLOW_SCOPE_DENIED", "站点刷流执行身份已经变化")
 	}
@@ -57,6 +57,7 @@ func (c *brushFlowCall) guardTx(ctx context.Context, tx *sql.Tx) error {
 			return err
 		}
 		c.revision, c.config = revision, cfg
+		c.dataKeys = nil
 	}
 
 	if c.run.Action == "api" {
@@ -159,23 +160,26 @@ func brushFlowDataKey(c *brushFlowCall, key string) bool {
 	if (c.run.Action == "init" || c.run.Action == "reload") && (key == "torrents" || key == "archived" || key == "unmanaged") {
 		return true
 	}
-	ids := brushFlowTaskIDs(c.config)
-	if c.staged != nil {
-		ids = append(ids, brushFlowTaskIDs(c.staged)...)
-	}
-	var inv struct {
-		Config bf.Row `json:"config"`
-	}
-	json.Unmarshal(c.run.Input, &inv)
-	ids = append(ids, brushFlowTaskIDs(inv.Config)...)
-	for _, id := range ids {
-		for _, n := range bf.DataNames {
-			if key == "task."+id+"."+n {
-				return true
+	if c.dataKeys == nil {
+		ids := brushFlowTaskIDs(c.config)
+		if c.staged != nil {
+			ids = append(ids, brushFlowTaskIDs(c.staged)...)
+		}
+		var inv struct {
+			Config bf.Row `json:"config"`
+		}
+		if json.Unmarshal(c.run.Input, &inv) != nil {
+			return false
+		}
+		ids = append(ids, brushFlowTaskIDs(inv.Config)...)
+		c.dataKeys = map[string]bool{}
+		for _, id := range ids {
+			for _, name := range bf.DataNames {
+				c.dataKeys["task."+id+"."+name] = true
 			}
 		}
 	}
-	return false
+	return c.dataKeys[key]
 }
 func (o *pluginBrushFlowOwner) Get(ctx context.Context, key string) (any, error) {
 	c := o.call(ctx)
@@ -301,6 +305,7 @@ func (o *pluginBrushFlowOwner) SaveConfig(ctx context.Context, value bf.Row) err
 		return brushFlowEvidenceError()
 	}
 	c.staged = value
+	c.dataKeys = nil
 	return nil
 }
 func (o *pluginBrushFlowOwner) RefreshSchedules(ctx context.Context, services []bf.Service) error {

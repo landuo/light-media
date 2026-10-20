@@ -373,6 +373,10 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	}
 	brushNotStarted := false
 	finishCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	if brushFlowSnapshotOwner(installation.PluginID, installation.Version) && ctx.Err() == nil {
+		cancel()
+		finishCtx, cancel = brushFlowCompletionContext(ctx)
+	}
 	defer cancel()
 	if installation.PluginID == "PluginUnInstall" && installation.Version == "2.2" {
 		committed, found, receiptErr := a.pluginStore.committedUninstallResult(finishCtx, &run)

@@ -30,12 +30,13 @@ var ErrInput = errors.New("invalid BrushFlow ledger scope or input")
 type Collection string
 
 const (
-	Runs       Collection = "runs"
-	Effects    Collection = "effects"
-	Sources    Collection = "sources"
-	Unresolved Collection = "unresolved"
-	Values     Collection = "values"
-	chunkBytes            = 64 << 10
+	Runs          Collection = "runs"
+	Effects       Collection = "effects"
+	Sources       Collection = "sources"
+	Unresolved    Collection = "unresolved"
+	Values        Collection = "values"
+	AppliedConfig Collection = "applied-config"
+	chunkBytes               = 64 << 10
 )
 
 type Root string
@@ -91,7 +92,7 @@ func CreateSchema(ctx context.Context, tx *sql.Tx) error {
 	return e
 }
 func validCollection(c Collection) bool {
-	return c == Runs || c == Effects || c == Sources || c == Unresolved || c == Values
+	return c == Runs || c == Effects || c == Sources || c == Unresolved || c == Values || c == AppliedConfig
 }
 func validDigest(v string) bool {
 	b, e := hex.DecodeString(v)

@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"sync"
-	"time"
 
 	bf "light-media/internal/plugins/brushflow"
 )
@@ -213,6 +212,9 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 		return nil, e
 	}
 	c := &brushFlowCall{o: lease.o, run: *run, method: method, config: value, revision: cfg.Revision, writes: map[string]json.RawMessage{}, observations: map[string]map[string]bf.DownloadState{}}
+	if e = c.captureRunCipher(ctx); e != nil {
+		return nil, e
+	}
 	lease.o.mu.Lock()
 	live := lease.o.live[run.ID]
 	if live == nil || live.d != d || live.c != nil {
@@ -240,9 +242,12 @@ func (a *App) pluginBrushFlowHost(ctx context.Context, in PluginInstallation, ru
 	if e != nil {
 		return nil, e
 	}
+	if hook := a.pluginBrushFlow.afterProof; hook != nil {
+		hook(ctx, c)
+	}
 	var result json.RawMessage
 	result, e = c.execute(ctx)
-	finish, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
+	finish, cancel := brushFlowCompletionContext(ctx)
 	defer cancel()
 	if c.uncertain.Load() {
 		return nil, bad("BRUSH_FLOW_UNCERTAIN", "下载或远端写操作结果待核对，未重新派发")
