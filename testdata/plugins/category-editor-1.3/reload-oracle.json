@@ -1,0 +1,170 @@
+{
+  "source": "complete installed methods compiled locally; fake file IO/notifications only",
+  "yaml": "0.19.1; all 33 Python sources SHA match installed package",
+  "cases": [
+    {
+      "case": "blank",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "comments",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "null",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "empty_map",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "empty_sequence",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "false",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "zero",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "empty_string",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 0,
+      "cold_parser_warning_count": 0
+    },
+    {
+      "case": "parser_failure",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 1,
+      "cold_parser_warning_count": 1
+    },
+    {
+      "case": "duplicate_key",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 1,
+      "cold_parser_warning_count": 1
+    },
+    {
+      "case": "multiple_documents",
+      "warm": [
+        "缓存电影",
+        "缓存剧集"
+      ],
+      "cold": [
+        "",
+        ""
+      ],
+      "warm_parser_warning_count": 1,
+      "cold_parser_warning_count": 1
+    }
+  ],
+  "orders": [
+    {
+      "notice_failure": false,
+      "order": [
+        "write",
+        "reload",
+        "notice",
+        "patch"
+      ],
+      "enabled_after": false
+    },
+    {
+      "notice_failure": true,
+      "order": [
+        "write",
+        "reload",
+        "notice"
+      ],
+      "enabled_after": true
+    }
+  ]
+}

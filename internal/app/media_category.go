@@ -48,10 +48,18 @@ func categoryPolicyError(reason string) error {
 }
 
 func loadMediaCategoryPolicy(dataDir string) (mediaCategoryPolicy, error) {
+	raw, err := readMediaCategoryPolicy(dataDir)
+	if err != nil {
+		return nil, err
+	}
+	return parseMediaCategoryPolicy(raw)
+}
+
+func readMediaCategoryPolicy(dataDir string) ([]byte, error) {
 	path := filepath.Join(dataDir, "category.yaml")
 	info, err := os.Lstat(path)
 	if errors.Is(err, os.ErrNotExist) {
-		return parseMediaCategoryPolicy([]byte(defaultMediaCategoryPolicy))
+		return []byte(defaultMediaCategoryPolicy), nil
 	}
 	if err != nil || !info.Mode().IsRegular() || info.Size() > maxCategoryPolicyBytes {
 		return nil, categoryPolicyError("请使用不超过64 KiB的普通配置文件")
@@ -65,7 +73,7 @@ func loadMediaCategoryPolicy(dataDir string) (mediaCategoryPolicy, error) {
 	if err != nil || len(raw) > maxCategoryPolicyBytes {
 		return nil, categoryPolicyError("配置文件读取失败或超过64 KiB")
 	}
-	return parseMediaCategoryPolicy(raw)
+	return raw, nil
 }
 
 func parseMediaCategoryPolicy(raw []byte) (mediaCategoryPolicy, error) {
@@ -198,7 +206,7 @@ func (p mediaCategoryPolicy) category(identity catalog.Media) string {
 }
 
 func (a *App) importMediaCategory(ctx context.Context, identity catalog.Media) (catalog.Media, string, error) {
-	policy, err := loadMediaCategoryPolicy(a.Dir)
+	policy, err := a.currentMediaCategoryPolicy()
 	if err != nil || len(policy[identity.MediaType]) == 0 {
 		return identity, "", err
 	}

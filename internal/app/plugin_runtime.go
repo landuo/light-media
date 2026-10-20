@@ -549,7 +549,7 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		if json.Unmarshal(raw, &in) != nil {
 			return nil, bad("INVALID_CATEGORY_POLICY", "二级分类策略无效")
 		}
-		if _, err := parseMediaCategoryPolicy([]byte(in.Content)); err != nil {
+		if _, _, err := categoryPluginReload([]byte(in.Content)); err != nil {
 			return nil, err
 		}
 		if err := a.writePluginCategory(in.Content); err != nil {
@@ -631,6 +631,14 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 }
 
 func (a *App) writePluginCategory(content string) error {
+	// Preserve the previous process maps before replacing their backing text.
+	if _, err := a.currentMediaCategoryPolicy(); err != nil {
+		// A valid new policy may repair an unsupported old file. No old maps are
+		// invented on this path; the replacement is parsed again after the write.
+		if _, kind, check := categoryPluginReload([]byte(content)); check != nil || kind != categoryReplaceMaps {
+			return err
+		}
+	}
 	path := filepath.Join(a.Dir, "category.yaml")
 	if info, err := os.Lstat(path); err == nil && !info.Mode().IsRegular() || err != nil && !errors.Is(err, os.ErrNotExist) {
 		return bad("CATEGORY_FILE_UNSAFE", "分类策略目标不是普通配置文件")
@@ -653,5 +661,6 @@ func (a *App) writePluginCategory(content string) error {
 	if err != nil {
 		return bad("CATEGORY_WRITE_FAILED", "写入二级分类策略失败，原配置保留")
 	}
-	return nil
+	_, err = a.currentMediaCategoryPolicy()
+	return err
 }

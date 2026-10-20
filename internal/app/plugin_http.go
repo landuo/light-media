@@ -565,7 +565,7 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 			return nil, err
 		}
 		if config.Enabled {
-			if _, err := parseMediaCategoryPolicy([]byte(config.Content)); err != nil {
+			if _, _, err := categoryPluginReload([]byte(config.Content)); err != nil {
 				return nil, err
 			}
 		}

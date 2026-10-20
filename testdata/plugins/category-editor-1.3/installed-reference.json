@@ -1,0 +1,142 @@
+{
+  "installed-categoryeditor.py": {
+    "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+    "bytes": 4291
+  },
+  "installed-category-helper.py": {
+    "sha256": "1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2",
+    "bytes": 8294
+  },
+  "form": [
+    {
+      "component": "VForm",
+      "content": [
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12,
+                "md": 6
+              },
+              "content": [
+                {
+                  "component": "VSwitch",
+                  "props": {
+                    "model": "enabled",
+                    "label": "启用插件（写入配置文件）"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "VRow",
+          "content": [
+            {
+              "component": "VCol",
+              "props": {
+                "cols": 12
+              },
+              "content": [
+                {
+                  "component": "VAceEditor",
+                  "props": {
+                    "modelvalue": "content",
+                    "lang": "yaml",
+                    "theme": "monokai",
+                    "style": "height: 30rem"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "original_metadata": {
+    "at": "2026-10-20T11:43:33.002532+00:00",
+    "source": {
+      "path": "/app/app/plugins/categoryeditor/__init__.py",
+      "bytes": 4291,
+      "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27"
+    },
+    "installed": true,
+    "config": {
+      "exists": true,
+      "raw_bytes": 9299,
+      "raw_sha256": "59ce8c0dd98c95235ffffed7c8e091b0c72c59e92b7cc5e05aa45cfe822b6821",
+      "fields": [
+        "content",
+        "enabled"
+      ],
+      "enabled": false,
+      "content_bytes": 5499,
+      "content_sha256": "61502da87836ee756bdc8e5e3dad67d31893e517ba4c170a170ba8a9a695ac47"
+    },
+    "plugin_table_schemas": {
+      "plugindata": [
+        [
+          0,
+          "id",
+          "INTEGER",
+          1,
+          null,
+          1
+        ],
+        [
+          1,
+          "plugin_id",
+          "VARCHAR",
+          1,
+          null,
+          0
+        ],
+        [
+          2,
+          "key",
+          "VARCHAR",
+          1,
+          null,
+          0
+        ],
+        [
+          3,
+          "value",
+          "JSON",
+          0,
+          null,
+          0
+        ]
+      ]
+    },
+    "policies": {
+      "/app/config/category.yaml": {
+        "exists": true,
+        "bytes": 5298,
+        "sha256": "1095b3aeb315569f541fded31bc77f43fa625cb9ac4844e3a28ba7d7868b2303"
+      },
+      "/config/category.yaml": {
+        "exists": true,
+        "bytes": 5499,
+        "sha256": "61502da87836ee756bdc8e5e3dad67d31893e517ba4c170a170ba8a9a695ac47"
+      }
+    }
+  },
+  "helper_and_kv": {
+    "at": "2026-10-20T11:44:16.559139+00:00",
+    "kv_count": 0,
+    "helper_path": "/app/app/modules/themoviedb/category.py",
+    "helper_sha256": "1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2",
+    "helper_bytes": 8294
+  },
+  "native_policy": {
+    "path": "/vol2/1000/docker/light-media/data/category.yaml",
+    "bytes": 5499,
+    "sha256": "61502da87836ee756bdc8e5e3dad67d31893e517ba4c170a170ba8a9a695ac47"
+  },
+  "runtime_status": "read-only reference; actual production plugin configuration not migrated"
+}

@@ -94,7 +94,7 @@ func (a *App) priorityRulesAPI(w http.ResponseWriter, r *http.Request, section s
 			}
 			revisions[key] = revision
 		}
-		policy, err := loadMediaCategoryPolicy(a.Dir)
+		policy, err := a.currentMediaCategoryPolicy()
 		if err != nil {
 			return nil, err
 		}

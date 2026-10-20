@@ -57,12 +57,13 @@ func HandleCategoryEditor(ctx context.Context, method string, payload json.RawMe
 		if _, err := host(ctx, "category.write", request); err != nil {
 			return nil, err
 		}
-		// Only clear the one-shot flag after the category file was accepted.
-		if _, err := host(ctx, "config.patch", json.RawMessage(`{"enabled":false}`)); err != nil {
-			return nil, err
-		}
 		notice, _ := json.Marshal(map[string]string{"title": "二级分类策略", "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"})
 		if _, err := host(ctx, "notification.post", notice); err != nil {
+			return nil, err
+		}
+		// Source order is write/reload, system message, then close the one-shot
+		// switch and persist config. A failed message must not clear the switch.
+		if _, err := host(ctx, "config.patch", json.RawMessage(`{"enabled":false}`)); err != nil {
 			return nil, err
 		}
 		return json.RawMessage(`{"enabled":false,"applied":true}`), nil

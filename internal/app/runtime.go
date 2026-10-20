@@ -35,6 +35,7 @@ type App struct {
 	logs                    *runtimeLogger
 	logError                string
 	catMu                   sync.Mutex
+	mediaCategories         mediaCategoryRuntime
 	catClient               *catalog.Client
 	catCreds                TMDBConfig
 	catProxy                networkproxy.Config
@@ -97,7 +98,7 @@ type Options struct {
 	Web           http.Handler
 }
 
-const appVersion = "0.3.21"
+const appVersion = "0.4.0"
 
 type APIError struct {
 	Code    string `json:"code"`
@@ -171,6 +172,9 @@ func New(opts Options) (*App, error) {
 		s.Close()
 		return nil, e
 	}
+	// Match the original CategoryHelper process lifetime. Syntax failures start
+	// empty on a cold process; a later failed/empty reload retains these maps.
+	_, _ = a.currentMediaCategoryPolicy()
 	return a, nil
 }
 func (a *App) Start(parent context.Context) {

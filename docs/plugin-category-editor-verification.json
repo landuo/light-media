@@ -1,0 +1,232 @@
+{
+  "baseline": "bf769d2148878802d99994961267f61425ddb3a9",
+  "version": "0.4.0",
+  "frozen_inputs": 3316,
+  "source_manifest_sha256": "1ff14769b6fab5b390c9a2d44f3171217f5612ee53fd40c5b379936b39363027",
+  "focused_changes": 18,
+  "agent_paths": 16,
+  "shared_three_way": [
+    "internal/app/plugin_runtime.go"
+  ],
+  "root_changes": [
+    "version metadata",
+    "final same-binary UI documentation correction"
+  ],
+  "checks": {
+    "app": [
+      {
+        "command": [
+          "go",
+          "test",
+          "-json",
+          "-count=1",
+          "./internal/app"
+        ],
+        "exit_code": 0,
+        "seconds": 418.509,
+        "log": "app-0.log",
+        "sha256": "2e22487c637ede36d1b82fc653211dbcfecf913993f235baae74e83c4dfc1e1d",
+        "top_pass": 852,
+        "inclusive_pass": 1832,
+        "failed": [],
+        "skipped": [
+          "TestIsolatedDownloadersRealTransferAndImport",
+          "TestIsolatedFNOSProductWorkflow",
+          "TestIsolatedCustomHostsNetwork",
+          "TestPublicRemoteIdentifiersCorpus",
+          "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+        ]
+      }
+    ],
+    "race": [
+      {
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "-json",
+          "-count=1",
+          "./internal/app",
+          "-run",
+          "Test(Category|MediaCategory|CustomMediaCategory|FullCustomMediaCategory|DefaultMediaCategory|DisabledMediaCategory|PriorityRule|PluginStore|Plugin.*Migration|PluginRuntime|BrushFlow.*Completion)"
+        ],
+        "exit_code": 0,
+        "seconds": 114.765,
+        "log": "race-0.log",
+        "sha256": "61007b96d4a7275d0816e1d6b44dc4ca472f7f86d8bf230bfcfb93c3e5f040a1",
+        "top_pass": 34,
+        "inclusive_pass": 67,
+        "failed": [],
+        "skipped": []
+      }
+    ],
+    "core": [
+      {
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "-json",
+          "-count=1",
+          "./internal/plugins/builtin"
+        ],
+        "exit_code": 0,
+        "seconds": 18.501,
+        "log": "core-0.log",
+        "sha256": "eb6d5dd82e991e47be616edd6c1a687bbff75b277b93a8f83f15344a44e338e7",
+        "top_pass": 16,
+        "inclusive_pass": 111,
+        "failed": [],
+        "skipped": []
+      }
+    ],
+    "build": [
+      {
+        "command": [
+          "go",
+          "vet",
+          "./internal/app",
+          "./internal/plugins/builtin"
+        ],
+        "exit_code": 0,
+        "seconds": 9.131,
+        "log": "build-0.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_category_editor_formal_v040/light-media-v040-native",
+          "./cmd/server"
+        ],
+        "exit_code": 0,
+        "seconds": 20.547,
+        "log": "build-1.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-ldflags=-s -w",
+          "-o",
+          "/Users/accidia/projects/light-media/work/_category_editor_formal_v040/light-media-v040-linux-amd64",
+          "./cmd/server"
+        ],
+        "exit_code": 0,
+        "seconds": 25.133,
+        "log": "build-2.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "web": [
+      {
+        "command": [
+          "npm",
+          "test"
+        ],
+        "exit_code": 0,
+        "seconds": 8.946,
+        "log": "web-0.log",
+        "sha256": "2fa5fee37ec106cf8b831bab561ee57b7c60dd9ed24cc728e502c052450668f7"
+      }
+    ]
+  },
+  "web_build": {
+    "exit_code": 0,
+    "dist_files": 50,
+    "rebuilt_files": 50,
+    "different_paths": [],
+    "log_sha256": "1607477becd95ee41b74809febef0a6ff242614b3747dbeafde31a4a03846a0d"
+  },
+  "tool_smoke": {
+    "state": "passed",
+    "dry_run_read_only": true,
+    "apply_and_replay_one_receipt": true,
+    "cold_server_version": "0.4.0",
+    "live_lock_refused": true,
+    "checks": {
+      "installations": 1,
+      "receipts": 1,
+      "runs": 0,
+      "kv": 0,
+      "notifications": 0
+    },
+    "policy_unchanged": true,
+    "tool_native_sha256": "d40f630073986579257aca7b9968eb26a66e931e5a94723d3aad98bafd8875bd",
+    "tool_linux_sha256": "57ab17cd5982126bd0f30fcaae99bc2edfedb0f193c253a2b04dba054c5a7b9c",
+    "server_native_sha256": "4edca174628b04c967c92a154e0381c148b7fce0ae9157a11c579dab4ee78c20",
+    "server_linux_sha256": "7732dd6a7f7d3c85f41589a0aa7250c385bc1e1f33ef65857ebe8cd3b805ef22",
+    "prod_writes": 0,
+    "owned_cleanup": true
+  },
+  "evidence": [
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/agent-HANDOFF-FINAL.txt.gz",
+      "input_sha256": "6710796ee6581e0fb76f433f0d3af135d7c0e3e5a4a70b23486220dce12fe54f",
+      "archive_sha256": "ed45220c75462faf67cacf22118ed53a6088c3af1321cad11c9c3e170e66e7ad"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/agent-VERIFICATION.json.gz",
+      "input_sha256": "1b0aa18cd13275b1dec9c3591260e02c75225fb981afcb019ee7d437e4e52f4a",
+      "archive_sha256": "f12ac150bb7b514c511b9b5fc734aafc42413cadda0b5171fa1fa91532eff91c"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/agent-UI-VERIFICATION.json.gz",
+      "input_sha256": "6cc4060ffa9827ed1a58824a9c420ca13c2b5bae616cc05e3a9351ee3ad8b2cc",
+      "archive_sha256": "8274047f395faf357d83acd9893334579522618b772d7d1f23ec7d957f0e7f44"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/agent-SOURCE-FROZEN.json.gz",
+      "input_sha256": "799be2e901bf88620fc588ec96eb34ab5c6c180f8e08e4f6643bd8fc4688bd9f",
+      "archive_sha256": "45402cbd2eb59eb15458b05435229e66175923f9aca271038e8139df94906e0f"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-SOURCE-INPUTS.json.gz",
+      "input_sha256": "1ff14769b6fab5b390c9a2d44f3171217f5612ee53fd40c5b379936b39363027",
+      "archive_sha256": "bff81a970a23fc8c055e326d83742e5ad2019b4720e69d88e19b7ab9c8eaf807"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-FOCUSED.json.gz",
+      "input_sha256": "d16339502f581bb1ee0fe35abf016e0a74bad9ce67126a659fe7d429cd7a20cd",
+      "archive_sha256": "7176ae7f5cc1acae8f22a192d1366a696e26bc4d7b3094df2bf520019b975f4b"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-app.jsonl.gz",
+      "input_sha256": "2e22487c637ede36d1b82fc653211dbcfecf913993f235baae74e83c4dfc1e1d",
+      "archive_sha256": "6b6ffc1e190ec41ea122fc4476221bb7d547aebf4c434bbec3440ab8aec31f99"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-race.jsonl.gz",
+      "input_sha256": "61007b96d4a7275d0816e1d6b44dc4ca472f7f86d8bf230bfcfb93c3e5f040a1",
+      "archive_sha256": "dcc4ad0b2f2fdb74a7b23acf9f2deada38cce1ccd195217a45bb7d8db04d0111"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-core-race.jsonl.gz",
+      "input_sha256": "eb6d5dd82e991e47be616edd6c1a687bbff75b277b93a8f83f15344a44e338e7",
+      "archive_sha256": "2327f4f1d96ba01fb2bc7d629f1bf3a2e3d2defe40eb8fc648c615cd269c3da1"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-web-build.log.gz",
+      "input_sha256": "1607477becd95ee41b74809febef0a6ff242614b3747dbeafde31a4a03846a0d",
+      "archive_sha256": "7628177a501db83a4775f3ea7489e7183836edb5a43021c0a7424f01af27767f"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/root-tool-smoke-result.json.gz",
+      "input_sha256": "ebd73680bccbe30accf1a2d1e0436409badf42f26e69018cedb34729a634e4dd",
+      "archive_sha256": "efc8224e01f21604bda8cea4ec9bf576eba8d593d0276373bceffa620a13b35d"
+    },
+    {
+      "path": "testdata/plugins/category-editor-1.3/verification/owned-migration-tool.go.gz",
+      "input_sha256": "0daa67c9f4d259776306efaf80a613df279fc87721cdf5ed6b261a72369a11a3",
+      "archive_sha256": "aaf2336b109d1cc45e8af111e76e2a0f978ea7eef1d8f5d30f9ec0f768073bc7"
+    }
+  ],
+  "production_deployed": false,
+  "original_plugins_migrated": 0,
+  "pending": "Actual deployment, disabled import, cold verification and production UI. Other22 plugins incomplete; no blanket1:1 claim."
+}
