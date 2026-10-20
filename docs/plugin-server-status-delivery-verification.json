@@ -1,0 +1,103 @@
+{
+  "state": "passed",
+  "base": "dca1d1f84f615d018ed0dd22ced5f2a58ad0c885",
+  "source_files": 3409,
+  "focus_paths": 10,
+  "compiler_inputs": 5330,
+  "source_drift": 0,
+  "compiler_drift": 0,
+  "source_manifest_sha256": "89c0eea502cf437422f2df1f5274ca1b0af65902acec4652f941d9602033aa7e",
+  "focus_manifest_sha256": "05a7b23827bfa90121964a353e80af1445545332b9fbcd0cdfb014ddef1b0869",
+  "normal": {
+    "top": {
+      "pass": 20,
+      "skip": 1
+    },
+    "inclusive": {
+      "pass": 46,
+      "skip": 1
+    }
+  },
+  "race": {
+    "top": {
+      "pass": 20,
+      "skip": 1
+    },
+    "inclusive": {
+      "pass": 46,
+      "skip": 1
+    }
+  },
+  "pure_package": {
+    "top": {
+      "pass": 8
+    },
+    "inclusive": {
+      "pass": 213
+    }
+  },
+  "frontend": {
+    "tests_pass": 163,
+    "build_exit": 0
+  },
+  "vet_exit": 0,
+  "native_build_exit": 0,
+  "linux_cgo0_build_exit": 0,
+  "binaries": {
+    "light-media-owned": "22d3e663f95743f1033c90f4b1c4504a11eb9baa529f812bcae94e9d29b861c5",
+    "light-media-linux-owned": "b8e56d0446960cf79c102e84822df705eb92422aeb94669102ea44dfc134a8d6",
+    "server-status-migrate-owned": "00903058eea435538420a182508a3fabc05d0f3e1988cbdc837a07a80dadaaf3",
+    "server-status-migrate-linux-owned": "c5fd8102bb4be4004e3ab24f40b1dc6abe060c25689e8f8e5dd3b27ea8deade2"
+  },
+  "source": {
+    "source_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+    "config_sha256": "230cc6899bbbe3afa7e15808f8cdf4badc2afdec8366fa6bc5a4ea41aa526851",
+    "config_bytes": 16,
+    "installed_count": 1,
+    "kv_count": 0,
+    "file_count": 0,
+    "symlink_count": 0,
+    "audit": {
+      "network": 0,
+      "writes": 0,
+      "process": 0
+    }
+  },
+  "owned": {
+    "state": "passed",
+    "source_mode": "readonly_selected_sql_capture_to_ram_stdin",
+    "source_writes": 0,
+    "source_network": 0,
+    "dry_run_and_invalid_input_files_unchanged": true,
+    "duplicate_missing_null_refused": true,
+    "running_target_refused": true,
+    "atomic_configuration_receipt": true,
+    "source_configuration_values_preserved": true,
+    "existing_source_preferences_http_equal": true,
+    "cold_native_and_actual_sdk": true,
+    "replayed_without_overwrite": true,
+    "configuration_and_preferences_unchanged_after_ui": true,
+    "counts_final": {
+      "installed": 1,
+      "config": 1,
+      "receipts": 1,
+      "runs": 2,
+      "success": 2,
+      "active": 0,
+      "other": 0,
+      "events": 0,
+      "schedules": 0,
+      "p0_jobs": 0,
+      "preferences": 5
+    },
+    "owned_cleanup": true,
+    "production_changes": 0,
+    "server_sha256": "22d3e663f95743f1033c90f4b1c4504a11eb9baa529f812bcae94e9d29b861c5",
+    "tool_sha256": "00903058eea435538420a182508a3fabc05d0f3e1988cbdc837a07a80dadaaf3"
+  },
+  "prior_failures_retained": [
+    "before-focused-normal.jsonl: null-zero-count validation gap fixed; source JSON whitespace assertion replaced with value preservation",
+    "owned-controller-before.log and round2: old browser-origin source-layout synchronization caused desktop ciphertext update; new unique hostname kept all five preferences unchanged"
+  ],
+  "formal_migrations_before_deploy": 4
+}

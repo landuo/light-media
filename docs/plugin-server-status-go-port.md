@@ -1,5 +1,7 @@
 # MPServerStatus 1.4 Go 行为切片
 
+2026-10-21 更新：本文为原实现阶段记录；配置迁移、布局兼容及 v0.4.5 部署已完成，当前总体5/23，见 [正式交付](plugin-server-status-delivery.txt) 与 [生产收据](plugin-server-status-deployment.json)。
+
 2026-10-16，已完成正式 `internal/plugins/serverstatus` 纯算法、原表单/详情页/仪表板与现有Go SDK handler。正式 App 宿主、固定 HTTP 适配、配置生命周期与前端已接入；本地正常/竞态/全量/纯 Go 构建及隔离浏览器验证通过。完整个性化仪表板、正式用户配置迁移和部署尚未完成，不能称 23 个插件已全部迁移。
 
 ## 来源与参考边界

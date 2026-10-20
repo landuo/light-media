@@ -1,6 +1,6 @@
 # 已安装插件迁移基线
 
-最新交付（2026-10-21）：新服务已部署 v0.4.4，**二级分类策略 1.3、插件彻底卸载 2.2、共享识别词 2.4.1、系统进程 1.1 已完成正式迁移；当前 4/23 完成，其余 19 项未完成**。系统进程保留原配置并迁移五份仪表板偏好，生产详情、刷新与冷启动已核对；共享识别词继续保留真实配置缺失及停用。详见 [系统进程交付](plugin-system-process-delivery.md)、[最新迁移收据](plugin-system-process-deployment.json)、[分类交付](plugin-category-editor-delivery.md)、[卸载交付](plugin-uninstall-delivery.md)及[识别词交付](plugin-remote-identifiers-delivery.md)。v0.4.4 另修正了共享详情设置按钮位置，详见 [界面修正](release-v0.4.4-progress.txt)，不增加迁移数量。下方带旧日期的开发记录保留历史口径，不代表全部可用。
+最新交付（2026-10-21）：新服务已部署 v0.4.5，**二级分类策略 1.3、插件彻底卸载 2.2、共享识别词 2.4.1、系统进程 1.1、MoviePilot服务监控 1.4 已完成正式迁移；当前 5/23 完成，其余 18 项未完成**。服务监控保留原配置和五份仪表板偏好，生产表单、真实公共状态采样/刷新与冷启动已核对。详见 [本轮交付](plugin-server-status-delivery.txt)、[最新迁移收据](plugin-server-status-deployment.json)；系统进程历史交付见 [系统进程](plugin-system-process-delivery.md)。v0.4.4 的共享详情按钮修正见 [界面修正](release-v0.4.4-progress.txt)。下方带旧日期的记录保留历史口径，不代表全部可用。
 
 2026-10-20 共享基础补充：[原版请求与调度设置](source-settings-migration.md)已随 v0.4.2 部署，并正式导入 4 条密文记录，区分配置 TZ 和本地时区。代理认证修复亦已部署；共享配置迁移不额外增加插件完成数量。
 
@@ -12,7 +12,7 @@
 | TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 418 | 2026-10-18 已接实际 Go SDK/原生双下载器、原表单、调度、历史、通知、生命周期与冷恢复；配置及418项KV未迁移，未部署 |
 | SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | Go 快照统计、原版表单/卡片/饼图/明细、一次性刷新、持久站内通知及按域名刷新 API 已接入；通知通道、完整账户字段/域名别名、历史/配置正式迁移和仪表板布局仍待完成 |
 | RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；NoticeMessage路由与外发、正式迁移和部署未完成 |
-| MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | Go SDK、固定公共状态探针、跨工作器采样/缓存、原表单/详情/仪表板数据及配置失效已接入；完整仪表板布局、正式配置迁移与部署未完成，编码等平台差异见专文 |
+| MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | 2026-10-21 已随 v0.4.5 正式迁移；原配置1条加密导入，既有五份布局/显示偏好保留，原单widget空key对齐。详情/表单/六卡、增量采样/缓存/刷新与冷启动已验证；生产真实公共状态及速率已核对，1次成功初始化、0计划/事件/其他业务运行 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | 2026-10-20 已随v0.4.1部署并正式迁移；原true/true及空选择保留，安装与收据各1、0运行/KV/计划/事件/卸载步骤，实际生产表单已核对；失败后的warm/durable、连续新执行、重装及自卸载已在独占实例验证；原全局顺序/布局仍待后续独立迁移 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类适配、原表单/详情及逐效果StateJournal已迁入正式Go包；实际SQLite分行/owner、内部配置CAS与旧admission归档切换已有NAS证据。实际Manager/调度/消息及Browser/OCR接线、资源按需加载/回收、注册、配置/KV迁移和实机验收未完成 |
 | MergeMessageNotify | 聚合消息通知 | 1.20.1 | 启用 | 0 | 主流程/17渠道构造/SDK及SMTP依赖已迁入正式Go包，28项NAS隔离测试通过。原表单页签/子弹窗/点号键已用实际ConfigDialog验证；完整Mako/Apprise、正式宿主/消息生产者及迁移未完成，不在可安装目录 |
@@ -110,4 +110,4 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 
 2026-10-18 刷流与源文件联动清理原生入口集成：新增两个实际Go宿主和原版配置/应用界面，可安装处理器入口增至20。当前业务范围、验证分层及仍未完成的RSS/TMDB/并行、消费者、Lark/自动签到/聚合通知与完整平台接线见[集成进展](plugin-brush-scrape-native-progress.txt)。入口增加不等于全部业务已完成；本批未部署，原23个实例配置、KV、独立文件正式迁移仍为0。
 
-最新系统进程交付见 [交付记录](plugin-system-process-delivery.md)，总体实际完成 4/23；共享识别词的 v0.4.2 历史交付见 [识别词记录](plugin-remote-identifiers-delivery.md)。
+最新服务监控交付见 [交付记录](plugin-server-status-delivery.txt)，总体实际完成 5/23；此前系统进程见 [历史交付](plugin-system-process-delivery.md)；共享识别词的 v0.4.2 历史交付见 [识别词记录](plugin-remote-identifiers-delivery.md)。
