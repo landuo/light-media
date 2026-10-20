@@ -64,6 +64,7 @@ type App struct {
 	siteLocks               sync.Map
 	cancel                  context.CancelFunc
 	pluginMu                sync.Mutex
+	pluginIdentifiers       identifiersRuntime
 	pluginLifecycleMu       sync.Mutex
 	pluginStore             *PluginStore
 	pluginWake              chan struct{}
@@ -98,7 +99,7 @@ type Options struct {
 	Web           http.Handler
 }
 
-const appVersion = "0.4.1"
+const appVersion = "0.4.2"
 
 type APIError struct {
 	Code    string `json:"code"`

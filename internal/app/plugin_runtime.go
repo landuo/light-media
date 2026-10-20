@@ -524,6 +524,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == sr.ConfigureCapability || method == sr.ScanCapability || method == sr.APICapability || method == sr.ReadCapability {
 		return a.pluginSeedRescueHost(ctx, installation, run, method, raw)
 	}
+	if method == "identifiers.configure" || method == "identifiers.refresh" {
+		return a.pluginIdentifiersHost(ctx, installation, run, method, raw)
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	if err := a.validatePluginHostRun(ctx, installation, run, method); err != nil {
@@ -532,8 +535,6 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	switch method {
 	case "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify":
 		return a.pluginSiteStatisticHost(ctx, installation, run, method, raw)
-	case "identifiers.configure", "identifiers.refresh":
-		return a.pluginIdentifiersHost(ctx, installation, run, method, raw)
 	case "media.servers", "events.configure", "media.refresh":
 		return a.pluginMediaHost(ctx, installation, run, method, raw)
 	case "hosts.read":

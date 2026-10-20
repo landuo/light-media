@@ -50,6 +50,18 @@ func deferredInputSHA(raw []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawMessage, error) {
+	if in.PluginID == "RemoteIdentifiers" && in.Version == "2.4.1" && run.Action == "service" {
+		var invocation plugins.Invocation
+		var input struct {
+			OccurrenceID string `json:"occurrence_id"`
+		}
+		if json.Unmarshal(run.Input, &invocation) != nil || !pluginStrictJSON(invocation.Input, &input) || input.OccurrenceID == "" {
+			return "", nil, bad("PLUGIN_RUN_SCOPE_DENIED", "识别词服务缺少绑定任务")
+		}
+		raw, _ := json.Marshal(input)
+		return "identifiers.refresh", raw, nil
+	}
+
 	if isTorrentTransfer(in.PluginID) && in.Version == "1.10.3" {
 		return transferDeferredSpec(run)
 	}
@@ -517,6 +529,21 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 		phase = "uncertain"
 		result = nil
 	}
+	if d.record.Plugin == "RemoteIdentifiers" && d.record.Version == "2.4.1" {
+		known, proofErr := d.a.pluginStore.identifiersUpdateReceipt(finish, *run)
+		if proofErr == nil {
+			phase, result, err = "confirmed", known, nil
+		} else if errors.Is(proofErr, sql.ErrNoRows) && err != nil {
+			phase, code = "terminal_failed", pluginErrorCodeInternal(err)
+			if code == "" {
+				code = "IDENTIFIERS_FETCH_FAILED"
+			}
+			result = json.RawMessage(`{"applied":false}`)
+		} else {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "识别词发布结果尚未持久确认")
+		}
+	}
 	if d.record.Plugin == "PluginUnInstall" && d.record.Version == "2.2" {
 		known, knownCode, found, proofErr := d.a.pluginStore.uninstallSourceOutcome(finish, *run)
 		if proofErr != nil || !found {
@@ -655,6 +682,33 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		// already completed above; an unfinished deferred record stays conservative.
 		if r.Run != run.ID || r.Instance != run.InstanceID || r.Version != run.Version || r.Generation != run.Generation || r.Action != run.Action || r.InputSHA != deferredInputSHA(run.Input) {
 			return bad("PLUGIN_DEFERRED_INVALID", "插件操作恢复身份不匹配")
+		}
+
+		if r.Plugin == "RemoteIdentifiers" && r.Version == "2.4.1" && (r.Phase == "started" || r.Phase == "uncertain") {
+			result, e := p.identifiersUpdateReceipt(ctx, run)
+			if e != nil && !errors.Is(e, sql.ErrNoRows) {
+				return e
+			}
+			if e == nil {
+				r.Phase, r.Result = "confirmed", result
+			} else {
+				r.Phase = "prepared"
+			}
+			tx, e := p.store.DB.BeginTx(ctx, nil)
+			if e != nil {
+				return e
+			}
+			if e = p.writeDeferred(ctx, tx, r, previous); e != nil {
+				tx.Rollback()
+				return e
+			}
+			if e = tx.Commit(); e != nil {
+				return e
+			}
+			r, previous, e = p.readDeferred(ctx, p.store.DB, run)
+			if e != nil {
+				return e
+			}
 		}
 
 		if isTorrentTransfer(r.Plugin) && (r.Phase == "started" || r.Phase == "uncertain") {

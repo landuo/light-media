@@ -13,15 +13,20 @@ import (
 	"unicode/utf8"
 
 	"light-media/internal/media/words"
+	"light-media/internal/networkproxy"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/iyuuautoseed/compat/urlprep"
+	"light-media/internal/plugins/mergemessagenotify/apprise"
+	"light-media/internal/plugins/remoteidentifiers"
 )
 
 type identifiersFetcher struct {
-	client *http.Client
-	sleep  func(context.Context, time.Duration) error
+	base     *http.Transport
+	settings func(context.Context) (identifiersNetworkSettings, error)
+	sleep    func(context.Context, time.Duration) error
 }
 
-func identifiersClient() *http.Client {
+func identifiersTransport() *http.Transport {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.DialContext = func(ctx context.Context, network, address string) (net.Conn, error) {
 		host, port, err := net.SplitHostPort(address)
@@ -46,7 +51,7 @@ func identifiersClient() *http.Client {
 		}
 		return nil, errors.New("words endpoint connection failed")
 	}
-	return &http.Client{Transport: transport, Timeout: 15 * time.Second, CheckRedirect: identifiersRedirect}
+	return transport
 }
 
 func identifiersURL(raw string) (*url.URL, error) {
@@ -92,22 +97,89 @@ func (f identifiersFetcher) text(ctx context.Context, raw string) (string, error
 	if err != nil {
 		return "", err
 	}
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
+	prepared, err := urlprep.Prepare(u.String())
 	if err != nil {
 		return "", bad("INVALID_IDENTIFIERS_URL", "远程词表请求无效")
 	}
-	request.Header.Set("User-Agent", "LightMedia/RemoteIdentifiers")
-	response, err := f.client.Do(request)
+	// requests prepares URL credentials after headers and encodes Basic auth
+	// with Latin-1. Go's automatic URL userinfo auth instead uses UTF-8 and
+	// does not override an existing Authorization header. Bind the source port
+	// explicitly and remove userinfo from the transport URL (also empty :@).
+	var auth []any
+	parsed, err := url.Parse(prepared)
 	if err != nil {
+		return "", bad("INVALID_IDENTIFIERS_URL", "远程词表请求无效")
+	}
+	if parsed.User != nil {
+		user := parsed.User.Username()
+		password, hasPassword := parsed.User.Password()
+		if hasPassword && (user != "" || password != "") {
+			for _, field := range []string{user, password} {
+				for _, r := range field {
+					if r > 255 {
+						return "", bad("IDENTIFIERS_SOURCE_UNICODE_ERROR", "远程词表认证包含原版不支持的字符")
+					}
+				}
+			}
+			auth = []any{user, password}
+		}
+		parsed.User = nil
+		prepared = parsed.String()
+	}
+	if f.settings == nil {
+		return "", identifiersDependency()
+	}
+	settings, err := f.settings(ctx)
+	if err != nil {
+		return "", err
+	}
+	environment, err := identifiersProxyEnvironment(settings)
+	if err != nil {
+		return "", err
+	}
+	headers, remove := identifiersHeaders(raw, settings)
+	pairs := [][2]string{}
+	for name, values := range headers {
+		pairs = append(pairs, [2]string{name, values[0]})
+	}
+	previous := u
+	private := u.User != nil || u.RawQuery != ""
+	transport := apprise.HTTPTransport{Base: f.base, Environment: func() []string { return environment }, Authorize: func(ctx context.Context, target *url.URL) error {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		if _, err := identifiersURL(target.String()); err != nil {
+			return err
+		}
+		if previous.Scheme == "https" && target.Scheme != "https" {
+			return bad("IDENTIFIERS_REDIRECT_FAILED", "远程词表不允许HTTPS降级")
+		}
+		if previous.Scheme != target.Scheme || !strings.EqualFold(previous.Host, target.Host) {
+			if private || target.RawQuery != "" {
+				return bad("IDENTIFIERS_REDIRECT_FAILED", "私有订阅地址不允许跨来源重定向")
+			}
+		}
+		private = private || target.RawQuery != ""
+		copy := *target
+		previous = &copy
+		return nil
+	}}
+	response, err := transport.Send(ctx, apprise.Request{Method: "GET", URL: prepared, HeaderOrder: pairs, RemoveHeaders: remove, Auth: auth, Timeout: [2]float64{15, 15}, Verify: false})
+	if err != nil {
+		if ctx.Err() != nil {
+			return "", ctx.Err()
+		}
+		if errors.Is(err, networkproxy.ErrRequestsProxyAuthEncoding) {
+			return "", bad("IDENTIFIERS_SOURCE_UNICODE_ERROR", "远程词表代理认证包含原版不支持的字符")
+		}
 		return "", bad("IDENTIFIERS_FETCH_FAILED", "远程词表连接失败，请检查地址与网络")
 	}
-	defer response.Body.Close()
-	if response.StatusCode != 200 {
+	if response.Status != 200 {
 		return "", bad("IDENTIFIERS_HTTP_FAILED", "远程词表返回了非成功状态")
 	}
-	rawBytes, err := io.ReadAll(io.LimitReader(response.Body, words.MaxBytes+1))
-	if err != nil || len(rawBytes) > words.MaxBytes {
-		return "", bad("IDENTIFIERS_BODY_LIMIT", "远程词表读取失败或超过8 MiB")
+	rawBytes := response.Content
+	if len(rawBytes) > words.MaxBytes {
+		return "", bad("IDENTIFIERS_BODY_LIMIT", "远程词表超过8 MiB")
 	}
 	if !utf8.Valid(rawBytes) {
 		return "", bad("IDENTIFIERS_ENCODING_FAILED", "远程词表必须使用UTF-8编码")
@@ -122,12 +194,19 @@ func (f identifiersFetcher) text(ctx context.Context, raw string) (string, error
 // Python dict preserves first insertion position and the last duplicate value.
 // Decode tokens instead of a Go map so list application order stays identical.
 func identifiersMapping(text string) ([]string, error) {
+	if identifiersSurrogate([]byte(text)) {
+		return nil, identifiersDependency()
+	}
+	text, err := identifiersPythonMappingJSON(text)
+	if err != nil {
+		return nil, err
+	}
 	decoder := json.NewDecoder(strings.NewReader(text))
 	token, err := decoder.Token()
 	if err != nil || token != json.Delim('{') {
 		return nil, bad("IDENTIFIERS_MAPPING_INVALID", "词表索引必须是名称到地址的JSON对象")
 	}
-	values := []string{}
+	values := []json.RawMessage{}
 	positions := map[string]int{}
 	for decoder.More() {
 		token, err = decoder.Token()
@@ -135,11 +214,10 @@ func identifiersMapping(text string) ([]string, error) {
 			return nil, bad("IDENTIFIERS_MAPPING_INVALID", "词表索引不是有效的JSON对象")
 		}
 		key, ok := token.(string)
-		var value string
-		if !ok || decoder.Decode(&value) != nil || strings.TrimSpace(value) == "" {
+		var value json.RawMessage
+		if !ok || decoder.Decode(&value) != nil {
 			return nil, bad("IDENTIFIERS_MAPPING_INVALID", "词表索引的地址必须为非空字符串")
 		}
-		value = strings.TrimSpace(value)
 		if pos, ok := positions[key]; ok {
 			values[pos] = value
 		} else {
@@ -153,7 +231,15 @@ func identifiersMapping(text string) ([]string, error) {
 	if _, err = decoder.Token(); err != nil || decoder.Decode(new(any)) != io.EOF {
 		return nil, bad("IDENTIFIERS_MAPPING_INVALID", "词表索引含无效的JSON内容")
 	}
-	return values, nil
+	out := make([]string, len(values))
+	for i, value := range values {
+		var text string
+		if json.Unmarshal(value, &text) != nil || remoteidentifiers.Strip(text) == "" {
+			return nil, bad("IDENTIFIERS_MAPPING_INVALID", "词表索引的地址必须为非空字符串")
+		}
+		out[i] = remoteidentifiers.Strip(text)
+	}
+	return out, nil
 }
 
 func (f identifiersFetcher) collect(ctx context.Context, config builtin.RemoteIdentifiersConfiguration) ([]string, error) {
@@ -173,7 +259,7 @@ func (f identifiersFetcher) collect(ctx context.Context, config builtin.RemoteId
 		return nil
 	}
 	for _, raw := range strings.Split(config.FileURLs, "\n") {
-		raw = strings.TrimSpace(raw)
+		raw = remoteidentifiers.Strip(raw)
 		if raw == "" {
 			continue
 		}
@@ -219,6 +305,9 @@ func (f identifiersFetcher) fetch(ctx context.Context, config builtin.RemoteIden
 			return result, nil
 		}
 		last = err
+		if pluginErrorCodeInternal(err) == "IDENTIFIERS_SOURCE_DEPENDENCY" {
+			return nil, err
+		}
 		if attempt == 2 {
 			break
 		}
@@ -242,4 +331,65 @@ func (f identifiersFetcher) fetch(ctx context.Context, config builtin.RemoteIden
 		last = errors.New("identifiers unavailable")
 	}
 	return nil, last
+}
+
+// json.loads accepts these non-finite extensions. Mapping validation observes
+// only the final value for each key: a number (including NaN/Inf) is invalid,
+// but a later string may replace it. Null is an equivalent non-string sentinel
+// in this one-purpose parser; quoted text and keys are never rewritten.
+func identifiersPythonMappingJSON(text string) (string, error) {
+	var out strings.Builder
+	quoted := false
+	for i := 0; i < len(text); {
+		c := text[i]
+		if quoted {
+			out.WriteByte(c)
+			i++
+			if c == '\\' && i < len(text) {
+				out.WriteByte(text[i])
+				i++
+				continue
+			}
+			if c == '"' {
+				quoted = false
+			}
+			continue
+		}
+		if c == '"' {
+			quoted = true
+			out.WriteByte(c)
+			i++
+			continue
+		}
+		replaced := false
+		for _, literal := range []string{"-Infinity", "Infinity", "NaN"} {
+			if strings.HasPrefix(text[i:], literal) {
+				out.WriteString("null")
+				i += len(literal)
+				replaced = true
+				break
+			}
+		}
+		if replaced {
+			continue
+		}
+		if c == '-' || c >= '0' && c <= '9' {
+			start := i
+			i++
+			for i < len(text) && strings.ContainsRune("0123456789.eE+-", rune(text[i])) {
+				i++
+			}
+			number := text[start:i]
+			// Installed CPython's measured int_max_str_digits is 4300. Its decoder
+			// rejects an oversized integer even when a duplicate would overwrite it.
+			if !strings.ContainsAny(number, ".eE") && len(strings.TrimPrefix(number, "-")) > 4300 {
+				return "", bad("IDENTIFIERS_MAPPING_INVALID", "词表索引整数超过原版JSON解析范围")
+			}
+			out.WriteString(number)
+			continue
+		}
+		out.WriteByte(c)
+		i++
+	}
+	return out.String(), nil
 }

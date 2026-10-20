@@ -10,8 +10,8 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/remoteidentifiers"
 	"light-media/internal/plugins/removelink"
-	"light-media/internal/plugins/schedule"
 	"light-media/internal/plugins/scrapefileclean"
 	serverstatus "light-media/internal/plugins/serverstatus"
 	"light-media/internal/plugins/subscribegroup"
@@ -97,8 +97,11 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 						state = controls.AnyFollow(ids)
 					}
 				}
-				if installation.PluginID == "SystemProcess" || installation.PluginID == "RemoteIdentifiers" {
+				if installation.PluginID == "SystemProcess" {
 					state = flags.Enable
+				}
+				if installation.PluginID == "RemoteIdentifiers" {
+					state = a.identifiersGetState(ctx, installation, config.Revision, config.Value)
 				}
 				if installation.PluginID == "PluginUnInstall" {
 					state = uninstall.State()
@@ -294,7 +297,11 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 			return nil, err
 		}
 		a.pluginMu.Lock()
-		run, err := a.pluginStore.InstallAndQueue(ctx, installation, form["model"])
+		defaults := form["model"]
+		if installation.PluginID == "RemoteIdentifiers" {
+			defaults = json.RawMessage(`{}`)
+		}
+		run, err := a.pluginStore.InstallAndQueue(ctx, installation, defaults)
 		if err == nil {
 			if installation.PluginID == "MPServerStatus" {
 				a.pluginServerStatus.invalidate(installation.InstanceID)
@@ -353,16 +360,20 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 			return nil, err
 		}
 		if installation.PluginID == "RemoteIdentifiers" {
-			config := configValue.(builtin.RemoteIdentifiersConfiguration)
-			if config.FileURLs == privateIdentifiersURLs {
-				var previous builtin.RemoteIdentifiersConfiguration
+			var fields map[string]json.RawMessage
+			json.Unmarshal(configValue.(json.RawMessage), &fields)
+			var urls string
+			if json.Unmarshal(fields["file_urls"], &urls) == nil && urls == privateIdentifiersURLs {
+				var previous map[string]json.RawMessage
 				if missingPluginValue(err) || json.Unmarshal(stored.Value, &previous) != nil {
 					return nil, bad("INVALID_IDENTIFIERS_URL", "没有可保留的订阅地址")
 				}
-				config.FileURLs = previous.FileURLs
-				configValue = config
+				fields["file_urls"] = previous["file_urls"]
+				configValue, _ = json.Marshal(fields)
+				configValue = json.RawMessage(configValue.([]byte))
 			}
 		}
+
 		if stored.Revision != in.Revision {
 			return nil, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，请重新打开配置")
 		}
@@ -529,32 +540,22 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		}
 		return config, nil
 	case "RemoteIdentifiers":
-		var config builtin.RemoteIdentifiersConfiguration
-		if err := decode(&config); err != nil {
-			return nil, err
+		var fields map[string]json.RawMessage
+		if identifiersSurrogate(raw) || json.Unmarshal(raw, &fields) != nil || fields == nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "共享识别词配置无效或超出原生Unicode范围")
 		}
-		if len(config.FileURLs) > 64<<10 || len(strings.Split(config.FileURLs, "\n")) > 128 {
-			return nil, bad("INVALID_IDENTIFIERS_URL", "远程词表地址过多或过长")
+		state := remoteidentifiers.Cold()
+		if state.Init(raw) != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "共享识别词配置无效")
 		}
-		if config.FileURLs != privateIdentifiersURLs {
-			for _, raw := range strings.Split(config.FileURLs, "\n") {
-				if strings.TrimSpace(raw) != "" {
-					if _, err := identifiersURL(strings.TrimSpace(raw)); err != nil {
-						return nil, err
-					}
-				}
+		// Preserve source values and unknown keys. Invalid cron/type failures occur
+		// during initialization, after the source's one-shot normalization order.
+		if urls, ok := state.FileURLs.(string); ok {
+			if len(urls) > 64<<10 || len(strings.Split(urls, "\n")) > 128 {
+				return nil, bad("INVALID_IDENTIFIERS_URL", "远程词表地址过多或过长")
 			}
 		}
-		cron := config.Cron
-		if cron == "" {
-			cron = builtin.RemoteIdentifiersCron
-		}
-		if config.Enable {
-			if _, err := schedule.New(schedule.Spec{Kind: "cron", Timezone: identifiersTimezone(), Cron: cron}, time.Now()); err != nil {
-				return nil, bad("INVALID_PLUGIN_SCHEDULE", "识别词定时任务周期无效")
-			}
-		}
-		return config, nil
+		return append(json.RawMessage(nil), raw...), nil
 
 	case "CategoryEditor":
 		var config struct {

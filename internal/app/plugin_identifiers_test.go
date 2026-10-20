@@ -23,8 +23,34 @@ import (
 	"light-media/internal/sites"
 )
 
+func identifiersSyntheticNetwork(context.Context) (identifiersNetworkSettings, error) {
+	return identifiersNetworkSettings{Version: 1, Known: true, GitHubHeaders: map[string]string{}, Environment: []string{}}, nil
+}
+func identifiersSeedSource(t *testing.T, a *App) {
+	t.Helper()
+	s, _ := identifiersSyntheticNetwork(context.Background())
+	for kind, value := range map[string]any{"source_network_settings": s, "source_runtime_settings": map[string]any{"Version": 1, "Known": true, "Timezone": identifiersTimezone(), "LocalTimezone": identifiersTimezone()}} {
+		var n int
+		if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind=? AND id='main'`, kind).Scan(&n); err != nil {
+			t.Fatal(err)
+		}
+		if n > 0 {
+			continue
+		}
+		raw, _ := json.Marshal(value)
+		sealed, err := a.pluginStore.seal(kind, "system", "main", raw)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err = a.Store.DB.Exec(`INSERT INTO records(kind,id,payload,updated_at) VALUES(?,'main',?,?)`, kind, sealed, now()); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
 func identifiersExecuteNext(t *testing.T, a *App) PluginRun {
 	t.Helper()
+	identifiersSeedSource(t, a)
 	run, err := a.pluginStore.ClaimRun(context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -274,7 +300,7 @@ func TestIdentifiersFetcherOriginalOrderFilteringRetriesAndFailures(t *testing.T
 	defer server.Close()
 	base = server.URL
 	delays := []time.Duration{}
-	f := identifiersFetcher{client: &http.Client{Timeout: time.Second, CheckRedirect: identifiersRedirect}, sleep: func(ctx context.Context, d time.Duration) error { delays = append(delays, d); return nil }}
+	f := identifiersFetcher{base: identifiersTransport(), settings: identifiersSyntheticNetwork, sleep: func(ctx context.Context, d time.Duration) error { delays = append(delays, d); return nil }}
 	config := builtin.RemoteIdentifiersConfiguration{FileURLs: base + "/list.json\n" + base + "/etherpad/p/test", Flitter: true}
 	got, err := f.fetch(context.Background(), config)
 	expected := []string{remoteIdentifiersMarker, "A => B", " \r", "C => D", "E => F"}
@@ -310,7 +336,7 @@ func TestIdentifiersPrivateRedirectAndGenericAPISecrets(t *testing.T) {
 	defer target.Close()
 	from := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, target.URL, http.StatusFound) }))
 	defer from.Close()
-	f := identifiersFetcher{client: &http.Client{CheckRedirect: identifiersRedirect}}
+	f := identifiersFetcher{base: identifiersTransport(), settings: identifiersSyntheticNetwork}
 	if _, err := f.text(context.Background(), from.URL+"/?token=synthetic-url-token"); err == nil || strings.Contains(err.Error(), "synthetic-url-token") || foreign.Load() != 0 {
 		t.Fatal("private redirect reached foreign source or exposed token", err, foreign.Load())
 	}
@@ -400,7 +426,7 @@ func TestPublicRemoteIdentifiersCorpus(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	f := identifiersFetcher{client: &http.Client{Timeout: 15 * time.Second, CheckRedirect: identifiersRedirect}}
+	f := identifiersFetcher{base: identifiersTransport(), settings: identifiersSyntheticNetwork}
 	rules, err := f.fetch(ctx, builtin.RemoteIdentifiersConfiguration{FileURLs: builtin.RemoteIdentifiersURLs, Flitter: true})
 	if err != nil {
 		t.Fatal(err)
@@ -438,7 +464,7 @@ func TestPublicRemoteIdentifiersCorpus(t *testing.T) {
 	}
 }
 
-func TestIdentifiersPendingOnceRestartPreservesAndReloadStops(t *testing.T) {
+func TestIdentifiersPendingOnceOriginalInitAndReloadStop(t *testing.T) {
 	a := newTestApp(t)
 	useBuiltInPluginProcess(t, a)
 	ctx := context.Background()
@@ -452,8 +478,9 @@ func TestIdentifiersPendingOnceRestartPreservesAndReloadStops(t *testing.T) {
 		t.Fatal(err)
 	}
 	identifiersExecuteNext(t, a)
-	if !identifiersDue(t, a).Equal(original) {
-		t.Fatal("startup reset pending one-shot anchor")
+	var active int
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_schedules WHERE service_id='RemoteIdentifiers.once' AND active=1`).Scan(&active); err != nil || active != 0 {
+		t.Fatal("original init stop_service retained private once scheduler", active, err)
 	}
 	if _, err := a.pluginStore.EnqueueRun(ctx, "RemoteIdentifiers", "reload", nil); err != nil {
 		t.Fatal(err)

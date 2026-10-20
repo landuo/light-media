@@ -175,6 +175,9 @@ func (h *HTTPTransport) Send(ctx context.Context, request Request) (Response, er
 		}
 		headers.Set(p[0], value)
 	}
+	for _, name := range request.RemoveHeaders {
+		headers.Del(name)
+	}
 	if len(request.Auth) == 2 {
 		value, e := httpBasicAuth(request.Auth)
 		if e != nil {

@@ -21,6 +21,7 @@ type Request struct {
 	Data                    []byte
 	Headers, Params         map[string]string
 	HeaderOrder, ParamOrder [][2]string
+	RemoveHeaders           []string // Optional requests headers with None values; other clients retain defaults.
 	Auth                    []any
 	Verify                  bool
 	Timeout                 [2]float64

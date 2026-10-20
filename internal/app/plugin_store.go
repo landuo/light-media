@@ -18,6 +18,7 @@ import (
 	"sync"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/builtin"
 )
 
 // PluginInstallation is prepared package metadata, not evidence of a running
@@ -66,10 +67,11 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
-	RunID        string
-	Installation PluginInstallation
-	Config       json.RawMessage
-	Data         map[string]json.RawMessage
+	SourceConfigAbsent bool // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
+	RunID              string
+	Installation       PluginInstallation
+	Config             json.RawMessage
+	Data               map[string]json.RawMessage
 }
 
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
@@ -844,10 +846,18 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		return PluginMigrationReceipt{}, err
 	}
 	installation.DesiredEnabled = false // Import never activates schedules/actions.
-	config, err := pluginJSON(in.Config, true)
-	if err != nil {
-		return PluginMigrationReceipt{}, err
+	var config json.RawMessage
+	if in.SourceConfigAbsent {
+		if !identifiersCanonicalAbsentImport(installation, in.Config, in.Data) {
+			return PluginMigrationReceipt{}, bad("INVALID_PLUGIN_MIGRATION", "配置缺失标记仅限原版共享识别词空配置和空数据")
+		}
+	} else {
+		config, err = pluginJSON(in.Config, true)
+		if err != nil {
+			return PluginMigrationReceipt{}, err
+		}
 	}
+
 	total := len(config) + len(installation.Manifest)
 	if len(in.Data) > 4096 {
 		return PluginMigrationReceipt{}, bad("INVALID_PLUGIN_MIGRATION", "插件迁移数据条目过多")
@@ -866,11 +876,12 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	// Include the private manifest explicitly; its public JSON projection omits it.
 	digestInput, err := json.Marshal(struct {
-		PluginID, Version string
-		ManifestSchema    int
-		Manifest, Config  json.RawMessage
-		Data              map[string]json.RawMessage
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data})
+		PluginID, Version  string
+		ManifestSchema     int
+		Manifest, Config   json.RawMessage
+		Data               map[string]json.RawMessage
+		SourceConfigAbsent bool `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -926,8 +937,10 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if installation.PluginID == "IYUUAutoSeed" {
 		importCtx = context.WithValue(ctx, iyuuOriginalImportKey{}, iyuuOriginalImportAdmission{Instance: installation.InstanceID, Migration: run.ID, ConfigSHA: tokenHash(string(config))})
 	}
-	if _, err = p.saveValueTx(importCtx, tx, installation.InstanceID, "config", "main", 0, config); err != nil {
-		return PluginMigrationReceipt{}, err
+	if !in.SourceConfigAbsent {
+		if _, err = p.saveValueTx(importCtx, tx, installation.InstanceID, "config", "main", 0, config); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
 	}
 	for key, value := range in.Data {
 		if _, err = p.saveValueTx(ctx, tx, installation.InstanceID, "data", key, 0, value); err != nil {
@@ -945,4 +958,19 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		return PluginMigrationReceipt{}, fmt.Errorf("plugin import commit: %w", err)
 	}
 	return receipt, nil
+}
+
+// Only the installed canonical compiled package may carry source absence.
+func identifiersCanonicalAbsentImport(in PluginInstallation, config json.RawMessage, data map[string]json.RawMessage) bool {
+	if in.PluginID != "RemoteIdentifiers" || in.InstanceID != "RemoteIdentifiers" || in.Version != "2.4.1" || in.ManifestSchemaVersion != 1 || len(config) != 0 || len(data) != 0 {
+		return false
+	}
+	expected, _ := json.Marshal(builtin.RemoteIdentifiersManifest())
+	var got, want map[string]any
+	if json.Unmarshal(in.Manifest, &got) != nil || json.Unmarshal(expected, &want) != nil {
+		return false
+	}
+	a, _ := json.Marshal(got)
+	b, _ := json.Marshal(want)
+	return bytes.Equal(a, b)
 }

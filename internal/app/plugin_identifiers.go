@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/remoteidentifiers"
 	"light-media/internal/plugins/schedule"
 )
 
@@ -34,6 +35,8 @@ func remoteIdentifiersPrivate(raw string) bool {
 	return false
 }
 
+// Legacy callers outside RemoteIdentifiers keep their existing local schedule
+// selection. RemoteIdentifiers uses its explicit source_runtime_settings record.
 func identifiersTimezone() string {
 	if zone := os.Getenv("TZ"); zone != "" && zone != "Local" {
 		if _, err := time.LoadLocation(zone); err == nil {
@@ -47,43 +50,87 @@ func (a *App) pluginIdentifiersHost(ctx context.Context, installation PluginInst
 	if run == nil || installation.PluginID != "RemoteIdentifiers" {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "识别词调用范围无效")
 	}
-	stored, err := a.pluginStore.Config(ctx, run.InstanceID)
-	if err != nil {
+	if method == "identifiers.configure" && (string(raw) != "{}" || (run.Action != "init" && run.Action != "reload")) {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "只能根据当前配置登记识别词服务")
+	}
+	if method != "identifiers.configure" && method != "identifiers.refresh" {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "识别词操作尚未实现")
+	}
+	if method == "identifiers.refresh" {
+		if err := a.requireDeferredExecution(ctx, run, method); err != nil {
+			return nil, err
+		}
+	}
+	a.pluginMu.Lock()
+	if err := a.validatePluginHostRun(ctx, installation, run, method); err != nil {
+		a.pluginMu.Unlock()
 		return nil, err
 	}
-	var config builtin.RemoteIdentifiersConfiguration
-	if json.Unmarshal(stored.Value, &config) != nil {
-		return nil, bad("INVALID_PLUGIN_CONFIG", "共享识别词配置无效")
+	stored, err := a.pluginStore.Config(ctx, run.InstanceID)
+	if err != nil {
+		a.pluginMu.Unlock()
+		return nil, err
 	}
+	if method == "identifiers.configure" {
+		if err := a.pluginStore.configurePluginSchedules(ctx, *run, "once", nil, time.Now()); err != nil {
+			a.pluginMu.Unlock()
+			return nil, err
+		}
+	}
+	state, err := a.identifiersClassState(installation, stored.Revision, stored.Value, method == "identifiers.configure")
+	if err != nil {
+		a.pluginMu.Unlock()
+		return nil, err
+	}
+	// Configuration holds only the short mutation lock. Collection runs after
+	// SDK exit without pluginMu or a SQL transaction; publication has its own CAS.
+	if method == "identifiers.configure" {
+		defer a.pluginMu.Unlock()
+	} else {
+		a.pluginMu.Unlock()
+	}
+
 	switch method {
 	case "identifiers.configure":
 		if string(raw) != "{}" || (run.Action != "init" && run.Action != "reload") {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "只能根据当前配置登记识别词服务")
 		}
-		definitions := []pluginScheduleDefinition{}
-		cron := config.Cron
-		if cron == "" {
-			cron = builtin.RemoteIdentifiersCron
+		// stop_service is first, including None/{}; it stops only the private
+		// date scheduler. The Manager refreshes the global cron service afterwards.
+		once := remoteidentifiers.Truth(state.OnlyOnce)
+		if once {
+			zone, err := a.identifiersSourceTimezone(ctx, false)
+			if err != nil {
+				return nil, err
+			}
+			at := time.Now()
+			date := pluginScheduleDefinition{ID: "RemoteIdentifiers.once", Name: "获取远端识别词", Handler: "refresh", Trigger: schedule.Spec{Kind: "date", Timezone: zone, RunAt: schedule.FormatTime(at.Add(3 * time.Second))}}
+			if _, err := schedule.New(date.Trigger, at); err != nil {
+				return nil, bad("INVALID_PLUGIN_SCHEDULE", "识别词一次任务时区无效")
+			}
+			// The source clears its class flag before update_config, even if SQL fails.
+			state.OnlyOnce = false
+			a.identifiersRemember(installation, run.ConfigRevision, state)
+			replacement, _ := json.Marshal(state)
+			if err := a.pluginStore.configureIdentifiersOnce(ctx, run, []pluginScheduleDefinition{date}, at, replacement); err != nil {
+				return nil, err
+			}
+			a.identifiersRemember(installation, run.ConfigRevision, state)
 		}
-		if config.Enable {
-			definitions = append(definitions, pluginScheduleDefinition{ID: "RemoteIdentifiers", Name: "获取远端识别词", Handler: "refresh", Trigger: schedule.Spec{Kind: "cron", Timezone: identifiersTimezone(), Cron: cron}})
+		definitions := []pluginScheduleDefinition{}
+		if remoteidentifiers.Truth(state.Enable) && remoteidentifiers.Truth(state.Cron) {
+			cron, ok := state.Cron.(string)
+			if !ok {
+				return nil, bad("INVALID_PLUGIN_SCHEDULE", "识别词定时任务周期无效")
+			}
+			zone, err := a.identifiersSourceTimezone(ctx, true)
+			if err != nil {
+				return nil, err
+			}
+			definitions = append(definitions, pluginScheduleDefinition{ID: "RemoteIdentifiers", Name: "获取远端识别词", Handler: "refresh", Trigger: schedule.Spec{Kind: "cron", Timezone: zone, Cron: cron}})
 		}
 		if err := a.pluginStore.configurePluginSchedules(ctx, *run, "services", definitions, time.Now()); err != nil {
 			return nil, err
-		}
-		if config.OnlyOnce {
-			// Original date job is three seconds after initialization, including
-			// time spent waiting in the queue. Persisting
-			// its anchor and flag together means retry cannot create a second job.
-			at := time.Now()
-			date := pluginScheduleDefinition{ID: "RemoteIdentifiers.once", Name: "获取远端识别词", Handler: "refresh", Trigger: schedule.Spec{Kind: "date", Timezone: identifiersTimezone(), RunAt: schedule.FormatTime(at.Add(3 * time.Second))}}
-			if err := a.pluginStore.configurePluginSchedulesAndPatch(ctx, run, "once", []pluginScheduleDefinition{date}, time.Now(), map[string]json.RawMessage{"onlyonce": json.RawMessage(`false`)}); err != nil {
-				return nil, err
-			}
-		} else if run.Action == "reload" {
-			if err := a.pluginStore.configurePluginSchedules(ctx, *run, "once", nil, time.Now()); err != nil {
-				return nil, err
-			}
 		}
 		return json.RawMessage(`{"configured":true}`), nil
 	case "identifiers.refresh":
@@ -105,9 +152,12 @@ func (a *App) pluginIdentifiersHost(ctx context.Context, installation PluginInst
 		} else if !errors.Is(err, sql.ErrNoRows) {
 			return nil, err
 		}
-		client := identifiersClient()
-		defer client.CloseIdleConnections()
-		fetcher := identifiersFetcher{client: client}
+		urls, flitter, err := state.Task()
+		if err != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "识别词远程地址必须为字符串")
+		}
+		config := builtin.RemoteIdentifiersConfiguration{FileURLs: urls, Flitter: flitter}
+		fetcher := identifiersFetcher{base: identifiersTransport(), settings: a.identifiersSourceNetwork}
 		remote, err := fetcher.fetch(ctx, config)
 		if err != nil {
 			return nil, err

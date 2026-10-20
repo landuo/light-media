@@ -34,6 +34,12 @@ func (p *PluginStore) configurePluginSchedulesAndPatch(ctx context.Context, run 
 }
 
 func (p *PluginStore) configurePluginSchedulesWithEffect(ctx context.Context, run *PluginRun, group string, definitions []pluginScheduleDefinition, at time.Time, patch map[string]json.RawMessage, effect func(context.Context, *sql.Tx, PluginRun) error) error {
+	return p.configurePluginSchedulesWithReplacement(ctx, run, group, definitions, at, patch, effect, nil)
+}
+func (p *PluginStore) configureIdentifiersOnce(ctx context.Context, run *PluginRun, definitions []pluginScheduleDefinition, at time.Time, replacement json.RawMessage) error {
+	return p.configurePluginSchedulesWithReplacement(ctx, run, "once", definitions, at, nil, nil, replacement)
+}
+func (p *PluginStore) configurePluginSchedulesWithReplacement(ctx context.Context, run *PluginRun, group string, definitions []pluginScheduleDefinition, at time.Time, patch map[string]json.RawMessage, effect func(context.Context, *sql.Tx, PluginRun) error, replacement json.RawMessage) error {
 	if !pluginStorageID.MatchString(group) || len(definitions) > 1000 || at.IsZero() {
 		return bad("INVALID_PLUGIN_SCHEDULE", "插件定时服务声明无效")
 	}
@@ -158,6 +164,11 @@ func (p *PluginStore) configurePluginSchedulesWithEffect(ctx context.Context, ru
 	updated := *run
 	if effect != nil {
 		if err := effect(ctx, tx, updated); err != nil {
+			return err
+		}
+	}
+	if len(replacement) > 0 {
+		if err := p.replaceRunConfigTx(ctx, tx, &updated, replacement); err != nil {
 			return err
 		}
 	}
