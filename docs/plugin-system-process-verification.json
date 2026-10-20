@@ -1,0 +1,137 @@
+{
+  "state": "passed",
+  "version": "0.4.3",
+  "base": "4f3b95276ef0565abe54e7e69399067850bff09e",
+  "source_sha256": "fa3fb7e9b462dfa5907b01b90f52fccf8c27138dd37105999a08cf53a18aa01b",
+  "focused_sha256": "8cdc7125265e83c5035f08082b3e537cb875ebbb3e5a8c421f4d3756ceecc4d1",
+  "source_files": 3399,
+  "compiler_inputs": 5326,
+  "source_and_compiler_drift": 0,
+  "full_regression_parent": {
+    "top": 1796,
+    "including_subtests": 43130,
+    "skipped": [
+      "TestIsolatedDownloadersRealTransferAndImport",
+      "TestIsolatedFNOSProductWorkflow",
+      "TestIsolatedCustomHostsNetwork",
+      "TestPublicRemoteIdentifiersCorpus",
+      "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+      "TestPluginSystemProcessOwnedUIFixture"
+    ],
+    "sha256": "e04133829e5c231210f90d259edec5b8e69c2b3e489eafa93a1408ae8a5922e6"
+  },
+  "normal_delta": {
+    "top": 16,
+    "including_subtests": 32,
+    "skipped": [
+      "TestPluginSystemProcessOwnedUIFixture"
+    ],
+    "sha256": "28868ec502500c9e718cbc26303d9e3724a98d4c4dbaebffaf4d3d1fd187e3f6"
+  },
+  "race_delta": {
+    "top": 16,
+    "including_subtests": 32,
+    "skipped": [
+      "TestPluginSystemProcessOwnedUIFixture"
+    ],
+    "sha256": "3eef481988532a0d551fe65b8604c6614b0c354db7a23875ee5b3b1b78a7ce9b"
+  },
+  "actual_native_process_isolated": {
+    "top": 1,
+    "including_subtests": 1,
+    "skipped": [],
+    "sha256": "a4ed12b386e054ca6de834e38f6d307b544593103b0dbd15552c3379a6010079"
+  },
+  "exact_activation_delta": [
+    "cmd/system-process-migrate-owned/main.go",
+    "internal/app/plugin_store.go",
+    "internal/app/system_process_migration_test.go"
+  ],
+  "frontend": {
+    "inherited_identical_source_and_built_assets": true,
+    "tests_sha256": "6b1394fa9d55174330fbed3ec25e60c99eb3209d592de7d0fa2add4214019015",
+    "build_sha256": "d66b23c9de190d8b76e14e432e27a3625bbb1c97e1f83a752f9c3a44e449f251"
+  },
+  "tool_smoke": {
+    "state": "passed",
+    "mode": "private_selected_source_to_disposable_owned_target",
+    "config_and_five_preferences_atomic": true,
+    "counts_before_start": {
+      "installation": 1,
+      "config": 1,
+      "receipts": 1,
+      "preferences": 5,
+      "runs": 0,
+      "succeeded_runs": 0,
+      "active_runs": 0,
+      "other_runs": 0,
+      "schedules": 0,
+      "events": 0,
+      "p0_jobs": 0
+    },
+    "counts_cold": {
+      "installation": 1,
+      "config": 1,
+      "receipts": 1,
+      "preferences": 5,
+      "runs": 1,
+      "succeeded_runs": 1,
+      "active_runs": 0,
+      "other_runs": 0,
+      "schedules": 0,
+      "events": 0,
+      "p0_jobs": 0
+    },
+    "dry_run_files_unchanged": true,
+    "missing_fields_and_duplicates_refused": true,
+    "running_target_refused": true,
+    "cold_ciphertext_unchanged": true,
+    "replay_same_receipt": true,
+    "key_unchanged": true,
+    "source_writes": 0,
+    "source_network_calls": 0,
+    "authenticated_live_dashboard": true,
+    "original_five_preferences_http_equal": true,
+    "owned_cleanup": true,
+    "server_sha256": "201595c8d8cba94543cdb1e7d46bd19cef44d4027294e744edc835b8e258a8cf",
+    "tool_sha256": "674869a2148570390fdd0d6668c98ae87897fc1cb833863b932c77094b9a2239"
+  },
+  "build": [
+    {
+      "name": "native-server",
+      "exit_code": 0
+    },
+    {
+      "name": "linux-server",
+      "exit_code": 0
+    },
+    {
+      "name": "native-tool",
+      "exit_code": 0
+    },
+    {
+      "name": "linux-tool",
+      "exit_code": 0
+    },
+    {
+      "name": "modules",
+      "exit_code": 0
+    }
+  ],
+  "execution": {
+    "parent_full_regression": 0,
+    "parent_frontend_build": 0,
+    "parent_frontend_tests": 0,
+    "normal_delta": 0,
+    "race_delta": 0,
+    "native_process_isolated": 0,
+    "vet": 0,
+    "build": 0,
+    "tool_smoke": 0
+  },
+  "known_failures_retained": [
+    "agent initial concurrent Mac process read exceeded 8s; same frozen inputs passed targeted and serial 8s checks",
+    "parent owned migration cold proof exposed disabled read-only package; exact three-file activation delta fixed it",
+    "first production preflight assumed CategoryEditor disabled; actual user enabled state is now preserved"
+  ]
+}
