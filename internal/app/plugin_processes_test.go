@@ -14,8 +14,8 @@ import (
 
 func TestPluginProcessCPUSamplingDetectsPIDReuse(t *testing.T) {
 	at := time.Now()
-	previous := pluginCPUSample{created: 100, seconds: 4, at: at}
-	current := pluginCPUSample{created: 100, seconds: 5.25, at: at.Add(time.Second)}
+	previous := pluginCPUSample{created: 100, user: 4, at: at}
+	current := pluginCPUSample{created: 100, user: 5.25, at: at.Add(time.Second)}
 	if value := processSampleCPU(previous, current); value != 125 {
 		t.Fatal("multi-core CPU value changed", value)
 	}
@@ -36,7 +36,7 @@ func TestPluginProcessSnapshotIncludesActualProcessWithoutCommandOrEnvironment(t
 	found := false
 	for _, item := range items {
 		if item.PID == int32(os.Getpid()) {
-			found = item.Name != "" && item.Memory > 0 && item.CreateTime > 0 && item.CPU == 0
+			found = item.Name != "" && item.Memory > 0 && item.CreateTime > 0
 		}
 	}
 	if !found {
@@ -87,15 +87,15 @@ func TestPluginSystemProcessActualWorkerPageConfigAndDashboard(t *testing.T) {
 	}
 	a.executePluginRun(context.Background(), run)
 	meta = callTest(t, h, "GET", "/api/plugins/dashboard/meta", "", cookie, "")
-	if !strings.Contains(meta.Body.String(), `"key":"default"`) || !strings.Contains(meta.Body.String(), "SystemProcess") {
+	if !strings.Contains(meta.Body.String(), `"key":""`) || !strings.Contains(meta.Body.String(), "SystemProcess") {
 		t.Fatal("enabled dashboard metadata missing", meta.Body.String())
 	}
 	dashboard := callTest(t, h, "GET", "/api/plugins/SystemProcess/dashboard?key=default", "", cookie, "")
-	if dashboard.Code != 200 || !strings.Contains(dashboard.Body.String(), `"md":6`) || !strings.Contains(dashboard.Body.String(), `"refresh":7`) || !strings.Contains(dashboard.Body.String(), "242px") {
+	if dashboard.Code != 200 || !strings.Contains(dashboard.Body.String(), `"md":6`) || !strings.Contains(dashboard.Body.String(), `"refresh":"7"`) || !strings.Contains(dashboard.Body.String(), "242px") {
 		t.Fatal("original dashboard configuration missing", dashboard.Code, dashboard.Body.String())
 	}
-	if w := callTest(t, h, "GET", "/api/plugins/SystemProcess/dashboard?key=other", "", cookie, ""); w.Code != 404 {
-		t.Fatal("unknown widget key accepted", w.Code)
+	if w := callTest(t, h, "GET", "/api/plugins/SystemProcess/dashboard?key=other", "", cookie, ""); w.Code != 200 {
+		t.Fatal("source SystemProcess must ignore arbitrary dashboard key", w.Code)
 	}
 	if err := a.pluginStore.Uninstall(context.Background(), builtin.SystemProcessManifest().PluginID); err != nil {
 		t.Fatal(err)

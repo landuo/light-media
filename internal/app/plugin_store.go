@@ -67,11 +67,12 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
-	SourceConfigAbsent bool // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
-	RunID              string
-	Installation       PluginInstallation
-	Config             json.RawMessage
-	Data               map[string]json.RawMessage
+	systemProcessDashboard map[string]json.RawMessage // Only the reviewed offline SystemProcess importer.
+	SourceConfigAbsent     bool                       // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
+	RunID                  string
+	Installation           PluginInstallation
+	Config                 json.RawMessage
+	Data                   map[string]json.RawMessage
 }
 
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
@@ -845,7 +846,16 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
-	installation.DesiredEnabled = false // Import never activates schedules/actions.
+	installation.DesiredEnabled = false // Ordinary imports never activate schedules/actions.
+	if in.systemProcessDashboard != nil && !validSystemProcessDashboardImport(installation, in.systemProcessDashboard) {
+		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_system_process_import")
+	}
+	if in.systemProcessDashboard != nil {
+		// This pinned compiled plugin only reads processes for its page/dashboard.
+		// Preserve its source enable flag without hiding the migrated widget.
+		// No worker, event or schedule is created by this import transaction.
+		installation.DesiredEnabled = true
+	}
 	var config json.RawMessage
 	if in.SourceConfigAbsent {
 		if !identifiersCanonicalAbsentImport(installation, in.Config, in.Data) {
@@ -876,12 +886,13 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	// Include the private manifest explicitly; its public JSON projection omits it.
 	digestInput, err := json.Marshal(struct {
-		PluginID, Version  string
-		ManifestSchema     int
-		Manifest, Config   json.RawMessage
-		Data               map[string]json.RawMessage
-		SourceConfigAbsent bool `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent})
+		PluginID, Version      string
+		ManifestSchema         int
+		Manifest, Config       json.RawMessage
+		Data                   map[string]json.RawMessage
+		SourceConfigAbsent     bool                       `json:",omitempty"`
+		SystemProcessDashboard map[string]json.RawMessage `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -898,6 +909,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if run.InstanceID != installation.InstanceID {
 		return PluginMigrationReceipt{}, bad("PLUGIN_MIGRATION_CONFLICT", "迁移目标与预览记录不符")
+	}
+	if in.systemProcessDashboard != nil && run.SourcePluginID != "SystemProcess" {
+		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_system_process_import")
 	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
@@ -920,6 +934,15 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if existing != 0 {
 		return PluginMigrationReceipt{}, bad("PLUGIN_IMPORT_TARGET_EXISTS", "目标插件已有配置或保留数据，迁移未覆盖")
+	}
+	if in.systemProcessDashboard != nil {
+		var count int
+		if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='plugin_dashboard_settings'`).Scan(&count); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+		if count != 0 {
+			return PluginMigrationReceipt{}, errors.New("target_dashboard_preferences_already_exist")
+		}
 	}
 	if err = p.installTx(ctx, tx, installation); err != nil {
 		return PluginMigrationReceipt{}, err
@@ -944,6 +967,15 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	for key, value := range in.Data {
 		if _, err = p.saveValueTx(ctx, tx, installation.InstanceID, "data", key, 0, value); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
+	for key, value := range in.systemProcessDashboard {
+		sealed, e := p.seal("plugin_dashboard_settings", "admin", key, value)
+		if e != nil {
+			return PluginMigrationReceipt{}, e
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO records(kind,id,payload,updated_at) VALUES('plugin_dashboard_settings',?,?,?)`, key, sealed, now()); err != nil {
 			return PluginMigrationReceipt{}, err
 		}
 	}

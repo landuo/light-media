@@ -182,6 +182,11 @@ func (a *App) pluginDashboardMeta(ctx context.Context) (any, error) {
 			continue
 		}
 		for _, key := range card.Dashboards {
+			// Source single-dashboard metadata uses an empty public key.
+			// The SDK's registered permission key remains "default".
+			if card.PluginID == "SystemProcess" && card.Version == "1.1" {
+				key = ""
+			}
 			items = append(items, map[string]string{"id": card.InstanceID, "name": card.Name, "key": key})
 		}
 	}

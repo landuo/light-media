@@ -18,6 +18,7 @@ import AppIcon from './components/AppIcon.vue';
 const ShortcutTools = defineAsyncComponent(() => import('./components/ShortcutTools.vue'));
 const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
 const PluginAppPage = defineAsyncComponent(() => import('./components/PluginAppPage.vue'));
+const PluginDashboard = defineAsyncComponent(() => import('./components/PluginDashboard.vue'));
 const pluginNavigation = createPluginNavigation(() => api('/plugins/navigation'));
 const pluginNavItems = pluginNavigation.state;
 function normalizeRoute(value: string) {
@@ -44,7 +45,10 @@ const nav = [
   },
   {
     label: '发现',
-    items: [['discover', 'star', '推荐']],
+    items: [
+      ['discover', 'star', '推荐'],
+      ['dashboard', 'chart', '仪表板'],
+    ],
   },
   {
     label: '订阅',
@@ -346,6 +350,7 @@ onUnmounted(() => {
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
         <Plugins v-else-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
+        <PluginDashboard v-else-if="pageKey === 'dashboard'" />
         <PluginAppPage
           v-else-if="pageKey === 'plugin-app'"
           :key="route"

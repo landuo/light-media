@@ -92,3 +92,13 @@
   gap: normal;
   transition: none;
 }
+
+/* Installed v2.15.6 style-C3NbyNap.css: the process table declares these
+   Tailwind utilities, which are absent from Vuetify's utility stylesheet. */
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .whitespace-nowrap {
+  white-space: nowrap;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}

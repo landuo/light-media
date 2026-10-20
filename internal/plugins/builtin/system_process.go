@@ -10,12 +10,19 @@ import (
 	"strconv"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/removelink"
 )
 
-type SystemProcessConfiguration struct {
-	Enable                 bool            `json:"enable"`
-	DashboardWidgetSize    json.RawMessage `json:"dashboard_widget_size,omitempty"`
-	DashboardWidgetRefresh json.RawMessage `json:"dashboard_widget_refresh,omitempty"`
+// The source passes values to Vuetify unchanged. In particular, strings are
+// not parsed as numbers, null size falls back to 8, and Python truth controls
+// whether refresh is included. Preserve unknown configuration keys as well.
+type SystemProcessConfiguration map[string]json.RawMessage
+
+func (c SystemProcessConfiguration) State() bool { return systemProcessTruth(c["enable"]) }
+
+func systemProcessTruth(raw json.RawMessage) bool {
+	v, err := removelink.Decode(raw)
+	return err == nil && removelink.Truth(v)
 }
 
 func pluginConfigNumber(raw json.RawMessage, fallback float64) (float64, error) {
@@ -37,16 +44,16 @@ func pluginConfigNumber(raw json.RawMessage, fallback float64) (float64, error) 
 	return value, nil
 }
 
-func (c SystemProcessConfiguration) Display() (int, float64, error) {
-	size, err := pluginConfigNumber(c.DashboardWidgetSize, 8)
-	if err != nil || (size != 4 && size != 6 && size != 8 && size != 12) {
-		return 0, 0, errors.New("invalid dashboard size")
+func (c SystemProcessConfiguration) Display() (json.RawMessage, json.RawMessage, error) {
+	size := c["dashboard_widget_size"]
+	if len(size) == 0 || string(size) == "null" {
+		size = json.RawMessage(`8`)
 	}
-	refresh, err := pluginConfigNumber(c.DashboardWidgetRefresh, 0)
-	if err != nil || refresh < 0 || refresh > 86400 {
-		return 0, 0, errors.New("invalid dashboard refresh")
+	refresh := c["dashboard_widget_refresh"]
+	if !systemProcessTruth(refresh) {
+		refresh = nil
 	}
-	return int(size), refresh, nil
+	return size, refresh, nil
 }
 
 type ProcessInfo struct {
@@ -108,7 +115,7 @@ func HandleSystemProcess(ctx context.Context, method string, raw json.RawMessage
 		return json.RawMessage(`null`), nil
 	}
 	if method == "config_form" {
-		return json.Marshal(map[string]any{"conf": json.RawMessage(systemProcessForm), "model": map[string]any{"enable": false, "dashboard_widget_size": 8, "dashboard_widget_refresh": 5}})
+		return json.Marshal(map[string]any{"conf": json.RawMessage(systemProcessForm), "model": map[string]any{"dashboard_widget_size": 8, "dashboard_widget_refresh": 5}})
 	}
 	var invocation plugins.Invocation
 	var config SystemProcessConfiguration
@@ -139,7 +146,7 @@ func HandleSystemProcess(ctx context.Context, method string, raw json.RawMessage
 	}
 	cols := map[string]any{"cols": 12, "xxl": size, "xl": size, "lg": size, "md": size, "sm": 12, "xs": 12}
 	attrs := map[string]any{"title": "系统进程"}
-	if refresh != 0 {
+	if len(refresh) != 0 {
 		attrs["refresh"] = refresh
 	}
 	return json.Marshal(map[string]any{"cols": cols, "attrs": attrs, "elements": elements})

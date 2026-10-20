@@ -97,11 +97,14 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 						state = controls.AnyFollow(ids)
 					}
 				}
-				if installation.PluginID == "SystemProcess" {
-					state = flags.Enable
-				}
 				if installation.PluginID == "RemoteIdentifiers" {
 					state = a.identifiersGetState(ctx, installation, config.Revision, config.Value)
+				}
+				if installation.PluginID == "SystemProcess" {
+					var value builtin.SystemProcessConfiguration
+					if json.Unmarshal(config.Value, &value) == nil {
+						state = value.State()
+					}
 				}
 				if installation.PluginID == "PluginUnInstall" {
 					state = uninstall.State()
@@ -178,7 +181,7 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		if json.Unmarshal(stored.Value, &config) != nil {
 			return nil, bad("INVALID_PLUGIN_CONFIG", "插件配置无效")
 		}
-		if installation.PluginID == "AutoBackup" {
+		if installation.PluginID == "AutoBackup" || installation.PluginID == "SystemProcess" {
 			for key, value := range config {
 				form.Model[key] = value
 			}
@@ -273,6 +276,9 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	if path == "market" && r.Method == "GET" {
 		return a.pluginCards(ctx, true)
 	}
+	if strings.HasPrefix(path, "dashboard/settings/") {
+		return a.pluginDashboardSettingsHTTP(w, r, strings.TrimPrefix(path, "dashboard/settings/"))
+	}
 	if path == "dashboard/meta" && r.Method == "GET" {
 		return a.pluginDashboardMeta(ctx)
 	}
@@ -332,6 +338,13 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 			return nil, bad("PLUGIN_MIGRATION_STAGED", "迁移插件仍在暂存")
 		}
 		key := r.URL.Query().Get("key")
+		if installation.PluginID == "SystemProcess" && installation.Version == "1.1" {
+			result, err := a.pluginView(ctx, installation, "dashboard", "default")
+			if err != nil {
+				return nil, err
+			}
+			return systemProcessDashboardResult(result, installation.InstanceID, key)
+		}
 		if key == "" {
 			key = "default"
 		}
@@ -582,11 +595,8 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return config, nil
 	case "SystemProcess":
 		var config builtin.SystemProcessConfiguration
-		if err := decode(&config); err != nil {
-			return nil, err
-		}
-		if _, _, err := config.Display(); err != nil {
-			return nil, bad("INVALID_PLUGIN_CONFIG", "仪表板尺寸必须选择列表中的值，刷新间隔须为0到86400秒或留空")
+		if err := json.Unmarshal(raw, &config); err != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "系统进程配置必须是对象")
 		}
 		return config, nil
 	case "MediaServerRefresh":
