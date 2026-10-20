@@ -1,6 +1,6 @@
 # 已安装插件迁移基线
 
-最新交付（2026-10-21）：新服务已部署 v0.4.3，**二级分类策略 1.3、插件彻底卸载 2.2、共享识别词 2.4.1、系统进程 1.1 已完成正式迁移；当前 4/23 完成，其余 19 项未完成**。系统进程保留原配置并迁移五份仪表板偏好，生产详情、刷新与冷启动已核对；共享识别词继续保留真实配置缺失及停用。详见 [系统进程交付](plugin-system-process-delivery.md)、[最新迁移收据](plugin-system-process-deployment.json)、[分类交付](plugin-category-editor-delivery.md)、[卸载交付](plugin-uninstall-delivery.md)及[识别词交付](plugin-remote-identifiers-delivery.md)。下方带旧日期的开发记录保留历史口径，不代表全部可用。
+最新交付（2026-10-21）：新服务已部署 v0.4.4，**二级分类策略 1.3、插件彻底卸载 2.2、共享识别词 2.4.1、系统进程 1.1 已完成正式迁移；当前 4/23 完成，其余 19 项未完成**。系统进程保留原配置并迁移五份仪表板偏好，生产详情、刷新与冷启动已核对；共享识别词继续保留真实配置缺失及停用。详见 [系统进程交付](plugin-system-process-delivery.md)、[最新迁移收据](plugin-system-process-deployment.json)、[分类交付](plugin-category-editor-delivery.md)、[卸载交付](plugin-uninstall-delivery.md)及[识别词交付](plugin-remote-identifiers-delivery.md)。v0.4.4 另修正了共享详情设置按钮位置，详见 [界面修正](release-v0.4.4-progress.txt)，不增加迁移数量。下方带旧日期的开发记录保留历史口径，不代表全部可用。
 
 2026-10-20 共享基础补充：[原版请求与调度设置](source-settings-migration.md)已随 v0.4.2 部署，并正式导入 4 条密文记录，区分配置 TZ 和本地时区。代理认证修复亦已部署；共享配置迁移不额外增加插件完成数量。
 
