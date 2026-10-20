@@ -1,0 +1,62 @@
+{
+  "state": "verified",
+  "version": "0.4.7",
+  "actual_complete": 7,
+  "remaining": 16,
+  "server_sha256": "2cb875b05e16e1e98a1ef2b2b88e47b4156b28adb05c52b1eb4c4d04b8c27b6e",
+  "tool_sha256": "813432918c113203325d84fe24baeac9889cd1969f4cfb1fcd33286ec8f6f5fa",
+  "product_commit": "56488174eba524b151db490a548c34784065214e",
+  "original_services_and_hosts_unchanged": true,
+  "existing_configuration_and_preferences_preserved": true,
+  "source_fields_and_reference_verified": true,
+  "private_source_values_saved": false,
+  "production_ui": {
+    "fields": [
+      "启用插件",
+      "媒体服务器",
+      "延迟时间（秒）"
+    ],
+    "enabled": true,
+    "media_server_chip": "飞牛影视",
+    "delay": 0,
+    "saved": false,
+    "screenshot": "/Users/accidia/Documents/Codex/2026-10-14/s/outputs/light-media-media-refresh-migrated-v047.png",
+    "created_tab_closed": true
+  },
+  "runtime_shape_verified": true,
+  "target": {
+    "id": "df0b6275595f521d1bc54fc016fe118b9e2a530aa126e21fcf6ae620d997f963",
+    "pid": 1892332,
+    "started": "2026-10-20T19:17:58.373614185Z",
+    "restart": 0,
+    "running": true
+  },
+  "media_refresh": {
+    "installation": 1,
+    "config": 1,
+    "runs": 1,
+    "success": 1,
+    "active": 0,
+    "other": 0,
+    "data": 0,
+    "schedules": 0,
+    "events": 1,
+    "mapping": 1
+  },
+  "media_subscription": [
+    [
+      "refresh",
+      1,
+      1,
+      "[\"import.completed\"]",
+      0,
+      1,
+      53
+    ]
+  ],
+  "migration_receipts": 7,
+  "active_work": 0,
+  "original_services": "MP and qB identity/start/restart unchanged; old MP backend health is not inferred",
+  "full_audit": "testdata/plugins/media-server-refresh-1.3.3/verification/deployment-result.json.gz",
+  "custom_hosts_restart": "Original whole-object replacement creates a new AEAD nonce at startup; canonical config and owned hosts file content were independently verified unchanged."
+}
