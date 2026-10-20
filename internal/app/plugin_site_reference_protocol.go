@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"slices"
+	"strings"
 
 	"light-media/internal/plugins/builtin"
 )
@@ -54,6 +55,12 @@ func (p *PluginStore) readSiteReferenceProtocol(ctx context.Context, q pluginRem
 			return out, bad("PLUGIN_SITE_PROTOCOL_UNCLAIMED", "原版站点编号尚未完成独立引用映射，不能保存后直接激活")
 		}
 		return out, bad("PLUGIN_SITE_PROTOCOL_INVALID", "未知的站点引用协议")
+	}
+	if strings.HasPrefix(out.Source, reviewedIYUUProtocolPrefix) {
+		if err := p.validateReviewedIYUUProtocol(ctx, q, in, out.Source); err != nil {
+			return out, err
+		}
+		return out, nil
 	}
 	if out.Source != "host-install/v1" && out.Source != "reset-empty/v1" {
 		var receipt legacySiteControlTransition

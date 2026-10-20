@@ -65,6 +65,18 @@ func validateSiteIdentitySourceEntries(entries []siteIdentitySourceEntry) error 
 // Explicit write-only preparation for a reviewed migration. Native inventory and
 // all read APIs never call this function and never infer a source fingerprint.
 func (a *App) registerSiteIdentitySourceSnapshot(ctx context.Context, fingerprint string, entries []siteIdentitySourceEntry) (siteIdentitySourceSnapshot, error) {
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return siteIdentitySourceSnapshot{}, err
+	}
+	defer tx.Rollback()
+	out, err := a.Store.registerSiteIdentitySourceSnapshotTx(ctx, tx, fingerprint, entries)
+	if err != nil {
+		return out, err
+	}
+	return out, tx.Commit()
+}
+func (s *Store) registerSiteIdentitySourceSnapshotTx(ctx context.Context, tx *sql.Tx, fingerprint string, entries []siteIdentitySourceEntry) (siteIdentitySourceSnapshot, error) {
 	var out siteIdentitySourceSnapshot
 	if !validSiteIdentityFingerprint(fingerprint) {
 		return out, siteIdentityError()
@@ -75,44 +87,42 @@ func (a *App) registerSiteIdentitySourceSnapshot(ctx context.Context, fingerprin
 		return out, err
 	}
 	out = siteIdentitySourceSnapshot{Version: 1, SourceFingerprint: fingerprint, SnapshotDigest: siteIdentitySourceDigest(owned), Entries: owned}
-	out.SnapshotID = "sss_" + a.Store.siteIdentityMAC("source-snapshot", []string{fingerprint, out.SnapshotDigest})
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return out, err
-	}
-	defer tx.Rollback()
+	out.SnapshotID = "sss_" + s.siteIdentityMAC("source-snapshot", []string{fingerprint, out.SnapshotDigest})
 	var oldRaw []byte
-	err = tx.QueryRowContext(ctx, `SELECT sealed FROM native_site_source_snapshots WHERE snapshot_id=?`, out.SnapshotID).Scan(&oldRaw)
+	err := tx.QueryRowContext(ctx, `SELECT sealed FROM native_site_source_snapshots WHERE snapshot_id=?`, out.SnapshotID).Scan(&oldRaw)
 	if err == nil {
-		old, e := a.readSiteIdentitySourceSnapshot(ctx, tx, out.SnapshotID)
+		old, e := s.readSiteIdentitySourceSnapshot(ctx, tx, out.SnapshotID)
 		if e != nil {
 			return out, e
 		}
 		if old.SnapshotDigest != out.SnapshotDigest || old.SourceFingerprint != fingerprint {
 			return out, siteIdentityError()
 		}
-		return old, tx.Commit()
+		return old, nil
 	}
 	if !errors.Is(err, sql.ErrNoRows) {
 		return out, err
 	}
-	sealed, err := a.Store.Seal(out)
+	sealed, err := s.Seal(out)
 	if err != nil {
 		return out, err
 	}
 	if _, err = tx.ExecContext(ctx, `INSERT INTO native_site_source_snapshots VALUES(?,?,?,?)`, out.SnapshotID, fingerprint, out.SnapshotDigest, sealed); err != nil {
 		return out, err
 	}
-	return out, tx.Commit()
+	return out, nil
 }
 func (a *App) readSiteIdentitySourceSnapshot(ctx context.Context, q siteIdentityReader, id string) (siteIdentitySourceSnapshot, error) {
+	return a.Store.readSiteIdentitySourceSnapshot(ctx, q, id)
+}
+func (s *Store) readSiteIdentitySourceSnapshot(ctx context.Context, q siteIdentityReader, id string) (siteIdentitySourceSnapshot, error) {
 	var out siteIdentitySourceSnapshot
 	var fingerprint, digest string
 	var sealed []byte
 	if err := q.QueryRowContext(ctx, `SELECT source_fingerprint,snapshot_digest,sealed FROM native_site_source_snapshots WHERE snapshot_id=?`, id).Scan(&fingerprint, &digest, &sealed); err != nil {
 		return out, err
 	}
-	if a.Store.Unseal(sealed, &out) != nil || out.Version != 1 || out.SnapshotID != id || out.SourceFingerprint != fingerprint || out.SnapshotDigest != digest || !validSiteIdentityFingerprint(fingerprint) || validateSiteIdentitySourceEntries(out.Entries) != nil || siteIdentitySourceDigest(out.Entries) != digest || id != "sss_"+a.Store.siteIdentityMAC("source-snapshot", []string{fingerprint, digest}) {
+	if s.Unseal(sealed, &out) != nil || out.Version != 1 || out.SnapshotID != id || out.SourceFingerprint != fingerprint || out.SnapshotDigest != digest || !validSiteIdentityFingerprint(fingerprint) || validateSiteIdentitySourceEntries(out.Entries) != nil || siteIdentitySourceDigest(out.Entries) != digest || id != "sss_"+s.siteIdentityMAC("source-snapshot", []string{fingerprint, digest}) {
 		return out, siteIdentityError()
 	}
 	return out, nil
@@ -122,15 +132,22 @@ func (a *App) readSiteIdentitySourceSnapshot(ctx context.Context, q siteIdentity
 // related domain selects it. This records reference identity only, never copies
 // an original plugin config, onlyonce flag, KV value or credential.
 func (a *App) commitSiteIdentityMigration(ctx context.Context, snapshotID string, originalID int64, targetAppID string) (siteIdentityMigrationReceipt, error) {
-	var out siteIdentityMigrationReceipt
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
-		return out, err
+		return siteIdentityMigrationReceipt{}, err
 	}
 	defer tx.Rollback()
-	snapshot, err := a.readSiteIdentitySourceSnapshot(ctx, tx, snapshotID)
+	out, err := a.Store.commitSiteIdentityMigrationTx(ctx, tx, a.Settings(), snapshotID, originalID, targetAppID)
+	if err != nil {
+		return out, err
+	}
+	return out, tx.Commit()
+}
+func (s *Store) commitSiteIdentityMigrationTx(ctx context.Context, tx *sql.Tx, settings Settings, snapshotID string, originalID int64, targetAppID string) (siteIdentityMigrationReceipt, error) {
+	var out siteIdentityMigrationReceipt
+	snapshot, err := s.readSiteIdentitySourceSnapshot(ctx, tx, snapshotID)
 	if err != nil {
 		return out, err
 	}
@@ -144,7 +161,7 @@ func (a *App) commitSiteIdentityMigration(ctx context.Context, snapshotID string
 	if sourceOrigin == "" {
 		return out, siteIdentityError()
 	}
-	local, err := a.Store.readNativeSiteIdentity(ctx, tx, "site_id", targetAppID)
+	local, err := s.readNativeSiteIdentity(ctx, tx, "site_id", targetAppID)
 	if err != nil {
 		return out, err
 	}
@@ -152,7 +169,7 @@ func (a *App) commitSiteIdentityMigration(ctx context.Context, snapshotID string
 		return out, siteIdentityError()
 	}
 	found := false
-	for _, site := range a.Settings().Sites {
+	for _, site := range settings.Sites {
 		if site.ID == targetAppID {
 			origin, e := nativeConfiguredSiteOrigin(site)
 			if e != nil || origin != sourceOrigin {
@@ -166,31 +183,31 @@ func (a *App) commitSiteIdentityMigration(ctx context.Context, snapshotID string
 		return out, siteIdentityError()
 	}
 	out = siteIdentityMigrationReceipt{Version: 1, SnapshotID: snapshotID, SnapshotDigest: snapshot.SnapshotDigest, SourceFingerprint: snapshot.SourceFingerprint, OriginalSourceID: originalID, NativeSourceID: local.SourceID, SiteID: targetAppID, CanonicalOrigin: sourceOrigin}
-	out.ReceiptID = "smr_" + a.Store.siteIdentityMAC("migration-receipt", out)
+	out.ReceiptID = "smr_" + s.siteIdentityMAC("migration-receipt", out)
 	var oldSealed []byte
 	var oldNativeID int64
 	var oldAppID string
 	err = tx.QueryRowContext(ctx, `SELECT native_source_id,site_id,sealed FROM native_site_migration_receipts WHERE source_fingerprint=? AND original_source_id=?`, snapshot.SourceFingerprint, originalID).Scan(&oldNativeID, &oldAppID, &oldSealed)
 	if err == nil {
 		var old siteIdentityMigrationReceipt
-		if a.Store.Unseal(oldSealed, &old) != nil || old.NativeSourceID != oldNativeID || old.SiteID != oldAppID || a.verifySiteIdentityMigrationReceipt(ctx, tx, old) != nil || old.SourceFingerprint != out.SourceFingerprint || old.OriginalSourceID != out.OriginalSourceID || old.NativeSourceID != out.NativeSourceID || old.SiteID != out.SiteID || old.CanonicalOrigin != out.CanonicalOrigin {
+		if s.Unseal(oldSealed, &old) != nil || old.NativeSourceID != oldNativeID || old.SiteID != oldAppID || s.verifySiteIdentityMigrationReceipt(ctx, tx, old) != nil || old.SourceFingerprint != out.SourceFingerprint || old.OriginalSourceID != out.OriginalSourceID || old.NativeSourceID != out.NativeSourceID || old.SiteID != out.SiteID || old.CanonicalOrigin != out.CanonicalOrigin {
 			return out, siteIdentityError()
 		}
 		// A newer observed inventory may add other sites. Existing exact identity
 		// bindings retain their original immutable receipt, never a new claim.
-		return old, tx.Commit()
+		return old, nil
 	}
 	if !errors.Is(err, sql.ErrNoRows) {
 		return out, err
 	}
-	sealed, err := a.Store.Seal(out)
+	sealed, err := s.Seal(out)
 	if err != nil {
 		return out, err
 	}
 	if _, err = tx.ExecContext(ctx, `INSERT INTO native_site_migration_receipts VALUES(?,?,?,?,?)`, snapshot.SourceFingerprint, originalID, local.SourceID, local.SiteID, sealed); err != nil {
 		return out, err
 	}
-	return out, tx.Commit()
+	return out, nil
 }
 func (a *App) migratedSiteIdentity(ctx context.Context, fingerprint string, originalID int64) (nativeSiteIdentity, error) {
 	var out nativeSiteIdentity
@@ -226,15 +243,18 @@ func (a *App) migratedSiteIdentity(ctx context.Context, fingerprint string, orig
 }
 
 func (a *App) verifySiteIdentityMigrationReceipt(ctx context.Context, q siteIdentityReader, receipt siteIdentityMigrationReceipt) error {
+	return a.Store.verifySiteIdentityMigrationReceipt(ctx, q, receipt)
+}
+func (s *Store) verifySiteIdentityMigrationReceipt(ctx context.Context, q siteIdentityReader, receipt siteIdentityMigrationReceipt) error {
 	if receipt.Version != 1 || receipt.OriginalSourceID < 1 || receipt.NativeSourceID < 1 || receipt.SiteID == "" || receipt.CanonicalOrigin == "" {
 		return siteIdentityError()
 	}
 	proof := receipt.ReceiptID
 	receipt.ReceiptID = ""
-	if proof != "smr_"+a.Store.siteIdentityMAC("migration-receipt", receipt) {
+	if proof != "smr_"+s.siteIdentityMAC("migration-receipt", receipt) {
 		return siteIdentityError()
 	}
-	snapshot, err := a.readSiteIdentitySourceSnapshot(ctx, q, receipt.SnapshotID)
+	snapshot, err := s.readSiteIdentitySourceSnapshot(ctx, q, receipt.SnapshotID)
 	if err != nil || snapshot.SourceFingerprint != receipt.SourceFingerprint || snapshot.SnapshotDigest != receipt.SnapshotDigest {
 		return siteIdentityError()
 	}

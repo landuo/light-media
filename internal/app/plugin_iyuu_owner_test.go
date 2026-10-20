@@ -138,7 +138,16 @@ func TestIYUUActualAppSDKDaemonDirectoryChangeAndLostACK(t *testing.T) {
 	}
 }
 
+type iyuuActualSDKSetup struct {
+	Prepare          func(*testing.T, *App, map[string]any) PluginRun
+	SuccessCacheBase int
+	Verify           func(*testing.T, *App, PluginRun)
+}
+
 func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...string) {
+	testIYUUActualAppSDKWithSetup(t, kind, lostACK, nil, stages...)
+}
+func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setup *iyuuActualSDKSetup, stages ...string) {
 	stage := "pending"
 	if len(stages) > 0 {
 		stage = stages[0]
@@ -378,7 +387,13 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 		config["reuse_save_path"] = false
 		config["categoryafterseed"] = "movie"
 	}
-	run := uninstallInstall(t, a, "OwnedIYUU", iyuu.Manifest(), config, true)
+	var run PluginRun
+	if setup == nil {
+		run = uninstallInstall(t, a, "OwnedIYUU", iyuu.Manifest(), config, true)
+	} else {
+		run = setup.Prepare(t, a, config)
+	}
+	instance := run.InstanceID
 	if _, _, found := builtin.Lookup("IYUUAutoSeed"); !found {
 		t.Fatal("owned catalog overlay missing")
 	}
@@ -387,10 +402,10 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 		t.Fatal(run.State)
 	}
 	var schedules int
-	if e := a.Store.DB.QueryRow("SELECT COUNT(*) FROM plugin_schedules WHERE instance_id='OwnedIYUU' AND active=1").Scan(&schedules); e != nil || schedules != 2 {
+	if e := a.Store.DB.QueryRow("SELECT COUNT(*) FROM plugin_schedules WHERE instance_id=? AND active=1", instance).Scan(&schedules); e != nil || schedules != 2 {
 		t.Fatalf("persistent schedules %d %v", schedules, e)
 	}
-	queued, e := a.pluginStore.EnqueueRun(ctx, "OwnedIYUU", "run", nil)
+	queued, e := a.pluginStore.EnqueueRun(ctx, instance, "run", nil)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -399,7 +414,7 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	if lostACK {
 		// Both admissions predate the unknown outcome. A later claim still
 		// requires a current safe owner, even though enqueue was valid then.
-		if second, e = a.pluginStore.EnqueueRun(ctx, "OwnedIYUU", "run", nil); e != nil {
+		if second, e = a.pluginStore.EnqueueRun(ctx, instance, "run", nil); e != nil {
 			t.Fatal("second original queue admission", e)
 		}
 	}
@@ -560,7 +575,7 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	if e != nil || run.State != "succeeded" {
 		t.Fatal("cold final CP not recovered", run.State, e)
 	}
-	installation, e := a.pluginStore.Installation(ctx, "OwnedIYUU")
+	installation, e := a.pluginStore.Installation(ctx, instance)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -568,11 +583,11 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	if e != nil {
 		t.Fatal(e)
 	}
-	checkpoint, found, e := owner.journal.ReadCheckpoint(ctx, "OwnedIYUU", uint64(run.Generation))
+	checkpoint, found, e := owner.journal.ReadCheckpoint(ctx, instance, uint64(run.Generation))
 	if e != nil || !found || checkpoint.Core.Counters.Success != 1 {
 		t.Fatalf("actual durable runtime %+v %v", checkpoint, e)
 	}
-	stored, e := a.pluginStore.Config(ctx, "OwnedIYUU")
+	stored, e := a.pluginStore.Config(ctx, instance)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -580,15 +595,19 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	if e != nil {
 		t.Fatal(e)
 	}
-	if len(fields["success_caches"].([]any)) != 1 {
+	wantCaches := 1
+	if setup != nil {
+		wantCaches += setup.SuccessCacheBase
+	}
+	if len(fields["success_caches"].([]any)) != wantCaches {
 		t.Fatal("source cache did not reach actual plugin config")
 	}
-	history, e := a.pluginStore.Data(ctx, "OwnedIYUU", original)
+	history, e := a.pluginStore.Data(ctx, instance, original)
 	if e != nil || !strings.Contains(string(history.Value), seed) {
 		t.Fatalf("source history did not reach actual plugin data: %s %v", history.Value, e)
 	}
 	var routeID string
-	if e = a.Store.DB.QueryRow(`SELECT id FROM plugin_notice_routes WHERE instance_id='OwnedIYUU' AND source_token IN (SELECT token FROM plugin_iyuu_notices)`).Scan(&routeID); e != nil {
+	if e = a.Store.DB.QueryRow(`SELECT id FROM plugin_notice_routes WHERE instance_id=? AND source_token IN (SELECT token FROM plugin_iyuu_notices)`, instance).Scan(&routeID); e != nil {
 		t.Fatal("actual native IYUU notice not accepted", e)
 	}
 	route, _, e := a.pluginStore.readNoticeRoute(ctx, a.Store.DB, routeID)
@@ -596,6 +615,9 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 		t.Fatal("actual native notice routing/history", route, e)
 	}
 	iyuuAssertActualBusinessSourceLogs(t, a, run)
+	if setup != nil && setup.Verify != nil {
+		setup.Verify(t, a, run)
+	}
 	mu.Lock()
 	defer mu.Unlock()
 	routes := []string{"/api/v2/torrents/add", "/api/v2/torrents/removeTags", "/api/v2/torrents/recheck", "/api/v2/torrents/start", "/download.php"}

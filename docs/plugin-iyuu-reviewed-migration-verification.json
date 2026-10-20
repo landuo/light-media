@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "state": "go_importer_and_owned_business_verified_not_production_migrated",
+  "base_commit": "34f3a8af763cc377cb3aa442ef31fcff45388198",
+  "actual_complete": 7,
+  "remaining_count": 16,
+  "production_version": "0.4.8",
+  "production_migration": false,
+  "production_writes_performed": 0,
+  "original_writes_performed": 0,
+  "user_downloaders_or_sites_contacted": false,
+  "python_runtime_dependency_added": false,
+  "scope": "Reviewed original IYUU2.19 atomic native-reference/config/cache/KV import and real Go SDK/native owned add/control/cold recovery with offline CLI. Rendered UI and production handoff pending.",
+  "source": {
+    "source_sha256": "a47d36432e87da046af025fc76281d99c714064a8fe05bdf8b11e83d2c683a3f",
+    "matches_compiled_reference": true,
+    "config_sha256": "490bd44c3e18de1919fe758d023ba9dec381eb94f9637bd6e9e2d4a724702046",
+    "config_bytes": 4487,
+    "history_rows": 329,
+    "history_bytes": 47304,
+    "file_count": 0,
+    "history_entries": 346,
+    "torrent_references": 792,
+    "cache_counts": {
+      "success_caches": 43,
+      "error_caches": 26,
+      "permanent_error_caches": 19
+    },
+    "flags": {
+      "enabled": true,
+      "skipverify": false,
+      "onlyonce": false,
+      "clearcache": false,
+      "notify": false,
+      "addhosttotag": true,
+      "auto_category": false,
+      "auto_start": true,
+      "reuse_save_path": true
+    },
+    "capture_audit": {
+      "writes": 0,
+      "network": 0,
+      "process": 0
+    }
+  },
+  "references": {
+    "sites": 17,
+    "all_canonical_origins_uniquely_matched": true,
+    "downloaders": [
+      {
+        "kind": "qbittorrent",
+        "matches": 1,
+        "native_id": "qbittorrent-0",
+        "same_name": true,
+        "username_equal": true,
+        "password_equal": true,
+        "enabled": true
+      },
+      {
+        "kind": "transmission",
+        "matches": 1,
+        "native_id": "transmission-1",
+        "same_name": true,
+        "username_equal": true,
+        "password_equal": true,
+        "enabled": true
+      }
+    ],
+    "core_settings_and_credentials_not_overwritten": true,
+    "site_namespace": "native-numeric/custom-string/v1; independently authenticated original snapshot/per-site receipts",
+    "ordinary_unreviewed_original_import_stays_unclaimed": true,
+    "config_changes_only_initial_sites_field": true,
+    "history_raw_bytes_and_downloader_names_preserved": true
+  },
+  "implementation": {
+    "atomic_snapshot_site_receipts_config_data_binding_protocol_final_receipt": true,
+    "site_identity_transaction_helpers_reused": true,
+    "receipt_replay_preserves_later_plugin_and_core_edits": true,
+    "missing_site_or_final_receipt_blocks_configuration_and_execution": true,
+    "import_desired_enabled": false,
+    "workers_schedules_started_by_import": false
+  },
+  "inputs": {
+    "files": 3990,
+    "manifest_sha256": "5b29bdac5dbb420d8e8374663117ee85d42b1289896bf29256fc7c1bdea5489a",
+    "compiler_files": 5594,
+    "compiler_manifest_sha256": "cecf240948fe2dba4d38afbd442d187b628ad5d0cd22f6053687c772d8c05f62",
+    "platforms": [
+      "native macOS",
+      "linux amd64 CGO0 modernconly"
+    ],
+    "drift": 0,
+    "focus": [
+      {
+        "path": "internal/app/native_site_identity_migration.go",
+        "sha256": "8af00c93027d7d9ccb6871c1ed1e1af6f49b49fc550fb1aeeed389cf8318be4e"
+      },
+      {
+        "path": "internal/app/plugin_site_reference_protocol.go",
+        "sha256": "37fdfe9403c7492a0f68ab3807da42d4ce53d7c9768427a518ef39ffb28aef32"
+      },
+      {
+        "path": "internal/app/plugin_store.go",
+        "sha256": "db88584b4ac936413df480d74454da51a265d6b13ed28ea6559adfe6f882d679"
+      },
+      {
+        "path": "internal/app/iyuu_migration.go",
+        "sha256": "82c20d3b2ebee4a91fc247daac9893c982cb3836b9932c6129d33821a799c5dc"
+      },
+      {
+        "path": "internal/app/iyuu_migration_test.go",
+        "sha256": "b0aee7444394ee52dc962522b8358d6d16cadccac1715d6325f4c7a9bb87b925"
+      },
+      {
+        "path": "internal/app/iyuu_migration_sdk_test.go",
+        "sha256": "4125da297374688a4931bfd75b6cccdb3d9213fbdd5382933861d0bd216049f3"
+      },
+      {
+        "path": "internal/app/plugin_iyuu_owner_test.go",
+        "sha256": "5cccf1a7322c93e94c2a91c53e824318a59714e337dfba9c70f361e7afc5214a"
+      },
+      {
+        "path": "cmd/iyuu-migrate-owned/main.go",
+        "sha256": "b69875ecd5a8190d2112b1c36ec98ec4e7c3f8a6005b9f009b24ca2f4b65d606"
+      }
+    ]
+  },
+  "checks": {
+    "affected-normal": {
+      "exit": 0,
+      "top_level_passed": 49,
+      "including_subtests_passed": 109,
+      "skipped": [
+        "TestReviewedIYUUSelectedStdin",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+      ]
+    },
+    "affected-race": {
+      "exit": 0,
+      "top_level_passed": 49,
+      "including_subtests_passed": 109,
+      "skipped": [
+        "TestReviewedIYUUSelectedStdin",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+      ]
+    },
+    "normal-selected": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 12,
+      "skipped": []
+    },
+    "race-selected": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 12,
+      "skipped": []
+    }
+  },
+  "selected": {
+    "state": "passed",
+    "source": "actual installed IYUUAutoSeed2.19",
+    "private_payload_saved": false,
+    "runs": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "passed": true,
+        "log_sha256": "1ede7245133eee91819a9205fd3a6a939fd36033bd7c12f1f838c5b3612525de"
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "passed": true,
+        "log_sha256": "3b38c48952788876a24eefd33c30e6c3fb604e7af2857208c3139d264e473627"
+      }
+    ],
+    "scope": "Actual original data into owned encrypted stores; read-only CLI/apply/replay; real Go SDK and native qB/TR add/control/cold recovery against owned loopback services only. No production/original writes or user site/downloader requests.",
+    "owned_workers_network_business": true,
+    "original_and_production_writes": 0,
+    "user_sites_or_downloaders_contacted": false
+  },
+  "builds": {
+    "light-media-native-owned": {
+      "exit": 0,
+      "sha256": "ec27db7b6e91e0ad01f4fec1773db1d7eaba1b3324c6bf89ff7c84545ec8037d"
+    },
+    "light-media-linux-owned": {
+      "exit": 0,
+      "sha256": "1d75c8db8d8a222486b492ae098b7b26482771c94297221be96d26cc13bf9ea6"
+    },
+    "iyuu-migrate-native-owned": {
+      "exit": 0,
+      "sha256": "83648939ce6a677a451b442c3e87453fcb2d2968bca7a6024262086395fcd889"
+    },
+    "iyuu-migrate-race-owned": {
+      "exit": 0,
+      "sha256": "7adb7bd838b9a77db8aa000ef6ae8285d6239cb0f1ff9c79413891ad7203de4f"
+    },
+    "iyuu-migrate-linux-owned": {
+      "exit": 0,
+      "sha256": "4568971b19dc644b87c59233126a765c125e9e919103313b13e9263790cd9424"
+    }
+  },
+  "vet_exit": 0,
+  "mod_verify_exit": 0,
+  "owned_sdk": {
+    "backends": [
+      "qbittorrent",
+      "transmission"
+    ],
+    "source_history_rows_unchanged": 329,
+    "target_rows_after_one_synthetic_addition": 330,
+    "success_cache_size_after_owned_run": 44,
+    "original_success_cache_entries_retained": 43,
+    "error_cache_entries_retained": 26,
+    "permanent_cache_entries_retained": 19,
+    "qb_effects": [
+      "add",
+      "remove temporary tag",
+      "recheck",
+      "start"
+    ],
+    "tr_effects": [
+      "add",
+      "start"
+    ],
+    "native_effects_each_once_after_cold_lost_ack_recovery": true,
+    "generation_stays_original_import_generation": 1,
+    "protocol_remains_reviewed_original_transition": true,
+    "all_network_owned_loopback": true,
+    "original_credentials_replaced_before_SDK": true
+  },
+  "offline_cli": {
+    "source_only": true,
+    "target_read_only_files_byte_and_mode_unchanged": true,
+    "apply": true,
+    "replay": true,
+    "running_target_refused": true,
+    "modified_source_refused_without_file_changes": true,
+    "cold_history_and_reference_proofs_valid": true,
+    "activation_disabled": true
+  },
+  "retained_failures": [
+    {
+      "stage": "r1",
+      "result": "Actual validation rejected before target writes: runtime journal canonicalization sorted wire keys, unlike independent collector. Explicit ordered wire encoder fixed; pins unchanged."
+    },
+    {
+      "stage": "r2",
+      "result": "Actual source import/cold/replay assertions passed. Eight rollback subtests failed querying a lazy table correctly rolled back; R3 checks unchanged schema presence/zero existing rows. R2 whole test remained failed."
+    }
+  ],
+  "remaining_requirements": [
+    "Rendered configuration form and source interactions with mapped selections",
+    "Current source recheck, production deployment/offline migration",
+    "Safe activation without duplicate original scheduled writes",
+    "Complete remaining installed plugins; full goal active"
+  ],
+  "evidence_archive": "testdata/plugins/iyuu-reviewed-migration-verification.json.gz",
+  "evidence_archive_sha256": "e030dc9da9e96a7258a2ce76706147e0189e1faa78a07e8dc2334569557ac825"
+}
