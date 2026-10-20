@@ -104,6 +104,13 @@ func (a *App) pluginTransferHost(ctx context.Context, in PluginInstallation, run
 		if e != nil {
 			return nil, e
 		}
+		binding, options, _, e := a.transferBoundReferences(ctx, in, a.Settings())
+		if e != nil {
+			return nil, e
+		}
+		if binding != nil {
+			transferSetFormReferenceOptions(form, options)
+		}
 		return json.Marshal(map[string]any{"conf": form, "model": defaults})
 	}
 	if run == nil || a.requireDeferredExecution(ctx, run, method) != nil {
@@ -182,7 +189,11 @@ func (a *App) transferJournalRun(ctx context.Context, owner *pluginTransferOwner
 	return jr, initial, e
 }
 func (a *App) transferHostFor(ctx context.Context, jr *transfer.JournalRun, in PluginInstallation, run *PluginRun, cfg transfer.Config, settings Settings, proofs []transfer.AuthorityGrant) (*transfer.NativeHost, error) {
-	return transfer.NewNativeHost(transfer.NativeHostOptions{Context: ctx, Run: jr, Config: cfg, Bindings: a.transferBindings(settings), TempDir: filepath.Join(a.Dir, "plugin-state", "torrent-transfer", run.InstanceID, "generation-"+itoaSourceSite(run.Generation), run.ID), PendingProofs: proofs, NoticeAccepted: func(ctx context.Context, key string) error { return a.routeTransferNotice(ctx, jr.Identity(), key) }, Logger: a.transferSourceLogger(in, *run, settings)})
+	bindings, e := a.transferBindingsFor(ctx, in, settings)
+	if e != nil {
+		return nil, e
+	}
+	return transfer.NewNativeHost(transfer.NativeHostOptions{Context: ctx, Run: jr, Config: cfg, Bindings: bindings, TempDir: filepath.Join(a.Dir, "plugin-state", "torrent-transfer", run.InstanceID, "generation-"+itoaSourceSite(run.Generation), run.ID), PendingProofs: proofs, NoticeAccepted: func(ctx context.Context, key string) error { return a.routeTransferNotice(ctx, jr.Identity(), key) }, Logger: a.transferSourceLogger(in, *run, settings)})
 }
 func (a *App) transferLocalCommits(jr *transfer.JournalRun, run *PluginRun, configuring bool) {
 	jr.LocalCommit = func(ctx context.Context, tx *sql.Tx, id transfer.RunIdentity, op, key string, value any) (func(), error) {

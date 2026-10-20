@@ -31,7 +31,7 @@ func (p *PluginStore) transferQueueAdmissionTx(ctx context.Context, tx *sql.Tx, 
 	if e != nil {
 		return e
 	}
-	if root.ReferenceProtocol != "native-downloader-name/v1" {
+	if root.ReferenceProtocol != "native-downloader-name/v1" && root.ReferenceProtocol != reviewedTransferProtocol {
 		return bad("TORRENT_TRANSFER_REFERENCES_UNCLAIMED", "原版下载器引用尚未确认映射")
 	}
 	return nil

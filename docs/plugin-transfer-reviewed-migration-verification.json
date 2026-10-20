@@ -1,0 +1,521 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "state": "two_reviewed_transfer_migration_tools_and_owned_native_SDK_verified_not_production_migrated",
+  "base_commit": "891397517647b26a8d66d4e5d88c434393f8c77b",
+  "actual_complete": 7,
+  "remaining_count": 16,
+  "production_version": "0.4.8",
+  "production_migration": false,
+  "production_writes_performed": 0,
+  "original_writes_performed": 0,
+  "user_downloaders_or_sites_contacted": false,
+  "python_runtime_dependency_added": false,
+  "source_profiles": [
+    {
+      "plugin": "TorrentTransfer",
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "config_sha256": "50b5ec8157db0974ef6a1f57214341ee9962a479454550b224086b188c07af9e",
+      "data_sha256": "00a23b1f182b7c1c8bb0077751ca34a8ff246cc26be77749245bc9a8108d9088",
+      "data_rows": 422,
+      "data_bytes": 55704,
+      "downloader_kinds": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "downloader_name_hashes": [
+        "22d1fb414b6d62b69391bb42b9b94314a5b2fa77a7e8abd507cf3152ed4fa38e",
+        "7817bb812e82168bd48fe1ea6783078d42be37e8db9bdaafdac5c45804aca64f"
+      ],
+      "history_destination_id_lengths": [
+        40
+      ],
+      "private_values_saved": false,
+      "references_sha256": "65c0c47b87517d03c43124db54f62d55897daa79aa285e393b8b3359b5e683f2"
+    },
+    {
+      "plugin": "TorrentTransfermusic",
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "config_sha256": "08bd158b96b2b4339992ff9e5f3e86cedeb0f83ecc4942c209ec6ae9173e576a",
+      "data_sha256": "34f31c30ead3deba2a5c27117712245f20ca8029b3a6d29dbb46e0c82a9ff47c",
+      "data_rows": 36,
+      "data_bytes": 4752,
+      "downloader_kinds": [
+        "qbittorrent",
+        "transmission"
+      ],
+      "downloader_name_hashes": [
+        "22d1fb414b6d62b69391bb42b9b94314a5b2fa77a7e8abd507cf3152ed4fa38e",
+        "7817bb812e82168bd48fe1ea6783078d42be37e8db9bdaafdac5c45804aca64f"
+      ],
+      "history_destination_id_lengths": [
+        40
+      ],
+      "private_values_saved": false,
+      "references_sha256": "65c0c47b87517d03c43124db54f62d55897daa79aa285e393b8b3359b5e683f2"
+    }
+  ],
+  "backup_mount": {
+    "original_backup_path_sha256": "522f6d330f8d9a3e04fc4b5e4b2b8eac1362406641e8668beed8d5f79554ddcb",
+    "physical_host_path_sha256": "c1397e01fe28c28237641a85d80554da55e68576b28cde41210a62e360468a64",
+    "physical_directory": true,
+    "physical_owner_uid": 1000,
+    "physical_owner_gid": 1000,
+    "physical_mode": "0o700",
+    "current_mounted_candidates": [],
+    "new_readonly_mount_needed_to_preserve_original_config": true,
+    "writes": 0
+  },
+  "implementation": {
+    "raw_configuration_and_all_history_preserved_on_initial_import": true,
+    "canonical_instances": [
+      "TorrentTransfer",
+      "TorrentTransfermusic"
+    ],
+    "independent_initial_generation": 1,
+    "source_history_not_replayed": true,
+    "source_one_shot_flags_not_replayed": true,
+    "import_desired_enabled": false,
+    "unique_endpoint_username_password_match_to_stable_native_ID": true,
+    "renamed_downloaders_keep_original_value_and_current_title": true,
+    "reused_names_explicit_conflict": true,
+    "independent_sealed_namespace_and_final_receipt_digest_same_transaction": true,
+    "replay_does_not_overwrite_later_user_or_core_edits": true,
+    "ordinary_unreviewed_import_remains_unclaimed_across_retained_reinstall": true,
+    "reviewed_retained_reinstall_keeps_namespace": true,
+    "reset_clears_data_and_restores_native_selection": true,
+    "source_get_page_is_empty_no_history_page_added": true,
+    "global_downloader_or_path_mapping_UI_changed": false
+  },
+  "checks": {
+    "affected_normal": {
+      "exit": 0,
+      "top_level_passed": 28,
+      "including_subtests_passed": 57,
+      "skipped": [],
+      "terminal_pass": true,
+      "failures": [],
+      "log_sha256": "8ee901656f72b6d7594ce0c4b7d8fddd73f715d78472b4dea7260ae241f5a0c6"
+    },
+    "affected_race": {
+      "exit": 0,
+      "top_level_passed": 28,
+      "including_subtests_passed": 57,
+      "skipped": [],
+      "terminal_pass": true,
+      "failures": [],
+      "log_sha256": "c4b4689588e63a227fd8d01dd62720ceeda260162c8cfff8412bfb4d68965c5c"
+    },
+    "actual_source_normal": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 36,
+      "skipped": [],
+      "terminal_pass": true,
+      "failures": [],
+      "log_sha256": "676104ad079165cfa15e40aa966c9b14272296fa8dc27c463a0f70b6f40df832"
+    },
+    "actual_source_race": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 36,
+      "skipped": [],
+      "terminal_pass": true,
+      "failures": [],
+      "log_sha256": "15cbe2359280f6f95715848c4ccf2c35d8752afd78ab235495afb2990c1d802a"
+    },
+    "owned_NAS_actual_source": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 36,
+      "skipped": [],
+      "terminal_pass": true,
+      "failures": [],
+      "log_sha256": "23dc00701adf82b44de867b21f734fa467fe5223f780fb2b60b71e2619eea96e"
+    }
+  },
+  "inputs": {
+    "source_files": 4059,
+    "source_manifest_sha256": "5bf8955814f2509909874c10d74297d21b5f30992a180a76774d5d0d05b209ea",
+    "compiler_files": 5602,
+    "compiler_manifest_sha256": "9321020da27ecac1693f8106e05b5b53bcda5d0fc243e4f03bd0857ba4f7eb3a",
+    "missing": [],
+    "extra": [],
+    "source_drift": [],
+    "compiler_drift_since_after_build_capture": [],
+    "main_focus_drift": [],
+    "focus": [
+      {
+        "path": "internal/app/transfer_migration.go",
+        "sha256": "b27984e7f30cf002d92404bca2fede50519f6e43b1d1a475657aa0a0016ff4f1"
+      },
+      {
+        "path": "internal/app/transfer_migration_test.go",
+        "sha256": "a5d5aea070beaf6b95f40ec1130fe1e652c4d340c7f68d0d41b92aa4ccc72a74"
+      },
+      {
+        "path": "internal/app/plugin_transfer_reviewed_references.go",
+        "sha256": "d3c3082c79d2ac7d0ef7a672f1cd5407359ae2b69b64b10c174f30ca5bf84ba6"
+      },
+      {
+        "path": "internal/app/plugin_transfer_retained_reference_test.go",
+        "sha256": "47197ff5d29c733b486271db187160549b003342af283e7b089a2f0da9823fab"
+      },
+      {
+        "path": "internal/app/plugin_store.go",
+        "sha256": "dd8a1358343c30723a2b4f4733f55d4f09c7e8a0293c7196d52713b247f03c72"
+      },
+      {
+        "path": "internal/app/plugin_transfer_root.go",
+        "sha256": "67c90fd050ea1ad40c830ae38f3cee39c12f91e8c63d5593cf7458f6cd3ebfda"
+      },
+      {
+        "path": "internal/app/plugin_transfer_gates.go",
+        "sha256": "5678d51e4ebdc0af5d539a2def146ed011e47d158be75f465eab1b4891981ede"
+      },
+      {
+        "path": "internal/app/plugin_transfer_references.go",
+        "sha256": "2af10a0286b5488b0da57125fe23ee2ce5d0d999071a6f94d1e0323ea349185a"
+      },
+      {
+        "path": "internal/app/plugin_transfer_owner.go",
+        "sha256": "a5ed8a02dcce2cb21621bdc21d33254c6897939506f40a6e96d2893a22d863f7"
+      },
+      {
+        "path": "cmd/transfer-migrate-owned/main.go",
+        "sha256": "599401570ab5ebb08ca93e1eddff66155b978651bcb11b8c4111f84a70f61bcd"
+      },
+      {
+        "path": "internal/app/transfer_migration_sdk_test.go",
+        "sha256": "1a06db15a6c7656d7cddcd2f64e2fc9d636ac02e4f4bf4f16c5af31cebc236d5"
+      },
+      {
+        "path": "internal/app/plugin_transfer_owner_test.go",
+        "sha256": "52df1912fcd6814d558275461cfbc19192e9719e9619b62d0f0b4de4f1cf0738"
+      }
+    ]
+  },
+  "builds": {
+    "normal_app_test_and_CGO0_CLI": {
+      "session": 52657,
+      "exit": 0
+    },
+    "race_app_test_and_CLI": {
+      "session": 40369,
+      "exit": 0
+    },
+    "native_Linux_CGO0_server_CLI_vet_mod": {
+      "session": 96998,
+      "exit": 0
+    },
+    "Linux_CGO0_app_test": {
+      "session": 54516,
+      "exit": 0
+    },
+    "compiler_capture": {
+      "session": 18318,
+      "exit": 0,
+      "timing": "after builds; not a before-build compiler manifest"
+    },
+    "all_readers_terminal": true
+  },
+  "native_business": {
+    "public_management_HTTP_original_form_and_config": true,
+    "original_filter_rules_retained": true,
+    "only_connections_paths_schedule_changed_for_owned_execution": true,
+    "qBittorrent_to_Transmission_completed_once_each_instance": true,
+    "source_tasks_removed_without_data_deletion": true,
+    "new_history_uses_original_downloader_names": true,
+    "all_458_original_rows_unchanged_after_execution_and_cold_bootstrap": true,
+    "lost_add_ack_keeps_same_run_reconcile_pending": true,
+    "lost_add_ack_does_not_delete_source_or_record_success": true,
+    "cold_unknown_blocks_new_admission_and_performs_no_downloader_IO": true,
+    "real_browser_UI_newly_exercised": false,
+    "frontend_files_changed": 0
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed TorrentTransfer + music data and Go SDK in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-transfer-reviewed-2dca2761d03e4c38872295f13bb7b6d0",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/transfer-reviewed-2dca2761d03e4c38872295f13bb7b6d0",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "23dc00701adf82b44de867b21f734fa467fe5223f780fb2b60b71e2619eea96e"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "f362f87dd53049970f7b85834f9787d659e3635675abf3ecad0479d2b55fbdb2",
+      "transfer-migrate": "cf6e6a2ef6c59d5a03e01150470bd3477321a5148ce927bbf41972af703f1063"
+    },
+    "container_id": "72fdf1f0ebdaa5dc5460f42ffeaf72c4a68a67f1b2ce18422d19f90b6a95f44d",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 21.06
+  },
+  "nas_independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_runtime_directory_absent": true,
+    "production_server_and_compose_unchanged": true,
+    "writes_performed": 0
+  },
+  "prior_failure_records": [
+    {
+      "stage": "before",
+      "session": 3396,
+      "exit": 1,
+      "scope": "new retained-original-reinstall test on unchanged8913975 reproduces unsafe native-name promotion for both instances"
+    },
+    {
+      "stage": "r1",
+      "selected_session": 2688,
+      "selected_exit": 1,
+      "related_session": 43066,
+      "related_exit": 1,
+      "normal_compile": 0,
+      "race_compile": 0,
+      "result": "Actual private basic import/cold/reference cases passed, but rollback test queried a root table correctly removed by rollback; related App tests found real market default-form-before-install regression. R2 treats the transactionally removed root table as absence of partial state, verifies zero rows if it exists, and permits default form only for a truly absent generation0 instance; existing instances retain namespace guards. No R1 race test claimed."
+    }
+  ],
+  "boundaries": [
+    "No production deployment or scheduling cutover; full23 goal remains active7/23.",
+    "Old qB backup directory exists but is not mounted in current new service. Future production deployment must add a read-only bind at the original container path before activation; raw plugin paths and global downloader settings stay unchanged.",
+    "CLI target ready means ready for disabled atomic import; it is not evidence of a usable production backup mount.",
+    "Source profiles have422+36 historical receipts. Prior baseline418 is stale and replaced only for the rechecked source record.",
+    "Lost external acknowledgement deliberately remains unresolved and blocks fresh work; no success is fabricated and no mutation is replayed."
+  ],
+  "artifacts": [
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/SOURCE-INPUTS.json.gz",
+      "uncompressed_sha256": "5bf8955814f2509909874c10d74297d21b5f30992a180a76774d5d0d05b209ea",
+      "compressed_sha256": "447abcd9ed342e4ed4980be31a2f728c1957ce9f72407c255fd8e2b4a6720201"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/COMPILER-INPUTS.json.gz",
+      "uncompressed_sha256": "9321020da27ecac1693f8106e05b5b53bcda5d0fc243e4f03bd0857ba4f7eb3a",
+      "compressed_sha256": "926dc6f5e0078bb0380c075571b90ad37bcd63a715d3c7e8031646d396e6cee0"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/FOCUS.json.gz",
+      "uncompressed_sha256": "86db4c1d48dd1310fffee0d9868e46b2da674d16ea04769f7ca8639a9971b425",
+      "compressed_sha256": "6067727fbe7d41f51b058b266ff91ebbf825ecb9c14a19f44705995b74ddba0c"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/INPUT-AUDIT.json.gz",
+      "uncompressed_sha256": "5f461b3889ceaaf377f1fd6697cac39608c2f11816a50e3615f6e4352d8c8bfa",
+      "compressed_sha256": "d6922ef190c27168d744f121ef998ccd16955c1d369138a3f03067df5e8a7dff"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/test.log.gz",
+      "uncompressed_sha256": "8ee901656f72b6d7594ce0c4b7d8fddd73f715d78472b4dea7260ae241f5a0c6",
+      "compressed_sha256": "1ddfe8ab745cbc71082f63d7ad29103855f94507768cadd8c6bd78a6c6806252"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/test-race.log.gz",
+      "uncompressed_sha256": "c4b4689588e63a227fd8d01dd62720ceeda260162c8cfff8412bfb4d68965c5c",
+      "compressed_sha256": "9ebf20f57c2d3b8455d4362b5456fd4c943b89714a813ac8983f49eb8212ad9c"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/normal-selected.log.gz",
+      "uncompressed_sha256": "676104ad079165cfa15e40aa966c9b14272296fa8dc27c463a0f70b6f40df832",
+      "compressed_sha256": "58dc69fca01b15266f661982d5a7d4846cca5d671ae2fa00ba9e8e79d589a694"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/race-selected.log.gz",
+      "uncompressed_sha256": "15cbe2359280f6f95715848c4ccf2c35d8752afd78ab235495afb2990c1d802a",
+      "compressed_sha256": "b750c5ec2ad12440490dec133c00f98cb8ffb4be17289cd589f622cb3e5925cc"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/selected-verification.json.gz",
+      "uncompressed_sha256": "3f627d9ec2691b2dc5e262e2b266b6fe4523615c63f00cd5c08e9328cf9886ff",
+      "compressed_sha256": "4781c12ca1c168d0311694f135e878f781d072fa6ffc6aa2e2d4c0536e239706"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/nas-selected.log.gz",
+      "uncompressed_sha256": "23dc00701adf82b44de867b21f734fa467fe5223f780fb2b60b71e2619eea96e",
+      "compressed_sha256": "d75b206bd86b7bf8dbae76c9963328861d07d7c1e5f5d70b636f44c02775035b"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/nas-verification.json.gz",
+      "uncompressed_sha256": "af204fa7d65c0e66f29e6b64d48cf3b04a4dbda88e536de1c362ca0aefdc9aab",
+      "compressed_sha256": "6467be303bd05a311d48189829f45b072455ca08f048b2ffc3aac57897027715"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/nas-independent-cleanup.json.gz",
+      "uncompressed_sha256": "36bbb74e3c284f0df324632f4c882d822c83a1eb2ec9c237a470fb0227caee0d",
+      "compressed_sha256": "5c3d5b4737bc7a4e3b7573f079073e6cd8e000181ae66e6a6cedbf32f20862a6"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/run-selected.py.gz",
+      "uncompressed_sha256": "48c8897c70006c666a074375cf54621f27cc3554e1d90e24552a30086d62d502",
+      "compressed_sha256": "b02650a8027fd925840edbceadf00685af3d8153d646a9266385eae2ae9c9bb2"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/run-nas-owned.py.gz",
+      "uncompressed_sha256": "a69bd269614b79c180aa13d110637f000ada06c0748c8b7a1e27a82fb2a17b26",
+      "compressed_sha256": "4d0bd64825c2036881faf8bce7b41fbfdea5d1b4e336000dd466550d036a86bf"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-test.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-race.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-cli.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-cli-race.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-native.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-linux.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-cli-linux.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/build-linux-test.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/vet.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/mod-verify.log.gz",
+      "uncompressed_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+      "compressed_sha256": "4699dce40a065353f016ef7eb2c309ee9dee73281263a6b29287016349618a1b"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/before-SOURCE-INPUTS.json.gz",
+      "uncompressed_sha256": "16d9ce8aab00832b6d42d3edc9c4f54e290f9c079ccc367acdf29a2aaf32f62a",
+      "compressed_sha256": "d56b29bf830d8100c3f305f3b14515a6937d7af1268326b3c1fa0946fb5efdde"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/before-test.log.gz",
+      "uncompressed_sha256": "7b2118e8ffe2635a4312bfce409919a0e33c1c81189bc6c74cdcceff4ca98b3f",
+      "compressed_sha256": "9c6ba0fe518f7ab5c9e42845aecb64f7c0db5d93eef6e2247930733682f82d46"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/prior-r1-SOURCE-INPUTS.json.gz",
+      "uncompressed_sha256": "5a9f2db8199c8632d6bd8ad14d1a8d4b8353b635289e3797d2a5873b7e7c9737",
+      "compressed_sha256": "c35d2de44a9442b2d290daa720ec93382aa0f491d9f16e76ef7e5346a0b4fd64"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/prior-r1-normal-selected.log.gz",
+      "uncompressed_sha256": "4738a960568e4d5e0bd595da7f43999de64abe745b8f6bcae32c2b27967c334f",
+      "compressed_sha256": "800d45e10a252fc802a12f8b14e264a71a408269d596e0dfce4252809f1907c1"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/prior-r1-selected-verification.json.gz",
+      "uncompressed_sha256": "3e4670bcfcfe6bd260864b5992d77252740aa542e8bbe995290da2b3bb37ca13",
+      "compressed_sha256": "f635d1556b2d1230eddaadbf6f0f84a6494fd768437a9a4b1f2e97796a2100d9"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/prior-r1-test.log.gz",
+      "uncompressed_sha256": "baebe32ad322062457e2e0bd65d99654e51fed29341d45cbacc6fe8ee6cfd000",
+      "compressed_sha256": "750608061488e576b3d1950c61eab34e31438106cc72c9689693e62228aa29ad"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/source-reviewed-profile-metadata.json.gz",
+      "uncompressed_sha256": "f14d1e06750e250fa146cde6886402f14aa007254288870722dbaaee1e338cda",
+      "compressed_sha256": "ced3ff4a0646c9d365df8376b04a8f38b2975f44aa29b1cd1b47e419298a9972"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/source-backup-mount-comparison.json.gz",
+      "uncompressed_sha256": "0bd4b830ed4a47e4413188075532cac6f3571b522ef226de6ba1c30005afc02d",
+      "compressed_sha256": "f0814045c851c866c9f3d70c20a43065cda1f053fa59e4738ee36aee970a397d"
+    },
+    {
+      "path": "testdata/plugins/transfer-reviewed-migration/verification/source-emit-reviewed-private-stdin.py.gz",
+      "uncompressed_sha256": "f0282a63c7e9b6ebe0731a0745b5ca664afc372451add598f6f787d898dbb303",
+      "compressed_sha256": "21e4c6d10656870d2b49da71efb2c3b231e2b97ad1f8079f1fa373ebfd3aebd4"
+    }
+  ],
+  "private_material_check": {
+    "source_secret_scan_passed": true,
+    "source_private_values_printed_or_saved": false,
+    "changed_files_scanned": 48,
+    "compressed_contents_scanned": true
+  }
+}

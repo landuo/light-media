@@ -52,7 +52,7 @@ func (p *PluginStore) transferConfigAdmissionTx(ctx context.Context, tx *sql.Tx,
 	if e != nil {
 		return e
 	}
-	if root.ReferenceProtocol == "native-downloader-name/v1" {
+	if root.ReferenceProtocol == "native-downloader-name/v1" || root.ReferenceProtocol == reviewedTransferProtocol {
 		return nil
 	}
 	grant, ok := ctx.Value(transferOriginalImportKey{}).(transferOriginalImportAdmission)

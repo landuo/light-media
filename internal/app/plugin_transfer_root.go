@@ -59,7 +59,7 @@ func (p *PluginStore) transferRootReadTx(ctx context.Context, tx *sql.Tx, instan
 	if e = tx.QueryRowContext(ctx, "SELECT plugin_id FROM plugin_installations WHERE instance_id=?", instance).Scan(&plugin); e != nil || root.Plugin != plugin || !isTorrentTransfer(root.Plugin) {
 		return root, nil, transfer.ErrJournalIntegrity
 	}
-	if root.ReferenceProtocol != "native-downloader-name/v1" && root.ReferenceProtocol != "moviepilot-reference-unclaimed/v1" {
+	if root.ReferenceProtocol != "native-downloader-name/v1" && root.ReferenceProtocol != "moviepilot-reference-unclaimed/v1" && root.ReferenceProtocol != reviewedTransferProtocol {
 		return root, nil, transfer.ErrJournalIntegrity
 	}
 	if root.ReferenceProtocol == "native-downloader-name/v1" {
@@ -70,6 +70,12 @@ func (p *PluginStore) transferRootReadTx(ctx context.Context, tx *sql.Tx, instan
 		var count int
 		if e = tx.QueryRowContext(ctx, "SELECT COUNT(*) FROM plugin_migration_runs WHERE id=? AND instance_id=? AND source_plugin_id=? AND state IN ('planned','imported')", root.ReferenceMigration, root.Instance, root.Plugin).Scan(&count); e != nil || count != 1 {
 			return root, nil, transfer.ErrJournalIntegrity
+		}
+		if root.ReferenceProtocol == reviewedTransferProtocol {
+			proof, e := p.readReviewedTransferProof(ctx, tx, instance)
+			if e != nil || proof.Migration != root.ReferenceMigration || proof.Binding.Generation > g {
+				return root, nil, invalidReviewedTransfer()
+			}
 		}
 	}
 
@@ -245,6 +251,19 @@ func (p *PluginStore) transferGenesisTx(ctx context.Context, tx *sql.Tx, instanc
 		return e
 	}
 	root := transferOwnerRoot{Version: 1, Plugin: plugin, ReferenceProtocol: "native-downloader-name/v1", Purpose: "transfer-owner-root/v1", Instance: instance, Event: event, Generation: g, ParentGeneration: parent.Generation, ParentSHA: parent.SHA, Journal: anchor, Runs: map[string]transferRunFact{}}
+	if parent.Generation > 0 && event != "reset" {
+		var retained int
+		if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_values WHERE instance_id=?`, instance).Scan(&retained); e != nil {
+			return e
+		}
+		if retained > 0 {
+			previous, _, e := p.transferRootReadTx(ctx, tx, instance, parent.Generation)
+			if e != nil {
+				return e
+			}
+			root.ReferenceProtocol, root.ReferenceMigration = previous.ReferenceProtocol, previous.ReferenceMigration
+		}
+	}
 	raw, e := json.Marshal(root)
 	if e != nil {
 		return e

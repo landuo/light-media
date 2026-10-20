@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedTransfer       *reviewedTransferBinding     // Reviewed source identities for each independent transfer instance.
 	reviewedSeed           *reviewedSeedBinding         // Reviewed original SeedRescue namespace; never supplied by HTTP.
 	reviewedIYUU           *reviewedIYUUImportBinding   // Pinned original snapshot and verified native references only.
 	reviewedMediaRefresh   *reviewedMediaRefreshBinding // Only the reviewed source-to-native media reference mapping.
@@ -918,6 +919,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if in.reviewedSeed != nil && !validReviewedSeedImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedSeed()
 	}
+	if in.reviewedTransfer != nil && !validReviewedTransferImport(in, installation) {
+		return PluginMigrationReceipt{}, invalidReviewedTransfer()
+	}
 	if in.reviewedIYUU != nil && !validReviewedIYUUImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedIYUU()
 	}
@@ -933,7 +937,7 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		}
 	}
 
-	if in.reviewedSeed != nil {
+	if in.reviewedSeed != nil || in.reviewedTransfer != nil {
 		config = append(json.RawMessage(nil), in.Config...)
 	}
 	total := len(config) + len(installation.Manifest)
@@ -965,7 +969,8 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		ReviewedMediaRefresh   *reviewedMediaRefreshBinding `json:",omitempty"`
 		ReviewedIYUU           *reviewedIYUUImportBinding   `json:",omitempty"`
 		ReviewedSeed           *reviewedSeedBinding         `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed})
+		ReviewedTransfer       *reviewedTransferBinding     `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1000,6 +1005,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedSeed != nil && (run.SourcePluginID != "SeedRescue" || run.SourceFingerprint != in.reviewedSeed.SourceFingerprint) {
 		return PluginMigrationReceipt{}, invalidReviewedSeed()
+	}
+	if in.reviewedTransfer != nil && (run.SourcePluginID != in.reviewedTransfer.PluginID || run.SourceFingerprint != in.reviewedTransfer.SourceFingerprint) {
+		return PluginMigrationReceipt{}, invalidReviewedTransfer()
 	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
@@ -1047,6 +1055,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 			return PluginMigrationReceipt{}, err
 		}
 	}
+	if in.reviewedTransfer != nil {
+		if err = p.reviewedTransferTargetTx(ctx, tx, *in.reviewedTransfer); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
 	if err = p.installTx(ctx, tx, installation); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1086,6 +1099,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedSeed != nil {
 		if err = p.commitReviewedSeedReferencesTx(ctx, tx, *in.reviewedSeed, run.ID, digest); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
+	if in.reviewedTransfer != nil {
+		if err = p.commitReviewedTransferReferencesTx(ctx, tx, *in.reviewedTransfer, run.ID, digest); err != nil {
 			return PluginMigrationReceipt{}, err
 		}
 	}

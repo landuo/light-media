@@ -25,6 +25,7 @@ type transferAppDaemon struct {
 	server                *httptest.Server
 	source                bool
 	kind, hash, tags, dir string
+	category, sourceTags  string
 	added, removed        bool
 	calls                 map[string]int
 	lost                  string
@@ -32,7 +33,7 @@ type transferAppDaemon struct {
 }
 
 func newTransferAppDaemon(t *testing.T, kind, hash string, source bool) *transferAppDaemon {
-	d := &transferAppDaemon{t: t, source: source, kind: kind, hash: hash, calls: map[string]int{}, dir: "/transfer/destination"}
+	d := &transferAppDaemon{t: t, source: source, kind: kind, hash: hash, calls: map[string]int{}, dir: "/transfer/destination", category: "电影", sourceTags: "已整理,自有"}
 	if source {
 		d.dir = "/transfer/source"
 	}
@@ -51,9 +52,9 @@ func (d *transferAppDaemon) rows() []any {
 		}
 		tags := d.tags
 		if d.source {
-			tags = "已整理,自有"
+			tags = d.sourceTags
 		}
-		return []any{map[string]any{"hash": d.hash, "save_path": d.dir, "category": "电影", "tags": tags, "state": state, "progress": 1, "amount_left": 0}}
+		return []any{map[string]any{"hash": d.hash, "save_path": d.dir, "category": d.category, "tags": tags, "state": state, "progress": 1, "amount_left": 0}}
 	}
 	status := 0
 	if d.source {
