@@ -351,3 +351,24 @@ func TestPluginServerStatusSavingConfigCancelsInFlightRealView(t *testing.T) {
 		t.Fatal("replacement did not take effect", page.Body.String())
 	}
 }
+
+func TestPluginServerStatusSourceSingleDashboardIdentity(t *testing.T) {
+	a, _ := serverStatusTestApp(t)
+	h, cookie := a.Handler(), setupTestAdmin(t, a)
+	if got := callTest(t, h, "POST", "/api/plugins/install", `{"plugin_id":"MPServerStatus"}`, cookie, ""); got.Code != 200 {
+		t.Fatal(got.Code)
+	}
+	executeServerStatusPending(t, a)
+	if got := callTest(t, h, "PUT", "/api/plugins/MPServerStatus/config", `{"revision":1,"config":{"enable":true}}`, cookie, ""); got.Code != 200 {
+		t.Fatal(got.Code)
+	}
+	executeServerStatusPending(t, a)
+	meta := callTest(t, h, "GET", "/api/plugins/dashboard/meta", "", cookie, "")
+	if meta.Code != 200 || !strings.Contains(meta.Body.String(), `"id":"MPServerStatus"`) || !strings.Contains(meta.Body.String(), `"key":""`) || strings.Contains(meta.Body.String(), `"key":"default"`) {
+		t.Fatal("source singleton identity changed", meta.Code, meta.Body.String())
+	}
+	got := callTest(t, h, "GET", "/api/plugins/MPServerStatus/dashboard?key=", "", cookie, "")
+	if got.Code != 200 || !strings.Contains(got.Body.String(), `"refresh":10`) {
+		t.Fatal("original empty key failed", got.Code, got.Body.String())
+	}
+}

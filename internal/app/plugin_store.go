@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedServerStatus   bool                       // Pinned read-only MPServerStatus offline import only.
 	systemProcessDashboard map[string]json.RawMessage // Only the reviewed offline SystemProcess importer.
 	SourceConfigAbsent     bool                       // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
 	RunID                  string
@@ -856,6 +857,12 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		// No worker, event or schedule is created by this import transaction.
 		installation.DesiredEnabled = true
 	}
+	if in.reviewedServerStatus {
+		if !validReviewedServerStatusImport(installation, in.Config, in.Data, in.SourceConfigAbsent) {
+			return PluginMigrationReceipt{}, errors.New("invalid_reviewed_server_status_import")
+		}
+		installation.DesiredEnabled = true // The reviewed package only probes its fixed public endpoint on page reads.
+	}
 	var config json.RawMessage
 	if in.SourceConfigAbsent {
 		if !identifiersCanonicalAbsentImport(installation, in.Config, in.Data) {
@@ -892,7 +899,8 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		Data                   map[string]json.RawMessage
 		SourceConfigAbsent     bool                       `json:",omitempty"`
 		SystemProcessDashboard map[string]json.RawMessage `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard})
+		ReviewedServerStatus   bool                       `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -912,6 +920,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.systemProcessDashboard != nil && run.SourcePluginID != "SystemProcess" {
 		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_system_process_import")
+	}
+	if in.reviewedServerStatus && run.SourcePluginID != "MPServerStatus" {
+		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_server_status_import")
 	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
