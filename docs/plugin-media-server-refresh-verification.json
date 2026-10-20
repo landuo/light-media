@@ -1,0 +1,138 @@
+{
+  "status": "passed source/importer/ownedCLI/frontend/product/affectedSDK; pending real deployment and UI",
+  "base": "527625a328f7cf5306dabababf33b760f65fffb1",
+  "source_files": 3920,
+  "source_manifest_sha256": "7dce98e41144d2b0f47eb0ab37f8560c4aa41388853daad410937a47a1990c16",
+  "compiler_inputs": 5839,
+  "source_drift": [],
+  "compiler_drift": [],
+  "selected_source_tests": {
+    "state": "passed",
+    "tests": [
+      {
+        "plugin": "MediaServerRefresh",
+        "mode": "app-selected-owned.test",
+        "exit": 0,
+        "binary_sha256": "82188bcb30d0ca294fe7bf38cedf94de49fa3a0e578d4fc355c17a6ecc65850c"
+      },
+      {
+        "plugin": "MediaServerRefresh",
+        "mode": "app-selected-owned-race.test",
+        "exit": 0,
+        "binary_sha256": "01a4f7966208d7aed226109d0cf744c047a3f975033d1062d5fde19bf342d278"
+      },
+      {
+        "plugin": "CustomHosts",
+        "mode": "app-selected-owned.test",
+        "exit": 0,
+        "binary_sha256": "82188bcb30d0ca294fe7bf38cedf94de49fa3a0e578d4fc355c17a6ecc65850c"
+      },
+      {
+        "plugin": "CustomHosts",
+        "mode": "app-selected-owned-race.test",
+        "exit": 0,
+        "binary_sha256": "01a4f7966208d7aed226109d0cf744c047a3f975033d1062d5fde19bf342d278"
+      }
+    ],
+    "original_source_private_input_saved": false,
+    "source_configuration_mapping": true,
+    "connection_binding": true,
+    "atomic_rollback": true,
+    "cold_replay_preserves_user_edit": true,
+    "workers": 0,
+    "network_business_calls": 0,
+    "production_writes": 0,
+    "cli_validate_writes": 0
+  },
+  "native_app_and_race_compilers": 0,
+  "vet": 0,
+  "native_build": 0,
+  "linux_cgo0_server_build": 0,
+  "linux_cgo0_migration_cli_build": 0,
+  "mod_verify": 0,
+  "web_build": 0,
+  "web_tests": 167,
+  "web_embedded_version": "0.4.7",
+  "native_app_version": "0.4.7",
+  "cli_fingerprint_domain": "MediaServerRefresh/1.3.3/reviewed-configuration/",
+  "binaries": {
+    "light-media-native-owned": "1f877909b3d9aebc2fa57bbb40b9827798eadf4f62126ce8adb908f760b529f8",
+    "light-media-linux-owned": "2cb875b05e16e1e98a1ef2b2b88e47b4156b28adb05c52b1eb4c4d04b8c27b6e",
+    "media-refresh-migrate-owned": "2237168db662e3234083d7dd5a01bd36331f8f58e87fc1a87459a836aedca618",
+    "media-refresh-migrate-linux-owned": "813432918c113203325d84fe24baeac9889cd1969f4cfb1fcd33286ec8f6f5fa"
+  },
+  "root_complete_plugins": 6,
+  "remaining_plugins": 17,
+  "production_version": "0.4.6",
+  "new_migrations": 0,
+  "new_deployments": 0,
+  "original_business_writes": 0,
+  "private_plaintext_payload_files": 0,
+  "remaining": [
+    "Owned stopped-target CLI dry-run/apply/replay/refusal/file-preservation checks (direct App importer and CLI --validate already pass).",
+    "Production source AST/control flow fidelity and stable event subscription/high-water startup proof; inherit prior actual FNOS business only for byte-identical code.",
+    "Formal exact8-path promotion plus tested source evidence, then safe NAS deploy/atomic source config+one reference mapping/cold/UI checks before counting7/23."
+  ],
+  "sdk_checks": {
+    "migration-media-normal": {
+      "counts": {
+        "pass_top": 31,
+        "pass_pkg": 2,
+        "skip_top": 2,
+        "pass_sub": 59
+      },
+      "failures": [],
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin"
+      ],
+      "terminal_exit": 0
+    },
+    "migration-media-race": {
+      "counts": {
+        "pass_top": 31,
+        "skip_top": 2,
+        "pass_pkg": 2,
+        "pass_sub": 59
+      },
+      "failures": [],
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin"
+      ],
+      "terminal_exit": 0
+    }
+  },
+  "all_readers_terminal": true,
+  "cli_apply_verification": {
+    "state": "passed",
+    "read_only_dry_run": true,
+    "live_store_lock_refused": true,
+    "atomic_apply": true,
+    "one_reference_mapping": true,
+    "no_workers_or_events_created": true,
+    "receipt_replay_preserves_user_edit": true,
+    "invalid_input_zero_writes": true,
+    "private_source_saved": false,
+    "network_business_calls": 0,
+    "production_writes": 0,
+    "cleanup": "owned temporary directory removed after verification"
+  },
+  "source_control_flow_review": {
+    "installed_source_sha256": "ea92f39a852aa0333cb625885e0fbf7b2a679f4f7449463bb6126afe6694a3fc",
+    "config_sha256": "a9611ac9dcd35f975281a8adf02ca924a6f06410c6de53e5ba2644f48a7f1030",
+    "source_methods": 11,
+    "empty_command_api_page": true,
+    "original_fields": [
+      "enabled",
+      "delay",
+      "mediaservers"
+    ],
+    "configured_server_type": "trimemedia",
+    "configured_server_count": 1,
+    "original_runtime_values_saved": false,
+    "actual_same_endpoint_account_credential_ram_comparison": "work/_media_refresh_migration_review/endpoint-account-identity-comparison.json",
+    "events": "Actual import publication emits import.completed in file transaction independently of scraping; Go SDK tests cover debounce, last arrival, startup high water, disable/uninstall/close flush, unknown submit and independent visibility.",
+    "migration": "Only verified media reference changes; source enable and delay preserved. Receipt + config AEAD + encrypted mapping committed together; import starts no worker and never replays history."
+  }
+}

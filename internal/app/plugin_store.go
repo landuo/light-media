@@ -67,10 +67,11 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
-	reviewedCustomHosts    bool                       // Only the pinned, explicit CustomHosts offline migration.
-	reviewedServerStatus   bool                       // Pinned read-only MPServerStatus offline import only.
-	systemProcessDashboard map[string]json.RawMessage // Only the reviewed offline SystemProcess importer.
-	SourceConfigAbsent     bool                       // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
+	reviewedMediaRefresh   *reviewedMediaRefreshBinding // Only the reviewed source-to-native media reference mapping.
+	reviewedCustomHosts    bool                         // Only the pinned, explicit CustomHosts offline migration.
+	reviewedServerStatus   bool                         // Pinned read-only MPServerStatus offline import only.
+	systemProcessDashboard map[string]json.RawMessage   // Only the reviewed offline SystemProcess importer.
+	SourceConfigAbsent     bool                         // Only the selected absent RemoteIdentifiers 2.4.1 source, never a UI flag.
 	RunID                  string
 	Installation           PluginInstallation
 	Config                 json.RawMessage
@@ -906,6 +907,12 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		}
 		installation.DesiredEnabled = true // Only this container owns the reviewed writable Hosts file.
 	}
+	if in.reviewedMediaRefresh != nil {
+		if !validReviewedMediaRefreshImport(in, installation) {
+			return PluginMigrationReceipt{}, errors.New("invalid_reviewed_media_refresh_import")
+		}
+		installation.DesiredEnabled = true // Initialization registers only future native import events.
+	}
 	var config json.RawMessage
 	if in.SourceConfigAbsent {
 		if !identifiersCanonicalAbsentImport(installation, in.Config, in.Data) {
@@ -940,11 +947,12 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		ManifestSchema         int
 		Manifest, Config       json.RawMessage
 		Data                   map[string]json.RawMessage
-		SourceConfigAbsent     bool                       `json:",omitempty"`
-		SystemProcessDashboard map[string]json.RawMessage `json:",omitempty"`
-		ReviewedServerStatus   bool                       `json:",omitempty"`
-		ReviewedCustomHosts    bool                       `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts})
+		SourceConfigAbsent     bool                         `json:",omitempty"`
+		SystemProcessDashboard map[string]json.RawMessage   `json:",omitempty"`
+		ReviewedServerStatus   bool                         `json:",omitempty"`
+		ReviewedCustomHosts    bool                         `json:",omitempty"`
+		ReviewedMediaRefresh   *reviewedMediaRefreshBinding `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -971,6 +979,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if in.reviewedCustomHosts && run.SourcePluginID != "CustomHosts" {
 		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_custom_hosts_import")
 	}
+	if in.reviewedMediaRefresh != nil && run.SourcePluginID != "MediaServerRefresh" {
+		return PluginMigrationReceipt{}, errors.New("invalid_reviewed_media_refresh_import")
+	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
 	err = tx.QueryRowContext(ctx, `SELECT digest,imported_at FROM plugin_migration_receipts WHERE source_fingerprint=? AND source_plugin_id=? AND instance_id=?`, run.SourceFingerprint, run.SourcePluginID, run.InstanceID).Scan(&previousDigest, &receipt.ImportedAt)
@@ -992,6 +1003,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if existing != 0 {
 		return PluginMigrationReceipt{}, bad("PLUGIN_IMPORT_TARGET_EXISTS", "目标插件已有配置或保留数据，迁移未覆盖")
+	}
+	if in.reviewedMediaRefresh != nil {
+		if err = p.reviewedMediaRefreshTargetTx(ctx, tx, *in.reviewedMediaRefresh); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
 	}
 	if in.systemProcessDashboard != nil {
 		var count int
