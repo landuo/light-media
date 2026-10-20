@@ -1,0 +1,13 @@
+MergeMessageNotify: native Apprise JSON/JSONS dependency — incremental progress
+
+The pinned Apprise 1.9.9 JSON and JSONS providers now run in Go. URL/query parsing preserves ordered remapping, Python ASCII JSON payload bytes, original title/body truthiness, splitting/HTML/Markdown boundaries and source emoji alias errors. Independent providers use the source-sized worker pool; chunks stay sequential per provider. NativeApprise binds the real MergeMessageNotify channel to this dependency with a caller-owned transport.
+
+The native transport has owned HTTP wire evidence for methods, redirects, cookies, Latin-1 headers and Basic Auth, original CA verification, connect/read timeouts, compression, environment HTTP/SOCKS routing and cancellation. Source CA bytes match the read-only original NAS bundle. Wire capture was in owned loopback fixtures, using the pinned original requests version and original Accept-Encoding; it was not a real NAS notification test. No user notification was sent.
+
+Source oracles comprise70 basic,1054 expanded and240 overflow cases,1812 ordered emoji patterns and50 HTTP wire cases producing75 owned requests. Earlier failures are preserved: parser/remapping/title semantics; raw Latin-1 header bytes; and eight invalid-attachment cases wrongly returning True. The final attachment preparation returns original False for invalid input and permits an empty list. Valid local/HTTP attachments remain an explicit dependency, not a false successful send.
+
+The final physical candidate is based on9f2f53b and changes22 new source/test/license/data paths only. All3239 frozen inputs stayed identical during verification. Full MergeMessageNotify subtree normal and race each passed46 top-level/2765 inclusive tests, zero failure/skip. Default product build, vet and Linux CGO0 test compilation passed. All compiler handles are terminal. Offline oracle generators are archived reference material only; production and Go tests require no Python runtime.
+
+Only JSON/JSONS Apprise providers are implemented in this increment. The183-schema/131-provider catalog is a dependency inventory, not a claim of implementation or NAS availability. Other valid providers, valid attachments, netrc/CA hash-directory edge behavior, remaining Mako language, the actual App notification owner and full global Notifications pipeline remain required work. Unsupported valid behavior reports an explicit dependency instead of a generic webhook or silent source-exception fallback.
+
+All old formal source and immutable original manifests are unchanged. There are still20 registered native handlers. Original configuration/KV/files migrated:0; production deployment:0. This is not completion of MergeMessageNotify or of the23-plugin migration.

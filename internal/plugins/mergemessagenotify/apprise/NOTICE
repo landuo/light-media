@@ -1,0 +1,28 @@
+Native Go incremental port of pinned Apprise 1.9.9.
+Original BSD-2-Clause copyright and license are retained in APPRISE-LICENSE.
+Source reference: https://github.com/caronc/apprise/tree/v1.9.9
+
+The public Certifi 2026.7.22 CA bundle and MPL-2.0 license are retained as
+certifi-ca.pem and CERTIFI-LICENSE. The bundle matches the original installed
+MoviePilot container SHA256 9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f.
+Source reference: https://github.com/certifi/python-certifi
+
+Source-derived emoji patterns and IP address regular expressions retain the
+original ordering and behavior. JSON URL parsing, ordered key remapping,
+CPython-style ASCII JSON serialization, long-message smart splitting and the
+JSON/JSONS provider are implemented in Go. Source aliases/uppercase emoji
+KeyError behavior is intentionally preserved, not silently corrected.
+
+Only JSON/JSONS providers are presently implemented. Registered provider names
+in catalog.json identify remaining native dependencies; enabled flags in that
+reference catalog describe the owned oracle environment, not production NAS
+availability. Other valid providers and valid local/HTTP attachments are not
+yet implemented and raise ErrUnsupported. Invalid attachment preparation
+returns False; an empty attachment list is allowed, matching the original
+AppriseAttachment constructor. No Python runtime is used.
+
+The native HTTP port has owned wire evidence for methods, redirects, cookies,
+Latin-1 headers/basic auth, TLS verification, read timeout and cancellation.
+This is not a claim of full requests-library equivalence: final App authority,
+netrc authentication, CA hash directories and remaining provider integration
+still need original-source handling. No actual user notification was sent.
