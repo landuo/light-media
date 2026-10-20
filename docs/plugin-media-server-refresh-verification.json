@@ -198,7 +198,11 @@
     "custom_hosts_restart": "Original whole-object replacement creates a new AEAD nonce at startup; canonical config and owned hosts file content were independently verified unchanged."
   },
   "all23_goal_complete": false,
-  "remaining_fidelity_followups": [
-    "Original MediaServerHelper.get_configs() filters disabled core connections. Native media.servers currently checks Host only; align the disabled-core form-options branch and verify it before final all23 fidelity audit."
-  ]
+  "remaining_fidelity_followups": [],
+  "enabled_form_options_followup": {
+    "state": "resolved",
+    "version": "0.4.8",
+    "evidence": "docs/plugin-media-service-options-verification.json",
+    "scope": "Actual installed source default enabled filtering, independent host/health, selected native reference retained; owned real Vuetify UI verified."
+  }
 }

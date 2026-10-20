@@ -1,5 +1,5 @@
 媒体服务配置表单原版对齐
-2026-10-21，v0.4.8代码验证通过，待生产更新。
+2026-10-21，已部署v0.4.8并通过生产保护核对。
 
 以NAS实际安装的ServiceBaseHelper.get_configs为准（源码SHA fa1c4bd99c5196bb2d8170a0fd942f4386e12c5f7e230e43cb0778c22193d6b9），原版列出有名称、类型且已启用的配置，不在此处判断地址或连接状态。新项目的飞牛槽位已固定名称和类型，因此候选列表改按核心启用状态判断，移除原先不正确的Host存在判断。
 
@@ -10,3 +10,5 @@
 前端167项及构建、vet、原生与Linux CGO=0产品构建和模块校验通过，3957来源及5840编译输入无漂移。两项来源stdin迁移测试在本轮标准集跳过；导入实现未改变，前一轮实际来源普通/竞态证据保留，不将跳过计为通过。
 
 本轮没有新增插件迁移，23项完整目标仍在进行。证据见plugin-media-service-options-verification.json及testdata/plugins/media-service-options/verification/index.json。
+
+生产更新不重导配置，7条迁移收据、7项配置及既有偏好保留，原MP/qB/Hosts不变。媒体库刷新只新增一次正常启动初始化，事件监听位置未变、无新增业务执行。部署收据见plugin-media-service-options-deployment.json。
