@@ -127,9 +127,9 @@ func TestPluginCleanInvalidSeedHTTPLifecycleAuthResetRevisionZeroAndReinstall(t 
 	}
 }
 
-func TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners(t *testing.T) {
+func TestPluginCleanInvalidSeedMixedBulkUninstallKeepsCommittedOwnersOnLaterFailure(t *testing.T) {
 	for _, failSQL := range []bool{false, true} {
-		t.Run(map[bool]string{false: "commit", true: "late_sql_rollback"}[failSQL], func(t *testing.T) {
+		t.Run(map[bool]string{false: "commit", true: "own_config_commit_failure"}[failSQL], func(t *testing.T) {
 			a := newTestApp(t)
 			a.config = Settings{}
 			clean := uninstallInstall(t, a, "a-clean", seed.Manifest(), map[string]any{"enabled": false}, true)
@@ -138,7 +138,7 @@ func TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners(
 			removeLinkOwnerWorker(t, a, remove)
 			run := uninstallInstall(t, a, "PluginUnInstall", uninstall.Manifest(), map[string]any{"plugin_ids": []string{"z-remove", "a-clean"}}, true)
 			if failSQL {
-				if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_mixed_cleanup_uninstall BEFORE INSERT ON plugin_uninstall_operations BEGIN SELECT RAISE(ABORT,'synthetic late mixed SQL failure'); END`); err != nil {
+				if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_mixed_cleanup_uninstall BEFORE UPDATE ON plugin_values WHEN NEW.instance_id='PluginUnInstall' BEGIN SELECT RAISE(ABORT,'synthetic late own-config SQL failure'); END`); err != nil {
 					t.Fatal(err)
 				}
 			}
@@ -149,17 +149,23 @@ func TestPluginCleanInvalidSeedMixedBulkUninstallRollsBackAndResolvesBothOwners(
 				}
 				for _, instance := range []string{clean.InstanceID, remove.InstanceID} {
 					i, e := a.pluginStore.Installation(context.Background(), instance)
-					if e != nil || !i.Installed || i.Generation != 1 {
-						t.Fatal("target core escaped rollback", instance, i.Generation, e)
+					if e != nil || i.Installed || i.Generation != 2 {
+						t.Fatal("later source config failure undid an earlier package", instance, i.Generation, e)
 					}
 				}
-				if len(a.pluginCleanInvalidSeed.owners[clean.InstanceID].gate) != 0 || len(a.pluginRemoveLink.owners[remove.InstanceID].gate) != 0 {
-					t.Fatal("partial bulk reservation leaked")
+				if owner := a.pluginCleanInvalidSeed.owners[clean.InstanceID]; owner != nil && len(owner.gate) != 0 {
+					t.Fatal("clean owner reservation leaked")
+				}
+				if owner := a.pluginRemoveLink.owners[remove.InstanceID]; owner != nil && len(owner.gate) != 0 {
+					t.Fatal("remove owner reservation leaked")
 				}
 				if _, e := a.Store.DB.Exec(`DROP TRIGGER fail_mixed_cleanup_uninstall`); e != nil {
 					t.Fatal(e)
 				}
-				_, err = a.applyPluginUninstall(context.Background(), &run)
+				if _, retryErr := a.applyPluginUninstall(context.Background(), &run); retryErr == nil {
+					t.Fatal("failed source operation replayed")
+				}
+				err = nil
 			}
 			if err != nil {
 				t.Fatal("mixed cleanup retirement", err)

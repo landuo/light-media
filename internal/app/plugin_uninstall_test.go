@@ -212,26 +212,25 @@ func TestPluginUninstallHostRejectsPayloadForgedStaleAndReadOnlyRequests(t *test
 	}
 }
 
-func TestPluginUninstallHostAtomicFailureLeavesNoPartialRemovalOrReceipt(t *testing.T) {
+// Source operations are not rolled back when a later local result projection
+// cannot be inserted. The new sealed source journal is the authoritative proof.
+func TestPluginUninstallSourceCompletionDoesNotDependOnLegacyReceipt(t *testing.T) {
 	a := newTestApp(t)
 	ctx := context.Background()
 	uninstallInstall(t, a, "CategoryEditor", builtin.CategoryEditorManifest(), map[string]any{"enabled": false}, false)
 	run := uninstallInstall(t, a, "PluginUnInstall", uninstall.Manifest(), map[string]any{"plugin_ids": []string{"CategoryEditor"}, "clear_config": true}, true)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER reject_uninstall_receipt BEFORE INSERT ON plugin_uninstall_operations BEGIN SELECT RAISE(ABORT,'synthetic rollback'); END`); err != nil {
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER reject_uninstall_receipt BEFORE INSERT ON plugin_uninstall_operations BEGIN SELECT RAISE(ABORT,'synthetic legacy projection failure'); END`); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.applyPluginUninstall(ctx, &run); err == nil {
-		t.Fatal("receipt failure claimed success")
+	if _, err := a.applyPluginUninstall(ctx, &run); err != nil {
+		t.Fatal(err)
 	}
 	target, _ := a.pluginStore.Installation(ctx, "CategoryEditor")
 	own, _ := a.pluginStore.Config(ctx, "PluginUnInstall")
-	if !target.Installed || target.Generation != 1 || own.Revision != 1 || run.ConfigRevision != 1 {
-		t.Fatal("partial state escaped receipt transaction", target, own.Revision, run.ConfigRevision)
+	if target.Installed || target.Generation != 2 || own.Revision != 2 || run.ConfigRevision != 2 {
+		t.Fatal("source completion was lost", target, own.Revision, run.ConfigRevision)
 	}
-	if _, err := a.pluginStore.uninstallReceipt(ctx, run); !errors.Is(err, sql.ErrNoRows) {
-		t.Fatal("failed transaction retained a receipt", err)
-	}
-	if _, err := a.Store.DB.Exec(`DROP TRIGGER reject_uninstall_receipt`); err != nil {
+	if _, err := a.pluginStore.uninstallReceipt(ctx, run); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.Store.DB.Exec(`UPDATE plugin_runs SET state='reconcile_pending' WHERE id=?`, run.ID); err != nil {
@@ -240,9 +239,9 @@ func TestPluginUninstallHostAtomicFailureLeavesNoPartialRemovalOrReceipt(t *test
 	if err := a.pluginStore.recoverUninstallRuns(ctx); err != nil {
 		t.Fatal(err)
 	}
-	retry, _ := a.pluginStore.Run(ctx, run.ID)
-	if retry.State != "pending" {
-		t.Fatal("uncommitted run was not safely retriable", retry.State)
+	recovered, _ := a.pluginStore.Run(ctx, run.ID)
+	if recovered.State != "succeeded" {
+		t.Fatal("known completed source operation was replayed", recovered.State)
 	}
 }
 

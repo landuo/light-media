@@ -1,0 +1,1562 @@
+{
+  "snapshot_sha256": "c0c53a1e54ebad1e8c0b537229d1a49169170e8339a44a16b0df6897bc3ecdfc",
+  "installed_plugin_sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+  "scope": "owned method AST only; model commit stub follows real db_update commit/rollback/rethrow",
+  "cases": [
+    {
+      "fault": "",
+      "target": "Alpha",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "close",
+      "target": "Alpha",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "close",
+      "target": "Beta",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "stop_service",
+      "target": "Alpha",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "stop_service",
+      "target": "Beta",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "scheduler_get",
+      "target": "Alpha",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_notice",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Alpha.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 1,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "scheduler_get",
+      "target": "Beta",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_notice",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Beta.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 1,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "scheduler_remove",
+      "target": "Alpha",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_notice",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Alpha.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 1,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "scheduler_remove",
+      "target": "Beta",
+      "error": "",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_notice",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Beta.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 1,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "scheduler_notice",
+      "target": "Alpha",
+      "error": "SyntheticFailure",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_notice",
+          "target": "Alpha"
+        }
+      ],
+      "cache_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "durable_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "Beta.job",
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Alpha.job|owned",
+        "Beta.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "alpha",
+        "beta",
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "scheduler_notice",
+      "target": "Beta",
+      "error": "SyntheticFailure",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_notice",
+          "target": "Beta"
+        }
+      ],
+      "cache_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "durable_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "classes": [
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Beta.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "beta",
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "commit_installed",
+      "target": "Alpha",
+      "error": "SyntheticFailure",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "durable_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "commit_own",
+      "target": "Alpha",
+      "error": "SyntheticFailure",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Beta"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Beta"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Beta"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Beta"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "commit_installed",
+          "target": ""
+        },
+        {
+          "stage": "commit_own",
+          "target": ""
+        }
+      ],
+      "cache_installed": [
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "plugin_ids": [],
+        "clear_config": true,
+        "clear_data": true
+      },
+      "durable_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "classes": [
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "remove_jobs_entry",
+      "target": "Alpha",
+      "error": "SyntheticFailure",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        }
+      ],
+      "cache_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "durable_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "classes": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "Alpha.job",
+        "Beta.job",
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Alpha.job|owned",
+        "Beta.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "alpha",
+        "beta",
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "fault": "remove_jobs_entry",
+      "target": "Beta",
+      "error": "SyntheticFailure",
+      "trace": [
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_get",
+          "target": "Alpha"
+        },
+        {
+          "stage": "scheduler_remove",
+          "target": "Alpha"
+        },
+        {
+          "stage": "disable_events",
+          "target": ""
+        },
+        {
+          "stage": "close",
+          "target": "Alpha"
+        },
+        {
+          "stage": "stop_service",
+          "target": "Alpha"
+        },
+        {
+          "stage": "invalidate_modules",
+          "target": ""
+        },
+        {
+          "stage": "remove_jobs_entry",
+          "target": "Beta"
+        }
+      ],
+      "cache_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "durable_installed": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "cache_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "durable_own": {
+        "clear_config": true,
+        "clear_data": true,
+        "plugin_ids": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "classes": [
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "jobs": [
+        "Beta.job",
+        "PluginUnInstall.job"
+      ],
+      "backend_jobs": [
+        "Beta.job|owned",
+        "PluginUnInstall.job|owned"
+      ],
+      "packages": [
+        "beta",
+        "pluginuninstall"
+      ],
+      "notices": 0,
+      "configs_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ],
+      "data_retained": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    }
+  ]
+}

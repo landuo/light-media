@@ -1,0 +1,106 @@
+{
+  "source_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+  "snapshot_sha256": "8539d334dbace2ba654a804bb9116762c1c7debe6755601450d44a44022aa088",
+  "scope": "owned only; no source app imports, repositories, registration, reload, or real credentials",
+  "cases": [
+    {
+      "name": "new",
+      "initial": [
+        "Alpha",
+        "Beta"
+      ],
+      "id": "Gamma",
+      "force": false,
+      "install_success": true,
+      "expected_installed": [
+        "Alpha",
+        "Beta",
+        "Gamma"
+      ],
+      "response_success": true,
+      "trace": [
+        "install",
+        "register",
+        "save_installed",
+        "reload"
+      ]
+    },
+    {
+      "name": "reinstall",
+      "initial": [
+        "Beta"
+      ],
+      "id": "Alpha",
+      "force": false,
+      "install_success": true,
+      "expected_installed": [
+        "Beta",
+        "Alpha"
+      ],
+      "response_success": true,
+      "trace": [
+        "install",
+        "register",
+        "save_installed",
+        "reload"
+      ]
+    },
+    {
+      "name": "already_installed",
+      "initial": [
+        "Alpha",
+        "Beta"
+      ],
+      "id": "Alpha",
+      "force": false,
+      "install_success": true,
+      "expected_installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "response_success": true,
+      "trace": [
+        "register",
+        "reload"
+      ]
+    },
+    {
+      "name": "forced_upgrade",
+      "initial": [
+        "Alpha",
+        "Beta"
+      ],
+      "id": "Alpha",
+      "force": true,
+      "install_success": true,
+      "expected_installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "response_success": true,
+      "trace": [
+        "install",
+        "register",
+        "reload"
+      ]
+    },
+    {
+      "name": "failed_new",
+      "initial": [
+        "Alpha",
+        "Beta"
+      ],
+      "id": "Gamma",
+      "force": false,
+      "install_success": false,
+      "expected_installed": [
+        "Alpha",
+        "Beta"
+      ],
+      "response_success": false,
+      "trace": [
+        "install"
+      ]
+    }
+  ]
+}

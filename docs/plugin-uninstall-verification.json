@@ -1,0 +1,165 @@
+{
+  "state": "verified_not_deployed_not_migrated",
+  "native_plugin": "PluginUnInstall",
+  "source_version": "2.2",
+  "agent_source_inputs": 3323,
+  "agent_source_manifest_sha256": "087df04e27ccd720b7accedd20c37770dfa80b35d354e254bc41eb4a86c1d813",
+  "agent_handoff_sha256": "c604d2da35521dce3e280937e9b44f5330641c96b2c8c1bd5073a786c2feffc0",
+  "agent_verification_sha256": "120324e86a547a28a79decdd6854f2fcff96368aec1988857a4e103f25a28590",
+  "root_base_commit": "68c246dca4a02756054238a5f7d929f2bd7c0b88",
+  "root_source_inputs": 3350,
+  "root_source_manifest_sha256": "536faa607b2eef4133208ea103b75314acfa03a54a7e07f6e459e8881f307735",
+  "root_focused_paths": 26,
+  "root_agent_exact_paths": 23,
+  "root_three_way_paths": 0,
+  "app": [
+    {
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "-count=1",
+        "./internal/app"
+      ],
+      "exit_code": 0,
+      "seconds": 386.377,
+      "log": "app-0.log",
+      "sha256": "236631d8b58873bea3097fa7445c4d72788e5056d682994b5d8eefcb939a9d1c",
+      "top_pass": 870,
+      "inclusive_pass": 1860,
+      "failed": [],
+      "skipped": [
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+      ]
+    }
+  ],
+  "race": [
+    {
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-json",
+        "-count=1",
+        "./internal/app",
+        "-run",
+        "Test(PluginUninstall|PluginStore|Plugin.*Migration|PluginDeferred|Category|MediaCategory|CustomMediaCategory|FullCustomMediaCategory|DefaultMediaCategory|DisabledMediaCategory)"
+      ],
+      "exit_code": 0,
+      "seconds": 205.604,
+      "log": "race-0.log",
+      "sha256": "efc681384751a53bd7a4704e99fe1cc4ec4fa0b0a741d2da952f6e90dd97b5d7",
+      "top_pass": 72,
+      "inclusive_pass": 168,
+      "failed": [],
+      "skipped": []
+    }
+  ],
+  "build": [
+    {
+      "command": [
+        "go",
+        "vet",
+        "./internal/app",
+        "./internal/plugins/uninstall"
+      ],
+      "exit_code": 0,
+      "seconds": 8.814,
+      "log": "build-0.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "go",
+        "build",
+        "-buildvcs=false",
+        "-trimpath",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_uninstall_formal_v041_r3/light-media-v041-native",
+        "./cmd/server"
+      ],
+      "exit_code": 0,
+      "seconds": 7.729,
+      "log": "build-1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "go",
+        "build",
+        "-buildvcs=false",
+        "-trimpath",
+        "-ldflags=-s -w",
+        "-o",
+        "/Users/accidia/projects/light-media/work/_plugin_uninstall_formal_v041_r3/light-media-v041-linux-amd64",
+        "./cmd/server"
+      ],
+      "exit_code": 0,
+      "seconds": 6.933,
+      "log": "build-2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "unchanged_frontend": {
+    "kind": "exact_unchanged_frontend_reuses_prior_actual_verification",
+    "source_files": 192,
+    "differences": 0,
+    "previous_result_sha256": "c550bcafed4961757cae611f03cbc62ec4e43c60464cfbb4b08089647edd88cd",
+    "result": [
+      {
+        "command": [
+          "npm",
+          "test"
+        ],
+        "exit_code": 0,
+        "seconds": 3.693,
+        "log": "web-0.log",
+        "sha256": "db2fcc1cb62211a28d1c500471875185bd0d4e56512a6296f6528ad8361ed3df"
+      }
+    ],
+    "rerun_in_r3": false
+  },
+  "owned_migration_tool": {
+    "state": "passed",
+    "dry_run_database_unchanged": true,
+    "missing_source_evidence_refused": true,
+    "repeat_one_receipt": true,
+    "cold_version": "0.4.1",
+    "live_instance_lock_refused": true,
+    "checks": {
+      "installations": 1,
+      "receipts": 1,
+      "runs": 0,
+      "kv": 0,
+      "schedules": 0,
+      "events": 0,
+      "notifications": 0
+    },
+    "key_unchanged": true,
+    "tool_sha256": "747f38a02f98229623aa9ecf7e33e7bc2515416164f72798789a47c54f23347b",
+    "server_sha256": "f76574b6db31285a76dd59cbd12ba9a89e71173704a23ee00c5a9b3003fb101c",
+    "original_writes": 0,
+    "owned_cleanup": true
+  },
+  "linux_product_sha256": "2848752cd20707cde9a0d462c042cf39fc59a646c4c2911edb369df32d904da1",
+  "source_config_raw_sha256": "defba4aee5f41f0cf4b1e50a812f2117ab04de0ff3ec69ca43bd045bab514bf1",
+  "source_config_field_names": [
+    "clear_config",
+    "clear_data",
+    "plugin_ids"
+  ],
+  "source_flags": [
+    true,
+    true
+  ],
+  "source_selected_count": 0,
+  "source_kv_count": 0,
+  "source_file_count": 0,
+  "source_enabled": false,
+  "production_migration_done": false,
+  "original_write_operations": 0
+}

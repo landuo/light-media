@@ -183,6 +183,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 	if r.Phase != "terminal_failed" {
 		return r.ErrorCode == ""
 	}
+	if r.Plugin == "PluginUnInstall" && r.Version == "2.2" {
+		return r.ErrorCode == uninstallSourceFailed && json.Valid(r.Result)
+	}
 	if isTorrentTransfer(r.Plugin) && r.Version == "1.10.3" {
 		return r.ErrorCode == transferSourceFailed && transferResultErrorCode(r.Result) == r.ErrorCode
 	}
@@ -514,6 +517,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 		phase = "uncertain"
 		result = nil
 	}
+	if d.record.Plugin == "PluginUnInstall" && d.record.Version == "2.2" {
+		known, knownCode, found, proofErr := d.a.pluginStore.uninstallSourceOutcome(finish, *run)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "卸载分步结果尚未持久确认")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(knownCode, "卸载源流程失败，已完成的步骤保持原样")
+			}
+		}
+	}
 	if isTorrentTransfer(d.record.Plugin) && d.record.Version == "1.10.3" {
 		known, found, proofErr := d.a.pluginStore.transferDeferredOutcome(finish, *run, d.record)
 		if proofErr != nil || !found {
@@ -708,12 +724,14 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "PluginUnInstall" || r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "BrushFlowLanduo" {
+			if r.Plugin == "PluginUnInstall" {
+				result, code, found, proofErr = p.uninstallSourceOutcome(ctx, run)
+			} else if r.Plugin == "BrushFlowLanduo" {
 				result, code, found, proofErr = p.brushFlowOutcome(ctx, run, r.Method)
 			} else if r.Plugin == "SeedRescue" {
 				result, code, found, proofErr = p.seedRescueOutcome(ctx, run, r.Method)
@@ -729,6 +747,12 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 				result, code, found, proofErr = p.cleanInvalidSeedDeferredOutcome(ctx, run, r.Method)
 			}
 			if proofErr != nil {
+				if r.Plugin == "PluginUnInstall" && pluginErrorCodeInternal(proofErr) == "PLUGIN_UNINSTALL_EVIDENCE_INVALID" {
+					if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code='PLUGIN_UNINSTALL_EVIDENCE_INVALID',updated_at=? WHERE id=?`, now(), run.ID); err != nil {
+						return err
+					}
+					continue
+				}
 				if (r.Plugin == "AutoBackup" && autoBackupErrorCode(proofErr) == "AUTO_BACKUP_EVIDENCE_MISSING") || (r.Plugin == "CloudflareSpeedTest" && cloudflareErrorCode(proofErr) == "CLOUDFLARE_EVIDENCE_MISSING") || (r.Plugin == "BrushFlowLanduo" && brushFlowErrorCode(proofErr) == "BRUSH_FLOW_EVIDENCE_MISSING") {
 					code := "AUTO_BACKUP_EVIDENCE_MISSING"
 					if r.Plugin == "BrushFlowLanduo" {

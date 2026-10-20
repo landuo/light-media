@@ -1,0 +1,30 @@
+{
+  "scope": "owned App/SQLite/HTTP/real Go worker; no source application or production mutation",
+  "before": [
+    {
+      "log": "cross-run-before.jsonl",
+      "sha256": "0a9f013b3b761447f7a90280b4f5493e975cbe345b68d5287d7fc777966aac17",
+      "behavior": "cold independent run rebuilt from loaded/installed local classes, losing source durable removed ID",
+      "actual_installed_before": [
+        "PluginUnInstall"
+      ],
+      "expected_installed_before": [
+        "CategoryEditor",
+        "PluginUnInstall"
+      ]
+    },
+    {
+      "log": "cross-run-oracle-final.jsonl",
+      "sha256": "911b092751319a97b7a1bf0e4f02282cd1ec46c242bbf51b9657bae227990d22",
+      "behavior": "intermediate R3 incorrectly repaired durable list during warm same-value set; installed source skips DB update",
+      "actual_durable": [
+        "PluginUnInstall"
+      ],
+      "expected_durable": [
+        "Alpha",
+        "Beta",
+        "PluginUnInstall"
+      ]
+    }
+  ]
+}

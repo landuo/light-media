@@ -76,6 +76,8 @@ type PluginImport struct {
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
 	store            *Store
+	uninstallConfig  pluginUninstallConfigCache
+	installedSource  pluginSourceInstalledCache
 	notices          pluginNoticeRuntime
 	brushFlowLiveMu  sync.Mutex
 	brushFlowRuntime *pluginBrushFlowRuntime
@@ -196,6 +198,29 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if _, err = tx.ExecContext(ctx, pluginUninstallSchema); err != nil {
 		return nil, err
 	}
+	var installSequenceExists, sourceInstalledExists int
+	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='plugin_source_installed'`).Scan(&sourceInstalledExists); err != nil {
+		return nil, err
+	}
+	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='plugin_install_sequence'`).Scan(&installSequenceExists); err != nil {
+		return nil, err
+	}
+	if _, err = tx.ExecContext(ctx, pluginUninstallSourceSchema+pluginSourceInstalledSchema); err != nil {
+		return nil, err
+	}
+	// Only the first feature migration backfills existing local row order.
+	// A missing row in an existing sequence is damaged evidence, not a reason
+	// to silently invent a new order on every cold startup.
+	if installSequenceExists == 0 {
+		if _, err = tx.ExecContext(ctx, pluginInstallSequenceBackfill); err != nil {
+			return nil, err
+		}
+	}
+	if sourceInstalledExists == 0 {
+		if err = (&PluginStore{store: store}).initializeSourceInstalledTx(ctx, tx); err != nil {
+			return nil, err
+		}
+	}
 	if _, err = tx.ExecContext(ctx, pluginOrganizationSchema); err != nil {
 		return nil, err
 	}
@@ -306,7 +331,8 @@ func validatePluginInstallation(in PluginInstallation) (PluginInstallation, erro
 
 func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstallation) error {
 	var previousID string
-	err := tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID)
+	var wasInstalled bool
+	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &wasInstalled)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
@@ -371,6 +397,12 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
  manifest=excluded.manifest,desired_enabled=excluded.desired_enabled,installed=1,generation=plugin_installations.generation+1,updated_at=excluded.updated_at`,
 		in.InstanceID, in.PluginID, in.Version, in.ManifestSchemaVersion, sealed, in.DesiredEnabled, now(), now())
 	if err != nil {
+		return err
+	}
+	if err = p.recordPluginInstallSequenceTx(ctx, tx, in.InstanceID, wasInstalled); err != nil {
+		return err
+	}
+	if err = p.updateSourceInstalledMembershipTx(ctx, tx, in.InstanceID, true); err != nil {
 		return err
 	}
 	if in.PluginID == "CloudflareSpeedTest" {
@@ -452,7 +484,11 @@ func (p *PluginStore) readValue(ctx context.Context, instanceID, kind, key strin
 }
 
 func (p *PluginStore) Config(ctx context.Context, instanceID string) (PluginStoredValue, error) {
-	return p.readValue(ctx, instanceID, "config", "main")
+	value, err := p.readValue(ctx, instanceID, "config", "main")
+	if err == nil {
+		value = p.uninstallCachedConfig(ctx, instanceID, value)
+	}
+	return value, err
 }
 
 func (p *PluginStore) Data(ctx context.Context, instanceID, key string) (PluginStoredValue, error) {
@@ -574,6 +610,9 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 	}
 	if changed, _ := result.RowsAffected(); changed == 0 {
 		return sql.ErrNoRows
+	}
+	if err = p.updateSourceInstalledMembershipTx(ctx, tx, instanceID, false); err != nil {
+		return err
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
 		return err

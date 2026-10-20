@@ -1,0 +1,18 @@
+{
+  "base_git": "bf769d2148878802d99994961267f61425ddb3a9",
+  "before_log_sha256": "f2edeff63a9cf401db6271d10432a907107a25f30324c34c973fcbdc15c36f7a",
+  "before_exit": 1,
+  "cases": [
+    {
+      "test": "TestPluginUninstallSourceOwnResetFailureKeepsEarlierRemoval",
+      "actual": "target installed=true generation=1 after own-config reset failure",
+      "expected": "earlier removed target remains unavailable generation=2"
+    },
+    {
+      "test": "TestPluginUninstallSourceStopExceptionDoesNotRetainTarget",
+      "actual": "ordinary owned stop_service error surfaced and target retained",
+      "expected": "Manager catches ordinary stop exception and continues removal"
+    }
+  ],
+  "scope": "owned synthetic App/SQLite only; no original or production writes"
+}
