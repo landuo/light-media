@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedSeed           *reviewedSeedBinding         // Reviewed original SeedRescue namespace; never supplied by HTTP.
 	reviewedIYUU           *reviewedIYUUImportBinding   // Pinned original snapshot and verified native references only.
 	reviewedMediaRefresh   *reviewedMediaRefreshBinding // Only the reviewed source-to-native media reference mapping.
 	reviewedCustomHosts    bool                         // Only the pinned, explicit CustomHosts offline migration.
@@ -914,6 +915,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		}
 		installation.DesiredEnabled = true // Initialization registers only future native import events.
 	}
+	if in.reviewedSeed != nil && !validReviewedSeedImport(in, installation) {
+		return PluginMigrationReceipt{}, invalidReviewedSeed()
+	}
 	if in.reviewedIYUU != nil && !validReviewedIYUUImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedIYUU()
 	}
@@ -929,6 +933,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		}
 	}
 
+	if in.reviewedSeed != nil {
+		config = append(json.RawMessage(nil), in.Config...)
+	}
 	total := len(config) + len(installation.Manifest)
 	if len(in.Data) > 4096 {
 		return PluginMigrationReceipt{}, bad("INVALID_PLUGIN_MIGRATION", "插件迁移数据条目过多")
@@ -957,7 +964,8 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		ReviewedCustomHosts    bool                         `json:",omitempty"`
 		ReviewedMediaRefresh   *reviewedMediaRefreshBinding `json:",omitempty"`
 		ReviewedIYUU           *reviewedIYUUImportBinding   `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU})
+		ReviewedSeed           *reviewedSeedBinding         `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -989,6 +997,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedIYUU != nil && (run.SourcePluginID != "IYUUAutoSeed" || run.SourceFingerprint != in.reviewedIYUU.SourceFingerprint) {
 		return PluginMigrationReceipt{}, invalidReviewedIYUU()
+	}
+	if in.reviewedSeed != nil && (run.SourcePluginID != "SeedRescue" || run.SourceFingerprint != in.reviewedSeed.SourceFingerprint) {
+		return PluginMigrationReceipt{}, invalidReviewedSeed()
 	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
@@ -1031,6 +1042,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 			return PluginMigrationReceipt{}, err
 		}
 	}
+	if in.reviewedSeed != nil {
+		if _, err = p.reviewedSeedTargetTx(ctx, tx, *in.reviewedSeed); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
 	if err = p.installTx(ctx, tx, installation); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1065,6 +1081,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedIYUU != nil {
 		if err = p.commitReviewedIYUUReferencesTx(ctx, tx, *in.reviewedIYUU, run.ID); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
+	if in.reviewedSeed != nil {
+		if err = p.commitReviewedSeedReferencesTx(ctx, tx, *in.reviewedSeed, run.ID, digest); err != nil {
 			return PluginMigrationReceipt{}, err
 		}
 	}

@@ -128,6 +128,9 @@ func TestSeedRescueActualLostAddACKColdOnlyObservesSameHash(t *testing.T) {
 	rescueNativeHTTPFlow(t, true)
 }
 func rescueNativeHTTPFlow(t *testing.T, lostACK bool) {
+	rescueNativeHTTPFlowConfigured(t, lostACK, nil)
+}
+func rescueNativeHTTPFlowConfigured(t *testing.T, lostACK bool, initialize func(*App, sr.Object, nativeSiteIdentity, nativeSiteIdentity) (PluginInstallation, PluginRun)) {
 	a := newTestApp(t)
 	useBuiltInPluginProcess(t, a)
 	cookie := setupTestAdmin(t, a)
@@ -177,6 +180,11 @@ func rescueNativeHTTPFlow(t *testing.T, lostACK bool) {
 			}
 			w.Header().Set("Content-Type", "application/x-bittorrent")
 			w.Write(torrent)
+		case "/details.php":
+			if initialize == nil {
+				t.Error("unexpected owned detail lookup")
+			}
+			w.WriteHeader(http.StatusNotFound)
 		case "/torrents.php":
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 			io.WriteString(w, `<html><table id="torrenttable"><tr><td>none</td></tr></table></html>`)
@@ -229,7 +237,13 @@ func rescueNativeHTTPFlow(t *testing.T, lostACK bool) {
 	cfg["save_path"] = "/owned/download"
 	cfg["rss_urls"] = site.URL + "/rss.php?passkey=owned"
 	cfg["cron"] = "0 0 1 1 *"
-	in, initial := rescueInstallation(t, a, cfg)
+	var in PluginInstallation
+	var initial PluginRun
+	if initialize == nil {
+		in, initial = rescueInstallation(t, a, cfg)
+	} else {
+		in, initial = initialize(a, cfg, target, source)
+	}
 	rescueFinish(t, a, initial)
 	api := func(method, path, body string) sr.Object {
 		t.Helper()
@@ -256,7 +270,7 @@ func rescueNativeHTTPFlow(t *testing.T, lostACK bool) {
 	}
 	// Fresh target fallback has unknown promotion. Its first attempt must show
 	// original risk confirmation and make no selected native write.
-	selection := map[string]any{"candidate_id": fmt.Sprintf("target:%d:%s", target.SourceID, hash)}
+	selection := map[string]any{"candidate_id": fmt.Sprintf("target:%d:%s", sr.ParseConfig(cfg).TargetSiteID, hash)}
 	risk := api("POST", "jobs/"+hash+"/download", string(mustCleanSeedJSON(selection)))
 	if risk["success"] != false || adds.Load() != 0 {
 		t.Fatal("risk bypass", risk, adds.Load())

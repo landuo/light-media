@@ -165,7 +165,7 @@ func (a *App) seedRescueReadAPI(ctx context.Context, in PluginInstallation, run 
 			return nil, e
 		}
 	}
-	options, e := a.seedRescueOptionsTx(ctx, tx)
+	options, e := a.seedRescueOptionsTx(ctx, tx, in.InstanceID)
 	if e != nil {
 		return nil, e
 	}

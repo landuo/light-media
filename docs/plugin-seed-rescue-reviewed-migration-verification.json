@@ -1,0 +1,559 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "state": "reviewed_seed_import_references_cli_owned_SDK_UI_and_NAS_verified_not_production_migrated",
+  "base_commit": "6fe1f18515a7603ce6c92b9b60bfd734835e064e",
+  "actual_complete": 7,
+  "remaining_count": 16,
+  "production_version": "0.4.8",
+  "production_migration": false,
+  "production_writes_performed": 0,
+  "original_writes_performed": 0,
+  "user_downloaders_or_sites_contacted": false,
+  "python_runtime_dependency_added": false,
+  "source": {
+    "source_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+    "config_sha256": "62a36d3f29fc1c72b83a413ab301b16a5fe63777f41a685fbcd099b060d53756",
+    "data_sha256": "43d65b2b130947660d40b895d624248e2c6bafe8a1501a84a3cae41107b091b7",
+    "sites_sha256": "0ae615c182f1d7b6518dc5999b83103ced7ee6d08e3c9208e7c46c621ace5c41",
+    "references_sha256": "378dd4c931abe633743027ed67938c9ba9c3408010b0a3bb94292e97a722d282",
+    "source_site_count": 17,
+    "downloader_count": 1,
+    "reserved_ceiling": 18,
+    "private_values_saved": false,
+    "canonical_mteam_api_origin": true,
+    "plugin": "SeedRescue",
+    "version": "1.6.3",
+    "config_bytes": 544,
+    "kv_rows": 3,
+    "kv_bytes": 2934138,
+    "history_tasks": 1140,
+    "current_RSS_tasks": 128,
+    "archived_tasks": 1012,
+    "active_original_tasks": {
+      "downloading": 5,
+      "waiting_iyuu": 7
+    },
+    "files": 0,
+    "symlinks": 0
+  },
+  "implementation": {
+    "raw_original_config_and_KV_preserved_at_import": true,
+    "independent_source_and_17_site_receipts": true,
+    "namespace_and_final_receipt_same_transaction": true,
+    "final_receipt_digest_bound_in_sealed_namespace": true,
+    "import_desired_enabled": false,
+    "source_flags_preserved": true,
+    "no_one_shot_replay": true,
+    "workers_or_schedules_started_by_import": false,
+    "legacy_IDs_reserved_through": 18,
+    "absent_original_ID3_never_maps_to_native3": true,
+    "new_site_alias": "reserved18 + native stable numeric ID; bound sites keep original numbers; alternate aliases and unsafe browser integers rejected",
+    "downloader": "original name bound to unique endpoint/account and stable native ID; rename keeps value and current label; reusing old name conflicts",
+    "current_core_settings_and_credentials_preserved": true,
+    "later_replay_preserves_user_edits": true,
+    "retained_reinstall_inherits_namespace": true,
+    "reset_returns_empty_native_namespace": true,
+    "target_indexer_fix": "original refresh target search uses target domain; host now checks configured target before peer sources; unknown domains remain unresolved"
+  },
+  "checks": {
+    "affected_normal": {
+      "exit": 0,
+      "top_level_passed": 48,
+      "including_subtests_passed": 83,
+      "skipped": [
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestReviewedSeedSelectedStdin"
+      ],
+      "failures": [],
+      "terminal_pass": true,
+      "log_sha256": "a3a164a5fa9ccb0193f30f40ee841894154bfe5a06bdb69ceae91b79045886b6"
+    },
+    "affected_race": {
+      "exit": 0,
+      "top_level_passed": 48,
+      "including_subtests_passed": 83,
+      "skipped": [
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestReviewedSeedSelectedStdin"
+      ],
+      "failures": [],
+      "terminal_pass": true,
+      "log_sha256": "3c03adfdbd51efa210e53608a092777d5dad894cecf5697f24b0251c7ab58e1b"
+    },
+    "actual_source_normal": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 22,
+      "skipped": [],
+      "failures": [],
+      "terminal_pass": true,
+      "log_sha256": "ead5a1c41811f076903b5f0a957a99d34df66017e72629f3965aad56a11eaddb"
+    },
+    "actual_source_race": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 22,
+      "skipped": [],
+      "failures": [],
+      "terminal_pass": true,
+      "log_sha256": "5eb6bfd8fe102139d66e6009a3a974ca0ee8e7e86bf4762d2c4bc2d9925e34dc"
+    },
+    "owned_NAS_actual_source": {
+      "exit": 0,
+      "top_level_passed": 1,
+      "including_subtests_passed": 22,
+      "skipped": [],
+      "failures": [],
+      "terminal_pass": true,
+      "log_sha256": "8da2a7c5349092776be999e906721b33564ab60650a89bde37ed9a5397f68cf4"
+    }
+  },
+  "builds": {
+    "recheck_exec_session": 15751,
+    "exit": 0,
+    "scope": [
+      "normal app test binary",
+      "race app test binary",
+      "CGO0 native server",
+      "CGO0 native CLI",
+      "race CLI",
+      "CGO0 Linux amd64 server",
+      "CGO0 Linux amd64 CLI",
+      "vet app/server/CLI",
+      "go mod verify"
+    ],
+    "source_frozen": true,
+    "at": "2026-10-20T22:55:58.573249+00:00",
+    "linux_CGO0_app_test_binary": {
+      "session": 28863,
+      "exit": 0
+    },
+    "source_readers_terminal": true
+  },
+  "inputs": {
+    "source_files": 4010,
+    "source_manifest_sha256": "ac94dcf6ebb503100a081a36e9f1d1e547678f24671752ec84948870712c0dde",
+    "compiler_files": 5597,
+    "compiler_manifest_sha256": "daab2896acc154a2c190ddb213bda7f4ba1cea5e324c929f36f25f2e8360135b",
+    "source_missing": [],
+    "source_extra": [],
+    "source_drift": [],
+    "compiler_drift_since_after_build_capture": [],
+    "main_focus_drift": [],
+    "focus": [
+      {
+        "path": "internal/app/seed_rescue_migration.go",
+        "sha256": "f002bfe1126e5f0ecd0400e9906ba6b020027330b6d0c6ac8e37cb532ca4c1ae"
+      },
+      {
+        "path": "internal/app/seed_rescue_migration_test.go",
+        "sha256": "1d13df8b629dbe7d2955b0d0c514361795b3afff07dee95196cc048244ba7fc6"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_references.go",
+        "sha256": "2f172b9dcc5d2a9170ecce2a8968efebc7cae4c0c09e3ea144b3183fb5b15dc3"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_native.go",
+        "sha256": "5d0553106f1b3d4dedfd0ddcccb2e7678d84ffc5f76771426428d4287228976c"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_api.go",
+        "sha256": "875ba5d507e8a5e89f6340fbe9ef6859e137d15431cc515739a19f8edabb96d6"
+      },
+      {
+        "path": "internal/app/plugin_site_reference_protocol.go",
+        "sha256": "3542e1a92d2bb1ae252005c04da5b6d352d755a783347e69139649407bc31207"
+      },
+      {
+        "path": "internal/app/plugin_store.go",
+        "sha256": "8cc2bf814528f760d31392159d20436bf2cb3c3454550b41fdc73b5144349ab8"
+      },
+      {
+        "path": "cmd/seed-rescue-migrate-owned/main.go",
+        "sha256": "126b889a914e7339b2894f78835726ef178287a146148989baa52060a6a2fa3d"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_test.go",
+        "sha256": "bf59b0302ab3eda10b78ce1cc007de33d3098a3943b80233cd5c190ddff2b546"
+      },
+      {
+        "path": "internal/app/seed_rescue_migration_sdk_test.go",
+        "sha256": "56820feb82701d6f2b46f651f2b181b87b4fe531d05a5b0f3cd0c3aa2a3cccd6"
+      },
+      {
+        "path": "internal/app/plugin_seed_rescue_indexer_test.go",
+        "sha256": "f4e988b90d3186e5cf94ddf0e2e1feb30809d2065699928dc403d5b6aa3c1f95"
+      }
+    ]
+  },
+  "ui": {
+    "scope": "owned current Go binary and actual original Vue frontend, synthetic site labels, no save/scan/download clicked",
+    "current_rss": 128,
+    "history": 1012,
+    "sum": 1140,
+    "history_last_page": 51,
+    "history_last_page_rows": 12,
+    "original_active_downloading": 5,
+    "original_waiting_iyuu": 7,
+    "target_source_id": 11,
+    "source_sites_selected": 16,
+    "site_options": 17,
+    "downloader_label_rename_verified": true,
+    "token_and_rss_masked": true,
+    "original_config_history_and_reference_tables_unchanged": true,
+    "active_schedules": 0,
+    "owned_tab_closed": true,
+    "owned_server_terminal_exit": 0,
+    "private_owned_runtime_removed": true,
+    "stage": "owned original Vue UI on R4 product; final R8 product delta is backend Indexer target lookup only; no frontend/config/read-view changes",
+    "screenshot": "testdata/plugins/seed-rescue-reviewed-migration/verification/owned-config.png",
+    "private_runtime_removed": true
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed SeedRescue data and Go SDK in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-seed-reviewed-d7780c725f4742ecabe655bdce20935a",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/seed-reviewed-d7780c725f4742ecabe655bdce20935a",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "8da2a7c5349092776be999e906721b33564ab60650a89bde37ed9a5397f68cf4"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "27d65cc7303b7148e360d50f39ebe3a9668cd4b31d1c802be978839a308055b0",
+      "seed-migrate": "9cfbaaf4d59504a5749ae88661b42d0015d7b82e9854be793f0a9f9834423dba"
+    },
+    "container_id": "c1433db92a859a4691e13c602b64cc117a9f7d8bbc952ec758fdcd18d197afca",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 118.62
+  },
+  "nas_independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_runtime_directory_absent": true,
+    "production_server_and_compose_unchanged": true,
+    "writes_performed": 0
+  },
+  "nas_resource_snapshot": {
+    "observation": {
+      "BlockIO": "92.7MB / 0B",
+      "CPUPerc": "103.55%",
+      "Container": "light-media-seed-reviewed-d7780c725f4742ecabe655bdce20935a",
+      "ID": "c1433db92a85",
+      "MemPerc": "25.36%",
+      "MemUsage": "129.8MiB / 512MiB",
+      "Name": "light-media-seed-reviewed-d7780c725f4742ecabe655bdce20935a",
+      "NetIO": "0B / 0B",
+      "PIDs": "6"
+    },
+    "scope": "single observation during owned selected source suite; not a peak or idle benchmark"
+  },
+  "prior_failures": [
+    {
+      "revision": "r1",
+      "result": "compile failure: unused encoding/json import; not passed"
+    },
+    {
+      "revision": "r3",
+      "result": "normal source suite failed incorrect unlimited history expectation and missing cold core identities; runner initially matched child PASS but parent/exit failed; never accepted"
+    },
+    {
+      "revision": "r4",
+      "result": "actual source race600s timeout; fixture had replaced original processing limit with unlimited; failure retained"
+    },
+    {
+      "revision": "r6",
+      "result": "actual source race600s timeout; discovered real missing target Indexer lookup; failure retained"
+    },
+    {
+      "revision": "r6",
+      "result": "owned frozen source provenance violation: wrong cwd added target regression and rebuilt normal test binary while old race reader live; R6 excluded from final evidence; incident retained"
+    },
+    {
+      "revision": "r7",
+      "result": "related normal/race failed only direct []int64 config shape in new target test; product actual source22 passed normal/race; R8 normalizes stored config exactly as runtime"
+    }
+  ],
+  "boundaries": [
+    "Only reviewed importer/development changes committed; no production handoff or activation.",
+    "Original all1140 raw tasks retained at import. Subsequent real execution follows original _save_jobs current/active+1000 other history policy. Owned changed RSS retained12 original active+1 owned+1000 history.",
+    "The older history-only opt-in test is skipped in related R8 suite; its prior formal report remains. New reviewed source suite executes independently normal/race/NAS with all3 original KV.",
+    "IYUU dependency production migration and non-duplicating scheduling handoff remain; full23 goal is active."
+  ],
+  "artifacts": [
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/SOURCE-INPUTS.json.gz",
+      "uncompressed_sha256": "ac94dcf6ebb503100a081a36e9f1d1e547678f24671752ec84948870712c0dde",
+      "compressed_sha256": "71c7871f1bded301197b0fd0fcb3428143a2673649273e12a7568b61537604fe"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/COMPILER-INPUTS.json.gz",
+      "uncompressed_sha256": "daab2896acc154a2c190ddb213bda7f4ba1cea5e324c929f36f25f2e8360135b",
+      "compressed_sha256": "63bb7ecb24a9763f0ea6d7468ae0a6b66f21ea202b4bba2bc1ecae9f251c55fb"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/FOCUS.json.gz",
+      "uncompressed_sha256": "b88aaa1caba566722827107a177766fa4799581fa251ea4f6d2cc32f1891f231",
+      "compressed_sha256": "21da308e1f8fd3ee118b4a7e404e9404d5934ad1df52bc49943fa150d93ce32c"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/FINAL-INPUT-AUDIT.json.gz",
+      "uncompressed_sha256": "8747192ffac4568b7a3b9f68fd45619ff7ac721dbe816467f5e6d8596885a97d",
+      "compressed_sha256": "e3c5797de9cd7e3ab8e7cbe736b082eaefd59c62557983134b07f3c31181923f"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/BUILD-STATUS.json.gz",
+      "uncompressed_sha256": "99c1423847fa959ccc77dab3b5e45c1ec64531f80763db27dfa8353da57814ea",
+      "compressed_sha256": "a9cd3ffcece8a6607bf235b7d515de87db774e6f865d1ec6d02fa2ae1d870e11"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/test.log.gz",
+      "uncompressed_sha256": "a3a164a5fa9ccb0193f30f40ee841894154bfe5a06bdb69ceae91b79045886b6",
+      "compressed_sha256": "54abdcde583d13bb6710fd5f14131b575fd7014eda33ee10ef519372926c36e1"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/test-race.log.gz",
+      "uncompressed_sha256": "3c03adfdbd51efa210e53608a092777d5dad894cecf5697f24b0251c7ab58e1b",
+      "compressed_sha256": "116c2856cf4738b01951d87e3e613dfe892d1b021efdc4b9e3c4a97ae31e3cfe"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/normal-selected.log.gz",
+      "uncompressed_sha256": "ead5a1c41811f076903b5f0a957a99d34df66017e72629f3965aad56a11eaddb",
+      "compressed_sha256": "f5db5b2d04e62ee22334ab95a605dcbf2cd202925be536953441b1977e96372e"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/race-selected.log.gz",
+      "uncompressed_sha256": "5eb6bfd8fe102139d66e6009a3a974ca0ee8e7e86bf4762d2c4bc2d9925e34dc",
+      "compressed_sha256": "4f77e0bc639a7318ef7fe93f6d33949065cb663ebe09856a4c030a71e6e74ec9"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/selected-verification.json.gz",
+      "uncompressed_sha256": "584a07737c5a8e232cedb47948adf7c79a9bef44ddbdf2427e28bb4c49c23218",
+      "compressed_sha256": "ab7b528ef6771d183d27a299e63198966dda85e166e68a689eea9b174f0a47c7"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/nas-selected.log.gz",
+      "uncompressed_sha256": "8da2a7c5349092776be999e906721b33564ab60650a89bde37ed9a5397f68cf4",
+      "compressed_sha256": "32df0d299479914ba03feaab2e63c7b8812553effd2ced1f35529c2d58896262"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/nas-verification.json.gz",
+      "uncompressed_sha256": "33d0776abbebc6b9ac79559d0319920061e34265e0a40a5cb33643777a128607",
+      "compressed_sha256": "7300f51f933d93ba4a5d0e216b70cd9e6bdb6934ee1833de6a4afa266291e1d2"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/nas-resource-observation.json.gz",
+      "uncompressed_sha256": "803c87ec1f0559e54d93d132d208a7aabb2619e58ca9ee69752c9b5216f4b723",
+      "compressed_sha256": "6855dc47d09cdee1d8238ce1d310d93f65f4d5bb0df533b95b6f176bc1217349"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/nas-independent-cleanup.json.gz",
+      "uncompressed_sha256": "36bbb74e3c284f0df324632f4c882d822c83a1eb2ec9c237a470fb0227caee0d",
+      "compressed_sha256": "5c3d5b4737bc7a4e3b7573f079073e6cd8e000181ae66e6a6cedbf32f20862a6"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/run-selected.py.gz",
+      "uncompressed_sha256": "386d66dc444ce2486a68cabfc5d752fe70b2f07a60963f6bb5cb1e49bce9928e",
+      "compressed_sha256": "9b0d5e1e77dd85ad7237ccc99dfcf840854e7ad37c330939ed1a21ea1137b3a2"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/run-nas-owned.py.gz",
+      "uncompressed_sha256": "5abb00836014c9a2e52b1ebc3267a4e0da764426d040801dd2a93be89c6df9d8",
+      "compressed_sha256": "e9bb0f524f163a9ed547638887a61472a8b05b17673e1e40654712ddbed470f6"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-linux-test.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-cli-linux-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-cli-race-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-cli-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-linux-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-native-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-race-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/build-test-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/mod-verify-recheck.log.gz",
+      "uncompressed_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+      "compressed_sha256": "4699dce40a065353f016ef7eb2c309ee9dee73281263a6b29287016349618a1b"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/vet-recheck.log.gz",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressed_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/ui-UI-ACCEPTANCE.json.gz",
+      "uncompressed_sha256": "438682ecfbf60c3ebdb4ae86ab022b45d3e7870a2153f7db8529b1627d99724e",
+      "compressed_sha256": "353e39b400cc0195d7c994a1c629be5a62134576994115cd4c9bd844b7bdf966"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/ui-UI-SEED-METADATA.json.gz",
+      "uncompressed_sha256": "d569de26ddb0c43c8906c3054a97e0ec7080ca25375bf27410a774e9e6f0b5b4",
+      "compressed_sha256": "8f6d2a8a9bba131532dd0d35820aec42d1eca4008ae9719b9452978a18b778be"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/ui-UI-DB-before.json.gz",
+      "uncompressed_sha256": "8524b0d4c7f1060d4d9bf33370936272b007fb0f96fd32693879a106b7008f74",
+      "compressed_sha256": "a685caf1700fa0dd4b7fedbedbca8bb5be8249712c949f908219a2b41aa4bb30"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/ui-UI-DB-after.json.gz",
+      "uncompressed_sha256": "8524b0d4c7f1060d4d9bf33370936272b007fb0f96fd32693879a106b7008f74",
+      "compressed_sha256": "a685caf1700fa0dd4b7fedbedbca8bb5be8249712c949f908219a2b41aa4bb30"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r6-PROVENANCE-INCIDENT.txt.gz",
+      "uncompressed_sha256": "9c54ea82bd34085a74ed8e1a27d7fce577c06bbdd15d9bd0622872f84a917b9a",
+      "compressed_sha256": "3cafba4546d739d2ce27893f51fcc415d0c79eaeb0dbe92fec8c8d8fe0c93a96"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r6-race-selected.log.gz",
+      "uncompressed_sha256": "9855f6707387707c27cae9871c6694c441e6467bc67581b0367e2e3c41566e06",
+      "compressed_sha256": "cd2fbdbe92d01c2130794036db1ed18590429e7b0bb01025a06f0b8198cbfd57"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r6-test.log.gz",
+      "uncompressed_sha256": "ecdcb7e11b027cb25924fd31a4be171caf51351bbd7570605705e1afe660159a",
+      "compressed_sha256": "0f3b114f500ec39d17cfd786442ceee2d53fedeb468ed91142edd03ce840b496"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r7-normal-selected.log.gz",
+      "uncompressed_sha256": "6bc53206cf593c6121637ad86e59469edb885fdbd8f4baa2932b7c3e0d6a242b",
+      "compressed_sha256": "cae74f00b9d0d340f22c6e557b60c5a94a630f2264bf95d53eb46c0fa412b6c2"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r7-race-selected.log.gz",
+      "uncompressed_sha256": "87ff1187dbe091da36f05a02b93667fbb19a31abb2c2480189159d5af7380d7a",
+      "compressed_sha256": "1629a82b2eb9b21145a432e6cffb618a36abb95039207da74c6f476c9daf8c9a"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r7-test-race.log.gz",
+      "uncompressed_sha256": "54d569aad46f869b8001311618e5481fa220a0993d5317a1f3ea769a58eb18c9",
+      "compressed_sha256": "fd321cbdcad7d52539d6626538da5644c30190ce286b29316325af491db1d5ba"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r1-build-test.log.gz",
+      "uncompressed_sha256": "287ac6a24f7192b31456190e899e7df1e88a761c5363bf38a32d5f0d5ba32ffd",
+      "compressed_sha256": "0ad280b92671bee05b7e0740e58a454c1c0c8fae4088b134fc8fd41d20c73c9e"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r3-normal-selected.log.gz",
+      "uncompressed_sha256": "ef05c6bedcef459963f7e77cb4b5620f475a1fc0c87caa362641e78990c6b4b1",
+      "compressed_sha256": "3b43de2386f1c967d055e9fe4c33b3b6994811e52889fae7ed3a206f0d574086"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/prior-r4-race-selected.log.gz",
+      "uncompressed_sha256": "337bc47fcf6f418f1e5d68cdc5014f2f07054f625cf44d2d256139bf4a066ecc",
+      "compressed_sha256": "1991d4cf62258fe664e2acfb4ccfb39b7fc53dd145058fc1d95ffe03f3887928"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/owned-config.png",
+      "sha256": "edcdba9e73ef851f92e4ee9f5a394c8809e91e81a00f2d816b8fbab48d1e67ee"
+    },
+    {
+      "path": "testdata/plugins/seed-rescue-reviewed-migration/verification/production-preflight-summary.json.gz",
+      "uncompressed_sha256": "7b38ceee612d059bda172705c23b2240b2d134ee57ef59285a32ccc1a3932e7b",
+      "compressed_sha256": "6a3820f0758243a2acc2283f677f4af87b665aacc8d852873b3dc0d1b0dcd9ef"
+    }
+  ],
+  "staged_private_material_check": {
+    "selected_source_secret_scan_passed": true,
+    "private_values_printed_or_saved": false,
+    "scanned_staged_files": 55,
+    "compressed_contents_scanned": true
+  }
+}

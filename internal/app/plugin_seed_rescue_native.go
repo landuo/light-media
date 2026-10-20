@@ -94,7 +94,7 @@ func (o *pluginSeedRescueOwner) downloader(ctx context.Context, name string) (*n
 	if name != sr.ParseConfig(c.config).Downloader {
 		return nil, DownloaderConfig{}, bad("SEED_RESCUE_SCOPE_DENIED", "下载器没有绑定当前稀缺保种配置")
 	}
-	d, e := seedRescueDownloader(o.a.Settings(), name)
+	d, e := o.boundDownloader(ctx, name)
 	if e != nil {
 		return nil, d, e
 	}
@@ -103,7 +103,7 @@ func (o *pluginSeedRescueOwner) downloader(ctx context.Context, name string) (*n
 		if e := c.ioGuard(ctx); e != nil {
 			return e
 		}
-		current, e := seedRescueDownloader(o.a.Settings(), name)
+		current, e := o.boundDownloader(ctx, name)
 		if e != nil || seedRescueDownloaderSHA(current) != digest {
 			return bad("SEED_RESCUE_SCOPE_DENIED", "下载器配置已经变化")
 		}
@@ -249,7 +249,11 @@ func (c *seedRescueCall) finishEffect(ctx context.Context, ordinal int, kind str
 	}
 	return e
 }
-func (a *App) seedRescueOptionsTx(ctx context.Context, tx *sql.Tx) (sr.Object, error) {
+func (a *App) seedRescueOptionsTx(ctx context.Context, tx *sql.Tx, instance string) (sr.Object, error) {
+	binding, e := a.pluginStore.seedRescueNamespaceTx(ctx, tx, instance)
+	if e != nil {
+		return nil, e
+	}
 	sitesOut := []sr.Object{}
 	for _, site := range a.Settings().Sites {
 		if !site.Enabled || site.Public {
@@ -263,13 +267,15 @@ func (a *App) seedRescueOptionsTx(ctx context.Context, tx *sql.Tx) (sr.Object, e
 		if e != nil || id.State != "active" || id.CanonicalOrigin != origin {
 			return nil, siteIdentityError()
 		}
-		sitesOut = append(sitesOut, sr.Object{"value": id.publicSourceID(), "title": site.Name})
-	}
-	downloaders := []sr.Object{}
-	for _, d := range a.Settings().Downloaders {
-		if downloaderEnabled(d) && seedRescueNativeConfig(d).Kind == "qbittorrent" {
-			downloaders = append(downloaders, sr.Object{"value": d.Name, "title": d.Name})
+		alias, e := seedRescueSiteAlias(binding, id)
+		if e != nil {
+			return nil, e
 		}
+		sitesOut = append(sitesOut, sr.Object{"value": alias, "title": site.Name})
+	}
+	downloaders, e := seedRescueDownloaderOptions(a.Settings(), binding)
+	if e != nil {
+		return nil, e
 	}
 	return sr.Object{"sites": sitesOut, "downloaders": downloaders}, nil
 }
@@ -282,7 +288,7 @@ func (o *pluginSeedRescueOwner) Options(ctx context.Context) (sr.Object, error) 
 		return nil, e
 	}
 	defer tx.Rollback()
-	return o.a.seedRescueOptionsTx(ctx, tx)
+	return o.a.seedRescueOptionsTx(ctx, tx, o.instance)
 }
 func (o *pluginSeedRescueOwner) Site(ctx context.Context, id int) (sr.Object, error) {
 	if e := o.active.ioGuard(ctx); e != nil {
@@ -296,7 +302,16 @@ func (o *pluginSeedRescueOwner) Site(ctx context.Context, id int) (sr.Object, er
 	if !allowed || id < 1 {
 		return nil, bad("SEED_RESCUE_SITE_UNBOUND", "站点不在当前稀缺保种配置中")
 	}
-	identity, e := o.a.Store.nativeSiteByID(ctx, int64(id))
+	tx, e := o.a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if e != nil {
+		return nil, e
+	}
+	defer tx.Rollback()
+	binding, e := o.a.pluginStore.seedRescueNamespaceTx(ctx, tx, o.instance)
+	if e != nil {
+		return nil, e
+	}
+	identity, e := o.a.pluginStore.seedRescueSiteIdentityTx(ctx, tx, binding, int64(id))
 	if errors.Is(e, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -318,13 +333,17 @@ func (o *pluginSeedRescueOwner) Site(ctx context.Context, id int) (sr.Object, er
 		if s.Kind == "mteam" {
 			schema = "mteam"
 		}
-		return sr.Object{"id": identity.publicSourceID(), "name": s.Name, "url": strings.TrimRight(s.BaseURL, "/") + "/", "domain": seedRescueDomain(s.BaseURL), "cookie": s.Cookie, "apikey": s.APIKey, "ua": seedRescueUA(s.UserAgent), "timeout": s.Timeout, "proxy": s.Proxy, "schema": schema, "_native_ref": s.ID}, nil
+		return sr.Object{"id": id, "name": s.Name, "url": strings.TrimRight(s.BaseURL, "/") + "/", "domain": seedRescueDomain(s.BaseURL), "cookie": s.Cookie, "apikey": s.APIKey, "ua": seedRescueUA(s.UserAgent), "timeout": s.Timeout, "proxy": s.Proxy, "schema": schema, "_native_ref": s.ID}, nil
 	}
 	return nil, nil
 }
 func (o *pluginSeedRescueOwner) Indexer(ctx context.Context, domain string) (sr.Object, error) {
 	cfg := sr.ParseConfig(o.active.config)
-	for _, id := range cfg.SourceSiteIDs {
+	ids := cfg.SourceSiteIDs
+	if cfg.TargetSiteID > 0 {
+		ids = append([]int{cfg.TargetSiteID}, ids...)
+	}
+	for _, id := range ids {
 		site, e := o.Site(ctx, id)
 		if e != nil {
 			return nil, e

@@ -30,7 +30,7 @@
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
 | LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 主流程、13个消息模块、API/回调与受控HTTP已迁入正式Go包；1,376条原执行及28项NAS隔离测试通过。实际App持久宿主、可信消息入口、完整动态输入及配置/KV迁移未完成，不在可安装目录 |
 | CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 已接正式catalog、真实SDK终态/owner/Core、配置生命周期与调度；下载器写前拒绝与未知写分开留证，源通知路由、私有事件和持久队列已接入。本轮107项联合NAS保留独立证据；原43/148项及mutation98项证据保留。可信远程五命令入口、真实通知渠道/完整依赖及正式迁移未完成 |
-| SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 已接 Go 宿主、SDK、原六 API、持久扫描及原版 Vue 工作台；2026-10-21 修复历史导入校验并拦截未映射的旧编号执行，通过原版3项KV/1140条记录的隔离重启与分页验证；完整引用映射、IYUU依赖及正式迁移未完成，未部署 |
+| SeedRescue | 稀缺保种 | 1.6.3 | 启用 | 3 | 已接 Go 宿主、SDK、原六 API、持久扫描及原版 Vue 工作台；2026-10-21 完成原配置/3项KV/1140任务、17站点与qB旧名引用的隔离迁移及离线CLI；真实GoSDK下载/冷恢复普通和竞态、原版界面及NAS 1核512MiB验证通过，并补齐目标站点搜索。IYUU生产依赖与调度交接、正式迁移未完成，未部署 |
 | CloudflareSpeedTest | Cloudflare IP优选 | 1.5.1 | 停用 | 0 | 2026-10-18 已接正式 Go handler、实际 CLI/下载校验/hosts 宿主、原表单和持久 once/cron/API；统一认证消息命令入口待接，配置及12个文件尚未迁移，未部署 |
 | CustomHosts | 自定义Hosts | 1.2.1 | 启用 | 0 | 2026-10-21 已随 v0.4.6 正式迁移；启用配置1条AEAD导入，独占容器Hosts可写挂载，原模拟文件与运行配置一致；生产原版表单和1次成功初始化已核对，0其他运行/计划/KV。真实域名连接及停用恢复在NAS独占容器验证，原服务/Hosts/既有配置与偏好保留 |
 
@@ -119,3 +119,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21 稀缺保种原版编号执行拦截的实际失败复现、普通/竞态及真实历史冷读取补充见[说明](plugin-seed-rescue-reference-gate.txt)和[逐项记录](plugin-seed-rescue-reference-gate-verification.json)。该限制没有代替完整引用映射，未增加已迁移数量。
 
 2026-10-21 IYUU 原版配置/历史和引用迁移工具、真实 Go SDK/qB/TR 独占业务及冷恢复验证见[说明](plugin-iyuu-reviewed-migration.txt)和[逐项记录](plugin-iyuu-reviewed-migration-verification.json)；独占界面、凭据保护及前后数据不变见[补充记录](plugin-iyuu-owned-ui-verification.json)。已合入开发代码，尚未生产迁移/切换，正式完成仍为 7/23。
+
+2026-10-21 稀缺保种完整编号/下载器引用、原数据离线迁移与真实GoSDK/冷恢复、原Vue界面及NAS资源限制验证见[说明](plugin-seed-rescue-reviewed-migration.txt)和[逐项记录](plugin-seed-rescue-reviewed-migration-verification.json)。这是开发交付，尚未生产迁移或切换，正式完成仍7/23。

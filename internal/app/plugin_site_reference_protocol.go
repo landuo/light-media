@@ -50,6 +50,9 @@ func (p *PluginStore) readSiteReferenceProtocol(ctx context.Context, q pluginRem
 	if p.store.Unseal(sealed, &out) != nil || out.Version != 1 || out.Purpose != "site-reference-protocol/v1" || out.Instance != in.InstanceID || out.Generation != in.Generation || out.Plugin != in.PluginID || out.PluginVersion != in.Version {
 		return out, bad("PLUGIN_SITE_PROTOCOL_INVALID", "站点引用协议记录无法校验")
 	}
+	if out.Protocol == reviewedSeedProtocol {
+		return out, p.validateReviewedSeedProtocol(ctx, q, in, out.Source)
+	}
 	if out.Protocol != sourceSiteReferenceProtocol {
 		if out.Protocol == originalUnclaimedSiteReferenceProtocol {
 			return out, bad("PLUGIN_SITE_PROTOCOL_UNCLAIMED", "原版站点编号尚未完成独立引用映射，不能保存后直接激活")
@@ -76,6 +79,13 @@ func (p *PluginStore) writeSiteReferenceProtocolTx(ctx context.Context, tx *sql.
 		return nil
 	}
 	f := siteReferenceProtocol{Version: 1, Purpose: "site-reference-protocol/v1", Protocol: sourceSiteReferenceProtocol, Instance: in.InstanceID, Plugin: in.PluginID, PluginVersion: in.Version, Generation: in.Generation, Source: source}
+	if in.PluginID == "SeedRescue" && source == "host-install/v1" {
+		var err error
+		f, err = p.inheritSeedReferenceProtocolTx(ctx, tx, in, f)
+		if err != nil {
+			return err
+		}
+	}
 	sealed, err := p.store.Seal(f)
 	if err != nil {
 		return err
