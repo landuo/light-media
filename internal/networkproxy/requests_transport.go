@@ -37,6 +37,10 @@ func NewRequestsTransport(base *http.Transport, environment func() []string) *Re
 
 type requestsTransportError struct{ cause error }
 
+// ErrRequestsProxyAuthEncoding is the source's escaping UnicodeEncodeError,
+// before any network request. Its fixed text never contains proxy userinfo.
+var ErrRequestsProxyAuthEncoding = errors.New("requests_proxy_auth_unicode_encode_error")
+
 func (e requestsTransportError) Error() string { return "requests_proxy_transport_error" }
 func (e requestsTransportError) Unwrap() error { return e.cause }
 func (t *RequestsTransport) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -99,7 +103,32 @@ func requestsRoute(base *http.Transport, proxy *url.URL) (*http.Transport, error
 		return requestsBindDial(t), nil
 	}
 	switch proxy.Scheme {
-	case "http", "https", "socks5h":
+	case "http", "https":
+		p := *proxy
+		if p.User != nil {
+			username := p.User.Username()
+			password, hasPassword := p.User.Password()
+			if username == "" || !hasPassword {
+				// get_auth_from_url returns an empty pair for username-only
+				// userinfo; proxy_headers also ignores an empty username.
+				p.User = nil
+			} else {
+				user, err := requestsAuthLatin1(username)
+				if err != nil {
+					return nil, err
+				}
+				pass, err := requestsAuthLatin1(password)
+				if err != nil {
+					return nil, err
+				}
+				// net/http builds Basic from the raw Userinfo bytes, for both
+				// forward requests and CONNECT. SOCKS retains UTF-8 semantics.
+				p.User = url.UserPassword(user, pass)
+			}
+		}
+		t.Proxy = http.ProxyURL(&p)
+		return requestsBindDial(t), nil
+	case "socks5h":
 		t.Proxy = http.ProxyURL(proxy)
 		return requestsBindDial(t), nil
 	case "socks5":
@@ -120,6 +149,17 @@ func requestsRoute(base *http.Transport, proxy *url.URL) (*http.Transport, error
 		return requestsBindDial(requestsSOCKS4(t, proxy)), nil
 	}
 	return nil, errors.New("requests_proxy_unsupported_scheme")
+}
+
+func requestsAuthLatin1(value string) (string, error) {
+	bytes := make([]byte, 0, len(value))
+	for _, r := range value {
+		if r > 255 {
+			return "", ErrRequestsProxyAuthEncoding
+		}
+		bytes = append(bytes, byte(r))
+	}
+	return string(bytes), nil
 }
 func requestsSOCKS4(t *http.Transport, proxy *url.URL) *http.Transport {
 	dial := t.DialContext

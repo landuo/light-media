@@ -42,12 +42,46 @@ func RequestsEnvironmentProxy(environ []string, target *url.URL) (*url.URL, erro
 	} else if !strings.Contains(raw, "://") {
 		raw = "http://" + raw
 	}
-	proxy, err := url.Parse(raw)
+	proxy, err := url.Parse(requestsEscapeUnicodeUserinfo(raw))
 	if err != nil || proxy.Hostname() == "" || proxy.Opaque != "" {
 		return nil, errors.New("requests_proxy_invalid_url")
 	}
 	proxy.Scheme = strings.ToLower(proxy.Scheme)
 	return proxy, nil
+}
+
+// urllib3 accepts raw Unicode userinfo and percent-encodes its UTF-8 bytes;
+// net/url otherwise rejects it before HTTPAdapter's Latin-1 auth conversion.
+// Preserve existing ASCII escapes and authority delimiters verbatim.
+func requestsEscapeUnicodeUserinfo(raw string) string {
+	start := strings.Index(raw, "://") + 3
+	end := len(raw)
+	if at := strings.IndexAny(raw[start:], "/?#"); at >= 0 {
+		end = start + at
+	}
+	at := strings.LastIndexByte(raw[start:end], '@')
+	if at < 0 {
+		return raw
+	}
+	at += start
+	var escaped strings.Builder
+	changed := false
+	const hex = "0123456789ABCDEF"
+	for i := start; i < at; i++ {
+		c := raw[i]
+		if c < 128 {
+			escaped.WriteByte(c)
+			continue
+		}
+		changed = true
+		escaped.WriteByte('%')
+		escaped.WriteByte(hex[c>>4])
+		escaped.WriteByte(hex[c&15])
+	}
+	if !changed {
+		return raw
+	}
+	return raw[:start] + escaped.String() + raw[at:]
 }
 
 // RequestsProxy can resolve http.Transport's HTTP(S) proxy callback. Callers

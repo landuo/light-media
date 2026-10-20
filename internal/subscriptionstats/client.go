@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"light-media/internal/networkproxy"
 	"light-media/internal/plugins/iyuuautoseed/compat/urlprep"
 	"light-media/internal/plugins/mergemessagenotify/apprise"
 )
@@ -115,6 +116,9 @@ func (c Client) send(ctx context.Context, setting SettingsSnapshot, payload []by
 		}
 		if ctx.Err() != nil {
 			return Result{Outcome: "unconfirmed"}, ctx.Err()
+		}
+		if errors.Is(err, networkproxy.ErrRequestsProxyAuthEncoding) {
+			return Result{SourceError: "UnicodeEncodeError", Outcome: "not_requested"}, nil
 		}
 		return Result{SourceReturned: true, Outcome: "unconfirmed"}, nil
 	}

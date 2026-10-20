@@ -207,6 +207,9 @@ func (h *HTTPTransport) Send(ctx context.Context, request Request) (Response, er
 			if ctx.Err() != nil {
 				return Response{}, ctx.Err()
 			}
+			if errors.Is(e, networkproxy.ErrRequestsProxyAuthEncoding) {
+				return Response{}, networkproxy.ErrRequestsProxyAuthEncoding
+			}
 			return Response{}, errHTTP
 		}
 		raw, e := io.ReadAll(res.Body)

@@ -1,0 +1,247 @@
+{
+  "requests_version": "2.34.2",
+  "helper_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "adapter_method_source": "    def proxy_headers(self, proxy: str) -> dict[str, str]:\n        \"\"\"Returns a dictionary of the headers to add to any request sent\n        through a proxy. This works with urllib3 magic to ensure that they are\n        correctly sent to the proxy, rather than in a tunnelled request if\n        CONNECT is being used.\n\n        This should not be called from user code, and is only exposed for use\n        when subclassing the\n        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.\n\n        :param proxy: The url of the proxy being used for this request.\n        :rtype: dict\n        \"\"\"\n        headers: dict[str, str] = {}\n        username, password = get_auth_from_url(proxy)\n\n        if username:\n            headers[\"Proxy-Authorization\"] = _basic_auth_str(username, password)\n\n        return headers\n",
+  "cases": [
+    {
+      "name": "no-auth",
+      "proxy": "http://owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "no-auth",
+      "proxy": "https://owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "username",
+      "proxy": "http://synthetic@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "username",
+      "proxy": "https://synthetic@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "empty-user",
+      "proxy": "http://:pass@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "empty-user",
+      "proxy": "https://:pass@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "both-empty",
+      "proxy": "http://:@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "both-empty",
+      "proxy": "https://:@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "latin1",
+      "proxy": "http://\u00e9:\u00ff@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic 6Tr/"
+      },
+      "source_error": ""
+    },
+    {
+      "name": "latin1",
+      "proxy": "https://\u00e9:\u00ff@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic 6Tr/"
+      },
+      "source_error": ""
+    },
+    {
+      "name": "latin1-percent",
+      "proxy": "http://%C3%A9:%C3%BF@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic 6Tr/"
+      },
+      "source_error": ""
+    },
+    {
+      "name": "latin1-percent",
+      "proxy": "https://%C3%A9:%C3%BF@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic 6Tr/"
+      },
+      "source_error": ""
+    },
+    {
+      "name": "invalid-utf8",
+      "proxy": "http://%FF:pass@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "invalid-utf8",
+      "proxy": "https://%FF:pass@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "wide-user",
+      "proxy": "http://\u4e2d:pass@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "wide-user",
+      "proxy": "https://\u4e2d:pass@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "wide-password",
+      "proxy": "http://user:\u4e2d@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "wide-password",
+      "proxy": "https://user:\u4e2d@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "emoji",
+      "proxy": "http://user:\ud83d\ude00@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "emoji",
+      "proxy": "https://user:\ud83d\ude00@owned.invalid:8123",
+      "headers": null,
+      "source_error": "UnicodeEncodeError"
+    },
+    {
+      "name": "empty-user-wide-pass",
+      "proxy": "http://:\u4e2d@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "empty-user-wide-pass",
+      "proxy": "https://:\u4e2d@owned.invalid:8123",
+      "headers": {},
+      "source_error": ""
+    },
+    {
+      "name": "colon",
+      "proxy": "http://user%3Aname:p%3Ass@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic dXNlcjpuYW1lOnA6c3M="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "colon",
+      "proxy": "https://user%3Aname:p%3Ass@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic dXNlcjpuYW1lOnA6c3M="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "plus",
+      "proxy": "http://a+b:c+d@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic YStiOmMrZA=="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "plus",
+      "proxy": "https://a+b:c+d@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic YStiOmMrZA=="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "nul",
+      "proxy": "http://user%00:p%00@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic dXNlcgA6cAA="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "nul",
+      "proxy": "https://user%00:p%00@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic dXNlcgA6cAA="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "empty-password",
+      "proxy": "http://user:@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic dXNlcjo="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "empty-password",
+      "proxy": "https://user:@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic dXNlcjo="
+      },
+      "source_error": ""
+    },
+    {
+      "name": "percent-ascii",
+      "proxy": "http://%41:%42@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic QTpC"
+      },
+      "source_error": ""
+    },
+    {
+      "name": "percent-ascii",
+      "proxy": "https://%41:%42@owned.invalid:8123",
+      "headers": {
+        "Proxy-Authorization": "Basic QTpC"
+      },
+      "source_error": ""
+    }
+  ],
+  "helper_cases": [
+    {
+      "source_error": "UnicodeEncodeError",
+      "source_returned": false
+    },
+    {
+      "source_error": "UnicodeEncodeError",
+      "source_returned": false
+    },
+    {
+      "source_error": "UnicodeEncodeError",
+      "source_returned": false
+    }
+  ],
+  "attempts": {
+    "network": 0,
+    "writes": 0,
+    "process": 0
+  },
+  "actual_configuration_read": false
+}
