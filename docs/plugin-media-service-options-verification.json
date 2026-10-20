@@ -1,0 +1,111 @@
+{
+  "state": "passed source-backed fix; pending production rollout",
+  "base": "f753b92ec6b44263cb15ef2f75e4b85e31874ad0",
+  "source_files": 3957,
+  "compiler_inputs": 5840,
+  "source_drift": 0,
+  "compiler_drift": 0,
+  "checks": {
+    "media-options-normal": {
+      "counts": {
+        "pass_top": 32,
+        "pass_pkg": 2,
+        "skip_top": 2,
+        "pass_sub": 64
+      },
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin"
+      ],
+      "exit": 0
+    },
+    "media-options-race": {
+      "counts": {
+        "pass_top": 32,
+        "skip_top": 2,
+        "pass_pkg": 2,
+        "pass_sub": 64
+      },
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin"
+      ],
+      "exit": 0
+    }
+  },
+  "source_oracle": {
+    "source_sha256": "fa1c4bd99c5196bb2d8170a0fd942f4386e12c5f7e230e43cb0778c22193d6b9",
+    "source_method": "ServiceBaseHelper.get_configs default include_disabled=False",
+    "source_module_imported": false,
+    "native_name_and_type": "fixed configured FNOS slot; only enable flag controls available form choices",
+    "cases": [
+      {
+        "name": "configured_enabled",
+        "enabled": true,
+        "host_present": true,
+        "source_names": [
+          "飞牛影视"
+        ],
+        "expected_options": 1
+      },
+      {
+        "name": "configured_disabled",
+        "enabled": false,
+        "host_present": true,
+        "source_names": [],
+        "expected_options": 0
+      },
+      {
+        "name": "configured_enabled_without_host",
+        "enabled": true,
+        "host_present": false,
+        "source_names": [
+          "飞牛影视"
+        ],
+        "expected_options": 1
+      },
+      {
+        "name": "absent_or_disabled_without_host",
+        "enabled": false,
+        "host_present": false,
+        "source_names": [],
+        "expected_options": 0
+      },
+      {
+        "name": "reenabled",
+        "enabled": true,
+        "host_present": true,
+        "source_names": [
+          "飞牛影视"
+        ],
+        "expected_options": 1
+      }
+    ],
+    "original_writes": 0,
+    "network_business_calls": 0
+  },
+  "before": "Two actual HTTP subcases fail: configured disabled and enabled without host. Frozen before logs preserved.",
+  "ui": {
+    "kind": "owned synthetic instance",
+    "core_enabled": false,
+    "plugin_enabled": true,
+    "selected_reference_retained": "fnos",
+    "available_options": 0,
+    "visible_empty_list": "No data available",
+    "saved": false,
+    "screenshot": "/Users/accidia/Documents/Codex/2026-10-14/s/outputs/light-media-disabled-media-options-owned-v048.png",
+    "server_exit": 0,
+    "owned_data_removed": true
+  },
+  "vet": 0,
+  "native_build": 0,
+  "linux_cgo0_build": 0,
+  "module_verify": 0,
+  "frontend_tests": 167,
+  "frontend_build": 0,
+  "version": "0.4.8",
+  "linux_sha256": "4e14738c14a243767389d754dd7220ab4ee199b057731160fa4986e9c32c047b",
+  "actual_migrations": 7,
+  "new_migrations": 0,
+  "goal_complete": false
+}

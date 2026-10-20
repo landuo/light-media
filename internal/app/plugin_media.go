@@ -62,7 +62,8 @@ func (a *App) pluginMediaHost(ctx context.Context, installation PluginInstallati
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "媒体服务器列表不接受查询目标")
 		}
 		options := []map[string]string{}
-		if a.Settings().FNOS.Host != "" {
+		// Source get_configs lists enabled configurations, not connected instances.
+		if a.Settings().FNOS.Enabled {
 			options = append(options, map[string]string{"title": "飞牛影视", "value": "fnos"})
 		}
 		return json.Marshal(options)
