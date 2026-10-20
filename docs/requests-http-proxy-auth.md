@@ -1,6 +1,6 @@
 # requests HTTP 代理认证
 
-当前为共享传输修复，尚未部署；实际插件迁移数量仍为 2/23。
+共享传输修复已随 v0.4.2 部署；总体实际插件迁移为 3/23，此修复不额外增加插件数量。
 
 以原 MoviePilot 容器中 requests 2.34.2 的 HTTPAdapter.proxy_headers 和选定 RequestUtils 方法为只读依据。HTTP/HTTPS 代理的用户名、密码按 Latin-1 构造 Basic，forward 与 CONNECT 均在自有 HTTP/HTTPS 代理上逐字节核对；空用户名、没有冒号的用户名、百分号编码、Unicode 和空密码遵从来源行为。SOCKS 保持原 UTF-8。仅对代理 authority 中原始 Unicode userinfo 补齐 urllib3 对应的转义，不宣称实现 requests 的所有任意 URL 解析差异。
 

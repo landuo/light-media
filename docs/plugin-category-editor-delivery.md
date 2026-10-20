@@ -1,6 +1,6 @@
 # CategoryEditor 1.3 交付与迁移核对
 
-2026-10-20 20:34（Asia/Shanghai）已部署 v0.4.0，并正式导入原版停用配置。生产冷启动及实际页面已核对：安装与收据各1条，任务/KV/调度/订阅事件均0，原有2条通知未增加，全局分类文件不变。原 MoviePilot 和 qBittorrent 未重启或修改。当前实际迁移完成1/23，其余22项继续开发。结构化收据见 `plugin-category-editor-deployment.json`。
+2026-10-20 20:34（Asia/Shanghai）已部署 v0.4.0，并正式导入原版停用配置。生产冷启动及实际页面已核对：安装与收据各1条，任务/KV/调度/订阅事件均0，原有2条通知未增加，全局分类文件不变。原 MoviePilot 和 qBittorrent 未重启或修改。v0.4.0 发布时实际完成 1/23；最新总体进度见主迁移清单。结构化收据见 `plugin-category-editor-deployment.json`。
 
 以下“本轮未部署”等表述记录独立候选验证阶段；正式交付状态以上述记录为准。
 
