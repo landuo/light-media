@@ -1,0 +1,127 @@
+{
+  "state": "formally imported source leaf, not deployed or actually migrated",
+  "formal_base": "73fa9b285954b61c20f33ddd2aa0dcd21b348ace",
+  "focused_paths": 3,
+  "dependency": "unchanged immutable Root sync subscriptionstats5 paths",
+  "source_and_compile": {
+    "SOURCE-FROZEN.json": {
+      "files": 3362,
+      "drift": 0
+    },
+    "COMPILE-INPUTS.json": {
+      "files": 1442,
+      "drift": 0
+    }
+  },
+  "normal_and_race": {
+    "normal-first.jsonl": {
+      "passed_top": 3,
+      "passed_including_subtests": 37,
+      "fail": 0,
+      "skip": 0
+    },
+    "race-final.jsonl": {
+      "passed_top": 3,
+      "passed_including_subtests": 37,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "vet_exit": 0,
+  "native_tool_build_exit": 0,
+  "Linux_amd64_CGO0_tool_and_server_build_exit": 0,
+  "source_oracle": {
+    "actual_installed_Pydantic_BaseSettings_AST": true,
+    "cases": 41,
+    "source_normal_returns": 39,
+    "source_ValidationError": 2,
+    "prior39_unchanged_except_required_LocalTimezone": true,
+    "additional_distinct_timezone_assertions": 2,
+    "network_attempts": 0,
+    "write_attempts": 0,
+    "process_attempts": 0,
+    "real_configuration_read_in_oracle": false
+  },
+  "actual_source_selected_capture": {
+    "state": "actual_selected_source_cold_derivation_validated_in_memory",
+    "source_mode": "selected_installed_cold_settings",
+    "uid_mode": "derived_rootfs_not_live_helper_cache",
+    "selected_fields": 7,
+    "selected_runtime_domains": 3,
+    "localzone_captured_separately_from_configured_TZ": true,
+    "localzone_mode": "derived_installed_tzlocal_not_live_cache",
+    "captures_equal": true,
+    "native_stdin_validation_calls": 2,
+    "original_identity_unchanged": true,
+    "original_config_file_unchanged_during_capture": true,
+    "source_app_imports": 0,
+    "source_settings_initializations": 0,
+    "source_network_calls": 0,
+    "source_writes": 0,
+    "target_opened": false,
+    "target_writes": 0,
+    "migrated": false,
+    "private_configuration_saved": false,
+    "producer_sha256": "b41be0cb3415c9065bda5c384d835dcdd38e231624407bc6b151894144feab22",
+    "native_tool_sha256": "6e498dca5b381f88a2c7aad845afeab8c92f712f68bf62b254ffb6b604bdf10b"
+  },
+  "import_semantics": {
+    "encrypted_records": [
+      "source_statistics_settings",
+      "source_network_settings",
+      "source_runtime_settings",
+      "source_settings_migration"
+    ],
+    "dry_run": "flock + immutable readonly SQLite with nonempty WAL/journal rejection; byte/size/mtime/mode/key/schema unchanged",
+    "apply": "single transaction, existing target only, no workers, no original writes",
+    "cold_replay": "same import zero writes; differing/partial/tampered records fail",
+    "private_UID_provenance": "derived rootfs, not live original helper cache",
+    "proof_boundaries": [
+      "selected model cold derivation, not original process live config inspection",
+      "No actual source-global migration and no production change",
+      "Only targeted native App tests; no claim of whole application test rerun"
+    ],
+    "private_timezone_provenance": "derived installed tzlocal localzone separate from selected settings.TZ, not source live cache"
+  },
+  "held_before": [
+    {
+      "path": "revision2/normal-before-freeze.jsonl",
+      "failure": "SQLite mode=ro created WAL sidecars; frozen source kept"
+    },
+    {
+      "path": "revision3/actual-capture-before-failure.json",
+      "failure": "isolated source env-path class annotation Optional missing; no config capture completed"
+    },
+    {
+      "path": "revision1/reference/before-fixture-assertion-failure.json",
+      "failure": "synthetic int/string boolean fixture labels collided; distinct labels restored, producer behavior unchanged"
+    },
+    {
+      "path": "revision4/VERIFICATION.json",
+      "state": "passed historical schema, not a behavior failure",
+      "reason": "superseded by added required source LocalTimezone distinct from configured TZ"
+    }
+  ],
+  "files": {
+    "revision5/FOCUSED-3.json": "77b416d6ec4141c679b84227b65d12e0628ec63bf6216a1a365070595b9743b9",
+    "revision5/SOURCE-FROZEN.json": "a88c4c1f8e267748d374f3c40d916a9476f0e5e177de4adc1004598a13f90b41",
+    "revision5/COMPILE-INPUTS.json": "474eec26e4b6508b6fae596f6df9008dc850227517bcc8e65e44fbccf2177221",
+    "revision5/source-settings-migrate-owned": "6e498dca5b381f88a2c7aad845afeab8c92f712f68bf62b254ffb6b604bdf10b",
+    "revision5/source-settings-migrate-owned-linux": "ef7578e2e811b8970cfc91274a9d6b2d76a1df9a5feed36b76be7d6683944766",
+    "revision5/server-linux": "0acbf6fd0d23633ec8983318871233a3ee3d94051f969cea3d0bf3c5ae901458",
+    "revision5/vet-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "revision5/mod-verify-final.log": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+    "revision5/capture-selected.py": "b41be0cb3415c9065bda5c384d835dcdd38e231624407bc6b151894144feab22",
+    "revision5/validate-real-capture.py": "9464a0b632cd095c50cbabf01ec171b7ffc664ce66c4566a71477fe3bfb3bd29",
+    "revision5/actual-capture-validation.json": "0cfed1be10b7069df4a459f9fecf824b8a651bcfe4ea924862c62cad36a91e3d",
+    "revision5/reference/source-fixture-results.json": "3e3173dd27712066f55b30fe8f785347ac89ab9348dfa545aeed8d1fdfc2128e"
+  },
+  "mod_verify_exit": 0,
+  "runtime_schema": {
+    "Version": 1,
+    "Known": true,
+    "Timezone": "selected source.TZ; preserve invalid and empty values",
+    "LocalTimezone": "actual installed tzlocal5.4.4 ZoneInfo.key cold derivation, not live cache"
+  },
+  "artifact_paths_are_private_local_evidence": true
+}

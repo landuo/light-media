@@ -2,6 +2,8 @@
 
 最新交付（2026-10-20）：新服务已部署v0.4.1，**二级分类策略1.3、插件彻底卸载2.2均已完成正式迁移，保持原停用状态；当前2/23完成**。实际冷启动、生产页面及加密导入收据见 [CategoryEditor交付](plugin-category-editor-delivery.md)、[分类迁移收据](plugin-category-editor-deployment.json)、[卸载插件交付](plugin-uninstall-delivery.md) 与 [卸载迁移收据](plugin-uninstall-deployment.json)。其余21项未完成；下方带旧日期的开发记录保留历史口径，不代表当前全部可用。
 
+2026-10-20 共享基础补充：[原版请求与调度设置迁移工具](source-settings-migration.md)已入库，完成私有来源读取、Go 校验及原子加密导入的独立验证，区分配置 TZ 和本地时区。尚未部署或向正式服务导入全局设置，**不增加 2/23 的实际完成数量**。
+
 核查日期：2026-10-16（Asia/Shanghai）。来源：NAS 原版 MoviePilot 的只读 SQLite 查询 UserInstalledPlugins，与 /app/app/plugins、/config/plugins 已安装源码的 AST 元数据对应；未导入配置值或运行数据。23/23 插件源码已找到，合计 36717 行 Python（不含前端静态包）。此清单是迁移范围，不是完成声明。
 
 | ID | 名称 | 原版本 | 原状态 | 数据键数量 | 状态 |
