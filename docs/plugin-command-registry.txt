@@ -31,3 +31,9 @@ internal/commandrouter 新增 4 组测试并全过：3 条声明逐字段对照�
 - 授权依据：原版 LarkMessager 在消息解析阶段执行 _should_reject_admin_command（admin_users 为空则放行，否则仅管理员），Go 的 lark 包已实现同一门（非管理员回复“只有管理员才有权限执行此命令”并丢弃）。命令分发不再增设第二套凭证。
 - /cloudflare_speedtest 需要独立的受控命令 authority（现有 queueCloudflareCommand 只接受 HTTP key/session），/site_signin 需要 AutoSignIn 的 RunCapability 宿主（当前未实现），两者保持明确错误码，不伪装成功。
 - 测试：internal/app 新增 2 组（已安装并初始化后入队并保留 event 绑定；未安装/空用户/动作不符/未接命令分别返回精确错误），全部通过。
+
+2026-10-21 追加：/cloudflare_speedtest 接入
+- queueCloudflareCommand 接受第三种来源 authority.Kind=command：不依赖 HTTP key/session，而是要求 channel/user 非空；命令事实仍由 App 内部事务加密写入并与 run 的 InputSHA/Revision 绑定，worker 无写库权限。
+- commandEvent 对 command 来源校验事实内 channel/user，其他来源继续走原 HTTP 凭证校验，不放宽既有 API。
+- Lark 分发命中 /cloudflare_speedtest 时入队 command run；未安装/停用仍返回 LARK_PLUGIN_COMMAND_DENIED。
+- 测试：已安装并配置后入队且存在加密命令事实；未就绪目标仍被拒绝。

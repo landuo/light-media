@@ -260,7 +260,13 @@ func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrout
 		}
 		return nil
 	case "CloudflareSpeedTest":
-		return bad("LARK_PLUGIN_COMMAND_AUTHORITY_PENDING", "Cloudflare 命令入口需要独立的受控命令凭证")
+		if !command.Target("cloudflare_speedtest") {
+			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令动作不属于该插件")
+		}
+		if _, err := a.queueCloudflareCommand(ctx, "CloudflareSpeedTest", pluginAPIAuthority{Kind: "command"}, "飞书", user); err != nil {
+			return bad("LARK_PLUGIN_COMMAND_DENIED", "Cloudflare 命令目标未安装或已停用")
+		}
+		return nil
 	case "AutoSignIn":
 		return bad("LARK_PLUGIN_COMMAND_CONSUMER_PENDING", "签到命令执行端尚未接入")
 	default:

@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"strings"
 
 	"light-media/internal/plugins"
 	cf "light-media/internal/plugins/cloudflarespeedtest"
@@ -30,10 +31,17 @@ func (a *App) queueCloudflareCommand(ctx context.Context, instance string, autho
 		return PluginRun{}, e
 	}
 	defer tx.Rollback()
-	if authority.Kind != "key" && authority.Kind != "session" {
+	if authority.Kind != "key" && authority.Kind != "session" && authority.Kind != "command" {
 		return PluginRun{}, bad("CLOUDFLARE_COMMAND_DENIED", "命令来源未经鉴权")
 	}
-	if e = a.validatePluginHTTPAuthorityTx(ctx, tx, authority); e != nil {
+	if authority.Kind == "command" {
+		// A message command carries the source channel/user instead of an HTTP
+		// credential. The sealed fact below is only writable through this
+		// authenticated dispatch path, so the fact itself is the evidence.
+		if strings.TrimSpace(channel) == "" || strings.TrimSpace(user) == "" {
+			return PluginRun{}, bad("CLOUDFLARE_COMMAND_DENIED", "命令来源缺少渠道或用户")
+		}
+	} else if e = a.validatePluginHTTPAuthorityTx(ctx, tx, authority); e != nil {
 		return PluginRun{}, e
 	}
 	var plugin, version string
@@ -88,7 +96,11 @@ func (c *cloudflareCall) commandEvent(ctx context.Context) (cf.Object, error) {
 	if cleanupJournalStrict(raw, &fact) != nil || fact.Version != 1 || fact.ID != token.ID || fact.Instance != c.o.instance || fact.Generation != c.o.generation || fact.Revision != c.run.ConfigRevision || fact.RunID != c.run.ID || fact.InputSHA != deferredInputSHA(c.run.Input) || fact.Event["action"] != cf.Action {
 		return nil, bad("CLOUDFLARE_COMMAND_DENIED", "命令事实与执行不匹配")
 	}
-	if e = c.o.a.validatePluginHTTPAuthorityTx(ctx, tx, fact.Authority); e != nil {
+	if fact.Authority.Kind == "command" {
+		if larkSourceText(fact.Event["channel"]) == "" || larkSourceText(fact.Event["user"]) == "" {
+			return nil, bad("CLOUDFLARE_COMMAND_DENIED", "命令事实缺少渠道或用户")
+		}
+	} else if e = c.o.a.validatePluginHTTPAuthorityTx(ctx, tx, fact.Authority); e != nil {
 		return nil, e
 	}
 	return fact.Event, nil
