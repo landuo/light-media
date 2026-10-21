@@ -41,7 +41,7 @@ func run() error {
 	if flag.NArg() != 0 || validate && (apply || dir != "") {
 		return errors.New("invalid_owned_tool_arguments")
 	}
-	if instance != "IYUUAutoSeed" && instance != "SeedRescue" && instance != "TorrentTransfer" && instance != "TorrentTransfermusic" {
+	if instance != "IYUUAutoSeed" && instance != "SeedRescue" && instance != "TorrentTransfer" && instance != "TorrentTransfermusic" && instance != "SiteStatistic" {
 		return errors.New("reviewed_plugin_instance_required")
 	}
 	raw, e := io.ReadAll(io.LimitReader(os.Stdin, 4097))

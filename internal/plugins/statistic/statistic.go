@@ -19,10 +19,11 @@ const PrecisionNote = "≈ 表示两期读数疑似经过 PB 舍入，显示步�
 const pbStep = float64(1<<50) / 1000
 
 type Data struct {
+	SiteID      string   `json:"site_id,omitempty"`
 	Domain      string   `json:"domain"`
 	Name        string   `json:"name"`
-	Username    string   `json:"username"`
-	UserLevel   string   `json:"user_level"`
+	Username    *string  `json:"username"`
+	UserLevel   *string  `json:"user_level"`
 	Upload      *float64 `json:"upload"`
 	Download    *float64 `json:"download"`
 	Ratio       *float64 `json:"ratio"`
@@ -30,6 +31,7 @@ type Data struct {
 	Seeding     *float64 `json:"seeding"`
 	SeedingSize *float64 `json:"seeding_size"`
 	UpdatedDay  string   `json:"updated_day"`
+	UpdatedTime string   `json:"updated_time,omitempty"`
 	Error       string   `json:"err_msg"`
 }
 

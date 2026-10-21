@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedStatistic      *reviewedStatisticImport     // Reviewed core account history; never a public migration flag.
 	reviewedTransfer       *reviewedTransferBinding     // Reviewed source identities for each independent transfer instance.
 	reviewedSeed           *reviewedSeedBinding         // Reviewed original SeedRescue namespace; never supplied by HTTP.
 	reviewedIYUU           *reviewedIYUUImportBinding   // Pinned original snapshot and verified native references only.
@@ -925,6 +926,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if in.reviewedIYUU != nil && !validReviewedIYUUImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedIYUU()
 	}
+	if in.reviewedStatistic != nil && !validReviewedStatisticImport(in, installation) {
+		return PluginMigrationReceipt{}, invalidSourceAccounts()
+	}
 	var config json.RawMessage
 	if in.SourceConfigAbsent {
 		if !identifiersCanonicalAbsentImport(installation, in.Config, in.Data) {
@@ -937,7 +941,7 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		}
 	}
 
-	if in.reviewedSeed != nil || in.reviewedTransfer != nil {
+	if in.reviewedSeed != nil || in.reviewedTransfer != nil || in.reviewedStatistic != nil {
 		config = append(json.RawMessage(nil), in.Config...)
 	}
 	total := len(config) + len(installation.Manifest)
@@ -952,6 +956,13 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 			return PluginMigrationReceipt{}, err
 		}
 		total += len(key) + len(value)
+	}
+	var statisticBinding *sourceAccountBinding
+	if in.reviewedStatistic != nil {
+		statisticBinding = &in.reviewedStatistic.Binding
+		for _, raw := range in.reviewedStatistic.Rows {
+			total += len(raw)
+		}
 	}
 	if total > pluginImportLimit {
 		return PluginMigrationReceipt{}, bad("INVALID_PLUGIN_MIGRATION", "插件迁移数据超过大小上限")
@@ -970,7 +981,8 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		ReviewedIYUU           *reviewedIYUUImportBinding   `json:",omitempty"`
 		ReviewedSeed           *reviewedSeedBinding         `json:",omitempty"`
 		ReviewedTransfer       *reviewedTransferBinding     `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer})
+		ReviewedStatistic      *sourceAccountBinding        `json:",omitempty"`
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer, statisticBinding})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1008,6 +1020,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedTransfer != nil && (run.SourcePluginID != in.reviewedTransfer.PluginID || run.SourceFingerprint != in.reviewedTransfer.SourceFingerprint) {
 		return PluginMigrationReceipt{}, invalidReviewedTransfer()
+	}
+	if statisticBinding != nil && (run.SourcePluginID != "SiteStatistic" || run.SourceFingerprint != statisticBinding.SourceFingerprint) {
+		return PluginMigrationReceipt{}, invalidSourceAccounts()
 	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
@@ -1060,6 +1075,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 			return PluginMigrationReceipt{}, err
 		}
 	}
+	if statisticBinding != nil {
+		if err = p.reviewedStatisticTargetTx(ctx, tx, *statisticBinding); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
 	if err = p.installTx(ctx, tx, installation); err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1104,6 +1124,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedTransfer != nil {
 		if err = p.commitReviewedTransferReferencesTx(ctx, tx, *in.reviewedTransfer, run.ID, digest); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
+	if in.reviewedStatistic != nil {
+		if err = p.commitReviewedStatisticTx(ctx, tx, *in.reviewedStatistic, run.ID, digest); err != nil {
 			return PluginMigrationReceipt{}, err
 		}
 	}

@@ -53,6 +53,9 @@ func (p *PluginStore) readSiteReferenceProtocol(ctx context.Context, q pluginRem
 	if out.Protocol == reviewedSeedProtocol {
 		return out, p.validateReviewedSeedProtocol(ctx, q, in, out.Source)
 	}
+	if out.Protocol == sourceSiteReferenceProtocol && strings.HasPrefix(out.Source, reviewedStatisticProtocolPrefix) {
+		return out, p.validateStatisticProtocol(ctx, q, in, out.Source)
+	}
 	if out.Protocol != sourceSiteReferenceProtocol {
 		if out.Protocol == originalUnclaimedSiteReferenceProtocol {
 			return out, bad("PLUGIN_SITE_PROTOCOL_UNCLAIMED", "原版站点编号尚未完成独立引用映射，不能保存后直接激活")
@@ -82,6 +85,13 @@ func (p *PluginStore) writeSiteReferenceProtocolTx(ctx context.Context, tx *sql.
 	if in.PluginID == "SeedRescue" && source == "host-install/v1" {
 		var err error
 		f, err = p.inheritSeedReferenceProtocolTx(ctx, tx, in, f)
+		if err != nil {
+			return err
+		}
+	}
+	if in.PluginID == "SiteStatistic" && source == "host-install/v1" {
+		var err error
+		f, err = p.inheritStatisticProtocolTx(ctx, tx, in, f)
 		if err != nil {
 			return err
 		}

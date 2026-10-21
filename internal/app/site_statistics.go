@@ -25,7 +25,7 @@ func siteStatisticDomain(site SiteConfig) string {
 }
 
 func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, error) {
-	data := statistic.Data{Domain: snapshot.Domain, Name: snapshot.Name, UpdatedDay: snapshot.Day}
+	data := statistic.Data{SiteID: site.ID, Domain: snapshot.Domain, Name: snapshot.Name, UpdatedDay: snapshot.Day}
 	if snapshot.Stats == nil {
 		return data, bad("SITE_STATISTICS_CORRUPT", "站点统计快照缺少有效数据")
 	}
@@ -50,7 +50,15 @@ func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, erro
 		return &v
 	}
 	stats := snapshot.Stats
-	data.Username, data.UserLevel = stats.Username, stats.Level
+	if at, e := time.Parse(time.RFC3339Nano, stats.CapturedAt); e == nil {
+		data.UpdatedTime = at.In(shanghai()).Format("15:04:05")
+	}
+	if stats.Username != "" {
+		data.Username = &stats.Username
+	}
+	if stats.Level != "" {
+		data.UserLevel = &stats.Level
+	}
 	data.Upload, data.Download = convert(stats.Uploaded), convert(stats.Downloaded)
 	data.Ratio, data.Bonus = stats.Ratio, stats.Bonus
 	data.Seeding, data.SeedingSize = convert(stats.Seeding), convert(stats.SeedingBytes)
@@ -125,6 +133,9 @@ func (a *App) siteStatisticsSnapshot(ctx context.Context) (statistic.Snapshot, e
 		if err != nil {
 			return snapshot, err
 		}
+	}
+	if e := a.mergeSourceAccountStatisticsTx(ctx, tx, &snapshot); e != nil {
+		return snapshot, e
 	}
 	return snapshot, tx.Commit()
 }

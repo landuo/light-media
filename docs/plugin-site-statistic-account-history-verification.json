@@ -1,0 +1,434 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "base_commit": "01ae45d37e4793c68105b633a326305c9b48bcb6",
+  "state": "shared_original_account_history_migration_and_original_statistics_read_verified_not_full_plugin_migrated",
+  "plugin": "SiteStatistic",
+  "plugin_version": "1.9.7",
+  "actual_complete": 7,
+  "remaining_count": 16,
+  "production_version": "0.4.8",
+  "production_deployment": false,
+  "production_writes_performed": 0,
+  "original_business_writes_performed": 0,
+  "user_site_downloader_or_media_business_calls": 0,
+  "accepted_real_execution_handoffs": 0,
+  "python_runtime_dependency_added": false,
+  "frontend_assets_or_version_changed": false,
+  "source": {
+    "source_payload_bytes": 2537058,
+    "config_sha256": "2ec13ebdddbe2e5a7595cbd744552c016e45e989516a48f53be27f84e9de253f",
+    "site_catalog_sha256": "b27625bd4cdfbcc188683874968786eb4e1dc548fa4ffa1171ccfb9db3e331a1",
+    "account_sha256": "fac3972705d612955dcd77294a90dc920e35ec362b1021dd52bc3fadb4e3031e",
+    "account_rows": 2133,
+    "column_count": 21,
+    "latest_ids": [
+      2115,
+      596,
+      2133,
+      2131,
+      2130,
+      2129,
+      2128,
+      2127,
+      2126,
+      2125,
+      2124,
+      2123,
+      2121,
+      2120,
+      2119,
+      2118,
+      2117
+    ],
+    "domains": 17,
+    "history_unmatched_catalog_domains": 0,
+    "max_row_bytes": 6098,
+    "source_config_enabled": true,
+    "private_payload_saved": false,
+    "source_writes": 0
+  },
+  "implementation": {
+    "all_21_original_columns_and_raw_row_bytes_preserved": true,
+    "per_row_AEAD_with_source_fingerprint_and_row_ID": true,
+    "authenticated_full_search_index": true,
+    "same_transaction_as_raw_configuration_and_final_receipt": true,
+    "original_core_data_not_plugin_KV": true,
+    "seventeen_independent_stable_site_ID_origin_bindings": true,
+    "source_latest_good_day_then_all_same_day_rows_and_time_order": true,
+    "original_by_day_ID_order_and_seven_day_name_backfill": true,
+    "new_native_observation_overlays_first_same_site_day_without_rewriting_archive": true,
+    "source_replay_does_not_overwrite_later_core_or_plugin_edits": true,
+    "shared_archive_survives_plugin_reset_and_retained_reinstall": true,
+    "nullable_username_and_level_reach_original_table_as_null": true,
+    "fifth_reviewed_source_execution_handoff_guard": true,
+    "read_only_forms_and_page_before_handoff": true,
+    "staged_dashboard_stays_rejected": true,
+    "actual_HTTP_enable_rejected_before_handoff": true,
+    "owned_synthetic_handoff_then_actual_HTTP_save_SDK_init_dashboard": true,
+    "source_once_and_notification_flags_not_replayed": true,
+    "offline_CLI_readonly_bytes_and_modes_unchanged": true
+  },
+  "checks": {
+    "actual-normal": {
+      "top_passed": 1,
+      "including_subtests_passed": 12,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "230b2b59f5f6c778e820f61150959bcecaf5c201a43e93894b04ba1fc0bffd6d"
+    },
+    "actual-race": {
+      "top_passed": 1,
+      "including_subtests_passed": 12,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "1f2ddc6ac26e8a55406234e7132de6ad9525a6d3faa87be49900116a108b83fc"
+    },
+    "related-normal": {
+      "top_passed": 19,
+      "including_subtests_passed": 19,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "9b733001e1581ad23786371be794e0531b62f1163140436ff5f46bb070f6b07d"
+    },
+    "related-race": {
+      "top_passed": 19,
+      "including_subtests_passed": 19,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "7b717a43afc229ab451aa28cf6c2f6c77bc553aded1df8e4a3c509557c47c43a"
+    },
+    "original-oracle-normal": {
+      "top_passed": 3,
+      "including_subtests_passed": 27,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "b8d06e2c5230e29fb635903008251e12f5ad5b600ca2d261f510ae75047feeb3"
+    },
+    "original-oracle-race": {
+      "top_passed": 3,
+      "including_subtests_passed": 27,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "2d61bed4bb5e91624249737f2c2aca114ae63b3204a11c9db07ba60e5f99a7a3"
+    },
+    "nas-selected": {
+      "top_passed": 1,
+      "including_subtests_passed": 12,
+      "failures": [],
+      "skips": [],
+      "log_sha256": "220ac488156c043d7a39b67eab7b9dffc205a9baa97bfc75a29976b0252dae22"
+    }
+  },
+  "check_statuses": {
+    "actual-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "230b2b59f5f6c778e820f61150959bcecaf5c201a43e93894b04ba1fc0bffd6d",
+        "source_account_log_scan_passed": true
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "1f2ddc6ac26e8a55406234e7132de6ad9525a6d3faa87be49900116a108b83fc",
+        "source_account_log_scan_passed": true
+      }
+    ],
+    "related-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "terminal_pass": true
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "terminal_pass": true
+      }
+    ],
+    "original-oracle-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0
+      },
+      {
+        "kind": "race",
+        "exit": 0
+      }
+    ],
+    "build-normal-status.json": [
+      {
+        "name": "app",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate",
+        "exit": 0
+      },
+      {
+        "name": "handoff",
+        "exit": 0
+      }
+    ],
+    "build-race-status.json": [
+      {
+        "name": "app-race",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-race",
+        "exit": 0
+      },
+      {
+        "name": "handoff-race",
+        "exit": 0
+      }
+    ],
+    "build-linux-status.json": [
+      {
+        "name": "server-native",
+        "exit": 0
+      },
+      {
+        "name": "server-linux",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-linux",
+        "exit": 0
+      },
+      {
+        "name": "handoff-linux",
+        "exit": 0
+      },
+      {
+        "name": "app-linux",
+        "exit": 0
+      },
+      {
+        "name": "vet",
+        "exit": 0
+      },
+      {
+        "name": "mod-verify",
+        "exit": 0
+      }
+    ]
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed SiteStatistic 2133 account rows, original views, Go SDK and offline migration in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-site-statistic-history-dc995fb76ab34bc08f9e6b73207c5496",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/site-statistic-history-dc995fb76ab34bc08f9e6b73207c5496",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "220ac488156c043d7a39b67eab7b9dffc205a9baa97bfc75a29976b0252dae22"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "b3da20a73e4e553d61b72bb4275c7998a363f6df33a0de427df7b8d289071bb0",
+      "statistic-migrate": "5d24dd1e85f1f85704cf8d5da5918122dfdc53d308a93ef2656bce20e8744a84",
+      "handoff": "71750f381ffa4b77991ef55935cba5bd0d5cdc774d2d0e45a82dc642e5b5484f"
+    },
+    "container_id": "d48d7e85bb07f4498991fe3af71a199b05375da91ee3f6c2ad6ccf1a6e4f3bfc",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "live_source_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 41.58
+  },
+  "independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_runtime_directory_absent": true,
+    "production_binary_and_compose_unchanged": true,
+    "writes_performed": 0
+  },
+  "inputs": {
+    "SOURCE-INPUTS.json": {
+      "files": 4198,
+      "manifest_sha256": "006d289684f6518c7dde52212ff6bfead6821be07e8404e67ce7dfdfe8eb6304",
+      "missing_or_changed": []
+    },
+    "COMPILATION-INPUTS.json": {
+      "files": 5685,
+      "manifest_sha256": "5d42a0b4b2c7363257b23b4168f9cfeefc6ae5cefc0ce1a5b02dffefa6da87e4",
+      "missing_or_changed": []
+    },
+    "extra_source_files": [],
+    "main_focus_changed": []
+  },
+  "compilation_modes_and_limits": {
+    "runs": [
+      {
+        "mode": "native",
+        "packages": 433,
+        "exit": 0
+      },
+      {
+        "mode": "linux",
+        "packages": 408,
+        "exit": 0
+      },
+      {
+        "mode": "native-race",
+        "packages": 435,
+        "exit": 0
+      }
+    ],
+    "boundary": "resolved Go/module/embedded/C/assembly inputs; does not claim complete compiler system header or linker dependency closure"
+  },
+  "focus": [
+    {
+      "path": "cmd/plugin-handoff-owned/main.go",
+      "sha256": "3898e71eda188f5ebfe46b1f840accf5b133861f0510e6b94ed79748283b2a24"
+    },
+    {
+      "path": "cmd/site-statistic-migrate-owned/main.go",
+      "sha256": "cc47ce8f06916b3c4a470fe11540a80835ad947e3a58df88fcf2205b68ae8dec"
+    },
+    {
+      "path": "internal/app/plugin_migration_handoff.go",
+      "sha256": "a323374c7a064a2b85c4f0be9173ddb05d333f194ed78f7102922714439186ec"
+    },
+    {
+      "path": "internal/app/plugin_site_reference_protocol.go",
+      "sha256": "2fe77170b3582cb8432b163c90049c836cf4d04b22bc57a58e70142ab52e7f39"
+    },
+    {
+      "path": "internal/app/plugin_store.go",
+      "sha256": "7c817605deffa433f446e4979659c392670a0ea14f2a534894de086171af199b"
+    },
+    {
+      "path": "internal/app/site_account_history.go",
+      "sha256": "343d0cfc08242b7ca95e731dba505954be2894879cdcc577dc4131d1db24c3ec"
+    },
+    {
+      "path": "internal/app/site_account_history_test.go",
+      "sha256": "3e47b17ecf1f083ec24544ba9f63993cf6f5c7a440daa74f9a7ee2ef14f3eb68"
+    },
+    {
+      "path": "internal/app/site_statistic_migration.go",
+      "sha256": "9813e9b5375792c338b6757755eae124c5ccd60ffd4143d1197fdb57c1e5b40f"
+    },
+    {
+      "path": "internal/app/site_statistics.go",
+      "sha256": "0a7eee89356cd54e4aadb149736ceb66b21ebf2c15db0b395b64eaded75fe6bd"
+    },
+    {
+      "path": "internal/app/store.go",
+      "sha256": "a39e02ebabd536f3abd3ab072e0a30ee72835ce9656d7ec73c81130b7cc3854b"
+    },
+    {
+      "path": "internal/plugins/statistic/statistic.go",
+      "sha256": "b586f27afae970483d40699ad779ebe59c180faeb1a74000fb0c7220a4dbe699"
+    }
+  ],
+  "secret_scan": {
+    "private_source_payload_saved": false,
+    "source_account_rows_scanned": 2133,
+    "account_identity_and_credential_patterns": 2219,
+    "artifact_and_code_files_scanned": 55,
+    "passed": true
+  },
+  "prior_failure": {
+    "stage": "r2",
+    "actual_normal_exit": 1,
+    "failed_subtest": "actual-Go-SDK-config-page-and-dashboard-read-only",
+    "observed_status": 400,
+    "actual_error_code_from_route_inspection": "PLUGIN_MIGRATION_STAGED",
+    "cause": "fixture incorrectly expected dashboard before enabling imported source",
+    "final_r3_delta": "only actual-source test changed; product source identical to r2; prove staged refusal then synthetic owned stop/real HTTP enable/real SDK init/dashboard",
+    "r2_actual_race_started": false,
+    "failure_retained": true
+  },
+  "remaining": [
+    "Full native failed-day account collection and historical semantics.",
+    "Unified core site-management current/history views over this shared archive.",
+    "All19 source refresh API fields: five still hardcoded null and native parsers incomplete.",
+    "Actual original indexer domain aliases: only REA static artifact evidence, behavior not yet established.",
+    "Complete real notification producers/channels and production cutover; no source plugin completion claimed.",
+    "No new user-browser acceptance or peak memory measurement in this leaf."
+  ],
+  "final_review_correction": {
+    "description": "Equal-time native rows without an old rank now form a consistent ordered group after ranked original rows.",
+    "strict_weak_order_property_test": true,
+    "new_code_delta_from_r3": [
+      "internal/app/site_account_history.go",
+      "internal/app/site_account_history_test.go"
+    ]
+  }
+}

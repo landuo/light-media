@@ -74,7 +74,7 @@ func (p *PluginStore) pluginExecutionSourceTx(ctx context.Context, tx *sql.Tx, i
 			return nil, nil
 		}
 		kind = reviewedTransferMappingKind
-	} else if in.PluginID == "IYUUAutoSeed" || in.PluginID == "SeedRescue" {
+	} else if in.PluginID == "IYUUAutoSeed" || in.PluginID == "SeedRescue" || in.PluginID == "SiteStatistic" {
 		var protocol siteReferenceProtocol
 		if e := tx.QueryRowContext(ctx, `SELECT sealed FROM native_site_reference_protocols WHERE instance_id=? AND generation=?`, instance, in.Generation).Scan(&sealed); e != nil {
 			return nil, e
@@ -86,13 +86,19 @@ func (p *PluginStore) pluginExecutionSourceTx(ctx context.Context, tx *sql.Tx, i
 			kind = reviewedIYUUMappingKind
 		} else if in.PluginID == "SeedRescue" && protocol.Protocol == reviewedSeedProtocol {
 			kind = reviewedSeedMappingKind
+		} else if in.PluginID == "SiteStatistic" && strings.HasPrefix(protocol.Source, reviewedStatisticProtocolPrefix) {
+			kind = sourceAccountKind
 		} else {
 			return nil, nil
 		}
 	} else {
 		return nil, nil
 	}
-	if e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, instance).Scan(&sealed); e != nil {
+	recordID := instance
+	if kind == sourceAccountKind {
+		recordID = "main"
+	}
+	if e := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, recordID).Scan(&sealed); e != nil {
 		return nil, e
 	}
 	raw, e := p.unseal(kind, instance, "main", sealed)
