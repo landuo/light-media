@@ -39,6 +39,10 @@ func integer(v any) (int64, bool) {
 }
 
 func envelope(b []byte) (json.RawMessage, error) {
+	return mteamEnvelope(b, false)
+}
+
+func mteamEnvelope(b []byte, allowEmptyAcknowledgement bool) (json.RawMessage, error) {
 	var e map[string]json.RawMessage
 	if !decodeJSON(b, &e) || e == nil {
 		return nil, errors.New("site_protocol_changed")
@@ -60,6 +64,9 @@ func envelope(b []byte) (json.RawMessage, error) {
 	}
 	data := e["data"]
 	if len(data) == 0 || bytes.Equal(bytes.TrimSpace(data), []byte("null")) {
+		if allowEmptyAcknowledgement {
+			return data, nil
+		}
 		return nil, errors.New("site_protocol_changed")
 	}
 	return data, nil

@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "source_sha256": {
+    "nexus_php.py": "b5c47b4ef97683057d0640f0bc8f4ad3e5354a29728f3acc12a4ed49b20382a4",
+    "mtorrent.py": "a8fb7d1ea9bc7c588de398a205d1fba7eea17a50e19388c9bf44ffff6cc358ca"
+  },
+  "network_calls": 0,
+  "original_writes": 0,
+  "count_sentinel": "None distinguishes no assignment from original constructor default zero",
+  "counts": [
+    {
+      "name": "zero",
+      "html": "<span><a href=\"messages.php\">0</a></span>",
+      "observed": 0
+    },
+    {
+      "name": "paren",
+      "html": "<span><a href=\"messages.php\">信息箱</a> (2)</span>",
+      "observed": 2
+    },
+    {
+      "name": "time-not-count",
+      "html": "<span><a href=\"messages.php\">Date (12:34)</a></span>",
+      "observed": null
+    },
+    {
+      "name": "nbsp",
+      "html": "<span><a href=\"messages.php\">你有 3</a></span>",
+      "observed": null
+    },
+    {
+      "name": "absent",
+      "html": "<div>none</div>",
+      "observed": null
+    },
+    {
+      "name": "exact-link-preferred",
+      "html": "<span><a href=\"messages.php?action=other\">(7)</a></span><span><a href=\"messages.php\">(2)</a></span>",
+      "observed": null
+    },
+    {
+      "name": "unknown-count",
+      "html": "<span><a href=\"messages.php\">信息箱</a></span>",
+      "observed": null
+    }
+  ],
+  "contents": [
+    {
+      "name": "nexus",
+      "html": "<h1> heading </h1><table><tr><td class=\"colhead\">header</td></tr><tr><td>sent</td><td>2026-10-21</td></tr><tr><td>body <b>bold</b>\n tail</td></tr></table>",
+      "tuple": [
+        "heading",
+        "2026-10-21",
+        "body bold\n tail"
+      ]
+    },
+    {
+      "name": "direct-title-text",
+      "html": "<h1>first<em>nested</em>tail</h1>",
+      "tuple": [
+        "tail",
+        null,
+        null
+      ]
+    },
+    {
+      "name": "layui",
+      "html": "<div class=\"layui-card-header\"><span>title</span><span><span>from</span><span>date</span></span></div><div class=\"layui-card-body extra\"> body <b>x</b> </div>",
+      "tuple": [
+        "title",
+        "date",
+        "body x"
+      ]
+    },
+    {
+      "name": "union-order",
+      "html": "<div class=\"layui-card-header\"><span>early</span><span><span>from</span><span>early-date</span></span></div><div class=\"layui-card-body\">early-body</div><h1>late</h1><table><tr><td class=\"colhead\">h</td></tr><tr><td>x</td><td>late-date</td></tr><tr><td>late-body</td></tr></table>",
+      "tuple": [
+        "late",
+        "early-date",
+        "early-body"
+      ]
+    },
+    {
+      "name": "missing",
+      "html": "<div>none</div>",
+      "tuple": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "links": [
+    {
+      "name": "read-and-unread",
+      "html": "<table><tr><td><a href=\"messages.php?action=viewmessage&amp;id=1\">new</a></td></tr><tr><td><img alt=\"Read\"><a href=\"messages.php?action=viewmessage&amp;id=2\">old</a></td></tr></table><a href=\"messages.php?action=viewmailbox&amp;box=1&amp;page=2\">下一页</a>",
+      "links": [
+        "messages.php?action=viewmessage&id=1"
+      ],
+      "next_page": "messages.php?action=viewmailbox&box=1&page=2"
+    },
+    {
+      "name": "direct-only",
+      "html": "<table><tr><td><span><a href=\"messages.php?action=viewmessage&amp;id=3\">nested</a></span><a href=\"messages.php?action=viewmessage&amp;id=4\">direct</a></td></tr></table>",
+      "links": [
+        "messages.php?action=viewmessage&id=4"
+      ],
+      "next_page": ""
+    },
+    {
+      "name": "duplicate-preserved",
+      "html": "<table><tr><td><a href=\"messages.php?action=viewmessage&amp;id=1\">one</a></td></tr><tr><td><a href=\"messages.php?action=viewmessage&amp;id=1\">same</a></td></tr></table>",
+      "links": [
+        "messages.php?action=viewmessage&id=1",
+        "messages.php?action=viewmessage&id=1"
+      ],
+      "next_page": ""
+    }
+  ],
+  "mtorrent": {
+    "payload": {
+      "code": "0",
+      "data": {
+        "data": [
+          {
+            "id": "1",
+            "unread": true,
+            "title": "title",
+            "createdDate": "date",
+            "context": "body"
+          },
+          {
+            "id": "2",
+            "unread": false,
+            "title": "read",
+            "createdDate": "date",
+            "context": "body"
+          },
+          {
+            "id": "3",
+            "unread": true,
+            "title": "incomplete"
+          }
+        ]
+      }
+    },
+    "contents": [
+      [
+        "title",
+        "date",
+        "body"
+      ]
+    ],
+    "marks": [
+      {
+        "url": "https://owned.invalid/api/msg/markRead",
+        "params": {
+          "msgId": "1"
+        }
+      }
+    ]
+  }
+}

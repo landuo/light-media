@@ -86,6 +86,7 @@ async function mount(t, result) {
           bytes: String,
         };
       if (dependency.endsWith('.vue')) return { name: dependency };
+      if (dependency === 'vuetify/components/VSwitch') return { VSwitch: 'source-switch' };
       throw new Error('Unexpected dependency ' + dependency);
     },
     module.exports,
@@ -132,8 +133,37 @@ async function mount(t, result) {
     resultMessage() {
       return nodes().find((node) => node.props?.role === 'status');
     },
+    async saveReadMessages(value) {
+      const field = nodes().find(
+        (node) => node.type === 'source-switch' && node.props?.label === '阅读站点消息',
+      );
+      assert.ok(field);
+      field.props['onUpdate:modelValue'](value);
+      await vue.nextTick();
+      const panel = nodes().find(
+        (node) => node.type === 'section' && nodeText(node).includes('站点选项'),
+      );
+      const button = panel.children
+        .find((node) => node?.props?.class === 'button-row')
+        .children.find((node) => node.type === 'button' && nodeText(node).trim() === '保存');
+      await button.props.onClick();
+      await vue.nextTick();
+    },
   };
 }
+
+test('the source read-site-messages switch saves explicit false and true with the site interval', async (t) => {
+  const app = await mount(t, {});
+  for (const enabled of [false, true]) {
+    await app.saveReadMessages(enabled);
+    const request = app.fixture.requests
+      .filter((r) => r.path === '/settings' && r.method === 'PUT')
+      .at(-1);
+    assert.equal(request.body.read_site_messages, enabled);
+    assert.equal(request.body.site_data_refresh_hours, 6);
+    assert.equal(request.body.fnos.host, 'http://nas.invalid:5666/v');
+  }
+});
 
 test('HTTP 200 with a failed TLS probe shows its actionable message as an error', async (t) => {
   const message = '飞牛影视 TLS 证书校验失败，请使用与证书匹配的域名或改用内网 HTTP 地址';

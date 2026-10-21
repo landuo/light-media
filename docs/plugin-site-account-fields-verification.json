@@ -1,0 +1,545 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "base_commit": "3ed2d0acd7022b9df96ee7447f08fcf538f11fba",
+  "state": "extended_account_fields_and_message_collection_verified_not_full_plugin_migration",
+  "actual_complete": 7,
+  "remaining": [
+    "Real host error DTO/None/exception API and SiteRefreshed event mapping; current failure may discard Stats and return empty failed data.",
+    "Compiled SitesHelper indexer alias behavior remains unknown; static REA evidence is not runtime parity.",
+    "Complete site-message/statistic notification producers and channels.",
+    "Review and migrate global source message option, fresh original source snapshot, execution handoff and production migration.",
+    "Other native source parser branches, including original role mapping and list-vs-peer counter behavior, remain subject to full-plugin fidelity audit.",
+    "No peak RSS measurement or user acceptance claimed."
+  ],
+  "production_version": "0.4.8",
+  "deployed": false,
+  "original_mutations": 0,
+  "production_mutations": 0,
+  "real_execution_handoffs": 0,
+  "user_sites_downloaders_or_media_business_calls": 0,
+  "python_runtime_dependency_added": false,
+  "source_account_rows": 2133,
+  "source_parser_metadata": [
+    {
+      "path": "app/modules/indexer/parser/mtorrent.py",
+      "bytes": 6748,
+      "sha256": "a8fb7d1ea9bc7c588de398a205d1fba7eea17a50e19388c9bf44ffff6cc358ca",
+      "same_as_local_public_source": true,
+      "read_only": true
+    },
+    {
+      "path": "app/modules/indexer/parser/nexus_php.py",
+      "bytes": 20663,
+      "sha256": "b5c47b4ef97683057d0640f0bc8f4ad3e5354a29728f3acc12a4ed49b20382a4",
+      "same_as_local_public_source": true,
+      "read_only": true
+    },
+    {
+      "path": "app/modules/indexer/parser/nexus_hhanclub.py",
+      "bytes": 2717,
+      "sha256": "479dc354a2de0ebf5eb2fdb7bbbe820de698d1d9079e989c2941e2d59bf9b761",
+      "same_as_local_public_source": true,
+      "read_only": true
+    }
+  ],
+  "source_message_option": {
+    "value": true,
+    "source": "source_default",
+    "mode": "read_only_cold_derivation_not_live_state",
+    "core_source_sha256": "f19111073a7ef25ecd0b7e9d53dab343d76fe64ff3ad821f4ff39a790c104033",
+    "original_writes": 0,
+    "network_calls": 0
+  },
+  "implementation": {
+    "all19_field_projection_with_nullable_extended_types": true,
+    "MTeam_source_and_size_pairs": true,
+    "Nexus_seeders_and_size_pairs": true,
+    "complete_list_only_no_invented_missing_peer_zero": true,
+    "Nexus_known_profile_totals_do_not_skip_needed_details": true,
+    "message_count_NULL_vs_observed_zero": true,
+    "original_Nexus_count_links_nullable_text_tuple_synthetic_oracle15": true,
+    "original_MTeam_message_form_and_valid_unread_mark_read": true,
+    "empty_success_ack_scope_only_markRead": true,
+    "read_site_message_source_default_and_UI_switch": true,
+    "connection_test_does_not_read_or_mark_messages": true,
+    "API_auth_and_job_generation_checked_each_IO": true,
+    "revocation_or_cancel_stops_later_message_read_and_commit": true,
+    "site_settings_and_existing_request_admission_retained": true,
+    "encrypted_native_message_snapshot_cold_read": true,
+    "leeching_size_not_observed_by_source_adapters_stays_null": true,
+    "err_msg_actual_error_DTO_host_branch_complete": false
+  },
+  "checks": {
+    "actual-normal": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "d56f6f051e7704ab3e5b0a53f1f022797c2a05e7ccaa375e09637be25a12c7c5"
+    },
+    "actual-race": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "edfbc96172a390e479326149096e75ee09f4de0bea35b15073eb1e8416561ca6"
+    },
+    "related-normal": {
+      "top_pass": 43,
+      "inclusive_pass": 102,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "2d65670167287c4261d9e7bc5a840d9dead06765cc8bf499b2776c412962ddeb"
+    },
+    "related-race": {
+      "top_pass": 43,
+      "inclusive_pass": 102,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "4a42b0c8219296234993a0460ef4f6c6da7eb53b8ec38e44c4a95f419a4f3ad9"
+    },
+    "sites-normal": {
+      "top_pass": 37,
+      "inclusive_pass": 170,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "be404bed8244d282c83b1ccaad05768a9aaaf64358a853b360c5ddae4ce06263"
+    },
+    "sites-race": {
+      "top_pass": 37,
+      "inclusive_pass": 170,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "d0cf8e461e8dd9ea7840d64d1926685975ae45e8e0fdbddb366b8fde0c924299"
+    },
+    "nas-selected": {
+      "top_pass": 6,
+      "inclusive_pass": 18,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "e41c72447aaafc99842ee2cd07ebc5869e31805b9270e6ebcc1054fa86b3bb0f"
+    }
+  },
+  "check_statuses": {
+    "actual-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "d56f6f051e7704ab3e5b0a53f1f022797c2a05e7ccaa375e09637be25a12c7c5",
+        "source_account_log_scan_passed": true
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "edfbc96172a390e479326149096e75ee09f4de0bea35b15073eb1e8416561ca6",
+        "source_account_log_scan_passed": true
+      }
+    ],
+    "related-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 43,
+        "inclusive_pass": 102,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "top_pass": 43,
+        "inclusive_pass": 102,
+        "failures": []
+      }
+    ],
+    "sites-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0
+      },
+      {
+        "kind": "race",
+        "exit": 0
+      }
+    ],
+    "build-normal-status.json": [
+      {
+        "name": "app",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate",
+        "exit": 0
+      },
+      {
+        "name": "handoff",
+        "exit": 0
+      }
+    ],
+    "build-race-status.json": [
+      {
+        "name": "app-race",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-race",
+        "exit": 0
+      },
+      {
+        "name": "handoff-race",
+        "exit": 0
+      }
+    ],
+    "build-linux-status.json": [
+      {
+        "name": "server-native",
+        "exit": 0
+      },
+      {
+        "name": "server-linux",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-linux",
+        "exit": 0
+      },
+      {
+        "name": "handoff-linux",
+        "exit": 0
+      },
+      {
+        "name": "app-linux",
+        "exit": 0
+      },
+      {
+        "name": "vet",
+        "exit": 0
+      },
+      {
+        "name": "mod-verify",
+        "exit": 0
+      }
+    ]
+  },
+  "frontend": {
+    "runs": [
+      {
+        "name": "web-tests",
+        "exit": 0
+      },
+      {
+        "name": "web-build",
+        "exit": 0
+      }
+    ],
+    "tests_passed": 168,
+    "source_and_assets_equal_to_r2": true,
+    "owned_UI": {
+      "owned": true,
+      "url": "http://127.0.0.1:33341/#settings",
+      "settings_read_false_saved_and_survived_reload": true,
+      "settings_read_true_saved_and_survived_reload": true,
+      "source_VSwitch_visible_and_purple": true,
+      "screenshot_sha256": "b9f460f383efde48be25f79532c82e744f90ca645384e91c62d06d26f544252b",
+      "screenshot": "/Users/accidia/Documents/Codex/2026-10-14/s/outputs/light-media-site-message-option-go.png",
+      "user_credentials_used": false,
+      "user_browser_acceptance_claimed": false,
+      "temporary_browser_tab_closed": true,
+      "owned_pid_signalled": 62309,
+      "owned_server_terminal": true,
+      "owned_data_removed": true
+    },
+    "UI_backend_version": "r5; final web and settings-save paths unchanged; later only job cancellation and seeding-detail collection changed"
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed SiteStatistic 2133 account rows, original views, Go SDK and offline migration in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-site-statistic-history-a36598fee5a54feabaf8bf8fc4a2883c",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/site-statistic-history-a36598fee5a54feabaf8bf8fc4a2883c",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "e41c72447aaafc99842ee2cd07ebc5869e31805b9270e6ebcc1054fa86b3bb0f"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "0b3d646b1042376259e53f6bf141aee2f046ee45fe707a328a7c9a3969c40981",
+      "statistic-migrate": "f1315bf05852b89d8d661a0785f2da5123b014644703af5a404726e758f09a01",
+      "handoff": "80de17b757265438e352a56bfdf9eef6a822243509468021f5217216efeb5c39"
+    },
+    "container_id": "8d4d54782ee050cc82bd8b22a51e00b37f7a80791b0ea396bec487744a953941",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "live_source_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 46.61
+  },
+  "independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_runtime_directory_absent": true,
+    "production_binary_and_compose_unchanged": true
+  },
+  "inputs": {
+    "source_count": 4302,
+    "source_manifest_sha256": "1fc80591dbb26a03cb1cbde01487fe8231be326e24fd334bd9228193094a2243",
+    "compiler_count": 5692,
+    "compiler_manifest_sha256": "5919f13589b3fd44be446de048d7d0251192c9fa22e1ccaa66af134919546f77",
+    "frozen_and_compiler_drift": 0,
+    "main_product_focus_drift": 0,
+    "docs_written_after_checks": [
+      "docs/plugin-site-account-fields.txt",
+      "docs/plugin-site-account-fields-verification.json",
+      "docs/plugin-installed-migration-baseline.md"
+    ],
+    "compilation_limits": {
+      "runs": [
+        {
+          "mode": "native",
+          "packages": 435,
+          "exit": 0
+        },
+        {
+          "mode": "linux",
+          "packages": 410,
+          "exit": 0
+        },
+        {
+          "mode": "native-race",
+          "packages": 437,
+          "exit": 0
+        }
+      ],
+      "boundary": "resolved Go/module/embedded/C/assembly inputs; does not claim complete compiler system header or linker dependency closure"
+    }
+  },
+  "focus": [
+    {
+      "path": "internal/app/plugin_site_statistic_api.go",
+      "sha256": "80ea30d1d16e6a2251daa5b5e1980f4467ea92e42c0bcbb8d0aab1c352b7905a"
+    },
+    {
+      "path": "internal/app/plugin_site_statistic_fields_test.go",
+      "sha256": "6da5cace3f49d754d29fbd0d63d61e094df0c2db3b04ca6084bebfc4d5b1391b"
+    },
+    {
+      "path": "internal/app/site_manage.go",
+      "sha256": "5c15ad4a6301fbbed0a31b738fe75d6f0e0f688f738fb9d17ff70bb464eb0eb3"
+    },
+    {
+      "path": "internal/app/site_statistics.go",
+      "sha256": "00d194f3b8e1509651fe95ca1580769289a17306d65fa59ba91689f6e29dc046"
+    },
+    {
+      "path": "internal/app/types.go",
+      "sha256": "9764cc180ae8a871086c13a2afef95b8b9b195bd54b69e53d45286879bb0213a"
+    },
+    {
+      "path": "internal/sites/mteam.go",
+      "sha256": "6520716c54b2c0f8e01c6238d91af4ce74894482eed0f2606d9e0d038642c5aa"
+    },
+    {
+      "path": "internal/sites/stats.go",
+      "sha256": "122244344059af5c8eb177820b74c44320bb5e78722295dfb46315a7d56439e6"
+    },
+    {
+      "path": "internal/sites/stats_extended_test.go",
+      "sha256": "91ee0329aa3ad0b13851f6786803623ab77601f5bb5f47e158776305e97f9210"
+    },
+    {
+      "path": "internal/sites/stats_messages.go",
+      "sha256": "78e9f340dd0dd6d403dc96893e129cf2c4e2892c0c134bdc7e63295e0cd5f951"
+    },
+    {
+      "path": "internal/sites/testdata/stats-message-original-oracle.json",
+      "sha256": "b5b80786af3160747e198ab2138410aabc3a382062c896ccbc83ebe0a267d204"
+    },
+    {
+      "path": "web/dist/assets/DownloaderConfigDialog-CystyMkB.js",
+      "sha256": "f540b789a557cf48156b135eb9e02e60c0df1c8ef2f4176ec0e16e2a212d3cae"
+    },
+    {
+      "path": "web/dist/assets/PluginAppPage-DzGe0xWA.js",
+      "sha256": "9390e9ff820993190ef67893169711da9c757114b25d47272fa7cb2e37068384"
+    },
+    {
+      "path": "web/dist/assets/PluginConfigDialog-D4tP48x3.js",
+      "sha256": "e497cc9d575cd067b857da4c442e3f9b0601aef9e9fbb3864eab4e689367deb2"
+    },
+    {
+      "path": "web/dist/assets/PluginCronField-EHGBKXIG.js",
+      "sha256": "e1266e75b7fca119ded23ea7472a4414fc34e76ef9e78ddf26b924472640218e"
+    },
+    {
+      "path": "web/dist/assets/PluginDashboard-BZnluh8l.js",
+      "sha256": "8b8ce564b14389b50610c76120d450eda0d16751920d18377f18a4768037eca5"
+    },
+    {
+      "path": "web/dist/assets/PluginDataDialog-BndZ_dOR.js",
+      "sha256": "af5a01ca2887b68bd76d48478c1c616a8319e2af07ebed9f06d8af572d2ae32b"
+    },
+    {
+      "path": "web/dist/assets/PluginFolderDialog-BlVybIu3.js",
+      "sha256": "e48c3543e02b782a748f4f67587481f130a148d2e2d3790dd9564fb13f7bce72"
+    },
+    {
+      "path": "web/dist/assets/PluginFormRenderer-Dse91tFP.js",
+      "sha256": "f4c90114e7384233f369d05631cef66164e21e6389915dd5599deef3fe614c28"
+    },
+    {
+      "path": "web/dist/assets/PluginLogDialog-Cm3AisgX.js",
+      "sha256": "0d4791fae005ee44c793cdbfa6d44676943923e415b59a701d16f06c0d8155de"
+    },
+    {
+      "path": "web/dist/assets/PluginPieChart-C1pPhXLz.js",
+      "sha256": "8ba39072e7004be21bad0b3034be501a13cf622c94d7a1ce31ccd18b1dd132dc"
+    },
+    {
+      "path": "web/dist/assets/PluginServices-Z5M3oc8C.js",
+      "sha256": "6ba5079a91acea6153f9ea7e2d663839e1f54a4d8a33d8026c3a4631f7e16c36"
+    },
+    {
+      "path": "web/dist/assets/Plugins-C82fJzUJ.js",
+      "sha256": "17569a2e4e751c4890e32ecf59b0de4404d035bd11c2d43a693df1524ce8dbe9"
+    },
+    {
+      "path": "web/dist/assets/ResourceMetadataSettings-CS30dyG8.js",
+      "sha256": "4152ddf0c1adbd8750bc96c5d867103ad49fc4c36eb2327793bf014cc8cd1604"
+    },
+    {
+      "path": "web/dist/assets/RuleManager-BC1tC3lR.js",
+      "sha256": "397c9f87777be635142bcfe5ae40c69f02ab7285ba6859dc13e408cad403ee7b"
+    },
+    {
+      "path": "web/dist/assets/ShortcutTools-Cyn9-4Rd.js",
+      "sha256": "25a935c054255f9d6b3b2abd396119a44192d3159dcd60efdcf48d84b418fbdb"
+    },
+    {
+      "path": "web/dist/assets/index-CkidJGQi.css",
+      "sha256": "eccb9ffc478a0b96ff40c87470008fdf8cab7b1c679301a80ee7d0fe717071db"
+    },
+    {
+      "path": "web/dist/assets/index-DPDpbJW2.js",
+      "sha256": "d4d97b9d0989007a563044cc1ad18e3b5c54739b9c399b00c23a69fd1fea8686"
+    },
+    {
+      "path": "web/dist/assets/plugin-remote-api-DbFADp4J.js",
+      "sha256": "4671a1183ff38cb0bac73b48178fb1b3dd7549e31b9913c7c4f9503cbfeeb8a6"
+    },
+    {
+      "path": "web/dist/index.html",
+      "sha256": "f968818fffca6b82f76f244a3b70e02cb3d9a1c25515aec7368181e38a274797"
+    },
+    {
+      "path": "web/src/components/Settings.vue",
+      "sha256": "26c9ad5719ed065306049a03c3b6509986d9f703d1c23b8cd4c8620be1c013a6"
+    },
+    {
+      "path": "web/tests/settings-connection.test.mjs",
+      "sha256": "5f275c8110558a32eda306a9cbb4b0d48084c4086c1cf77b586752f601f769bb"
+    }
+  ],
+  "secret_scan": {
+    "source_account_rows": 2133,
+    "patterns": 2219,
+    "files": 89,
+    "passed": true,
+    "private_source_payload_saved": false
+  },
+  "failures_retained": [
+    {
+      "stage": "r1",
+      "cause": "frontend test dependency loader did not allow new VSwitch module; fixed named dependency and added actual model-save test",
+      "accepted": false
+    },
+    {
+      "stage": "r2",
+      "cause": "duplicate existing AddRequestGuard declaration; regexp2 v2.9 variadic API incorrectly passed integer option; fixed. Auxiliary compile also invoked wrong cwd.",
+      "accepted": false
+    },
+    {
+      "stage": "r3",
+      "cause": "host disk exhausted during race compile; only reconstructible Go cache cleaned after no Go builders live. MTeam successful markRead empty data was incorrectly rejected; scoped ack fix.",
+      "accepted": false
+    }
+  ],
+  "build_parallelism": {
+    "GOMAXPROCS": 2,
+    "GOFLAGS": "-p=2",
+    "cache_cleared_after_confirming_no_Go_builders_live": true,
+    "available_disk_before_cleanup": "253MiB",
+    "available_disk_after_cleanup": "24GiB",
+    "only_rebuildable_Go_cache_removed": true
+  }
+}

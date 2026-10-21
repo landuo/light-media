@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+import { VSwitch } from 'vuetify/components/VSwitch';
 import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
 import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
@@ -37,6 +38,7 @@ async function load() {
   form.value.tmdb ||= { api_key: '', access_token: '' };
   form.value.fnos ||= { host: '', username: '', password: '', enabled: false };
   form.value.site_data_refresh_hours ??= 6;
+  form.value.read_site_messages ??= true;
   logging.value = await api('/settings/logging');
 }
 async function save(section: 'tmdb' | 'fnos' | 'site') {
@@ -48,7 +50,10 @@ async function save(section: 'tmdb' | 'fnos' | 'site') {
     const c = JSON.parse(JSON.stringify(current));
     delete c.secret_state;
     if (section === 'tmdb') c.tmdb = form.value.tmdb;
-    if (section === 'site') c.site_data_refresh_hours = form.value.site_data_refresh_hours;
+    if (section === 'site') {
+      c.site_data_refresh_hours = form.value.site_data_refresh_hours;
+      c.read_site_messages = form.value.read_site_messages;
+    }
     if (section === 'fnos')
       c.fnos = {
         ...c.fnos,
@@ -63,8 +68,10 @@ async function save(section: 'tmdb' | 'fnos' | 'site') {
       form.value.secret_state = result.secret_state;
       if (section === 'tmdb') form.value.tmdb = result.tmdb;
       if (section === 'fnos') form.value.fnos = result.fnos;
-      if (section === 'site')
+      if (section === 'site') {
         form.value.site_data_refresh_hours = result.site_data_refresh_hours ?? 6;
+        form.value.read_site_messages = result.read_site_messages ?? true;
+      }
       return true;
     }
     return false;
@@ -189,6 +196,12 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
               <option :value="0">从不</option>
             </select></label
           >
+          <VSwitch
+            v-model="form.read_site_messages"
+            label="阅读站点消息"
+            color="primary"
+            hide-details
+          />
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('site')">保存</button>

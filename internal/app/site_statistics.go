@@ -25,6 +25,10 @@ func siteStatisticDomain(site SiteConfig) string {
 	return site.ID
 }
 
+func siteMessagesEnabled(config Settings) bool {
+	return config.ReadSiteMessages == nil || *config.ReadSiteMessages
+}
+
 func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, error) {
 	data := statistic.Data{SiteID: site.ID, Domain: snapshot.Domain, Name: snapshot.Name, UpdatedDay: snapshot.Day}
 	if data.Domain == "" {
@@ -166,7 +170,7 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 			return err
 		}
 		a.event(ctx, job, "INFO", "site_refresh", "progress", fmt.Sprintf("正在刷新站点数据（%d/%d）%s", done+1, total, site.Name))
-		snapshot, err := a.collectManagedSite(ctx, site.ID, job.ID+":"+site.ID, &siteCollectionHooks{Auto: true, Guard: func(tx *sql.Tx) error {
+		snapshot, err := a.collectManagedSite(ctx, site.ID, job.ID+":"+site.ID, &siteCollectionHooks{Auto: true, RequestGuard: func(requestCtx context.Context) error { return a.jobCancelled(requestCtx, job) }, Guard: func(tx *sql.Tx) error {
 			var valid int
 			if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE id=? AND generation=? AND state='running'`, job.ID, job.Generation).Scan(&valid); err != nil {
 				return err

@@ -92,6 +92,7 @@ type Settings struct {
 	PriorityRules               *priorityrules.Configuration `json:"priority_rules,omitempty"`
 	APIToken                    string                       `json:"api_token"`
 	SiteDataRefreshHours        *int                         `json:"site_data_refresh_hours"`
+	ReadSiteMessages            *bool                        `json:"read_site_messages"`
 	IndexerSites                []string                     `json:"indexer_sites"`
 	RSSSites                    []string                     `json:"rss_sites"`
 	Directories                 []DirectoryRule              `json:"directories"`

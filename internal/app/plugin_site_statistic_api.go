@@ -74,6 +74,11 @@ func (a *App) pluginSiteStatisticAPIHost(ctx context.Context, installation Plugi
 	a.pluginMu.Unlock()
 	var result json.RawMessage
 	_, err = a.collectManagedSite(allowDisabledSiteRequests(ctx), site.ID, run.ID+":domain", &siteCollectionHooks{
+		RequestGuard: func(requestCtx context.Context) error {
+			a.pluginMu.Lock()
+			defer a.pluginMu.Unlock()
+			return a.validatePluginHTTPRun(requestCtx, *run)
+		},
 		Guard: func(tx *sql.Tx) error { _, err := a.validatePluginHTTPRunTx(ctx, tx, *run); return err },
 		Commit: func(tx *sql.Tx, snapshot siteSnapshot) error {
 			var body any
@@ -107,5 +112,5 @@ func siteStatisticAPIData(site SiteConfig, snapshot siteSnapshot) map[string]any
 	if at, err := time.Parse(time.RFC3339Nano, snapshot.Connection.CheckedAt); err == nil {
 		updatedTime = at.In(shanghai()).Format("15:04:05")
 	}
-	return map[string]any{"domain": siteStatisticDomain(site), "username": nullable(stats.Username), "userid": nullable(stats.UserID), "user_level": nullable(stats.Level), "join_at": nullable(stats.JoinedAt), "bonus": stats.Bonus, "upload": stats.Uploaded, "download": stats.Downloaded, "ratio": stats.Ratio, "seeding": stats.Seeding, "leeching": stats.Leeching, "seeding_size": stats.SeedingBytes, "leeching_size": nil, "seeding_info": nil, "message_unread": nil, "message_unread_contents": nil, "err_msg": nil, "updated_day": snapshot.Day, "updated_time": updatedTime}
+	return map[string]any{"domain": siteStatisticDomain(site), "username": nullable(stats.Username), "userid": nullable(stats.UserID), "user_level": nullable(stats.Level), "join_at": nullable(stats.JoinedAt), "bonus": stats.Bonus, "upload": stats.Uploaded, "download": stats.Downloaded, "ratio": stats.Ratio, "seeding": stats.Seeding, "leeching": stats.Leeching, "seeding_size": stats.SeedingBytes, "leeching_size": stats.LeechingBytes, "seeding_info": stats.SeedingInfo, "message_unread": stats.MessageUnread, "message_unread_contents": stats.Messages, "err_msg": stats.Error, "updated_day": snapshot.Day, "updated_time": updatedTime}
 }

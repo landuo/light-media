@@ -284,9 +284,10 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 // connection and optional owning job. A failed response never replaces an
 // existing day; its first failure can create that day's error observation.
 type siteCollectionHooks struct {
-	Auto   bool
-	Guard  func(*sql.Tx) error
-	Commit func(*sql.Tx, siteSnapshot) error
+	Auto         bool
+	RequestGuard func(context.Context) error
+	Guard        func(*sql.Tx) error
+	Commit       func(*sql.Tx, siteSnapshot) error
 }
 
 func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hooks *siteCollectionHooks) (siteSnapshot, error) {
@@ -297,7 +298,24 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	started := time.Now()
 	snapshot := siteSnapshot{SiteID: key, Name: s.Name, Domain: siteStatisticDomain(s), ConfigKey: a.managedSiteKey(s)}
 	var observed sites.UserStats
-	e = a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error { var err error; observed, err = client.UserStats(ctx); return err })
+	messageOption := siteMessagesEnabled(a.Settings())
+	// The existing site-card endpoint is a connection test. Only real refresh
+	// jobs and the plugin refresh API may read/mark messages, as in MoviePilot.
+	readMessages := messageOption && hooks != nil
+	e = a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error {
+		client.AddRequestGuard(func(requestCtx context.Context) error {
+			if messageOption != siteMessagesEnabled(a.Settings()) {
+				return bad("SITE_MESSAGE_SETTINGS_CHANGED", "站点消息设置已变化，请重新刷新")
+			}
+			if hooks != nil && hooks.RequestGuard != nil {
+				return hooks.RequestGuard(requestCtx)
+			}
+			return nil
+		})
+		var err error
+		observed, err = client.UserStatsWithOptions(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
+		return err
+	})
 	snapshot.Connection = managedConnection{Status: "ok", CheckedAt: now(), DurationMS: time.Since(started).Milliseconds()}
 	if e != nil {
 		snapshot.Connection.Status = "failed"
@@ -311,7 +329,7 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	current, err := a.siteForRequest(ctx, key)
-	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey {
+	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey || messageOption != siteMessagesEnabled(a.Settings()) {
 		return siteSnapshot{}, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
