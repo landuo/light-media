@@ -1,0 +1,27 @@
+插件命令注册表：原版 get_command 审计与 Go 接线边界（2026-10-21）
+
+结果
+在 internal/commandrouter 增加已安装插件的 get_command 只读注册表（3 条真实命令），字段为命令名、插件 ID、动作、描述，大小写敏感、不含参数解析，并提供不可变副本与目标绑定。它不执行任何命令，也不改变现有 Lark 命令分发。
+
+原版依据
+逐个读取 work/plugin-source/<ID>/__init__.py（与实际安装同源）中的 get_command：
+- AutoSignIn：/site_signin → EventType.PluginAction，data.action=site_signin（源文件 SHA256 04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d）
+- CleanInvalidSeed：/detect_invalid_torrents → PluginAction，action=detect_invalid_torrents（fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda）
+- CloudflareSpeedTest：/cloudflare_speedtest → PluginAction，action=cloudflare_speedtest（2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1）
+其余已装插件 get_command 返回 None 或只含文档模板 "/xx"，因此注册表 3 条。该清单不等于未来安装版本的命令全集。
+
+已存在但尚未连通的执行端
+- CleanInvalidSeed：PluginStore.enqueueCleanInvalidSeedCommand 已限制五个动作、channel/user 字段与 payload 大小，可安全承接命令事实。
+- CloudflareSpeedTest：App.queueCloudflareCommand 已实现鉴权、代际/配置版本、私有命令事实与 run 入队，目前只有测试调用。
+- AutoSignIn：尚无命令执行入口。
+
+未接入的部分与原因
+- 原版由 PluginManager 汇总 get_command 注册到 Command 表，消息命令触发 PluginAction，插件方法响应；Go 的 Lark 分发目前只认内置 preset，未知命令返回 LARK_COMMAND_REGISTRY_PENDING。
+- 插件命令必须先有可信 ingress（Lark 管理员/绑定校验），再构造与 HTTP API 不同的命令 authority；不能把任意 Lark 用户或空 proof 直接映射为 key/session。
+- 因此本批只冻结“有哪些命令、属于谁”，不把命令接到执行端，也不据此增加插件迁移完成数。
+
+验证
+internal/commandrouter 新增 4 组测试并全过：3 条声明逐字段对照、大小写敏感与未知/模板/带参数拒绝、与内置 preset 无冲突、返回副本不可变、目标动作绑定。
+
+下一步
+先定义消息入口的命令 authority（管理员身份 + 绑定 + 防重），再把 /detect_invalid_torrents、/cloudflare_speedtest、/site_signin 分别接到已存在的执行端（AutoSignIn 需新建），最后做普通/竞态与真实消息回环验证。
