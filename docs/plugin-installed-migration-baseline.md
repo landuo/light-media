@@ -1,5 +1,7 @@
 # 已安装插件迁移基线
 
+2026-10-21 来源异常分类补充：SiteStatistic 的真实账户采集已对四类固定 oracle 解析异常建立调用级私有来源分类，普通/race 正反例与并发隔离留证；这不是 SystemError/SSE 完整接线，固定 IndexerModule 源码证据仍缺。通知默认插件链接差异另列待补，不计插件正式完成。详见 [分类与边界](plugin-site-statistic-module-failure-classification.txt) 及 [验证记录](plugin-site-statistic-module-failure-verification.json)。
+
 2026-10-21 开发续作：SiteStatistic 已补专属来源绑定的共享通知 Router/持久队列接线，并按精确原版源码修正为通知正常返回后才保存 last_notify；处理中去重、双实例隔离、未知发送不重放与冷恢复终态分别留证。该阶段未部署、未使用真实外发账户，不增加正式完成数，仍为7/23。专项、全项目回归及本机二进制输入限制见 [通知路由说明](plugin-site-statistic-notice-routing.txt) 与 [验证记录](plugin-site-statistic-notice-routing-verification.json)。
 
 2026-10-21 站点索引器目录补充：已取证的 17 行 SitesHelper 模板投影（23 个 host，含 ext_domains 别名）正式内建为 Go 目录并接入站点来源识别，站点地址如 hhan.club、kp.m-team.cc、cspt.top、www.pttime.top 现在按原版 schema 选择适配器并保存注册域；同时修复站点管理把导出 token 误报为已配置凭据的既有回归。详见 [说明](site-indexer-alias-go-port.txt) 与 [逐项验证](site-indexer-alias-verification.json)。这是 SiteStatistic 的模板/别名基础接线，未部署、未访问真实站点，正式完成仍为 7/23。

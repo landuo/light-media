@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	"light-media/internal/logging"
+	"light-media/internal/releasemeta/legacyanime"
 )
 
 // SourceUserData is the MoviePilot DTO, distinct from observed native values.
@@ -50,9 +52,10 @@ func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 
 type sourceUserStatsKey struct{}
 type sourceUserStatsTrace struct {
-	guardError  error
-	status      int
-	contentType string
+	parserFailure *sourceUserParserFailure
+	guardError    error
+	status        int
+	contentType   string
 }
 
 func sourceStatsTrace(ctx context.Context) *sourceUserStatsTrace {
@@ -88,10 +91,51 @@ func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) 
 		return s, nil, ctx.Err()
 	}
 	if trace.guardError != nil {
-		return s, nil, trace.guardError
+		return s, nil, &sourceUserRevokedError{trace.guardError}
+	}
+	if marker, ok := e.(*sourceUserParserFailure); ok && d == nil && marker == trace.parserFailure {
+		e = &sourceUserModuleFailure{kind: marker.kind}
 	}
 	return s, d, e
 }
+
+// SourceUserModuleFailureKind classifies only a fresh SourceUserStats module
+// failure. It intentionally does not unwrap: a guard may return an older failure,
+// and wrapping or reusing one is not evidence of another parser execution.
+func SourceUserModuleFailureKind(err error) (string, bool) {
+	failure, ok := err.(*sourceUserModuleFailure)
+	if !ok || failure == nil {
+		return "", false
+	}
+	return failure.kind, true
+}
+
+type sourceUserModuleFailure struct{ kind string }
+
+func (*sourceUserModuleFailure) Error() string { return "site_user_source_module_failed" }
+
+type sourceUserParserFailure struct{ kind string }
+
+func (*sourceUserParserFailure) Error() string { return "site_user_source_module_failed" }
+
+// Registration occurs only immediately after an audited parser branch, never
+// by searching an arbitrary returned error chain for a matching type or text.
+func recordSourceUserParserFailure(ctx context.Context, err error) error {
+	if marker, ok := err.(*sourceUserParserFailure); ok {
+		if trace := sourceStatsTrace(ctx); trace != nil {
+			trace.parserFailure = marker
+		}
+	}
+	return err
+}
+
+type sourceUserRevokedError struct{ error }
+
+func (e *sourceUserRevokedError) Unwrap() error { return e.error }
+
+type sourceUserIntegerFormatError struct{}
+
+func (*sourceUserIntegerFormatError) Error() string { return "site_user_source_module_failed" }
 
 func sourceModuleError(err error) error {
 	if err != nil {
@@ -166,12 +210,22 @@ func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {
 	return nil
 }
 
+var sourceUserDecimalDigits = regexp.MustCompile(legacyanime.DecimalClass())
+
 func sourceUserInteger(v any) (int64, error) {
 	if !sourceTruth(v) {
 		return 0, nil
 	}
 	n, e := sourceInteger(v)
-	if e == nil && n.IsInt64() {
+	if e != nil {
+		// The audited case is a malformed string conversion. Numeric overflow,
+		// non-string schema errors, and conversion size limits are not promoted.
+		if value, ok := v.(string); ok && len(sourceUserDecimalDigits.FindAllStringIndex(value, 4301)) <= 4300 {
+			return 0, &sourceUserIntegerFormatError{}
+		}
+		return 0, sourceModuleError(nil)
+	}
+	if n.IsInt64() {
 		return n.Int64(), nil
 	}
 	return 0, sourceModuleError(nil)

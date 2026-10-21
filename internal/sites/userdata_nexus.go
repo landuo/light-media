@@ -347,7 +347,10 @@ func (r *sourceNexusReader) traffic(raw string) {
 		}{{"4", "uploaded", &r.d.Upload}, {"5", "downloaded", &r.d.Download}} {
 			nodes := r.x(doc, `//*[@id="user-info-panel"]/div[2]/div[2]/div[`+f.index+`]/text()`)
 			if len(nodes) == 0 {
-				r.err = sourceModuleError(nil)
+				if r.err != nil {
+					return
+				}
+				r.err = recordSourceUserParserFailure(r.ctx, &sourceUserParserFailure{kind: "hh-missing-panel"})
 				return
 			}
 			*f.dst = 0
@@ -360,7 +363,10 @@ func (r *sourceNexusReader) traffic(raw string) {
 		}
 		nodes := r.x(doc, `//*[@id="user-info-panel"]/div[2]/div[1]/div[1]/div/text()`)
 		if len(nodes) == 0 {
-			r.err = sourceModuleError(nil)
+			if r.err != nil {
+				return
+			}
+			r.err = recordSourceUserParserFailure(r.ctx, &sourceUserParserFailure{kind: "hh-missing-panel"})
 			return
 		}
 		r.ratio(r.m(`分享率][:：_<>/a-zA-Z-="'\s#;]+([\d,.\s]+)`, sourceNexusText(nodes[0]), false))

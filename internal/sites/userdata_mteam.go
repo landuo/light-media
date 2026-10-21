@@ -1,9 +1,11 @@
 package sites
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"math"
 	"math/big"
 	"net/http"
@@ -28,7 +30,10 @@ func sourceMTeamBase(root map[string]any) (sourceMTeamBaseData, error) {
 	var ok bool
 	b.data, ok = root["data"].(map[string]any)
 	if !ok {
-		if _, exists := root["data"]; exists {
+		if value, exists := root["data"]; exists {
+			if value == nil {
+				return b, &sourceUserParserFailure{kind: "mt-null-data"}
+			}
 			return b, sourceModuleError(nil)
 		}
 		b.data = map[string]any{}
@@ -62,9 +67,15 @@ func sourceMTeamBase(root map[string]any) (sourceMTeamBaseData, error) {
 	}
 	var err error
 	if b.uploaded, err = sourceUserInteger(b.counts["uploaded"]); err != nil {
+		if _, format := err.(*sourceUserIntegerFormatError); format {
+			return b, &sourceUserParserFailure{kind: "mt-invalid-integer"}
+		}
 		return b, err
 	}
 	if b.downloaded, err = sourceUserInteger(b.counts["downloaded"]); err != nil {
+		if _, format := err.(*sourceUserIntegerFormatError); format {
+			return b, &sourceUserParserFailure{kind: "mt-invalid-integer"}
+		}
 		return b, err
 	}
 	return b, nil
@@ -149,8 +160,24 @@ func sourceMTeamRoot(raw []byte) (map[string]any, bool, error) {
 		return nil, false, nil
 	}
 	var value any
-	if !decodeJSON(raw, &value) {
-		return nil, false, sourceModuleError(nil)
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	decodeErr := decoder.Decode(&value)
+	if decodeErr == nil {
+		decodeErr = decoder.Decode(new(any))
+		if decodeErr == io.EOF {
+			decodeErr = nil
+		} else if decodeErr == nil {
+			return nil, false, &sourceUserParserFailure{kind: "mt-invalid-json"}
+		}
+	}
+	if decodeErr != nil {
+		// encoding/json's nesting cap is a Go safety limit, not evidence that
+		// the installed module raised its own JSON parsing exception.
+		if syntax, ok := decodeErr.(*json.SyntaxError); ok && strings.HasSuffix(syntax.Error(), "exceeded max depth") {
+			return nil, false, sourceModuleError(nil)
+		}
+		return nil, false, &sourceUserParserFailure{kind: "mt-invalid-json"}
 	}
 	if !sourceTruth(value) {
 		return nil, false, nil
@@ -198,14 +225,14 @@ func (c *Client) sourceMTeamUserStats(ctx context.Context, options UserStatsOpti
 	}
 	profile, parsed, e := sourceMTeamRoot(raw)
 	if e != nil {
-		return s, nil, e
+		return s, nil, recordSourceUserParserFailure(ctx, e)
 	}
 	var params map[string]any
 	var base sourceMTeamBaseData
 	if parsed {
 		base, e = sourceMTeamBase(profile)
 		if e != nil {
-			return s, nil, e
+			return s, nil, recordSourceUserParserFailure(ctx, e)
 		}
 		observeSourceMTeamProfile(&s, base)
 		params = map[string]any{"pageNumber": 1, "pageSize": 200, "type": "SEEDING", "userid": base.data["id"]}
@@ -288,7 +315,7 @@ func (r *sourceMTeamReader) messages(dto *SourceUserData) error {
 	}
 	m, ok, e := sourceMTeamRoot(raw)
 	if e != nil {
-		return e
+		return recordSourceUserParserFailure(r.ctx, e)
 	}
 	if !ok {
 		return nil
@@ -367,7 +394,7 @@ func (r *sourceMTeamReader) seeding(dto *SourceUserData, params map[string]any) 
 		}
 		m, ok, e := sourceMTeamRoot(raw)
 		if e != nil {
-			return e
+			return recordSourceUserParserFailure(r.ctx, e)
 		}
 		if !ok {
 			return nil
