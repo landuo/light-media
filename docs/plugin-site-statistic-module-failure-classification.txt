@@ -17,3 +17,5 @@
 SystemError宿主事件、MessageHelper实时SSE、原异常正文/traceback尚未实现。固定安装的 app/modules/indexer/__init__.py（42309字节，SHA256 b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf）在保留资料中只有指纹、没有完整源码或core commit pin。有界官方v2历史候选查询返回HTTP403，已停止，没有改通道绕过；这不证明历史中不存在对应文件。当前公共版本显示名不冒充固定安装版本。
 
 补记通知阶段边界：dc62de226 的 SiteStatistic信封仅包含分类、标题、正文，尚未补插件基类的AppDomain默认插件链接；该差异不是未知真实域名导致的不可开发项，已有全局AppDomain配置可用于合成域名实现/测试。后续必须在接受时冻结链接，并保留旧已接受无链接消息，不在冷恢复改读最新配置或重发。
+
+2026-10-21 后续默认链接修复已独立实现，见 plugin-site-statistic-default-link.txt；上述 dc62de226 缺口说明保留该阶段历史语境，不能用后续实现追溯改变旧已接受通知。

@@ -1,0 +1,230 @@
+{
+  "scope": "Synthetic cloud App/SQLite/SDK tests only; no NAS, Mac, production, real accounts, or complete plugin parity validation.",
+  "baseline": "bb2834c7c1f58ed284521ac4cb59295dbe13664d",
+  "sources": {
+    "installed_base_fixture": "testdata/plugins/remove-link-outbox/installed-source.json",
+    "fixture_sha256": "f72c9142c01970d2ddabe03ddfda1012a14c65c8c4003c15f287ee2ad4277f0f",
+    "base_plugin_original_sha256": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "public_rule_urls": [
+      "https://raw.githubusercontent.com/jxxghp/MoviePilot/v2/app/core/config.py",
+      "https://github.com/jxxghp/MoviePilot/blob/v2/app/utils/url.py"
+    ],
+    "public_rule_revision": "Not pinned to installed core or a verified commit; original file bytes/hash not obtained."
+  },
+  "final_files": {
+    "internal/app/plugin_default_link.go": "555c2a63eba79d41cad5e5bd2c184f8ec49617690a54ba4ffb95c6e9d0d192a5",
+    "internal/app/plugin_default_link_test.go": "090b1647484365d458c1596c77bfb7695880657d6ccb2b5019c2f23199bc06a9",
+    "internal/app/plugin_site_statistic_notice.go": "67c5d40a24b6b4e6e91d4312874e17321ce65546a0524107e7716fee9d28ae57"
+  },
+  "excluded_evidence": "app-normal.jsonl passed against pre-history-fix source and is investigation only, not final validation.",
+  "limitations": [
+    "Go URL structural parse rejects some malformed domains Python permits; these fail closed with a redacted error and rolled-back acceptance, not silent nil links.",
+    "Helper implements fixed plugin-fragment path/query semantics, not complete Python urllib equivalence.",
+    "Real APP_DOMAIN migration, UI configuration, all plugin default links, and SiteStatistic SystemError remain outside this patch."
+  ],
+  "date": "2026-10-21",
+  "branch": "dev/plugins-continuation",
+  "deployed": false,
+  "real_accounts_used": false,
+  "migration_count": "7/23 unchanged",
+  "toolchain": "go1.26.10 linux/amd64",
+  "logs": {
+    "final-normal": {
+      "path": "work/plugin-default-link-validation/final-normal.jsonl",
+      "command": "go test -json ./internal/app -run 'Test(PluginDefaultLink|SiteStatistic)' -count=1",
+      "sha256": "7d8b268ca1c4003a27b18b0d27125a878d508f808b6e6f03b1b476a679ea0ab3",
+      "bytes": 866992,
+      "exit_code": 0,
+      "top_level_passed": 35,
+      "passed_including_subtests": 165,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:45:49.576687169+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 234.218
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": false
+    },
+    "final-race": {
+      "path": "work/plugin-default-link-validation/final-race.jsonl",
+      "command": "go test -race -json ./internal/app -run 'Test(PluginDefaultLink|SiteStatistic)' -count=1",
+      "sha256": "b46b287a6a870d3c3d7ed6db5c950faf4fc4f1f1fce3d637991c73ce8e76a066",
+      "bytes": 493576,
+      "exit_code": 1,
+      "top_level_passed": 13,
+      "passed_including_subtests": 84,
+      "failed_entries": [
+        "TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot",
+        "TestSiteStatisticNexusOriginalRequestsActualSDKAndColdSnapshot/coin-last-text-and-exact-class",
+        "TestSiteStatisticNexusOriginalRequestsActualSDKAndColdSnapshot",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:53:04.463903334+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 601.517
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": true
+    },
+    "shared-race": {
+      "path": "work/plugin-default-link-validation/shared-race.jsonl",
+      "command": "go test -timeout 20m -race -json ./internal/app -run 'TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestSiteStatisticRouter|TestPluginSiteStatistic|TestSiteStatisticNoticeAndOnce|TestPluginNoticeRoute' -count=1",
+      "sha256": "c141fa965a8be0533f562504571fbf30a362c9d9c5ddfffbd2b3dd12dd121eb0",
+      "bytes": 217610,
+      "exit_code": 1,
+      "top_level_passed": 31,
+      "passed_including_subtests": 79,
+      "failed_entries": [
+        "TestPluginSiteStatisticLiveThreeSecondCallbackToNotification",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:50:18.271407635+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 403.289
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": false
+    },
+    "shared-modernconly": {
+      "path": "work/plugin-default-link-validation/shared-modernconly.jsonl",
+      "command": "CGO_ENABLED=0 go test -timeout 15m -tags modernconly -json ./internal/app -run 'TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestSiteStatisticRouter|TestPluginSiteStatistic|TestSiteStatisticNoticeAndOnce|TestPluginNoticeRoute' -count=1",
+      "sha256": "e10292dc34152ef0793b4b889034f35a54fc786bd1c71ae1784eae4932395987",
+      "bytes": 221945,
+      "exit_code": 0,
+      "top_level_passed": 32,
+      "passed_including_subtests": 80,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:44:49.223939277+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 126.985
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": false
+    },
+    "serial-union-race": {
+      "path": "work/plugin-default-link-validation/serial-union-race.jsonl",
+      "command": "go test -timeout 30m -race -json ./internal/app -run 'Test(PluginDefaultLink|SiteStatistic)|TestPluginSiteStatistic|TestPluginNoticeRoute' -count=1",
+      "sha256": "c052ddf95decf0168e4c1958abf5cdba39f321ec7eb0ed5606f0490e61814b41",
+      "bytes": 936672,
+      "exit_code": 0,
+      "top_level_passed": 46,
+      "passed_including_subtests": 185,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:15:30.903913817+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1169.952
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": false
+    },
+    "serial-failed-current": {
+      "path": "work/plugin-default-link-validation/serial-failed-current.jsonl",
+      "command": "go test -timeout 10m -race -json ./internal/app -run 'TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot|TestSiteStatisticNexusOriginalRequestsActualSDKAndColdSnapshot/coin-last-text-and-exact-class|TestPluginSiteStatisticLiveThreeSecondCallbackToNotification' -count=1",
+      "sha256": "50d12feffc08b02c0d2269aad4a8cd57ec15170e1c760d94be2278487d4da168",
+      "bytes": 25882,
+      "exit_code": 0,
+      "top_level_passed": 3,
+      "passed_including_subtests": 4,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:53:51.319445189+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 29.221
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": false
+    },
+    "serial-failed-baseline": {
+      "path": "work/plugin-default-link-validation/serial-failed-baseline.jsonl",
+      "command": "go test -overlay work/plugin-default-link-validation/baseline-overlay.json -timeout 10m -race -json ./internal/app -run 'TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot|TestSiteStatisticNexusOriginalRequestsActualSDKAndColdSnapshot/coin-last-text-and-exact-class|TestPluginSiteStatisticLiveThreeSecondCallbackToNotification' -count=1",
+      "sha256": "d7db4d150c7a4f9446cc36b1091ee9793598651f322a0f0693e50847ad4dbd67",
+      "bytes": 25889,
+      "exit_code": 0,
+      "top_level_passed": 3,
+      "passed_including_subtests": 4,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:55:49.082715623+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 31.489
+        }
+      ],
+      "race_detector_warning": false,
+      "total_timeout": false
+    },
+    "vet": {
+      "path": "work/plugin-default-link-validation/vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "command": "go vet ./internal/app",
+      "exit_code": 0
+    },
+    "build": {
+      "path": "work/plugin-default-link-validation/build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "command": "CGO_ENABLED=0 go build -tags modernconly ./cmd/...",
+      "exit_code": 0
+    }
+  },
+  "initial_failures": {
+    "concurrent_runs": [
+      "final-race",
+      "shared-race"
+    ],
+    "failures": [
+      "ExtendedFields: plugin installation context deadline exceeded",
+      "Nexus coin-last-text-and-exact-class: plugin installation PLUGIN_FORM_FAILED",
+      "LiveThreeSecondCallbackToNotification: existing 20-second context deadline exceeded",
+      "final-race: existing default 10-minute package timeout"
+    ],
+    "interpretation": "All three failed test cases passed serially on current source and bb2834 baseline with race enabled; the concurrent failures were not reproduced. No assertion of proven root cause. Full affected union rerun is recorded independently. Only package-level total budget increased; no individual test deadline or code changed."
+  },
+  "baseline_overlay": {
+    "commit": "bb2834c7c1f58ed284521ac4cb59295dbe13664d",
+    "restored": "internal/app/plugin_site_statistic_notice.go from baseline Git object",
+    "excluded_new_files": [
+      "internal/app/plugin_default_link.go",
+      "internal/app/plugin_default_link_test.go"
+    ],
+    "method": "Go -overlay; current files unchanged; new files replaced by package app only"
+  },
+  "not_full_acceptance": [
+    "Full-project pre-existing failures, conditional skips and 40 absent source blobs remain recorded in prior verification reports.",
+    "Build success is not deployable artifact completeness.",
+    "Synthetic sender stubs do not prove real-channel delivery.",
+    "Installed URL implementation version is not frozen. No whole-plugin completion claim."
+  ]
+}

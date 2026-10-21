@@ -20,7 +20,9 @@ CREATE TABLE IF NOT EXISTS plugin_site_statistic_pending(instance_id TEXT PRIMAR
 // This fact is created only by the host from a validated event invocation. SDK
 // JSON supplies only a batch identifier, never a notice, route or source proof.
 type siteStatisticNotice struct {
-	Version                                               int
+	Version int
+	// Present (even when empty) only in v2; omission preserves v1 facts.
+	AppDomain                                             *string `json:",omitempty"`
 	Instance, RunID, RunVersion, InputSHA, Token, BatchID string
 	Generation, Revision                                  int64
 	Config                                                json.RawMessage
@@ -72,6 +74,29 @@ func (a *App) pluginSiteStatisticNotifyHost(ctx context.Context, installation Pl
 
 func siteStatisticEnvelope(n statistic.Notification) (*notice.Envelope, error) {
 	return notice.NewEnvelope(notice.Object{"mtype": "站点", "title": n.Title, "text": n.Text})
+}
+
+// v1 was published without the base-plugin default link. Its accepted bytes
+// remain authoritative; neither replay nor recovery upgrades old facts.
+func siteStatisticNoticeEnvelope(box siteStatisticNotice) (*notice.Envelope, error) {
+	switch box.Version {
+	case 1:
+		if box.AppDomain != nil {
+			return nil, errors.New("legacy statistic notice has frozen domain")
+		}
+		return siteStatisticEnvelope(box.Payload)
+	case 2:
+		if box.AppDomain == nil {
+			return nil, errors.New("statistic notice missing frozen domain")
+		}
+		link, err := sourcePluginDefaultLink(*box.AppDomain, "SiteStatistic", "")
+		if err != nil {
+			return nil, err
+		}
+		return notice.NewEnvelope(notice.Object{"mtype": "站点", "title": box.Payload.Title, "text": box.Payload.Text, "link": link})
+	default:
+		return nil, errors.New("unsupported statistic notice version")
+	}
 }
 
 // Re-read the genuine persisted run and event rather than accepting an
@@ -131,7 +156,11 @@ func (a *App) siteStatisticNoticeSource(ctx context.Context, run PluginRun, mode
 func (a *App) acceptSiteStatisticNoticeTx(ctx context.Context, tx *sql.Tx, box siteStatisticNotice, payload statistic.Notification, at time.Time) (siteStatisticNoticeReceipt, error) {
 	p := a.pluginStore
 	result := siteStatisticNoticeReceipt{Notified: true}
-	env, err := siteStatisticEnvelope(payload)
+	// Freeze configuration at acceptance, never during historical recovery.
+	domain := a.Settings().AppDomain
+	box.Version, box.AppDomain = 2, &domain
+	box.Payload = payload
+	env, err := siteStatisticNoticeEnvelope(box)
 	if err != nil {
 		return result, err
 	}
@@ -154,7 +183,8 @@ func (a *App) acceptSiteStatisticNoticeTx(ctx context.Context, tx *sql.Tx, box s
 	box.CurrentTime = at.Local().Format("2006-01-02 15:04:05")
 	if env.Get("save_history") == true {
 		box.HistoryID = "plugin_notice_" + box.RunID
-		n := Notification{ID: box.HistoryID, Title: payload.Title, Message: a.clean(payload.Text), MType: "站点", CreatedAt: box.CreatedAt}
+		link, _ := env.Get("link").(string)
+		n := Notification{ID: box.HistoryID, Title: payload.Title, Message: a.clean(payload.Text), MType: "站点", Link: link, CreatedAt: box.CreatedAt}
 		box.HistoryDigest = p.noticeID("site-statistic-history-value", n)
 		if err = putCleanupNoticeTx(ctx, tx, n); err != nil {
 			return result, err
@@ -207,14 +237,14 @@ func (p *PluginStore) validateSiteStatisticNotice(ctx context.Context, q pluginR
 		return err
 	}
 	var box siteStatisticNotice
-	if cleanupJournalStrict(raw, &box) != nil || box.Version != 1 || box.DataRevision < 0 || box.Instance != route.Instance || box.Generation != route.Generation || box.Token != route.Token || box.Token != p.noticeID("site-statistic-source", box.Instance, box.Generation, box.RunID, box.Revision, box.InputSHA) || box.Event.Type != "site.refreshed" || box.Event.SiteID != "*" {
+	if cleanupJournalStrict(raw, &box) != nil || (box.Version != 1 && box.Version != 2) || box.DataRevision < 0 || box.Instance != route.Instance || box.Generation != route.Generation || box.Token != route.Token || box.Token != p.noticeID("site-statistic-source", box.Instance, box.Generation, box.RunID, box.Revision, box.InputSHA) || box.Event.Type != "site.refreshed" || box.Event.SiteID != "*" {
 		return invalid
 	}
 	var config builtin.SiteStatisticConfiguration
 	if !pluginStrictJSON(box.Config, &config) || config.Validate() != nil || !config.Enabled || config.NotifyType == "" {
 		return invalid
 	}
-	env, err := siteStatisticEnvelope(box.Payload)
+	env, err := siteStatisticNoticeEnvelope(box)
 	if err != nil {
 		return err
 	}

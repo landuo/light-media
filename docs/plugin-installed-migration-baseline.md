@@ -1,5 +1,7 @@
 # 已安装插件迁移基线
 
+2026-10-21 默认链接补充：SiteStatistic 新通知已复用 AppDomain，并把默认插件链接与站内历史在接受时冻结；旧v1通知不补发、不随设置漂移。采用固定基类片段及公开v2 URL规则的合成对照，未冒称完整安装版URL等价或真实域名迁移。详见 [链接阶段](plugin-site-statistic-default-link.txt) 与 [验证记录](plugin-site-statistic-default-link-verification.json)，正式迁移数仍7/23。
+
 2026-10-21 来源异常分类补充：SiteStatistic 的真实账户采集已对四类固定 oracle 解析异常建立调用级私有来源分类，普通/race 正反例与并发隔离留证；这不是 SystemError/SSE 完整接线，固定 IndexerModule 源码证据仍缺。通知默认插件链接差异另列待补，不计插件正式完成。详见 [分类与边界](plugin-site-statistic-module-failure-classification.txt) 及 [验证记录](plugin-site-statistic-module-failure-verification.json)。
 
 2026-10-21 开发续作：SiteStatistic 已补专属来源绑定的共享通知 Router/持久队列接线，并按精确原版源码修正为通知正常返回后才保存 last_notify；处理中去重、双实例隔离、未知发送不重放与冷恢复终态分别留证。该阶段未部署、未使用真实外发账户，不增加正式完成数，仍为7/23。专项、全项目回归及本机二进制输入限制见 [通知路由说明](plugin-site-statistic-notice-routing.txt) 与 [验证记录](plugin-site-statistic-notice-routing-verification.json)。
