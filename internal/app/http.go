@@ -559,6 +559,16 @@ func (a *App) publicSettings() map[string]any {
 	}
 	m["secret_state"] = secretState
 	m["proxy_endpoint"] = proxyEndpoint
+	// Keep the stored nullable preference distinct from the effective value.
+	// Unrelated settings saves must not turn an inherited source flag into an
+	// explicit user choice merely because the UI displayed it.
+	policy, err := a.sourceSiteMessagePolicy(context.Background(), c)
+	if err != nil {
+		m["effective_read_site_messages"] = nil
+		m["read_site_messages_error"] = "站点消息设置无法确认，请检查迁移数据；站点刷新已停止读取消息"
+	} else {
+		m["effective_read_site_messages"] = policy.enabled
+	}
 	return m
 }
 

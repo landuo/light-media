@@ -38,10 +38,18 @@ async function load() {
   form.value.tmdb ||= { api_key: '', access_token: '' };
   form.value.fnos ||= { host: '', username: '', password: '', enabled: false };
   form.value.site_data_refresh_hours ??= 6;
-  form.value.read_site_messages ??= true;
+  form.value.read_site_messages = displayedReadMessages(form.value);
   logging.value = await api('/settings/logging');
 }
+function displayedReadMessages(settings: any) {
+  if (settings.read_site_messages_error) return settings.read_site_messages;
+  return settings.effective_read_site_messages ?? settings.read_site_messages ?? true;
+}
 async function save(section: 'tmdb' | 'fnos' | 'site') {
+  if (section === 'site' && form.value.read_site_messages_error) {
+    toast(form.value.read_site_messages_error, true);
+    return false;
+  }
   saving.value = true;
   try {
     // Downloaders and directories have their own save actions. Read current
@@ -70,7 +78,8 @@ async function save(section: 'tmdb' | 'fnos' | 'site') {
       if (section === 'fnos') form.value.fnos = result.fnos;
       if (section === 'site') {
         form.value.site_data_refresh_hours = result.site_data_refresh_hours ?? 6;
-        form.value.read_site_messages = result.read_site_messages ?? true;
+        form.value.read_site_messages_error = result.read_site_messages_error;
+        form.value.read_site_messages = displayedReadMessages(result);
       }
       return true;
     }
@@ -198,13 +207,15 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
           >
           <VSwitch
             v-model="form.read_site_messages"
+            :disabled="!!form.read_site_messages_error"
             label="阅读站点消息"
             color="primary"
             hide-details
           />
         </div>
+        <p v-if="form.read_site_messages_error" class="error" role="alert">{{ form.read_site_messages_error }}</p>
         <div class="button-row">
-          <button class="primary" :disabled="saving" @click="save('site')">保存</button>
+          <button class="primary" :disabled="saving || !!form.read_site_messages_error" @click="save('site')">保存</button>
         </div>
       </section>
       <section class="panel">

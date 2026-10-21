@@ -304,13 +304,26 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 		snapshot.SourceOutcome = "none"
 	}
 	var observed sites.UserStats
-	messageOption := siteMessagesEnabled(a.Settings())
+	readPolicy := func(ctx context.Context) (siteMessagePolicy, error) {
+		if hooks == nil {
+			return siteMessagePolicy{enabled: siteMessagesEnabled(a.Settings())}, nil
+		}
+		return a.sourceSiteMessagePolicy(ctx, a.Settings())
+	}
+	messageOption, policyErr := readPolicy(ctx)
+	if policyErr != nil {
+		return siteSnapshot{}, policyErr
+	}
 	// The existing site-card endpoint is a connection test. Only real refresh
 	// jobs and the plugin refresh API may read/mark messages, as in MoviePilot.
-	readMessages := messageOption && hooks != nil
+	readMessages := messageOption.enabled && hooks != nil
 	e = a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error {
 		client.AddRequestGuard(func(requestCtx context.Context) error {
-			if messageOption != siteMessagesEnabled(a.Settings()) {
+			currentPolicy, policyErr := readPolicy(requestCtx)
+			if policyErr != nil {
+				return policyErr
+			}
+			if messageOption != currentPolicy {
 				return bad("SITE_MESSAGE_SETTINGS_CHANGED", "站点消息设置已变化，请重新刷新")
 			}
 			if hooks != nil && hooks.RequestGuard != nil {
@@ -350,7 +363,11 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	current, err := a.siteForRequest(ctx, key)
-	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey || messageOption != siteMessagesEnabled(a.Settings()) {
+	currentPolicy, policyErr := readPolicy(ctx)
+	if policyErr != nil {
+		return siteSnapshot{}, policyErr
+	}
+	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey || messageOption != currentPolicy {
 		return siteSnapshot{}, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)

@@ -21,7 +21,7 @@ function nodeText(node) {
   return nodeText(node.children);
 }
 
-async function mount(t, result) {
+async function mount(t, result, initial = {}) {
   let settings = {
     tmdb: { api_key: '', access_token: '' },
     fnos: {
@@ -32,6 +32,7 @@ async function mount(t, result) {
     },
     secret_state: { fnos: true },
     sites: [],
+    ...initial,
   };
   const fixture = { requests: [], toasts: [], failSave: false, result },
     mounted = [],
@@ -133,6 +134,11 @@ async function mount(t, result) {
     resultMessage() {
       return nodes().find((node) => node.props?.role === 'status');
     },
+    readMessages() {
+      return nodes().find(
+        (node) => node.type === 'source-switch' && node.props?.label === '阅读站点消息',
+      );
+    },
     async saveReadMessages(value) {
       const field = nodes().find(
         (node) => node.type === 'source-switch' && node.props?.label === '阅读站点消息',
@@ -151,6 +157,34 @@ async function mount(t, result) {
     },
   };
 }
+
+test('inherited source false is displayed without changing the nullable preference on an unrelated save', async (t) => {
+  const app = await mount(t, { status: 'passed' }, {
+    read_site_messages: null,
+    effective_read_site_messages: false,
+  });
+  assert.equal(app.readMessages().props.modelValue, false);
+  await app.testConnection();
+  const request = app.fixture.requests.find((r) => r.path === '/settings' && r.method === 'PUT');
+  assert.equal(request.body.read_site_messages, null);
+  await app.saveReadMessages(true);
+  assert.equal(app.fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT').at(-1).body.read_site_messages, true);
+});
+
+test('an unconfirmed source setting stays unknown, disables its switch and cannot be silently saved as true', async (t) => {
+  const message = '站点消息设置无法确认，请检查迁移数据；站点刷新已停止读取消息';
+  const app = await mount(t, {}, {
+    read_site_messages: null,
+    effective_read_site_messages: null,
+    read_site_messages_error: message,
+  });
+  assert.equal(app.readMessages().props.modelValue, null);
+  assert.equal(app.readMessages().props.disabled, true);
+  assert.ok(app.nodes().some((node) => node.props?.role === 'alert' && nodeText(node) === message));
+  await app.saveReadMessages(true);
+  assert.equal(app.fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT').length, 0);
+  assert.deepEqual(app.fixture.toasts.at(-1), { message, error: true });
+});
 
 test('the source read-site-messages switch saves explicit false and true with the site interval', async (t) => {
   const app = await mount(t, {});

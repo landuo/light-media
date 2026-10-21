@@ -1,0 +1,361 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "7d51281d84ffad8e2983e0f6e40ba42b3069ffda",
+  "state": "Go_site_message_source_default_import_and_effective_UI_verified_not_plugin_completion",
+  "production_version": "0.4.8",
+  "formal_migrated_instances": 7,
+  "remaining_instances": 16,
+  "deployed": false,
+  "production_settings_imported": false,
+  "real_handoffs": 0,
+  "real_site_message_reads_or_writes": 0,
+  "python_product_runtime_added": false,
+  "source_reference": {
+    "cases": 14,
+    "producer_sha256": "0d1020215c3187d16580fcff7a4f207bf1e75a06a75ab4b34902bf99216d36f6",
+    "oracle_sha256": "2ee408ed7c98a36618aae69961eb2b83b8c7d5d89e2a41ef38f654b2d19479ce",
+    "mode": "AST selected source bool derivation, no original App import/Settings constructor/env writer",
+    "live_original_process_settings_proven": false
+  },
+  "actual_source_validation": {
+    "state": "actual_cold_selected_input_validated_not_imported",
+    "original_identity_unchanged": true,
+    "captures_equal": true,
+    "original_config_unchanged": true,
+    "original_app_imports": 0,
+    "original_settings_constructors": 0,
+    "audit": {
+      "denied_writes": 0,
+      "denied_network": 0,
+      "denied_processes": 0
+    },
+    "source_mode": "selected_installed_cold_site_message_not_live_cache",
+    "selected_boolean": true,
+    "normalization_fields": [],
+    "source_hashes": {
+      "/app/app/core/config.py": "f19111073a7ef25ecd0b7e9d53dab343d76fe64ff3ad821f4ff39a790c104033",
+      "/app/app/utils/system.py": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db"
+    },
+    "env_sha256": "879e4ce8fdd6a544e61f63f6c0db95aa129f9bee68d8b8e7e930d202036b1c98",
+    "producer_sha256": "0d1020215c3187d16580fcff7a4f207bf1e75a06a75ab4b34902bf99216d36f6",
+    "native_cli_sha256": "dd2b24b229f8ce2dc7c63f5cec134d41c2497ec1a80055f681403c366c15fd13",
+    "native_validations": [
+      {
+        "state": "validated",
+        "source_mode": "selected_installed_cold_site_message_not_live_cache",
+        "records": 1,
+        "writes": 0,
+        "jobs_queued": 0,
+        "external_calls": 0
+      },
+      {
+        "state": "validated",
+        "source_mode": "selected_installed_cold_site_message_not_live_cache",
+        "records": 1,
+        "writes": 0,
+        "jobs_queued": 0,
+        "external_calls": 0
+      }
+    ],
+    "target_opened": false,
+    "private_configuration_saved": false,
+    "migrated": false
+  },
+  "checks": {
+    "normal-nexus": {
+      "top_pass": 1,
+      "inclusive_pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "eaa19759d47624d72c4f73862b401632b235d39d18aed6aece20e7e5d4b53979"
+    },
+    "normal-mteam": {
+      "top_pass": 2,
+      "inclusive_pass": 25,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "d2524b5ce134e0bbe19fd3a8dcdfb877a1f6ebba15e857117026540f92cf6384"
+    },
+    "normal-rousi": {
+      "top_pass": 1,
+      "inclusive_pass": 32,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "ff3e143f1c7c6ec6f1120fe5a9a1aac6bbc86fd8c0b3661f26c8c19e6c536c69"
+    },
+    "normal-remaining": {
+      "top_pass": 73,
+      "inclusive_pass": 222,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "201f72dd933cfd2046c8f990579c93fe14b0245ecc410722ba7ad0a232b958e0"
+    },
+    "cli-normal": {
+      "top_pass": 2,
+      "inclusive_pass": 10,
+      "sha256": "a98fe9cd499aab248c3cd52054605a62c1bd333dd61aa29e47854d1b6fc350b2"
+    },
+    "race-nexus": {
+      "top_pass": 1,
+      "inclusive_pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "7c8bfd8942eceb42cb184175bed761c247ab0a0f4c5f1b4079847e3fa8f938af"
+    },
+    "race-mteam": {
+      "top_pass": 2,
+      "inclusive_pass": 25,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "95ca32bc16e7e27f7707900738d36aeb575e6d16d10050e116679e8888ff9b91"
+    },
+    "race-rousi": {
+      "top_pass": 1,
+      "inclusive_pass": 32,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "80740e34e37842829ee35bec720126abbe15cc626575b855ac0d7d682740ecd1"
+    },
+    "race-remaining": {
+      "top_pass": 73,
+      "inclusive_pass": 222,
+      "fail": 0,
+      "skip": 0,
+      "race_reports": 0,
+      "sha256": "6df93144fd3c8693a78ae1cadd518dbc3d12ace480a44dc99ae6f1c8b87f0c49"
+    },
+    "cli-race": {
+      "top_pass": 2,
+      "inclusive_pass": 10,
+      "sha256": "a385d578724d22a9c3a9999078f304668199faa4fb169b57acde8e700e66461d"
+    }
+  },
+  "builds": {
+    "normal": [
+      {
+        "name": "app",
+        "exit": 0
+      },
+      {
+        "name": "source-settings-migrate-owned",
+        "exit": 0
+      },
+      {
+        "name": "source-settings-migrate-owned-cli",
+        "exit": 0
+      },
+      {
+        "name": "site-message-settings-migrate-owned",
+        "exit": 0
+      },
+      {
+        "name": "site-message-settings-migrate-owned-cli",
+        "exit": 0
+      },
+      {
+        "name": "web",
+        "exit": 0
+      },
+      {
+        "name": "vet",
+        "exit": 0
+      },
+      {
+        "name": "modules",
+        "exit": 0
+      }
+    ],
+    "race": [
+      {
+        "name": "app-race",
+        "exit": 0
+      },
+      {
+        "name": "source-settings-migrate-owned-race",
+        "exit": 0
+      },
+      {
+        "name": "source-settings-migrate-owned-race-cli",
+        "exit": 0
+      },
+      {
+        "name": "site-message-settings-migrate-owned-race",
+        "exit": 0
+      },
+      {
+        "name": "site-message-settings-migrate-owned-race-cli",
+        "exit": 0
+      }
+    ],
+    "linux": [
+      {
+        "name": "app-linux",
+        "exit": 0
+      },
+      {
+        "name": "source-settings-migrate-owned-linux",
+        "exit": 0
+      },
+      {
+        "name": "source-settings-migrate-owned-linux-cli",
+        "exit": 0
+      },
+      {
+        "name": "site-message-settings-migrate-owned-linux",
+        "exit": 0
+      },
+      {
+        "name": "site-message-settings-migrate-owned-linux-cli",
+        "exit": 0
+      },
+      {
+        "name": "server-linux",
+        "exit": 0
+      },
+      {
+        "name": "server-linux-modernconly",
+        "exit": 0
+      }
+    ]
+  },
+  "frontend": {
+    "tests": 171,
+    "pass": 171,
+    "fail": 0,
+    "build_exit": 0,
+    "test_log_sha256": "37ed07bf70d7174d7f7a28b7d40c7a29c893ecea207e1defd7f0f83b0dc51272",
+    "build_log_sha256": "4abe8a59c50457f18f73ce0d5eb2c19b2b5f5731ce88855b4145efadc6bb9388",
+    "exact_built_assets_in_frozen_inputs": true,
+    "browser_visual_acceptance_claimed": false
+  },
+  "nas": {
+    "state": "passed_owned_linux_synthetic",
+    "scope": "owned synthetic Go offline settings import, cold policy, actual SDK revocation, CLI; no real sites/downloader/media",
+    "network": "none",
+    "created_container": "light-media-site-message-settings-207c5cadce9044ef8f34838243b265a0",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/site-message-settings-207c5cadce9044ef8f34838243b265a0",
+    "runs": [
+      {
+        "exit": 0,
+        "top_pass": 12,
+        "inclusive_pass": 83,
+        "fail": 0,
+        "sha256": "3cf75c1f641b89751bfe20ac9f1c01b2ee6e3915a4f98f0026ea2d180cf3f50d"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "633903794e3656bcf0293d4c766230db93fd7b2cde7b409873abdddbad059340",
+      "cli.test": "4a35d288b2e068ebda6f08d70546d038643b7b0aec060696136e6ec406b316ff"
+    },
+    "container_id": "b1f82c5edabf60869cb4fc996cdd96bcc89aac776883cdd4cec8b692cfd58562",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "pid": 0,
+      "network": "none",
+      "memory_limit": 536870912,
+      "cpu_limit": 1000000000
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "production_hashes_unchanged": true,
+    "elapsed_seconds": 17.65
+  },
+  "independent_cleanup": {
+    "exact_cid_absent": true,
+    "exact_name_absent": true,
+    "owned_volume_prefix_absent": true,
+    "owned_directory_absent": true
+  },
+  "drift": {
+    "frozen_source_files": 5194,
+    "resolved_compiler_inputs": 6042,
+    "source": 0,
+    "compiler": 0,
+    "product": 0,
+    "complete_compiler_system_headers_linker_closure_claimed": false
+  },
+  "source_manifest_sha256": "ff344732211dee3b943e7b579375aa1ea9dda21241a7d90f3325a369fd65430e",
+  "compiler_manifest_sha256": "3173b22b7ca9f92186a782c89908746759ec987159822612396aa4d357f11b01",
+  "privacy": {
+    "actual_config_fields_selected": [
+      "CONFIG_DIR",
+      "SITE_MESSAGE"
+    ],
+    "actual_env_body_or_credentials_saved": false,
+    "private_full_payload_saved": false,
+    "common_credential_format_scan_files": 2806,
+    "scan_passed": true,
+    "no_vault_or_unrelated_credentials_read": true
+  },
+  "retained_failures": [
+    "r1 import-initial: test undefined stringBool; fixed strconv.FormatBool and required synthetic job columns.",
+    "r1 sdk-initial selector omitted new test suffix, only3 older tests ran; excluded from new SDK completion claim.",
+    "r1 sdk-actual-initial:4normal cases passed; revocation/corrupt-proof expected succeeded incorrectly. Kept rejection behavior, corrected test to require failed/no publication/no subsequent message IO."
+  ],
+  "remaining": [
+    "Source helper/catalog/schema/alias context formal Go integration.",
+    "SystemError/site messages/statistic complete producers and routed channels.",
+    "Final complete-plugin review, source execution handoff and production migration; remaining16instances."
+  ],
+  "notes": [
+    "Native nil preference remains nil on unrelated settings saves; effective value is a separate projection.",
+    "No broad/full-repository test or real user site acceptance claim.",
+    "Actual source cold flag true is metadata, not evidence of a live Python cache or successful network operation."
+  ]
+}
