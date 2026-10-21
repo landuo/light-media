@@ -69,7 +69,7 @@ func (j *StateJournal) Start(ctx context.Context, b Binding, id, action string, 
 			if old.Scope != b.Scope {
 				return ErrStale
 			}
-			if old.Phase != "completed" && s.ActiveRun != id {
+			if old.Phase != "completed" && old.Phase != "failed_source" && s.ActiveRun != id {
 				return ErrConflict
 			}
 			if old.Action != action || !bytes.Equal(old.Plan, plan) {
@@ -91,6 +91,9 @@ func (j *StateJournal) Start(ctx context.Context, b Binding, id, action string, 
 }
 
 func (j *StateJournal) Apply(ctx context.Context, b Binding, e Effect) (Entry, error) {
+	if sourceKind(e.Kind) {
+		return Entry{}, ErrConflict
+	}
 	var out Entry
 	err := j.backend.Update(ctx, b, func(s *State) error {
 		run, err := getRun(s, b, e.RunID)
@@ -127,6 +130,9 @@ func (j *StateJournal) Apply(ctx context.Context, b Binding, e Effect) (Entry, e
 }
 
 func (j *StateJournal) BeginNetwork(ctx context.Context, b Binding, n NetworkIntent) (Entry, bool, error) {
+	if sourceKind(n.Kind) {
+		return Entry{}, false, ErrConflict
+	}
 	var out Entry
 	replay := false
 	err := j.backend.Update(ctx, b, func(s *State) error {
@@ -172,6 +178,9 @@ func (j *StateJournal) BeginNetwork(ctx context.Context, b Binding, n NetworkInt
 }
 
 func (j *StateJournal) CompleteNetwork(ctx context.Context, b Binding, n NetworkIntent, value json.RawMessage, knownError string) error {
+	if sourceKind(n.Kind) {
+		return ErrConflict
+	}
 	return j.backend.Update(ctx, b, func(s *State) error {
 		run, err := getRun(s, b, n.RunID)
 		if err != nil {
@@ -193,6 +202,9 @@ func (j *StateJournal) CompleteNetwork(ctx context.Context, b Binding, n Network
 }
 
 func (j *StateJournal) Unknown(ctx context.Context, b Binding, n NetworkIntent) error {
+	if sourceKind(n.Kind) {
+		return ErrConflict
+	}
 	return j.backend.Update(ctx, b, func(s *State) error {
 		run, err := getRun(s, b, n.RunID)
 		if err != nil {
@@ -264,7 +276,7 @@ func (j *StateJournal) Reconcile(ctx context.Context, b Binding, runID, lane str
 			return ErrConflict
 		}
 		old, exists, err := at(run, lane, index)
-		if err != nil || !exists || old.Phase != "uncertain" {
+		if err != nil || !exists || sourceKind(old.Kind) || old.Phase != "uncertain" {
 			return ErrConflict
 		}
 		old.Phase = "receipt"

@@ -78,6 +78,7 @@ type App struct {
 	pluginProcessStats      pluginProcessSnapshotter
 	pluginServerStatus      pluginServerStatusRuntime
 	pluginRemoveLink        pluginRemoveLinkRuntime
+	pluginAutoSignIn        pluginAutoSignInRuntime
 	pluginScrapeClean       pluginScrapeCleanRuntime
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime
@@ -224,6 +225,7 @@ func (a *App) Close() error {
 	a.closeSubscriptionStatisticsHTTP()
 	a.stopScrapeFileCleanPlugins()
 	a.stopRemoveLinkPlugins()
+	a.stopAutoSignInPlugins()
 	a.stopCleanInvalidSeedPlugins()
 	if a.cancel != nil {
 		a.stopMediaRefreshPlugins()

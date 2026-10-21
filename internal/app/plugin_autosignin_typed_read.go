@@ -424,6 +424,11 @@ func (b *pluginAutoSignInTypedBackend) ReadRunStartHead(ctx context.Context, bin
 			return e
 		}
 		if !cell.Exists {
+			runKeys, readErr := p.collectionKeysTx(ctx, tx, "run.head")
+			if readErr != nil {
+				return readErr
+			}
+			out.Fresh = len(runKeys) == 0 && p.meta.RuntimeEpoch == "" && p.meta.ActiveRun == ""
 			for _, pair := range []struct {
 				name string
 				dst  *json.RawMessage

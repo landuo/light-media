@@ -58,6 +58,9 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	if err != nil {
 		return nil, seedhost.ErrUnknown
 	}
+	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
+		return nil, err
+	}
 	if ordinal < r.Count {
 		s := steps[ordinal]
 		if s.Kind != kind || s.InputSHA != inputSHA {
@@ -123,11 +126,17 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	if r.Count != d.cursor {
 		return seedhost.ErrUnknown
 	}
+	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
+		return err
+	}
 	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
 		return err
 	}
 	r.Complete = true
 	r.SourceError = sourceNoticeError(sourceErr)
+	if err = d.a.pluginStore.finishAutoSignInNoticeTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
+		return seedhost.ErrUnknown
+	}
 	if err = d.a.pluginStore.finishRemoveLinkSourceTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
 		return seedhost.ErrUnknown
 	}
@@ -169,6 +178,17 @@ func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
 	initial, _, err := a.pluginStore.readNoticeRoute(ctx, a.Store.DB, id)
 	if err != nil {
 		return seedhost.ErrUnknown
+	}
+	if initial.Kind == "auto_signin" {
+		tx, guardErr := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if guardErr != nil {
+			return seedhost.ErrUnknown
+		}
+		guardErr = a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, initial)
+		_ = tx.Rollback()
+		if guardErr != nil {
+			return seedhost.ErrUnknown
+		}
 	}
 	if initial.Complete {
 		if initial.SourceError != "" {
@@ -224,7 +244,10 @@ func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
 	router := notice.Router{Dependencies: notice.Dependencies{
 		Superuser: superuser,
 		SaveHistory: func(_ context.Context, v notice.Object) error {
-			_, err := d.step(ctx, "history", v, func(_ *sql.Tx, r pluginNoticeRoute, _ int) (any, error) {
+			_, err := d.step(ctx, "history", v, func(tx *sql.Tx, r pluginNoticeRoute, _ int) (any, error) {
+				if r.Kind == "auto_signin" {
+					return a.pluginStore.autoSignInNoticeHistoryTx(ctx, tx, r, v)
+				}
 				if r.HistoryID == "" || !bytes.Equal(mustCleanSeedJSON(v), r.Envelope) {
 					return nil, seedhost.ErrUnsafe
 				}

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/autosignin"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/remoteidentifiers"
 	"light-media/internal/plugins/removelink"
@@ -369,7 +370,7 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginRunHistory(ctx, installation.InstanceID)
 	case parts[1] == "config" && r.Method == "PUT":
-		if !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" && installation.PluginID != "LarkMessager" {
+		if installation.PluginID != "AutoSignIn" && !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" && installation.PluginID != "LarkMessager" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -483,6 +484,12 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "AutoSignIn":
+		var config autosignin.Object
+		if autosignin.Decode(raw, &config) != nil || config == nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "签到配置必须为有效对象")
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "CloudflareSpeedTest":
 		if _, e := cloudflareConfig(raw); e != nil {
 			return nil, e

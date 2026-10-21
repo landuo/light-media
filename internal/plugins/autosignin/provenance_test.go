@@ -28,6 +28,30 @@ func TestFormalSourceAndOriginalReferenceIntegrity(t *testing.T) {
 	if json.Unmarshal(raw, &manifest) != nil || manifest.Version != 1 || len(manifest.Files) != 65 || len(manifest.Fixtures) != 35 {
 		t.Fatal("formal input inventory incomplete")
 	}
+	// The original promotion remains immutable; reviewed host/source-boundary
+	// changes are explicit amendments, never replacements for installed fixtures.
+	amendmentRaw, err := readAutoSignInFixture("host-source-manifest.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	amendmentSum := sha256.Sum256(amendmentRaw)
+	if hex.EncodeToString(amendmentSum[:]) != "3d7ee2ea024298cf94caf1367f7a3b3bbb4fd3a83c472ea0ac6f3d44c8292989" {
+		t.Fatal("host source amendment changed without review")
+	}
+	var amendment struct {
+		Version            int
+		BaseManifestSHA256 string `json:"base_manifest_sha256"`
+		Files              map[string]string
+	}
+	if json.Unmarshal(amendmentRaw, &amendment) != nil || amendment.Version != 1 || amendment.BaseManifestSHA256 != hex.EncodeToString(sum[:]) || len(amendment.Files) == 0 {
+		t.Fatal("host source amendment incomplete")
+	}
+	for name, digest := range amendment.Files {
+		if _, fixture := manifest.Fixtures[name]; fixture {
+			t.Fatal("host amendment cannot replace installed fixture", name)
+		}
+		manifest.Files[name] = digest
+	}
 	for _, files := range []map[string]string{manifest.Files, manifest.Fixtures} {
 		for name, want := range files {
 			raw, err := os.ReadFile(filepath.Join("..", "..", "..", name))

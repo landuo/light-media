@@ -161,3 +161,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21：肉丝 RousiPro 单独以 Go 实现账户资料和 Token 消息流程，原版参考采集扩至 31 场景；补原生搜索/签名种子材料获取、API-only 导入和站点 Token 编辑/在途撤销。直接协议、实际插件 SDK、冷恢复及隔离 NAS 分别验证；原生搜索/下载为自有合成协议验证，未访问用户站点或下载器，未部署。详细边界见 `plugin-site-rousi-account-flow.txt` 与验证 JSON；仍为 7/23，不能把本项算作 SiteStatistic 整体迁移完成。
 
 2026-10-21：原版 SITE_MESSAGE 的独立加密迁移、父快照完整性、原生显式选择优先、页面实际值投影及逐请求撤销保护，见[说明](plugin-site-message-settings.txt)与[逐项验证](plugin-site-message-settings-verification.json)。实际来源只做冷推导与 stdin 校验，NAS 使用独占合成业务；未部署、未迁移生产开关，完整插件正式完成仍 7/23。
+
+2026-10-21：AutoSignIn 2.9.14 接入实际 SDK 宿主、分身 owner/历史/调度、原生事件及命令、逐请求撤销和同步通知/事件独立回执，见[说明](plugin-auto-signin-host-source.txt)与[验证](plugin-auto-signin-host-source-verification.json)。完整 App 保留 8 项已确认基线失败；受影响普通/race/modernconly、核心和构建分别计证。Browser/OCR、Tjupt 图像能力和拆分/SOCKS 代理等代码仍待补齐；未迁移真实账户或部署，正式完成仍 7/23。

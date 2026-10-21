@@ -31,6 +31,9 @@ type pluginAPIScope struct {
 	Method    string             `json:"method"`
 	RequestID string             `json:"request_id"`
 	Authority pluginAPIAuthority `json:"authority"`
+	// Only the host can mint these from the original observed query values.
+	// They remain inside encrypted api_scope, never worker HTTPRequest.
+	CredentialProofs map[string]string `json:"credential_proofs,omitempty"`
 }
 type pluginHTTPFailure struct {
 	Status int
@@ -197,6 +200,7 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		return true
 	}
 	missing := []map[string]any{}
+	credentialProofs := map[string]string{}
 	input := plugins.HTTPRequest{RequestID: w.Header().Get("X-Request-ID"), Key: api.Key, Method: r.Method, Path: endpoint, Params: params, Query: map[string][]string{}, CredentialMatches: map[string]bool{}, Headers: map[string]string{}}
 	for key, values := range query {
 		input.Query[key] = slices.Clone(values)
@@ -212,6 +216,9 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 				value = values[len(values)-1]
 			}
 			input.CredentialMatches[parameter.Name] = apiKeyEqual(value, a.Settings().APIToken)
+			if api.Auth == "anonymous" && input.CredentialMatches[parameter.Name] {
+				credentialProofs[parameter.Name] = a.pluginAPIKeyProof(value)
+			}
 			delete(input.Query, parameter.Name)
 		}
 	}
@@ -253,7 +260,7 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		return true
 	}
 	a.pluginMu.Lock()
-	run, err := a.enqueuePluginHTTP(r.Context(), installation, input, pluginAPIScope{Key: api.Key, Method: r.Method, RequestID: w.Header().Get("X-Request-ID"), Authority: authority})
+	run, err := a.enqueuePluginHTTP(r.Context(), installation, input, pluginAPIScope{Key: api.Key, Method: r.Method, RequestID: w.Header().Get("X-Request-ID"), Authority: authority, CredentialProofs: credentialProofs})
 	a.pluginMu.Unlock()
 	if err == nil {
 		if installation.PluginID == "BrushFlowLanduo" && installation.Version == "5.2.15" {
@@ -329,6 +336,25 @@ func (a *App) enqueuePluginHTTP(ctx context.Context, installation PluginInstalla
 	if err = a.validatePluginHTTPAuthorityTx(ctx, tx, scope.Authority); err != nil {
 		return PluginRun{}, err
 	}
+	if scope.Authority.Kind == "anonymous" {
+		manifest, _, ok := builtin.Lookup(installation.PluginID)
+		if ok && manifest.Version == installation.Version {
+			for _, api := range manifest.APIs {
+				if api.Auth != "anonymous" || api.Key != scope.Key || !pluginHTTPHasQueryCredential(api) {
+					continue
+				}
+				params, route := api.Match(input.Path)
+				if input.Key != scope.Key || input.Method != scope.Method || input.RequestID != scope.RequestID || !slices.Contains(api.Methods, scope.Method) || !route || !maps.Equal(params, input.Params) {
+					return PluginRun{}, bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据与编译路由不一致")
+				}
+				if err = a.validatePluginHTTPQueryCredentials(api, input, scope); err != nil {
+					return PluginRun{}, err
+				}
+				break
+			}
+		}
+	}
+
 	raw, err := json.Marshal(input)
 	if err != nil {
 		return PluginRun{}, err
@@ -347,6 +373,56 @@ func (a *App) enqueuePluginHTTP(ctx context.Context, installation PluginInstalla
 	}
 	return run, tx.Commit()
 }
+
+// Anonymous source APIs may inspect a key and return their own failure body.
+// A frozen true is not lasting authority: its original keyed proof must still
+// match the live token at admission and every subsequent native IO boundary.
+func pluginHTTPHasQueryCredential(api plugins.HTTPAPI) bool {
+	for _, parameter := range api.Query {
+		if parameter.Kind == "api_key" {
+			return true
+		}
+	}
+	return false
+}
+
+func (a *App) validatePluginHTTPQueryCredentials(api plugins.HTTPAPI, request plugins.HTTPRequest, scope pluginAPIScope) error {
+	if api.Auth != "anonymous" || !pluginHTTPHasQueryCredential(api) {
+		return nil
+	}
+	declared := map[string]bool{}
+	for _, parameter := range api.Query {
+		if parameter.Kind == "api_key" {
+			declared[parameter.Name] = true
+		}
+	}
+	for name := range scope.CredentialProofs {
+		if !declared[name] || !request.CredentialMatches[name] {
+			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据证明与请求不一致")
+		}
+	}
+	token := a.Settings().APIToken
+	for name, matched := range request.CredentialMatches {
+		if !declared[name] {
+			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据未声明")
+		}
+		if _, exposed := request.Query[name]; exposed {
+			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据未隔离")
+		}
+		if !matched {
+			continue
+		}
+		proof := scope.CredentialProofs[name]
+		if proof == "" {
+			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据缺少原始宿主证明")
+		}
+		if token == "" || !hmac.Equal([]byte(proof), []byte(a.pluginAPIKeyProof(token))) {
+			return bad("PLUGIN_API_AUTH_REVOKED", "插件API凭据已变化或失效")
+		}
+	}
+	return nil
+}
+
 func (a *App) validatePluginHTTPAuthorityTx(ctx context.Context, tx *sql.Tx, authority pluginAPIAuthority) error {
 	switch authority.Kind {
 	case "anonymous":
@@ -374,7 +450,7 @@ func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run Plugi
 		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API执行输入无效")
 	}
 	var pluginID string
-	err := tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.version=? AND r.version=i.version AND r.state IN ('pending','running','succeeded') AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND (v.revision=c.config_revision OR (i.plugin_id='SeedRescue' AND i.version='1.6.3') OR (i.plugin_id='BrushFlowLanduo' AND i.version='5.2.15'))`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed, &pluginID)
+	err := tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.version=? AND r.version=i.version AND r.state IN ('pending','running','succeeded') AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND (v.revision=c.config_revision OR (i.plugin_id='SeedRescue' AND i.version='1.6.3') OR (i.plugin_id='BrushFlowLanduo' AND i.version='5.2.15') OR (i.plugin_id='AutoSignIn' AND i.version='2.9.14'))`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed, &pluginID)
 	if err != nil && a.pluginStore.isCloudflareRun(ctx, tx, run) {
 		revision, proofErr := a.pluginStore.cloudflareAPIRevisionTx(ctx, tx, run)
 		if proofErr == nil {
@@ -383,6 +459,15 @@ func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run Plugi
 	}
 	if err != nil {
 		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API执行未获得宿主授权")
+	}
+	if pluginID == "AutoSignIn" && run.Version == "2.9.14" {
+		handled, proofErr := a.pluginStore.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision)
+		if proofErr != nil {
+			return request, proofErr
+		}
+		if !handled {
+			return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API配置授权链无效")
+		}
 	}
 	if pluginID == "BrushFlowLanduo" && run.Version == "5.2.15" {
 		if err = a.brushFlowHTTPRevisionTx(ctx, tx, run); err != nil {
@@ -403,6 +488,7 @@ func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run Plugi
 	}
 	manifest, _, available := builtin.Lookup(pluginID)
 	authorized := false
+	var queryAPI *plugins.HTTPAPI
 	if available && manifest.Version == run.Version {
 		for _, api := range manifest.APIs {
 			if api.Key != scope.Key || !slices.Contains(api.Methods, scope.Method) {
@@ -413,10 +499,20 @@ func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run Plugi
 				continue
 			}
 			authorized = api.Auth == "anonymous" && scope.Authority.Kind == "anonymous" || api.Auth == "apikey" && scope.Authority.Kind == "key" || api.Auth == "bear" && slices.Contains([]string{"key", "session"}, scope.Authority.Kind)
+			if authorized {
+				copy := api
+				queryAPI = &copy
+				break
+			}
 		}
 	}
 	if !authorized {
 		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API未声明当前路由、方法或鉴权方式")
+	}
+	if queryAPI != nil {
+		if err = a.validatePluginHTTPQueryCredentials(*queryAPI, request, scope); err != nil {
+			return request, err
+		}
 	}
 	return request, a.validatePluginHTTPAuthorityTx(ctx, tx, scope.Authority)
 }

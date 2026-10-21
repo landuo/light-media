@@ -62,6 +62,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 		return "identifiers.refresh", raw, nil
 	}
 
+	if in.PluginID == "AutoSignIn" && in.Version == "2.9.14" {
+		return autoSignInDeferredSpec(run)
+	}
 	if in.PluginID == "LarkMessager" && in.Version == "0.9.1" {
 		return larkDeferredSpec(run)
 	}
@@ -205,6 +208,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 		return r.ErrorCode == transferSourceFailed && transferResultErrorCode(r.Result) == r.ErrorCode
 	}
 
+	if r.Plugin == "AutoSignIn" && r.Version == "2.9.14" {
+		return r.ErrorCode == autoSignInSourceFailed && json.Valid(r.Result)
+	}
 	if r.Plugin == "LarkMessager" && r.Version == "0.9.1" {
 		return r.ErrorCode == "LARK_SOURCE_FAILED" && json.Valid(r.Result)
 	}
@@ -457,6 +463,12 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 		return err
 	}
 	if current != 1 {
+		if r.Plugin == "AutoSignIn" && r.Version == "2.9.14" {
+			handled, proofErr := p.autoSignInScheduleAdmissionTx(ctx, tx, r.Instance, r.Generation, r.Revision)
+			if handled && proofErr == nil {
+				return nil
+			}
+		}
 		if r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" && r.Phase == "started" {
 			if err = p.brushFlowAcceptedRevisionTx(ctx, tx, r, run); err == nil {
 				return nil
@@ -613,6 +625,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 			if knownCode != "" {
 				phase, code = "terminal_failed", knownCode
 				err = bad(code, "自动备份执行失败，已保留确认结果")
+			}
+		}
+	}
+	if d.record.Plugin == "AutoSignIn" && d.record.Version == "2.9.14" {
+		known, knownCode, found, proofErr := d.a.pluginStore.autoSignInDeferredOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "签到结果尚未持久确认，未重新执行")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "签到源流程失败，已保留已完成步骤")
 			}
 		}
 	}
@@ -844,12 +869,14 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "PluginUnInstall" || r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "AutoSignIn" || r.Plugin == "PluginUnInstall" || r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "PluginUnInstall" {
+			if r.Plugin == "AutoSignIn" {
+				result, code, found, proofErr = p.autoSignInDeferredOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "PluginUnInstall" {
 				result, code, found, proofErr = p.uninstallSourceOutcome(ctx, run)
 			} else if r.Plugin == "BrushFlowLanduo" {
 				result, code, found, proofErr = p.brushFlowOutcome(ctx, run, r.Method)

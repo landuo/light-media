@@ -18,7 +18,7 @@ import (
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 )
 
-const pluginNoticeSchema = siteStatisticNoticeSchema + removeLinkSourceResultSchema + `
+const pluginNoticeSchema = pluginAutoSignInSourceSchema + siteStatisticNoticeSchema + removeLinkSourceResultSchema + `
 CREATE TABLE IF NOT EXISTS plugin_notice_routes(id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,source_token TEXT NOT NULL,sealed BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_notice_route_steps(route_id TEXT NOT NULL,ordinal INTEGER NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(route_id,ordinal));
 CREATE TABLE IF NOT EXISTS plugin_notice_publications(id TEXT PRIMARY KEY,route_id TEXT NOT NULL,ordinal INTEGER NOT NULL,sealed BLOB NOT NULL);
@@ -190,13 +190,17 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err := p.noticeUnseal("route", id, sealed, &r); err != nil {
 		return r, nil, err
 	}
-	v1Kind := r.Version == 1 && r.BusinessV2 == nil && (r.Kind == "clean_seed" || r.Kind == "auto_backup" || r.Kind == "iyuu" || r.Kind == "cloudflare" || r.Kind == "brush_flow" || r.Kind == "seed_rescue" || r.Kind == "transfer" || r.Kind == "scrape_clean" || r.Kind == "site_statistic" || r.Kind == "remove_link")
+	v1Kind := r.Version == 1 && r.BusinessV2 == nil && (r.Kind == "clean_seed" || r.Kind == "auto_backup" || r.Kind == "iyuu" || r.Kind == "cloudflare" || r.Kind == "brush_flow" || r.Kind == "seed_rescue" || r.Kind == "transfer" || r.Kind == "scrape_clean" || r.Kind == "site_statistic" || r.Kind == "remove_link" || r.Kind == "auto_signin")
 	v2Kind := r.Version == 2 && r.Kind == "business" && r.BusinessV2 != nil
 	if (!v1Kind && !v2Kind) || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
 	if v2Kind {
 		if err := p.validateNoticeBusinessV2(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else if r.Kind == "auto_signin" {
+		if err := p.validateAutoSignInNotice(ctx, q, r); err != nil {
 			return r, nil, err
 		}
 	} else if r.Kind == "remove_link" {
@@ -283,6 +287,14 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	}
 	if err = rows.Close(); err != nil {
 		return r, nil, err
+	}
+	if r.Kind == "auto_signin" {
+		if err := p.validateAutoSignInSourceResult(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+		if err := p.validateAutoSignInNoticeSteps(ctx, q, r, steps); err != nil {
+			return r, nil, err
+		}
 	}
 	if r.Kind == "remove_link" {
 		if err := p.validateRemoveLinkSourceResult(ctx, q, r); err != nil {

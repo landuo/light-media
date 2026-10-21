@@ -10,11 +10,12 @@ import (
 // accepted from a worker, and no general HTTP RPC is exposed. Reconstruct it
 // after a host SiteStore change, with current credential/version validation.
 type Registration struct {
-	Site     Object
-	ProxyURL *url.URL
-	Browser  BrowserTransport
-	OCR      func(context.Context, string) (any, error)
-	Tjupt    *TjuptDependencies
+	Site          Object
+	ProxyURL      *url.URL
+	Browser       BrowserTransport
+	OCR           func(context.Context, string) (any, error)
+	Tjupt         *TjuptDependencies
+	BeforeRequest func(context.Context) error `json:"-"`
 }
 type RegisteredSites struct {
 	rows  []Registration
@@ -59,23 +60,36 @@ func (r *RegisteredSites) Visit(ctx context.Context, ref Object, operation strin
 	if registration == nil {
 		return Result{}, ErrSiteTargetDenied
 	}
+	h, err := BindRegistrationHooks(*registration, loaded)
+	if err != nil {
+		return Result{}, err
+	}
+	h.Stats, h.Now = r.Stats, r.Now
+	return (SiteVisitor{Adapters: InstalledAdapterRegistry(), Hooks: h}).Visit(ctx, registration.Site, operation, loaded)
+}
+
+// DomainKey uses the installed source's lookup normalization; it grants no URL.
+func DomainKey(address string) string { return sourceDomain(address) }
+
+// BindRegistrationHooks builds capabilities exclusively from a trusted host
+// registration. Never accept registration fields from an SDK reverse call.
+func BindRegistrationHooks(registration Registration, loaded bool) (SiteVisitHooks, error) {
 	site := registration.Site
 	proxy := registration.ProxyURL
 	if !Truth(site["proxy"]) {
 		proxy = nil
 	}
-	binding := SiteHTTPBinding{URL: textValue(site["url"]), Cookie: textValue(site["cookie"]), UserAgent: site["ua"], ProxyURL: proxy}
+	binding := SiteHTTPBinding{URL: textValue(site["url"]), Cookie: textValue(site["cookie"]), UserAgent: site["ua"], ProxyURL: proxy, BeforeRequest: registration.BeforeRequest}
 	transport, err := BindSiteHTTP(binding)
 	if err != nil {
-		return Result{}, err
+		return SiteVisitHooks{}, err
 	}
-	h := SiteVisitHooks{HTTP: transport, Browser: registration.Browser, OCR: registration.OCR, Tjupt: registration.Tjupt, Stats: r.Stats, Now: r.Now}
-	adapters := InstalledAdapterRegistry()
+	h := SiteVisitHooks{HTTP: transport, Browser: registration.Browser, OCR: registration.OCR, Tjupt: registration.Tjupt}
 	if loaded {
 		if MTeamMatch(binding.URL) {
-			h.MTeam, err = BindMTeam(Credentials{URL: binding.URL, Token: textValue(site["token"]), UserAgent: textValue(site["ua"]), Proxy: site["proxy"], Timeout: site["timeout"]}, proxy)
+			h.MTeam, err = bindMTeam(Credentials{URL: binding.URL, Token: textValue(site["token"]), UserAgent: textValue(site["ua"]), Proxy: site["proxy"], Timeout: site["timeout"]}, proxy, registration.BeforeRequest)
 			if err != nil {
-				return Result{}, err
+				return SiteVisitHooks{}, err
 			}
 		} else {
 			// A dedicated grant authorizes only its installed adapter's known target
@@ -85,12 +99,12 @@ func (r *RegisteredSites) Visit(ctx context.Context, ref Object, operation strin
 				if yes {
 					h.HTTP, err = BindFixedAdapter(kind, binding)
 					if err != nil {
-						return Result{}, err
+						return SiteVisitHooks{}, err
 					}
 					break
 				}
 			}
 		}
 	}
-	return (SiteVisitor{Adapters: adapters, Hooks: h}).Visit(ctx, site, operation, loaded)
+	return h, nil
 }

@@ -38,7 +38,32 @@ type SiteHTTPBinding struct {
 	URL, Cookie string
 	UserAgent   any
 	ProxyURL    *url.URL
+	// BeforeRequest is a host-only grant check, run for every redirect hop too.
+	BeforeRequest func(context.Context) error `json:"-"`
 }
+
+// siteHostGuardError distinguishes host denial from ordinary network failures.
+// Its text must not expose the host callback's potentially sensitive cause.
+type siteHostGuardError struct{ cause error }
+
+func (e *siteHostGuardError) Error() string { return "site host request guard denied" }
+func (e *siteHostGuardError) Unwrap() error { return e.cause }
+
+type siteHostGuardTransport struct {
+	next          http.RoundTripper
+	beforeRequest func(context.Context) error
+}
+
+func (t siteHostGuardTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if err := req.Context().Err(); err != nil {
+		return nil, &siteHostGuardError{cause: err}
+	}
+	if err := t.beforeRequest(req.Context()); err != nil {
+		return nil, &siteHostGuardError{cause: err}
+	}
+	return t.next.RoundTrip(req)
+}
+
 type BoundSiteHTTP struct {
 	binding                SiteHTTPBinding
 	origin                 string
@@ -264,6 +289,9 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		}
 		return nil
 	}}
+	if b.binding.BeforeRequest != nil {
+		client.Transport = siteHostGuardTransport{next: transport, beforeRequest: b.binding.BeforeRequest}
+	}
 	var body io.Reader
 	if request.JSON != nil {
 		raw, err := encodeSourceJSON(request.JSON)
@@ -361,6 +389,10 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	if err != nil {
 		if res != nil && res.Body != nil {
 			res.Body.Close()
+		}
+		var guardErr *siteHostGuardError
+		if errors.As(err, &guardErr) {
+			return nil, guardErr.cause
 		}
 		if ctx.Err() != nil {
 			return nil, ctx.Err()

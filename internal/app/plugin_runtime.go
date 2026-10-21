@@ -16,6 +16,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/autobackup"
+	"light-media/internal/plugins/autosignin"
 	bf "light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/cleaninvalidseed"
@@ -77,6 +78,16 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		}
 		if err != nil {
 			return err
+		}
+		if installation.PluginID == "AutoSignIn" {
+			initialize, err := a.shouldInitializeAutoSignIn(ctx, installation, config)
+			if err != nil {
+				a.log("ERROR", "plugins", "signin_initialize_pending", "签到存在待核对状态，未重新初始化；其他插件继续启动", "", "")
+				continue
+			}
+			if !initialize {
+				continue
+			}
 		}
 		if installation.PluginID == "ScrapeFileClean" {
 			initialize, err := a.shouldInitializeScrapeFileClean(ctx, installation, config)
@@ -304,6 +315,10 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	}
 	workerMethod := "invoke"
 	workerInput := run.Input
+	if err == nil && installation.PluginID == "AutoSignIn" && run.Action == "api" {
+		workerMethod = "http"
+		workerInput = json.RawMessage(`{}`)
+	}
 	if err == nil && installation.PluginID == "LarkMessager" {
 		workerMethod, workerInput, err = larkWorkerInput(run)
 	}
@@ -484,8 +499,23 @@ func (a *App) validatePluginHostRun(ctx context.Context, installation PluginInst
 			return bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
 		}
 		config, err := a.pluginStore.Config(ctx, run.InstanceID)
-		if err != nil || config.Revision != run.ConfigRevision {
-			return bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
+		if err != nil {
+			return err
+		}
+		if config.Revision != run.ConfigRevision {
+			accepted := false
+			if current.PluginID == "AutoSignIn" && current.Version == autosignin.Version {
+				tx, e := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+				if e != nil {
+					return e
+				}
+				handled, e := a.pluginStore.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision)
+				tx.Rollback()
+				accepted = handled && e == nil
+			}
+			if !accepted {
+				return bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
+			}
 		}
 		persisted, err := a.pluginStore.Run(ctx, run.ID)
 		if err != nil || persisted.State != "running" {
@@ -508,6 +538,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	trusted, _, exists := builtin.Lookup(installation.PluginID)
 	if !exists || !slices.Contains(trusted.Capabilities, method) {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "该插件未获授权调用此操作")
+	}
+	if method == autosignin.OptionsCapability || method == autosignin.ConfigureCapability || method == autosignin.RunCapability || method == autosignin.SnapshotCapability || method == autosignin.DeleteCapability {
+		return a.pluginAutoSignInHost(ctx, installation, run, method, raw)
 	}
 	if method == "sites.controls.read" || method == "sites.controls.configure" {
 		return a.pluginSiteControlsHost(ctx, installation, run, method, raw)

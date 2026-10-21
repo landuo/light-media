@@ -26,6 +26,12 @@ func signinTransitionSetup(t *testing.T) (*signinSQLFixture, PluginRun, signinjo
 	if _, err := f.j.Apply(ctx, f.o.binding, signinjournal.Effect{RunID: f.run.ID, Lane: "main", Index: 1, Kind: "notify", Digest: "old-pending-notice", Value: json.RawMessage(`{"title":"old source pending notice"}`), Mutation: signinjournal.Mutation{Kind: "outbox"}}); err != nil {
 		t.Fatal(err)
 	}
+	// This is a journal transition fixture, not an Engine oracle. A completed
+	// initialization now needs an explicit authenticated (empty) service set;
+	// merely setting phase=completed must never activate fabricated timers.
+	if _, err := f.j.Apply(ctx, f.o.binding, signinjournal.Effect{RunID: f.run.ID, Lane: "main", Index: 2, Kind: "service.definitions", Digest: "owned-empty-transition-services", Value: json.RawMessage(`[]`), Mutation: signinjournal.Mutation{Kind: "services", Value: json.RawMessage(`[]`)}}); err != nil {
+		t.Fatal(err)
+	}
 	runtime := json.RawMessage(`{"enabled":true,"notify":false,"cron":"2.3/9-23","onlyonce":false,"queue_cnt":5,"sign_sites":[],"login_sites":[],"auto_cf":0,"clean":false,"start_time":9,"end_time":23,"schema_loaded":true,"config":{"enabled":true}}`)
 	if err := f.b.Update(ctx, f.o.binding, func(s *signinjournal.State) error {
 		s.Runtime = runtime

@@ -222,7 +222,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		var instanceID, serviceID, dueText, pluginID string
 		var generation, revision int64
 		var sealed []byte
-		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND v.revision=s.config_revision`
+		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND (v.revision=s.config_revision OR i.plugin_id='AutoSignIn')`
 		args := []any{schedule.FormatTime(at)}
 		if len(blocked) > 0 {
 			// At most 200 instances are considered in one bounded dispatch. IDs
@@ -242,6 +242,15 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		}
 		enqueued := false
 		applyErr := func() error {
+			if pluginID == "AutoSignIn" {
+				handled, e := p.autoSignInScheduleAdmissionTx(ctx, tx, instanceID, generation, revision)
+				if e != nil {
+					return e
+				}
+				if !handled {
+					return bad("SIGNIN_SCHEDULE_DENIED", "签到调度身份未匹配")
+				}
+			}
 			raw, err := p.unseal("schedule", instanceID, serviceID, sealed)
 			if err != nil {
 				return err
@@ -334,6 +343,9 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 }
 
 func (p *PluginStore) claimPluginScheduleTx(ctx context.Context, tx *sql.Tx, run PluginRun, at time.Time) (string, error) {
+	if handled, code, err := p.claimAutoSignInScheduleTx(ctx, tx, run, at); handled || err != nil {
+		return code, err
+	}
 	var invocation struct {
 		Input struct {
 			OccurrenceID string `json:"occurrence_id"`

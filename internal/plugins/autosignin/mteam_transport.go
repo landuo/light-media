@@ -17,6 +17,10 @@ type BoundMTeam struct {
 }
 
 func BindMTeam(credentials Credentials, proxy *url.URL) (*BoundMTeam, error) {
+	return bindMTeam(credentials, proxy, nil)
+}
+
+func bindMTeam(credentials Credentials, proxy *url.URL, beforeRequest func(context.Context) error) (*BoundMTeam, error) {
 	if !Truth(credentials.Proxy) {
 		proxy = nil
 	}
@@ -41,7 +45,7 @@ func BindMTeam(credentials Credentials, proxy *url.URL) (*BoundMTeam, error) {
 	if ok && plan.URL != target {
 		return nil, ErrSiteTargetDenied
 	}
-	api, err := BindSiteHTTP(SiteHTTPBinding{URL: target, ProxyURL: proxy, UserAgent: credentials.UserAgent})
+	api, err := BindSiteHTTP(SiteHTTPBinding{URL: target, ProxyURL: proxy, UserAgent: credentials.UserAgent, BeforeRequest: beforeRequest})
 	if err != nil {
 		return nil, err
 	}

@@ -268,7 +268,13 @@ func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrout
 		}
 		return nil
 	case "AutoSignIn":
-		return bad("LARK_PLUGIN_COMMAND_CONSUMER_PENDING", "签到命令执行端尚未接入")
+		if !command.Target("site_signin") {
+			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令动作不属于该插件")
+		}
+		if _, err := a.queueAutoSignInCommand(ctx, "AutoSignIn", pluginAPIAuthority{Kind: "command"}, "飞书", user); err != nil {
+			return bad("LARK_PLUGIN_COMMAND_DENIED", "签到命令目标未安装或已停用")
+		}
+		return nil
 	default:
 		return bad("LARK_PLUGIN_COMMAND_UNKNOWN", "未知插件命令")
 	}

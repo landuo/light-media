@@ -378,6 +378,11 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			_ = tx.Rollback()
 			return PluginRun{}, err
 		}
+		if current == 0 {
+			if handled, proofErr := p.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision); handled && proofErr == nil {
+				current, pluginID = 1, "AutoSignIn"
+			}
+		}
 		if e := p.brushFlowClaimIdentityTx(ctx, tx, pluginID, run); e != nil {
 			_ = tx.Rollback()
 			return PluginRun{}, e

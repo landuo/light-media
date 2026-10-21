@@ -1,0 +1,17 @@
+AutoSignIn 2.9.14 正式宿主与同步源调用边界（开发里程碑，非完整插件验收）
+
+目标固定安装源码 SHA256 04044049166caa06659249b167539f96f1b3505d57da3fbf379ba4472a84008d。沿用同一个 Go Engine/durable Controller，不创建第二套业务算法。
+本阶段接正式 catalog、实际子进程能力、SQL owner/配置回执链、独立分身 host slots、公开表单/只读页面、真实命令事实、匿名域名 API 的原值 host HMAC 和每 I/O 撤销、源定时任务投影/原 admission、原生站点删除事实、只读固定站点快照和同步通知/事件边界。
+
+同步源边界：start通知正常返回后才HTTP；月history→site_refresh接受→操作history→CF事件接受→分类通知→命令完成通知→config。typed异常仅凭独立终态收据截断，未知不得重发。completed replay也重新核验所有source proof。旧 outbox 不能冒充新source返回，不允许通用reconcile填成功。
+事件接受是 EventType.PluginAction 优先队列的真实持久接受，不是下游 SiteStatistic/CloudflareSpeedTest handler 成功；不存在消费者时原 send_event 仍正常返回。本阶段未将新队列直接翻译成不相干的核心统计作业。
+通知使用既有实际 Router/持久发送队列；通知构造错误在history前截断，发送器捕获异常不变成source异常；AppDomain链接在源接受点冻结。只有本插件真实非空title/noctype路径使用恒等render，不声称通用模板全部实现。
+
+cold恢复保留runtime/services/jobs/next_due/config/history，不重跑onlyonce、随机服务和初始化。源stop_service并不主动取消在途线程/HTTP，本宿主额外对已取消或已撤销admission安全停机；unknown不会自称取消了远端效果，也不会自动重放。
+
+未完代码：可信 Browser/OCR、Tjupt可信图像origin能力及逐I/O撤销接线、SOCKS及拆分代理等尚未接线，明确拒绝，不把普通HTTP 200当签到成功；PluginAction下游消费者仍需独立迁移验收。Tjupt已有真实SQL journal持久缓存，尚须明确原答案文件导入及文件可见语义；不能再把它写成没有持久缓存。CustomSites/SitesHelper本轮已接，旧文档未完成清单部分过时。其余全量源依赖语义差异沿用原文档，不宣称全1:1。
+未做部署/真实验收：未导入用户真实配置/KV/凭据或触碰NAS/生产；无真实站点签到/外发通知验收。与代码缺口分开记录，未增加正式完成插件数。
+
+当前本地原始缺件40项保持不变。imagehash两条完整基线测试因原JPEG gzip参考缺失失败；不删除、替换、不skip伪造通过。原固定formal-manifest不改，新host-source amendment仅固定本轮修改Go文件，禁止覆盖installed fixtures。
+
+验证终态：冻结同一源码的完整 App 为 1156 个顶层/4055 含子项通过、8 个既存基线失败、14 项原有实机前置跳过，不标作全绿。受影响 race 与 modernconly 各 249 个顶层/769 含子项通过；AutoSignIn/durable/builtin 普通与 race、vet 和 23 个 CLI 构建通过，精确计数及日志哈希见配套 verification JSON。冷重启只读页面、逐重定向撤销和真实 Lark 命令链均在最终冻结输入中验过。早一轮全 App 缺少编译时源码前像，仅保留诊断用途，最终已完整重跑。

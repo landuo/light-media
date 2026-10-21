@@ -32,6 +32,7 @@ type CacheReader interface {
 // describes the current instance, whereas Epoch belongs to an existing run.
 type RunStartHead struct {
 	Exists                   bool
+	Fresh                    bool
 	RuntimeEpoch             string
 	ID, Action, Epoch, Phase string
 	Scope                    Scope
@@ -114,7 +115,7 @@ func stateRunStartHead(ctx context.Context, journal Journal, b Binding, id strin
 	if err != nil {
 		return RunStartHead{}, err
 	}
-	head := RunStartHead{RuntimeEpoch: state.RuntimeEpoch, Scope: state.Scope}
+	head := RunStartHead{Fresh: len(state.Runs) == 0 && state.RuntimeEpoch == "" && state.ActiveRun == "", RuntimeEpoch: state.RuntimeEpoch, Scope: state.Scope}
 	if run := state.Runs[id]; run != nil {
 		head.Exists, head.ID, head.Action, head.Epoch, head.Phase = true, run.ID, run.Action, run.Epoch, run.Phase
 		head.Scope, head.Plan, head.Baseline, head.FinalRuntime, head.Result = run.Scope, run.Plan, run.Baseline, run.FinalRuntime, run.Result
