@@ -190,13 +190,17 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err := p.noticeUnseal("route", id, sealed, &r); err != nil {
 		return r, nil, err
 	}
-	v1Kind := r.Version == 1 && r.BusinessV2 == nil && (r.Kind == "clean_seed" || r.Kind == "auto_backup" || r.Kind == "iyuu" || r.Kind == "cloudflare" || r.Kind == "brush_flow" || r.Kind == "seed_rescue" || r.Kind == "transfer" || r.Kind == "scrape_clean" || r.Kind == "site_statistic")
+	v1Kind := r.Version == 1 && r.BusinessV2 == nil && (r.Kind == "clean_seed" || r.Kind == "auto_backup" || r.Kind == "iyuu" || r.Kind == "cloudflare" || r.Kind == "brush_flow" || r.Kind == "seed_rescue" || r.Kind == "transfer" || r.Kind == "scrape_clean" || r.Kind == "site_statistic" || r.Kind == "remove_link")
 	v2Kind := r.Version == 2 && r.Kind == "business" && r.BusinessV2 != nil
 	if (!v1Kind && !v2Kind) || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
 	if v2Kind {
 		if err := p.validateNoticeBusinessV2(ctx, q, r); err != nil {
+			return r, nil, err
+		}
+	} else if r.Kind == "remove_link" {
+		if err := p.validateRemoveLinkNotice(ctx, q, r); err != nil {
 			return r, nil, err
 		}
 	} else if r.Kind == "site_statistic" {

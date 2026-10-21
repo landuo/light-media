@@ -1,5 +1,7 @@
 # 已安装插件迁移基线
 
+2026-10-21 RemoveLink 通知接线补充：新接受的 notification 在原 Commit 授权内冻结域名、信封及最小历史，并以核心收据绑定专属共享 Router 交接；旧v1保持本地历史、不升级补发。分身、退休代次、回滚与未知发送分别验证。原同步通知异常回传清理流程及共享v1终态独立证明仍待完成，未部署、正式迁移仍7/23。详见 [接线范围](plugin-remove-link-notice-routing.txt) 与 [验证记录](plugin-remove-link-notice-routing-verification.json)。
+
 2026-10-21 默认链接补充：SiteStatistic 新通知已复用 AppDomain，并把默认插件链接与站内历史在接受时冻结；旧v1通知不补发、不随设置漂移。采用固定基类片段及公开v2 URL规则的合成对照，未冒称完整安装版URL等价或真实域名迁移。详见 [链接阶段](plugin-site-statistic-default-link.txt) 与 [验证记录](plugin-site-statistic-default-link-verification.json)，正式迁移数仍7/23。
 
 2026-10-21 来源异常分类补充：SiteStatistic 的真实账户采集已对四类固定 oracle 解析异常建立调用级私有来源分类，普通/race 正反例与并发隔离留证；这不是 SystemError/SSE 完整接线，固定 IndexerModule 源码证据仍缺。通知默认插件链接差异另列待补，不计插件正式完成。详见 [分类与边界](plugin-site-statistic-module-failure-classification.txt) 及 [验证记录](plugin-site-statistic-module-failure-verification.json)。

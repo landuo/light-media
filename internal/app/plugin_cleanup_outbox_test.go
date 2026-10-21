@@ -154,7 +154,7 @@ func TestPluginRemoveLinkOutboxHistorySavedIsNotExternalDelivery(t *testing.T) {
 		t.Fatal("notification mislabeled as delivered")
 	}
 	var notice Notification
-	if err := f.a.Store.Get(ctx, "notification", h.Reference, &notice); err != nil || notice.Title != "清理结果" || notice.Message != strings.Repeat("完整消息", 850)+"[REDACTED]" || notice.MType != "站点" || notice.Link != "#/plugins?tab=installed&id=RemoveLink" {
+	if err := f.a.Store.Get(ctx, "notification", h.Reference, &notice); err != nil || notice.Title != "清理结果" || notice.Message != strings.Repeat("完整消息", 850)+"[REDACTED]" || notice.MType != "站点" || notice.Link != "" {
 		t.Fatal("original history content/type/link lost or secret exposed", err)
 	}
 	notice.Read = true
@@ -537,7 +537,9 @@ func TestPluginRemoveLinkOutboxNoticeIDConflictNeverOverwritesReadMessage(t *tes
 				t.Fatal(err)
 			}
 			id := "cleanup_notice_" + hex.EncodeToString(f.j.mac("notice-history", []byte(token)))
-			n := Notification{ID: id, Title: "private notice title", Message: "private notice body", MType: "站点", Link: "#/plugins?tab=installed&id=RemoveLink", CreatedAt: created, Read: true}
+			n := Notification{ID: id, Title: "private notice title", Message: "private notice body", MType: "站点", CreatedAt: created, Read: true}
+			// New v2 acceptance freezes an empty domain as an empty history link.
+			// Genuine legacy fragment behavior is covered separately.
 			if conflict {
 				n.Title = "a different pre-existing message"
 			}

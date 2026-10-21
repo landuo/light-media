@@ -43,11 +43,13 @@ type pluginRemoveLinkCoreReceipt struct {
 	Effect                                   []byte `json:"effect"`
 	Result                                   bool   `json:"result"`
 	HistoryID, FileID, ExecutionKey, AssetID string
+	NoticeAcceptanceSHA                      string `json:",omitempty"`
 }
 type pluginRemoveLinkPrivateOutbox struct {
-	Version int    `json:"version"`
-	Effect  []byte `json:"effect"`
-	State   string `json:"state"`
+	Version int                         `json:"version"`
+	Effect  []byte                      `json:"effect"`
+	State   string                      `json:"state"`
+	Notice  *removeLinkNoticeAcceptance `json:",omitempty"`
 }
 
 const pluginRemoveLinkEffectsSchema = `CREATE TABLE IF NOT EXISTS plugin_cleanup_core_receipts(
@@ -440,6 +442,26 @@ func (e *pluginRemoveLinkEffects) receipt(ctx context.Context, q pluginRemoveLin
 	if out.Version != 1 || out.Identity != identity || !bytes.Equal(out.Effect, original) {
 		return out, cleanuphost.ErrUnsafe
 	}
+	if x.Kind == "notification" {
+		var sealed []byte
+		if err := q.QueryRowContext(ctx, `SELECT sealed FROM plugin_cleanup_private_outbox WHERE instance_id=? AND generation=? AND token=?`, e.j.instance, e.j.generation, token).Scan(&sealed); err != nil {
+			return out, err
+		}
+		raw, err := e.j.p.unseal("cleanup_journal", e.j.instance, e.aad("outbox", token), sealed)
+		if err != nil {
+			return out, err
+		}
+		var box pluginRemoveLinkPrivateOutbox
+		if cleanupJournalStrict(raw, &box) != nil || !bytes.Equal(box.Effect, original) {
+			return out, cleanuphost.ErrUnsafe
+		}
+		sha, err := removeLinkNoticeAcceptanceSHA(box, x)
+		if err != nil || out.NoticeAcceptanceSHA != sha {
+			return out, cleanuphost.ErrUnsafe
+		}
+	} else if out.NoticeAcceptanceSHA != "" {
+		return out, cleanuphost.ErrUnsafe
+	}
 	return out, nil
 }
 func (e *pluginRemoveLinkEffects) saveReceipt(ctx context.Context, tx *sql.Tx, x cleanuphost.Effect, r pluginRemoveLinkCoreReceipt) error {
@@ -510,10 +532,23 @@ func (e *pluginRemoveLinkEffects) Commit(ctx context.Context, x cleanuphost.Effe
 		if err == nil {
 			var sealed []byte
 			token := e.token(x.ID)
-			data, _ := json.Marshal(pluginRemoveLinkPrivateOutbox{Version: 1, Effect: original, State: "pending"})
+			box := pluginRemoveLinkPrivateOutbox{Version: 1, Effect: original, State: "pending"}
+			created := now()
+			if x.Kind == "notification" {
+				box, err = e.acceptRemoveLinkNotice(x, original)
+				if err != nil {
+					return false, err
+				}
+				created = box.Notice.CreatedAt
+				r.NoticeAcceptanceSHA, err = removeLinkNoticeAcceptanceSHA(box, x)
+				if err != nil {
+					return false, err
+				}
+			}
+			data, _ := json.Marshal(box)
 			sealed, err = e.j.p.seal("cleanup_journal", e.j.instance, e.aad("outbox", token), data)
 			if err == nil {
-				_, err = tx.ExecContext(ctx, `INSERT INTO plugin_cleanup_private_outbox VALUES(?,?,?,?,?)`, e.j.instance, e.j.generation, token, sealed, now())
+				_, err = tx.ExecContext(ctx, `INSERT INTO plugin_cleanup_private_outbox VALUES(?,?,?,?,?)`, e.j.instance, e.j.generation, token, sealed, created)
 			}
 		}
 	}
