@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedRemoveLink     *reviewedRemoveLinkBinding   // Offline disabled-only path references; never an HTTP flag.
 	reviewedStatistic      *reviewedStatisticImport     // Reviewed core account history; never a public migration flag.
 	reviewedTransfer       *reviewedTransferBinding     // Reviewed source identities for each independent transfer instance.
 	reviewedSeed           *reviewedSeedBinding         // Reviewed original SeedRescue namespace; never supplied by HTTP.
@@ -920,6 +921,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if in.reviewedSeed != nil && !validReviewedSeedImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedSeed()
 	}
+	if in.reviewedRemoveLink != nil && !validReviewedRemoveLinkImport(in, installation) {
+		return PluginMigrationReceipt{}, invalidReviewedRemoveLink()
+	}
 	if in.reviewedTransfer != nil && !validReviewedTransferImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedTransfer()
 	}
@@ -981,8 +985,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		ReviewedIYUU           *reviewedIYUUImportBinding   `json:",omitempty"`
 		ReviewedSeed           *reviewedSeedBinding         `json:",omitempty"`
 		ReviewedTransfer       *reviewedTransferBinding     `json:",omitempty"`
+		ReviewedRemoveLink     *reviewedRemoveLinkBinding   `json:",omitempty"`
 		ReviewedStatistic      *sourceAccountBinding        `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer, statisticBinding})
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer, in.reviewedRemoveLink, statisticBinding})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1024,12 +1029,25 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if statisticBinding != nil && (run.SourcePluginID != "SiteStatistic" || run.SourceFingerprint != statisticBinding.SourceFingerprint) {
 		return PluginMigrationReceipt{}, invalidSourceAccounts()
 	}
+	if in.reviewedRemoveLink != nil && (run.SourcePluginID != "RemoveLink" || run.SourceFingerprint != in.reviewedRemoveLink.SourceFingerprint) {
+		return PluginMigrationReceipt{}, invalidReviewedRemoveLink()
+	}
+	if in.reviewedRemoveLink != nil {
+		if err = p.reviewedRemoveLinkTargetTx(ctx, tx, *in.reviewedRemoveLink); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
 	err = tx.QueryRowContext(ctx, `SELECT digest,imported_at FROM plugin_migration_receipts WHERE source_fingerprint=? AND source_plugin_id=? AND instance_id=?`, run.SourceFingerprint, run.SourcePluginID, run.InstanceID).Scan(&previousDigest, &receipt.ImportedAt)
 	if err == nil {
 		if previousDigest != digest {
 			return PluginMigrationReceipt{}, bad("PLUGIN_MIGRATION_CONFLICT", "相同来源迁移内容已变化，未覆盖现有插件")
+		}
+		if in.reviewedRemoveLink != nil {
+			if err = p.verifyReviewedRemoveLinkReceiptTx(ctx, tx, *in.reviewedRemoveLink, run.ID, digest); err != nil {
+				return PluginMigrationReceipt{}, err
+			}
 		}
 		return receipt, tx.Commit()
 	}
@@ -1124,6 +1142,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedTransfer != nil {
 		if err = p.commitReviewedTransferReferencesTx(ctx, tx, *in.reviewedTransfer, run.ID, digest); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
+	if in.reviewedRemoveLink != nil {
+		if err = p.commitReviewedRemoveLinkTx(ctx, tx, *in.reviewedRemoveLink, run.ID, digest); err != nil {
 			return PluginMigrationReceipt{}, err
 		}
 	}

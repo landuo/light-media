@@ -1,0 +1,279 @@
+{
+  "date": "2026-10-21",
+  "baseline": "ac3e094887f2164034289c153445c5316522c3f7",
+  "branch": "dev/plugins-continuation",
+  "scope": "RemoveLink supplied-snapshot disabled import and explicit local path mapping; synthetic task-owned SQLite/App/CLI tests",
+  "deployed": false,
+  "real_accounts_used": false,
+  "actual_source_configuration_observed": false,
+  "migration_count": "7/23 unchanged",
+  "toolchain": "go1.26.10 linux/amd64",
+  "source_sha256": {
+    "internal/app/remove_link_migration.go": "cfe8701289428d83132306cdf41f9da7401edcda857815a92632eb9a609541ae",
+    "internal/app/remove_link_migration_test.go": "870ed6a65a945bebb88dd696e85064e80a092b18bbb40a4583284eae7ed8a8a8",
+    "internal/app/remove_link_migration_isolation_test.go": "ef8e5edb35cedf6d2a473fdec56d7075ed40d1b804dfdda1cecd8b80e372479b",
+    "internal/app/plugin_store.go": "a98f21ffe2f1d79b734d9fb306c628fccadbbbfc74ec8688ceb237c94bcd70cb",
+    "cmd/remove-link-migrate-owned/main.go": "df8c954b6126d82b39b384e988feed53f15e74b4f263920796b5f25280e54594",
+    "cmd/remove-link-migrate-owned/main_test.go": "e654b2471262834805ce55ec57eb6bdc531ec429bdbc2e10447bfa6b1e28669f"
+  },
+  "logs": {
+    "initial-app": {
+      "command": "go test -timeout 15m -json ./internal/app -run '^TestReviewedRemoveLink' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/initial-app.jsonl",
+      "sha256": "f645fc07b3688e6bd5388a3bad744428bd1eedbc5a8ea9eb997d0f1c057832bf",
+      "bytes": 14917,
+      "exit_code": 0,
+      "top_level_passed": 5,
+      "passed_including_subtests": 14,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:46:18.740917401+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 0.429
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "initial-cli": {
+      "command": "go test -timeout 15m -json ./cmd/remove-link-migrate-owned -count=1",
+      "path": "work/remove-link-reviewed-import-validation/initial-cli.jsonl",
+      "sha256": "e13492816ea20a4b20e4e1f62f9eb5d3ca46e1cfb0c240c464a3c9b11dec4f8e",
+      "bytes": 26568,
+      "exit_code": 1,
+      "top_level_passed": 3,
+      "passed_including_subtests": 26,
+      "failed_entries": [
+        "TestDryRunSubprocessZeroWrites",
+        "TestApplySubprocessDisabledAndIdempotent",
+        "TestReplayPreservesLaterUserState",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:46:42.867384164+09:00",
+          "Action": "fail",
+          "Package": "light-media/cmd/remove-link-migrate-owned",
+          "Elapsed": 10.079
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revised-app": {
+      "command": "go test -timeout 15m -json ./internal/app -run '^TestReviewedRemoveLink' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/revised-app.jsonl",
+      "sha256": "770328965bfc17423e0ce8123bf8c5802f4f16a05ab59154c259136463b8196f",
+      "bytes": 19430,
+      "exit_code": 0,
+      "top_level_passed": 6,
+      "passed_including_subtests": 19,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:48:37.023588993+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 0.483
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revised-cli": {
+      "command": "go test -timeout 15m -json ./cmd/remove-link-migrate-owned -count=1",
+      "path": "work/remove-link-reviewed-import-validation/revised-cli.jsonl",
+      "sha256": "40dd2421b0a5256249b65b12074d4a0a9fdaa884a0162de1283c79cee44effcb",
+      "bytes": 25703,
+      "exit_code": 0,
+      "top_level_passed": 6,
+      "passed_including_subtests": 29,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:49:03.315713873+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/remove-link-migrate-owned",
+          "Elapsed": 10.217
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-app-normal": {
+      "command": "CGO_ENABLED=1 go test -timeout 30m -json ./internal/app -run 'TestReviewed|TestPluginStore|Test.*OriginalImport|Test.*Migration|TestSourceAccount|TestRemoteIdentifiersAbsentImport|TestPluginRemoveLink|TestRemoveLinkSourceBarrier|TestTransferOriginalRetained|TestCategoryEditorDeliveryDisabled|TestPluginSiteSwitchSourceProtocol|TestPluginSiteSwitchLegacy|TestPluginSiteSwitchUnclaimed' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/final-app-normal.jsonl",
+      "sha256": "353dc639d42b61a89d15e45918b9f029ce46d5fbe9b0a7dc615258897a945e77",
+      "bytes": 663060,
+      "exit_code": 0,
+      "top_level_passed": 117,
+      "passed_including_subtests": 335,
+      "failed_entries": [],
+      "skipped_tests": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:50:26.182909485+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 63.402
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-cli-normal": {
+      "command": "CGO_ENABLED=1 go test -timeout 30m -json ./cmd/remove-link-migrate-owned -run '.' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/final-cli-normal.jsonl",
+      "sha256": "ae7d78cc83b84aa346be08d50cd9146aabd7cc0c71a634a1e214bbdd7454bbda",
+      "bytes": 25699,
+      "exit_code": 0,
+      "top_level_passed": 6,
+      "passed_including_subtests": 29,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:50:39.727503177+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/remove-link-migrate-owned",
+          "Elapsed": 11.704
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-app-race": {
+      "command": "CGO_ENABLED=1 go test -race -timeout 30m -json ./internal/app -run 'TestReviewed|TestPluginStore|Test.*OriginalImport|Test.*Migration|TestSourceAccount|TestRemoteIdentifiersAbsentImport|TestPluginRemoveLink|TestRemoveLinkSourceBarrier|TestTransferOriginalRetained|TestCategoryEditorDeliveryDisabled|TestPluginSiteSwitchSourceProtocol|TestPluginSiteSwitchLegacy|TestPluginSiteSwitchUnclaimed' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/final-app-race.jsonl",
+      "sha256": "bab978e57779c4d38c7a54dfd08fd63d0aa8146f6ccf9f4f654ca62f1db83622",
+      "bytes": 663191,
+      "exit_code": 0,
+      "top_level_passed": 117,
+      "passed_including_subtests": 335,
+      "failed_entries": [],
+      "skipped_tests": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:04:27.590685916+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 746.271
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-cli-race": {
+      "command": "CGO_ENABLED=1 go test -race -timeout 30m -json ./cmd/remove-link-migrate-owned -run '.' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/final-cli-race.jsonl",
+      "sha256": "2cfe5ea1f934a7c77abf3a4a935d799a315879f2eede2433ca3dfcd05326a15f",
+      "bytes": 25704,
+      "exit_code": 0,
+      "top_level_passed": 6,
+      "passed_including_subtests": 29,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:05:48.961321378+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/remove-link-migrate-owned",
+          "Elapsed": 51.906
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-app-modernconly": {
+      "command": "CGO_ENABLED=0 go test -tags modernconly -timeout 30m -json ./internal/app -run 'TestReviewed|TestPluginStore|Test.*OriginalImport|Test.*Migration|TestSourceAccount|TestRemoteIdentifiersAbsentImport|TestPluginRemoveLink|TestRemoveLinkSourceBarrier|TestTransferOriginalRetained|TestCategoryEditorDeliveryDisabled|TestPluginSiteSwitchSourceProtocol|TestPluginSiteSwitchLegacy|TestPluginSiteSwitchUnclaimed' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/final-app-modernconly.jsonl",
+      "sha256": "381ddae197db140f0ac4629f8a50960d9b249f858f8db4ba3d8cacba19444d20",
+      "bytes": 663060,
+      "exit_code": 0,
+      "top_level_passed": 117,
+      "passed_including_subtests": 335,
+      "failed_entries": [],
+      "skipped_tests": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:07:11.067307762+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 41.471
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-cli-modernconly": {
+      "command": "CGO_ENABLED=0 go test -tags modernconly -timeout 30m -json ./cmd/remove-link-migrate-owned -run '.' -count=1",
+      "path": "work/remove-link-reviewed-import-validation/final-cli-modernconly.jsonl",
+      "sha256": "db2a210d162c5d58bcdce7539afac72e2078b6efb86b25a5e767255bbdc98c5d",
+      "bytes": 25696,
+      "exit_code": 0,
+      "top_level_passed": 6,
+      "passed_including_subtests": 29,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:07:37.490006859+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/remove-link-migrate-owned",
+          "Elapsed": 12.804
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vet": {
+      "command": "go vet ./internal/app ./cmd/remove-link-migrate-owned",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "command": "CGO_ENABLED=0 go build -tags modernconly ./cmd/...",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "initial_failure": "Three CLI success/replay cases failed target validation because the synthetic config/main fixture used Store.Put JSON instead of encrypted settings. Fixture changed to Store.Seal + raw encrypted records payload, matching production. No production validator weakened. Initial App run also preceded final generation/receipt-run checks; revised and final gates test frozen source.",
+  "static_review": "Independent read-only review found and closed missing-proof reconstruction, incomplete reference proof checks, same-transaction receipt proof/run binding, retired-generation dryrun mismatch, directory FD identity, CLI canceled/cancelled terminal states and misleading replay-enabled state issues. Static review is not counted as runtime verification.",
+  "limits": [
+    "Code source SHA pins RemoveLink 2.17, not the origin of caller-provided configuration. Proof explicitly labels supplied-snapshot-validated/v1; no actual installed configuration or attached file inventory was observed.",
+    "Tool v1 rejects whole-config absence/null, truthy enabled, nonempty KV/file inventory, nonlocal STRM, unresolved/ambiguous/noncanonical paths and missing/symlinked target directories. It does not silently discard unsupported state.",
+    "Target directory validation reads metadata only; no source/media scan, new root grant, watcher, cleanup journal, schedule or outgoing notification is created by import.",
+    "Existing selected-stdin migration tests skip without their real input; skipped tests are listed, not claimed as passed actual-source acceptance.",
+    "No full-project green claim: prior baseline failures and 40 missing binary source inputs remain documented in plugin-site-statistic-notice-routing-verification.json and earlier stage evidence.",
+    "Remaining RemoveLink remote provider/platform/init systemmessage gaps and real configuration/reference verification, account acceptance, actual import/handoff/deployment remain separate work."
+  ]
+}

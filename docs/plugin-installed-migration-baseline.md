@@ -1,5 +1,7 @@
 # 已安装插件迁移基线
 
+2026-10-21 RemoveLink 专项停用导入补充：固定代码版本与调用者提供快照的校验分开标记，新增离线validate/只读dry-run/显式apply、已有授权本地目录映射、加密proof与原子收据、分身冷启动隔离。受影响App及真实CLI普通/race/modernconly均通过，真实来源stdin测试跳过不算生产验收；非local存储及整个配置缺失明确拒绝。详见 [工具范围](plugin-remove-link-reviewed-import.txt) 与 [验证记录](plugin-remove-link-reviewed-import-verification.json)。未读取真实NAS配置或部署，正式迁移仍7/23。
+
 2026-10-21 RemoveLink 同步来源屏障补充：新v3通知在原位置等待可验证的来源结果，已知typed异常按原捕获规则继续，未知结果保持文件写闭锁；独立收据绑定终态，旧v1/v2不升级补发。真实SDK事件/原生宿主、分身、冷恢复和撤销并发已通过受影响普通/race/modernconly验证。远端StorageChain适配、专项停用导入等开发缺口与实际迁移/部署缺口分列，未部署，正式迁移仍7/23。详见 [本轮范围](plugin-remove-link-source-barrier.txt) 与 [验证记录](plugin-remove-link-source-barrier-verification.json)。
 
 2026-10-21 RemoveLink 通知接线补充：新接受的 notification 在原 Commit 授权内冻结域名、信封及最小历史，并以核心收据绑定专属共享 Router 交接；旧v1保持本地历史、不升级补发。分身、退休代次、回滚与未知发送分别验证。原同步通知异常回传清理流程及共享v1终态独立证明仍待完成，未部署、正式迁移仍7/23。详见 [接线范围](plugin-remove-link-notice-routing.txt) 与 [验证记录](plugin-remove-link-notice-routing-verification.json)。
@@ -25,7 +27,7 @@
 | CategoryEditor | 二级分类策略 | 1.3 | 停用 | 0 | 2026-10-20 已正式迁移并冷启动/UI核对；原停用配置保留、安装与收据各1、0任务/KV/新增通知，分类文件未改写；实际编辑/分类及错误缓存行为已在独占实例验证 |
 | TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 422（10-21复核） | 已接实际Go SDK/原生双下载器、原表单、调度、历史、通知、生命周期与冷恢复；2026-10-21完成原配置/422项历史和双下载器引用的隔离迁移、离线CLI及真实SDK正常/未知回执冷启动验证，普通/竞态和NAS通过；生产备份目录只读挂载、调度交接及正式迁移未完成，未部署 |
 | SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | 已接Go统计、原表单/卡片/饼图/明细、刷新与API基础；原配置、2133条21列账户档案、17个站点引用及离线CLI已验证。账户日记录/卡片/历史统一读取并加密；做种明细、站内消息采集、原版开关及逐请求授权/取消检查已通过普通/竞态/NAS与独占UI验证；刷新API 19字段与24例原HTTP对照一致。17行已装SitesHelper模板投影已内建并接入站点别名/schema解析，错误DTO与事件语义已对齐。原版通知分类（站点）、专属来源Router/持久队列和完成后去重已接，双实例及冷恢复专项已验证；SystemError、真实外发账户验收、全局选项正式迁移、执行交接和部署仍未完成 |
-| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；新v3通知路由、同步来源结果及未知继续闭锁已验证；远端存储适配、专项停用导入、真实渠道验收、正式迁移和部署未完成 |
+| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；新v3通知路由、同步来源结果及未知继续闭锁已验证；专项停用导入与本地引用映射工具已验证；远端存储适配、监听失败系统提示、非Linux监听、真实渠道验收、正式迁移和部署未完成 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | 2026-10-21 已随 v0.4.5 正式迁移；原配置1条加密导入，既有五份布局/显示偏好保留，原单widget空key对齐。详情/表单/六卡、增量采样/缓存/刷新与冷启动已验证；生产真实公共状态及速率已核对，1次成功初始化、0计划/事件/其他业务运行 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | 2026-10-20 已随v0.4.1部署并正式迁移；原true/true及空选择保留，安装与收据各1、0运行/KV/计划/事件/卸载步骤，实际生产表单已核对；失败后的warm/durable、连续新执行、重装及自卸载已在独占实例验证；原全局顺序/布局仍待后续独立迁移 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类适配、原表单/详情及逐效果StateJournal已迁入正式Go包；实际SQLite分行/owner、内部配置CAS与旧admission归档切换已有NAS证据。实际Manager/调度/消息及Browser/OCR接线、资源按需加载/回收、注册、配置/KV迁移和实机验收未完成 |
