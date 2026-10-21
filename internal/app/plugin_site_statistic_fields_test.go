@@ -69,7 +69,7 @@ func TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot(t *testing
 	if json.Unmarshal(response.Body, &payload) != nil {
 		t.Fatal("invalid response body")
 	}
-	if !payload.Success || len(payload.Data) != 19 || payload.Data["leeching_size"] != nil || payload.Data["message_unread"] != float64(1) || !reflect.DeepEqual(payload.Data["seeding_info"], []any{[]any{float64(3), float64(1024)}}) || !reflect.DeepEqual(payload.Data["message_unread_contents"], []any{[]any{"owned-private-heading", "2026-10-21", "owned-private-message"}}) || reads.Load() != 1 {
+	if !payload.Success || len(payload.Data) != 19 || payload.Data["leeching_size"] != float64(0) || payload.Data["updated_time"] != nil || payload.Data["message_unread"] != float64(1) || !reflect.DeepEqual(payload.Data["seeding_info"], []any{[]any{float64(3), float64(1024)}}) || !reflect.DeepEqual(payload.Data["message_unread_contents"], []any{[]any{"owned-private-heading", "2026-10-21", "owned-private-message"}}) || reads.Load() != 1 {
 		t.Fatal("extended fields lost before SDK/API receipt")
 	}
 	var sealed []byte
@@ -144,25 +144,30 @@ func TestSiteStatisticAPIRevocationBeforeMessageReadStopsSideEffect(t *testing.T
 	}
 }
 
-func TestSiteStatisticAllExtendedNullableFieldsForwardValuesAndUnknowns(t *testing.T) {
+func TestSiteStatisticSourceDefaultsStaySeparateFromNativeUnknowns(t *testing.T) {
 	size, count := int64(1234), int64(0)
 	message := "owned error"
 	title, date, body := "title", "date", "body"
-	s := siteSnapshot{Stats: &sites.UserStats{LeechingBytes: &size, MessageUnread: &count, Messages: [][3]*string{{&title, &date, &body}}, SeedingInfo: [][2]int64{{2, 1024}}, Error: &message}}
+	s := siteSnapshot{Stats: &sites.UserStats{}, SourceData: &sites.SourceUserData{LeechingSize: size, MessageUnread: count, Messages: [][3]*string{{&title, &date, &body}}, SeedingInfo: [][2]int64{{2, 1024}}, Error: &message}}
 	for _, populated := range []bool{true, false} {
 		if !populated {
-			s.Stats = &sites.UserStats{}
+			s.SourceData = &sites.SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]*string{}}
 		}
-		raw, e := json.Marshal(siteStatisticAPIData(SiteConfig{}, s))
+		raw, e := json.Marshal(siteStatisticAPIData(s))
 		if e != nil {
 			t.Fatal(e)
 		}
 		var m map[string]any
 		json.Unmarshal(raw, &m)
-		for _, key := range []string{"leeching_size", "seeding_info", "message_unread", "message_unread_contents", "err_msg"} {
-			if _, ok := m[key]; !ok || (m[key] != nil) != populated {
-				t.Fatal("nullable field hardcoded or zero invented", key)
+		if populated {
+			if m["leeching_size"] != float64(size) || m["err_msg"] != message || len(m["seeding_info"].([]any)) != 1 {
+				t.Fatal("source field values lost")
 			}
+		} else if m["leeching_size"] != float64(0) || m["err_msg"] != nil || len(m["seeding_info"].([]any)) != 0 {
+			t.Fatal("source constructor defaults lost")
+		}
+		if s.Stats.LeechingBytes != nil || s.Stats.MessageUnread != nil || s.Stats.SeedingInfo != nil {
+			t.Fatal("native unknown became constructor zero")
 		}
 	}
 }

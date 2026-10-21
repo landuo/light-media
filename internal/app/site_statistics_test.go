@@ -45,7 +45,7 @@ func TestSiteStatisticsSnapshotAndFactCommitTogether(t *testing.T) {
 	}
 }
 
-func TestSiteStatisticsFullFailureDoesNotEmitAggregateSuccess(t *testing.T) {
+func TestSiteStatisticsErrorDTOEmitsSourceRefreshFactsWhileJobFails(t *testing.T) {
 	ctx := context.Background()
 	a := newTestApp(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -70,10 +70,14 @@ func TestSiteStatisticsFullFailureDoesNotEmitAggregateSuccess(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	var sites []string
 	for _, event := range events.Events {
 		if event.Type == "site.refreshed" {
-			t.Fatal("failed data emitted success fact")
+			sites = append(sites, event.SiteID)
 		}
+	}
+	if len(sites) != 2 || sites[0] != site.ID || sites[1] != "*" {
+		t.Fatal("source error DTO lost refresh facts", sites)
 	}
 	view, err := a.jobView(ctx, job)
 	if err != nil || view.Summary.TypeLabel != "刷新站点数据" || view.Summary.Subject != "所有启用站点" {

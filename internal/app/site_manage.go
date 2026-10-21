@@ -23,13 +23,15 @@ type managedConnection struct {
 	Error      string `json:"error,omitempty"`
 }
 type siteSnapshot struct {
-	SiteID     string            `json:"site_id"`
-	Name       string            `json:"name,omitempty"`
-	Domain     string            `json:"domain,omitempty"`
-	Day        string            `json:"updated_day,omitempty"`
-	ConfigKey  string            `json:"config_key,omitempty"`
-	Connection managedConnection `json:"connection"`
-	Stats      *sites.UserStats  `json:"stats"`
+	SiteID        string                `json:"site_id"`
+	Name          string                `json:"name,omitempty"`
+	Domain        string                `json:"domain,omitempty"`
+	Day           string                `json:"updated_day,omitempty"`
+	ConfigKey     string                `json:"config_key,omitempty"`
+	Connection    managedConnection     `json:"connection"`
+	Stats         *sites.UserStats      `json:"stats"`
+	SourceData    *sites.SourceUserData `json:"source_data,omitempty"`
+	SourceOutcome string                `json:"source_outcome,omitempty"`
 }
 type SiteTemplate struct {
 	Kind     string `json:"kind"`
@@ -297,6 +299,9 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	}
 	started := time.Now()
 	snapshot := siteSnapshot{SiteID: key, Name: s.Name, Domain: siteStatisticDomain(s), ConfigKey: a.managedSiteKey(s)}
+	if hooks != nil {
+		snapshot.SourceOutcome = "none"
+	}
 	var observed sites.UserStats
 	messageOption := siteMessagesEnabled(a.Settings())
 	// The existing site-card endpoint is a connection test. Only real refresh
@@ -313,17 +318,32 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 			return nil
 		})
 		var err error
-		observed, err = client.UserStatsWithOptions(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
+		if hooks != nil {
+			snapshot.SourceOutcome = "none"
+			observed, snapshot.SourceData, err = client.SourceUserStats(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
+			if snapshot.SourceData != nil {
+				snapshot.SourceOutcome = "data"
+			}
+		} else {
+			observed, err = client.UserStatsWithOptions(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
+		}
 		return err
 	})
+	if err := ctx.Err(); err != nil {
+		return siteSnapshot{}, err
+	}
 	snapshot.Connection = managedConnection{Status: "ok", CheckedAt: now(), DurationMS: time.Since(started).Milliseconds()}
 	if e != nil {
 		snapshot.Connection.Status = "failed"
 		snapshot.Connection.Error = a.clean(e.Error())
-	} else {
+	}
+	if e == nil || snapshot.SourceData != nil {
 		snapshot.Stats = &observed
 	}
 	snapshot.Day = time.Now().In(shanghai()).Format("2006-01-02")
+	if snapshot.SourceData != nil {
+		snapshot.SourceData.Domain, snapshot.SourceData.Day = snapshot.Domain, snapshot.Day
+	}
 	a.settingsMu.Lock()
 	defer a.settingsMu.Unlock()
 	a.pluginMu.Lock()
@@ -345,7 +365,9 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	if err = a.recordSiteAccountObservationTx(ctx, tx, current, snapshot); err != nil {
 		return siteSnapshot{}, err
 	}
-	if e == nil {
+	// This is a collected-data fact. MoviePilot emits it even when the DTO
+	// carries err_msg; connection health is reported separately above.
+	if snapshot.SourceData != nil || (hooks == nil && e == nil) {
 		if eventKey == "" {
 			eventKey = id("site_refresh_")
 		}

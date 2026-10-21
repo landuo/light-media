@@ -71,9 +71,12 @@ func (c *Client) UserStatsWithOptions(ctx context.Context, options UserStatsOpti
 	if err != nil {
 		return s, err
 	}
-	doc, err := pageDOM(b)
+	doc, err := sourceAccountDOM(ctx, b)
 	if err != nil {
 		return s, err
+	}
+	if !sourceIndexStage(ctx, c.config.Kind, doc) {
+		return s, sourceModuleError(nil)
 	}
 	parseUserHTML(&s, doc, "index.php")
 	parseNexusUnread(&s, doc)
@@ -389,6 +392,7 @@ func (c *Client) statsJSON(ctx context.Context, endpoint string, in any) (map[st
 	if err != nil {
 		return nil, err
 	}
+	sourceProfilePage(ctx, endpoint, b)
 	data, err := envelope(b)
 	if err != nil {
 		return nil, err
@@ -400,6 +404,8 @@ func (c *Client) statsJSON(ctx context.Context, endpoint string, in any) (map[st
 	return m, nil
 }
 
+var mteamUserRoles = map[string]string{"1": "User", "2": "Power User", "3": "Elite User", "4": "Crazy User", "5": "Insane User", "6": "Veteran User", "7": "Extreme User", "8": "Ultimate User", "9": "Nexus Master", "10": "VIP", "11": "Retiree", "12": "Uploader", "13": "Moderator", "14": "Administrator", "15": "Sysop", "16": "Staff", "17": "Offer memberStaff", "18": "Bet memberStaff"}
+
 func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, error) {
 	m, err := c.statsJSON(ctx, "api/member/profile", map[string]any{})
 	if err != nil {
@@ -410,8 +416,7 @@ func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, er
 		return s, errors.New("site_user_identity_missing")
 	}
 	s.Sources["user_id"], s.Sources["username"] = "api/member/profile", "api/member/profile"
-	roles := map[string]string{"1": "User", "2": "Power User", "3": "Elite User", "4": "Crazy User", "5": "Insane User", "6": "Veteran User", "7": "Extreme User", "8": "Ultimate User", "9": "Nexus Master", "10": "VIP", "11": "Retiree", "12": "Uploader", "13": "Moderator", "14": "Administrator", "15": "Sysop", "16": "Staff"}
-	if v := roles[stringValue(m["role"])]; v != "" {
+	if v := mteamUserRoles[stringValue(m["role"])]; v != "" {
 		s.Level = v
 		s.Sources["level"] = "api/member/profile:role"
 	}
@@ -518,7 +523,7 @@ func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, er
 			s.SeedingInfo = info
 			s.Sources["seeding_info"] = "api/member/getUserTorrentList:torrent.source,size/all pages"
 		}
-		if s.Seeding == nil {
+		if s.Seeding == nil || sourceStatsTrace(ctx) != nil {
 			s.Seeding = &count
 			s.Sources["seeding"] = "api/member/getUserTorrentList:all pages"
 		}

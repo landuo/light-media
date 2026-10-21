@@ -254,9 +254,13 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 	}
 	if c.requestGuard != nil {
 		if err = c.requestGuard(ctx); err != nil {
+			if trace := sourceStatsTrace(ctx); trace != nil {
+				trace.guardError = err
+			}
 			return nil, "", err
 		}
 	}
+	sourceRequestStarted(ctx)
 	res, err := c.http.Do(req)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -268,16 +272,19 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 		return nil, "", errors.New("site_transport_error")
 	}
 	defer res.Body.Close()
+	// MoviePilot's account reader parses bodies for these status codes. Keep
+	// this exception scoped to its DTO collection; searches remain strict.
+	sourceBody := sourceStatsTrace(ctx) != nil && (res.StatusCode == 403 || res.StatusCode == 500)
 	switch {
 	case res.StatusCode == 401:
 		return nil, "", errors.New("site_authentication_failed")
-	case res.StatusCode == 403:
+	case res.StatusCode == 403 && !sourceBody:
 		return nil, "", errors.New("site_forbidden_or_challenge")
 	case res.StatusCode == 429:
 		return nil, "", errors.New("site_rate_limited")
 	case res.StatusCode >= 300 && res.StatusCode < 400:
 		return nil, res.Header.Get("Location"), errors.New("site_redirect_blocked")
-	case res.StatusCode < 200 || res.StatusCode >= 300:
+	case (res.StatusCode < 200 || res.StatusCode >= 300) && !sourceBody:
 		return nil, "", errors.New("site_http_error")
 	}
 	b, err := io.ReadAll(io.LimitReader(res.Body, limit+1))

@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"time"
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
@@ -82,10 +81,10 @@ func (a *App) pluginSiteStatisticAPIHost(ctx context.Context, installation Plugi
 		Guard: func(tx *sql.Tx) error { _, err := a.validatePluginHTTPRunTx(ctx, tx, *run); return err },
 		Commit: func(tx *sql.Tx, snapshot siteSnapshot) error {
 			var body any
-			if snapshot.Connection.Status != "ok" || snapshot.Stats == nil {
+			if snapshot.SourceData == nil {
 				body = builtin.SiteStatisticResponse(false, "站点 "+wanted.Domain+" 刷新数据失败，未获取到数据", map[string]any{})
 			} else {
-				body = builtin.SiteStatisticResponse(true, "站点 "+wanted.Domain+" 刷新成功", siteStatisticAPIData(site, snapshot))
+				body = builtin.SiteStatisticResponse(true, "站点 "+wanted.Domain+" 刷新成功", siteStatisticAPIData(snapshot))
 			}
 			response, err := plugins.JSONHTTPResponse(200, body)
 			if err != nil {
@@ -98,19 +97,11 @@ func (a *App) pluginSiteStatisticAPIHost(ctx context.Context, installation Plugi
 	return result, err
 }
 
-// Preserve the original nullable response schema. An unobserved value remains
-// null; missing scraping fields are not fabricated as zero or an empty list.
-func siteStatisticAPIData(site SiteConfig, snapshot siteSnapshot) map[string]any {
-	stats := snapshot.Stats
-	nullable := func(value string) any {
-		if value == "" {
-			return nil
-		}
-		return value
+// Source constructor defaults belong only to this DTO. Native account values
+// remain nullable; they are observations rather than protocol defaults.
+func siteStatisticAPIData(snapshot siteSnapshot) map[string]any {
+	if d := snapshot.SourceData; d != nil {
+		return map[string]any{"domain": d.Domain, "username": d.Username, "userid": d.UserID, "user_level": d.UserLevel, "join_at": d.JoinAt, "bonus": d.Bonus, "upload": d.Upload, "download": d.Download, "ratio": d.Ratio, "seeding": d.Seeding, "leeching": d.Leeching, "seeding_size": d.SeedingSize, "leeching_size": d.LeechingSize, "seeding_info": d.SeedingInfo, "message_unread": d.MessageUnread, "message_unread_contents": d.Messages, "err_msg": d.Error, "updated_day": d.Day, "updated_time": d.Time}
 	}
-	var updatedTime any
-	if at, err := time.Parse(time.RFC3339Nano, snapshot.Connection.CheckedAt); err == nil {
-		updatedTime = at.In(shanghai()).Format("15:04:05")
-	}
-	return map[string]any{"domain": siteStatisticDomain(site), "username": nullable(stats.Username), "userid": nullable(stats.UserID), "user_level": nullable(stats.Level), "join_at": nullable(stats.JoinedAt), "bonus": stats.Bonus, "upload": stats.Uploaded, "download": stats.Downloaded, "ratio": stats.Ratio, "seeding": stats.Seeding, "leeching": stats.Leeching, "seeding_size": stats.SeedingBytes, "leeching_size": stats.LeechingBytes, "seeding_info": stats.SeedingInfo, "message_unread": stats.MessageUnread, "message_unread_contents": stats.Messages, "err_msg": stats.Error, "updated_day": snapshot.Day, "updated_time": updatedTime}
+	return nil
 }

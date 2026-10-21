@@ -161,12 +161,17 @@ func pluginHTTPFixture(t *testing.T) (*App, *http.Cookie, *atomic.Int32, *atomic
 		}
 		fmt.Fprint(w, `<a href="logout.php">退出</a><a href="userdetails.php?id=7">synthetic</a><div>上传：2 GB 下载：1 GB 总做种数：0 总做种体积：0 B</div><table><tr><td>等级</td><td>Power User</td></tr></table>`)
 	}))
-	badServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { failed.Add(1); http.Error(w, "synthetic failure", 503) }))
+	// HHan's missing required panel throws inside its original parser and is
+	// swallowed by ChainBase, producing None rather than a login-error DTO.
+	badServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		failed.Add(1)
+		fmt.Fprint(w, `<a href="logout.php">out</a>`)
+	}))
 	t.Cleanup(goodServer.Close)
 	t.Cleanup(badServer.Close)
 	for _, site := range []SiteConfig{
 		{Config: sites.Config{ID: "known", Kind: "jiayuan", Name: "合成站点", BaseURL: goodServer.URL, Cookie: "synthetic-site-cookie"}, SiteOptions: SiteOptions{Domain: "known.example"}, Enabled: false},
-		{Config: sites.Config{ID: "failed", Kind: "jiayuan", Name: "合成失败站", BaseURL: badServer.URL, Cookie: "synthetic-site-cookie"}, SiteOptions: SiteOptions{Domain: "failed.example"}, Enabled: false},
+		{Config: sites.Config{ID: "failed", Kind: "hhanclub", Name: "合成失败站", BaseURL: badServer.URL, Cookie: "synthetic-site-cookie"}, SiteOptions: SiteOptions{Domain: "failed.example"}, Enabled: false},
 	} {
 		if _, err := a.saveManagedSite(context.Background(), site); err != nil {
 			t.Fatal(err)
@@ -250,7 +255,10 @@ func TestPluginHTTPOriginalASGIContractActualSDKAndCollection(t *testing.T) {
 				json.Unmarshal(expectedRaw, &expected)
 				if data, ok := actual.(map[string]any); ok {
 					if values, ok := data["data"].(map[string]any); ok && data["success"] == true {
-						for _, field := range []string{"updated_day", "updated_time"} {
+						if values["updated_time"] != nil {
+							t.Fatal("database timestamp mutated source API DTO")
+						}
+						for _, field := range []string{"updated_day"} {
 							if _, ok := values[field].(string); !ok {
 								t.Fatal("missing observed timestamp")
 							}

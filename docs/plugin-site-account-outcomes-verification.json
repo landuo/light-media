@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "base_commit": "7d7486578c1926120a05de04609fcb3f20856f19",
+  "state": "source_refresh_outcomes_and_event_semantics_verified_not_full_plugin_migration",
+  "actual_complete": 7,
+  "remaining": [
+    "Complete original parser request addresses/order, pagination and all special numeric/schema branches.",
+    "SystemError event and full site-message/statistic notification producers and channels.",
+    "Compiled SitesHelper alias runtime evidence.",
+    "Formal migration of source global message setting, final fresh source binding, execution handoff and production migration.",
+    "All remaining plugin business, platform and source-data migration obligations; no increase to completed 7/23."
+  ],
+  "production_version": "0.4.8",
+  "deployed": false,
+  "original_mutations": 0,
+  "production_mutations": 0,
+  "real_execution_handoffs": 0,
+  "real_user_site_downloader_media_or_notification_business_calls": 0,
+  "python_runtime_dependency_added": false,
+  "source_account_rows": 2133,
+  "source_outcome_oracle": {
+    "cases": 12,
+    "source_sha256": {
+      "app/utils/site.py": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+      "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+      "app/modules/indexer/parser/__init__.py": "ef73038e897b57f20269ed4141ea0574a027a6e760c78a5577f0aeb9b3ca30ed",
+      "app/modules/indexer/parser/mtorrent.py": "a8fb7d1ea9bc7c588de398a205d1fba7eea17a50e19388c9bf44ffff6cc358ca",
+      "app/modules/indexer/parser/nexus_hhanclub.py": "479dc354a2de0ebf5eb2fdb7bbbe820de698d1d9079e989c2941e2d59bf9b761",
+      "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf",
+      "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "app/chain/site.py": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+      "app/plugins/sitestatistic/__init__.py": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d"
+    },
+    "scope": "installed module/chain/API methods; network and persistence are isolated stubs, no live plugin execution",
+    "fixture_sha256": "a7af2afd71f09adcbf03c45a65ef894e1955ae9c9a6140cf4355b6f9a36e7798"
+  },
+  "implementation": {
+    "separate_source19_field_DTO_and_native_observations": true,
+    "error_DTO_API_success_with_err_msg": true,
+    "source_None_empty_failed_API": true,
+    "error_DTO_emits_source_site_and_aggregate_refresh_facts": true,
+    "native_job_and_connection_health_remain_separate": true,
+    "source_constructor_zero_and_empty_lists_do_not_change_native_unknown": true,
+    "nullable_API_timestamp_separate_database_refresh_time": true,
+    "None_does_not_create_daily_history": true,
+    "later_error_DTO_preserves_prior_same_day_row": true,
+    "lost_ACK_encrypted_cold_recovery_does_not_refetch": true,
+    "MTeam_numeric_or_string_user_id_and_roles17_18": true,
+    "complete_MTeam_list_count_not_peer_count": true,
+    "HTTP403_500_body_exception_only_in_source_account_context": true,
+    "revoked_and_cancelled_requests_do_not_manufacture_error_DTO": true
+  },
+  "checks": {
+    "sites-normal": {
+      "top_pass": 40,
+      "inclusive_pass": 186,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "e4891eb2a44c2549ac8c07fad806c3c79b205720be1e62f0dbf4d43f402df906"
+    },
+    "sites-race": {
+      "top_pass": 40,
+      "inclusive_pass": 186,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "241a240766336e9a3474a455671d859fc5bf6ed41a05017b49ebf79f61dc59e3"
+    },
+    "related-normal": {
+      "top_pass": 45,
+      "inclusive_pass": 114,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "531a622cb61bb55b3ff22df09bc768c6563d5ed17fc1bd9902954d7d5c6ebaf8"
+    },
+    "related-race": {
+      "top_pass": 45,
+      "inclusive_pass": 114,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "baa0aac044bf8be1611d6f3ce56e8533a311542a5c345c1423d6cad38d58cca8"
+    },
+    "actual-normal": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "4217c84f75fae64a5d5d37ea0776ebafd11c150c52f9c92bede6eef107b51056"
+    },
+    "actual-race": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "dd5a9f59517c7576d809d80c5999211f1d3d91f01b13eaa1223b50c4610da406"
+    },
+    "nas-selected": {
+      "top_pass": 9,
+      "inclusive_pass": 31,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "4414e997979acc600895f22e987a152fe83ec6e4947cda5241fc5ba256b4d2e4"
+    }
+  },
+  "statuses": {
+    "sites-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 40,
+        "inclusive_pass": 186,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "top_pass": 40,
+        "inclusive_pass": 186,
+        "failures": []
+      }
+    ],
+    "related-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 45,
+        "inclusive_pass": 114,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "top_pass": 45,
+        "inclusive_pass": 114,
+        "failures": []
+      }
+    ],
+    "actual-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "4217c84f75fae64a5d5d37ea0776ebafd11c150c52f9c92bede6eef107b51056",
+        "source_account_log_scan_passed": true
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "dd5a9f59517c7576d809d80c5999211f1d3d91f01b13eaa1223b50c4610da406",
+        "source_account_log_scan_passed": true
+      }
+    ],
+    "build-normal-status.json": [
+      {
+        "name": "app",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate",
+        "exit": 0
+      },
+      {
+        "name": "handoff",
+        "exit": 0
+      },
+      {
+        "name": "sites",
+        "exit": 0
+      }
+    ],
+    "build-race-status.json": [
+      {
+        "name": "app-race",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-race",
+        "exit": 0
+      },
+      {
+        "name": "handoff-race",
+        "exit": 0
+      },
+      {
+        "name": "sites-race",
+        "exit": 0
+      }
+    ],
+    "build-linux-status.json": [
+      {
+        "name": "server-native",
+        "exit": 0
+      },
+      {
+        "name": "server-linux",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-linux",
+        "exit": 0
+      },
+      {
+        "name": "handoff-linux",
+        "exit": 0
+      },
+      {
+        "name": "app-linux",
+        "exit": 0
+      },
+      {
+        "name": "vet",
+        "exit": 0
+      },
+      {
+        "name": "mod-verify",
+        "exit": 0
+      }
+    ]
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed SiteStatistic 2133 account rows, original views, Go SDK and offline migration in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-site-account-outcomes-642a4e7cefcc49e1b0a8b503696ebd68",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/site-account-outcomes-642a4e7cefcc49e1b0a8b503696ebd68",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "4414e997979acc600895f22e987a152fe83ec6e4947cda5241fc5ba256b4d2e4"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "556faccef186deac2d21d7824285854f1486f062205acd0867f6d093fb4ecefc",
+      "statistic-migrate": "42ace0ed8009784167af525b69191707e832bf1dbff8bf3815608750ac82cc7a",
+      "handoff": "6f024dd7c8dc6e7b05100f3f5fde47d583d3968154dfcdc24e334c58262845dd",
+      "outcomes.json": "a7af2afd71f09adcbf03c45a65ef894e1955ae9c9a6140cf4355b6f9a36e7798"
+    },
+    "container_id": "065fa9483916287a731930ea5af358ef2ddad2f84bf6d924e70c4d3931748884",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "live_source_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "production_hashes_after": {
+      "server_unchanged": true,
+      "compose_unchanged": true
+    },
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 54.71
+  },
+  "independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_directory_absent": true,
+    "production_server_unchanged": true,
+    "production_compose_unchanged": true
+  },
+  "inputs": {
+    "frozen_source_files": 4365,
+    "resolved_compilation_files": 5695,
+    "frozen_drift": 0,
+    "compilation_drift": 0,
+    "main_product_focus_drift": 0,
+    "docs_written_after_checks": [
+      "docs/plugin-site-account-outcomes.txt",
+      "docs/plugin-site-account-outcomes-verification.json",
+      "docs/plugin-installed-migration-baseline.md"
+    ],
+    "scope_limit": "does not claim complete compiler, system header or linker dependency closure"
+  },
+  "source_manifest_sha256": "fd56db94ca6526e7663a7d596efca3f7e48873abbac02fb73b912d0c5a0f750b",
+  "compilation_manifest_sha256": "46d44c02a09025e3befe1da852683676cf8ffed90ac390cb2ac66161c6dcebb0",
+  "focus": [
+    {
+      "path": "internal/app/extension_contract.go",
+      "sha256": "371d0b6208472e32b2629e0498be4b7173862a7abc604bacac6952d0afd417a8"
+    },
+    {
+      "path": "internal/app/plugin_custom_api_test.go",
+      "sha256": "a59bdadd038df473234a9adaa5164715ba816ea58ffddb5475f9c1485f47e051"
+    },
+    {
+      "path": "internal/app/plugin_site_statistic_api.go",
+      "sha256": "d7028ec6c1156f738cccbada8b4e148e42c97bd6d29a2aebe4f3d5ca6e4463e3"
+    },
+    {
+      "path": "internal/app/plugin_site_statistic_fields_test.go",
+      "sha256": "e94b7fd40825cc177a85c05e65426906543c57e3efd257fa683dbe2b941a8b9c"
+    },
+    {
+      "path": "internal/app/plugin_site_statistic_outcomes_test.go",
+      "sha256": "8d62306210f94051194eb606b1e2b1a648ba6832f6ca309eb74408ad5a7a2532"
+    },
+    {
+      "path": "internal/app/site_account_views.go",
+      "sha256": "13d6d21fdaf9ba62c279c9ad3b6d7ec7b3c7d2412ad28df66457c55b33a7d738"
+    },
+    {
+      "path": "internal/app/site_manage.go",
+      "sha256": "2ab45798d9553c5443f287d0019d48855a83654234e82fa551940b818d69273b"
+    },
+    {
+      "path": "internal/app/site_statistics.go",
+      "sha256": "cfa83593ccc447bb99daee17d2661af9620a70cbc8dc1ab40b235830cf057368"
+    },
+    {
+      "path": "internal/app/site_statistics_test.go",
+      "sha256": "a936d90d9aa413ac014b504d34b0ea74b52696ffb468e51edaa0ebd3747a9bff"
+    },
+    {
+      "path": "internal/sites/client.go",
+      "sha256": "a2a2cafebfb8be3f1b95240965488d7de1cae926ed9a88c4606071591d32abb9"
+    },
+    {
+      "path": "internal/sites/stats.go",
+      "sha256": "4412431a78888233e4cb8c000633b0a9fbb214f1a544442173ae0b22530a40ac"
+    },
+    {
+      "path": "internal/sites/userdata.go",
+      "sha256": "dd1cb3a6ec39abf8edeaa1d0b23191539d4f9131b564f9658c19de867a7d747a"
+    },
+    {
+      "path": "internal/sites/userdata_test.go",
+      "sha256": "5647861a97ecf7d681029a18bf8cee1a6e9dee687ba9911f9d8ec4cdce1281f6"
+    },
+    {
+      "path": "testdata/plugins/site-account-outcomes-original-oracle.json",
+      "sha256": "a7af2afd71f09adcbf03c45a65ef894e1955ae9c9a6140cf4355b6f9a36e7798"
+    },
+    {
+      "path": "testdata/plugins/site-statistic-http-original-oracle.json",
+      "sha256": "a75d1ee74c963f17338de6f4a9941fe6464cd3cc82ef7e71dfaec86eb7c54794"
+    }
+  ],
+  "frontend": {
+    "changed": false,
+    "retested": false,
+    "same_as_base_commit": true,
+    "verified_file_count": 202,
+    "user_acceptance_claimed": false
+  },
+  "peak_RSS_measured": false,
+  "secret_scan": {
+    "passed": true,
+    "source_account_rows": 2133,
+    "patterns": 2219,
+    "files": 72,
+    "private_payload_saved": false
+  },
+  "failures_retained": [
+    {
+      "scope": "r1 exploration",
+      "cause": "sourceUserInteger initially reused an existing helper name; duplicate declaration fixed",
+      "accepted": false
+    },
+    {
+      "scope": "r1 exploratory oracle",
+      "cause": "incomplete AST stub omitted request_mode/API key, producing invalid early outcomes; source constructor and 12 final cases corrected before freezing",
+      "accepted": false
+    },
+    {
+      "scope": "r1 app focus",
+      "cause": "MTeam loopback origin correctly rejected and test event SQL referenced missing column; retained origin restriction, used owned synthetic transport and fixed test SQL",
+      "accepted": false
+    },
+    {
+      "scope": "r2 setup",
+      "cause": "first orchestration helper used relative path from stage cwd; corrected absolute path, no frozen app edit",
+      "accepted": false
+    }
+  ]
+}

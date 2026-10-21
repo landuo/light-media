@@ -24,6 +24,11 @@ func (a *App) recordSiteAccountObservationTx(ctx context.Context, tx *sql.Tx, si
 	if snapshot.SiteID != site.ID || snapshot.ConfigKey != a.managedSiteKey(site) {
 		return invalidSiteAccountSnapshot()
 	}
+	if snapshot.SourceOutcome == "none" {
+		// A swallowed module exception/unsupported parser has no DTO and cannot
+		// create a source daily row. Preserve its native connection diagnostic.
+		return a.Store.putSiteAccountSnapshotTx(ctx, tx, "site_connection", site.ID, snapshot)
+	}
 	data, err := statisticData(snapshot, site)
 	if err != nil {
 		return err

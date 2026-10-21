@@ -150,6 +150,8 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	case "job.failed":
 		subject, kind = in.JobID, "job"
 	case "site.refreshed":
+		// Source fact: a userdata DTO was received, including one with err_msg.
+		// It does not assert healthy authentication or a successful native job.
 		if (in.SiteID != "*" && !domainReferencePattern.MatchString(in.SiteID)) || in.MediaID != "" || in.AssetID != "" || in.IntentID != "" {
 			return invalid()
 		}

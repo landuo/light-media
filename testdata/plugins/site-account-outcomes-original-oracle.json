@@ -1,0 +1,310 @@
+{
+  "source_sha256": {
+    "app/utils/site.py": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+    "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+    "app/modules/indexer/parser/__init__.py": "ef73038e897b57f20269ed4141ea0574a027a6e760c78a5577f0aeb9b3ca30ed",
+    "app/modules/indexer/parser/mtorrent.py": "a8fb7d1ea9bc7c588de398a205d1fba7eea17a50e19388c9bf44ffff6cc358ca",
+    "app/modules/indexer/parser/nexus_hhanclub.py": "479dc354a2de0ebf5eb2fdb7bbbe820de698d1d9079e989c2941e2d59bf9b761",
+    "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/site.py": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+    "app/plugins/sitestatistic/__init__.py": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d"
+  },
+  "scope": "installed module/chain/API methods; network and persistence are isolated stubs, no live plugin execution",
+  "cases": [
+    {
+      "name": "logged-out",
+      "kind": "nexus",
+      "body": "<input type=\"password\">",
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": "未检测到已登陆，请检查cookies是否过期",
+        "updated_day": "<day>",
+        "updated_time": null
+      },
+      "success": true,
+      "events": [
+        "owned",
+        "*"
+      ],
+      "api_events": [
+        "owned"
+      ],
+      "module_errors": 0,
+      "database_rows": 2,
+      "api_time_is_none": true
+    },
+    {
+      "name": "empty-page",
+      "kind": "nexus",
+      "body": "",
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": "未检测到已登陆，请检查cookies是否过期",
+        "updated_day": "<day>",
+        "updated_time": null
+      },
+      "success": true,
+      "events": [
+        "owned",
+        "*"
+      ],
+      "api_events": [
+        "owned"
+      ],
+      "module_errors": 0,
+      "database_rows": 2,
+      "api_time_is_none": true
+    },
+    {
+      "name": "hh-missing-panel",
+      "kind": "hhanclub",
+      "body": "<a href=\"logout.php\">out</a>",
+      "data": null,
+      "success": false,
+      "events": [],
+      "api_events": [],
+      "module_errors": 2,
+      "database_rows": 0,
+      "api_time_is_none": true
+    },
+    {
+      "name": "module-throws",
+      "kind": "throws",
+      "body": "",
+      "data": null,
+      "success": false,
+      "events": [],
+      "api_events": [],
+      "module_errors": 2,
+      "database_rows": 0,
+      "api_time_is_none": true
+    },
+    {
+      "name": "unsupported",
+      "kind": "unsupported",
+      "body": "",
+      "data": null,
+      "success": false,
+      "events": [],
+      "api_events": [],
+      "module_errors": 0,
+      "database_rows": 0,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-invalid-json",
+      "kind": "mteam",
+      "body": "{",
+      "data": null,
+      "success": false,
+      "events": [],
+      "api_events": [],
+      "module_errors": 2,
+      "database_rows": 0,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-null",
+      "kind": "mteam",
+      "body": "null",
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "<day>",
+        "updated_time": null
+      },
+      "success": true,
+      "events": [
+        "owned",
+        "*"
+      ],
+      "api_events": [
+        "owned"
+      ],
+      "module_errors": 0,
+      "database_rows": 2,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-business-error",
+      "kind": "mteam",
+      "body": "{\"code\":\"1\"}",
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "<day>",
+        "updated_time": null
+      },
+      "success": true,
+      "events": [
+        "owned",
+        "*"
+      ],
+      "api_events": [
+        "owned"
+      ],
+      "module_errors": 0,
+      "database_rows": 2,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-empty-data",
+      "kind": "mteam",
+      "body": "{\"code\":\"0\",\"data\":{}}",
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": null,
+        "user_level": "User",
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "<day>",
+        "updated_time": null
+      },
+      "success": true,
+      "events": [
+        "owned",
+        "*"
+      ],
+      "api_events": [
+        "owned"
+      ],
+      "module_errors": 0,
+      "database_rows": 2,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-null-data",
+      "kind": "mteam",
+      "body": "{\"code\":\"0\",\"data\":null}",
+      "data": null,
+      "success": false,
+      "events": [],
+      "api_events": [],
+      "module_errors": 2,
+      "database_rows": 0,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-invalid-integer",
+      "kind": "mteam",
+      "body": "{\"code\":\"0\",\"data\":{\"memberCount\":{\"uploaded\":\"no\"}}}",
+      "data": null,
+      "success": false,
+      "events": [],
+      "api_events": [],
+      "module_errors": 2,
+      "database_rows": 0,
+      "api_time_is_none": true
+    },
+    {
+      "name": "mt-numeric-userid",
+      "kind": "mteam",
+      "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\"owned\",\"role\":\"17\"}}",
+      "data": {
+        "domain": "owned.example",
+        "username": "owned",
+        "userid": 7,
+        "user_level": "Offer memberStaff",
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "<day>",
+        "updated_time": null
+      },
+      "success": true,
+      "events": [
+        "owned",
+        "*"
+      ],
+      "api_events": [
+        "owned"
+      ],
+      "module_errors": 0,
+      "database_rows": 2,
+      "api_time_is_none": true
+    }
+  ]
+}

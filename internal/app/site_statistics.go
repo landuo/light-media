@@ -53,6 +53,19 @@ func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, erro
 	if err == nil {
 		data.UpdatedTime = at.In(shanghai()).Format("15:04:05")
 	}
+	if dto := snapshot.SourceData; dto != nil {
+		// SiteOper updates a model_dump copy. Its database timestamp must not
+		// mutate the nullable timestamp on the returned source DTO.
+		data.Username, data.UserLevel = dto.Username, dto.UserLevel
+		ptr := func(n int64) *float64 { v := float64(n); return &v }
+		data.Upload, data.Download = ptr(dto.Upload), ptr(dto.Download)
+		data.Ratio, data.Bonus = &dto.Ratio, &dto.Bonus
+		data.Seeding, data.SeedingSize = ptr(dto.Seeding), ptr(dto.SeedingSize)
+		if dto.Error != nil {
+			data.Error = *dto.Error
+		}
+		return data, nil
+	}
 	if snapshot.Connection.Status == "failed" {
 		data.Error = snapshot.Connection.Error
 		if data.Error == "" {
@@ -154,6 +167,7 @@ func enqueueSiteRefreshTx(ctx context.Context, tx *sql.Tx) (Job, error) {
 
 func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 	anyUpdated := false
+	anyData := false
 	config := a.Settings()
 	total := 0
 	for _, site := range config.Sites {
@@ -194,6 +208,9 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 		} else {
 			a.event(ctx, job, "WARN", "site_refresh", "site_failed", "站点 "+site.Name+" 刷新失败，请在站点管理查看连接状态")
 		}
+		if err == nil && snapshot.SourceData != nil {
+			anyData = true
+		}
 		done++
 	}
 	if err := a.jobCancelled(ctx, job); err != nil {
@@ -211,12 +228,12 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 	if valid != 1 {
 		return bad("JOB_CANCELLED", "站点刷新任务已取消")
 	}
-	if anyUpdated {
+	if anyData {
 		if err = recordDomainEventTx(ctx, tx, DomainEvent{EventID: domainEventID("site.refreshed", job.ID+":all"), Type: "site.refreshed", SiteID: "*", JobID: job.ID}); err != nil {
 			return err
 		}
 	}
-	if err = txPut(ctx, tx, "site_refresh_result", job.ID, map[string]any{"finished": done, "total": total, "any_updated": anyUpdated}); err != nil {
+	if err = txPut(ctx, tx, "site_refresh_result", job.ID, map[string]any{"finished": done, "total": total, "any_updated": anyUpdated, "any_data": anyData}); err != nil {
 		return err
 	}
 	if err = tx.Commit(); err != nil {
