@@ -827,7 +827,11 @@ onUnmounted(() => {
                   autocomplete="new-password"
                   aria-label="API Key"
                   :placeholder="
-                    original?.credential_state?.api_key || original?.credential_configured
+                    (
+                      original?.credential_state
+                        ? original.credential_state.api_key
+                        : original?.credential_configured
+                    )
                       ? '已保存，留空保留原凭据'
                       : '填写站点 API Key'
                   " /></label

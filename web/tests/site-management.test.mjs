@@ -646,6 +646,7 @@ test('Rousi edit opens API credentials and submits its independent mailbox token
   assert.ok(!token.props.disabled);
   assert.equal(token.props.type, 'password');
   assert.equal(token.props.placeholder, '已保存，保留原配置');
+  assert.equal(view.label('API Key').props.placeholder, '填写站点 API Key');
   await view.update('Authorization', 'synthetic-new-mailbox-token');
   await view.update('API Key', 'synthetic-profile-key');
   await view.submit();
