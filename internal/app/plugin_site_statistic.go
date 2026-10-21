@@ -225,7 +225,7 @@ func (a *App) commitSiteStatisticNotice(ctx context.Context, run PluginRun, noti
 			}
 		}
 		if last.Date != at.Format("2006-01-02") || last.Type != mode || last.Fingerprint != notice.Fingerprint {
-			notification := Notification{ID: "plugin_notice_" + run.ID, Title: notice.Title, Message: a.clean(notice.Text), CreatedAt: now()}
+			notification := Notification{ID: "plugin_notice_" + run.ID, Title: notice.Title, Message: a.clean(notice.Text), MType: "站点", CreatedAt: now()}
 			if err = txPut(ctx, tx, "notification", notification.ID, notification); err != nil {
 				return nil, err
 			}

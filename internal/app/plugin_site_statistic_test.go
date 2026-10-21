@@ -154,7 +154,7 @@ func TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt(t *testing.
 		t.Fatal("single/full event gate", notices)
 	}
 	var notification Notification
-	if err := a.Store.Get(ctx, "notification", "plugin_notice_"+noticeRun.ID, &notification); err != nil || !strings.Contains(notification.Message, "2.0G") || !strings.Contains(notification.Message, "合成站点") {
+	if err := a.Store.Get(ctx, "notification", "plugin_notice_"+noticeRun.ID, &notification); err != nil || !strings.Contains(notification.Message, "2.0G") || !strings.Contains(notification.Message, "合成站点") || notification.MType != "站点" {
 		t.Fatal("bad actual notification", notification, err)
 	}
 	last, err := a.pluginStore.Data(ctx, "SiteStatistic", "last_notify")
