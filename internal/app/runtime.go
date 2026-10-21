@@ -79,6 +79,7 @@ type App struct {
 	pluginServerStatus      pluginServerStatusRuntime
 	pluginRemoveLink        pluginRemoveLinkRuntime
 	pluginAutoSignIn        pluginAutoSignInRuntime
+	autoSignInEnvironment   func() []string // Private startup-only seam; nil reads os.Environ.
 	pluginScrapeClean       pluginScrapeCleanRuntime
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime

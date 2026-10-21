@@ -163,3 +163,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21：原版 SITE_MESSAGE 的独立加密迁移、父快照完整性、原生显式选择优先、页面实际值投影及逐请求撤销保护，见[说明](plugin-site-message-settings.txt)与[逐项验证](plugin-site-message-settings-verification.json)。实际来源只做冷推导与 stdin 校验，NAS 使用独占合成业务；未部署、未迁移生产开关，完整插件正式完成仍 7/23。
 
 2026-10-21：AutoSignIn 2.9.14 接入实际 SDK 宿主、分身 owner/历史/调度、原生事件及命令、逐请求撤销和同步通知/事件独立回执，见[说明](plugin-auto-signin-host-source.txt)与[验证](plugin-auto-signin-host-source-verification.json)。完整 App 保留 8 项已确认基线失败；受影响普通/race/modernconly、核心和构建分别计证。Browser/OCR、Tjupt 图像能力和拆分/SOCKS 代理等代码仍待补齐；未迁移真实账户或部署，正式完成仍 7/23。
+
+2026-10-21：AutoSignIn 再接显式/环境代理合并、HTTP/HTTPS/SOCKS 与逐跳撤销，保留原 proxy=false 的 trust_env；修复共享传输取消时握手 socket 回调竞态。详见[说明](plugin-auto-signin-proxy-routing.txt)与[验证](plugin-auto-signin-proxy-routing-verification.json)。同字节完整 App 无新增失败，受影响 race/modernconly、核心及构建通过；Browser/OCR/Tjupt 等仍待完成，未部署，正式完成仍7/23。

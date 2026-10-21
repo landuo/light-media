@@ -15,3 +15,5 @@ cold恢复保留runtime/services/jobs/next_due/config/history，不重跑onlyonc
 当前本地原始缺件40项保持不变。imagehash两条完整基线测试因原JPEG gzip参考缺失失败；不删除、替换、不skip伪造通过。原固定formal-manifest不改，新host-source amendment仅固定本轮修改Go文件，禁止覆盖installed fixtures。
 
 验证终态：冻结同一源码的完整 App 为 1156 个顶层/4055 含子项通过、8 个既存基线失败、14 项原有实机前置跳过，不标作全绿。受影响 race 与 modernconly 各 249 个顶层/769 含子项通过；AutoSignIn/durable/builtin 普通与 race、vet 和 23 个 CLI 构建通过，精确计数及日志哈希见配套 verification JSON。冷重启只读页面、逐重定向撤销和真实 Lark 命令链均在最终冻结输入中验过。早一轮全 App 缺少编译时源码前像，仅保留诊断用途，最终已完整重跑。
+
+后续代理阶段已补齐本插件实际 RequestUtils 调用范围的显式/环境/拆分/SOCKS 接线，见 plugin-auto-signin-proxy-routing.txt 与对应验证；上文代理待项仅描述本阶段发布时状态，其余未完边界仍保留。

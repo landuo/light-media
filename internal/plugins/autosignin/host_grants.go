@@ -12,6 +12,7 @@ import (
 type Registration struct {
 	Site          Object
 	ProxyURL      *url.URL
+	RequestsProxy *RequestsProxyPolicy `json:"-"`
 	Browser       BrowserTransport
 	OCR           func(context.Context, string) (any, error)
 	Tjupt         *TjuptDependencies
@@ -28,6 +29,7 @@ func NewRegisteredSites(rows []Registration) *RegisteredSites {
 	for i, row := range rows {
 		cloned[i] = row
 		cloned[i].Site = clone(row.Site).(Object)
+		cloned[i].RequestsProxy = cloneRequestsProxyPolicy(row.RequestsProxy)
 		if row.ProxyURL != nil {
 			proxy := *row.ProxyURL
 			cloned[i].ProxyURL = &proxy
@@ -74,12 +76,19 @@ func DomainKey(address string) string { return sourceDomain(address) }
 // BindRegistrationHooks builds capabilities exclusively from a trusted host
 // registration. Never accept registration fields from an SDK reverse call.
 func BindRegistrationHooks(registration Registration, loaded bool) (SiteVisitHooks, error) {
+	if registration.RequestsProxy != nil && registration.ProxyURL != nil {
+		return SiteVisitHooks{}, ErrSiteTargetDenied
+	}
+	policy := cloneRequestsProxyPolicy(registration.RequestsProxy)
 	site := registration.Site
 	proxy := registration.ProxyURL
 	if !Truth(site["proxy"]) {
 		proxy = nil
+		if policy != nil {
+			policy.Explicit = nil
+		}
 	}
-	binding := SiteHTTPBinding{URL: textValue(site["url"]), Cookie: textValue(site["cookie"]), UserAgent: site["ua"], ProxyURL: proxy, BeforeRequest: registration.BeforeRequest}
+	binding := SiteHTTPBinding{URL: textValue(site["url"]), Cookie: textValue(site["cookie"]), UserAgent: site["ua"], ProxyURL: proxy, RequestsProxy: policy, BeforeRequest: registration.BeforeRequest}
 	transport, err := BindSiteHTTP(binding)
 	if err != nil {
 		return SiteVisitHooks{}, err
@@ -87,7 +96,7 @@ func BindRegistrationHooks(registration Registration, loaded bool) (SiteVisitHoo
 	h := SiteVisitHooks{HTTP: transport, Browser: registration.Browser, OCR: registration.OCR, Tjupt: registration.Tjupt}
 	if loaded {
 		if MTeamMatch(binding.URL) {
-			h.MTeam, err = bindMTeam(Credentials{URL: binding.URL, Token: textValue(site["token"]), UserAgent: textValue(site["ua"]), Proxy: site["proxy"], Timeout: site["timeout"]}, proxy, registration.BeforeRequest)
+			h.MTeam, err = bindMTeam(Credentials{URL: binding.URL, Token: textValue(site["token"]), UserAgent: textValue(site["ua"]), Proxy: site["proxy"], Timeout: site["timeout"]}, proxy, policy, registration.BeforeRequest)
 			if err != nil {
 				return SiteVisitHooks{}, err
 			}

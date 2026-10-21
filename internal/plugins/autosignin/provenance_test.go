@@ -35,7 +35,7 @@ func TestFormalSourceAndOriginalReferenceIntegrity(t *testing.T) {
 		t.Fatal(err)
 	}
 	amendmentSum := sha256.Sum256(amendmentRaw)
-	if hex.EncodeToString(amendmentSum[:]) != "3d7ee2ea024298cf94caf1367f7a3b3bbb4fd3a83c472ea0ac6f3d44c8292989" {
+	if hex.EncodeToString(amendmentSum[:]) != "5959758e7e5012b9394bc1099e9d8fe272ad9e755e21f41b12d4d3258d03fb39" {
 		t.Fatal("host source amendment changed without review")
 	}
 	var amendment struct {

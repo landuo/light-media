@@ -1,0 +1,4139 @@
+{
+  "kind": "synthetic frozen-source AST execution, not real service verification",
+  "source_file": "frozen-source.json",
+  "source_sha256": "fcc0510e8ca782b6468a516ef655053494321f6bf6083000e6cd6fd40b18c335",
+  "scope": "Go comparisons only request mode, empty Session.proxies, trust_env=true, no null-valued explicit entries. Other cases preserve source evidence without parity claims.",
+  "cases": [
+    {
+      "name": "empty-none",
+      "environment": {},
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "empty-empty",
+      "environment": {},
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "empty-value",
+      "environment": {},
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "empty-present-empty",
+      "environment": {},
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "empty-no-proxy-empty",
+      "environment": {},
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": ""
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "empty-no-proxy-value",
+      "environment": {},
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "empty-host-priority",
+      "environment": {},
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "empty-all-host-priority",
+      "environment": {},
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "upper-none",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "upper-empty",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "upper-value",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "http": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "http": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "http": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "upper-present-empty",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "",
+            "http": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "",
+            "http": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "",
+            "http": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "upper-no-proxy-empty",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "upper-no-proxy-value",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid",
+            "http": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid",
+            "http": "http://environment.invalid:8200"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "upper-host-priority",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "upper-all-host-priority",
+      "environment": {
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-none",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-present-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-no-proxy-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-no-proxy-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "lower-wins-all-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": "http://lower.invalid:8400"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://lower.invalid:8400"
+          },
+          "selected": "http://lower.invalid:8400"
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-none",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-present-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-no-proxy-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": ""
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-no-proxy-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "lower-empty-all-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "https_proxy": ""
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "cgi-none",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "cgi-empty",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "cgi-value",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "cgi-present-empty",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "cgi-no-proxy-empty",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "cgi-no-proxy-value",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "cgi-host-priority",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "cgi-all-host-priority",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-none",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-empty",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-value",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-present-empty",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-no-proxy-empty",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-no-proxy-value",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-host-priority",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "cgi-lower-all-host-priority",
+      "environment": {
+        "REQUEST_METHOD": "GET",
+        "HTTP_PROXY": "http://environment.invalid:8200",
+        "http_proxy": "http://explicit.invalid:8100"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-none",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-present-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-no-proxy-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200",
+            "no": "target.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200",
+            "no": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200",
+            "no": "target.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-no-proxy-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-upper-all-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-none",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "no": "other.invalid"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "no": "other.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "no": "other.invalid"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-present-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "",
+            "no": "other.invalid"
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "",
+            "no": "other.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "",
+            "no": "other.invalid"
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-no-proxy-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-no-proxy-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "no": "other.invalid"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "no": "other.invalid"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "no": "other.invalid"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-lower-all-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": "other.invalid"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "https": "http://environment.invalid:8200",
+            "no": "other.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-none",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-present-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": ""
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-no-proxy-empty",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-no-proxy-value",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "no-proxy-empty-lower-all-host-priority",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid",
+        "no_proxy": ""
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "all-none",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": null,
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300",
+            "https": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        }
+      ]
+    },
+    {
+      "name": "all-empty",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300",
+            "https": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        }
+      ]
+    },
+    {
+      "name": "all-value",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "http://explicit.invalid:8100",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "all-present-empty",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": ""
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https": "",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https": "",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "all-no-proxy-empty",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "no_proxy": ""
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300",
+            "https": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        }
+      ]
+    },
+    {
+      "name": "all-no-proxy-value",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "no_proxy": "target.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "no_proxy": "target.invalid"
+          },
+          "selected": null
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "no_proxy": "target.invalid",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "no_proxy": "target.invalid",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "all-host-priority",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "https://target.invalid": "http://explicit.invalid:8100",
+        "https": "http://environment.invalid:8200",
+        "all://target.invalid": "http://hostall.invalid:8500",
+        "all": "http://all.invalid:8300"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "https://target.invalid": "http://explicit.invalid:8100",
+            "https": "http://environment.invalid:8200",
+            "all://target.invalid": "http://hostall.invalid:8500",
+            "all": "http://all.invalid:8300",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "all-all-host-priority",
+      "environment": {
+        "ALL_PROXY": "http://all.invalid:8300"
+      },
+      "explicit": {
+        "all://target.invalid": "http://explicit.invalid:8100",
+        "all": "http://environment.invalid:8200"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start",
+        "http://other.invalid/next",
+        "https://target.invalid/end"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200"
+          },
+          "selected": "http://explicit.invalid:8100"
+        },
+        {
+          "url": "http://other.invalid/next",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        },
+        {
+          "url": "https://target.invalid/end",
+          "proxies": {
+            "all://target.invalid": "http://explicit.invalid:8100",
+            "all": "http://environment.invalid:8200",
+            "http": "http://all.invalid:8300",
+            "https": "http://all.invalid:8300"
+          },
+          "selected": "http://all.invalid:8300"
+        }
+      ]
+    },
+    {
+      "name": "nullable-80",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": null
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "nullable-81",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "no_proxy": null
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "nullable-82",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https://target.invalid": null,
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "session-request-83",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": null,
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "session-request-84",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {},
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "session-request-85",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": null
+      },
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "session-request-86",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "session-request-87",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "session-merge_method-88",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": null,
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "merge_method",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://session.invalid:8600"
+          },
+          "selected": "http://session.invalid:8600"
+        }
+      ]
+    },
+    {
+      "name": "session-merge_method-89",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {},
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "merge_method",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "session-merge_method-90",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": null
+      },
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "merge_method",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "session-merge_method-91",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": ""
+      },
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "merge_method",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": ""
+          },
+          "selected": ""
+        }
+      ]
+    },
+    {
+      "name": "session-merge_method-92",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {
+        "https": "http://explicit.invalid:8100"
+      },
+      "session": {
+        "https": "http://session.invalid:8600"
+      },
+      "trust_env": true,
+      "mode": "merge_method",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://explicit.invalid:8100"
+          },
+          "selected": "http://explicit.invalid:8100"
+        }
+      ]
+    },
+    {
+      "name": "trust-True",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "trust-False",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": false,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid/start"
+      ],
+      "go_supported": false,
+      "expected": [
+        {
+          "url": "https://target.invalid/start",
+          "proxies": {},
+          "selected": null
+        }
+      ]
+    },
+    {
+      "name": "bypass-retains-prior-map",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "bypass.invalid"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid",
+        "https://bypass.invalid",
+        "https://other.invalid"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "bypass.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://bypass.invalid",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "bypass.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://other.invalid",
+          "proxies": {
+            "https": "http://environment.invalid:8200",
+            "no": "bypass.invalid"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "initial-bypass-then-resolve",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid",
+        "https://other.invalid",
+        "https://target.invalid"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://other.invalid",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://target.invalid",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "explicit-no-proxy-override",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "*"
+      },
+      "explicit": {
+        "no_proxy": "other.invalid"
+      },
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid",
+        "https://other.invalid"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://target.invalid",
+          "proxies": {
+            "no_proxy": "other.invalid",
+            "https": "http://environment.invalid:8200",
+            "no": "*"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://other.invalid",
+          "proxies": {
+            "no_proxy": "other.invalid",
+            "https": "http://environment.invalid:8200",
+            "no": "*"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "ipv4-cidr",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "192.0.2.0/24"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://192.0.2.8",
+        "https://198.51.100.8",
+        "https://192.0.2.9"
+      ],
+      "go_supported": true,
+      "expected": [
+        {
+          "url": "https://192.0.2.8",
+          "proxies": {},
+          "selected": null
+        },
+        {
+          "url": "https://198.51.100.8",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        },
+        {
+          "url": "https://192.0.2.9",
+          "proxies": {
+            "https": "http://environment.invalid:8200"
+          },
+          "selected": "http://environment.invalid:8200"
+        }
+      ]
+    },
+    {
+      "name": "invalid-port-authentic-error",
+      "environment": {
+        "HTTPS_PROXY": "http://environment.invalid:8200",
+        "NO_PROXY": "target.invalid"
+      },
+      "explicit": {},
+      "session": {},
+      "trust_env": true,
+      "mode": "request",
+      "urls": [
+        "https://target.invalid:bad"
+      ],
+      "go_supported": false,
+      "expected": [],
+      "expected_error": {
+        "type": "ValueError",
+        "message": "Port could not be cast to integer value as 'bad'"
+      }
+    }
+  ]
+}

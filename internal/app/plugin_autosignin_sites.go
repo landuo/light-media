@@ -7,10 +7,12 @@ import (
 	"encoding/json"
 	"errors"
 	"net/url"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
 
+	"light-media/internal/networkproxy"
 	source "light-media/internal/plugins/autosignin"
 	signinjournal "light-media/internal/plugins/autosignin/durable"
 )
@@ -18,13 +20,27 @@ import (
 // This snapshot never crosses the worker boundary. All three dependencies use
 // this one read, including the credentials and transport policy it authorizes.
 type autoSignInSiteSnapshot struct {
-	Inventory  source.Inventory
-	Rows       map[string]source.Object
-	Proxy      string
-	Custom     any
-	Identities []nativeSiteIdentity
-	Native     []SiteConfig
-	Revision   string
+	Inventory   source.Inventory
+	Rows        map[string]source.Object
+	Proxy       networkproxy.Config
+	Environment []string
+	Custom      any
+	Identities  []nativeSiteIdentity
+	Native      []SiteConfig
+	Revision    string
+}
+
+// Keep order, spelling and empty values: urllib's two-pass environment rules
+// distinguish uppercase and lowercase keys, including host-specific mappings.
+func autoSignInProxyEnvironment(environment []string) []string {
+	out := []string{}
+	for _, entry := range environment {
+		name, _, ok := strings.Cut(entry, "=")
+		if ok && (strings.HasSuffix(strings.ToLower(name), "_proxy") || name == "REQUEST_METHOD") {
+			out = append(out, entry)
+		}
+	}
+	return out
 }
 
 func autoSignInSiteKey(id any) (string, error) {
@@ -77,12 +93,26 @@ func (a *App) readAutoSignInSites(ctx context.Context, owner *pluginAutoSignInOw
 		}
 	}
 	settings := a.Settings()
-	// Resolve once, never consult process proxy settings inside a bound request.
-	proxy, e := resolveProxyConfig(settings.ProxyHost)
+	// Capture only routing inputs once. Resolution and requests trust-env use
+	// the same ordered snapshot, never live process values inside a bound request.
+	environment := os.Environ
+	if a.autoSignInEnvironment != nil {
+		environment = a.autoSignInEnvironment
+	}
+	out.Environment = autoSignInProxyEnvironment(environment())
+	proxy, e := networkproxy.Resolve(settings.ProxyHost, func(key string) string {
+		for i := len(out.Environment) - 1; i >= 0; i-- {
+			name, value, ok := strings.Cut(out.Environment[i], "=")
+			if ok && name == key {
+				return value
+			}
+		}
+		return ""
+	})
 	if e != nil {
 		return out, bad("AUTOSIGNIN_PROXY_UNAVAILABLE", "签到代理配置无法验证")
 	}
-	out.Custom = source.Object{"proxy_http": proxy.HTTP, "proxy_https": proxy.HTTPS}
+	out.Proxy = proxy
 	sites := append([]SiteConfig(nil), settings.Sites...)
 	out.Native = sites
 	sort.SliceStable(sites, func(i, j int) bool { return sites[i].Priority < sites[j].Priority })
@@ -149,7 +179,7 @@ func (a *App) readAutoSignInSites(ctx context.Context, owner *pluginAutoSignInOw
 				return out, signinjournal.ErrStale
 			}
 		}
-		out.Custom = source.Object{"peer": p, "proxy_http": proxy.HTTP, "proxy_https": proxy.HTTPS}
+		out.Custom = source.Object{"peer": p}
 		out.Inventory.CustomEnabled = source.Truth(p.Config["enabled"])
 		if source.Truth(p.Config["enabled"]) {
 			raw, _ := json.Marshal(p.Config["sites"])
@@ -174,18 +204,12 @@ func (a *App) readAutoSignInSites(ctx context.Context, owner *pluginAutoSignInOw
 			}
 		}
 	}
-	// Unsupported proxy modes remain visible at Factory, not silently direct.
-	if proxy.HTTP == proxy.HTTPS {
-		out.Proxy = proxy.HTTP
-	} else {
-		out.Proxy = "unsupported:split"
-	}
 	raw, e := json.Marshal(out)
 	if e != nil {
 		return out, e
 	}
 	if owner != nil {
-		out.Revision = hex.EncodeToString(owner.mac("trusted-site-snapshot/v1:tls-system-min12", raw))
+		out.Revision = hex.EncodeToString(owner.mac("trusted-site-snapshot/v2:frozen-requests-proxy:tls-system-min12", raw))
 	}
 	return out, nil
 }
@@ -265,14 +289,14 @@ func (a *App) autoSignInSiteDependencies(ctx context.Context, owner *pluginAutoS
 				return out, bad("AUTOSIGNIN_ADAPTER_DEPENDENCY_UNAVAILABLE", "此站点需要尚未接入的可信OCR或题库执行能力")
 			}
 		}
-		var proxy *url.URL
-		if source.Truth(row["proxy"]) && snapshot.Proxy != "" {
-			proxy, e = url.Parse(snapshot.Proxy)
-			if e != nil || proxy.Host == "" || (proxy.Scheme != "http" && proxy.Scheme != "https") {
-				return out, bad("AUTOSIGNIN_PROXY_UNAVAILABLE", "签到传输尚不支持此代理模式")
-			}
+		policy := &source.RequestsProxyPolicy{Environment: append([]string(nil), snapshot.Environment...), Explicit: map[string]string{}}
+		if snapshot.Proxy.HTTP != "" {
+			policy.Explicit["http"] = snapshot.Proxy.HTTP
 		}
-		registration := source.Registration{Site: out.Site, ProxyURL: proxy, BeforeRequest: guard}
+		if snapshot.Proxy.HTTPS != "" {
+			policy.Explicit["https"] = snapshot.Proxy.HTTPS
+		}
+		registration := source.Registration{Site: out.Site, RequestsProxy: policy, BeforeRequest: guard}
 		generic, e := source.BindRegistrationHooks(registration, false)
 		if e != nil {
 			return out, e

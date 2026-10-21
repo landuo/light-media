@@ -17,12 +17,19 @@ type BoundMTeam struct {
 }
 
 func BindMTeam(credentials Credentials, proxy *url.URL) (*BoundMTeam, error) {
-	return bindMTeam(credentials, proxy, nil)
+	return bindMTeam(credentials, proxy, nil, nil)
 }
 
-func bindMTeam(credentials Credentials, proxy *url.URL, beforeRequest func(context.Context) error) (*BoundMTeam, error) {
+func bindMTeam(credentials Credentials, proxy *url.URL, policy *RequestsProxyPolicy, beforeRequest func(context.Context) error) (*BoundMTeam, error) {
+	if policy != nil && proxy != nil {
+		return nil, ErrSiteTargetDenied
+	}
+	policy = cloneRequestsProxyPolicy(policy)
 	if !Truth(credentials.Proxy) {
 		proxy = nil
+		if policy != nil {
+			policy.Explicit = nil
+		}
 	}
 	u, err := url.Parse(credentials.URL)
 	if err != nil || u == nil || u.User != nil || u.Scheme != "https" || u.Port() != "" {
@@ -45,7 +52,7 @@ func bindMTeam(credentials Credentials, proxy *url.URL, beforeRequest func(conte
 	if ok && plan.URL != target {
 		return nil, ErrSiteTargetDenied
 	}
-	api, err := BindSiteHTTP(SiteHTTPBinding{URL: target, ProxyURL: proxy, UserAgent: credentials.UserAgent, BeforeRequest: beforeRequest})
+	api, err := BindSiteHTTP(SiteHTTPBinding{URL: target, ProxyURL: proxy, RequestsProxy: policy, UserAgent: credentials.UserAgent, BeforeRequest: beforeRequest})
 	if err != nil {
 		return nil, err
 	}

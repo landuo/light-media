@@ -1,0 +1,346 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "3bb924939e2c103ce8b84c27bd070455c7b8a22d",
+  "branch": "dev/plugins-continuation",
+  "scope": "AutoSignIn frozen RequestUtils proxy request-path integration; not generic Session parity or complete-plugin acceptance",
+  "migration_count": "7/23 unchanged",
+  "deployed": false,
+  "real_accounts_or_proxy_credentials_used": false,
+  "source": {
+    "requests_version": "2.34.2",
+    "utils_sha256": "657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c",
+    "utils_installed_hash_exact": true,
+    "sessions_sha256": "96fbb30bbbf06a59a5268d13b57885149756aa3f31695b5c15e41dd7bb2f67a6",
+    "sessions_scope": "Official same-version source; installed sessions file hash was not retained",
+    "license": "internal/networkproxy/licenses/Requests-Apache-2.0.txt",
+    "oracle": "testdata/plugins/auto-signin-proxy-routing/oracle.json",
+    "oracle_total_cases": 100,
+    "go_compared_cases": 85,
+    "go_compared_hops": 252,
+    "source_only_cases": 15,
+    "source_only_categories": {
+      "nullable_explicit": 3,
+      "nonempty_session_via_request": 5,
+      "nonempty_session_direct_merge": 5,
+      "trust_env_false": 1,
+      "invalid_url_port": 1
+    },
+    "source_only_explanation": "None of these 15 are TLS/netrc security exceptions. First 14 are normal wider Session API semantics not produced by fixed AutoSignIn RequestUtils requests.request with a fresh empty Session, trust_env=true and string http/https settings.PROXY or None. Invalid port is rejected earlier by host URL authorization. No claim of generic Requests Session parity."
+  },
+  "input": {
+    "manifest": "work/auto-signin-host-validation/proxy-final-v2/manifest.json",
+    "sha256": "51f0df7887eb62b7360bc38b59cb3b069f51e733d86d382aa79e71165a222cb1",
+    "files": 5303,
+    "missing_files": 40,
+    "before_images": "work/auto-signin-host-validation/proxy-final-v2/before-images.tar.gz",
+    "all_final_gate_source_checks": "No modified non-document input before/after gates"
+  },
+  "code_sha256": {
+    "internal/app/plugin_autosignin_journal_test.go": "308b59f8eb83fb369974bc07b635db483364c8074bf5e66e1b2512890e177006",
+    "internal/app/plugin_autosignin_sites.go": "17a7e3c87055450e69c43a69e6b08e2d61552d7dc5b12ae5b91ea13ca81c7dba",
+    "internal/app/plugin_autosignin_sites_test.go": "c6493bf1cd451e562341f45199ac56dbfcb457dc624f3383f142342088d06432",
+    "internal/app/runtime.go": "2d4365f37469bbe1234be558712998c065d8741642cb74b90cbaa812c1515530",
+    "internal/app/runtime_test.go": "b5fee39a070bfc31029895efec0505e3aa5824152c81abb0190cdb82bca8360a",
+    "internal/networkproxy/requests_cancel.go": "bab3e9b740990d73a40b24033554b9d005ab23e38234e22c6b15982b3c589be7",
+    "internal/networkproxy/requests_cancel_test.go": "920a62cb7ceb8638e41a59ebee7f1ebb1c6543475ee352a89d04f9c8d904e148",
+    "internal/networkproxy/requests_env.go": "22d79755751a445593f25c8edc741d3931c5a94c18295b760a967efc47ca056c",
+    "internal/networkproxy/requests_merge.go": "a0380ec024b78daef35ab0eb637d4c9cdd9ad842d656bbd45a9c80e1c3f29fc5",
+    "internal/networkproxy/requests_merge_oracle_test.go": "5bdec55cdf65d44ee1809518fa5ecd6261b1a89937a55a8211cdf823ea48999c",
+    "internal/networkproxy/requests_merge_test.go": "13c9cd23fdc5baffec79c1d5cfc177247327ba7f28c8959c45ade77d8acfa1a7",
+    "internal/networkproxy/requests_transport.go": "1e409eb302e28902c2719e10a9e830f80e2a510cc3285a029e3a344d9c7b1f97",
+    "internal/plugins/autosignin/host_grants.go": "2144a96199525fd78540e8a008e694e7f469d234a11e1718753ebb563d1cb617",
+    "internal/plugins/autosignin/http_transport.go": "df4c875e07c5aa8327fb7885bed34b56210ff97edb3ade633e514c117621636d",
+    "internal/plugins/autosignin/mteam_transport.go": "b279f9624fc89706bff13638acb02b8bbbf0db7b1dcf72669bc034f92f5a7877",
+    "internal/plugins/autosignin/provenance_test.go": "0b5484f8fc3734aefdc5f08acaa4d169e9e6784e23ff6c042011b17a3c9ef9e9",
+    "internal/plugins/autosignin/requests_proxy_policy_test.go": "6caa2a8089315448c2e67e457c062f75fd387df5013872d98217db0f736bb3aa",
+    "testdata/plugins/auto-signin-2.9.14/host-source-manifest.json": "5959758e7e5012b9394bc1099e9d8fe272ad9e755e21f41b12d4d3258d03fb39",
+    "testdata/plugins/auto-signin-proxy-routing/README.md": "498253dc4a2e972a02a329ddeb371059bac17184f232dd2ca8915511a8d1f4e0",
+    "testdata/plugins/auto-signin-proxy-routing/frozen-source.json": "fcc0510e8ca782b6468a516ef655053494321f6bf6083000e6cd6fd40b18c335",
+    "testdata/plugins/auto-signin-proxy-routing/generate-oracle.py": "0b14842dc101a215d55619e0229026cbda4236397a2b47c4017dfc759593b884",
+    "testdata/plugins/auto-signin-proxy-routing/oracle.json": "c8cf2181132c25f966abd7d14a375515ea5d2aa907a4b28e000fdab99994e2c9"
+  },
+  "gates": {
+    "app-target2": {
+      "log": "work/auto-signin-proxy-validation/app-target2.jsonl",
+      "sha256": "6f2fc4838bef22643103d293bdd9eef266463a0d69e318e9564aa64a6a552a5e",
+      "exit_code": 0,
+      "top_level_passed": 70,
+      "passed_including_subtests": 150,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T05:09:20.488312484+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 33.898
+        }
+      ]
+    },
+    "final-app-full": {
+      "log": "work/auto-signin-proxy-validation/final-app-full.jsonl",
+      "sha256": "278614cb776550810585547ff5a22cb9ea0e220507820f95091641e3321f030a",
+      "exit_code": 1,
+      "top_level_passed": 1161,
+      "passed_including_subtests": 4068,
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestPluginServerStatusOwnedUIFixture",
+        "TestPluginSystemProcessOwnedUIFixture",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T05:26:24.193609886+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1019.857
+        }
+      ]
+    },
+    "final-app-race": {
+      "log": "work/auto-signin-proxy-validation/recovered-gates/final-app-race.jsonl",
+      "sha256": "c44b05464049a8ed1b4bb7ad90963e0feed90587c1702449b67b417473c1fdc4",
+      "exit_code": 0,
+      "top_level_passed": 286,
+      "passed_including_subtests": 1840,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T05:57:19.627998355+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1447.784
+        }
+      ]
+    },
+    "final-app-modernconly": {
+      "log": "work/auto-signin-proxy-validation/recovered-gates/final-app-modernconly.jsonl",
+      "sha256": "1eef6b2f6a833d343eb4df059d3bead594ef42913605d69738a30d7b66f6c9ed",
+      "exit_code": 0,
+      "top_level_passed": 286,
+      "passed_including_subtests": 1840,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T06:00:01.320997627+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 134.225
+        }
+      ]
+    },
+    "final-core-normal": {
+      "log": "work/auto-signin-proxy-validation/recovered-gates/final-core-normal.jsonl",
+      "sha256": "5d33dfeae696f1f672f6ac26ea05367c2938dea75d459515df0bfe4d0cda8f6c",
+      "exit_code": 0,
+      "top_level_passed": 159,
+      "passed_including_subtests": 6243,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T06:00:03.574050024+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/networkproxy",
+          "Elapsed": 0.65
+        },
+        {
+          "Time": "2026-10-22T06:00:04.509722531+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/builtin",
+          "Elapsed": 0.228
+        },
+        {
+          "Time": "2026-10-22T06:00:05.468547527+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 1.187
+        },
+        {
+          "Time": "2026-10-22T06:00:06.172536248+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/mergemessagenotify/apprise",
+          "Elapsed": 1.891
+        },
+        {
+          "Time": "2026-10-22T06:02:11.221090566+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin",
+          "Elapsed": 126.94
+        }
+      ]
+    },
+    "final-core-race": {
+      "log": "work/auto-signin-proxy-validation/recovered-gates/final-core-race.jsonl",
+      "sha256": "e84ea1a812ced07731ec24d4a6ce614ea126e8cfb38cd2418436bc647119c648",
+      "exit_code": 0,
+      "top_level_passed": 159,
+      "passed_including_subtests": 6243,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T06:02:16.030645458+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/networkproxy",
+          "Elapsed": 2.172
+        },
+        {
+          "Time": "2026-10-22T06:02:17.838730093+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/builtin",
+          "Elapsed": 2.128
+        },
+        {
+          "Time": "2026-10-22T06:02:23.495935982+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 7.785
+        },
+        {
+          "Time": "2026-10-22T06:02:29.548175787+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/mergemessagenotify/apprise",
+          "Elapsed": 13.837
+        },
+        {
+          "Time": "2026-10-22T06:04:48.19725856+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin",
+          "Elapsed": 152.487
+        }
+      ]
+    },
+    "final-vet": {
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-build": {
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "app_race_modernconly_scope": "TestRemoveLinkInitDiagnostic|TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestReviewedRemoveLink|TestPluginAutoSignIn|TestAutoSignIn|TestLarkPluginCommand|TestPluginHTTP|TestPluginDeferred|TestPluginRuns|TestPluginSchedules|TestPluginHostRejects|TestPluginRuntime|TestPluginCategory|TestPluginLogs|TestPluginStoreSupportsActualLargeMigratingHistory|TestPluginLark|TestLark",
+  "known_baseline_failures": "Full App exit1 retains same 8 top-level existing image/TMDB/scrape/subscription failures and 14 real-environment prerequisite skips; new failing tests compared with published host milestone = 0. Missing original binaries unchanged, no deletion/replacement/skips added. Full project is not green.",
+  "environment_interruption": {
+    "session_id": 59569,
+    "tool_result": "Unknown process id 59569 after environment interruption",
+    "exit_code": null,
+    "terminal_package_result": null,
+    "source_manifest_sha256": "51f0df7887eb62b7360bc38b59cb3b069f51e733d86d382aa79e71165a222cb1",
+    "files": {
+      "final-app-race.jsonl": {
+        "sha256": "95bfe73456fe076a11abf9e7f0b253c3e0d1a2423fb522f540cb5e4fa51fc936",
+        "bytes": 165855
+      },
+      "final-app-race.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "final-app-race.input-before.json": {
+        "sha256": "df98f196a1c863eb817f1ce36e1f97ae1abb2984aae6b756333dddd08b2e24f5",
+        "bytes": 119
+      }
+    },
+    "preserved_unmodified": true
+  },
+  "interruption_resolution": "Original session lost without terminal exit; exact source bytes retained. Old logs not overwritten. Recovery directory contains complete new race/modernconly/core/vet/CLI gates, not inferred success.",
+  "early_regressions": [
+    "First new App SOCKS no-fallback test incorrectly expected an escaping network error; corrected to exact source None return and strengthened actual reject-attempt=1/origin no additional requests. Production error handling unchanged.",
+    "Initial networkproxy race exposed existing cancellation callback-stop ownership gap. Tracked sockets now synchronously close when original context is canceled at release; successful response/body remains open. First failure and pre-fix hashes preserved."
+  ],
+  "remaining_code": [
+    "Trusted browser/render and OCR capabilities",
+    "Tjupt trusted image origin/per-I/O policy and original answer-file import/visibility semantics",
+    "PluginAction downstream consumers and other documented original dependency differences"
+  ],
+  "production_pending": [
+    "No real configuration/KV/credential migration",
+    "No production or NAS deployment",
+    "No real-site sign-in or external-account acceptance"
+  ],
+  "security_boundaries": [
+    "Frozen filtered proxy variables only; no current actual environment written to files or reports",
+    "Proxy=false retains source trust_env routing, disables only explicit settings.PROXY",
+    "No proxy-error fallback to direct",
+    "TLS>=1.2 and origin/proxy certificate verification retained; no .netrc or CA_BUNDLE automatic access",
+    "Guard wraps every routed RoundTrip; snapshot HMAC v2 revokes old environment/config snapshots",
+    "Each Do creates isolated chain; fixed adapters and MTeam select actual request target scheme",
+    "Proxy credentials never copied to origin headers; source pathological redirect-header divergence not generalized into authorization"
+  ]
+}

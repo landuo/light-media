@@ -23,6 +23,7 @@ type RequestsTransport struct {
 	base        *http.Transport
 	environment func() []string
 	routes      map[string]*http.Transport
+	merged      *requestsProxyMerge
 }
 
 func NewRequestsTransport(base *http.Transport, environment func() []string) *RequestsTransport {
@@ -50,7 +51,7 @@ func (t *RequestsTransport) RoundTrip(req *http.Request) (*http.Response, error)
 	if err := req.Context().Err(); err != nil {
 		return nil, err
 	}
-	proxy, err := RequestsEnvironmentProxy(t.environment(), req.URL)
+	proxy, err := t.requestProxy(req.URL)
 	if err != nil {
 		return nil, err
 	}

@@ -5,9 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"net"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -207,7 +211,7 @@ func TestAutoSignInTrustedSitesCrossOriginAndUnsupportedCapabilities(t *testing.
 	if leaked.Load() != 0 {
 		t.Fatal("redirect leaked credential-bearing request")
 	}
-	for _, kind := range []string{"browser", "ocr", "tjupt", "socks"} {
+	for _, kind := range []string{"browser", "ocr", "tjupt"} {
 		t.Run(kind, func(t *testing.T) {
 			settings.Sites[0] = signinSitesNative(origin.URL)
 			settings.ProxyHost = ""
@@ -218,9 +222,6 @@ func TestAutoSignInTrustedSitesCrossOriginAndUnsupportedCapabilities(t *testing.
 				settings.Sites[0].BaseURL = "https://hdsky.me"
 			case "tjupt":
 				settings.Sites[0].BaseURL = "https://www.tjupt.org"
-			case "socks":
-				settings.Sites[0].Proxy = true
-				settings.ProxyHost = "socks5://127.0.0.1:9"
 			}
 			signinSitesPublish(t, f.a, settings)
 			deps := signinSitesDependencies(t, f)
@@ -255,7 +256,7 @@ func TestAutoSignInTrustedSitesRejectsIdentityCorruptionAndReservedCustomID(t *t
 
 func TestAutoSignInFormInventoryBeforeInstallationDoesNotCreateOwner(t *testing.T) {
 	store, plugins := pluginStoreFixture(t)
-	a := &App{Store: store, pluginStore: plugins}
+	a := &App{Store: store, pluginStore: plugins, autoSignInEnvironment: func() []string { return nil }}
 	settings := a.Settings()
 	settings.Sites = []SiteConfig{signinSitesNative("http://127.0.0.1:1")}
 	signinSitesPublish(t, a, settings)
@@ -449,5 +450,373 @@ func signinSitesRedirectRevocation(t *testing.T, api bool) {
 	}
 	if bound.Site["cookie"] != "sid=synthetic-native" {
 		t.Fatal("revocation rewrote the originally bound credentials")
+	}
+}
+
+// The provider never reads process environment, and changes are synchronized
+// with redirect handlers to keep the revocation tests race-clean.
+type signinSyntheticEnvironment struct {
+	mu      sync.Mutex
+	entries []string
+	calls   int
+}
+
+func (e *signinSyntheticEnvironment) read() []string {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.calls++
+	return append([]string(nil), e.entries...)
+}
+func (e *signinSyntheticEnvironment) set(entries ...string) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.entries = append([]string(nil), entries...)
+}
+
+func TestAutoSignInProxySnapshotFiltersAndFreezesAllRoutingInputs(t *testing.T) {
+	f := signinSQLSetup(t)
+	environment := &signinSyntheticEnvironment{}
+	environment.set("HTTP_PROXY=http://127.0.0.1:1101", "http_proxy=", "HTTPS_PROXY=socks5h://127.0.0.1:1102", "http://host.test_proxy=http://127.0.0.1:1103", "No_PrOxY=", "REQUEST_METHOD=POST", "request_method=ignored", "UNRELATED=synthetic-not-routing")
+	f.a.autoSignInEnvironment = environment.read
+	first, err := f.a.readAutoSignInSites(context.Background(), f.o)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if environment.calls != 1 {
+		t.Fatal("snapshot reread provider")
+	}
+	want := []string{"HTTP_PROXY=http://127.0.0.1:1101", "http_proxy=", "HTTPS_PROXY=socks5h://127.0.0.1:1102", "http://host.test_proxy=http://127.0.0.1:1103", "No_PrOxY=", "REQUEST_METHOD=POST"}
+	if !reflect.DeepEqual(first.Environment, want) || first.Proxy.HTTP != "http://127.0.0.1:1101" || first.Proxy.HTTPS != "socks5h://127.0.0.1:1102" {
+		t.Fatal("frozen routing inputs differ")
+	}
+	environment.set(append(want, "UNRELATED=changed")...)
+	second, err := f.a.readAutoSignInSites(context.Background(), f.o)
+	if err != nil || first.Revision != second.Revision {
+		t.Fatal("unrelated environment changed authority", err)
+	}
+	environment.set(append(want, "all_proxy=socks5h://127.0.0.1:1104")...)
+	third, err := f.a.readAutoSignInSites(context.Background(), f.o)
+	if err != nil || first.Revision == third.Revision {
+		t.Fatal("environment omitted from authority", err)
+	}
+	if !reflect.DeepEqual(first.Environment, want) {
+		t.Fatal("snapshot mutated with provider")
+	}
+	environment.set("HTTP_PROXY=http://127.0.0.1:1101", "HTTP_PROXY=http://127.0.0.1:1105")
+	duplicate, err := f.a.readAutoSignInSites(context.Background(), f.o)
+	if err != nil || duplicate.Proxy.HTTP != "http://127.0.0.1:1105" || duplicate.Proxy.HTTPS != "http://127.0.0.1:1105" {
+		t.Fatal("duplicate synthetic environment did not use last value", err)
+	}
+}
+
+func TestAutoSignInFactoryRequestsProxyUsesEnvironmentEvenWhenFlagFalse(t *testing.T) {
+	for _, enabled := range []bool{false, true} {
+		t.Run(fmt.Sprint(enabled), func(t *testing.T) {
+			f := signinSQLSetup(t)
+			var direct, proxied atomic.Int32
+			origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { direct.Add(1); fmt.Fprint(w, "direct") }))
+			defer origin.Close()
+			proxy := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				proxied.Add(1)
+				if !r.URL.IsAbs() || r.Header.Get("Cookie") != "sid=synthetic-native" {
+					t.Error("proxy lost absolute target or trusted credentials")
+				}
+				fmt.Fprint(w, "synthetic proxy response")
+			}))
+			defer proxy.Close()
+			environment := &signinSyntheticEnvironment{}
+			environment.set("http_proxy=" + proxy.URL)
+			f.a.autoSignInEnvironment = environment.read
+			settings := f.a.Settings()
+			settings.Sites = []SiteConfig{signinSitesNative(origin.URL)}
+			settings.Sites[0].Proxy = enabled
+			signinSitesPublish(t, f.a, settings)
+			deps := signinSitesDependencies(t, f)
+			inventory, _ := deps.Inventory(context.Background())
+			bound, err := deps.Factory(context.Background(), inventory.Configured[0])
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = bound.Hooks.HTTP.Do(context.Background(), source.PageRequest{Method: "GET", URL: origin.URL})
+			if err != nil || proxied.Load() != 1 || direct.Load() != 0 {
+				t.Fatal("environment routing failed", err, proxied.Load(), direct.Load())
+			}
+			environment.set("http_proxy="+proxy.URL, "no_proxy=127.0.0.1")
+			_, err = bound.Hooks.HTTP.Do(context.Background(), source.PageRequest{Method: "GET", URL: origin.URL})
+			if !errors.Is(err, signinjournal.ErrStale) || proxied.Load() != 1 || direct.Load() != 0 {
+				t.Fatal("revoked environment reached network", err)
+			}
+		})
+	}
+}
+
+// A minimal SOCKS5 fixture forwards only to the synthetic local origin. It is
+// not a production proxy and never resolves arbitrary external destinations.
+func signinSyntheticSOCKS(t *testing.T, target string) (string, *atomic.Int32) {
+	t.Helper()
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	count := &atomic.Int32{}
+	var workers sync.WaitGroup
+	acceptDone := make(chan struct{})
+	t.Cleanup(func() { listener.Close(); <-acceptDone; workers.Wait() })
+	go func() {
+		defer close(acceptDone)
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				return
+			}
+			workers.Add(1)
+			go func() {
+				defer workers.Done()
+				defer conn.Close()
+				_ = conn.SetDeadline(time.Now().Add(10 * time.Second))
+				header := make([]byte, 2)
+				if _, err := io.ReadFull(conn, header); err != nil {
+					return
+				}
+				methods := make([]byte, int(header[1]))
+				if _, err := io.ReadFull(conn, methods); err != nil {
+					return
+				}
+				if _, err := conn.Write([]byte{5, 0}); err != nil {
+					return
+				}
+				request := make([]byte, 4)
+				if _, err := io.ReadFull(conn, request); err != nil {
+					return
+				}
+				size := 0
+				switch request[3] {
+				case 1:
+					size = 4
+				case 4:
+					size = 16
+				case 3:
+					b := make([]byte, 1)
+					if _, err := io.ReadFull(conn, b); err != nil {
+						return
+					}
+					size = int(b[0])
+				default:
+					return
+				}
+				if _, err := io.ReadFull(conn, make([]byte, size+2)); err != nil {
+					return
+				}
+				upstream, err := net.DialTimeout("tcp", target, time.Second)
+				if err != nil {
+					return
+				}
+				defer upstream.Close()
+				count.Add(1)
+				if _, err = conn.Write([]byte{5, 0, 0, 1, 127, 0, 0, 1, 0, 0}); err != nil {
+					return
+				}
+				done := make(chan struct{})
+				go func() {
+					_, _ = io.Copy(upstream, conn)
+					if c, ok := upstream.(*net.TCPConn); ok {
+						_ = c.CloseWrite()
+					}
+					close(done)
+				}()
+				_, _ = io.Copy(conn, upstream)
+				conn.Close()
+				<-done
+			}()
+		}
+	}()
+	return listener.Addr().String(), count
+}
+
+func TestAutoSignInFactorySOCKSSupportedAndFailureNeverFallsBack(t *testing.T) {
+	for _, scheme := range []string{"socks5", "socks5h"} {
+		t.Run(scheme, func(t *testing.T) {
+			f := signinSQLSetup(t)
+			var requests atomic.Int32
+			origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				requests.Add(1)
+				w.Header().Set("Connection", "close")
+				fmt.Fprint(w, "synthetic socks success")
+			}))
+			defer origin.Close()
+			address, count := signinSyntheticSOCKS(t, strings.TrimPrefix(origin.URL, "http://"))
+			settings := f.a.Settings()
+			settings.Sites = []SiteConfig{signinSitesNative(origin.URL)}
+			settings.Sites[0].Proxy = true
+			settings.ProxyHost = scheme + "://" + address
+			signinSitesPublish(t, f.a, settings)
+			deps := signinSitesDependencies(t, f)
+			inv, _ := deps.Inventory(context.Background())
+			bound, err := deps.Factory(context.Background(), inv.Configured[0])
+			if err != nil {
+				t.Fatal("SOCKS binding rejected", err)
+			}
+			response, err := bound.Hooks.HTTP.Do(context.Background(), source.PageRequest{Method: "GET", URL: origin.URL})
+			if err != nil || response == nil || response.Status != http.StatusOK || response.Text != "synthetic socks success" || count.Load() != 1 || requests.Load() != 1 {
+				t.Fatal("SOCKS did not return the origin response", err, count.Load(), requests.Load())
+			}
+			// Reject a real SOCKS handshake, proving the configured proxy was
+			// attempted while the origin remains untouched by fallback traffic.
+			failedProxy, err := net.Listen("tcp", "127.0.0.1:0")
+			if err != nil {
+				t.Fatal(err)
+			}
+			var failedAttempts atomic.Int32
+			stopped := make(chan struct{})
+			go func() {
+				defer close(stopped)
+				conn, acceptErr := failedProxy.Accept()
+				if acceptErr != nil {
+					return
+				}
+				defer conn.Close()
+				_ = conn.SetDeadline(time.Now().Add(5 * time.Second))
+				greeting := make([]byte, 2)
+				if _, readErr := io.ReadFull(conn, greeting); readErr != nil {
+					return
+				}
+				methods := make([]byte, int(greeting[1]))
+				if _, readErr := io.ReadFull(conn, methods); readErr != nil {
+					return
+				}
+				failedAttempts.Add(1)
+				_, _ = conn.Write([]byte{5, 255})
+			}()
+			t.Cleanup(func() { failedProxy.Close(); <-stopped })
+			settings.ProxyHost = scheme + "://" + failedProxy.Addr().String()
+			signinSitesPublish(t, f.a, settings)
+			deps = signinSitesDependencies(t, f)
+			bound, err = deps.Factory(context.Background(), inv.Configured[0])
+			if err != nil {
+				t.Fatal("supported binding unexpectedly rejected", err)
+			}
+			response, err = bound.Hooks.HTTP.Do(context.Background(), source.PageRequest{Method: "GET", URL: origin.URL})
+			// Frozen RequestUtils suppresses ordinary RequestException and
+			// returns None; nil response is not a successful HTTP response.
+			if response != nil || err != nil || failedAttempts.Load() != 1 || requests.Load() != 1 {
+				t.Fatal("failed SOCKS did not preserve source failure without direct fallback", err, failedAttempts.Load(), requests.Load())
+			}
+		})
+	}
+}
+
+func TestAutoSignInProxyRevocationStopsSameOriginRedirect(t *testing.T) {
+	for _, mutation := range []string{"environment", "setting"} {
+		t.Run(mutation, func(t *testing.T) {
+			f := signinSQLSetup(t)
+			environment := &signinSyntheticEnvironment{}
+			f.a.autoSignInEnvironment = environment.read
+			var first, next atomic.Int32
+			publication := make(chan error, 1)
+			origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path == "/first" {
+					first.Add(1)
+					if mutation == "environment" {
+						environment.set("NO_PROXY=synthetic-new-bypass.test")
+						publication <- nil
+					} else {
+						settings := f.a.Settings()
+						settings.ProxyHost = "http://127.0.0.1:9"
+						publication <- signinSitesPublishConfig(f.a, settings)
+					}
+					http.Redirect(w, r, "/next", http.StatusFound)
+					return
+				}
+				next.Add(1)
+			}))
+			defer origin.Close()
+			settings := f.a.Settings()
+			settings.Sites = []SiteConfig{signinSitesNative(origin.URL)}
+			signinSitesPublish(t, f.a, settings)
+			deps := signinSitesDependencies(t, f)
+			inventory, _ := deps.Inventory(context.Background())
+			bound, err := deps.Factory(context.Background(), inventory.Configured[0])
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = bound.Hooks.HTTP.Do(context.Background(), source.PageRequest{Method: "GET", URL: origin.URL + "/first"})
+			if !errors.Is(err, signinjournal.ErrStale) || first.Load() != 1 || next.Load() != 0 {
+				t.Fatal("routing revocation allowed redirect", err, first.Load(), next.Load())
+			}
+			if err := <-publication; err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestAutoSignInSDKProxyPolicyClonesAndBusinessSuccess(t *testing.T) {
+	for _, route := range []string{"direct", "environment-forward", "explicit-socks"} {
+		t.Run(route, func(t *testing.T) {
+			a := newTestApp(t)
+			useBuiltInPluginProcess(t, a)
+			var direct, forward atomic.Int32
+			success := `<a href="logout.php">退出</a><p>这是您的首次签到，本次签到获得10个魔力值。</p>`
+			origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				direct.Add(1)
+				w.Header().Set("Connection", "close")
+				fmt.Fprint(w, success)
+			}))
+			defer origin.Close()
+			proxy := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				forward.Add(1)
+				if !r.URL.IsAbs() || r.Header.Get("Cookie") != "sid=synthetic-native" {
+					t.Error("untrusted SDK forward request")
+				}
+				fmt.Fprint(w, success)
+			}))
+			defer proxy.Close()
+			environment := &signinSyntheticEnvironment{}
+			a.autoSignInEnvironment = environment.read
+			settings := a.Settings()
+			settings.Sites = []SiteConfig{signinSitesNative(origin.URL)}
+			var socks *atomic.Int32
+			switch route {
+			case "environment-forward":
+				environment.set("http_proxy=" + proxy.URL) // proxy=false must still honor trust_env.
+			case "explicit-socks":
+				address, count := signinSyntheticSOCKS(t, strings.TrimPrefix(origin.URL, "http://"))
+				socks = count
+				settings.ProxyHost = "socks5h://" + address
+				settings.Sites[0].Proxy = true
+			}
+			signinSitesPublish(t, a, settings)
+			config := map[string]any{"enabled": true, "onlyonce": false, "notify": false, "cron": "0 0 * * *", "sign_sites": []any{"all"}, "login_sites": []any{}, "queue_cnt": 1}
+			for _, instance := range []string{"AutoSignIn", "AutoSignIn_proxy_clone"} {
+				autoSignInSDKInstall(t, a, instance, config)
+			}
+			for index, instance := range []string{"AutoSignIn", "AutoSignIn_proxy_clone"} {
+				if _, err := a.queueAutoSignInCommand(context.Background(), instance, pluginAPIAuthority{Kind: "command"}, "飞书", "synthetic-user"); err != nil {
+					t.Fatal(err)
+				}
+				autoSignInSDKExecute(t, a, instance)
+				state := autoSignInSDKState(t, a, instance)
+				if len(state.History) == 0 || state.Stats[source.DomainKey(origin.URL)].Success == 0 {
+					t.Fatal("SDK lacked business success and durable statistics", route)
+				}
+				if index == 0 && len(autoSignInSDKState(t, a, "AutoSignIn_proxy_clone").History) != 0 {
+					t.Fatal("proxy execution crossed clone history")
+				}
+			}
+			switch route {
+			case "direct":
+				if direct.Load() < 2 || forward.Load() != 0 {
+					t.Fatal("direct route mismatch")
+				}
+			case "environment-forward":
+				if forward.Load() < 2 || direct.Load() != 0 {
+					t.Fatal("SDK proxy=false bypassed environment proxy")
+				}
+			case "explicit-socks":
+				if socks.Load() < 2 || direct.Load() < 2 || forward.Load() != 0 {
+					t.Fatal("SDK SOCKS routing mismatch")
+				}
+			}
+		})
 	}
 }

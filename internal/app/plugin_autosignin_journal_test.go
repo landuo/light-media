@@ -34,7 +34,7 @@ type signinSQLFixture struct {
 func signinSQLSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
 	t.Helper()
 	s, p := pluginStoreFixture(t)
-	a := &App{Store: s, pluginStore: p, Dir: filepath.Dir(s.lock.Name())}
+	a := &App{Store: s, pluginStore: p, Dir: filepath.Dir(s.lock.Name()), autoSignInEnvironment: func() []string { return nil }}
 	manifest, _ := json.Marshal(autosignin.Manifest())
 	config := map[string]any{"enabled": false, "onlyonce": false, "sign_sites": []any{}, "login_sites": []any{}}
 	if len(configs) > 0 {
@@ -632,7 +632,7 @@ func TestPluginAutoSignInSQLActualStoreRestartRetainsBytesAndRejectsForgedEffect
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.a = &App{Store: store, pluginStore: p, Dir: f.a.Dir}
+	f.a = &App{Store: store, pluginStore: p, Dir: f.a.Dir, autoSignInEnvironment: func() []string { return nil }}
 	o, err := claimPluginAutoSignInOwner(ctx, f.a, "AutoSignIn", signinSQLImplementation, "UTC")
 	if err != nil {
 		t.Fatal(err)
