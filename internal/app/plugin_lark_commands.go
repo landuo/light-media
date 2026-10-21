@@ -32,6 +32,12 @@ func (a *App) larkDispatchCommand(ctx context.Context, core *pluginLarkCoreExecu
 	name, args := commandrouter.Split(text)
 	command, ok := commandrouter.Lookup(name)
 	if !ok {
+		// Installed plugin get_command declarations (frozen registry) are a
+		// separate ingress: their action goes through the plugin's own durable
+		// command fact instead of a builtin preset handler.
+		if pluginCommand, found := commandrouter.LookupPluginCommand(name); found {
+			return a.dispatchLarkPluginCommand(ctx, pluginCommand, user)
+		}
 		return bad("LARK_COMMAND_REGISTRY_PENDING", "插件与动态命令注册来源尚未全部接入")
 	}
 	// A native read step freezes the exact source event split and builtin dispatch.
@@ -233,4 +239,31 @@ func (a *App) larkCommandPresetAdmission(ctx context.Context) error {
 		return e
 	}
 	return commandrouter.AdmitPreset(installed)
+}
+
+// dispatchLarkPluginCommand carries one installed plugin declaration into its
+// existing durable command fact. The Lark message gate has already rejected
+// non-admin senders when the plugin configures admin_users, so this path never
+// invents a second authority: the channel channel/user fields are the same
+// source values the original PluginAction event carried.
+func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrouter.PluginCommand, user string) error {
+	if command.Name == "" || command.PluginID == "" || strings.TrimSpace(user) == "" {
+		return bad("LARK_PLUGIN_COMMAND_DENIED", "插件命令来源无效")
+	}
+	switch command.PluginID {
+	case "CleanInvalidSeed":
+		if !command.Target("detect_invalid_torrents") {
+			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令动作不属于该插件")
+		}
+		if _, err := a.pluginStore.enqueueCleanInvalidSeedCommand(ctx, "CleanInvalidSeed", map[string]any{"action": command.Action, "channel": "飞书", "user": user}); err != nil {
+			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令目标未安装、已停用或状态未就绪")
+		}
+		return nil
+	case "CloudflareSpeedTest":
+		return bad("LARK_PLUGIN_COMMAND_AUTHORITY_PENDING", "Cloudflare 命令入口需要独立的受控命令凭证")
+	case "AutoSignIn":
+		return bad("LARK_PLUGIN_COMMAND_CONSUMER_PENDING", "签到命令执行端尚未接入")
+	default:
+		return bad("LARK_PLUGIN_COMMAND_UNKNOWN", "未知插件命令")
+	}
 }

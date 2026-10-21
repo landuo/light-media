@@ -25,3 +25,9 @@ internal/commandrouter 新增 4 组测试并全过：3 条声明逐字段对照�
 
 下一步
 先定义消息入口的命令 authority（管理员身份 + 绑定 + 防重），再把 /detect_invalid_torrents、/cloudflare_speedtest、/site_signin 分别接到已存在的执行端（AutoSignIn 需新建），最后做普通/竞态与真实消息回环验证。
+
+2026-10-21 追加：Lark 分发接入第一条真实插件命令
+- larkDispatchCommand 在内置 preset 未命中时查询冻结注册表；命中 /detect_invalid_torrents 时转入 dispatchLarkPluginCommand，按插件声明调用已存在的 PluginStore.enqueueCleanInvalidSeedCommand（action、channel=飞书、user 来自消息发送者），生成与原 PluginAction 同形的命令事实与 event run。
+- 授权依据：原版 LarkMessager 在消息解析阶段执行 _should_reject_admin_command（admin_users 为空则放行，否则仅管理员），Go 的 lark 包已实现同一门（非管理员回复“只有管理员才有权限执行此命令”并丢弃）。命令分发不再增设第二套凭证。
+- /cloudflare_speedtest 需要独立的受控命令 authority（现有 queueCloudflareCommand 只接受 HTTP key/session），/site_signin 需要 AutoSignIn 的 RunCapability 宿主（当前未实现），两者保持明确错误码，不伪装成功。
+- 测试：internal/app 新增 2 组（已安装并初始化后入队并保留 event 绑定；未安装/空用户/动作不符/未接命令分别返回精确错误），全部通过。
