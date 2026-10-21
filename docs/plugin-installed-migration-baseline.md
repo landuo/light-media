@@ -1,5 +1,7 @@
 # 已安装插件迁移基线
 
+2026-10-21 站点索引器目录补充：已取证的 17 行 SitesHelper 模板投影（23 个 host，含 ext_domains 别名）正式内建为 Go 目录并接入站点来源识别，站点地址如 hhan.club、kp.m-team.cc、cspt.top、www.pttime.top 现在按原版 schema 选择适配器并保存注册域；同时修复站点管理把导出 token 误报为已配置凭据的既有回归。详见 [说明](site-indexer-alias-go-port.txt) 与 [逐项验证](site-indexer-alias-verification.json)。这是 SiteStatistic 的模板/别名基础接线，未部署、未访问真实站点，正式完成仍为 7/23。
+
 最新交付（2026-10-21）：新服务已部署 v0.4.8，**二级分类策略1.3、插件彻底卸载2.2、共享识别词2.4.1、系统进程1.1、MoviePilot服务监控1.4、自定义Hosts1.2.1、媒体库服务器刷新1.3.3 已正式迁移，当前7/23已迁移，其余16项继续实施**。媒体库刷新保留原启用和延迟，唯一飞牛引用完成映射；生产表单、首次初始化与当前事件监听位置已核对，无历史重放或刷新调用。媒体连接停用时的表单过滤及选中引用保留已随v0.4.8对齐，完整23项目标继续实施。详见 [本轮交付](plugin-media-server-refresh-delivery.txt)、[部署收据](plugin-media-server-refresh-deployment.json)。下方旧日期记录保留历史阶段。
 
 2026-10-20 共享基础补充：[原版请求与调度设置](source-settings-migration.md)已随 v0.4.2 部署，并正式导入 4 条密文记录，区分配置 TZ 和本地时区。代理认证修复亦已部署；共享配置迁移不额外增加插件完成数量。

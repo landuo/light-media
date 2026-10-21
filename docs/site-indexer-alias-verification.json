@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "base_commit": "8615095b132c3a1e85d84d8171256582d22664e1",
+  "state": "reviewed_indexer_catalog_and_domain_aliases_formally_wired_and_credential_state_fixed_not_plugin_completion",
+  "plugin": "SiteStatistic",
+  "plugin_version": "1.9.7",
+  "actual_complete": 7,
+  "remaining_count": 16,
+  "production_version": "0.4.8",
+  "deployed": false,
+  "real_site_or_downloader_calls": 0,
+  "real_credential_reads_or_migrations": 0,
+  "python_runtime_dependency_added": false,
+  "source_reference": {
+    "catalog_fixture": "testdata/plugins/site-indexer-context/original-selected-catalog.json",
+    "catalog_sha256": "f6099dcd4f55f99646d53dbe4cec2c3f01ad4ec95929052a4e348a4ad90205c0",
+    "helper_sha256": "8a14c1668778305b9b40bdd5456e6a95afe6ef101b11db02750fbcd4e7ae0b64",
+    "proof_scope": "actual installed artifact reference, empty synthetic DB/config, no configured URL merge or authentication",
+    "rows": 17,
+    "hosts": 23,
+    "schemas": {
+      "NexusPhp": 14,
+      "NexusHhanclub": 1,
+      "MTorrent": 1,
+      "RousiPro": 1
+    }
+  },
+  "implementation": {
+    "catalog": "internal/sourceindexer/builtin.go",
+    "catalog_api": [
+      "BuiltinCatalog",
+      "ResolveHost",
+      "ResolveURL"
+    ],
+    "wiring": "internal/app/site_transfer.go::siteImportOrigin",
+    "domains_are_registered_domains": true,
+    "specializations_preserved": [
+      "jiayuan",
+      "ubits",
+      "1ptba",
+      "hhanclub",
+      "mteam",
+      "rousi"
+    ],
+    "unknown_domains": "generic NexusPHP fallback, unchanged",
+    "credential_state_fix": "internal/app/site_options.go::siteCredentialConfigured (mteam requires API key, rousi API key or token, others cookie)"
+  },
+  "checks": {
+    "sourceindexer_tests": "4 new groups + existing catalog/url oracles pass",
+    "app_alias_tests": "2 groups (23 reviewed origins; normalizeManagedSite alias schema) pass",
+    "app_credential_regression": "TestSiteConfigCanBeSavedBeforeCredentialValidation passes; failure was reproduced on unmodified site_transfer.go first",
+    "sites_package": "pass",
+    "sourceindexer_package": "pass",
+    "app_package_full": "pass after credential fix: ok light-media/internal/app 516.610s (full ordinary run)",
+    "gofmt": "clean for changed files",
+    "go_vet": "clean for changed packages",
+    "pre_fix_app_package_full": "FAIL 531.085s on TestSiteConfigCanBeSavedBeforeCredentialValidation (retained above)"
+  },
+  "retained_failures": [
+    "Before the credential fix, internal/app full run failed TestSiteConfigCanBeSavedBeforeCredentialValidation: an m-team site with an exported token but no API key was reported credential_configured=true. Reproduced with site_transfer.go at HEAD, so it was not caused by the alias wiring.",
+    "First full app run in this round ended FAIL after 525s with the same test; the log tail drowned the name and a focused rerun isolated it."
+  ],
+  "privacy": {
+    "no_credentials_read": true,
+    "no_site_requests": true,
+    "no_files_outside_project": true,
+    "fixture_contains_no_configured_urls_or_auth": true
+  },
+  "remaining": [
+    "SystemError and full site-message/statistic notification producers and routed channels.",
+    "Final complete-plugin review, source execution handoff and production migration; remaining 16 instances.",
+    "Additional upstream indexer templates outside the 17 installed rows remain outside the baked catalog (generic NexusPHP fallback)."
+  ],
+  "notes": [
+    "No formal migration count increase: browsing resolutions and schema selection are prerequisites, not plugin completion.",
+    "The catalog is baked Go data; runtime reads no testdata or Python artifacts."
+  ]
+}

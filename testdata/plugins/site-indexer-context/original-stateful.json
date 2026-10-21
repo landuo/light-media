@@ -1,0 +1,725 @@
+{
+  "fixture_id": "installed-site-helper-synthetic-stateful-v2-20261021",
+  "source_artifact_sha256": "8a14c1668778305b9b40bdd5456e6a95afe6ef101b11db02750fbcd4e7ae0b64",
+  "python": "3.12.13",
+  "source_pure_url_methods_sha256": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+  "scope": {
+    "actual_compiled_constructor_lookup_merge_list_add": true,
+    "external_Path_decrypt_config_DB_HTTP_log_are_synthetic": true,
+    "real_catalog_or_user_17_sites_verified": false,
+    "real_authentication_verified": false,
+    "runtime_dependency_for_new_program": false
+  },
+  "steps": [
+    {
+      "sequence": 1,
+      "operation": "inner.constructor",
+      "fixture_catalog": {
+        "version": "owned-1",
+        "indexers": {
+          "template": {
+            "id": "owned-template",
+            "name": "Template",
+            "domain": "https://canonical.invalid/template/",
+            "ext_domains": [
+              "https://alias.invalid/",
+              "https://www.alias-two.invalid/"
+            ],
+            "schema": "NexusPhp",
+            "ua": "template-agent",
+            "pri": 99
+          },
+          "public": {
+            "id": "owned-public",
+            "name": "PublicTemplate",
+            "domain": "https://public.invalid/",
+            "ext_domains": [],
+            "schema": "PublicSchema",
+            "public": true
+          }
+        }
+      },
+      "expected_input_calls": [
+        {
+          "fixture_path": "exists"
+        },
+        {
+          "fixture_path": "read_bytes"
+        },
+        {
+          "fixture_decrypt": "synthetic_pickle"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "operation": "inner.get_indexsites",
+      "observed_projection": [
+        {
+          "key": "canonical.invalid",
+          "value": {
+            "name": "Template",
+            "domain": null,
+            "ext_domains": null,
+            "schema": null,
+            "url": "https://canonical.invalid/template/",
+            "url_bak": null
+          }
+        },
+        {
+          "key": "alias.invalid",
+          "value": {
+            "name": "Template",
+            "domain": null,
+            "ext_domains": null,
+            "schema": null,
+            "url": "https://canonical.invalid/template/",
+            "url_bak": null
+          }
+        },
+        {
+          "key": "alias-two.invalid",
+          "value": {
+            "name": "Template",
+            "domain": null,
+            "ext_domains": null,
+            "schema": null,
+            "url": "https://canonical.invalid/template/",
+            "url_bak": null
+          }
+        },
+        {
+          "key": "public.invalid",
+          "value": {
+            "name": "PublicTemplate",
+            "domain": null,
+            "ext_domains": null,
+            "schema": null,
+            "url": "https://public.invalid/",
+            "url_bak": null
+          }
+        }
+      ],
+      "note": "get_indexsites is a public site-info projection, not raw registry dictionaries"
+    },
+    {
+      "sequence": 3,
+      "operation": "fixture.db_records.extend",
+      "records": [
+        {
+          "id": 1,
+          "name": "FixtureCanonical",
+          "domain": "canonical.invalid",
+          "url": "http://personal.invalid:4321/custom-path/?q=1",
+          "cookie": "fixture_cookie",
+          "apikey": "fixture_key",
+          "pri": 3
+        },
+        {
+          "id": 2,
+          "name": "FixtureAlias",
+          "domain": "alias.invalid",
+          "url": "https://alternate.invalid/personal-path/",
+          "cookie": "fixture_cookie",
+          "ua": "site-agent",
+          "pri": 4
+        },
+        {
+          "id": 3,
+          "name": "FixturePublic",
+          "domain": "public.invalid",
+          "url": "http://public-local.invalid/path/",
+          "public": 1
+        },
+        {
+          "id": 4,
+          "name": "FixtureUnknown",
+          "domain": "custom.invalid",
+          "url": "http://custom.invalid/path/",
+          "cookie": "fixture_cookie"
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "operation": "inner.get_indexers",
+      "db_calls": [
+        {
+          "site_oper": "list_active"
+        }
+      ],
+      "observed_return": [
+        {
+          "id": 2,
+          "name": "FixtureAlias",
+          "domain": "https://alternate.invalid/",
+          "schema": "NexusPhp",
+          "_scheme": null,
+          "url": "https://alternate.invalid/personal-path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [
+            "https://alias.invalid/",
+            "https://www.alias-two.invalid/"
+          ],
+          "is_active": true,
+          "ua": "site-agent",
+          "public": null,
+          "pri": 4
+        },
+        {
+          "id": 2,
+          "name": "FixtureAlias",
+          "domain": "https://alternate.invalid/",
+          "schema": "NexusPhp",
+          "_scheme": null,
+          "url": "https://alternate.invalid/personal-path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [
+            "https://alias.invalid/",
+            "https://www.alias-two.invalid/"
+          ],
+          "is_active": true,
+          "ua": "site-agent",
+          "public": null,
+          "pri": 4
+        },
+        {
+          "id": 3,
+          "name": "FixturePublic",
+          "domain": "http://public-local.invalid/",
+          "schema": "PublicSchema",
+          "_scheme": null,
+          "url": "http://public-local.invalid/path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [],
+          "is_active": true,
+          "ua": "owned-site-alias-probe/1.0",
+          "public": true,
+          "pri": 1
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "operation": "inner.get_indexer",
+      "input_domain": "canonical.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "canonical.invalid"
+        }
+      ],
+      "observed_return": {
+        "id": 1,
+        "name": "FixtureCanonical",
+        "domain": "http://personal.invalid:4321/",
+        "schema": "NexusPhp",
+        "_scheme": null,
+        "url": "http://personal.invalid:4321/custom-path/?q=1",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [
+          "https://alias.invalid/",
+          "https://www.alias-two.invalid/"
+        ],
+        "is_active": true,
+        "ua": "owned-site-alias-probe/1.0",
+        "public": null,
+        "pri": 3
+      }
+    },
+    {
+      "sequence": 6,
+      "operation": "inner.get_indexer",
+      "input_domain": "www.canonical.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "www.canonical.invalid"
+        }
+      ],
+      "observed_return": null
+    },
+    {
+      "sequence": 7,
+      "operation": "inner.get_indexer",
+      "input_domain": "sub.canonical.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "sub.canonical.invalid"
+        }
+      ],
+      "observed_return": null
+    },
+    {
+      "sequence": 8,
+      "operation": "inner.get_indexer",
+      "input_domain": "https://canonical.invalid/",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "https://canonical.invalid/"
+        }
+      ],
+      "observed_return": null
+    },
+    {
+      "sequence": 9,
+      "operation": "inner.get_indexer",
+      "input_domain": "canonical.invalid:443",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "canonical.invalid:443"
+        }
+      ],
+      "observed_return": null
+    },
+    {
+      "sequence": 10,
+      "operation": "inner.get_indexer",
+      "input_domain": "alias.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "alias.invalid"
+        }
+      ],
+      "observed_return": {
+        "id": 2,
+        "name": "FixtureAlias",
+        "domain": "https://alternate.invalid/",
+        "schema": "NexusPhp",
+        "_scheme": null,
+        "url": "https://alternate.invalid/personal-path/",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [
+          "https://alias.invalid/",
+          "https://www.alias-two.invalid/"
+        ],
+        "is_active": true,
+        "ua": "site-agent",
+        "public": null,
+        "pri": 4
+      }
+    },
+    {
+      "sequence": 11,
+      "operation": "inner.get_indexer",
+      "input_domain": "alias-two.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "alias-two.invalid"
+        }
+      ],
+      "observed_return": {
+        "id": 2,
+        "name": "FixtureAlias",
+        "domain": "https://alternate.invalid/",
+        "schema": "NexusPhp",
+        "_scheme": null,
+        "url": "https://alternate.invalid/personal-path/",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [
+          "https://alias.invalid/",
+          "https://www.alias-two.invalid/"
+        ],
+        "is_active": true,
+        "ua": "site-agent",
+        "public": null,
+        "pri": 4
+      }
+    },
+    {
+      "sequence": 12,
+      "operation": "inner.get_indexer",
+      "input_domain": "www.alias-two.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "www.alias-two.invalid"
+        }
+      ],
+      "observed_return": null
+    },
+    {
+      "sequence": 13,
+      "operation": "inner.get_indexer",
+      "input_domain": "public.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "public.invalid"
+        }
+      ],
+      "observed_return": {
+        "id": 3,
+        "name": "FixturePublic",
+        "domain": "http://public-local.invalid/",
+        "schema": "PublicSchema",
+        "_scheme": null,
+        "url": "http://public-local.invalid/path/",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [],
+        "is_active": true,
+        "ua": "owned-site-alias-probe/1.0",
+        "public": true,
+        "pri": 1
+      }
+    },
+    {
+      "sequence": 14,
+      "operation": "inner.get_indexer",
+      "input_domain": "custom.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "custom.invalid"
+        }
+      ],
+      "observed_return": null
+    },
+    {
+      "sequence": 15,
+      "operation": "fixture.db_record.update",
+      "id": 1,
+      "changes": {
+        "is_active": false
+      }
+    },
+    {
+      "sequence": 16,
+      "operation": "inner.get_indexer",
+      "input_domain": "canonical.invalid",
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "canonical.invalid"
+        }
+      ],
+      "observed_return": {
+        "id": 1,
+        "name": "FixtureCanonical",
+        "domain": "http://personal.invalid:4321/",
+        "schema": "NexusPhp",
+        "_scheme": null,
+        "url": "http://personal.invalid:4321/custom-path/?q=1",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [
+          "https://alias.invalid/",
+          "https://www.alias-two.invalid/"
+        ],
+        "is_active": false,
+        "ua": "owned-site-alias-probe/1.0",
+        "public": null,
+        "pri": 3
+      }
+    },
+    {
+      "sequence": 17,
+      "operation": "inner.get_indexers",
+      "db_calls": [
+        {
+          "site_oper": "list_active"
+        }
+      ],
+      "observed_return": [
+        {
+          "id": 2,
+          "name": "FixtureAlias",
+          "domain": "https://alternate.invalid/",
+          "schema": "NexusPhp",
+          "_scheme": null,
+          "url": "https://alternate.invalid/personal-path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [
+            "https://alias.invalid/",
+            "https://www.alias-two.invalid/"
+          ],
+          "is_active": true,
+          "ua": "site-agent",
+          "public": null,
+          "pri": 4
+        },
+        {
+          "id": 3,
+          "name": "FixturePublic",
+          "domain": "http://public-local.invalid/",
+          "schema": "PublicSchema",
+          "_scheme": null,
+          "url": "http://public-local.invalid/path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [],
+          "is_active": true,
+          "ua": "owned-site-alias-probe/1.0",
+          "public": true,
+          "pri": 1
+        }
+      ]
+    },
+    {
+      "sequence": 18,
+      "operation": "inner.add_indexer",
+      "input_domain": "custom.invalid",
+      "input_indexer": {
+        "name": "AddedTemplate",
+        "domain": "https://template-add.invalid/",
+        "ext_domains": [
+          "https://added-alias.invalid/"
+        ],
+        "schema": "AddedSchema",
+        "ua": "added-template-agent"
+      },
+      "observed_return": true
+    },
+    {
+      "sequence": 19,
+      "operation": "inner.get_indexer",
+      "input_domain": "custom.invalid",
+      "observed_return": {
+        "id": 4,
+        "name": "FixtureUnknown",
+        "domain": "http://custom.invalid/",
+        "schema": "AddedSchema",
+        "_scheme": null,
+        "url": "http://custom.invalid/path/",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [
+          "https://added-alias.invalid/"
+        ],
+        "is_active": true,
+        "ua": "owned-site-alias-probe/1.0",
+        "public": null,
+        "pri": 1
+      },
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "custom.invalid"
+        }
+      ]
+    },
+    {
+      "sequence": 20,
+      "operation": "inner.get_indexer",
+      "input_domain": "added-alias.invalid",
+      "observed_return": null,
+      "db_row_exists": false,
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "added-alias.invalid"
+        }
+      ]
+    },
+    {
+      "sequence": 21,
+      "operation": "fixture.db_records.append",
+      "record": {
+        "id": 5,
+        "name": "FixtureAddedAlias",
+        "domain": "added-alias.invalid",
+        "url": "https://added-alias.invalid/path/"
+      }
+    },
+    {
+      "sequence": 22,
+      "operation": "inner.get_indexer",
+      "input_domain": "added-alias.invalid",
+      "observed_return": null,
+      "db_row_exists": true,
+      "registry_key_added": false,
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "added-alias.invalid"
+        }
+      ]
+    },
+    {
+      "sequence": 23,
+      "operation": "inner.add_indexer",
+      "input_domain": "added-alias.invalid",
+      "input_indexer": {
+        "name": "AddedTemplate",
+        "domain": "https://template-add.invalid/",
+        "ext_domains": [
+          "https://added-alias.invalid/"
+        ],
+        "schema": "AddedSchema",
+        "ua": "added-template-agent"
+      },
+      "observed_return": true
+    },
+    {
+      "sequence": 24,
+      "operation": "inner.get_indexer",
+      "input_domain": "added-alias.invalid",
+      "observed_return": {
+        "id": 5,
+        "name": "FixtureAddedAlias",
+        "domain": "https://added-alias.invalid/",
+        "schema": "AddedSchema",
+        "_scheme": null,
+        "url": "https://added-alias.invalid/path/",
+        "url_bak": null,
+        "ext_domain": null,
+        "ext_domains": [
+          "https://added-alias.invalid/"
+        ],
+        "is_active": true,
+        "ua": "owned-site-alias-probe/1.0",
+        "public": null,
+        "pri": 1
+      },
+      "db_calls": [
+        {
+          "site_oper": "get_by_domain",
+          "domain": "added-alias.invalid"
+        }
+      ]
+    },
+    {
+      "sequence": 25,
+      "operation": "inner.add_indexer",
+      "input_domain": "",
+      "input_indexer": {
+        "name": "AddedTemplate",
+        "domain": "https://template-add.invalid/",
+        "ext_domains": [
+          "https://added-alias.invalid/"
+        ],
+        "schema": "AddedSchema",
+        "ua": "added-template-agent"
+      },
+      "observed_return": false
+    },
+    {
+      "sequence": 26,
+      "operation": "inner.add_indexer",
+      "input_domain": "empty.invalid",
+      "input_indexer": {},
+      "observed_return": false
+    },
+    {
+      "sequence": 27,
+      "operation": "inner.get_indexers",
+      "db_calls": [
+        {
+          "site_oper": "list_active"
+        }
+      ],
+      "observed_return": [
+        {
+          "id": 2,
+          "name": "FixtureAlias",
+          "domain": "https://alternate.invalid/",
+          "schema": "NexusPhp",
+          "_scheme": null,
+          "url": "https://alternate.invalid/personal-path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [
+            "https://alias.invalid/",
+            "https://www.alias-two.invalid/"
+          ],
+          "is_active": true,
+          "ua": "site-agent",
+          "public": null,
+          "pri": 4
+        },
+        {
+          "id": 3,
+          "name": "FixturePublic",
+          "domain": "http://public-local.invalid/",
+          "schema": "PublicSchema",
+          "_scheme": null,
+          "url": "http://public-local.invalid/path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [],
+          "is_active": true,
+          "ua": "owned-site-alias-probe/1.0",
+          "public": true,
+          "pri": 1
+        },
+        {
+          "id": 5,
+          "name": "FixtureAddedAlias",
+          "domain": "https://added-alias.invalid/",
+          "schema": "AddedSchema",
+          "_scheme": null,
+          "url": "https://added-alias.invalid/path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [
+            "https://added-alias.invalid/"
+          ],
+          "is_active": true,
+          "ua": "owned-site-alias-probe/1.0",
+          "public": null,
+          "pri": 1
+        },
+        {
+          "id": 5,
+          "name": "FixtureAddedAlias",
+          "domain": "https://added-alias.invalid/",
+          "schema": "AddedSchema",
+          "_scheme": null,
+          "url": "https://added-alias.invalid/path/",
+          "url_bak": null,
+          "ext_domain": null,
+          "ext_domains": [
+            "https://added-alias.invalid/"
+          ],
+          "is_active": true,
+          "ua": "owned-site-alias-probe/1.0",
+          "public": null,
+          "pri": 1
+        }
+      ]
+    }
+  ],
+  "stateful_observations": {
+    "constructor_input_initial_name": "Template",
+    "post_list_unconfigured_alias_return": {
+      "id": 2,
+      "name": "FixtureAlias",
+      "domain": "https://alternate.invalid/",
+      "schema": "NexusPhp",
+      "_scheme": null,
+      "url": "https://alternate.invalid/personal-path/",
+      "url_bak": null,
+      "ext_domain": null,
+      "ext_domains": [
+        "https://alias.invalid/",
+        "https://www.alias-two.invalid/"
+      ],
+      "is_active": true,
+      "ua": "site-agent",
+      "public": null,
+      "pri": 4
+    },
+    "list_first_two_equal": true,
+    "same_object_observed": null,
+    "identity_observation_limit": "The probe projected dictionaries after each whole call; it did not record Python is/id. Shared-reference identity is inferred from static direct-registry merge and stateful values, not directly measured.",
+    "static_flow_ranges": [
+      "get_indexers 0x341fc..0x34354 and 0x34851..0x349a9 read registry.get(site.domain) and pass it to merge, with no deepcopy call",
+      "get_indexer 0x36d91..0x36e85 deepcopies only for a configured DB row",
+      "get_indexer 0x36f20 returns the registry value when the configured DB row is absent"
+    ]
+  },
+  "public_fixture_only": true
+}

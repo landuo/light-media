@@ -1,0 +1,26 @@
+站点索引器目录与域名别名正式接入（2026-10-21）
+
+结果
+把已取证的原版 SitesHelper 站点模板投影（17 行、23 个 host）正式内建为 Go 目录，并接入站点来源识别与注册域解析。站点地址即使使用 ext_domains 别名（如 hhan.club、kp.m-team.cc、cspt.top、www.pttime.top），也按原版 schema 选择适配器并保存原版数据库同口径的注册域。新增代码不引入 Python、不改原服务与生产数据；正式迁移数量保持 7/23，生产仍为 v0.4.8。
+
+原版依据
+选定的 17 行来自实际安装实例的编译 catalog 投影（testdata/plugins/site-indexer-context/original-selected-catalog.json，catalog_sha256 f6099dcd4f55f99646d53dbe4cec2c3f01ad4ec95929052a4e348a4ad90205c0，helper_sha256 8a14c1668778305b9b40bdd5456e6a95afe6ef101b11db02750fbcd4e7ae0b64，proof_scope 为实际安装产物参考、空合成 DB/配置）。原版注册表以注册域（Domain）为键写入模板自身 domain 与全部 ext_domains；查询同样按注册域。17 行的 schema 分布为 NexusPhp 14、NexusHhanclub 1、MTorrent 1、RousiPro 1；host 分布为模板自身 17 个加 6 个 ext_domains。
+
+实现
+- internal/sourceindexer/builtin.go：内建 CatalogEntry（schema + 模板/别名 host），构建精确 host 与注册域两级索引，提供 ResolveHost / ResolveURL。注册域仍使用该包已有的 Domain 投影（与原版 url 方法 53 例参考一致），不引入新的猜测规则。
+- internal/app/site_transfer.go：siteImportOrigin 在显式 m-team/rousi/hhanclub/ubits/hdhome/1ptba 分支与通用 NexusPHP 回退之间接入 reviewed catalog。MTorrent 归一为 api.<注册域>（m-team.cc / m-team.io），RousiPro 归一 rousi.pro，NexusHhanclub 保留别名 host，其余 NexusPhp 行沿用既有特化（hdhome.org→jiayuan、ubits.club→ubits、1ptba.com→1ptba），未知域保持原通用回退。domain 字段使用注册域，与原版 siteuserdata 的 site.domain（btschool.club、xingyungept.org、xloli.cc、pttime.org、musopia.vip 等）同口径。
+- internal/app/site_options.go：新增 siteCredentialConfigured，按适配器所需凭据判定 credential_configured（mteam 需 API key、rousi 需 API key 或 token、其余需 cookie）。修复站点管理中「导出的 token 被当成已配置凭据」的既有回归：internal/app 全包原先在 TestSiteConfigCanBeSavedBeforeCredentialValidation 失败，已在未修改 site_transfer.go 的 HEAD 上复现并保留失败记录。
+- 该解析同时作用于站点保存、导入与迁移工具既有的 siteImportOrigin 调用点，未改变凭据处理、HTTPS 根地址校验或网络边界。
+
+验证
+- internal/sourceindexer：新增 4 组测试（内建内容与 reviewed 投影逐 host 一致、17 个已装注册域解析、别名 host 与子域解析含未知域拒绝、URL 形式与非法 scheme），加上既有 catalog/URL 方法参考测试全部通过。
+- internal/app：新增 2 组测试（23 个真实来源地址的 kind/origin/domain 对照；normalizeManagedSite 对别名来源得到 hhanclub/mteam 及注册域）。修复后 internal/app 全包普通测试通过（516.6s）；修复前的同一全包在既有凭据回归上失败（531.1s）并保留记录。
+- 未访问任何真实站点、下载器、通知渠道或媒体；没有读取/迁移用户凭据；没有部署或启用新插件。
+
+边界
+- 内建范围仅这 17 行已安装投影，不等于原版全部索引器模板全集；不在目录内的域名继续走既有通用 NexusPHP，与原行为相同，但没有新增模板上下文。
+- 没有执行原版运行时的认证/签名差异对照，只有静态 catalog 投影与 URL 方法参考；别名未在真实用户站点上发请求验证。
+- 这是 SiteStatistic 的“模板/schema/别名上下文”基础接线，不计为 SiteStatistic 或全部 23 个插件完成；SystemError、站点消息与统计通知的真实生产者/渠道、执行交接与生产迁移仍待完成。
+
+下一步
+继续 SystemError 与统计通知的真实生产者/渠道链，随后按迁移基线逐项完成剩余 16 个插件并再做正式迁移与部署。

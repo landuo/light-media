@@ -161,7 +161,7 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 			}
 			stats = last.Stats
 		}
-		configured := s.Cookie != "" || s.APIKey != "" || s.Token != ""
+		configured := siteCredentialConfigured(s)
 		credentials := siteSecretState(s)
 		hideSiteSecrets(&s)
 		var used int

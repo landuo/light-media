@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/net/publicsuffix"
 	"light-media/internal/sites"
+	"light-media/internal/sourceindexer"
 	"net/http"
 	"net/url"
 	"strings"
@@ -69,6 +70,26 @@ func siteImportOrigin(value string) (kind, canonical, domain string, err error) 
 	case "1ptba.com", "www.1ptba.com":
 		kind, domain = "1ptba", "1ptba.com"
 	default:
+		// Reviewed indexer catalog (17 installed-site templates): a configured
+		// origin is resolved through the template's own domain and reviewed
+		// ext_domains before the generic NexusPHP fallback. This is the
+		// original SitesHelper registered-domain lookup, not a name heuristic.
+		if schema, registered, ok := sourceindexer.ResolveHost(host); ok {
+			switch schema {
+			case "MTorrent":
+				kind, domain, host = "mteam", registered, "api."+registered
+			case "RousiPro":
+				kind, domain, host = "rousi", registered, registered
+			case "NexusHhanclub":
+				kind, domain = "hhanclub", registered
+			default:
+				kind, domain = reviewedNexusKind(registered), registered
+				if kind == "" {
+					kind = "nexusphp"
+				}
+			}
+			return kind, "https://" + host, domain, nil
+		}
 		canonical, err = sites.NormalizeNexusPHPOrigin(value)
 		if err != nil {
 			return "", "", "", bad("INVALID_SITE_URL", "站点地址须为公网域名的 HTTPS 根地址")
@@ -80,6 +101,21 @@ func siteImportOrigin(value string) (kind, canonical, domain string, err error) 
 		return "nexusphp", strings.TrimRight(canonical, "/"), domain, nil
 	}
 	return kind, "https://" + host, domain, nil
+}
+
+// reviewedNexusKind keeps the native specializations the application already
+// had for reviewed NexusPHP domains; every other NexusPhp row uses the generic
+// adapter, exactly as the original schema choice does.
+func reviewedNexusKind(registered string) string {
+	switch registered {
+	case "hdhome.org":
+		return "jiayuan"
+	case "ubits.club":
+		return "ubits"
+	case "1ptba.com":
+		return "1ptba"
+	}
+	return ""
 }
 
 func siteImportName(kind string) string {

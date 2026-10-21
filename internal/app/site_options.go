@@ -120,6 +120,21 @@ func siteSecretState(s SiteConfig) map[string]bool {
 	return map[string]bool{"cookie": s.Cookie != "", "api_key": s.APIKey != "", "token": s.Token != "", "rss": s.RSS != "", "note": s.Note != ""}
 }
 
+// siteCredentialConfigured reports the credential the adapter actually needs.
+// A token kept for export is not an m-team API key, and a cookie is not used by
+// either API adapter; treating any stored secret as ready would report a
+// connection state the site cannot reach.
+func siteCredentialConfigured(s SiteConfig) bool {
+	switch s.Kind {
+	case "mteam":
+		return s.APIKey != ""
+	case "rousi":
+		return s.APIKey != "" || s.Token != ""
+	default:
+		return s.Cookie != ""
+	}
+}
+
 func hideSiteSecrets(s *SiteConfig) {
 	s.Cookie, s.APIKey, s.Token, s.RSS, s.Note = "", "", "", "", ""
 }
