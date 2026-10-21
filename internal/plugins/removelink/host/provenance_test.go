@@ -22,19 +22,20 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 			SHA256       string `json:"sha256"`
 			FormalSHA256 string `json:"formal_sha256"`
 		} `json:"copied_go_files"`
-		Evidence           map[string]string `json:"evidence_files"`
-		FormalEvidence     map[string]string `json:"formal_validation_evidence"`
-		TransitionFiles    map[string]string `json:"transition_go_files"`
-		TransitionEvidence map[string]string `json:"transition_evidence_files"`
-		AfterActionFiles   map[string]string `json:"after_action_go_files"`
-		RootExpansionFiles map[string]string `json:"root_expansion_go_files"`
-		OwnerReferences    map[string]string `json:"owner_reference_files"`
-		SourceBarrierFiles map[string]string `json:"source_barrier_go_files"`
+		Evidence            map[string]string `json:"evidence_files"`
+		FormalEvidence      map[string]string `json:"formal_validation_evidence"`
+		TransitionFiles     map[string]string `json:"transition_go_files"`
+		TransitionEvidence  map[string]string `json:"transition_evidence_files"`
+		AfterActionFiles    map[string]string `json:"after_action_go_files"`
+		RootExpansionFiles  map[string]string `json:"root_expansion_go_files"`
+		OwnerReferences     map[string]string `json:"owner_reference_files"`
+		SourceBarrierFiles  map[string]string `json:"source_barrier_go_files"`
+		InitDiagnosticFiles map[string]string `json:"init_diagnostic_go_files"`
 	}
 	if err = json.Unmarshal(raw, &manifest); err != nil {
 		t.Fatal(err)
 	}
-	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 || len(manifest.SourceBarrierFiles) != 6 {
+	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 || len(manifest.SourceBarrierFiles) != 6 || len(manifest.InitDiagnosticFiles) != 5 {
 		t.Fatal("missing installed source/candidate/evidence provenance")
 	}
 	verify := func(path, expected string) {
@@ -61,6 +62,9 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		if current, ok := manifest.SourceBarrierFiles["internal/plugins/removelink/host/"+name]; ok {
 			expected = current
 		}
+		if current, ok := manifest.InitDiagnosticFiles["internal/plugins/removelink/host/"+name]; ok {
+			expected = current
+		}
 		verify(name, expected)
 	}
 	expectedBarrierFiles := []string{
@@ -75,6 +79,16 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		sum, ok := manifest.SourceBarrierFiles[name]
 		if !ok {
 			t.Fatalf("missing source-barrier provenance: %s", name)
+		}
+		if current, ok := manifest.InitDiagnosticFiles[name]; ok {
+			sum = current
+		}
+		verify(filepath.Join("..", "..", "..", "..", name), sum)
+	}
+	for _, name := range []string{"internal/plugins/removelink/host/types.go", "internal/plugins/removelink/host/host.go", "internal/plugins/removelink/host/watch_linux.go", "internal/app/plugin_remove_link_owner.go", "internal/app/plugin_remove_link_init_diagnostic.go"} {
+		sum, ok := manifest.InitDiagnosticFiles[name]
+		if !ok {
+			t.Fatalf("missing init-diagnostic provenance: %s", name)
 		}
 		verify(filepath.Join("..", "..", "..", "..", name), sum)
 	}

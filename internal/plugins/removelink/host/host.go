@@ -237,7 +237,7 @@ func (h *Host) save(ctx context.Context, active *Event, extra func(*Durable)) er
 		return nil
 	})
 }
-func (h *Host) block(reason string) {
+func (h *Host) block(reason string) error {
 	h.blocked = reason
 	h.running = false
 	_ = h.closeWatch(context.Background(), false)
@@ -245,9 +245,11 @@ func (h *Host) block(reason string) {
 	// failure's active scope (or any earlier interrupted execution evidence).
 	ctx, cancel := context.WithTimeout(context.Background(), h.opts.AsyncTimeout)
 	defer cancel()
-	if s, err := h.opts.Journal.Read(ctx); err == nil {
-		_ = h.checkpoint(ctx, s.Active)
+	s, err := h.opts.Journal.Read(ctx)
+	if err != nil {
+		return err
 	}
+	return h.checkpoint(ctx, s.Active)
 }
 func (h *Host) Snapshot(ctx context.Context) (Durable, error) {
 	var out Durable
@@ -386,7 +388,14 @@ func (h *Host) configureOwner(ctx context.Context, binding Binding, raw json.Raw
 	if len(specs) > 0 {
 		h.watcher, e = h.opts.Watch(context.Background(), specs, h.ops.openWatchDir)
 		if e != nil {
-			h.block(e.Error())
+			blockErr := h.block(e.Error())
+			if blockErr != nil {
+				return errors.Join(e, blockErr)
+			}
+			failure, nativeFailure := e.(*WatchInitFailure)
+			if h.opts.WatchInitDiagnostic != nil && nativeFailure && failure.Valid() && failure.Ordinal() < len(specs) && specs[failure.Ordinal()] == failure.Spec() {
+				return errors.Join(e, h.opts.WatchInitDiagnostic(ctx, binding, event.ID, failure))
+			}
 			return e
 		}
 	}

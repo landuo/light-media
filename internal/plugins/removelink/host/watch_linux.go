@@ -43,9 +43,18 @@ type nativeWatcher struct {
 	pendingSeq uint64
 }
 
+// observerInitError marks only a native observer syscall, never authorization,
+// directory validation, randomness, or a later running observer failure.
+type observerInitError struct{ cause error }
+
+func (e *observerInitError) Error() string { return e.cause.Error() }
+func (e *observerInitError) Unwrap() error { return e.cause }
+
 func NativeWatch(parent context.Context, specs []removelink.Watch, open func(string) (*os.File, error)) (Watcher, error) {
 	fd, e := unix.InotifyInit1(unix.IN_NONBLOCK | unix.IN_CLOEXEC)
 	if e != nil {
+		// Shared-fd allocation precedes any directory attempt. It cannot
+		// honestly identify a source per-directory observer failure.
 		return nil, e
 	}
 	ctx, cancel := context.WithCancel(parent)
@@ -56,10 +65,14 @@ func NativeWatch(parent context.Context, specs []removelink.Watch, open func(str
 		return nil, e
 	}
 	w := &nativeWatcher{fd: fd, cancel: cancel, done: make(chan struct{}), events: make(chan Event, 4096), errors: make(chan error, 1), specs: append([]removelink.Watch(nil), specs...), dirs: map[int]string{}, known: map[string]bool{}, pending: map[uint32]renamePending{}, open: open, nonce: hex.EncodeToString(nonce[:])}
-	for _, s := range specs {
+	for ordinal, s := range specs {
 		if e = w.addTree(s.Path, false); e != nil {
 			unix.Close(fd)
 			cancel()
+			var native *observerInitError
+			if errors.As(e, &native) {
+				return nil, &WatchInitFailure{s, ordinal, "inotify_add_watch", native.cause}
+			}
 			return nil, e
 		}
 	}
@@ -119,7 +132,7 @@ func (w *nativeWatcher) addTree(p string, emit bool) error {
 	mask := uint32(unix.IN_CREATE | unix.IN_DELETE | unix.IN_MOVED_FROM | unix.IN_MOVED_TO | unix.IN_DELETE_SELF | unix.IN_MOVE_SELF | unix.IN_ONLYDIR)
 	wd, e := unix.InotifyAddWatch(w.fd, fmt.Sprintf("/proc/self/fd/%d", f.Fd()), mask)
 	if e != nil {
-		return e
+		return &observerInitError{e}
 	}
 	if old, ok := w.dirs[wd]; ok && old != p {
 		return errors.New("physical watch alias is ambiguous")

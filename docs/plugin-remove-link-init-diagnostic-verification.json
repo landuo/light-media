@@ -1,0 +1,268 @@
+{
+  "date": "2026-10-21",
+  "baseline": "dc42db237043d475c5d9c134aa3d4b4efae5a7a4",
+  "branch": "dev/plugins-continuation",
+  "scope": "RemoveLink attributed add-watch syscall failure local systemmessage with fail-closed native owner; synthetic SDK/SQLite and task-owned Linux syscall faults",
+  "deployed": false,
+  "real_accounts_used": false,
+  "migration_count": "7/23 unchanged",
+  "toolchain": "go1.26.10 linux/amd64",
+  "source_sha256": {
+    "internal/app/plugin_remove_link_owner.go": "24e44ddae06724997b22930ea0cb3d11fa16423376175ab799ff298923a2fed8",
+    "internal/app/plugin_remove_link_init_diagnostic.go": "8dee1641b77161e38f732a2cb7ea9f8a82806cf277c7775cb703c37e0963ec60",
+    "internal/app/plugin_remove_link_init_diagnostic_test.go": "7341fcb449a0b24c2e4c7e072e88abfadb8b365fa76c5fef7866dcd117c7a6c4",
+    "internal/plugins/removelink/host/types.go": "6730dc6de51608fea5adb2efb0595b611bd0f1245e5a874c2b144535966cfb19",
+    "internal/plugins/removelink/host/host.go": "6ff23bd197f91b9c8f3175c7fe812663c32bef7cabdc827752286d6daaab2dcf",
+    "internal/plugins/removelink/host/watch_linux.go": "ebb14cc6012c04fe3b38160b7866d343cb40bc01ccd514fb5d4d9b61fb4af957",
+    "internal/plugins/removelink/host/watch_init_failure_test.go": "24ba552348db9ff93529bf0ce7c8ca36edb341ae851754e8b39c89553ecd60e2",
+    "internal/plugins/removelink/host/provenance_test.go": "66ba24047076bf8ea3ae07f2b1fe22e9ebbe157abe097bd4bc2a8d1cd31b214a",
+    "testdata/plugins/remove-link-host/source-manifest.json": "a3c68d8aac6ccc41ee272a8804414b7cfed56f88bff5b739897b97c743084573"
+  },
+  "logs": {
+    "initial-core": {
+      "command": "go test -timeout 15m -json ./internal/plugins/removelink/... -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/initial-core.jsonl",
+      "sha256": "1a5ac28646b9edfb609be11b84fa4153b0d1e7f0055704cb9c0c16be4939f616",
+      "bytes": 234667,
+      "exit_code": 0,
+      "top_level_passed": 60,
+      "passed_including_subtests": 257,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:15:32.01322811+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 0.087
+        },
+        {
+          "Time": "2026-10-22T02:15:55.324610727+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 22.427
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "core-race": {
+      "command": "go test -race -timeout 30m -json ./internal/plugins/removelink/... -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/core-race.jsonl",
+      "sha256": "c237e8980c0cc0227ed914ca44eb248b036d876f4ce028b511895fdec6f8194c",
+      "bytes": 234777,
+      "exit_code": 0,
+      "top_level_passed": 60,
+      "passed_including_subtests": 257,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:21:57.530361939+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 4.388
+        },
+        {
+          "Time": "2026-10-22T02:22:22.747746455+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 27.506
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "initial-app": {
+      "command": "go test -timeout 15m -json ./internal/app -run '^TestRemoveLinkInitDiagnostic' -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/initial-app.jsonl",
+      "sha256": "00f7f19f6cf31f5609890770be85bab6911c105bcc4d7fa4d40128279852ca25",
+      "bytes": 51044,
+      "exit_code": 1,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "failed_entries": [
+        "TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked/init_hardlink",
+        "TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked/init_strm",
+        "TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked/reload_hardlink",
+        "TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked/reload_strm",
+        "TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked",
+        "TestRemoveLinkInitDiagnosticRejectsOrdinaryFactoryError",
+        "TestRemoveLinkInitDiagnosticSQLFailureRollsBackNoticeAndReceipt/notice",
+        "TestRemoveLinkInitDiagnosticSQLFailureRollsBackNoticeAndReceipt/sealed_receipt",
+        "TestRemoveLinkInitDiagnosticSQLFailureRollsBackNoticeAndReceipt/core_receipt",
+        "TestRemoveLinkInitDiagnosticSQLFailureRollsBackNoticeAndReceipt",
+        "TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt/committed_reply_lost",
+        "TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt/rolled_back",
+        "TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt/committed_receipt_corrupt",
+        "TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt",
+        "TestRemoveLinkInitDiagnosticBlockedCheckpointFailureDoesNotPublish",
+        "TestRemoveLinkInitDiagnosticCloneAndColdReceiptIsolation",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:16:56.801894197+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 3.9539999999999997
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revised-app": {
+      "command": "go test -timeout 15m -json ./internal/app -run '^TestRemoveLinkInitDiagnostic' -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/revised-app.jsonl",
+      "sha256": "95e047b5ca9a8cb580249fea1e02f91f5e3114a0e99cb84f9aa4694c8a2c149f",
+      "bytes": 57530,
+      "exit_code": 1,
+      "top_level_passed": 6,
+      "passed_including_subtests": 16,
+      "failed_entries": [
+        "TestRemoveLinkInitDiagnosticColdOwnerDoesNotRestartOrReplay/init",
+        "TestRemoveLinkInitDiagnosticColdOwnerDoesNotRestartOrReplay/reload",
+        "TestRemoveLinkInitDiagnosticColdOwnerDoesNotRestartOrReplay",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:19:57.332007701+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 4.839
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revised2-app": {
+      "command": "go test -timeout 15m -json ./internal/app -run '^TestRemoveLinkInitDiagnostic' -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/revised2-app.jsonl",
+      "sha256": "35017f7ad5360bb6dd0011ff8d67eddc08bcadeb82e45cb6f90ef0e69e560384",
+      "bytes": 58312,
+      "exit_code": 0,
+      "top_level_passed": 7,
+      "passed_including_subtests": 19,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:21:27.312245634+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 5.298
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-app-normal": {
+      "command": "CGO_ENABLED=1 go test -timeout 30m -json ./internal/app -run 'TestRemoveLinkInitDiagnostic|TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestReviewedRemoveLink' -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/final-app-normal.jsonl",
+      "sha256": "83c704b31d5064c631ed749d72f61e1087b6211f78926a49660e32a535269aaf",
+      "bytes": 955584,
+      "exit_code": 0,
+      "top_level_passed": 134,
+      "passed_including_subtests": 475,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:23:55.557021881+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 90.124
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-app-race": {
+      "command": "CGO_ENABLED=1 go test -race -timeout 30m -json ./internal/app -run 'TestRemoveLinkInitDiagnostic|TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestReviewedRemoveLink' -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/final-app-race.jsonl",
+      "sha256": "a34610a7e1be4794ee7903c740ea48eac11e5bb7625a84757f3137630bccc923",
+      "bytes": 955948,
+      "exit_code": 0,
+      "top_level_passed": 134,
+      "passed_including_subtests": 475,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:40:27.364123791+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 931.862
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-app-modernconly": {
+      "command": "CGO_ENABLED=0 go test -tags modernconly -timeout 30m -json ./internal/app -run 'TestRemoveLinkInitDiagnostic|TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestReviewedRemoveLink' -count=1",
+      "path": "work/remove-link-init-diagnostic-validation/final-app-modernconly.jsonl",
+      "sha256": "28c562ee99e6e478b9abbba9a1fbeba7a10c185e8e715101e1d67fee77e289a0",
+      "bytes": 955580,
+      "exit_code": 0,
+      "top_level_passed": 134,
+      "passed_including_subtests": 475,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T02:42:37.930947553+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 87.906
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vet": {
+      "command": "go vet ./internal/app ./internal/plugins/removelink/...",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "command": "CGO_ENABLED=0 go build -tags modernconly ./cmd/...",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "initial_failures": [
+    "Initial App fixture incorrectly expected terminal failed; real started host errors become deferred uncertain / reconcile_pending. A journal fault trigger was also installed before lazy creation of its real table. Tests were corrected to the existing contract and trigger setup moved to the actual Watch attempt; production validation not weakened.",
+    "Revised cold test incorrectly assumed fresh init/reload EnqueueRun admission would reject. The corrected test claims the fresh run and executes the real SDK: owner.open refuses old Active/Blocked before Watch, new run remains reconciliation-pending, old run remains unclaimable, files/history/notices unchanged."
+  ],
+  "runtime_evidence": [
+    "Native Linux fault uses owned directories and closes the second spec descriptor so a real add-watch syscall fails. It proves attempted ordinal, no third-spec attempt and no inotify fd leak, not real resource exhaustion.",
+    "Actual SDK init/reload and hardlink/STRM failure, ordinary error rejection, original fixed title/prefix, one local notice and independent receipt, no Router/queue/outbox/external send.",
+    "SQL triggers test notice/journal/core-receipt rollback; private commit seam tests precommit failure, real committed SQL with lost ACK, and committed-corrupt receipt. Watch/commit counts and stored evidence are checked; the failed SDK state alone does not prove which diagnostic error returned.",
+    "True App Close/New and restore owner/new SDK retry verify blocked recovery without reopening watches or repeating notices/deleting media. Two clone receipts reject cross-instance/generation/revision substitution."
+  ],
+  "dependency_static_review": {
+    "official_watchdog_version": "6.0.0",
+    "official_commit": "76c091dc8841de1d1a1cd6511bb509fe4f058de6",
+    "actual_installed_bytes_verified": false,
+    "claim": "InotifyObserver constructor only selects emitter; native fd is created during emitter on_thread_start, not observer construction. No fallback on InotifyInit syscall failure added.",
+    "sources": [
+      "https://github.com/gorakhargosh/watchdog/releases/tag/v6.0.0",
+      "https://raw.githubusercontent.com/gorakhargosh/watchdog/v6.0.0/src/watchdog/observers/inotify.py",
+      "https://raw.githubusercontent.com/gorakhargosh/watchdog/v6.0.0/src/watchdog/observers/inotify_buffer.py",
+      "https://raw.githubusercontent.com/gorakhargosh/watchdog/v6.0.0/src/watchdog/observers/inotify_c.py"
+    ]
+  },
+  "limits": [
+    "Only actual add-watch syscall failures get per-spec attribution. Global InotifyInit/randomness/authorization/scan/runtime errors are not recast as original per-directory source exceptions.",
+    "Original Python catches each directory error and continues later watchers; the existing Go fail-closed batch remains stopped. Native errno text is not claimed identical to Python str(e).",
+    "No dedicated dynamic concurrent-retirement or whole worker-JSON-forgery case was added for this diagnostic path; actual Guard/lifecycle checks were statically reviewed and existing affected owner regressions rerun.",
+    "Prior frozen source/oracle evidence unchanged. Current-stage Go provenance is separate; historical NAS validation does not validate new code.",
+    "No whole-project green claim. Prior baseline failures and 40 missing binary inputs remain documented in plugin-site-statistic-notice-routing-verification.json.",
+    "Nonlocal provider/platform scope and remaining global-init/partial-watch source differences, actual configuration/reference review, real account acceptance, production import/handoff/deployment remain separate."
+  ]
+}

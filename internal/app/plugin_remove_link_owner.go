@@ -36,6 +36,8 @@ type pluginRemoveLinkOwner struct {
 	gate       chan struct{}
 	ready      chan struct{}
 	err        error
+	// Private isolated-fixture fault seam; never set from worker or API input.
+	initDiagnosticCommit func(*sql.Tx) error
 }
 type pluginRemoveLinkPrepared struct {
 	a      *App
@@ -378,7 +380,7 @@ func (o *pluginRemoveLinkOwner) openHost(i PluginInstallation, c PluginStoredVal
 	if len(o.roots) == 0 {
 		return nil
 	}
-	opts := cleanuphost.Options{Binding: removeLinkBinding(i, c), Roots: make([]cleanuphost.Root, 0, len(o.roots)), Journal: o.j, Effects: o.e, Guard: o.guard, AfterAction: o.e.afterAction, Watch: o.a.pluginRemoveLink.watch, MediaExtensions: removeLinkMediaExtensions(), AsyncTimeout: 2 * time.Minute}
+	opts := cleanuphost.Options{Binding: removeLinkBinding(i, c), Roots: make([]cleanuphost.Root, 0, len(o.roots)), Journal: o.j, Effects: o.e, Guard: o.guard, AfterAction: o.e.afterAction, WatchInitDiagnostic: o.watchInitDiagnostic, Watch: o.a.pluginRemoveLink.watch, MediaExtensions: removeLinkMediaExtensions(), AsyncTimeout: 2 * time.Minute}
 	for _, r := range o.roots {
 		opts.Roots = append(opts.Roots, r.Root)
 	}
