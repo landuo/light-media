@@ -126,6 +126,11 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	}
 	r.Complete = true
 	r.SourceError = sourceNoticeError(sourceErr)
+	if r.Kind == "site_statistic" {
+		if err = d.a.pluginStore.finishSiteStatisticNoticeTx(ctx, tx, r); err != nil {
+			return seedhost.ErrUnknown
+		}
+	}
 	if err = d.a.pluginStore.saveNoticeRouteTx(ctx, tx, r); err != nil {
 		return seedhost.ErrUnknown
 	}
@@ -384,5 +389,10 @@ func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
 	p.notices.mu.Lock()
 	p.notices.routeAfter, p.notices.routeThrough = after, through
 	p.notices.mu.Unlock()
+	// The source worker may have exited while this accepted route was still
+	// incomplete. Finish that original run without invoking its SDK again.
+	if err := p.reconcileSiteStatisticNoticeRuns(ctx); err != nil && first == nil {
+		first = err
+	}
 	return first
 }

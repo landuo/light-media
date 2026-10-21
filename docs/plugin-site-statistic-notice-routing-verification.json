@@ -1,0 +1,1623 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "f2ec1396c5984ead199d7b091fc22328515f0fa6",
+  "branch": "dev/plugins-continuation",
+  "scope": "SiteStatistic owned notification route and completion-time deduplication; development milestone only",
+  "migration_count": "7/23 unchanged",
+  "deployed": false,
+  "real_site_or_message_accounts_used": false,
+  "toolchain": "go1.26.10 linux/amd64",
+  "code_sha256": {
+    "internal/app/plugin_site_statistic_notice.go": "48e938155daad75ff2dbd22f3b8a4d94ad229c9e14a8bc901bf0cb5ee53e5cb0",
+    "internal/app/plugin_site_statistic_notice_router_test.go": "2ef5cb2e50a2dca1b11fdfaddec1270a33dff88922734d25fb14b485bb5463c9",
+    "internal/app/plugin_site_statistic.go": "733566c83ff5c62a4e7499bec561ab2bc99f84ce6526ced5fc178807bbd0ad74",
+    "internal/app/plugin_site_statistic_test.go": "0a4ea1f96b191f72eca3f3e7098b2ac8fb3ea333a9c12333615054486511df74",
+    "internal/app/plugin_runtime.go": "15f9a228d2cb34e69b74fbc24dc50da5476e88ccdc79724b3e76ea8653f92104",
+    "internal/app/plugin_notice_storage.go": "e395587d07ffe8d46d1645ee93af2b03a426f905babf5d3143a0cc9dafd4a470",
+    "internal/app/plugin_notice_route.go": "d8a15bc7b1bedc2a0773a68fe52f37a50e390e11680f3ecc4e904ebe6e3a04c2"
+  },
+  "gates": {
+    "app_target": {
+      "command": "go test -json ./internal/app -run 'TestSiteStatisticRouter|TestPluginSiteStatistic|TestSiteStatisticNoticeAndOnce' -count=1",
+      "log": "work/site-statistic-notice-validation/app-target-final.jsonl",
+      "sha256": "4daf3102d1bb9011ece50df975ba94c2ac44cc1075f78285a28a6811480d4dcb",
+      "bytes": 128193,
+      "top_level_passed": 18,
+      "passed_including_subtests": 38,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:36:16.054134317+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 20.716
+        }
+      ]
+    },
+    "app_race": {
+      "command": "go test -race -json ./internal/app -run 'TestSiteStatisticRouter|TestPluginSiteStatistic|TestSiteStatisticNoticeAndOnce|TestPluginNoticeRoute' -count=1",
+      "log": "work/verification/app-notice-race.jsonl",
+      "sha256": "4112208914a26ab355c4a0d419cf313333185f90929d5d54a8907422e4a77095",
+      "bytes": 172149,
+      "top_level_passed": 26,
+      "passed_including_subtests": 55,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:46:16.667269151+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 339.32
+        }
+      ]
+    },
+    "app_modernconly": {
+      "command": "CGO_ENABLED=0 go test -tags modernconly -json ./internal/app -run 'TestSiteStatisticRouter|TestPluginSiteStatistic|TestSiteStatisticNoticeAndOnce|TestPluginNoticeRoute' -count=1",
+      "log": "work/verification/app-notice-modernconly.jsonl",
+      "sha256": "cf28598791e577aeb86a8850f01653c904af511b69a097a102579d8e475acc35",
+      "bytes": 171449,
+      "top_level_passed": 26,
+      "passed_including_subtests": 55,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:44:21.683144127+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 40.116
+        }
+      ]
+    },
+    "all_normal": {
+      "command": "go test -json ./...",
+      "log": "work/verification/all-normal.jsonl",
+      "sha256": "7a3ea2b6da2fe92c64719d9f8e73cfb21c6534b97e199c966b6b21a73f0093fb",
+      "bytes": 38901588,
+      "top_level_passed": 1469,
+      "passed_including_subtests": 41823,
+      "skipped_tests": [
+        "TestNativePostgresOwnedClusterDumpAndRestore",
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin"
+      ],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": "TestFrozenInstalledJPEGSourceAndReferences"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": "TestExpandedPillowJPEG"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/plugins/iyuuautoseed",
+          "test": "TestSiteHTTPActualResponseDecodeAgainstInstalledOracle"
+        },
+        {
+          "package": "light-media/internal/plugins/iyuuautoseed",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/releasemeta/legacyanime",
+          "test": "TestInstalledCompletePipeline"
+        },
+        {
+          "package": "light-media/internal/releasemeta/legacyanime",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:39:32.894374011+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/custom-hosts-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.894476661+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/fnoscheck",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.894498731+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/fnosprovidercheck",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.951317764+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/iyuu-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.9513544+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/media-refresh-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.951371245+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/mediacheck",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.951384935+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/metadatacheck",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.951402008+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/metainfocheck",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.981175483+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/integrationcheck",
+          "Elapsed": 0.087
+        },
+        {
+          "Time": "2026-10-21T22:39:32.981319803+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/pathcheck",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.995135548+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/remote-identifiers-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:32.995152868+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/seed-rescue-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:33.008338708+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/nasbench",
+          "Elapsed": 0.057
+        },
+        {
+          "Time": "2026-10-21T22:39:33.039043909+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/server-status-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:33.096493853+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/site-statistic-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:33.096516361+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/source-settings-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:39:33.255261006+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/server",
+          "Elapsed": 0.26
+        },
+        {
+          "Time": "2026-10-21T22:39:33.26520282+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/plugin-handoff-owned",
+          "Elapsed": 0.284
+        },
+        {
+          "Time": "2026-10-21T22:39:33.306565589+09:00",
+          "Action": "pass",
+          "Package": "light-media/cmd/site-message-settings-migrate-owned",
+          "Elapsed": 0.268
+        },
+        {
+          "Time": "2026-10-21T22:40:42.471386925+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/sqlitebench",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.471463707+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/system-process-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.471481464+09:00",
+          "Action": "skip",
+          "Package": "light-media/cmd/transfer-migrate-owned",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.481377623+09:00",
+          "Action": "pass",
+          "Package": "light-media/experiments/internal/fixturelayout",
+          "Elapsed": 0.01
+        },
+        {
+          "Time": "2026-10-21T22:40:42.489538345+09:00",
+          "Action": "pass",
+          "Package": "light-media/experiments/nfo-compare",
+          "Elapsed": 0.017
+        },
+        {
+          "Time": "2026-10-21T22:40:42.52305498+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/commandrouter",
+          "Elapsed": 0.033
+        },
+        {
+          "Time": "2026-10-21T22:40:42.557075548+09:00",
+          "Action": "pass",
+          "Package": "light-media/experiments/nfo-fixtures",
+          "Elapsed": 0.084
+        },
+        {
+          "Time": "2026-10-21T22:40:42.585304328+09:00",
+          "Action": "pass",
+          "Package": "light-media/experiments/metadata-nfo",
+          "Elapsed": 0.114
+        },
+        {
+          "Time": "2026-10-21T22:40:42.62591242+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/acquisitionbatch",
+          "Elapsed": 0.152
+        },
+        {
+          "Time": "2026-10-21T22:40:42.667707552+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/downloadersource",
+          "Elapsed": 0.055
+        },
+        {
+          "Time": "2026-10-21T22:40:42.709742033+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/fileextensions",
+          "Elapsed": 0.083
+        },
+        {
+          "Time": "2026-10-21T22:40:42.712705539+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/decision",
+          "Elapsed": 0.189
+        },
+        {
+          "Time": "2026-10-21T22:40:42.739259706+09:00",
+          "Action": "pass",
+          "Package": "light-media/experiments/real-nfo-compare",
+          "Elapsed": 0.266
+        },
+        {
+          "Time": "2026-10-21T22:40:42.740527402+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.740672727+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.741062148+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/control_structures",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.741094654+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/methods",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.741156042+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/methods/pybool",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.741365556+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/methods/pyerrors",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.741397751+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/methods/pyfloat",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.741537843+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/methods/pyint",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.74171048+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/builtins/methods/pystring",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.742684636+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/config",
+          "Elapsed": 0.001
+        },
+        {
+          "Time": "2026-10-21T22:40:42.743551597+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/docs",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.743573346+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/examples/advanced_configuration",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.744375882+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/examples/configuration",
+          "Elapsed": 0.001
+        },
+        {
+          "Time": "2026-10-21T22:40:42.74497744+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/examples/custom_filter",
+          "Elapsed": 0.001
+        },
+        {
+          "Time": "2026-10-21T22:40:42.752542598+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/exec",
+          "Elapsed": 0.008
+        },
+        {
+          "Time": "2026-10-21T22:40:42.752563906+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/loaders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.752581132+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/logging",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.752599442+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/nodes",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.752612926+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/parser",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.752974449+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/tokens",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.75299248+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/jinja/utils",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:42.768720991+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/fnosprovider",
+          "Elapsed": 0.059
+        },
+        {
+          "Time": "2026-10-21T22:40:42.804003935+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/catalog",
+          "Elapsed": 0.317
+        },
+        {
+          "Time": "2026-10-21T22:40:42.807564248+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/media",
+          "Elapsed": 0.033
+        },
+        {
+          "Time": "2026-10-21T22:40:42.898968762+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/integrations",
+          "Elapsed": 0.184
+        },
+        {
+          "Time": "2026-10-21T22:40:42.915385716+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/metadata",
+          "Elapsed": 0.108
+        },
+        {
+          "Time": "2026-10-21T22:40:42.97833132+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/logging",
+          "Elapsed": 0.225
+        },
+        {
+          "Time": "2026-10-21T22:40:42.991197253+09:00",
+          "Action": "pass",
+          "Package": "light-media/experiments/fnos-nfo",
+          "Elapsed": 0.52
+        },
+        {
+          "Time": "2026-10-21T22:40:43.045848644+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/media/words",
+          "Elapsed": 0.241
+        },
+        {
+          "Time": "2026-10-21T22:40:43.086609795+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/pathprobe",
+          "Elapsed": 0.04
+        },
+        {
+          "Time": "2026-10-21T22:40:43.394772539+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/metainfo",
+          "Elapsed": 0.494
+        },
+        {
+          "Time": "2026-10-21T22:40:43.640756162+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/directorysource",
+          "Elapsed": 1.083
+        },
+        {
+          "Time": "2026-10-21T22:40:43.671598996+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/networkproxy",
+          "Elapsed": 0.756
+        },
+        {
+          "Time": "2026-10-21T22:40:43.732877394+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/fnos",
+          "Elapsed": 1.065
+        },
+        {
+          "Time": "2026-10-21T22:40:43.877769313+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/notice",
+          "Elapsed": 0.898
+        },
+        {
+          "Time": "2026-10-21T22:40:43.87814649+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/plugins/autosignin/imagehash/jpegport",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:44.350992673+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/brushflow",
+          "Elapsed": 0.473
+        },
+        {
+          "Time": "2026-10-21T22:40:44.616799136+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autobackup",
+          "Elapsed": 1.22
+        },
+        {
+          "Time": "2026-10-21T22:40:44.986949859+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/noticetemplate",
+          "Elapsed": 1.9929999999999999
+        },
+        {
+          "Time": "2026-10-21T22:40:45.100533693+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/builtin",
+          "Elapsed": 0.483
+        },
+        {
+          "Time": "2026-10-21T22:40:45.163342261+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 1.491
+        },
+        {
+          "Time": "2026-10-21T22:40:45.274691446+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/cleaninvalidseed",
+          "Elapsed": 0.287
+        },
+        {
+          "Time": "2026-10-21T22:40:45.817771861+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/autosignin/imagehash",
+          "Elapsed": 2.081
+        },
+        {
+          "Time": "2026-10-21T22:40:45.820678693+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/encodingdetector",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:45.82069984+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/htmlextract",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:45.820769745+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/pythonre",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:45.820787208+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/plugins/iyuuautoseed/compat/urlprep",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:45.994246524+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/cloudflarespeedtest",
+          "Elapsed": 0.828
+        },
+        {
+          "Time": "2026-10-21T22:40:46.506423457+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/iyuuautoseed/native",
+          "Elapsed": 0.685
+        },
+        {
+          "Time": "2026-10-21T22:40:46.69584425+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/larkmessager/host",
+          "Elapsed": 0.188
+        },
+        {
+          "Time": "2026-10-21T22:40:47.081306497+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/larkmessager",
+          "Elapsed": 1.086
+        },
+        {
+          "Time": "2026-10-21T22:40:47.681752945+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/iyuuautoseed",
+          "Elapsed": 2.406
+        },
+        {
+          "Time": "2026-10-21T22:40:47.882273773+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/mergemessagenotify/mako",
+          "Elapsed": 0.198
+        },
+        {
+          "Time": "2026-10-21T22:40:48.379751592+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/mergemessagenotify/smtp",
+          "Elapsed": 0.496
+        },
+        {
+          "Time": "2026-10-21T22:40:48.380895678+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/plugins/remoteidentifiers",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:48.554728905+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 0.174
+        },
+        {
+          "Time": "2026-10-21T22:40:49.219879494+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/brushflow/ledger",
+          "Elapsed": 4.867
+        },
+        {
+          "Time": "2026-10-21T22:40:49.275429653+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/schedule",
+          "Elapsed": 0.055
+        },
+        {
+          "Time": "2026-10-21T22:40:49.460563993+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/scrapefileclean",
+          "Elapsed": 0.185
+        },
+        {
+          "Time": "2026-10-21T22:40:49.742386476+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Elapsed": 4.641
+        },
+        {
+          "Time": "2026-10-21T22:40:49.8501876+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/seedrescue",
+          "Elapsed": 0.106
+        },
+        {
+          "Time": "2026-10-21T22:40:49.992765365+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/serverstatus",
+          "Elapsed": 0.142
+        },
+        {
+          "Time": "2026-10-21T22:40:50.109815234+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/statistic",
+          "Elapsed": 0.116
+        },
+        {
+          "Time": "2026-10-21T22:40:50.147331551+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/subscribegroup",
+          "Elapsed": 0.037
+        },
+        {
+          "Time": "2026-10-21T22:40:50.418169315+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/mergemessagenotify",
+          "Elapsed": 3.722
+        },
+        {
+          "Time": "2026-10-21T22:40:50.456726255+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/uninstall",
+          "Elapsed": 0.036
+        },
+        {
+          "Time": "2026-10-21T22:40:50.529010327+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/mergemessagenotify/apprise",
+          "Elapsed": 3.448
+        },
+        {
+          "Time": "2026-10-21T22:40:50.530379735+09:00",
+          "Action": "skip",
+          "Package": "light-media/internal/pyregex",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-21T22:40:50.643386605+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/pythonidna",
+          "Elapsed": 0.113
+        },
+        {
+          "Time": "2026-10-21T22:40:50.653373365+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/priorityrules",
+          "Elapsed": 0.196
+        },
+        {
+          "Time": "2026-10-21T22:40:50.705488732+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/releasemeta/legacyanime",
+          "Elapsed": 0.052
+        },
+        {
+          "Time": "2026-10-21T22:40:51.07534082+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/torrenttransfer",
+          "Elapsed": 0.927
+        },
+        {
+          "Time": "2026-10-21T22:40:51.827493058+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/download",
+          "Elapsed": 9.237
+        },
+        {
+          "Time": "2026-10-21T22:40:52.369413165+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/releasemeta/pinyin",
+          "Elapsed": 1.6640000000000001
+        },
+        {
+          "Time": "2026-10-21T22:40:53.756253318+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/sites",
+          "Elapsed": 1.3860000000000001
+        },
+        {
+          "Time": "2026-10-21T22:40:53.957615304+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/sourceindexer",
+          "Elapsed": 0.199
+        },
+        {
+          "Time": "2026-10-21T22:40:54.524787242+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/releasemeta/rustanime",
+          "Elapsed": 3.444
+        },
+        {
+          "Time": "2026-10-21T22:40:55.568414012+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/sqlitebaseline",
+          "Elapsed": 0.128
+        },
+        {
+          "Time": "2026-10-21T22:40:55.60165627+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/subscriptiondefaults",
+          "Elapsed": 0.161
+        },
+        {
+          "Time": "2026-10-21T22:40:55.645066632+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/subscriptionquality",
+          "Elapsed": 0.077
+        },
+        {
+          "Time": "2026-10-21T22:40:55.731997227+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/systemversion",
+          "Elapsed": 0.086
+        },
+        {
+          "Time": "2026-10-21T22:40:55.77564074+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/torrentfilter",
+          "Elapsed": 0.043
+        },
+        {
+          "Time": "2026-10-21T22:40:55.937370416+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/rsscontext",
+          "Elapsed": 4.108
+        },
+        {
+          "Time": "2026-10-21T22:40:55.984051333+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/transferextensions",
+          "Elapsed": 0.208
+        },
+        {
+          "Time": "2026-10-21T22:40:55.998689386+09:00",
+          "Action": "pass",
+          "Package": "light-media/web",
+          "Elapsed": 0.014
+        },
+        {
+          "Time": "2026-10-21T22:40:57.484509448+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/transferoverwrite",
+          "Elapsed": 1.546
+        },
+        {
+          "Time": "2026-10-21T22:40:59.595175187+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/scrapefileclean/host",
+          "Elapsed": 10.134
+        },
+        {
+          "Time": "2026-10-21T22:41:12.116137659+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/subscriptionstats",
+          "Elapsed": 16.513
+        },
+        {
+          "Time": "2026-10-21T22:41:12.388999234+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 23.833
+        },
+        {
+          "Time": "2026-10-21T22:41:56.885698016+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/releasemeta",
+          "Elapsed": 66.241
+        },
+        {
+          "Time": "2026-10-21T22:41:58.437603985+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins",
+          "Elapsed": 75.351
+        },
+        {
+          "Time": "2026-10-21T22:42:55.292930791+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin",
+          "Elapsed": 131.652
+        },
+        {
+          "Time": "2026-10-21T22:50:49.98678422+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 607.511
+        }
+      ]
+    },
+    "app_all_normal_30m": {
+      "command": "go test -timeout 30m -json ./internal/app",
+      "log": "work/verification/app-all-normal-30m.jsonl",
+      "sha256": "6aaca994e5aeb1da4cee9edffff12e78ecf27b6a4b06f03e9b11609b116d97a0",
+      "bytes": 9523900,
+      "top_level_passed": 1081,
+      "passed_including_subtests": 3861,
+      "skipped_tests": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestPluginServerStatusOwnedUIFixture",
+        "TestPluginSystemProcessOwnedUIFixture",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:12:07.882093073+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1258.25
+        }
+      ]
+    },
+    "statistic_notice_normal": {
+      "command": "go test -json ./internal/plugins/statistic ./internal/notice",
+      "log": "work/verification/statistic-notice-normal.jsonl",
+      "sha256": "a3172c7eafc651a7be359f552b30fae31c3814498af9f48b8df353dccce6f84e",
+      "bytes": 1115474,
+      "top_level_passed": 17,
+      "passed_including_subtests": 1357,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:51:27.925565257+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/statistic",
+          "Elapsed": 0.002
+        },
+        {
+          "Time": "2026-10-21T22:51:27.964385503+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/notice",
+          "Elapsed": 0.038
+        }
+      ]
+    },
+    "statistic_notice_race": {
+      "command": "go test -race -json ./internal/plugins/statistic ./internal/notice",
+      "log": "work/verification/statistic-notice-race.jsonl",
+      "sha256": "7e842b8cc0716b0c5f8adef0b7d2a282fd73be9c7d7a17fd370eecd2bcf66428",
+      "bytes": 1115551,
+      "top_level_passed": 17,
+      "passed_including_subtests": 1357,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:51:30.14696623+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/statistic",
+          "Elapsed": 1.399
+        },
+        {
+          "Time": "2026-10-21T22:51:32.010267682+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/notice",
+          "Elapsed": 3.253
+        }
+      ]
+    },
+    "baseline_tmdb": {
+      "command": "exact original HEAD overlay: three TMDB/image tests",
+      "log": "work/verification/baseline-tmdb.jsonl",
+      "sha256": "434811fb92dcf9b8bfd68b3a03abec5e75afe41da80149d0337bd5cfdc7853b3",
+      "bytes": 5352,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:44:12.172999274+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 7.246
+        }
+      ]
+    },
+    "baseline_media": {
+      "command": "exact original HEAD overlay: proxy mount and media category tests",
+      "log": "work/verification/baseline-media.jsonl",
+      "sha256": "d70c51760215d290652c7fa09cb187088a859b2e3cf363cc15a0afa664404fe9",
+      "bytes": 13450,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:48:31.661623757+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 11.964
+        }
+      ]
+    },
+    "baseline_scrapeclean": {
+      "command": "exact original HEAD overlay: actual kernel rename/delete/timer test",
+      "log": "work/verification/baseline-scrapeclean.jsonl",
+      "sha256": "31b2b03ef6c82dc17246a0e0646d383fe381f608ccf71686665fe5d7f38d4d2b",
+      "bytes": 13404,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:08:44.252398708+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 12.362
+        }
+      ]
+    },
+    "baseline_subscribegroup": {
+      "command": "exact original HEAD overlay: added event metadata/edit/cancellation test",
+      "log": "work/verification/baseline-subscribegroup.jsonl",
+      "sha256": "3c2c5ffe873cc34b2228dc3814ee632572a5550d6bb87569b66abf49556ccde0",
+      "bytes": 7047,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:12:40.094259717+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 10.264
+        }
+      ]
+    },
+    "baseline_missing_inputs": {
+      "command": "exact original HEAD overlay: failing JPEG, legacy anime and IYUU tests",
+      "log": "work/verification/baseline-missing-inputs.jsonl",
+      "sha256": "a957f20adef5fbc200e0c0ab8bb3df0746eab63e7689547a60e982f076e6ad3f",
+      "bytes": 8006,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": "TestFrozenInstalledJPEGSourceAndReferences"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": "TestExpandedPillowJPEG"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/releasemeta/legacyanime",
+          "test": "TestInstalledCompletePipeline"
+        },
+        {
+          "package": "light-media/internal/releasemeta/legacyanime",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/plugins/iyuuautoseed",
+          "test": "TestSiteHTTPActualResponseDecodeAgainstInstalledOracle"
+        },
+        {
+          "package": "light-media/internal/plugins/iyuuautoseed",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:49:08.874206977+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/autosignin/imagehash",
+          "Elapsed": 0.038
+        },
+        {
+          "Time": "2026-10-21T22:49:09.444028146+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/releasemeta/legacyanime",
+          "Elapsed": 0.008
+        },
+        {
+          "Time": "2026-10-21T22:49:10.094583941+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/iyuuautoseed",
+          "Elapsed": 0.659
+        }
+      ]
+    },
+    "vet": {
+      "command": "go vet ./...",
+      "exit_code": 0,
+      "log": "work/verification/vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "mod-verify": {
+      "command": "go mod verify",
+      "exit_code": 0,
+      "log": "work/verification/mod-verify.log",
+      "sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+      "bytes": 21,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "dateparser-normal": {
+      "command": "go -C third_party/go-dateparser test . ./date/... ./internal/...",
+      "exit_code": 0,
+      "log": "work/verification/dateparser-normal.log",
+      "sha256": "0a3d0160b06979fab97f89b549f341490274fd318b29b2ab9e64499e94d9a959",
+      "bytes": 1515,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "dateparser-race": {
+      "command": "go -C third_party/go-dateparser test -race ./internal/data -run '^TestConcurrentFirstLocaleLookup$' -count=1",
+      "exit_code": 0,
+      "log": "work/verification/dateparser-race.log",
+      "sha256": "a5d9b0bcb1c579e72a5ed2652ac8146957922cded88697e148576b99d3481aa4",
+      "bytes": 64,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "frontend-tests": {
+      "command": "npm test (171 pass, zero fail/skip)",
+      "exit_code": 0,
+      "log": "work/verification/frontend-tests.log",
+      "sha256": "f2f68ddbf8a581e36f552ae2ed61483503515e3d7b58947604a7af8cea01e40e",
+      "bytes": 18195,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "frontend-build": {
+      "command": "npm run build -- --outDir ../work/frontend-validation; diff -qr web/dist work/frontend-validation (identical)",
+      "exit_code": 0,
+      "log": "work/verification/frontend-build.log",
+      "sha256": "15aee712b94ca0d0e2ac6f0109a937c7fc0e43e3811b28edd37364e2b7ad12bf",
+      "bytes": 6391,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "build-modernconly": {
+      "command": "CGO_ENABLED=0 go build -tags modernconly -o work/verification/bin/ ./cmd/... (22 commands; NOT a complete deployable release)",
+      "exit_code": 0,
+      "log": "work/verification/build-modernconly.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    },
+    "encodingdetector-normal": {
+      "command": "go test ./internal/plugins/iyuuautoseed/compat/encodingdetector",
+      "exit_code": 0,
+      "log": "work/verification/encodingdetector-normal.log",
+      "sha256": "cf9c8f37c990452fa63eeeeda7ef7f1a34860e012fcd4ef306e38275d022219e",
+      "bytes": 87,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [],
+      "terminal_packages": []
+    }
+  },
+  "source_limitations": {
+    "source_commit": "f2ec1396c5984ead199d7b091fc22328515f0fa6",
+    "expected_files": 5279,
+    "missing": [
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/ascii-strict.bin.z",
+        "sha": "c3aa56abdbfc913ee7faa60e5c62ad223c23c3b7",
+        "size": 480
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1006-ignore.bin.z",
+        "sha": "dd0acbbf58035d00b69cc27967a7b9ff61fa4f7e",
+        "size": 1029
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1006-replace.bin.z",
+        "sha": "dd0acbbf58035d00b69cc27967a7b9ff61fa4f7e",
+        "size": 1029
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1006-strict.bin.z",
+        "sha": "dd0acbbf58035d00b69cc27967a7b9ff61fa4f7e",
+        "size": 1029
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1250-strict.bin.z",
+        "sha": "87fdeffc176d9bc5cb819063f8ce9aab9f4ba22c",
+        "size": 1048
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1251-replace.bin.z",
+        "sha": "69753a4f3a1c3aa471f84ba31f1a7b344ceb503d",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1253-replace.bin.z",
+        "sha": "93c6cdf7a5958c87d3e72d550a9bb2096a1c0b0f",
+        "size": 999
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1253-strict.bin.z",
+        "sha": "9d06cd1ed076895a4f512cfae7ceac470c4474ec",
+        "size": 998
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1255-strict.bin.z",
+        "sha": "a81a56b8f34473d7c61d108b181acad7c7f3eddc",
+        "size": 982
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1257-ignore.bin.z",
+        "sha": "b79b460ce352e04869c42a99811c57e24b0766b8",
+        "size": 1025
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1257-strict.bin.z",
+        "sha": "d6ecd4c5e8768addd28bf9df69ba7be45bcbca16",
+        "size": 1032
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp720-ignore.bin.z",
+        "sha": "1be341e0ead0cd50e5ab68659b2d78b4b1449150",
+        "size": 1052
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp720-replace.bin.z",
+        "sha": "1be341e0ead0cd50e5ab68659b2d78b4b1449150",
+        "size": 1052
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp720-strict.bin.z",
+        "sha": "1be341e0ead0cd50e5ab68659b2d78b4b1449150",
+        "size": 1052
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp850-ignore.bin.z",
+        "sha": "9a9151a8eeff1141982b7fcd58c392082e94e797",
+        "size": 1040
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp850-replace.bin.z",
+        "sha": "9a9151a8eeff1141982b7fcd58c392082e94e797",
+        "size": 1040
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp850-strict.bin.z",
+        "sha": "9a9151a8eeff1141982b7fcd58c392082e94e797",
+        "size": 1040
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp858-ignore.bin.z",
+        "sha": "994bf94570ba545a4036ac059fc9fda7dfd5d210",
+        "size": 1041
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp858-replace.bin.z",
+        "sha": "994bf94570ba545a4036ac059fc9fda7dfd5d210",
+        "size": 1041
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp858-strict.bin.z",
+        "sha": "994bf94570ba545a4036ac059fc9fda7dfd5d210",
+        "size": 1041
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/iso8859-14-ignore.bin.z",
+        "sha": "3fe5fc330f72fe34f418fcc021feba638052c7be",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/iso8859-14-replace.bin.z",
+        "sha": "3fe5fc330f72fe34f418fcc021feba638052c7be",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/iso8859-14-strict.bin.z",
+        "sha": "3fe5fc330f72fe34f418fcc021feba638052c7be",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/koi8-r-ignore.bin.z",
+        "sha": "584400766014a7e7b528a6bb9ff365b6fb68365e",
+        "size": 1038
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/koi8-r-replace.bin.z",
+        "sha": "584400766014a7e7b528a6bb9ff365b6fb68365e",
+        "size": 1038
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/koi8-r-strict.bin.z",
+        "sha": "584400766014a7e7b528a6bb9ff365b6fb68365e",
+        "size": 1038
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-arabic-ignore.bin.z",
+        "sha": "34bc9fdef499f9a59b7b9a7accca91b74b6816fc",
+        "size": 959
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-arabic-replace.bin.z",
+        "sha": "34bc9fdef499f9a59b7b9a7accca91b74b6816fc",
+        "size": 959
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-arabic-strict.bin.z",
+        "sha": "34bc9fdef499f9a59b7b9a7accca91b74b6816fc",
+        "size": 959
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-farsi-ignore.bin.z",
+        "sha": "df1fa3a3c400a3f7ee7a8ded612a008b5b687d3e",
+        "size": 960
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-farsi-replace.bin.z",
+        "sha": "df1fa3a3c400a3f7ee7a8ded612a008b5b687d3e",
+        "size": 960
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-farsi-strict.bin.z",
+        "sha": "df1fa3a3c400a3f7ee7a8ded612a008b5b687d3e",
+        "size": 960
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-roman-ignore.bin.z",
+        "sha": "475171acff3d2b7fadf4a35ce364e658b28d9fea",
+        "size": 1061
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-roman-replace.bin.z",
+        "sha": "475171acff3d2b7fadf4a35ce364e658b28d9fea",
+        "size": 1061
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-roman-strict.bin.z",
+        "sha": "475171acff3d2b7fadf4a35ce364e658b28d9fea",
+        "size": 1061
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/iso/iso2022_jp_2-g2F.bin.z",
+        "sha": "7a089a498eaf4693c777e35f7d2e44e469b6f3ca",
+        "size": 471
+      },
+      {
+        "path": "testdata/plugins/auto-signin-image-hash/jpeg/jpeg-pillow-12.2.0.jsonl.gz",
+        "sha": "915423d5ede2e5615b00244615d1b23933b4b0c0",
+        "size": 2759103
+      },
+      {
+        "path": "testdata/plugins/business-source-integration/verification/all-normal.jsonl.gz",
+        "sha": "ed0d6d718c6f70f4926e86cebeb30e07b5d6f8fa",
+        "size": 2637329
+      },
+      {
+        "path": "testdata/plugins/business-source-integration/verification/v1-all-normal.jsonl.gz",
+        "sha": "2c859f991f099c9fe8e93c7aa6c06491cd0ea3a2",
+        "size": 2666681
+      },
+      {
+        "path": "testdata/plugins/release-meta-legacy-anitopy-oracle.json.gz",
+        "sha": "41eb201bda00971dd65c86495903414d51b0610c",
+        "size": 2645685
+      }
+    ],
+    "changed": [
+      {
+        "path": "docs/plugin-installed-migration-baseline.md",
+        "base_sha": "a382921b45879c486b26e2166460f59b1ca04068",
+        "current_sha": "0b089e26a28da51550c2958e6a403e1e67e80dec"
+      },
+      {
+        "path": "internal/app/plugin_notice_route.go",
+        "base_sha": "7b6214d458a3551c5e975a8376b730877a9aa992",
+        "current_sha": "6d07531a1afab727e357206c368706bd50b22c69"
+      },
+      {
+        "path": "internal/app/plugin_notice_storage.go",
+        "base_sha": "ca8d166bcdc641076c4cd611b4200fee4bdb500c",
+        "current_sha": "adb790633500392bbe4121383b94ff933c6e5efc"
+      },
+      {
+        "path": "internal/app/plugin_runtime.go",
+        "base_sha": "a6a46be6466a4fdb34c8543a85b23ac7ed9e245f",
+        "current_sha": "a50f895f352e45494eb86be941b89376f7e9a62d"
+      },
+      {
+        "path": "internal/app/plugin_site_statistic.go",
+        "base_sha": "59e595e835ac08543b58f706cd7f7b5aa6944e38",
+        "current_sha": "7b985f300f522ec2f3357e2bf479443578d1b2ce"
+      },
+      {
+        "path": "internal/app/plugin_site_statistic_test.go",
+        "base_sha": "4bf3d3e66883952abbd8356f989a21e07565ec17",
+        "current_sha": "9006b549dd36acede028797ec7611c548a48487a"
+      }
+    ]
+  },
+  "notes": [
+    "Full project acceptance is NOT claimed. Preserve all failed logs and missing remote files.",
+    "36 missing generated codec/ISO assets affect IYUU runtime encoding coverage; embedding still compiles but release artifacts are incomplete.",
+    "Missing JPEG and legacy-anitopy gzip oracles prevent their full test gates. The two business-source integration gzip files are historical evidence, not notification runtime input.",
+    "None of the 40 missing files is an input to the 18-top-level SiteStatistic notification tests. Expanded shared-route race and modernconly gates cover 26 top-level tests.",
+    "Official signed raw file download returned HTTP 404. No invalid decoded binary, placeholders or deletions were used.",
+    "Baseline overlays restore every changed Go source/test to the exact original HEAD and omit new tests; same inputs, proxy environment and toolchain are retained.",
+    "ScrapeFileClean actual-kernel rename/timer test also fails on the exact baseline: immediate case has the same lost-original-media failure; delayed case fails at timer bound on baseline versus log ownership in full run. This establishes an existing failing gate, not byte-identical delayed-case behavior.",
+    "TMDB/image/media baseline failures reproduce original behavior in this environment; no claim of live TMDB integration success.",
+    "Full-runtime SystemError event and realtime SSE parity, real delivery acceptance, original global configuration migration and production handoff remain unfinished."
+  ],
+  "source_contract": {
+    "url": "https://github.com/jxxghp/MoviePilot-Plugins/blob/17fa38cfad0d5a43e6d0886f3a4b3668b1d6cd67/plugins.v2/sitestatistic/__init__.py#L297-L320",
+    "version": "1.9.7",
+    "file_sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+    "order": "post_message normal return before save_data(last_notify); thrown source error does not save"
+  },
+  "original_binary_recoveries": [
+    {
+      "source": "official chardet 7.5.1",
+      "git_blob_sha": "ad0d1e9d14da837ad655808462837db19c60d324"
+    },
+    {
+      "source": "official CloudflareSpeedTest v2.3.5 darwin archive",
+      "git_blob_sha": "b796426f4f866092a83bb162fc30b16a0abb9275"
+    },
+    {
+      "source": "official CloudflareSpeedTest v2.3.5 linux archive",
+      "git_blob_sha": "4bc950083fa50516a5c82a39d52e9323f99dc8f3"
+    }
+  ]
+}

@@ -328,11 +328,11 @@ func TestPluginSiteStatisticNotificationRollbackAndEnabledGate(t *testing.T) {
 	statisticExecute(t, a)
 	// An event receipt fails after both message and dedup writes: all three
 	// must roll back together, then a retry may publish the notification once.
-	run, err := a.pluginStore.EnqueueRun(ctx, "SiteStatistic", "reload", nil)
-	if err != nil {
+	commitDomainFixture(t, a, DomainEvent{EventID: domainEventID("site.refreshed", "statistic-rollback"), Type: "site.refreshed", SiteID: "*", JobID: "job_fixture"})
+	if err := a.dispatchPluginEvents(ctx, time.Now()); err != nil {
 		t.Fatal(err)
 	}
-	run, err = a.pluginStore.ClaimRun(ctx)
+	run, err := a.pluginStore.ClaimRun(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

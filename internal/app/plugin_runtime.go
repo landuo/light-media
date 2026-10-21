@@ -403,6 +403,26 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_SITE_RECEIPT_INVALID"
 		}
 	}
+	if installation.PluginID == "SiteStatistic" && run.Action == "event" {
+		committed, receiptErr := a.pluginStore.siteStatisticReceipt(finishCtx, run)
+		if receiptErr == nil {
+			outcome, outcomeCode, routed, outcomeErr := a.pluginStore.siteStatisticReceiptOutcome(finishCtx, run, committed)
+			if routed {
+				result.Result, state, errorCode = committed, outcome, outcomeCode
+				if outcomeErr != nil {
+					err = outcomeErr
+				} else if outcome == "succeeded" {
+					err = nil
+				} else {
+					err = bad(outcomeCode, "统计通知保留原始路由结果，未重新发送")
+				}
+			} else if outcomeErr != nil {
+				err, state, errorCode = outcomeErr, "reconcile_pending", "PLUGIN_SITE_STATISTIC_NOTICE_INVALID"
+			}
+		} else if !errors.Is(receiptErr, sql.ErrNoRows) {
+			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_SITE_STATISTIC_NOTICE_INVALID"
+		}
+	}
 	if err != nil && deferred != nil {
 		stored, _, receiptErr := a.pluginStore.readDeferred(finishCtx, a.Store.DB, deferred.run)
 		if receiptErr != nil {
@@ -492,6 +512,9 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if method == "sites.controls.read" || method == "sites.controls.configure" {
 		return a.pluginSiteControlsHost(ctx, installation, run, method, raw)
 	}
+	if method == "site.statistics.notify" {
+		return a.pluginSiteStatisticNotifyHost(ctx, installation, run, raw)
+	}
 	if method == "site.statistics.refresh_domain" {
 		return a.pluginSiteStatisticAPIHost(ctx, installation, run, raw)
 	}
@@ -548,7 +571,7 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return nil, err
 	}
 	switch method {
-	case "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify":
+	case "site.statistics.configure", "site.statistics.refresh":
 		return a.pluginSiteStatisticHost(ctx, installation, run, method, raw)
 	case "media.servers", "events.configure", "media.refresh":
 		return a.pluginMediaHost(ctx, installation, run, method, raw)
