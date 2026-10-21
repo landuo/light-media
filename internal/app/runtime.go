@@ -79,7 +79,8 @@ type App struct {
 	pluginServerStatus      pluginServerStatusRuntime
 	pluginRemoveLink        pluginRemoveLinkRuntime
 	pluginAutoSignIn        pluginAutoSignInRuntime
-	autoSignInEnvironment   func() []string // Private startup-only seam; nil reads os.Environ.
+	autoSignInEnvironment   func() []string               // Private startup-only seam; nil reads os.Environ.
+	autoSignInTjuptStartup  func() autoSignInTjuptStartup // Private trusted test input; nil uses only the startup environment and system roots.
 	pluginScrapeClean       pluginScrapeCleanRuntime
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime

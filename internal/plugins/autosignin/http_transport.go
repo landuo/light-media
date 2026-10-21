@@ -6,6 +6,7 @@ import (
 	"compress/zlib"
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/binary"
 	"errors"
 	"io"
@@ -57,6 +58,8 @@ func cloneRequestsProxyPolicy(policy *RequestsProxyPolicy) *RequestsProxyPolicy 
 // This prototype never accepts it from SDK invocation input. Transport objects
 // must not be shared across sites or persisted to plugin JSON/history/logs.
 type SiteHTTPBinding struct {
+	// RootCAs is a trusted host-only trust snapshot; nil uses system roots.
+	RootCAs       *x509.CertPool `json:"-"`
 	URL, Cookie   string
 	UserAgent     any
 	ProxyURL      *url.URL
@@ -100,6 +103,9 @@ func BindSiteHTTP(binding SiteHTTPBinding) (*BoundSiteHTTP, error) {
 		return nil, ErrSiteTargetDenied
 	}
 	binding.RequestsProxy = cloneRequestsProxyPolicy(binding.RequestsProxy)
+	if binding.RootCAs != nil {
+		binding.RootCAs = binding.RootCAs.Clone()
+	}
 	u, err := url.Parse(binding.URL)
 	if err != nil || u == nil || u.Host == "" || u.User != nil || (u.Scheme != "http" && u.Scheme != "https") {
 		return nil, ErrSiteTargetDenied
@@ -272,7 +278,7 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	transport := &http.Transport{DisableKeepAlives: false, DisableCompression: true, ForceAttemptHTTP2: false, TLSHandshakeTimeout: idle, MaxResponseHeaderBytes: 64 << 10, TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{}}
 	// Normal authenticated site requests always validate both origin and HTTPS
 	// proxy certificates. No caller option can weaken this policy.
-	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
+	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12, RootCAs: b.binding.RootCAs}
 	if b.testTLS != nil {
 		tlsConfig = b.testTLS.Clone()
 		if tlsConfig.InsecureSkipVerify {
@@ -330,6 +336,10 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		}
 		return nil
 	}}
+	// Public media never consumes Set-Cookie, including on redirect hops.
+	if fixedPublicReferer != "" {
+		client.Jar = nil
+	}
 	if b.binding.BeforeRequest != nil {
 		client.Transport = siteHostGuardTransport{next: routed, beforeRequest: b.binding.BeforeRequest}
 	}

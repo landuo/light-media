@@ -344,6 +344,16 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		return nil, &APIError{"NOT_FOUND", "插件已卸载", 404}
 	}
 	switch {
+	case parts[1] == "tjupt-cache" && r.Method == "GET":
+		return a.ExportAutoSignInTjuptCache(ctx, installation.InstanceID)
+	case parts[1] == "tjupt-cache" && r.Method == "POST":
+		raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, autoSignInTjuptCacheTransferLimit))
+		if err != nil {
+			return nil, bad("AUTOSIGNIN_CACHE_INPUT_INVALID", "签到缓存文件无效或过大")
+		}
+		// The existing lifecycle lock above is held. Import must not initialize
+		// the plugin, enqueue work or grant any source/network capability.
+		return a.importAutoSignInTjuptCacheLocked(ctx, installation.InstanceID, raw)
 	case parts[1] == "page" && r.Method == "GET":
 		if installation.PluginID == "LarkMessager" {
 			return a.larkPage(ctx, installation)

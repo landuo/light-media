@@ -211,17 +211,17 @@ func TestAutoSignInTrustedSitesCrossOriginAndUnsupportedCapabilities(t *testing.
 	if leaked.Load() != 0 {
 		t.Fatal("redirect leaked credential-bearing request")
 	}
-	for _, kind := range []string{"browser", "ocr", "tjupt"} {
+	for _, kind := range []string{"browser", "hdsky", "opencd"} {
 		t.Run(kind, func(t *testing.T) {
 			settings.Sites[0] = signinSitesNative(origin.URL)
 			settings.ProxyHost = ""
 			switch kind {
 			case "browser":
 				settings.Sites[0].Render = true
-			case "ocr":
+			case "hdsky":
 				settings.Sites[0].BaseURL = "https://hdsky.me"
-			case "tjupt":
-				settings.Sites[0].BaseURL = "https://www.tjupt.org"
+			case "opencd":
+				settings.Sites[0].BaseURL = "https://open.cd"
 			}
 			signinSitesPublish(t, f.a, settings)
 			deps := signinSitesDependencies(t, f)

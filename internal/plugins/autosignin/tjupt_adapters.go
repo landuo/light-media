@@ -3,10 +3,12 @@ package autosignin
 import (
 	"bytes"
 	"context"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -325,17 +327,55 @@ func encodeOrderedCache(cache Object, keys []string) ([]byte, error) {
 // TjuptPublicHTTP is an uncredentialed, dedicated capability. The host must
 // provide an explicit image-origin allowlist; data returned by Douban cannot
 // grant an arbitrary origin. Generic site same-origin authorization is intact.
-type TjuptPublicHTTP struct{ clients map[string]PageTransport }
+type TjuptPublicHTTP struct {
+	clients      map[string]PageTransport
+	imageOrigins map[string]bool
+}
+
+// TjuptPublicBinding is supplied only by the trusted host, never SDK arguments
+// or suggest responses. Image origins grant exact HTTPS origins, not suffixes.
+type TjuptPublicBinding struct {
+	ImageOrigins  []string                    `json:"-"`
+	RequestsProxy *RequestsProxyPolicy        `json:"-"`
+	BeforeRequest func(context.Context) error `json:"-"`
+	RootCAs       *x509.CertPool              `json:"-"`
+}
 
 func BindTjuptPublicHTTP(imageOrigins []string) (*TjuptPublicHTTP, error) {
-	hosts := append([]string{"https://movie.douban.com"}, imageOrigins...)
-	p := &TjuptPublicHTTP{clients: map[string]PageTransport{}}
-	for _, address := range hosts {
+	// Retain the original wrapper contract; explicit ports require host binding.
+	for _, address := range imageOrigins {
 		u, err := url.Parse(address)
-		if err != nil || u.User != nil || u.Scheme != "https" || u.Host == "" || u.Port() != "" || u.RawQuery != "" || u.Fragment != "" || (u.Path != "" && u.Path != "/") {
+		if err != nil || u.Port() != "" {
 			return nil, ErrSiteTargetDenied
 		}
-		bound, err := BindSiteHTTP(SiteHTTPBinding{URL: address, UserAgent: nil})
+	}
+	return BindTjuptPublicHTTPWithBinding(TjuptPublicBinding{ImageOrigins: imageOrigins})
+}
+
+func BindTjuptPublicHTTPWithBinding(binding TjuptPublicBinding) (*TjuptPublicHTTP, error) {
+	hosts := append([]string{"https://movie.douban.com"}, binding.ImageOrigins...)
+	// Source RequestUtils() has no explicit site proxy. Freeze only the host's
+	// environment snapshot, even if a site policy was accidentally supplied.
+	policy := cloneRequestsProxyPolicy(binding.RequestsProxy)
+	if policy != nil {
+		policy.Explicit = nil
+	}
+	p := &TjuptPublicHTTP{clients: map[string]PageTransport{}, imageOrigins: map[string]bool{}}
+	for i, address := range hosts {
+		u, err := url.Parse(address)
+		if err != nil || u.User != nil || u.Scheme != "https" || u.Host == "" || u.Hostname() == "" || strings.Contains(u.Host, "*") || strings.HasSuffix(u.Host, ":") || u.ForceQuery || u.RawQuery != "" || u.Fragment != "" || (u.Path != "" && u.Path != "/") {
+			return nil, ErrSiteTargetDenied
+		}
+		if u.Port() != "" {
+			port, err := strconv.Atoi(u.Port())
+			if err != nil || port < 1 || port > 65535 {
+				return nil, ErrSiteTargetDenied
+			}
+		}
+		if i > 0 {
+			p.imageOrigins[originOf(u)] = true
+		}
+		bound, err := BindSiteHTTP(SiteHTTPBinding{URL: address, UserAgent: nil, RequestsProxy: policy, BeforeRequest: binding.BeforeRequest, RootCAs: binding.RootCAs})
 		if err != nil {
 			return nil, err
 		}
@@ -366,7 +406,7 @@ func (p *TjuptPublicHTTP) Image(ctx context.Context, address string) (*PageRespo
 		return nil, ErrSiteTargetDenied
 	}
 	client := p.clients[originOf(u)]
-	if client == nil {
+	if client == nil || !p.imageOrigins[originOf(u)] {
 		return nil, ErrSiteTargetDenied
 	}
 	return client.Do(ctx, PageRequest{Method: "GET", URL: address, NoCookies: true, Binary: true, Referer: "https://movie.douban.com"})

@@ -1,0 +1,309 @@
+{
+  "scope": "AutoSignIn 2.9.14 Tjupt actual host/public transport/cache transfer milestone; not whole plugin or production acceptance",
+  "parent_commit": "b6101abd08d75fda93ee45b35554ab148945c653",
+  "branch": "dev/plugins-continuation",
+  "input_manifest_sha256": "1e24f7756ad01ac2cc682a84edb1ffbf3964ea7c0e1cb79281ba642badd66b6c",
+  "input_files": 5310,
+  "original_missing_binary_files": 40,
+  "original_missing_inventory_reference": "docs/plugin-site-statistic-notice-routing-verification.json source_limitations",
+  "tests": {
+    "final-target": {
+      "exit": 0,
+      "top_level": {
+        "pass": 85
+      },
+      "including_subtests": {
+        "pass": 223
+      },
+      "failures": [],
+      "skipped": [],
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-target.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-target.input-after.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-target.input-before.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-target.jsonl": "f7fceb9292fe4253792d16a846a55ad2751efafac01ef85bd3f2c090851953e3",
+        "work/auto-signin-tjupt-validation/final-target.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final-app-full": {
+      "exit": 1,
+      "top_level": {
+        "pass": 1176,
+        "fail": 8,
+        "skip": 14
+      },
+      "including_subtests": {
+        "pass": 4141,
+        "fail": 14,
+        "skip": 14
+      },
+      "failures": [
+        "TestAssetImagesUseFixedHostBoundedValidatedPublication",
+        "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage",
+        "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence",
+        "TestProxyMountAuthenticatedImagesDownloadsAndSSE",
+        "TestMediaCategoryRefreshesLegacyCacheBeforePlanning",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+      ],
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestPluginServerStatusOwnedUIFixture",
+        "TestPluginSystemProcessOwnedUIFixture",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-app-full.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "work/auto-signin-tjupt-validation/final-app-full.input-after.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-app-full.input-before.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-app-full.jsonl": "5c75e994b458940ac1e58277e1f565c5b767f0c56f8108175c806e5c8d9771f5",
+        "work/auto-signin-tjupt-validation/final-app-full.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final-app-race": {
+      "exit": 0,
+      "top_level": {
+        "pass": 301
+      },
+      "including_subtests": {
+        "pass": 1913
+      },
+      "failures": [],
+      "skipped": [],
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-app-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-app-race.input-after.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-app-race.input-before.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-app-race.jsonl": "1665319017766f1a6618124247322c43fcca123b881ce3027577a8aef6833f84",
+        "work/auto-signin-tjupt-validation/final-app-race.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final-app-modernconly": {
+      "exit": 0,
+      "top_level": {
+        "pass": 301
+      },
+      "including_subtests": {
+        "pass": 1913
+      },
+      "failures": [],
+      "skipped": [],
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-app-modernconly.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-app-modernconly.input-after.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-app-modernconly.input-before.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-app-modernconly.jsonl": "67c48617f05cbb47beb373611f9f1f80a55f7bd1ff3a03f4f8ca419d66f005ad",
+        "work/auto-signin-tjupt-validation/final-app-modernconly.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final-core-normal": {
+      "exit": 0,
+      "top_level": {
+        "pass": 162
+      },
+      "including_subtests": {
+        "pass": 6246
+      },
+      "failures": [],
+      "skipped": [],
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-core-normal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-core-normal.input-after.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-core-normal.input-before.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-core-normal.jsonl": "3d27302820978a0fd280e24e2b71b26279e7171861771d5266e72e352c495a5c",
+        "work/auto-signin-tjupt-validation/final-core-normal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final-core-race": {
+      "exit": 0,
+      "top_level": {
+        "pass": 162
+      },
+      "including_subtests": {
+        "pass": 6246
+      },
+      "failures": [],
+      "skipped": [],
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-core-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-core-race.input-after.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-core-race.input-before.json": "81156369814c0570988dc533b1dfeb61e3cf837a6d7406102f7c28420840b964",
+        "work/auto-signin-tjupt-validation/final-core-race.jsonl": "5672098fa9b4655fa6cb85783d8c03f87d11731a9f06e650cc1b19ea3ae7e4bd",
+        "work/auto-signin-tjupt-validation/final-core-race.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "full_app_baseline_comparison": {
+    "baseline_failures": [
+      [
+        "light-media/internal/app",
+        "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+      ],
+      [
+        "light-media/internal/app",
+        "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+      ],
+      [
+        "light-media/internal/app",
+        "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+      ],
+      [
+        "light-media/internal/app",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+      ],
+      [
+        "light-media/internal/app",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+      ],
+      [
+        "light-media/internal/app",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+      ],
+      [
+        "light-media/internal/app",
+        "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+      ],
+      [
+        "light-media/internal/app",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+      ],
+      [
+        "light-media/internal/app",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+      ],
+      [
+        "light-media/internal/app",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+      ]
+    ],
+    "current_failures": [
+      [
+        "light-media/internal/app",
+        "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+      ],
+      [
+        "light-media/internal/app",
+        "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+      ],
+      [
+        "light-media/internal/app",
+        "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+      ],
+      [
+        "light-media/internal/app",
+        "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+      ],
+      [
+        "light-media/internal/app",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+      ],
+      [
+        "light-media/internal/app",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+      ],
+      [
+        "light-media/internal/app",
+        "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+      ],
+      [
+        "light-media/internal/app",
+        "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+      ],
+      [
+        "light-media/internal/app",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+      ],
+      [
+        "light-media/internal/app",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+      ],
+      [
+        "light-media/internal/app",
+        "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+      ]
+    ],
+    "new": [],
+    "resolved": []
+  },
+  "source_amendment_sha256": "8737049c34eadaa60df96b0aaa2bd5f7d016ccce7581a2aa02693075bec9bbc3",
+  "deployment": "not performed; synthetic generated images/TLS CA/CONNECT fixtures only",
+  "intentional_differences": [
+    "Original global TEMP/signin/tjupt.json replaced by existing isolated per-instance SQL cache",
+    "Public media cookies never propagated across redirects",
+    "Strict TLS and exact trusted public origins enforced; no real origin or system trust configured"
+  ],
+  "remaining_code": [
+    "Browser actual production driver/egress enforcement/host binding",
+    "OCR trusted actual transport/host binding",
+    "Fixed dependency semantics absent from captured helper excerpts and previously documented event consumers"
+  ],
+  "formal_migration_complete": "7/23 unchanged",
+  "additional_gates": {
+    "final-vet": {
+      "exit": 0,
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-vet.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "work/auto-signin-tjupt-validation/final-vet.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "final-build": {
+      "exit": 0,
+      "evidence": {
+        "work/auto-signin-tjupt-validation/final-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "work/auto-signin-tjupt-validation/final-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "work/auto-signin-tjupt-validation/final-build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "cli_count": 23
+  },
+  "final_input_check": {
+    "input_manifest_sha256": "1e24f7756ad01ac2cc682a84edb1ffbf3964ea7c0e1cb79281ba642badd66b6c",
+    "modified_non_docs": []
+  }
+}

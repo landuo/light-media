@@ -2,10 +2,13 @@ package app
 
 import (
 	"context"
+	"crypto/sha256"
+	"crypto/x509"
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"net"
 	"net/url"
 	"os"
 	"sort"
@@ -28,6 +31,74 @@ type autoSignInSiteSnapshot struct {
 	Identities  []nativeSiteIdentity
 	Native      []SiteConfig
 	Revision    string
+	TjuptImages []string
+	TjuptTrust  string
+	TjuptRoots  *x509.CertPool `json:"-"`
+}
+
+const autoSignInTjuptOriginsEnvironment = "LIGHT_MEDIA_AUTOSIGNIN_TJUPT_IMAGE_ORIGINS"
+
+// This seam is private trusted-startup input, never a setting, worker argument,
+// migration value or API capability. Production accepts no alternate root CAs.
+type autoSignInTjuptStartup struct {
+	ImageOriginsJSON string
+	RootCAPEM        []byte
+}
+
+func autoSignInTjuptTrust(startup autoSignInTjuptStartup) ([]string, *x509.CertPool, string, error) {
+	invalid := func() ([]string, *x509.CertPool, string, error) {
+		return nil, nil, "", bad("AUTOSIGNIN_TJUPT_TRUST_INVALID", "签到公开图片来源配置无法验证")
+	}
+	origins := []string{}
+	if startup.ImageOriginsJSON != "" {
+		if json.Unmarshal([]byte(startup.ImageOriginsJSON), &origins) != nil || origins == nil {
+			return invalid()
+		}
+	}
+	for i, address := range origins {
+		u, err := url.Parse(address)
+		if err != nil || u.Scheme != "https" || u.User != nil || u.Hostname() == "" || u.ForceQuery || u.RawQuery != "" || strings.Contains(address, "#") || (u.Path != "" && u.Path != "/") || u.RawPath != "" {
+			return invalid()
+		}
+		host := strings.ToLower(u.Hostname())
+		if net.ParseIP(host) == nil {
+			for _, label := range strings.Split(host, ".") {
+				if label == "" || len(label) > 63 || label[0] == '-' || label[len(label)-1] == '-' {
+					return invalid()
+				}
+				for _, c := range label {
+					if !(c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || c == '-') {
+						return invalid()
+					}
+				}
+			}
+		}
+		if port := u.Port(); port != "" {
+			n, err := strconv.Atoi(port)
+			if err != nil || n < 1 || n > 65535 {
+				return invalid()
+			}
+		} else if strings.HasSuffix(u.Host, ":") {
+			return invalid()
+		}
+		port := u.Port()
+		if port == "" {
+			port = "443"
+		}
+		origins[i] = "https://" + net.JoinHostPort(host, port)
+	}
+	var roots *x509.CertPool
+	if len(startup.RootCAPEM) > 0 {
+		roots = x509.NewCertPool()
+		if !roots.AppendCertsFromPEM(startup.RootCAPEM) {
+			return invalid()
+		}
+	}
+	// Hash the exact supplied trust inputs, not only parsed certificate subjects:
+	// same-subject root replacement must revoke an already-bound request.
+	raw, _ := json.Marshal(startup)
+	digest := sha256.Sum256(raw)
+	return origins, roots, hex.EncodeToString(digest[:]), nil
 }
 
 // Keep order, spelling and empty values: urllib's two-pass environment rules
@@ -99,7 +170,22 @@ func (a *App) readAutoSignInSites(ctx context.Context, owner *pluginAutoSignInOw
 	if a.autoSignInEnvironment != nil {
 		environment = a.autoSignInEnvironment
 	}
-	out.Environment = autoSignInProxyEnvironment(environment())
+	allEnvironment := environment()
+	out.Environment = autoSignInProxyEnvironment(allEnvironment)
+	startup := autoSignInTjuptStartup{}
+	for _, entry := range allEnvironment {
+		name, value, ok := strings.Cut(entry, "=")
+		if ok && name == autoSignInTjuptOriginsEnvironment {
+			startup.ImageOriginsJSON = value
+		}
+	}
+	if a.autoSignInTjuptStartup != nil {
+		startup = a.autoSignInTjuptStartup()
+	}
+	out.TjuptImages, out.TjuptRoots, out.TjuptTrust, e = autoSignInTjuptTrust(startup)
+	if e != nil {
+		return out, e
+	}
 	proxy, e := networkproxy.Resolve(settings.ProxyHost, func(key string) string {
 		for i := len(out.Environment) - 1; i >= 0; i-- {
 			name, value, ok := strings.Cut(out.Environment[i], "=")
@@ -209,7 +295,7 @@ func (a *App) readAutoSignInSites(ctx context.Context, owner *pluginAutoSignInOw
 		return out, e
 	}
 	if owner != nil {
-		out.Revision = hex.EncodeToString(owner.mac("trusted-site-snapshot/v2:frozen-requests-proxy:tls-system-min12", raw))
+		out.Revision = hex.EncodeToString(owner.mac("trusted-site-snapshot/v3:frozen-requests-proxy:tjupt-exact-origins:tls-system-min12", raw))
 	}
 	return out, nil
 }
@@ -284,7 +370,7 @@ func (a *App) autoSignInSiteDependencies(ctx context.Context, owner *pluginAutoS
 			return out, bad("AUTOSIGNIN_BROWSER_UNAVAILABLE", "站点浏览器仿真尚未提供可信执行能力")
 		}
 		address, _ := row["url"].(string)
-		for _, kind := range []source.FixedAdapter{source.AdapterHDSky, source.AdapterOpencd, source.AdapterTjupt} {
+		for _, kind := range []source.FixedAdapter{source.AdapterHDSky, source.AdapterOpencd} {
 			if yes, _ := source.FixedAdapterMatch(kind, address); yes {
 				return out, bad("AUTOSIGNIN_ADAPTER_DEPENDENCY_UNAVAILABLE", "此站点需要尚未接入的可信OCR或题库执行能力")
 			}
@@ -297,6 +383,20 @@ func (a *App) autoSignInSiteDependencies(ctx context.Context, owner *pluginAutoS
 			policy.Explicit["https"] = snapshot.Proxy.HTTPS
 		}
 		registration := source.Registration{Site: out.Site, RequestsProxy: policy, BeforeRequest: guard}
+		if yes, _ := source.FixedAdapterMatch(source.AdapterTjupt, address); yes {
+			// Public RequestUtils() does not inherit the explicit site proxy or
+			// any site credential. Only the frozen host environment is used.
+			public, err := source.BindTjuptPublicHTTPWithBinding(source.TjuptPublicBinding{
+				ImageOrigins:  append([]string(nil), snapshot.TjuptImages...),
+				RequestsProxy: &source.RequestsProxyPolicy{Environment: append([]string(nil), snapshot.Environment...)},
+				BeforeRequest: guard, RootCAs: snapshot.TjuptRoots,
+			})
+			if err != nil {
+				return out, err
+			}
+			registration.Tjupt = &source.TjuptDependencies{Public: public}
+			registration.RootCAs = snapshot.TjuptRoots
+		}
 		generic, e := source.BindRegistrationHooks(registration, false)
 		if e != nil {
 			return out, e
@@ -309,7 +409,7 @@ func (a *App) autoSignInSiteDependencies(ctx context.Context, owner *pluginAutoS
 		if e != nil {
 			return out, e
 		}
-		out.Hooks = source.SiteVisitHooks{HTTP: autoSignInHTTP{guard: guard, origin: origin, generic: generic.HTTP, fixed: specialized.HTTP}}
+		out.Hooks = source.SiteVisitHooks{HTTP: autoSignInHTTP{guard: guard, origin: origin, generic: generic.HTTP, fixed: specialized.HTTP}, Tjupt: specialized.Tjupt}
 		if specialized.MTeam != nil {
 			out.Hooks.MTeam = autoSignInMTeam{guard: guard, next: specialized.MTeam}
 		}

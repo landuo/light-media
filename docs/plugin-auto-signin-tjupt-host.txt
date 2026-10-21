@@ -1,0 +1,23 @@
+AutoSignIn 2.9.14 Tjupt 宿主与缓存接入（开发阶段，验证结果另附）
+
+固定依据
+installed-source.json 中 sites/tjupt.py SHA256 ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0。继续复用原算法、实际 SDK、原 SQL durable controller，不另造签到流程。原代码空缓存不写入、缓存保存 option value 而匹配时比较 label 的行为保留，不当作优化修正。
+
+可信公共图片能力
+宿主启动配置 LIGHT_MEDIA_AUTOSIGNIN_TJUPT_IMAGE_ORIGINS 为 JSON 字符串数组，每项是精确 HTTPS origin，可带有效端口；默认空列表，不接受通配符、用户信息、查询或片段，不从站点响应、插件配置或 worker 输入添加来源。合成示例为 ["https://images.example.invalid"]，仅说明格式，不是可用生产域名。配置能力的实现不代表替用户配置真实白名单。
+Douban suggest 只使用冻结的 https://movie.douban.com/j/subject_suggest，响应 img 必须符合上述精确授权。公共请求独立冻结环境代理，不使用站点显式代理、Cookie 或站点 UA；绑定身份/配置/代理/图片策略的每跳守卫，在原签到权限失效时拒绝后续 I/O。公开图片使用固定 Douban Referer，不向其他来源复制凭据。公开响应 Cookie 不跨重定向传播，此凭据隔离是安全边界，不宣称等同任意 Requests Session。
+源站和 HTTPS 代理继续 TLS>=1.2 且验证证书。新增 RootCAs 是私有宿主传输依赖，生产默认系统信任；测试注入生成的合成 CA，不提供 worker/API 改信任或关闭校验的能力，不修改系统证书库。
+
+答案缓存迁移
+原全局 TEMP/signin/tjupt.json 有意改为现有每实例 SQL Cache["tjupt"]，符合分身隔离要求。不会导入一个全局共享文件，也不会自动复制到其他分身。导入/导出原始字节以 base64 表示，保留空白、顺序、重复键及坏 JSON/错误类型；它们以后实际使用时仍会触发原解析行为，而非被悄悄改成空对象。
+必须先在新应用正常安装并完成初始化，缓存操作本身不会初始化、签到、重放 onlyonce、修改配置/调度或发送通知。只接受当前实例/插件版本/代数/配置和空闲 sealed 状态，拒绝在途/未知结果/待执行队列。缺失或损坏状态明确失败。导入仅在事务内更新缓存与缓存目录就绪标志，提交失败整体回滚。
+
+管理 API（使用应用现有管理员会话与同源保护）
+GET /api/plugins/{instance_id}/tjupt-cache 返回 data 中的 version、destination 与 cache。destination 包含当前状态摘要和目的实例绑定证明；任何配置/owner/状态变化后须重新读取。读取不创建 owner 或执行插件。
+POST 同路径接收完整 envelope；最大请求12 MiB，缓存字节最大8 MiB。source-bytes 模式需保留新 GET 的 version/destination，将 cache 设置为 mode=source-bytes、source_sha256=上述固定SHA、key=tjupt、present/ready_present/ready=true、bytes=原始文件的base64、sha256=原始字节SHA256、proof=空字符串。
+source-bytes 明确只是调用者提供的字节，源代码 SHA 不证明文件来自真实旧实例。sealed-export 模式用本地 HMAC 证明本存储曾观察的缓存快照，也不证明生产来源。恢复旧导出需使用同实例/代数/配置的新 destination，不能改实例名跨分身复用。无缓存的 GET 只是预览，不能作为删除缓存请求。成功返回字节摘要与未新增任务/外部调用/配置修改的收据；不会自动发起签到。
+
+验收边界
+仅用生成图片、生成 CA、独占本地 HTTP/CONNECT 服务与合成答案测试，不解真实站点验证题、不登录真实账户。不将 HTTP 200、注册成功、专项或编译等同整插件完成。Browser/OCR 等其他源码依赖仍是代码待项，生产域名、真实账户及部署迁移是另外的实际验收待项。
+
+本批冻结最终门禁：受影响普通85顶层/223含子项通过；完整App1176顶层/4141含子项通过，保留8顶层/14含子项原失败及14原跳过，失败集合与上一批逐项一致，新增0。扩大race及modernconly各301顶层/1913含子项通过；核心普通/race各162顶层/6246含子项通过；vet与23CLI构建通过。全部使用同一冻结输入并核对前后无源码变化，证据摘要见相邻 verification.json。40个原二进制缺件未删除或替代，完整项目不是全绿。

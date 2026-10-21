@@ -2,6 +2,7 @@ package autosignin
 
 import (
 	"context"
+	"crypto/x509"
 	"net/url"
 	"time"
 )
@@ -10,6 +11,7 @@ import (
 // accepted from a worker, and no general HTTP RPC is exposed. Reconstruct it
 // after a host SiteStore change, with current credential/version validation.
 type Registration struct {
+	RootCAs       *x509.CertPool `json:"-"`
 	Site          Object
 	ProxyURL      *url.URL
 	RequestsProxy *RequestsProxyPolicy `json:"-"`
@@ -28,6 +30,9 @@ func NewRegisteredSites(rows []Registration) *RegisteredSites {
 	cloned := make([]Registration, len(rows))
 	for i, row := range rows {
 		cloned[i] = row
+		if row.RootCAs != nil {
+			cloned[i].RootCAs = row.RootCAs.Clone()
+		}
 		cloned[i].Site = clone(row.Site).(Object)
 		cloned[i].RequestsProxy = cloneRequestsProxyPolicy(row.RequestsProxy)
 		if row.ProxyURL != nil {
@@ -88,7 +93,7 @@ func BindRegistrationHooks(registration Registration, loaded bool) (SiteVisitHoo
 			policy.Explicit = nil
 		}
 	}
-	binding := SiteHTTPBinding{URL: textValue(site["url"]), Cookie: textValue(site["cookie"]), UserAgent: site["ua"], ProxyURL: proxy, RequestsProxy: policy, BeforeRequest: registration.BeforeRequest}
+	binding := SiteHTTPBinding{URL: textValue(site["url"]), Cookie: textValue(site["cookie"]), UserAgent: site["ua"], ProxyURL: proxy, RequestsProxy: policy, BeforeRequest: registration.BeforeRequest, RootCAs: registration.RootCAs}
 	transport, err := BindSiteHTTP(binding)
 	if err != nil {
 		return SiteVisitHooks{}, err
@@ -96,7 +101,7 @@ func BindRegistrationHooks(registration Registration, loaded bool) (SiteVisitHoo
 	h := SiteVisitHooks{HTTP: transport, Browser: registration.Browser, OCR: registration.OCR, Tjupt: registration.Tjupt}
 	if loaded {
 		if MTeamMatch(binding.URL) {
-			h.MTeam, err = bindMTeam(Credentials{URL: binding.URL, Token: textValue(site["token"]), UserAgent: textValue(site["ua"]), Proxy: site["proxy"], Timeout: site["timeout"]}, proxy, policy, registration.BeforeRequest)
+			h.MTeam, err = bindMTeam(Credentials{URL: binding.URL, Token: textValue(site["token"]), UserAgent: textValue(site["ua"]), Proxy: site["proxy"], Timeout: site["timeout"]}, proxy, policy, registration.BeforeRequest, registration.RootCAs)
 			if err != nil {
 				return SiteVisitHooks{}, err
 			}

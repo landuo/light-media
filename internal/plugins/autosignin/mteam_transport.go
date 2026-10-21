@@ -2,6 +2,7 @@ package autosignin
 
 import (
 	"context"
+	"crypto/x509"
 	"net/url"
 	"reflect"
 	"strconv"
@@ -17,10 +18,10 @@ type BoundMTeam struct {
 }
 
 func BindMTeam(credentials Credentials, proxy *url.URL) (*BoundMTeam, error) {
-	return bindMTeam(credentials, proxy, nil, nil)
+	return bindMTeam(credentials, proxy, nil, nil, nil)
 }
 
-func bindMTeam(credentials Credentials, proxy *url.URL, policy *RequestsProxyPolicy, beforeRequest func(context.Context) error) (*BoundMTeam, error) {
+func bindMTeam(credentials Credentials, proxy *url.URL, policy *RequestsProxyPolicy, beforeRequest func(context.Context) error, rootCAs *x509.CertPool) (*BoundMTeam, error) {
 	if policy != nil && proxy != nil {
 		return nil, ErrSiteTargetDenied
 	}
@@ -52,7 +53,7 @@ func bindMTeam(credentials Credentials, proxy *url.URL, policy *RequestsProxyPol
 	if ok && plan.URL != target {
 		return nil, ErrSiteTargetDenied
 	}
-	api, err := BindSiteHTTP(SiteHTTPBinding{URL: target, ProxyURL: proxy, RequestsProxy: policy, UserAgent: credentials.UserAgent, BeforeRequest: beforeRequest})
+	api, err := BindSiteHTTP(SiteHTTPBinding{URL: target, ProxyURL: proxy, RequestsProxy: policy, UserAgent: credentials.UserAgent, BeforeRequest: beforeRequest, RootCAs: rootCAs})
 	if err != nil {
 		return nil, err
 	}
