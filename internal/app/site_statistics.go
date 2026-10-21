@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -26,21 +27,37 @@ func siteStatisticDomain(site SiteConfig) string {
 
 func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, error) {
 	data := statistic.Data{SiteID: site.ID, Domain: snapshot.Domain, Name: snapshot.Name, UpdatedDay: snapshot.Day}
-	if snapshot.Stats == nil {
-		return data, bad("SITE_STATISTICS_CORRUPT", "站点统计快照缺少有效数据")
-	}
 	if data.Domain == "" {
 		data.Domain = siteStatisticDomain(site)
 	}
 	if data.Name == "" {
 		data.Name = site.Name
 	}
+	at, err := time.Parse(time.RFC3339Nano, snapshot.Connection.CheckedAt)
+	if err != nil && snapshot.Stats != nil {
+		at, err = time.Parse(time.RFC3339Nano, snapshot.Stats.CapturedAt)
+	}
 	if data.UpdatedDay == "" {
-		at, err := time.Parse(time.RFC3339Nano, snapshot.Stats.CapturedAt)
 		if err != nil {
-			return data, bad("SITE_STATISTICS_CORRUPT", "站点统计快照日期无效")
+			return data, invalidSiteAccountSnapshot()
 		}
 		data.UpdatedDay = at.In(shanghai()).Format("2006-01-02")
+	}
+	if _, e := time.Parse("2006-01-02", data.UpdatedDay); e != nil {
+		return data, invalidSiteAccountSnapshot()
+	}
+	if err == nil {
+		data.UpdatedTime = at.In(shanghai()).Format("15:04:05")
+	}
+	if snapshot.Connection.Status == "failed" {
+		data.Error = snapshot.Connection.Error
+		if data.Error == "" {
+			data.Error = "site_user_stats_refresh_failed"
+		}
+		return data, nil
+	}
+	if snapshot.Stats == nil {
+		return data, invalidSiteAccountSnapshot()
 	}
 	convert := func(value *int64) *float64 {
 		if value == nil {
@@ -50,9 +67,6 @@ func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, erro
 		return &v
 	}
 	stats := snapshot.Stats
-	if at, e := time.Parse(time.RFC3339Nano, stats.CapturedAt); e == nil {
-		data.UpdatedTime = at.In(shanghai()).Format("15:04:05")
-	}
 	if stats.Username != "" {
 		data.Username = &stats.Username
 	}
@@ -73,69 +87,49 @@ func (a *App) siteStatisticsSnapshot(ctx context.Context) (statistic.Snapshot, e
 		return snapshot, err
 	}
 	defer tx.Rollback()
+	view, err := a.siteAccountViewTx(ctx, tx, config.Sites)
+	if err != nil {
+		return snapshot, err
+	}
+	latest := []accountObservation{}
+	wantedDays := map[string]bool{}
 	for _, site := range config.Sites {
 		if !site.Enabled {
 			continue
 		}
 		snapshot.ActiveDomains = append(snapshot.ActiveDomains, siteStatisticDomain(site))
-		var raw []byte
-		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_stats_latest' AND id=?`, site.ID).Scan(&raw)
-		if errors.Is(err, sql.ErrNoRows) {
+		rows := view.latest(site.ID)
+		latest = append(latest, rows...)
+		if len(rows) == 0 {
 			continue
 		}
-		if err != nil {
-			return snapshot, err
-		}
-		var latest siteSnapshot
-		if json.Unmarshal(raw, &latest) != nil {
-			return snapshot, bad("SITE_STATISTICS_CORRUPT", "站点统计快照无法读取")
-		}
-		if latest.ConfigKey != a.managedSiteKey(site) {
-			continue
-		}
-		data, err := statisticData(latest, site)
-		if err != nil {
-			return snapshot, err
-		}
-		snapshot.Latest = append(snapshot.Latest, data)
-		day, err := time.Parse("2006-01-02", data.UpdatedDay)
-		if err != nil {
-			return snapshot, bad("SITE_STATISTICS_CORRUPT", "站点统计快照日期无效")
-		}
-		rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind='site_stats_history' AND id>=? AND id<? ORDER BY id`, site.ID+":"+day.AddDate(0, 0, -7).Format("2006-01-02"), site.ID+":"+data.UpdatedDay)
-		if err != nil {
-			return snapshot, err
-		}
-		for rows.Next() {
-			var raw []byte
-			var history siteSnapshot
-			if err = rows.Scan(&raw); err != nil {
-				break
-			}
-			if json.Unmarshal(raw, &history) != nil {
-				err = bad("SITE_STATISTICS_CORRUPT", "站点统计历史无法读取")
-				break
-			}
-			if history.ConfigKey != a.managedSiteKey(site) {
-				continue
-			}
-			previous, e := statisticData(history, site)
-			if e != nil {
-				err = e
-				break
-			}
-			snapshot.History = append(snapshot.History, previous)
-		}
-		if err == nil {
-			err = rows.Err()
-		}
-		rows.Close()
-		if err != nil {
-			return snapshot, err
+		day, _ := time.Parse("2006-01-02", rows[0].Header.Day)
+		for back := 1; back <= 7; back++ {
+			wantedDays[day.AddDate(0, 0, -back).Format("2006-01-02")] = true
 		}
 	}
-	if e := a.mergeSourceAccountStatisticsTx(ctx, tx, &snapshot); e != nil {
-		return snapshot, e
+	sort.SliceStable(latest, func(i, j int) bool { return accountObservationLess(latest[i], latest[j], view.Rank) })
+	for _, o := range latest {
+		d, e := a.siteAccountStatisticTx(ctx, tx, view, o)
+		if e != nil {
+			return snapshot, e
+		}
+		snapshot.Latest = append(snapshot.Latest, d)
+	}
+	for _, o := range view.Rows {
+		if !wantedDays[o.Header.Day] {
+			continue
+		}
+		// Keep every original history row, including removed sites, for the
+		// original name-based fallback. Native disabled instances stay excluded.
+		if o.Native != nil && !view.Sites[o.SiteID].Enabled {
+			continue
+		}
+		d, e := a.siteAccountStatisticTx(ctx, tx, view, o)
+		if e != nil {
+			return snapshot, e
+		}
+		snapshot.History = append(snapshot.History, d)
 	}
 	return snapshot, tx.Commit()
 }

@@ -101,7 +101,7 @@ func TestManagedSiteFailedRefreshPreservesLastSuccessAndUnknown(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	items := history.(map[string]any)["items"].([]siteSnapshot)
+	items := history.(map[string]any)["items"].([]managedSiteAccount)
 	if len(items) != 1 {
 		t.Fatal("history should retain one successful daily snapshot", len(items))
 	}

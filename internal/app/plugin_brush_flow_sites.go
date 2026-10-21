@@ -78,7 +78,7 @@ func (a *App) brushFlowUsersTx(ctx context.Context, tx *sql.Tx) ([]bf.UserData, 
 			return nil, e
 		}
 		var v siteSnapshot
-		if json.Unmarshal(raw, &v) != nil {
+		if a.Store.openSiteAccountSnapshot("site_stats_latest", site.ID, raw, &v) != nil {
 			return nil, brushFlowEvidenceError()
 		}
 		if v.ConfigKey != a.managedSiteKey(site) {

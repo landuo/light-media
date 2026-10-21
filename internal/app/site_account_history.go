@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"sort"
 	"strconv"
 	"time"
 
@@ -190,7 +189,8 @@ func sourceAccountLatestIDsTx(ctx context.Context, tx *sql.Tx, fp string) ([]int
 type accountObservation struct {
 	Header sourceAccountHeader
 	SiteID string
-	Native *statistic.Data
+	Native *siteSnapshot
+	Order  int64
 }
 
 func accountObservationLess(a, b accountObservation, rank map[int64]int) bool {
@@ -206,120 +206,4 @@ func accountObservationLess(a, b accountObservation, rank map[int64]int) bool {
 		j = len(rank)
 	}
 	return i < j
-}
-
-// Native collections overlay the first legacy row for the same site/day,
-// matching SiteOper.update_userdata, while the imported archive stays intact.
-func (a *App) mergeSourceAccountStatisticsTx(ctx context.Context, tx *sql.Tx, snapshot *statistic.Snapshot) error {
-	proof, e := a.pluginStore.sourceAccountProofTx(ctx, tx)
-	if e != nil || proof == nil {
-		return e
-	}
-	b := proof.Binding
-	if e = sourceAccountHeadersTx(ctx, tx, b); e != nil {
-		return e
-	}
-	active, domains, legacy := map[string]bool{}, map[string]string{}, map[string]string{}
-	for _, site := range a.Settings().Sites {
-		domains[site.ID], active[site.ID] = siteStatisticDomain(site), site.Enabled
-		for _, bind := range b.Sites {
-			if bind.SiteID != site.ID {
-				continue
-			}
-			identity, err := a.Store.readNativeSiteIdentity(ctx, tx, "site_id", site.ID)
-			origin, oe := nativeConfiguredSiteOrigin(site)
-			if err != nil {
-				return err
-			}
-			if oe == nil && identity.State == "active" && identity.SourceID == bind.NativeID && identity.CanonicalOrigin == bind.Origin && origin == bind.Origin {
-				legacy[bind.Domain] = site.ID
-			}
-		}
-	}
-	all := make([]accountObservation, 0, len(b.Rows)+len(snapshot.History)+len(snapshot.Latest))
-	first := map[string]int{}
-	for _, h := range b.Rows {
-		site := legacy[h.Domain]
-		if site != "" {
-			key := site + ":" + h.Day
-			if _, exists := first[key]; !exists {
-				first[key] = len(all)
-			}
-		}
-		all = append(all, accountObservation{Header: h, SiteID: site})
-	}
-	for _, data := range append(append([]statistic.Data{}, snapshot.History...), snapshot.Latest...) {
-		copy := data
-		key := data.SiteID + ":" + data.UpdatedDay
-		if i, found := first[key]; found {
-			if data.UpdatedTime >= all[i].Header.Time {
-				all[i].Native = &copy
-				all[i].Header.Time, all[i].Header.Good = data.UpdatedTime, data.Error == ""
-			}
-		} else {
-			first[key] = len(all)
-			all = append(all, accountObservation{Header: sourceAccountHeader{Domain: data.Domain, Day: data.UpdatedDay, Time: data.UpdatedTime, Good: data.Error == ""}, SiteID: data.SiteID, Native: &copy})
-		}
-	}
-	latestDay := map[string]string{}
-	for _, o := range all {
-		if active[o.SiteID] && o.Header.Good && o.Header.Day > latestDay[o.SiteID] {
-			latestDay[o.SiteID] = o.Header.Day
-		}
-	}
-	latestIDs, e := sourceAccountLatestIDsTx(ctx, tx, b.SourceFingerprint)
-	if e != nil {
-		return e
-	}
-	rank := map[int64]int{}
-	for i, id := range latestIDs {
-		rank[id] = i
-	}
-	wantedDays := map[string]bool{}
-	for _, day := range latestDay {
-		d, _ := time.Parse("2006-01-02", day)
-		for back := 1; back <= 7; back++ {
-			wantedDays[d.AddDate(0, 0, -back).Format("2006-01-02")] = true
-		}
-	}
-	latest, history := []accountObservation{}, []accountObservation{}
-	for _, o := range all {
-		if active[o.SiteID] && latestDay[o.SiteID] == o.Header.Day {
-			latest = append(latest, o)
-		}
-		if wantedDays[o.Header.Day] {
-			history = append(history, o)
-		}
-	}
-	sort.SliceStable(latest, func(i, j int) bool {
-		return accountObservationLess(latest[i], latest[j], rank)
-	})
-	project := func(o accountObservation) (statistic.Data, error) {
-		if o.Native != nil {
-			return *o.Native, nil
-		}
-		row, e := a.pluginStore.sourceAccountRowTx(ctx, tx, b, o.Header)
-		if e != nil {
-			return statistic.Data{}, e
-		}
-		domain := o.Header.Domain
-		if domains[o.SiteID] != "" {
-			domain = domains[o.SiteID]
-		}
-		return row.statistic(o.SiteID, domain), nil
-	}
-	snapshot.Latest, snapshot.History = []statistic.Data{}, []statistic.Data{}
-	for _, pair := range []struct {
-		from []accountObservation
-		to   *[]statistic.Data
-	}{{latest, &snapshot.Latest}, {history, &snapshot.History}} {
-		for _, o := range pair.from {
-			data, e := project(o)
-			if e != nil {
-				return e
-			}
-			*pair.to = append(*pair.to, data)
-		}
-	}
-	return nil
 }

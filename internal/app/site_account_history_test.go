@@ -195,6 +195,114 @@ func TestReviewedStatisticSelectedStdin(t *testing.T) {
 		t.Fatal("source input changed or failed validation", e)
 	}
 	ctx := context.Background()
+	t.Run("shared-site-management-history-failure-and-success-overlay", func(t *testing.T) {
+		s, p, settings := statisticReviewedOwned(t, source)
+		defer s.Close()
+		_, receipt := statisticReviewedImport(t, p, raw)
+		a := &App{Store: s, pluginStore: p, config: settings}
+		cards, e := a.managedSites(ctx)
+		if e != nil {
+			t.Fatal("core site cards cannot read imported history", e)
+		}
+		if len(cards.(map[string]any)["sites"].([]map[string]any)) != 17 {
+			t.Fatal("core site cards lost imported sites")
+		}
+		for _, card := range cards.(map[string]any)["sites"].([]map[string]any) {
+			if card["stats"] == nil || card["connection"].(managedConnection).Status != "" || card["stale"] != true {
+				t.Fatal("imported history was mistaken for a successful current connection test")
+			}
+		}
+		site := settings.Sites[0]
+		var originalDomain string
+		// Resolve by the reviewed origin, rather than assuming any old ID.
+		for _, v := range source.Sites {
+			_, origin, _, _ := siteImportOrigin(v.URL)
+			current, _ := nativeConfiguredSiteOrigin(site)
+			if origin == current {
+				originalDomain = v.Domain
+				break
+			}
+		}
+		expected := 0
+		for _, h := range headers {
+			if h.Domain == originalDomain {
+				expected++
+			}
+		}
+		history, e := a.managedSiteHistory(ctx, site.ID)
+		if e != nil || len(history.(map[string]any)["items"].([]managedSiteAccount)) != expected || expected == 0 {
+			t.Fatal("core history omitted original days", e)
+		}
+		view, e := a.siteStatisticsSnapshot(ctx)
+		if e != nil {
+			t.Fatal(e)
+		}
+		var current statistic.Data
+		for _, v := range view.Latest {
+			if v.SiteID == site.ID {
+				current = v
+				break
+			}
+		}
+		if current.UpdatedDay == "" {
+			t.Fatal("reviewed site did not bind")
+		}
+		var originalID int64
+		for _, h := range headers {
+			if h.Domain == originalDomain && h.Day == current.UpdatedDay {
+				originalID = h.ID
+				break
+			}
+		}
+		var archiveBefore []byte
+		if s.DB.QueryRow(`SELECT sealed FROM source_site_account_rows WHERE original_id=?`, originalID).Scan(&archiveBefore) != nil {
+			t.Fatal("missing source row")
+		}
+		ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, current.UpdatedDay, "23:59:58", "owned failed attempt", nil))
+		history, e = a.managedSiteHistory(ctx, site.ID)
+		if e != nil || len(history.(map[string]any)["items"].([]managedSiteAccount)) != expected {
+			t.Fatal("failed refresh duplicated imported day", e)
+		}
+		cards, e = a.managedSites(ctx)
+		if e != nil {
+			t.Fatal(e)
+		}
+		for _, card := range cards.(map[string]any)["sites"].([]map[string]any) {
+			if card["config"].(SiteConfig).ID == site.ID && (card["stale"] != true || card["stats"] == nil) {
+				t.Fatal("failed refresh hid imported current data")
+			}
+		}
+		up := int64(42)
+		ownedRecordAccount(t, a, site, ownedAccountObservation(t, a, site, current.UpdatedDay, "23:59:59", "", &up))
+		view, e = a.siteStatisticsSnapshot(ctx)
+		if e != nil {
+			t.Fatal(e)
+		}
+		found := 0
+		for _, v := range view.Latest {
+			if v.SiteID == site.ID {
+				found++
+				if v.Upload == nil || *v.Upload != 42 {
+					t.Fatal("native success absent from statistics")
+				}
+			}
+		}
+		if found != 1 {
+			t.Fatal("same-day success duplicated current data")
+		}
+		history, e = a.managedSiteHistory(ctx, site.ID)
+		if e != nil || len(history.(map[string]any)["items"].([]managedSiteAccount)) != expected {
+			t.Fatal("same-day success duplicated history", e)
+		}
+		var archiveAfter []byte
+		if s.DB.QueryRow(`SELECT sealed FROM source_site_account_rows WHERE original_id=?`, originalID).Scan(&archiveAfter) != nil || !bytes.Equal(archiveBefore, archiveAfter) {
+			t.Fatal("native refresh rewrote imported original")
+		}
+		var count int
+		if s.DB.QueryRow(`SELECT COUNT(*) FROM source_site_account_rows WHERE source_fingerprint=?`, receipt.SourceFingerprint).Scan(&count) != nil || count != 2133 {
+			t.Fatal("core read changed source archive")
+		}
+	})
 	t.Run("all-2133-raw-rows-cold-selection-and-native-overlay", func(t *testing.T) {
 		s, p, settings := statisticReviewedOwned(t, source)
 		defer func() { s.Close() }()

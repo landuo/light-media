@@ -186,6 +186,12 @@ func (s *Store) Put(ctx context.Context, kind, key string, value any) error {
 	if e != nil {
 		return e
 	}
+	if siteAccountSnapshotKind(kind) {
+		b, e = s.sealSiteAccountSnapshot(kind, key, b)
+		if e != nil {
+			return e
+		}
+	}
 	_, e = s.DB.ExecContext(ctx, `INSERT INTO records VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at`, kind, key, b, now())
 	return e
 }
@@ -194,6 +200,9 @@ func (s *Store) Get(ctx context.Context, kind, key string, dst any) error {
 	e := s.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, kind, key).Scan(&b)
 	if e != nil {
 		return e
+	}
+	if siteAccountSnapshotKind(kind) {
+		return s.openSiteAccountSnapshot(kind, key, b, dst)
 	}
 	return json.Unmarshal(b, dst)
 }

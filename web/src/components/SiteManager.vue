@@ -1014,8 +1014,16 @@ onUnmounted(() => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in history.items" :key="item.stats.captured_at">
-                  <td>{{ date(item.stats.captured_at) }}</td>
+                <tr
+                  v-for="(item, index) in history.items"
+                  :key="`${item.stats.captured_at}:${index}`"
+                >
+                  <td>
+                    {{ date(item.stats.captured_at) }}
+                    <small v-if="item.connection?.status === 'failed'" class="history-error">
+                      {{ item.connection.error || '刷新失败' }}
+                    </small>
+                  </td>
                   <td
                     v-for="key in ['uploaded', 'downloaded', 'ratio', 'seeding', 'bonus']"
                     :key="key"
@@ -1032,6 +1040,12 @@ onUnmounted(() => {
   </section>
 </template>
 <style scoped>
+.history-error {
+  display: block;
+  color: var(--danger, #b3261e);
+  max-width: 24rem;
+  overflow-wrap: anywhere;
+}
 .site-manager {
   padding-bottom: 90px;
 }

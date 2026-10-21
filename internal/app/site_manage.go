@@ -6,7 +6,7 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
-	"encoding/json"
+	"errors"
 	"net/url"
 	"sort"
 	"strings"
@@ -125,26 +125,50 @@ func validateManagedSiteConfig(config sites.Config) error {
 func (a *App) managedSites(ctx context.Context) (any, error) {
 	c := a.Settings()
 	sort.SliceStable(c.Sites, func(i, j int) bool { return c.Sites[i].Priority < c.Sites[j].Priority })
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	view, err := a.siteAccountViewTx(ctx, tx, c.Sites)
+	if err != nil {
+		return nil, err
+	}
 	rows := []map[string]any{}
 	for _, s := range c.Sites {
 		key := a.managedSiteKey(s)
-		var latest, last siteSnapshot
-		_ = a.Store.Get(ctx, "site_connection", s.ID, &latest)
-		_ = a.Store.Get(ctx, "site_stats_latest", s.ID, &last)
+		var latest siteSnapshot
+		var raw []byte
+		err := tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='site_connection' AND id=?`, s.ID).Scan(&raw)
+		if err == nil {
+			if err = a.Store.openSiteAccountSnapshot("site_connection", s.ID, raw, &latest); err != nil {
+				return nil, err
+			}
+		} else if !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
 		if latest.ConfigKey != key {
 			latest = siteSnapshot{}
 		}
-		if last.ConfigKey != key {
-			last = siteSnapshot{}
+		var stats any
+		if current := view.latest(s.ID); len(current) > 0 {
+			last, err := a.managedSiteAccountTx(ctx, tx, view, current[0])
+			if err != nil {
+				return nil, err
+			}
+			stats = last.Stats
 		}
 		configured := s.Cookie != "" || s.APIKey != ""
 		credentials := siteSecretState(s)
 		hideSiteSecrets(&s)
 		var used int
-		if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM site_usage WHERE site_id=? AND ts>?`, s.ID, time.Now().Add(-24*time.Hour).Unix()).Scan(&used); e != nil {
+		if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM site_usage WHERE site_id=? AND ts>?`, s.ID, time.Now().Add(-24*time.Hour).Unix()).Scan(&used); e != nil {
 			return nil, e
 		}
-		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": last.Stats, "stale": last.Stats != nil && latest.Connection.Status != "ok", "usage_24h": used})
+		rows = append(rows, map[string]any{"config": s, "credential_configured": configured, "credential_state": credentials, "connection": latest.Connection, "stats": stats, "stale": stats != nil && latest.Connection.Status != "ok", "usage_24h": used})
+	}
+	if err = tx.Commit(); err != nil {
+		return nil, err
 	}
 	return map[string]any{"sites": rows, "supported": nativeSiteTemplates, "capabilities": map[string]bool{"rss": false, "token": false, "proxy": false, "render": false, "downloader": false, "filter": false, "limit": true, "timeout": true, "user_agent": true}}, nil
 }
@@ -257,7 +281,8 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 
 // Site HTTP requests happen outside settings/plugin locks. The observation,
 // daily history and outbox fact publish together after checking the current
-// connection and optional owning job. A failed response never replaces data.
+// connection and optional owning job. A failed response never replaces an
+// existing day; its first failure can create that day's error observation.
 type siteCollectionHooks struct {
 	Auto   bool
 	Guard  func(*sql.Tx) error
@@ -299,23 +324,14 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 			return siteSnapshot{}, err
 		}
 	}
-	if err = txPut(ctx, tx, "site_connection", key, snapshot); err != nil {
+	if err = a.recordSiteAccountObservationTx(ctx, tx, current, snapshot); err != nil {
 		return siteSnapshot{}, err
 	}
 	if e == nil {
-		if err = txPut(ctx, tx, "site_stats_latest", key, snapshot); err != nil {
-			return siteSnapshot{}, err
-		}
-		if err = txPut(ctx, tx, "site_stats_history", key+":"+snapshot.Day, snapshot); err != nil {
-			return siteSnapshot{}, err
-		}
 		if eventKey == "" {
 			eventKey = id("site_refresh_")
 		}
 		if err = recordDomainEventTx(ctx, tx, DomainEvent{EventID: domainEventID("site.refreshed", eventKey), Type: "site.refreshed", SiteID: key}); err != nil {
-			return siteSnapshot{}, err
-		}
-		if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='site_stats_history' AND updated_at<?`, time.Now().Add(-90*24*time.Hour).UTC().Format(time.RFC3339Nano)); err != nil {
 			return siteSnapshot{}, err
 		}
 	}
@@ -342,27 +358,36 @@ func (a *App) managedSiteHistory(ctx context.Context, key string) (any, error) {
 	if s.ID == "" {
 		return nil, &APIError{"SITE_NOT_FOUND", "站点不存在", 404}
 	}
-	rows, err := a.Store.DB.QueryContext(ctx, `SELECT payload FROM records WHERE kind='site_stats_history' AND substr(id,1,?)=? ORDER BY id DESC LIMIT 90`, len(key)+1, key+":")
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	items := []siteSnapshot{}
-	for rows.Next() {
-		var raw []byte
-		var item siteSnapshot
-		if err = rows.Scan(&raw); err != nil {
-			return nil, err
-		}
-		if json.Unmarshal(raw, &item) != nil {
-			continue
-		}
-		if item.ConfigKey == a.managedSiteKey(s) {
-			item.ConfigKey = ""
-			items = append(items, item)
+	defer tx.Rollback()
+	view, err := a.siteAccountViewTx(ctx, tx, []SiteConfig{s})
+	if err != nil {
+		return nil, err
+	}
+	selected := []accountObservation{}
+	for _, o := range view.Rows {
+		if o.SiteID == key {
+			selected = append(selected, o)
 		}
 	}
-	return map[string]any{"site_id": key, "items": items}, rows.Err()
+	sort.SliceStable(selected, func(i, j int) bool {
+		if selected[i].Header.Day != selected[j].Header.Day {
+			return selected[i].Header.Day > selected[j].Header.Day
+		}
+		return accountObservationLess(selected[i], selected[j], view.Rank)
+	})
+	items := []managedSiteAccount{}
+	for _, o := range selected {
+		item, err := a.managedSiteAccountTx(ctx, tx, view, o)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+	return map[string]any{"site_id": key, "items": items}, tx.Commit()
 }
 
 type ManagedDownloaderRequest struct {
