@@ -133,3 +133,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21 再补充做种明细及站内消息采集，见[说明](plugin-site-account-fields.txt)和[逐项验证](plugin-site-account-fields-verification.json)。原版消息开关完成独占浏览器保存重载验证，连接测试不触发阅读，正式刷新逐请求核对授权和取消。19字段类型及转发不等于错误DTO分支完成；完整SiteStatistic及生产迁移仍待继续，完成数量7/23。
 
 2026-10-21 继续对照刷新API与核心采集的错误数据、None、事件及独立时间戳，见[本轮说明](plugin-site-account-outcomes.txt)和[逐项验证](plugin-site-account-outcomes-verification.json)。原版构造默认值与原生未知观测分开保存；错误数据可以触发刷新事件，连接状态仍独立反映失败。本轮尚未部署，完整SiteStatistic与其余实例仍在继续，正式完成仍7/23。
+
+2026-10-21 MTeam账户采集按原版完整解析流程调整，涉及请求参数与顺序、peer分页、消息原始类型、DTO校验时机及大整数冷恢复，见[本轮说明](plugin-site-mteam-account-flow.txt)和[逐项验证](plugin-site-mteam-account-flow-verification.json)。完整SiteStatistic及原23个实例的剩余迁移仍继续；本轮尚未部署，正式完成仍7/23。

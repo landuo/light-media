@@ -148,10 +148,10 @@ func TestSiteStatisticSourceDefaultsStaySeparateFromNativeUnknowns(t *testing.T)
 	size, count := int64(1234), int64(0)
 	message := "owned error"
 	title, date, body := "title", "date", "body"
-	s := siteSnapshot{Stats: &sites.UserStats{}, SourceData: &sites.SourceUserData{LeechingSize: size, MessageUnread: count, Messages: [][3]*string{{&title, &date, &body}}, SeedingInfo: [][2]int64{{2, 1024}}, Error: &message}}
+	s := siteSnapshot{Stats: &sites.UserStats{}, SourceData: &sites.SourceUserData{LeechingSize: size, MessageUnread: count, Messages: [][3]any{{title, date, body}}, SeedingInfo: [][2]int64{{2, 1024}}, Error: &message}}
 	for _, populated := range []bool{true, false} {
 		if !populated {
-			s.SourceData = &sites.SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]*string{}}
+			s.SourceData = &sites.SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]any{}}
 		}
 		raw, e := json.Marshal(siteStatisticAPIData(s))
 		if e != nil {

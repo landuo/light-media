@@ -10,41 +10,51 @@ import (
 	"strings"
 
 	"golang.org/x/net/html"
+	"light-media/internal/logging"
 )
 
 // SourceUserData is the MoviePilot DTO, distinct from observed native values.
 // Its constructor defaults are protocol values, never evidence of measured zero.
 type SourceUserData struct {
-	Domain        string       `json:"domain"`
-	Username      *string      `json:"username"`
-	UserID        any          `json:"userid"`
-	UserLevel     *string      `json:"user_level"`
-	JoinAt        *string      `json:"join_at"`
-	Bonus         float64      `json:"bonus"`
-	Upload        int64        `json:"upload"`
-	Download      int64        `json:"download"`
-	Ratio         float64      `json:"ratio"`
-	Seeding       int64        `json:"seeding"`
-	Leeching      int64        `json:"leeching"`
-	SeedingSize   int64        `json:"seeding_size"`
-	LeechingSize  int64        `json:"leeching_size"`
-	SeedingInfo   [][2]int64   `json:"seeding_info"`
-	MessageUnread int64        `json:"message_unread"`
-	Messages      [][3]*string `json:"message_unread_contents"`
-	Error         *string      `json:"err_msg"`
-	Day           string       `json:"updated_day"`
-	Time          *string      `json:"updated_time"`
+	Domain        string     `json:"domain"`
+	Username      *string    `json:"username"`
+	UserID        any        `json:"userid"`
+	UserLevel     *string    `json:"user_level"`
+	JoinAt        *string    `json:"join_at"`
+	Bonus         float64    `json:"bonus"`
+	Upload        int64      `json:"upload"`
+	Download      int64      `json:"download"`
+	Ratio         float64    `json:"ratio"`
+	Seeding       int64      `json:"seeding"`
+	Leeching      int64      `json:"leeching"`
+	SeedingSize   int64      `json:"seeding_size"`
+	LeechingSize  int64      `json:"leeching_size"`
+	SeedingInfo   [][2]int64 `json:"seeding_info"`
+	MessageUnread int64      `json:"message_unread"`
+	Messages      [][3]any   `json:"message_unread_contents"`
+	Error         *string    `json:"err_msg"`
+	Day           string     `json:"updated_day"`
+	Time          *string    `json:"updated_time"`
+}
+
+// Private snapshots must not round an original integer ID or arbitrary JSON
+// message values through float64 when reopened.
+func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
+	type plain SourceUserData
+	var value plain
+	if !decodeJSON(raw, &value) {
+		return sourceModuleError(nil)
+	}
+	*d = SourceUserData(value)
+	return nil
 }
 
 type sourceUserStatsKey struct{}
 type sourceUserStatsTrace struct {
-	guardError   error
-	attempted    bool
-	indexParsed  bool
-	none         bool
-	profileSeen  bool
-	profileEmpty bool
-	profile      map[string]any
+	guardError  error
+	attempted   bool
+	indexParsed bool
+	none        bool
 }
 
 func sourceStatsTrace(ctx context.Context) *sourceUserStatsTrace {
@@ -57,7 +67,20 @@ func sourceStatsTrace(ctx context.Context) *sourceUserStatsTrace {
 // The error alongside a DTO describes native connection health, not DTO truth.
 func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) (UserStats, *SourceUserData, error) {
 	trace := &sourceUserStatsTrace{}
-	stats, err := c.UserStatsWithOptions(context.WithValue(ctx, sourceUserStatsKey{}, trace), options)
+	ctx = context.WithValue(ctx, sourceUserStatsKey{}, trace)
+	if c.config.Kind == "mteam" {
+		ctx = logging.SiteContext(ctx, c.config.ID)
+		ctx, _ = logging.Target(ctx, "site")
+		s, d, e := c.sourceMTeamUserStats(ctx, options)
+		if ctx.Err() != nil {
+			return s, nil, ctx.Err()
+		}
+		if trace.guardError != nil {
+			return s, nil, trace.guardError
+		}
+		return s, d, e
+	}
+	stats, err := c.UserStatsWithOptions(ctx, options)
 	if ctx.Err() != nil {
 		return stats, nil, ctx.Err()
 	}
@@ -68,28 +91,7 @@ func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) 
 		return stats, nil, sourceModuleError(err)
 	}
 	dto := sourceDataFromObserved(stats)
-	if c.config.Kind == "mteam" {
-		if trace.profileSeen {
-			if trace.profileEmpty {
-				return stats, emptySourceUserData(), err
-			}
-			if trace.profile == nil {
-				return stats, nil, sourceModuleError(err)
-			}
-			code, ok := trace.profile["code"].(string)
-			if !ok || code != "0" {
-				return stats, emptySourceUserData(), err
-			}
-			if e := sourceMTeamProfile(dto, trace.profile); e != nil {
-				return stats, nil, e
-			}
-		}
-		// Empty/failed HTTP pages return normally in the original parser. They
-		// retain constructor defaults without claiming a healthy connection.
-		if !trace.profileSeen {
-			dto = emptySourceUserData()
-		}
-	} else if !trace.indexParsed {
+	if !trace.indexParsed {
 		message := "未检测到已登陆，请检查cookies是否过期"
 		dto.Error = &message
 	} else if stats.Sources["ratio"] == "derived:uploaded/downloaded" || stats.RatioInfinite {
@@ -109,7 +111,7 @@ func sourceModuleError(err error) error {
 }
 
 func emptySourceUserData() *SourceUserData {
-	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]*string{}}
+	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]any{}}
 }
 
 func sourceDataFromObserved(s UserStats) *SourceUserData {
@@ -144,16 +146,19 @@ func sourceDataFromObserved(s UserStats) *SourceUserData {
 		d.SeedingInfo = s.SeedingInfo
 	}
 	if s.Messages != nil {
-		d.Messages = s.Messages
+		for _, row := range s.Messages {
+			d.Messages = append(d.Messages, [3]any{row[0], row[1], row[2]})
+		}
 	}
 	return d
 }
 
 func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {
-	data, ok := root["data"].(map[string]any)
-	if !ok || data == nil {
-		return sourceModuleError(nil)
+	base, err := sourceMTeamBase(root)
+	if err != nil {
+		return err
 	}
+	data := base.data
 	stringField := func(v any) (*string, bool) {
 		if v == nil {
 			return nil, true
@@ -169,97 +174,60 @@ func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {
 	switch id := data["id"].(type) {
 	case nil, string:
 		dto.UserID = id
+	case bool:
+		if id {
+			dto.UserID = int64(1)
+		} else {
+			dto.UserID = int64(0)
+		}
 	case json.Number:
-		n, e := sourceUserInteger(id)
+		if strings.ContainsAny(string(id), ".eE") {
+			f, e := id.Float64()
+			if e != nil || math.IsNaN(f) || math.IsInf(f, 0) || math.Trunc(f) != f {
+				return sourceModuleError(nil)
+			}
+		}
+		n, e := sourceInteger(id)
 		if e != nil {
-			return e
-		}
-		dto.UserID = n
-	default:
-		return sourceModuleError(nil)
-	}
-	role := data["role"]
-	switch role.(type) {
-	case nil, bool, string, json.Number:
-	default:
-		return sourceModuleError(nil)
-	}
-	if sourceFalse(role) {
-		role = "1"
-	}
-	dto.UserLevel = nil
-	if r, ok := role.(string); ok {
-		if name := mteamUserRoles[r]; name != "" {
-			dto.UserLevel = &name
-		}
-	}
-	status := map[string]any{}
-	if v, exists := data["memberStatus"]; exists {
-		var ok bool
-		status, ok = v.(map[string]any)
-		if !ok {
 			return sourceModuleError(nil)
 		}
+		if n.IsInt64() {
+			dto.UserID = n.Int64()
+		} else {
+			dto.UserID = json.Number(n.String())
+		}
+	default:
+		return sourceModuleError(nil)
 	}
-	dto.JoinAt, valid = stringField(status["createdDate"])
+	dto.UserLevel = base.role
+	dto.JoinAt, valid = stringField(base.joinAt)
 	if !valid {
 		return sourceModuleError(nil)
 	}
-	counts := map[string]any{}
-	if v, exists := data["memberCount"]; exists {
-		var ok bool
-		counts, ok = v.(map[string]any)
-		if !ok {
-			return sourceModuleError(nil)
-		}
-	}
+	dto.Upload, dto.Download = base.uploaded, base.downloaded
 	var e error
-	if dto.Upload, e = sourceUserInteger(counts["uploaded"]); e != nil {
+	if dto.Bonus, e = sourceFloat(base.counts["bonus"]); e != nil {
 		return e
 	}
-	if dto.Download, e = sourceUserInteger(counts["downloaded"]); e != nil {
-		return e
-	}
-	if dto.Bonus, e = sourceFloat(counts["bonus"]); e != nil {
-		return e
-	}
-	if dto.Ratio, e = sourceFloat(counts["shareRate"]); e != nil {
+	if dto.Ratio, e = sourceFloat(base.counts["shareRate"]); e != nil {
 		return e
 	}
 	return nil
 }
 
 func sourceUserInteger(v any) (int64, error) {
-	switch n := v.(type) {
-	case nil:
+	if !sourceTruth(v) {
 		return 0, nil
-	case bool:
-		if n {
-			return 1, nil
-		}
-		return 0, nil
-	case string:
-		if n == "" {
-			return 0, nil
-		}
-		i, e := strconv.ParseInt(strings.TrimSpace(n), 10, 64)
-		if e == nil {
-			return i, nil
-		}
-	case json.Number:
-		if i, e := n.Int64(); e == nil {
-			return i, nil
-		}
-		f, e := n.Float64()
-		if e == nil && !math.IsNaN(f) && !math.IsInf(f, 0) && f < math.MaxInt64 && f >= math.MinInt64 {
-			return int64(f), nil
-		}
+	}
+	n, e := sourceInteger(v)
+	if e == nil && n.IsInt64() {
+		return n.Int64(), nil
 	}
 	return 0, sourceModuleError(nil)
 }
 
 func sourceFloat(v any) (float64, error) {
-	if sourceFalse(v) {
+	if !sourceTruth(v) {
 		return 0, nil
 	}
 	if b, ok := v.(bool); ok && b {
@@ -270,42 +238,6 @@ func sourceFloat(v any) (float64, error) {
 		return 0, sourceModuleError(nil)
 	}
 	return f, nil
-}
-
-func sourceFalse(v any) bool {
-	switch n := v.(type) {
-	case nil:
-		return true
-	case bool:
-		return !n
-	case string:
-		return n == ""
-	case json.Number:
-		return n == "0"
-	}
-	return false
-}
-
-func sourceProfilePage(ctx context.Context, endpoint string, raw []byte) {
-	trace := sourceStatsTrace(ctx)
-	if trace == nil || endpoint != "api/member/profile" {
-		return
-	}
-	trace.profileSeen = true
-	if len(raw) == 0 {
-		trace.profileEmpty = true
-		return
-	}
-	var value any
-	if !decodeJSON(raw, &value) {
-		trace.profile = nil
-		return
-	}
-	trace.profileEmpty = sourceFalse(value)
-	if values, ok := value.([]any); ok && len(values) == 0 {
-		trace.profileEmpty = true
-	}
-	trace.profile, _ = value.(map[string]any)
 }
 
 func sourceAccountDOM(ctx context.Context, raw []byte) (*html.Node, error) {

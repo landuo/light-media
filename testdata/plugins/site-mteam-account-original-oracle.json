@@ -1,0 +1,2190 @@
+{
+  "scope": "installed complete SiteParserBase/MTorrent parse and Indexer DTO methods; all HTTP is an in-memory mock, no real business or app module import",
+  "source_sha256": {
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "app/helper/cloudflare.py": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+    "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+    "app/modules/indexer/parser/__init__.py": "ef73038e897b57f20269ed4141ea0574a027a6e760c78a5577f0aeb9b3ca30ed",
+    "app/modules/indexer/parser/mtorrent.py": "a8fb7d1ea9bc7c588de398a205d1fba7eea17a50e19388c9bf44ffff6cc358ca",
+    "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf"
+  },
+  "cases": [
+    {
+      "name": "two-pages-peer-driven",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":1,\"data\":[{\"torrent\":{\"size\":100,\"source\":2}},{\"torrent\":{\"size\":200,\"source\":3}}]}}"
+          },
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":999,\"data\":[{\"torrent\":{\"size\":300,\"source\":4}},{\"torrent\":{\"size\":400,\"source\":5}},{\"torrent\":{\"size\":500,\"source\":6}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":5}}"
+          },
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":5}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 2,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 5,
+        "leeching": 0,
+        "seeding_size": 1500,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ],
+          [
+            3,
+            200
+          ],
+          [
+            4,
+            300
+          ],
+          [
+            5,
+            400
+          ],
+          [
+            6,
+            500
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "messages-before-seeding",
+      "read_messages": true,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"id\":10,\"unread\":true,\"title\":\" heading \",\"createdDate\":\" date \",\"context\":\" body \"},{\"id\":11,\"unread\":false,\"title\":\"old\",\"createdDate\":\"date\",\"context\":\"body\"},{\"id\":null,\"unread\":\"0\",\"title\":1,\"createdDate\":{\"date\":\"owned\"},\"context\":[\"body\"]},{\"id\":12,\"unread\":true,\"title\":\"\",\"createdDate\":\"date\",\"context\":\"body\"}]}}"
+          }
+        ],
+        "/api/msg/markRead": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\"}"
+          },
+          {
+            "status": 503,
+            "body": "ignored"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/msg/search",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "keyword": [
+              ""
+            ],
+            "box": [
+              "-2"
+            ],
+            "type": [
+              "pageNumber"
+            ],
+            "pageSize": [
+              "100"
+            ]
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/msg/markRead",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "msgId": [
+              "10"
+            ]
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/msg/markRead",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [
+          [
+            " heading ",
+            " date ",
+            " body "
+          ],
+          [
+            1,
+            {
+              "date": "owned"
+            },
+            [
+              "body"
+            ]
+          ]
+        ],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "profile-unavailable-continues-GET",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 503,
+            "body": "unavailable"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"torrent\":{\"size\":100,\"source\":2}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 1,
+        "leeching": 0,
+        "seeding_size": 100,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "profile-invalid-json-aborts",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "JSONDecodeError"
+    },
+    {
+      "name": "profile-business-error-continues-GET",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"1\"}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "profile-null-continues-GET",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "null"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "list-invalid-JSON-stops",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "later-list-invalid-JSON-keeps-source-partial",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"torrent\":{\"size\":100,\"source\":2}}]}}"
+          },
+          {
+            "status": 200,
+            "body": "{"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":3}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 2,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 1,
+        "leeching": 0,
+        "seeding_size": 100,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "invalid-rows-skipped",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[null,1,{},{\"torrent\":null},{\"torrent\":{\"size\":\"12\",\"source\":\"2\"}},{\"torrent\":{}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":2}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 2,
+        "leeching": 0,
+        "seeding_size": 12,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            12
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "invalid-size-aborts",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"torrent\":{\"size\":\"not-an-int\",\"source\":2}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "ValueError"
+    },
+    {
+      "name": "invalid-peer-is-caught",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"torrent\":{\"size\":100,\"source\":2}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 1,
+        "leeching": 0,
+        "seeding_size": 100,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "peer-code-ignored",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"torrent\":{\"size\":100,\"source\":2}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"1\",\"data\":{\"seeder\":1}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 1,
+        "leeching": 0,
+        "seeding_size": 100,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "message-invalid-json-aborts-before-list",
+      "read_messages": true,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/msg/search",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "keyword": [
+              ""
+            ],
+            "box": [
+              "-2"
+            ],
+            "type": [
+              "pageNumber"
+            ],
+            "pageSize": [
+              "100"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "JSONDecodeError"
+    },
+    {
+      "name": "schema-validation-after-seeding",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":42,\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[{\"torrent\":{\"size\":100,\"source\":2}}]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "ValidationError"
+    },
+    {
+      "name": "invalid-upload-aborts-before-messages",
+      "read_messages": true,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"1.5\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "ValueError"
+    },
+    {
+      "name": "boolean-ID-wire-vs-DTO",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":true,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": true
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "True"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 1,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "empty-role-default",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":[],\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "challenge-profile-continues-GET",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "<title>Just a moment...</title>"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "empty-message-dictionary-is-iterable",
+      "read_messages": true,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":{}}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/msg/search",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "keyword": [
+              ""
+            ],
+            "box": [
+              "-2"
+            ],
+            "type": [
+              "pageNumber"
+            ],
+            "pageSize": [
+              "100"
+            ]
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "nonempty-message-dictionary-throws",
+      "read_messages": true,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":{\"bad\":\"row\"}}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/msg/search",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "keyword": [
+              ""
+            ],
+            "box": [
+              "-2"
+            ],
+            "type": [
+              "pageNumber"
+            ],
+            "pageSize": [
+              "100"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "AttributeError"
+    },
+    {
+      "name": "fractional-ID-schema-fails-after-requests",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7.5,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7.5
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7.5"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "ValidationError"
+    },
+    {
+      "name": "large-integer-ID-preserved",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":1208925819614629174706176,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"17.5\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 1208925819614629174706176
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "1208925819614629174706176"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 1208925819614629174706176,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 17.5,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    },
+    {
+      "name": "underscore-bonus-schema",
+      "read_messages": false,
+      "replies": {
+        "/api/member/profile": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"id\":7,\"username\":\" owned \",\"role\":\"18\",\"memberStatus\":{\"createdDate\":\"2024-01-02 03:04:05\"},\"memberCount\":{\"uploaded\":\"12_345\",\"downloaded\":\"200\",\"shareRate\":\"61.725\",\"bonus\":\"1_0\"}}}"
+          }
+        ],
+        "/api/member/getUserTorrentList": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"total\":0,\"data\":[]}}"
+          }
+        ],
+        "/api/tracker/myPeerStatus": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"seeder\":0,\"leecher\":99}}"
+          }
+        ],
+        "/api/msg/search": [
+          {
+            "status": 200,
+            "body": "{\"code\":\"0\",\"data\":{\"data\":[]}}"
+          }
+        ],
+        "/api/msg/markRead": []
+      },
+      "requests": [
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/profile",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {},
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/member/getUserTorrentList",
+          "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "json",
+          "body": {
+            "pageNumber": 1,
+            "pageSize": 200,
+            "type": "SEEDING",
+            "userid": 7
+          },
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://api.m-team.cc/api/tracker/myPeerStatus",
+          "headers": {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-api-key": "synthetic-owned-api-key"
+          },
+          "body_kind": "form",
+          "body": {
+            "uid": [
+              "7"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "m-team.cc",
+        "username": " owned ",
+        "userid": 7,
+        "user_level": "Bet memberStaff",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 10.0,
+        "upload": 12345,
+        "download": 200,
+        "ratio": 61.725,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null
+    }
+  ]
+}

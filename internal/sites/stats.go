@@ -392,7 +392,6 @@ func (c *Client) statsJSON(ctx context.Context, endpoint string, in any) (map[st
 	if err != nil {
 		return nil, err
 	}
-	sourceProfilePage(ctx, endpoint, b)
 	data, err := envelope(b)
 	if err != nil {
 		return nil, err

@@ -1,0 +1,398 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "base_commit": "a38b72325323c46146eca68da30023b4a0ab054e",
+  "state": "MTeam_source_account_flow_verified_not_full_plugin_migration",
+  "actual_complete": 7,
+  "remaining": [
+    "Complete NexusPHP and variants source requests/raw parsing and their original fixtures.",
+    "Finish rare Pydantic/nonfinite/arbitrary-large counter cases and non-default canonical API origin rewrite; source resource bounds explicitly retained.",
+    "SystemError event and full source site-message/statistic notification producers/channels.",
+    "Compiled SitesHelper alias runtime evidence.",
+    "Global source setting import, final source binding, execution handoff and production migration; completed remains 7/23."
+  ],
+  "production_version": "0.4.8",
+  "deployed": false,
+  "original_mutations": 0,
+  "production_mutations": 0,
+  "real_execution_handoffs": 0,
+  "real_user_site_downloader_media_or_notification_business_calls": 0,
+  "python_runtime_dependency_added": false,
+  "source_account_rows": 2133,
+  "source_mteam_flow_oracle": {
+    "cases": 23,
+    "source_sha256": {
+      "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+      "app/helper/cloudflare.py": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+      "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+      "app/modules/indexer/parser/__init__.py": "ef73038e897b57f20269ed4141ea0574a027a6e760c78a5577f0aeb9b3ca30ed",
+      "app/modules/indexer/parser/mtorrent.py": "a8fb7d1ea9bc7c588de398a205d1fba7eea17a50e19388c9bf44ffff6cc358ca",
+      "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf"
+    },
+    "scope": "installed complete SiteParserBase/MTorrent parse and Indexer DTO methods; all HTTP is an in-memory mock, no real business or app module import",
+    "fixture_sha256": "b59897ccfe9cd89ea558821e4df4ecdd7e7dbbb017b8eb2409cb2d33b2653cc5"
+  },
+  "implementation": {
+    "original_profile_form_then_messages_then_seeding_then_peer": true,
+    "seeding_JSON_and_explicit_Accept": true,
+    "peer_driven_pagination_ignores_total": true,
+    "normal_profile_empty_or_error_continues_GET_seeding": true,
+    "source_invalid_row_skip_and_no_added_ID_requirement": true,
+    "message_mark_response_ignored_like_source": true,
+    "source_JSON_Accept_invalid_body_distinct_from_parser_exception": true,
+    "source_partial_DTO_distinct_from_complete_native_list": true,
+    "late_DTO_schema_validation_preserves_request_order": true,
+    "arbitrary_source_message_JSON_types_preserved": true,
+    "bool_ID_integer_and_large_ID_json_Number_cold_no_rounding": true,
+    "source_60s_timeout_preserves_parent_cancellation": true,
+    "API_key_reader_does_not_forward_cookie_UA": true,
+    "per_IO_auth_revocation_stops_markRead_and_seeding": true,
+    "cancel_and_50page_limit_do_not_publish_success_DTO": true,
+    "confirmed_API_lost_ACK_cold_recovery_no_replay": true,
+    "native_unknown_fields_remain_unknown": true
+  },
+  "checks": {
+    "sites-normal": {
+      "top_pass": 42,
+      "inclusive_pass": 213,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "14507aa5a96e08181849ae3dc498f158cd908636ae39e03e7399d2905a87f2d3"
+    },
+    "sites-race": {
+      "top_pass": 42,
+      "inclusive_pass": 213,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "57089acddc4752bf48412491c0a81fa1e75705a77e50b70f43f2bce0e8ff96c3"
+    },
+    "related-normal": {
+      "top_pass": 47,
+      "inclusive_pass": 139,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "61882e8451f935abe5761475bd8ca6b3bd7d4ca88f15f788fa0044da420f5c25"
+    },
+    "related-race": {
+      "top_pass": 47,
+      "inclusive_pass": 139,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "53d4e930439ad118c96bbe058106b243249cee2ebdb2a1d11e9c336dbeea6e0f"
+    },
+    "actual-normal": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "8ba3b00219b06e4d7ad25a947427f18c6e62577577e5961cae1db5eb715610de"
+    },
+    "actual-race": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "6abb9c1ac5e5b89c014f4e5dd531173abd02d15604269eae32a0bc7fc66fbe93"
+    },
+    "nas-selected": {
+      "top_pass": 11,
+      "inclusive_pass": 56,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "d5a1bfdf7f116d61e0bcf518130ccd47ff2e1c67092429ef188b2773dfeec147"
+    }
+  },
+  "statuses": {
+    "sites-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 42,
+        "inclusive_pass": 213,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "top_pass": 42,
+        "inclusive_pass": 213,
+        "failures": []
+      }
+    ],
+    "related-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 47,
+        "inclusive_pass": 139,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "top_pass": 47,
+        "inclusive_pass": 139,
+        "failures": []
+      }
+    ],
+    "actual-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "8ba3b00219b06e4d7ad25a947427f18c6e62577577e5961cae1db5eb715610de",
+        "source_account_log_scan_passed": true
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "6abb9c1ac5e5b89c014f4e5dd531173abd02d15604269eae32a0bc7fc66fbe93",
+        "source_account_log_scan_passed": true
+      }
+    ],
+    "build-normal-status.json": [
+      {
+        "name": "app",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate",
+        "exit": 0
+      },
+      {
+        "name": "handoff",
+        "exit": 0
+      },
+      {
+        "name": "sites",
+        "exit": 0
+      }
+    ],
+    "build-race-status.json": [
+      {
+        "name": "app-race",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-race",
+        "exit": 0
+      },
+      {
+        "name": "handoff-race",
+        "exit": 0
+      },
+      {
+        "name": "sites-race",
+        "exit": 0
+      }
+    ],
+    "build-linux-status.json": [
+      {
+        "name": "server-native",
+        "exit": 0
+      },
+      {
+        "name": "server-linux",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-linux",
+        "exit": 0
+      },
+      {
+        "name": "handoff-linux",
+        "exit": 0
+      },
+      {
+        "name": "app-linux",
+        "exit": 0
+      },
+      {
+        "name": "vet",
+        "exit": 0
+      },
+      {
+        "name": "mod-verify",
+        "exit": 0
+      }
+    ]
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed SiteStatistic 2133 account rows, original views, Go SDK and offline migration in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-site-account-mteam-4fa2d97c23844a9a9f23ba8e3b03879f",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/site-account-mteam-4fa2d97c23844a9a9f23ba8e3b03879f",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "d5a1bfdf7f116d61e0bcf518130ccd47ff2e1c67092429ef188b2773dfeec147"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "773f4419c1122baaa2404b6a7cadd2b7ee078239505dcdfe6d38104d7069e052",
+      "statistic-migrate": "fcfd432fa28930878510ca2f663b460146efc3018d2c4704b045d6eebd0624b7",
+      "handoff": "d238ee8c4522e91dd45f8346f1e0564552c9bb0c1ebf37a3a8818bfa0119bf64",
+      "outcomes.json": "a7af2afd71f09adcbf03c45a65ef894e1955ae9c9a6140cf4355b6f9a36e7798",
+      "mteam.json": "b59897ccfe9cd89ea558821e4df4ecdd7e7dbbb017b8eb2409cb2d33b2653cc5"
+    },
+    "container_id": "172795a8c87f151e73265c5dcec0413d0486b18967644c9a418abd1a25b94b54",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "live_source_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "production_hashes_after": {
+      "server_unchanged": true,
+      "compose_unchanged": true
+    },
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 74.25
+  },
+  "independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_directory_absent": true,
+    "production_server_unchanged": true,
+    "production_compose_unchanged": true
+  },
+  "inputs": {
+    "frozen_source_files": 4427,
+    "resolved_compilation_files": 5698,
+    "frozen_drift": 0,
+    "compilation_drift": 0,
+    "main_product_focus_drift": 0,
+    "docs_written_after_checks": [
+      "docs/plugin-site-mteam-account-flow.txt",
+      "docs/plugin-site-mteam-account-flow-verification.json",
+      "docs/plugin-installed-migration-baseline.md"
+    ],
+    "scope_limit": "does not claim complete compiler, system header or linker dependency closure"
+  },
+  "source_manifest_sha256": "043d0ede890140557fa208484cc6ea32628553c7e5ae5a3e30a18b2dcdf185b7",
+  "compilation_manifest_sha256": "ed53e5c0090227fc54f8303803c63ec8b0bbe333f424cdf687a94d1d2c2eed66",
+  "focus": [
+    {
+      "path": "internal/app/plugin_site_statistic_fields_test.go",
+      "sha256": "02086fcd8a0d5d96b534b038e478a68969b3294cd4f7aec0f43a2bf6a7cc078b"
+    },
+    {
+      "path": "internal/app/plugin_site_statistic_mteam_test.go",
+      "sha256": "1d1c7e715cff2c95932c1a0302f40ed855183d405eb14ac45d5c261cd2157e12"
+    },
+    {
+      "path": "internal/sites/stats.go",
+      "sha256": "8b2be8351a520f48a58ef5fc86b0a297662deaeb6a54daa38b60cb6e2ec46c4d"
+    },
+    {
+      "path": "internal/sites/userdata.go",
+      "sha256": "b51fb87ae00370f94cbef18efeb07a5849112e6237261987e4747aa92203a1ce"
+    },
+    {
+      "path": "internal/sites/userdata_mteam.go",
+      "sha256": "d4aa1c7a8c87e7c4dd13bae1c26fa969a59a3ee3ea28e10186088a1c684a276a"
+    },
+    {
+      "path": "internal/sites/userdata_mteam_test.go",
+      "sha256": "0552a28a6f55f400a99cbb78ef17a5479c3d94b25dcec3c0861c62753ae66764"
+    },
+    {
+      "path": "testdata/plugins/site-mteam-account-original-oracle.json",
+      "sha256": "b59897ccfe9cd89ea558821e4df4ecdd7e7dbbb017b8eb2409cb2d33b2653cc5"
+    }
+  ],
+  "frontend": {
+    "changed": false,
+    "retested": false,
+    "same_as_base_commit": true,
+    "verified_file_count": 202,
+    "user_acceptance_claimed": false
+  },
+  "peak_RSS_measured": false,
+  "secret_scan": {
+    "passed": true,
+    "source_account_rows": 2133,
+    "patterns": 2219,
+    "files": 58,
+    "private_payload_saved": false
+  },
+  "failures_retained": [
+    {
+      "scope": "r1 oracle generator",
+      "cause": "initial generator had mismatched closing parenthesis; no source methods or business ran, corrected before fixture generation",
+      "accepted": false
+    },
+    {
+      "scope": "r1 original full wire oracle",
+      "cause": "first Go implementation rejected an empty message dict that Python iterates normally; independent original trace caught missing seeding requests, corrected before frozen tests",
+      "accepted": false
+    }
+  ]
+}
