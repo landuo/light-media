@@ -93,13 +93,16 @@ func digest(v any) string {
 }
 
 type localOps struct {
-	h            *Host
-	roots        []RootStamp
-	pins, frozen map[string]Pin
-	serial       uint64
-	ctx          context.Context
-	scope        string
-	errors       []error
+	h                *Host
+	roots            []RootStamp
+	pins, frozen     map[string]Pin
+	serial           uint64
+	ctx              context.Context
+	scope            string
+	errors           []error
+	noticeOrdinal    int
+	noticeFatal      error
+	barrierSelection map[string]Pin
 }
 
 func newLocal(h *Host, roots []Root) (*localOps, error) {
@@ -193,6 +196,15 @@ func (o *localOps) pin(p string, replace bool) (Pin, error) {
 	if e != nil {
 		return Pin{}, e
 	}
+	if o.barrierSelection != nil {
+		selected, ok := o.barrierSelection[p]
+		if !ok || !sameEntity(got.File, selected.File) || !sameEntity(got.Parent, selected.Parent) || (!os.FileMode(got.File.Mode).IsDir() && got.File != selected.File) {
+			return Pin{}, ErrUnsafe
+		}
+		// A resumed source call cannot enlarge its pre-notification selection.
+		return selected, nil
+	}
+
 	if old, ok := o.pins[p]; ok && !replace {
 		return old, nil
 	}
@@ -355,6 +367,9 @@ func (o *localOps) storeEffect(x Effect) error {
 	return o.h.opts.Journal.Update(o.ctx, func(s *Durable) error { s.Effects[x.ID] = x; return nil })
 }
 func (o *localOps) remove(p string, dir bool) error {
+	if o.noticeFatal != nil {
+		return o.noticeFatal
+	}
 	if o.ctx == nil {
 		return ErrUnsafe
 	}
@@ -520,6 +535,23 @@ func (o *localOps) remove(p string, dir bool) error {
 	return o.storeEffect(effect)
 }
 func (o *localOps) side(kind, p string, payload any) (bool, error) {
+	return o.sideAt(kind, p, payload, "")
+}
+func (o *localOps) sideAt(kind, p string, payload any, site string) (result bool, err error) {
+	if o.noticeFatal != nil {
+		return false, o.noticeFatal
+	}
+	// Unknown notice outcomes poison the whole action, even when the source
+	// catches an exception and a timer/stop loop advances to its next task.
+	defer func() {
+		if site != "" && err != nil {
+			var source *removelink.SourceNoticeError
+			if !errors.As(err, &source) || !source.Valid() {
+				o.noticeFatal = err
+				o.remember(err)
+			}
+		}
+	}()
 	r, e := o.root(p)
 	if e != nil {
 		return false, e
@@ -535,12 +567,48 @@ func (o *localOps) side(kind, p string, payload any) (bool, error) {
 		return false, e
 	}
 	x.ID = digest([]any{o.h.binding, o.scope, kind, p, string(x.Payload)})
+	legacyID := x.ID
+	if site != "" {
+		o.noticeOrdinal++
+		x.SourceBarrierVersion, x.NoticeSite, x.NoticeOrdinal = 1, site, o.noticeOrdinal
+		x.ID = digest([]any{o.h.binding, o.scope, kind, p, string(x.Payload), x.SourceBarrierVersion, x.NoticeSite, x.NoticeOrdinal})
+	}
 	s, e := o.h.opts.Journal.Read(o.ctx)
 	if e != nil {
 		return false, e
 	}
 	old, ok := s.Effects[x.ID]
+	// Old confirmed notifications retain the historical outbox-only semantics.
+	// Never retroactively route an already committed legacy notification.
+	if !ok && site != "" {
+		if legacy, exists := s.Effects[legacyID]; exists && legacy.State == "confirmed" && legacy.SourceBarrierVersion == 0 {
+			return legacy.Result, nil
+		}
+	}
 	if ok && old.State == "confirmed" {
+		if old.SourceBarrierVersion == 1 {
+			if reader, ok := o.h.opts.Effects.(interface {
+				SourceNoticeResult(context.Context, Effect) error
+			}); ok {
+				receiptErr := reader.SourceNoticeResult(o.ctx, old)
+				var source *removelink.SourceNoticeError
+				matches := receiptErr == nil && old.SourceError == ""
+				if errors.As(receiptErr, &source) && source.Valid() && old.SourceError == source.Class {
+					matches = true
+				}
+				if !matches || !old.Result {
+					return false, ErrUncertain
+				}
+			}
+		}
+
+		if old.SourceBarrierVersion == 1 && old.SourceError != "" {
+			source := &removelink.SourceNoticeError{Class: old.SourceError}
+			if !old.Result || !source.Valid() {
+				return false, ErrUncertain
+			}
+			return old.Result, source
+		}
 		return old.Result, nil
 	}
 	if ok && old.State == "uncertain" {
@@ -550,11 +618,22 @@ func (o *localOps) side(kind, p string, payload any) (bool, error) {
 	if e = o.storeEffect(x); e != nil {
 		return false, e
 	}
-	result, e := o.h.opts.Effects.Commit(o.ctx, x)
+	result, e = o.h.opts.Effects.Commit(o.ctx, x)
 	if e != nil {
+		var source *removelink.SourceNoticeError
+		if site != "" && result && errors.As(e, &source) && source.Valid() {
+			x.State, x.Result, x.SourceError = "confirmed", result, source.Class
+			if save := o.storeEffect(x); save != nil {
+				return false, save
+			}
+			return result, source
+		}
 		x.State = "uncertain"
 		x.Error = e.Error()
 		_ = o.storeEffect(x)
+		if site != "" {
+			return false, fmt.Errorf("%w: notification outcome: %v", ErrUncertain, e)
+		}
 		return false, e
 	}
 	x.State = "confirmed"
@@ -578,6 +657,32 @@ func (o *localOps) Notice(title, text string) error {
 	}
 	return e
 }
+func (o *localOps) NoticeAt(site, title, text string) error {
+	switch site {
+	case "empty_directory", "hardlink_immediate", "hardlink_delayed", "strm":
+	default:
+		return ErrUnsafe
+	}
+	if o.barrierSelection == nil {
+		o.barrierSelection = make(map[string]Pin, len(o.pins)+len(o.frozen))
+		for path, pin := range o.pins {
+			o.barrierSelection[path] = pin
+		}
+		for path, pin := range o.frozen {
+			o.barrierSelection[path] = pin
+		}
+	}
+
+	p := o.roots[0].Root.Path
+	ok, err := o.sideAt("notification", p, map[string]string{"title": title, "text": text}, site)
+	if err == nil && !ok {
+		err = errors.New("notification source return was not committed")
+		o.noticeFatal = err
+		o.remember(err)
+	}
+	return err
+}
+
 func (o *localOps) MediaExtensions() []string {
 	return append([]string(nil), o.h.opts.MediaExtensions...)
 }

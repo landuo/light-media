@@ -29,11 +29,12 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		AfterActionFiles   map[string]string `json:"after_action_go_files"`
 		RootExpansionFiles map[string]string `json:"root_expansion_go_files"`
 		OwnerReferences    map[string]string `json:"owner_reference_files"`
+		SourceBarrierFiles map[string]string `json:"source_barrier_go_files"`
 	}
 	if err = json.Unmarshal(raw, &manifest); err != nil {
 		t.Fatal(err)
 	}
-	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 {
+	if manifest.InstalledSource != "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4" || len(manifest.Files) != 10 || len(manifest.Evidence) != 3 || len(manifest.FormalEvidence) != 2 || len(manifest.TransitionFiles) != 3 || len(manifest.TransitionEvidence) != 3 || len(manifest.AfterActionFiles) != 1 || len(manifest.RootExpansionFiles) != 2 || len(manifest.OwnerReferences) != 1 || len(manifest.SourceBarrierFiles) != 6 {
 		t.Fatal("missing installed source/candidate/evidence provenance")
 	}
 	verify := func(path, expected string) {
@@ -55,7 +56,27 @@ func TestFrozenCandidateSourceAndEvidence(t *testing.T) {
 		if source.FormalSHA256 != "" {
 			expected = source.FormalSHA256
 		}
+		// Candidate/formal hashes remain historical evidence. Changed current
+		// implementations are explicitly attributed to the source-barrier stage.
+		if current, ok := manifest.SourceBarrierFiles["internal/plugins/removelink/host/"+name]; ok {
+			expected = current
+		}
 		verify(name, expected)
+	}
+	expectedBarrierFiles := []string{
+		"internal/plugins/removelink/types.go",
+		"internal/plugins/removelink/machine.go",
+		"internal/plugins/removelink/storage.go",
+		"internal/plugins/removelink/host/types.go",
+		"internal/plugins/removelink/host/local.go",
+		"internal/plugins/removelink/host/host.go",
+	}
+	for _, name := range expectedBarrierFiles {
+		sum, ok := manifest.SourceBarrierFiles[name]
+		if !ok {
+			t.Fatalf("missing source-barrier provenance: %s", name)
+		}
+		verify(filepath.Join("..", "..", "..", "..", name), sum)
 	}
 	for name, sum := range manifest.Evidence {
 		if filepath.Base(name) != name {

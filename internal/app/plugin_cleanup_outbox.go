@@ -148,12 +148,12 @@ func (p *PluginStore) committedCleanupOutbox(ctx context.Context, q pluginRemove
 		Effect  cleanuphost.Effect
 		Payload []byte
 	}
-	if cleanupJournalStrict(raw, &box) != nil || (box.Version != 1 && box.Version != 2) || cleanupJournalStrict(box.Effect, &encoded) != nil {
+	if cleanupJournalStrict(raw, &box) != nil || (box.Version != 1 && box.Version != 2 && box.Version != 3) || cleanupJournalStrict(box.Effect, &encoded) != nil {
 		return nil, x, box, cleanuphost.ErrUnsafe
 	}
 	x = encoded.Effect
 	x.Payload = encoded.Payload
-	if x.Binding.InstanceID != row.Instance || x.Binding.Generation != row.Generation || x.Binding.Revision < 1 || e.token(x.ID) != row.Token || x.State != "" || x.Error != "" || x.Result {
+	if x.Binding.InstanceID != row.Instance || x.Binding.Generation != row.Generation || x.Binding.Revision < 1 || e.token(x.ID) != row.Token || x.State != "" || x.Error != "" || x.SourceError != "" || x.Result {
 		return nil, x, box, cleanuphost.ErrUnsafe
 	}
 	_, original, err := e.identity(x)
@@ -169,7 +169,7 @@ func (p *PluginStore) committedCleanupOutbox(ctx context.Context, q pluginRemove
 		}
 		return nil, x, box, err
 	}
-	if box.Version == 2 {
+	if box.Version >= 2 {
 		if x.Kind != "notification" || box.Notice == nil || row.Created != box.Notice.CreatedAt {
 			return nil, x, box, cleanuphost.ErrUnsafe
 		}
@@ -301,7 +301,7 @@ func (a *App) auditRemoveLinkHandoffs(ctx context.Context, cursor pluginCleanupA
 			if cleanupJournalStrict(noticeRaw, &notice) != nil || notice.ID != wantID || !hmac.Equal(h.PublicDigest, cleanupNoticeDigest(e, notice)) {
 				return cursor, cleanuphost.ErrUnsafe
 			}
-			if box.Version == 2 {
+			if box.Version >= 2 {
 				if h.Notice == nil {
 					return cursor, cleanuphost.ErrUnsafe
 				}
@@ -343,6 +343,12 @@ func (a *App) dispatchRemoveLinkOutboxes(ctx context.Context, limit int) error {
 // Retired producers may transfer already committed intents: no current worker,
 // config, filesystem or downloader authority is acquired by this operation.
 func (a *App) transferRemoveLinkOutbox(ctx context.Context) (bool, error) {
+	return a.transferRemoveLinkOutboxFor(ctx, "", 0, "")
+}
+
+// A synchronous source barrier must transfer only its own accepted token, not
+// whichever unrelated pending producer happens to be oldest in the queue.
+func (a *App) transferRemoveLinkOutboxFor(ctx context.Context, wantedInstance string, wantedGeneration int64, wantedToken string) (bool, error) {
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return false, err
@@ -351,10 +357,17 @@ func (a *App) transferRemoveLinkOutbox(ctx context.Context) (bool, error) {
 	var instance, token, created string
 	var generation int64
 	var sealed []byte
-	err = tx.QueryRowContext(ctx, `SELECT o.instance_id,o.generation,o.token,o.sealed,o.created_at
+	query := `SELECT o.instance_id,o.generation,o.token,o.sealed,o.created_at
 FROM plugin_cleanup_private_outbox o LEFT JOIN plugin_cleanup_outbox_handoffs h
 ON h.instance_id=o.instance_id AND h.generation=o.generation AND h.token=o.token
-WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &token, &sealed, &created)
+WHERE h.token IS NULL`
+	var args []any
+	if wantedInstance != "" {
+		query += ` AND o.instance_id=? AND o.generation=? AND o.token=?`
+		args = []any{wantedInstance, wantedGeneration, wantedToken}
+	}
+	query += ` ORDER BY o.rowid LIMIT 1`
+	err = tx.QueryRowContext(ctx, query, args...).Scan(&instance, &generation, &token, &sealed, &created)
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}
@@ -415,7 +428,7 @@ WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &t
 		settings := a.Settings()
 		noticeID := "cleanup_notice_" + hex.EncodeToString(e.j.mac("notice-history", []byte(token)))
 		n := Notification{ID: noticeID, Title: cleanWithSettings(data.Title, settings), Message: cleanWithSettings(data.Text, settings), MType: "站点", Link: "#/plugins?tab=installed&id=RemoveLink", CreatedAt: created}
-		if box.Version == 2 {
+		if box.Version >= 2 {
 			accepted, err := removeLinkAcceptedHistory(e, token, box, x)
 			if err != nil {
 				return true, err
@@ -427,7 +440,7 @@ WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &t
 		}
 		handoff.PublicDigest = cleanupNoticeDigest(e, n)
 		handoff.Stage, handoff.Reference = "history_saved", noticeID
-		if box.Version == 2 {
+		if box.Version >= 2 {
 			handoff.Notice, err = a.pluginStore.initRemoveLinkNoticeTx(ctx, tx, e, x, token, box, n)
 			if err != nil {
 				return true, err
@@ -459,5 +472,5 @@ WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &t
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_cleanup_private_outbox SET sealed=? WHERE instance_id=? AND generation=? AND token=?`, boxSealed, instance, generation, token); err != nil {
 		return true, err
 	}
-	return true, tx.Commit()
+	return true, a.pluginStore.commitNoticeTx(tx, "remove_link_handoff")
 }

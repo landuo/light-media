@@ -28,7 +28,14 @@ type removeLinkNoticeProof struct {
 }
 
 func removeLinkNoticeEnvelope(box pluginRemoveLinkPrivateOutbox, x cleanuphost.Effect) (*notice.Envelope, error) {
-	if box.Version != 2 || box.Notice == nil || box.Notice.AppDomain == nil || x.Kind != "notification" {
+	if (box.Version != 2 && box.Version != 3) || box.Notice == nil || box.Notice.AppDomain == nil || x.Kind != "notification" {
+		return nil, cleanuphost.ErrUnsafe
+	}
+	if box.Version == 3 {
+		if x.SourceBarrierVersion != 1 || x.NoticeOrdinal < 1 || !validRemoveLinkNoticeSite(x.NoticeSite) {
+			return nil, cleanuphost.ErrUnsafe
+		}
+	} else if x.SourceBarrierVersion != 0 || x.NoticeSite != "" || x.NoticeOrdinal != 0 {
 		return nil, cleanuphost.ErrUnsafe
 	}
 	var payload struct {
@@ -53,6 +60,9 @@ func (e *pluginRemoveLinkEffects) acceptRemoveLinkNotice(x cleanuphost.Effect, o
 	n := &removeLinkNoticeAcceptance{AppDomain: &domain, CreatedAt: at.UTC().Format(time.RFC3339Nano), Timezone: loc.String(), CurrentTime: at.In(loc).Format("2006-01-02 15:04:05")}
 	_, n.TimezoneOffset = at.In(loc).Zone()
 	box := pluginRemoveLinkPrivateOutbox{Version: 2, Effect: original, State: "pending", Notice: n}
+	if x.SourceBarrierVersion != 0 {
+		box.Version = 3
+	}
 	env, err := removeLinkNoticeEnvelope(box, x)
 	if err != nil {
 		return box, err
@@ -127,7 +137,7 @@ func (p *PluginStore) validateRemoveLinkNotice(ctx context.Context, q pluginRemo
 	if err != nil {
 		return err
 	}
-	if box.Version != 2 || box.State != "history_saved" || x.Kind != "notification" || x.ID != r.EffectID {
+	if (box.Version != 2 && box.Version != 3) || box.State != "history_saved" || x.Kind != "notification" || x.ID != r.EffectID {
 		return cleanuphost.ErrUnsafe
 	}
 	sha, err := removeLinkNoticeAcceptanceSHA(box, x)
@@ -169,4 +179,12 @@ func (p *PluginStore) validateRemoveLinkNotice(ctx context.Context, q pluginRemo
 		return cleanuphost.ErrUnsafe
 	}
 	return nil
+}
+
+func validRemoveLinkNoticeSite(site string) bool {
+	switch site {
+	case "empty_directory", "hardlink_immediate", "hardlink_delayed", "strm":
+		return true
+	}
+	return false
 }

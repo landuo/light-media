@@ -18,7 +18,7 @@ import (
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 )
 
-const pluginNoticeSchema = siteStatisticNoticeSchema + `
+const pluginNoticeSchema = siteStatisticNoticeSchema + removeLinkSourceResultSchema + `
 CREATE TABLE IF NOT EXISTS plugin_notice_routes(id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,source_token TEXT NOT NULL,sealed BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_notice_route_steps(route_id TEXT NOT NULL,ordinal INTEGER NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(route_id,ordinal));
 CREATE TABLE IF NOT EXISTS plugin_notice_publications(id TEXT PRIMARY KEY,route_id TEXT NOT NULL,ordinal INTEGER NOT NULL,sealed BLOB NOT NULL);
@@ -280,6 +280,14 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	}
 	if len(steps) != r.Count || previous != r.LastSHA || r.SourceError != "" && !r.Complete {
 		return r, nil, seedhost.ErrUnsafe
+	}
+	if err = rows.Close(); err != nil {
+		return r, nil, err
+	}
+	if r.Kind == "remove_link" {
+		if err := p.validateRemoveLinkSourceResult(ctx, q, r); err != nil {
+			return r, nil, err
+		}
 	}
 	if v2Kind {
 		if err := p.validateNoticeBusinessV2Steps(ctx, q, r, steps); err != nil {

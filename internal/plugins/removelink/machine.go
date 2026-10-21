@@ -11,16 +11,18 @@ import (
 )
 
 type Machine struct {
-	mu       sync.Mutex
-	Config   Config
-	State    []Tracked
-	Queue    []*Task
-	TimerDue *time.Time
-	Watches  []Watch
-	Ops      Ops
-	Home     string
-	Now      func() time.Time
-	Errors   []error
+	mu           sync.Mutex
+	Config       Config
+	State        []Tracked
+	Queue        []*Task
+	TimerDue     *time.Time
+	Watches      []Watch
+	Ops          Ops
+	Home         string
+	Now          func() time.Time
+	Errors       []error
+	SourceErrors []error
+	noticeFatal  error
 }
 type Watch struct{ Path, Mode string }
 
@@ -86,6 +88,9 @@ func (m *Machine) stop() {
 	for _, t := range tasks {
 		if !t.Processed {
 			m.execute(t)
+		}
+		if !t.Processed {
+			m.Queue = append(m.Queue, t)
 		}
 	}
 }
@@ -253,6 +258,11 @@ func (m *Machine) Tick() {
 	}
 }
 func (m *Machine) execute(t *Task) {
+	// A source finally marks the task that reached an unknown result processed;
+	// later tasks never enter that source call and must remain pending.
+	if m.noticeFatal != nil {
+		return
+	}
 	defer func() {
 		t.Processed = true
 		if x := recover(); x != nil {
@@ -327,7 +337,11 @@ func (m *Machine) cleanupLinks(t *Task, delayed bool) {
 		if delayed {
 			prefix = "⏰ 延迟删除完成"
 		}
-		m.notice("🧹 媒体文件清理", prefix+"\n\n"+strings.Join(parts, "\n"))
+		site := "hardlink_immediate"
+		if delayed {
+			site = "hardlink_delayed"
+		}
+		m.notice(site, "🧹 媒体文件清理", prefix+"\n\n"+strings.Join(parts, "\n"))
 	}
 }
 func (m *Machine) unlink(p string) bool {
@@ -338,6 +352,7 @@ func (m *Machine) unlink(p string) bool {
 	if m.Config.Excluded(p, m.Home) {
 		return false
 	}
+	m.beforeWrite()
 	if e := m.Ops.Unlink(p); e != nil {
 		if missing(e) {
 			m.pop(p)
@@ -353,6 +368,7 @@ func (m *Machine) history(kind, p string) bool {
 	if !Truth(m.Config.History) {
 		return false
 	}
+	m.beforeWrite()
 	ok, e := m.Ops.History(kind, p)
 	checked(e)
 	return ok
@@ -372,11 +388,13 @@ func (m *Machine) scrap(p string) {
 					continue
 				}
 				if x.Dir && py.LowerCase(suffix(x.Path)) == ".trickplay" && stem(x.Path) == stem(p) {
+					m.beforeWrite()
 					if e := m.Ops.RemoveTree(x.Path); e != nil {
 						m.Errors = append(m.Errors, e)
 						break
 					}
 				} else if m.Config.IsScrap(x.Path) {
+					m.beforeWrite()
 					if e := m.Ops.Unlink(x.Path); e != nil {
 						m.Errors = append(m.Errors, e)
 						break
@@ -421,8 +439,10 @@ func (m *Machine) empty(p string) {
 			if e == nil {
 				for _, x := range rows {
 					if x.Dir {
+						m.beforeWrite()
 						e = m.Ops.RemoveTree(x.Path)
 					} else {
+						m.beforeWrite()
 						e = m.Ops.Unlink(x.Path)
 					}
 					if e != nil {
@@ -440,10 +460,17 @@ func (m *Machine) empty(p string) {
 			return
 		}
 		if e == nil {
+			m.beforeWrite()
 			if e := m.Ops.RemoveDir(parent); e != nil {
 				m.Errors = append(m.Errors, e)
 			} else if Truth(m.Config.Notify) {
-				m.notice("📁 目录清理", "🗑️ 清理空目录："+parent)
+				// Source catches a notification exception at this level, then
+				// advances to the next parent. Infrastructure uncertainty is not caught.
+				if e := m.sendNotice("empty_directory", "📁 目录清理", "🗑️ 清理空目录："+parent); knownSourceNotice(e) {
+					m.SourceErrors = append(m.SourceErrors, e)
+				} else {
+					checked(e)
+				}
 			}
 		}
 		if parent == p {
@@ -455,16 +482,41 @@ func (m *Machine) empty(p string) {
 
 func (m *Machine) remember(x any) {
 	if e, ok := x.(effectFailure); ok {
-		m.Errors = append(m.Errors, e.err)
+		if knownSourceNotice(e.err) {
+			m.SourceErrors = append(m.SourceErrors, e.err)
+		} else {
+			m.Errors = append(m.Errors, e.err)
+		}
 	} else {
 		panic(x)
 	}
 }
-func (m *Machine) event(p string)            { checked(m.Ops.Event(p)) }
-func (m *Machine) notice(title, text string) { checked(m.Ops.Notice(title, text)) }
-func (m *Machine) storageExists(x Item) bool { ok, e := m.Ops.StorageExists(x); checked(e); return ok }
-func (m *Machine) storageList(x Item) []Item { v, e := m.Ops.StorageList(x); checked(e); return v }
-func (m *Machine) storageDelete(x Item) bool { ok, e := m.Ops.StorageDelete(x); checked(e); return ok }
+func (m *Machine) event(p string) { m.beforeWrite(); checked(m.Ops.Event(p)) }
+func (m *Machine) beforeWrite()   { checked(m.noticeFatal) }
+func (m *Machine) sendNotice(site, title, text string) error {
+	m.beforeWrite()
+	var err error
+	if ops, ok := m.Ops.(interface {
+		NoticeAt(string, string, string) error
+	}); ok {
+		err = ops.NoticeAt(site, title, text)
+	} else {
+		err = m.Ops.Notice(title, text)
+	}
+	if err != nil && !knownSourceNotice(err) {
+		m.noticeFatal = err
+	}
+	return err
+}
+func (m *Machine) notice(site, title, text string) { checked(m.sendNotice(site, title, text)) }
+func (m *Machine) storageExists(x Item) bool       { ok, e := m.Ops.StorageExists(x); checked(e); return ok }
+func (m *Machine) storageList(x Item) []Item       { v, e := m.Ops.StorageList(x); checked(e); return v }
+func (m *Machine) storageDelete(x Item) bool {
+	m.beforeWrite()
+	ok, e := m.Ops.StorageDelete(x)
+	checked(e)
+	return ok
+}
 
 func (m *Machine) keywordExcluded(p string) bool {
 	m.Config.ensureString("exclude_keywords")

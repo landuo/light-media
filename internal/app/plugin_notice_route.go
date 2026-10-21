@@ -15,9 +15,10 @@ import (
 )
 
 type pluginNoticeDriver struct {
-	a      *App
-	id     string
-	cursor int
+	a       *App
+	id      string
+	cursor  int
+	failure *removeLinkSourceFailure
 }
 
 func noticeValue(raw json.RawMessage) (any, error) {
@@ -76,6 +77,7 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	}
 	value, err := apply(tx, r, ordinal)
 	if err != nil {
+		d.failure = &removeLinkSourceFailure{Kind: kind, Ordinal: ordinal, InputSHA: inputSHA}
 		return nil, err
 	}
 	output, err := cleanupJournalJSON(value)
@@ -126,6 +128,9 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	}
 	r.Complete = true
 	r.SourceError = sourceNoticeError(sourceErr)
+	if err = d.a.pluginStore.finishRemoveLinkSourceTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
+		return seedhost.ErrUnknown
+	}
 	if r.Kind == "site_statistic" {
 		if err = d.a.pluginStore.finishSiteStatisticNoticeTx(ctx, tx, r); err != nil {
 			return seedhost.ErrUnknown

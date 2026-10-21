@@ -51,6 +51,10 @@ type Effect struct {
 	Stage, State, Error         string
 	Payload                     json.RawMessage
 	Result                      bool
+	SourceBarrierVersion        int    `json:",omitempty"`
+	NoticeSite                  string `json:",omitempty"`
+	NoticeOrdinal               int    `json:",omitempty"`
+	SourceError                 string `json:",omitempty"`
 }
 type EventReceipt struct {
 	Event        Event

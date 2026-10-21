@@ -54,7 +54,15 @@ func (o *pluginRemoveLinkOwner) guard(ctx context.Context, b cleanuphost.Binding
 	}
 	o.a.downloadMu.Lock()
 	o.a.importMu.Lock()
-	release := func() { o.a.importMu.Unlock(); o.a.downloadMu.Unlock(); o.a.pluginLifecycleMu.Unlock() }
+	held := true
+	release := func() {
+		if held {
+			held = false
+			o.a.importMu.Unlock()
+			o.a.downloadMu.Unlock()
+			o.a.pluginLifecycleMu.Unlock()
+		}
+	}
 	if err = ctx.Err(); err != nil {
 		release()
 		return nil, err
@@ -168,6 +176,27 @@ func (o *pluginRemoveLinkOwner) guard(ctx context.Context, b cleanuphost.Binding
 		release()
 		return nil, err
 	}
+	// Only this trusted owner may release and reacquire its file leases. The
+	// Host remains inside the same serialized action; no Host entry is called.
+	o.e.mu.Lock()
+	lease := o.e.lease
+	lease.pause = release
+	lease.resume = func() error {
+		if held {
+			return cleanuphost.ErrUnsafe
+		}
+		o.a.pluginLifecycleMu.Lock()
+		_, _, snapshotErr := o.a.removeLinkSnapshot(ctx, o.instance)
+		if snapshotErr != nil {
+			o.a.pluginLifecycleMu.Unlock()
+			return snapshotErr
+		}
+		o.a.downloadMu.Lock()
+		o.a.importMu.Lock()
+		held = true
+		return nil
+	}
+	o.e.mu.Unlock()
 	return func() { revoke(); release() }, nil
 }
 
@@ -218,6 +247,12 @@ func (a *App) validateRemoveLinkDeferredRetry(ctx context.Context, run PluginRun
 	for _, effect := range s.Effects {
 		if effect.State != "confirmed" {
 			return cleanuphost.ErrUncertain
+		}
+		if effect.SourceBarrierVersion != 0 {
+			effects := &pluginRemoveLinkEffects{j: j}
+			if err = effects.confirmedRemoveLinkSourceEffect(ctx, effect); err != nil {
+				return err
+			}
 		}
 		if effect.Kind == "lifecycle_applied" && effect.ID == "lifecycle:"+run.ID {
 			return cleanuphost.ErrUncertain
@@ -322,6 +357,11 @@ func (p *PluginStore) removeLinkDeferredOutcome(ctx context.Context, run PluginR
 	// every media deletion. A pre-owner/external journal cannot supply that proof.
 	effects := &pluginRemoveLinkEffects{j: j}
 	for _, fact := range s.Effects {
+		if fact.SourceBarrierVersion != 0 {
+			if err = effects.confirmedRemoveLinkSourceEffect(ctx, fact); err != nil {
+				return nil, false, nil
+			}
+		}
 		if cleanupEffectFileFact(fact) && fact.Role == "media" {
 			x := fact
 			x.ID = "file-index:" + fact.ID

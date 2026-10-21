@@ -537,57 +537,91 @@ func (f *removeLinkEffectsFixture) openHost(t *testing.T, now func() time.Time) 
 func TestPluginRemoveLinkEffectsActualHostDeletesAndReconcilesAllFlagsFalse(t *testing.T) {
 	for _, flags := range []bool{false, true} {
 		t.Run(map[bool]string{false: "all_optional_false", true: "history_events_notice"}[flags], func(t *testing.T) {
-			f := removeLinkEffectsNew(t, map[string]any{"delete_history": flags, "delete_torrents": flags, "notify": flags, "delayed_deletion": false})
-			h := f.openHost(t, nil)
+			a, item := historyRemovalFixture(t)
+			removeLinkOwnerFakeWatch(a)
+			config := map[string]any{"enabled": true, "monitor_dirs": a.Settings().AllowedRoots[0] + "\n" + a.Settings().Roots[0].Path, "delete_history": flags, "delete_torrents": flags, "notify": flags, "delayed_deletion": false}
+			run := uninstallInstall(t, a, "RemoveLink", removelink.Manifest(), config, true)
+			removeLinkOwnerWorker(t, a, run)
+			owner := a.pluginRemoveLink.owners[run.InstanceID]
+			if owner == nil || owner.h == nil {
+				t.Fatal("actual SDK did not initialize native owner")
+			}
+			var sends atomic.Int32
+			a.pluginStore.notices.send = func(context.Context, pluginNoticeQueueEntry) (int, error) { sends.Add(1); return 1, nil }
 			ctx := context.Background()
-			var err error
-			if err = os.Remove(f.history.Source); err != nil {
+			if err := os.Remove(item.Source); err != nil {
 				t.Fatal(err)
 			}
-			event := cleanuphost.Event{ID: "owned-external-delete", Kind: "deleted", Path: f.history.Source, Mode: "hardlink", At: time.Now()}
+			event := cleanuphost.Event{ID: "owned-external-delete", Kind: "deleted", Path: item.Source, Mode: "hardlink", At: time.Now()}
+			// Real owner Guard supplies the pause/resume capability required by v3;
+			// a low-level Effects fixture must not fake a lease handoff here.
 			if flags {
-				eventInput, _ := json.Marshal(map[string]string{"event_id": event.ID})
-				run, runErr := f.a.pluginStore.EnqueueRun(ctx, f.b.InstanceID, "event", eventInput)
-				if runErr != nil {
-					t.Fatal(runErr)
+				if err := owner.h.RecordEvent(removeLinkOwnerContext(ctx, owner, nil), event); err != nil {
+					t.Fatal("record actual owned event", err)
 				}
-				if _, runErr = f.a.Store.DB.Exec(`UPDATE plugin_runs SET state='running' WHERE id=?`, run.ID); runErr != nil {
-					t.Fatal(runErr)
+				eventInput, err := json.Marshal(map[string]string{"event_id": event.ID})
+				if err != nil {
+					t.Fatal(err)
 				}
-				f.eventRun = run.ID
-				if err = h.RecordEvent(ctx, event); err == nil {
-					err = h.Apply(ctx, f.b, event.ID)
+				queued, err := a.pluginStore.EnqueueRun(ctx, run.InstanceID, "event", eventInput)
+				if err != nil {
+					t.Fatal(err)
 				}
-			} else {
-				err = h.Observe(ctx, event)
+				claimed, err := a.pluginStore.claimRunForInstance(ctx, run.InstanceID)
+				if err != nil || claimed.ID != queued.ID || claimed.Action != "event" {
+					t.Fatal("claim exact SDK event run", claimed.ID, queued.ID, err)
+				}
+				removeLinkOwnerWorker(t, a, claimed)
+			} else if err := owner.h.Observe(ctx, event); err != nil {
+				t.Fatal("actual SDK-initialized host", err)
 			}
-			if err != nil {
-				_ = h.Close(ctx)
-				t.Fatal("actual host", err)
-			}
-			if _, err = os.Stat(f.history.Target); !os.IsNotExist(err) {
+			if _, err := os.Stat(item.Target); !os.IsNotExist(err) {
 				t.Fatal("follower not actually deleted", err)
 			}
 			var plan ImportPlan
-			_ = f.a.Store.Get(ctx, "import_plan", f.history.PlanID, &plan)
+			if err := a.Store.Get(ctx, "import_plan", item.PlanID, &plan); err != nil {
+				t.Fatal(err)
+			}
 			var asset Asset
-			_ = f.a.Store.Get(ctx, "asset", plan.Files[0].AssetID, &asset)
+			if err := a.Store.Get(ctx, "asset", plan.Files[0].AssetID, &asset); err != nil {
+				t.Fatal(err)
+			}
 			if asset.State != "missing_pending" {
 				t.Fatal("real deleted asset not reconciled", asset.State)
 			}
 			if flags {
-				if cleanupEffectsCount(t, f.a, "plugin_cleanup_private_outbox") != 3 {
-					t.Fatal("real event/notice outbox missing")
+				if cleanupEffectsCount(t, a, "plugin_cleanup_private_outbox") != 3 {
+					t.Fatal("two real event outboxes and source notice missing")
 				}
-				if _, err = f.a.transferHistoryItem(ctx, f.history.ID); !errors.Is(err, sql.ErrNoRows) {
+				if _, err := a.transferHistoryItem(ctx, item.ID); !errors.Is(err, sql.ErrNoRows) {
 					t.Fatal("history not hidden", err)
 				}
+				durable, err := owner.j.Read(ctx)
+				if err != nil {
+					t.Fatal(err)
+				}
+				notices := 0
+				for _, effect := range durable.Effects {
+					if effect.Kind != "notification" {
+						continue
+					}
+					notices++
+					if effect.SourceBarrierVersion != 1 || effect.NoticeSite != "hardlink_immediate" || effect.NoticeOrdinal != 1 || effect.State != "confirmed" {
+						t.Fatal("actual host bypassed source notification barrier", effect)
+					}
+					if err = owner.e.readRemoveLinkSourceResult(ctx, effect); err != nil {
+						t.Fatal("notification lacks independent normal-return proof", err)
+					}
+				}
+				if notices != 1 || sends.Load() != 1 {
+					t.Fatal("source notice not executed exactly once", notices, sends.Load())
+				}
 			} else {
-				if cleanupEffectsCount(t, f.a, "plugin_cleanup_private_outbox") != 0 {
-					t.Fatal("disabled effects enqueued")
+				if cleanupEffectsCount(t, a, "plugin_cleanup_private_outbox") != 0 || sends.Load() != 0 {
+					t.Fatal("disabled effects enqueued or sent")
 				}
 			}
-			if err = h.Close(ctx); err != nil {
+			if err := owner.h.Close(removeLinkOwnerContext(ctx, owner, nil)); err != nil {
 				t.Fatal(err)
 			}
 		})

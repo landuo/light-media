@@ -1,0 +1,326 @@
+{
+  "date": "2026-10-21",
+  "baseline": "fa171eee4b8fae74580d5a6ddbf6c5b19ac92e3b",
+  "branch": "dev/plugins-continuation",
+  "scope": "RemoveLink v3 synchronous source notification continuation and independent result receipts; synthetic task-owned filesystem/SQLite/SDK tests only",
+  "deployed": false,
+  "real_accounts_used": false,
+  "migration_count": "7/23 unchanged",
+  "toolchain": "go1.26.10 linux/amd64",
+  "source_sha256": {
+    "internal/app/plugin_cleanup_outbox.go": "5c2918f43d61fa56d55a0e996eef9a92404e32b952b304f91e4ab0635ed73411",
+    "internal/app/plugin_notice_route.go": "24f8fceef9e97dfabec093254dc6d2b8e617257aae45a9c88a04454c16196687",
+    "internal/app/plugin_notice_storage.go": "cf824358e99f9df23e70a98515d1604ada464dcc7cd790202e35153b79a8166c",
+    "internal/app/plugin_remove_link_effects.go": "250cb27e181958e299a9132582be4714206e15d19b343a36b220a8fb26a9e148",
+    "internal/app/plugin_remove_link_guard.go": "0c24107b65c9ddbf6a8662d0297b7d97b97c94beb13dd7de0e4cbb3c5b2f568c",
+    "internal/app/plugin_remove_link_notice.go": "fe78c693f44d9a34bedf0cdf068b62993085d3307b6b7bb39e1d11d2e9448e9c",
+    "internal/app/plugin_remove_link_owner.go": "5ab690063bda3465c297bf38e50c4651e6324df1cb56616336a9a536b37572ed",
+    "internal/app/plugin_remove_link_source_barrier.go": "f14d91c64dd39dd584cd3d47df6f69a5f38c7e62167599d2ccc4b59b9f550537",
+    "internal/app/plugin_remove_link_source_barrier_test.go": "473fb8c0de3ebe89ce00c460a276645b8a56b42ff570d5c93df58ff2d2adf7a7",
+    "internal/app/plugin_remove_link_source_result.go": "da3ebad0067c9a44101ee7873e28f91c372fc662afd4f73acfb526d35c8b888d",
+    "internal/plugins/removelink/host/host.go": "08a16a25a32895ea565d8a0492ee3cb214ddb602543039b080f40a7300c015b2",
+    "internal/plugins/removelink/host/local.go": "d095bd06b46654ad96a44173f5949fcf4fad39f0c3a7d5c4acd6964471ca0709",
+    "internal/plugins/removelink/host/provenance_test.go": "60204029a8bdbd183eebc371ebedb561014d9979c3fec10765826ef32d074b21",
+    "internal/plugins/removelink/host/types.go": "f9df63606cfcb6398e6433f9d6a3b76c0a367550ddbd96275c70bb0f2f4b8d70",
+    "internal/plugins/removelink/machine.go": "99e845ff4f3794c02ee544a936eddff66fbdded206966d1d420da5cef5b9e094",
+    "internal/plugins/removelink/source_notice_barrier_test.go": "728bff3435fcb10ed30f0403ed39f4cace832897a046be8a7a8ea8909f1ea2a8",
+    "internal/plugins/removelink/storage.go": "d961b8d4019edc15538534d287278900c8409c05af2a2bcef5fd37cea9f510ce",
+    "internal/plugins/removelink/types.go": "3ac0ebe34c8429dfca171bf66b704d3a429e3cbb356e25d6f21fbbc6cbb9f108",
+    "testdata/plugins/remove-link-host/source-manifest.json": "2631698ea60189695451c3e5642e6d606e9c2af6156c13bb7a668ae9061abe03",
+    "internal/app/plugin_remove_link_effects_test.go": "41c7c2d5beb9fe1221fbd6a54932533f4acf191f3698831b495a720f82af50a0"
+  },
+  "logs": {
+    "initial-core": {
+      "path": "work/remove-link-source-barrier-validation/initial-core.jsonl",
+      "sha256": "04fd2cda4d9c8ba11c35a362433af8efa21e46eb0d3990b597dff0de1c8a2c11",
+      "bytes": 232035,
+      "command": "go test JSON run of ./internal/plugins/removelink/...; initial exact invocation not retained",
+      "exit_code": 1,
+      "top_level_passed": 58,
+      "passed_including_subtests": 253,
+      "failed_entries": [
+        "TestFrozenCandidateSourceAndEvidence",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:56:59.418338498+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 0.178
+        },
+        {
+          "Time": "2026-10-22T00:57:23.378676689+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 23.493
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "initial-app": {
+      "path": "work/remove-link-source-barrier-validation/initial-app.jsonl",
+      "sha256": "1d450afae9d0403fc8085792045a2b1a470274ef79149a881abb4c34bc06dffc",
+      "bytes": 102529,
+      "command": "go test JSON run of ./internal/app, TestRemoveLinkSourceBarrier family; initial exact invocation not retained",
+      "exit_code": 1,
+      "top_level_passed": 4,
+      "passed_including_subtests": 25,
+      "failed_entries": [
+        "TestRemoveLinkSourceBarrierActualOwnerAtSourceBoundary/normal",
+        "TestRemoveLinkSourceBarrierActualOwnerAtSourceBoundary/known_type_error",
+        "TestRemoveLinkSourceBarrierActualOwnerAtSourceBoundary/queue_external_unknown",
+        "TestRemoveLinkSourceBarrierActualOwnerAtSourceBoundary/source_finish_unknown",
+        "TestRemoveLinkSourceBarrierActualOwnerAtSourceBoundary",
+        "TestRemoveLinkSourceBarrierSettingsWriteDuringSender/revoke_roots",
+        "TestRemoveLinkSourceBarrierSettingsWriteDuringSender/config_revision",
+        "TestRemoveLinkSourceBarrierSettingsWriteDuringSender/cancel",
+        "TestRemoveLinkSourceBarrierSettingsWriteDuringSender",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:59:49.660972034+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 18.894
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revised-app": {
+      "path": "work/remove-link-source-barrier-validation/revised-app.jsonl",
+      "sha256": "9f0e387dfef5c2624d10fba015ee074cbf442f8a16e088d2ef47beedc08bc5dc",
+      "bytes": 102513,
+      "command": "go test JSON run of ./internal/app, TestRemoveLinkSourceBarrier family; initial exact invocation not retained",
+      "exit_code": 0,
+      "top_level_passed": 9,
+      "passed_including_subtests": 38,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:03:28.671744145+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 17.205
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-provenance": {
+      "path": "work/remove-link-source-barrier-validation/final-provenance.jsonl",
+      "sha256": "a8990fcd22e1a60011126906260e6f61447e2e9b5a51810f5aafcaa8a281abb1",
+      "bytes": 1396,
+      "command": "go test -json ./internal/plugins/removelink/host -run '^TestFrozenCandidateSourceAndEvidence$' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 1,
+      "passed_including_subtests": 1,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:36:58.15276736+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 0.006
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "core-normal": {
+      "path": "work/remove-link-source-barrier-validation/core-normal.jsonl",
+      "sha256": "c6b31dd7dc5bad955bee503a8d4a181226e9c75b197133c026c283044c909f70",
+      "bytes": 231801,
+      "command": "go test -timeout 30m -json ./internal/plugins/removelink/... -count=1",
+      "exit_code": 0,
+      "top_level_passed": 59,
+      "passed_including_subtests": 254,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:03:55.326352909+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 0.126
+        },
+        {
+          "Time": "2026-10-22T01:04:19.093555089+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 22.79
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "core-race": {
+      "path": "work/remove-link-source-barrier-validation/core-race.jsonl",
+      "sha256": "b803a1c1469453df0f6f80c377ce3f0032aeea8d617aed2cb0cefefb67bd9cd1",
+      "bytes": 231863,
+      "command": "go test -race -timeout 30m -json ./internal/plugins/removelink/... -count=1",
+      "exit_code": 0,
+      "top_level_passed": 59,
+      "passed_including_subtests": 254,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:12:57.412449081+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 4.416
+        },
+        {
+          "Time": "2026-10-22T01:13:22.739433488+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 28.434
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "owner-fixture": {
+      "path": "work/remove-link-source-barrier-validation/owner-fixture.jsonl",
+      "sha256": "48241b338b9db8a2d372b3c80c40dda905dd324375b1f5475346bd1aeb8768af",
+      "bytes": 8382,
+      "command": "go test -timeout 5m -json ./internal/app -run '^TestPluginRemoveLinkEffectsActualHostDeletesAndReconcilesAllFlagsFalse$' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 1,
+      "passed_including_subtests": 3,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:11:54.373598539+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1.52
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "regression-normal": {
+      "path": "work/remove-link-source-barrier-validation/regression-normal.jsonl",
+      "sha256": "45bb2477986ea934b68b64bdc7bba5c5bf2f87aa05c1d0407dbe051617bce9ba",
+      "bytes": 876302,
+      "command": "go test -timeout 30m -json ./internal/app -run 'TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 1,
+      "top_level_passed": 120,
+      "passed_including_subtests": 435,
+      "failed_entries": [
+        "TestPluginRemoveLinkEffectsActualHostDeletesAndReconcilesAllFlagsFalse/history_events_notice",
+        "TestPluginRemoveLinkEffectsActualHostDeletesAndReconcilesAllFlagsFalse",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:06:12.217959056+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 110.625
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-normal": {
+      "path": "work/remove-link-source-barrier-validation/final-normal.jsonl",
+      "sha256": "1dd2d9ee1929fe9a2fcbb20994e48449dbb6e91b996c25d22eb7e06a33bdd9e8",
+      "bytes": 878861,
+      "command": "go test -timeout 30m -json ./internal/app -run 'TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 121,
+      "passed_including_subtests": 437,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:17:13.125913704+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 114.358
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-race": {
+      "path": "work/remove-link-source-barrier-validation/final-race.jsonl",
+      "sha256": "49d0f99db78fa1cb6dfc7b06a06b247be2cb29666e48933f6788be0726ce45ee",
+      "bytes": 879118,
+      "command": "go test -race -timeout 30m -json ./internal/app -run 'TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 121,
+      "passed_including_subtests": 437,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:34:29.296479209+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 979.588
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-modernconly": {
+      "path": "work/remove-link-source-barrier-validation/final-modernconly.jsonl",
+      "sha256": "75f0a51175d5c79ce5bd43ef70b2b20e5c80bab73a17831714883a9eb477fe78",
+      "bytes": 878848,
+      "command": "CGO_ENABLED=0 go test -tags modernconly -timeout 30m -json ./internal/app -run 'TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 121,
+      "passed_including_subtests": 437,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T01:36:28.554123107+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 89.659
+        }
+      ],
+      "race_detector_warning": false,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vet": {
+      "command": "go vet ./internal/app ./internal/plugins/removelink/...",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "command": "CGO_ENABLED=0 go build -tags modernconly ./cmd/...",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "initial_failures": [
+    "initial-core failed only current Go provenance hashes; historical frozen evidence mappings were preserved and a separate source-barrier current-Go map added. Initial run also overlapped a late core edit and is investigative, not final validation.",
+    "initial-app used scrap instead of source field delete_scrap_infos, reached a different notice boundary, and failed protective expectations. Fixture corrected and config readback added; production protection unchanged.",
+    "regression-normal failed only old low-level Guard fixture lacking required pause/resume callbacks. Final test uses real SDK owner, preserves flags=false Observe and flags=true RecordEvent->queued/claimed SDK event, deletion/assets/history/outbox assertions, and adds independent v3 result proof. owner-fixture intermediate run used Observe in both branches; only final-normal/race/modernconly validate the restored SDK event path."
+  ],
+  "limits": [
+    "Not a new Python oracle run: new core expected traces are synthetic checks against unchanged frozen source; original 42-method AST and existing oracle evidence remain unchanged.",
+    "Known source error classes require typed evidence; arbitrary SQL/transport error text is unknown. Router-consumed sender failure/panic is distinct from unhandled Router callback panic.",
+    "Protection added for v3 RemoveLink source results only; other pre-existing notification kinds and legacy v2 semantics are not globally rewritten.",
+    "No whole-project green claim. Prior full-suite baseline failures and 40 absent binary source inputs remain documented in plugin-site-statistic-notice-routing-verification.json and previous stage records.",
+    "Remaining code gaps: nonlocal StorageChain/provider host, non-Linux watcher support, source watch-init systemmessage, reviewed disabled RemoveLink import/reference mapping tool. Exact installed storage dependency and full MP_DOMAIN/UrlUtils evidence absent.",
+    "Actual source configuration/reference inventory, real account/provider acceptance, production import/handoff and deployment were not performed."
+  ]
+}

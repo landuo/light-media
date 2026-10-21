@@ -126,5 +126,20 @@
   },
   "owner_reference_files": {
     "installed-media-extensions.json": "de1f85676005345efaac84709e3b41a4b9d096962698021b616b387bae4cb517"
+  },
+  "source_barrier_go_files": {
+    "internal/plugins/removelink/types.go": "3ac0ebe34c8429dfca171bf66b704d3a429e3cbb356e25d6f21fbbc6cbb9f108",
+    "internal/plugins/removelink/machine.go": "99e845ff4f3794c02ee544a936eddff66fbdded206966d1d420da5cef5b9e094",
+    "internal/plugins/removelink/storage.go": "d961b8d4019edc15538534d287278900c8409c05af2a2bcef5fd37cea9f510ce",
+    "internal/plugins/removelink/host/types.go": "f9df63606cfcb6398e6433f9d6a3b76c0a367550ddbd96275c70bb0f2f4b8d70",
+    "internal/plugins/removelink/host/local.go": "d095bd06b46654ad96a44173f5949fcf4fad39f0c3a7d5c4acd6964471ca0709",
+    "internal/plugins/removelink/host/host.go": "08a16a25a32895ea565d8a0492ee3cb214ddb602543039b080f40a7300c015b2"
+  },
+  "source_barrier_provenance": {
+    "stage": "synchronous-source-notice-barrier",
+    "status": "validated in assistant cloud synthetic tests; not deployed; see docs/plugin-remove-link-source-barrier-verification.json",
+    "historical_mapping": "copied_go_files candidate/formal/pre_* hashes and all existing evidence mappings remain unchanged historical records; prior NAS and formal validation does not validate this stage.",
+    "scope": "Four explicit source notification sites, proven typed exception receipts, unknown-outcome write barrier, independent confirmed-result replay check, and pre-notification file selection preservation.",
+    "original_source": "Installed reference and sanitized Python source/oracles are unchanged; only proven exception classes are retained, not exception messages. This mapping is Go implementation provenance, not new original-source or live-system evidence."
   }
 }

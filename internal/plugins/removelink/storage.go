@@ -227,6 +227,6 @@ func (m *Machine) strm(p string) {
 			}
 			parts = append(parts, msg)
 		}
-		m.notice("🧹 媒体文件清理", "✅ 清理完成\n\n"+strings.Join(parts, "\n"))
+		m.notice("strm", "🧹 媒体文件清理", "✅ 清理完成\n\n"+strings.Join(parts, "\n"))
 	}
 }

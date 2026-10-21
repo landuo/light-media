@@ -189,10 +189,11 @@ func (h *Host) guard(ctx context.Context, action string) (func(), error) {
 	return func() { h.guardAction = previous; release() }, nil
 }
 func (h *Host) afterAction(ctx context.Context, active *Event) error {
-	if h.opts.AfterAction == nil {
-		return nil
+	var err error
+	if h.opts.AfterAction != nil {
+		err = h.opts.AfterAction(ctx, h.binding, h.guardAction)
 	}
-	err := h.opts.AfterAction(ctx, h.binding, h.guardAction)
+	err = errors.Join(err, h.ops.noticeFatal)
 	if err == nil {
 		return nil
 	}
@@ -377,6 +378,8 @@ func (h *Host) configureOwner(ctx context.Context, binding Binding, raw json.Raw
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	if e = h.checkpoint(ctx, &event); e != nil {
 		return e
 	}
@@ -451,6 +454,8 @@ func (h *Host) Recover(ctx context.Context, binding Binding) error {
 		h.ops.ctx = ctx
 		h.ops.scope = "recover:" + digest([]any{binding, h.opts.Now()})
 		h.ops.errors = nil
+		h.ops.noticeOrdinal = 0
+		h.ops.barrierSelection = nil
 		old := map[string]removelink.Tracked{}
 		for _, r := range h.machine.State {
 			old[r.Path] = r
@@ -614,6 +619,8 @@ func (h *Host) process(ctx context.Context, event Event, guarded bool) (err erro
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	before := len(h.machine.Errors)
 	if event.Mode != "hardlink" && event.Mode != "strm" {
 		return ErrUnsafe
@@ -721,6 +728,8 @@ func (h *Host) tick(ctx context.Context, guarded bool) error {
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	before := len(h.machine.Errors)
 	h.machine.Tick()
 	var err error
@@ -782,6 +791,8 @@ func (h *Host) stopOwner(ctx context.Context, reason string, finish func(context
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	before := len(h.machine.Errors)
 	h.machine.Stop()
 	if len(h.machine.Errors) > before {

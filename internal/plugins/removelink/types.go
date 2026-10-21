@@ -388,3 +388,21 @@ func parent(p string) string {
 	}
 	return p[:i]
 }
+
+// SourceNoticeError is a proven, terminal exception from the synchronous source
+// notification call. Adapters must not construct it for transport, persistence,
+// cancellation, or unclassified Router failures.
+type SourceNoticeError struct {
+	Class string
+}
+
+func (e *SourceNoticeError) Valid() bool {
+	return e != nil && (e.Class == "TypeError" || e.Class == "AttributeError" || e.Class == "ValueError" || e.Class == "RuntimeError")
+}
+func (e *SourceNoticeError) Error() string {
+	return e.Class
+}
+func knownSourceNotice(err error) bool {
+	var source *SourceNoticeError
+	return errors.As(err, &source) && source.Valid()
+}

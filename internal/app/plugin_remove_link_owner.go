@@ -333,6 +333,11 @@ func (o *pluginRemoveLinkOwner) open(ctx context.Context) error {
 	// A legacy confirmed file deletion without a core index receipt cannot be
 	// attached to a later same-path owner merely because the process restarted.
 	for _, fact := range s.Effects {
+		if fact.SourceBarrierVersion != 0 {
+			if err = o.e.confirmedRemoveLinkSourceEffect(ctx, fact); err != nil {
+				return err
+			}
+		}
 		if cleanupEffectFileFact(fact) && fact.Role == "media" {
 			x := fact
 			x.ID = "file-index:" + fact.ID

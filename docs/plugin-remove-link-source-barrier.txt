@@ -1,0 +1,34 @@
+RemoveLink：同步来源通知结果与安全继续（开发验证，未部署）
+
+2026-10-21。基线 fa171eee4b8fae74580d5a6ddbf6c5b19ac92e3b。此前里程碑已接通接受后的异步outbox/Router；本轮继续实现原通知调用返回时机与后续文件控制流，不以排队成功替代原来源成功。正式迁移仍7/23，整插件完整原版范围仍有后述代码缺口。
+
+来源契约
+固定安装原文件SHA256 1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4；testdata/plugins/remove-link-2.17/source.py是脱敏副本，SHA256 a10aca1b9a55ab3ee64f90c6c5c69c055309ebcb368db45e3c63354ae745b854。现有installed-reference及manifest记录42方法可执行AST一致；两种文件哈希不混称。
+- 第1230行：空目录通知在每层try/except内，已知来源异常被捕获后继续上爬。
+- 第1388行：延迟清理外层捕获，finally仍设置processed=true。
+- 第1585行：即时硬链接处理和最后通知在原内部捕获范围。
+- 第2069行：STRM通知由函数级捕获，先前已完成的文件/历史不回滚。
+新增核心测试是基于这些冻结代码的合成Ops/临时目录对照，不是新执行的Python oracle；既有冻结oracle与原始证据未改。
+
+实现
+1. 新调用显式带通知位置和同动作序号，使用v3接受事实；旧Effect新增字段均omitempty以保留原序列化身份。旧v1仍本地历史、旧v2仍原异步含义，旧confirmed通知不追补同步屏障。
+2. 原授权动作先提交接受事实并对账已确认效果，再暂停写租约、释放SQL/e.mu/生命周期/下载/整理锁；仅按当前精确token交接Router，不能顺带认领另一个实例最旧通知。Host串行动作保持，不能重新进入同Host。
+3. Router返回后以原锁序恢复锁，验证同绑定/修订/run/Active/完整durable快照、原根和pins；保留原lease.prior，不重新选择文件。首次通知还冻结文件候选，暂停期间新增或替换对象不能加入删除授权。配置、根、代次或取消使验证不成立时，不恢复写租约。
+4. 独立INSERT-only来源结果收据与Router终态同事务写入，绑定实例/代次/效果/位置/序号/接受摘要/初始路由及终态步骤链、异常位置。v3的Complete/SourceError不能仅靠可变路由值证明；确认效果重放、owner启动、deferred retry/outcome都要核对独立结果。
+5. 只有受信typed来源异常TypeError、AttributeError、ValueError、RuntimeError才进入原捕获规则；普通SQL/传输错误或相同文本不能经RuntimeError兜底变成已知异常。已知来源诊断不进入致命Machine.Errors；未知结果永久毒化本Machine的后续写入口并保持Active/Blocked，不能因冷启动把通知路由完成就重新授权清理。
+6. 丢失SQL ACK只有限读回精确证明，不重发。外部MessageQueue的发送未知/被消费的sender panic不等于原post_message失败；如果Router正常返回仍可得到normal_return。未处理runNoticeRoute回调panic在该窄边界转unknown，恢复锁但不恢复文件租约。本保护不笼统覆盖接受、handoff、证明读取、恢复或其他内部代码panic。
+
+兼容与证据
+保留所有旧候选、formal、NAS及原版证据哈希；testdata/plugins/remove-link-host/source-manifest.json追加本次source_barrier_go_files，provenance测试按新阶段验证六个当前生产文件，旧证据仍独立核验。不得把旧NAS结果当成本轮新源码验证。
+
+验证项目包括真实SDK初始化的owner、独占临时硬链接与祖先目录、单SQL连接、实际发送stub数据库写入、并发Settings/根撤销/配置修订/reload/uninstall/close、取消、分身和跨实例收据拒绝、已提交历史保留、ACK丢失、终态重密封、sender及Router panic语义。原生Observe来自可信宿主，不是worker任意JSON的文件权限。最终受影响App普通/race/modernconly各121顶层/437含子项，核心普通/race各59顶层/254含子项通过；vet与全部cmd构建通过。命令、退出码、计数、源码及日志SHA见配套JSON。初次测试的错误配置键scrap已纠正为原字段delete_scrap_infos，并加读回断言；原保护断言未放宽。旧全部开关测试原低层Guard没有新屏障要求的pause/resume能力，改为真实SDK owner装配并保留原文件、资产、历史、outbox及事件调用入口断言；没有为测试放宽生产校验。当前Go来源hash门禁通过追加阶段修复，未删除测试或更改Python/oracle证据。
+
+开发缺口与部署缺口分别列明
+- 开发仍缺：非local STRM真实StorageChain/provider（alipan/u115/rclone/alist/openlist等），现有算法不等于适配器；固定安装版依赖来源尚待补证。当前原表单宣称范围大于真实宿主可用范围，需明确能力边界或完成适配。
+- 开发仍缺：监听初始化失败的原systemmessage副作用；保持停用、可审核的RemoveLink专项迁移/路径与存储引用映射工具。通用PluginStore.Import已有，不等于专项交付完成。
+- 平台范围：!linux watcher当前ErrUnsupported；本轮Linux云端/NAS不被它阻塞，不能宣称原生Mac/Windows支持。
+- 来源边缘：默认URL完整固定安装MP_DOMAIN/UrlUtils未取得，已实现公开规则不能冒称全部安装版等价。
+- 生产交付未做：原真实配置/引用核对、独占真实渠道或远端存储删除验收、正式导入/交接和部署。只知旧安装停用、数据0，不能推断配置必为local。
+- 不虚构业务缺口：原RemoveLink无KV读写、cron服务或专属page/API/command；src-only下载事件的原已装消费者不删种，不擅自新增路径推断删种。未知提交闭锁和根交叠拒绝是安全边界，不以盲重放来追求表面成功。
+
+全项目已有失败、跳过及40项二进制缺件继续按前阶段记录保留；专项/构建成功不表示完整可部署材料或全部插件完成。本阶段只为新v3补终态证明，其他既有v1通知kind的继承边界并未全平台改写。
