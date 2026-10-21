@@ -1,10 +1,14 @@
-.PHONY: check build linux-amd64 experiments offline web-build run
+.PHONY: check build linux-amd64 experiments offline web-build run dateparser-check
 
 web-build:
 	npm --prefix web ci --no-audit --no-fund
 	npm --prefix web run build
 
-check: web-build
+dateparser-check:
+	go -C third_party/go-dateparser test . ./date/... ./internal/...
+	go -C third_party/go-dateparser test -race ./internal/data -run '^TestConcurrentFirstLocaleLookup$$' -count=1
+
+check: web-build dateparser-check
 	go test ./...
 	go test -race ./...
 	CGO_ENABLED=0 go test -tags modernconly ./...

@@ -137,3 +137,6 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21 MTeam账户采集按原版完整解析流程调整，涉及请求参数与顺序、peer分页、消息原始类型、DTO校验时机及大整数冷恢复，见[本轮说明](plugin-site-mteam-account-flow.txt)和[逐项验证](plugin-site-mteam-account-flow-verification.json)。完整SiteStatistic及原23个实例的剩余迁移仍继续；本轮尚未部署，正式完成仍7/23。
 
 2026-10-21 NexusPHP/憨憨原版账户流程、27个完整请求与DTO参考及真实Go SDK冷恢复见[说明](plugin-site-nexus-account-flow.txt)和[逐项验证](plugin-site-nexus-account-flow-verification.json)。独立源采集器保留原XPath、消息重复/null和摘要累计；原生未知值与DTO默认值继续区分。完整别名、通知链与生产迁移尚未完成，正式完成仍7/23、生产仍v0.4.8。
+
+
+2026-10-21：日期解析依赖改为本地 Go 分支，205 份语言构造函数延迟到首次查找并以 sync.Once 保护。仅初始化样本 RSS 从约 84 MiB 降至约 40 MiB；不表示首次解析后或生产峰值降低。依赖自身、站点与相关应用正常/race、2,133 条历史及 NAS 隔离验证分别计证，见 `site-dateparser-resource-initialization.txt` 与对应验证报告。未部署，正式迁移仍为 7/23。

@@ -8,6 +8,7 @@ RUN npm run build
 FROM golang:1.26-alpine AS backend
 WORKDIR /src
 COPY go.mod go.sum ./
+COPY third_party/go-dateparser ./third_party/go-dateparser
 RUN go mod download
 COPY . .
 COPY --from=frontend /src/web/dist ./web/dist
@@ -16,6 +17,7 @@ RUN CGO_ENABLED=0 go build -tags modernconly -trimpath -ldflags="-s -w" -o /serv
 FROM alpine:3.22
 RUN apk add --no-cache ca-certificates tzdata && addgroup -g 1001 media && adduser -D -u 1000 -G media media
 COPY --from=backend /server /usr/local/bin/light-media
+COPY --from=backend /src/third_party/go-dateparser/LICENSE /usr/share/licenses/light-media/go-dateparser.LICENSE
 USER 1000:1001
 EXPOSE 3120
 VOLUME ["/config"]

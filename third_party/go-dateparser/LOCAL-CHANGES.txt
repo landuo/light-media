@@ -1,0 +1,21 @@
+Local fork of github.com/markusmobius/go-dateparser v1.4.7.
+
+Upstream source and BSD-3-Clause LICENSE are preserved. This application uses
+Go 1.26; remove the optional upstream toolchain go1.27.1 preference. No compiler
+installation is required by this fork.
+
+The generated internal/data locale initialization bodies are unchanged. Their
+205 init functions are renamed initializeLocale_<file>; zz-lazy.go calls them in
+the same lexical source-file order once, on the first GetLocaleData call.
+All locales are retained. The once barrier protects concurrent first readers.
+The concurrent first-lookup test covers 256 callers and eight locales.
+
+This avoids allocating all language tables in every short-lived Go plugin
+process. The host still loads those tables on its first date lookup; this is
+not a claim that parsing itself uses no memory or that production peak RSS
+has been measured. Generated tables and parsing behavior are not replaced.
+
+The upstream generator is retained unchanged. Regeneration requires reapplying
+this local patch and running the upstream library, cold-concurrency and actual
+application checks; zz-lazy.go deliberately fails to build if renamed generated
+constructors are lost. See docs/site-dateparser-resource-initialization.txt.

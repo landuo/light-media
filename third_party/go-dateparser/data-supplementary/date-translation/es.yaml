@@ -1,0 +1,109 @@
+skip: ["a las", "cerca", "de", "del", "en", "y"]
+pertain: ["de", "del"]
+
+sentence_splitter_group : 2
+
+monday:
+    - Lu
+wednesday:
+    - Mi
+thursday:
+    - Ju
+friday:
+    - Vi
+saturday:
+    - Sa
+sunday:
+    - Do
+
+september:
+    - Setiembre
+    - Sep
+    - Set
+
+year:
+    - años
+month:
+    - meses
+week:
+    - semanas
+day:
+    - días
+hour:
+    - horas
+minute:
+    - minutos
+second:
+    - segundos
+
+ago:
+    - hace
+in:
+    - en
+
+relative-type:
+    2 day ago:
+        - anteayer
+
+simplifications:
+    - una: '1'
+    - un: '1'
+locale-specific:
+  es-419:
+    september:
+      - sep
+  es-AR:
+    september:
+      - sep
+  es-BO:
+    september:
+      - sep
+  es-BR:
+    september:
+      - sep
+  es-BZ:
+    september:
+      - sep
+  es-CL:
+    september:
+      - sep
+  es-CO:
+    september:
+      - sep
+  es-CR:
+    september:
+      - sep
+  es-CU:
+    september:
+      - sep
+  es-DO:
+    september:
+      - sep
+  es-EC:
+    september:
+      - sep
+  es-GT:
+    september:
+      - sep
+  es-HN:
+    september:
+      - sep
+  es-MX:
+    relative-type-regex:
+      in \1 minute:
+        - en (\d+[.,]?\d*) min
+  es-NI:
+    september:
+      - sep
+  es-PA:
+    september:
+      - sep
+  es-PR:
+    september:
+      - sep
+  es-SV:
+    september:
+      - sep
+  es-US:
+    september:
+      - sep

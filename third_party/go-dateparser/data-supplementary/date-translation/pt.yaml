@@ -1,0 +1,60 @@
+skip: ["cerca", "de", "e", "às"]
+pertain: ["de"]
+
+sentence_splitter_group : 1
+
+monday:
+    - Segunda
+tuesday:
+    - Terça
+wednesday:
+    - Quarta
+thursday:
+    - Quinta
+friday:
+    - Sexta
+saturday:
+    - Sab
+
+september:
+    - Septembro
+
+year:
+    - anos
+month:
+    - meses
+week:
+    - semanas
+day:
+    - dias
+hour:
+    - horas
+minute:
+  - minutos
+  - m
+
+second:
+  - segundos
+  - s
+
+ago:
+    - atrás
+    - há
+in:
+    - em
+
+relative-type:
+    2 day ago:
+        - anteontem
+
+simplifications:
+    - uma: '1'
+    - um: '1'
+    - alguns segundos: 44 segundos
+relative-type-regex:
+  \1 minute ago:
+    - há (\d+[.,]?\d*) mins
+  in \1 minute:
+    - em (\d+[.,]?\d*) mins
+  in \1 second:
+    - em (\d+[.,]?\d*) segs

@@ -47,3 +47,6 @@ require (
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.12.1 // indirect
 )
+
+// Keep locale data out of short-lived plugin process initialization.
+replace github.com/markusmobius/go-dateparser => ./third_party/go-dateparser
