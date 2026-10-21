@@ -21,14 +21,16 @@ import (
 )
 
 type Config struct {
-	ID        string `json:"id"`
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
-	BaseURL   string `json:"base_url"`
-	Cookie    string `json:"cookie,omitempty"`
-	APIKey    string `json:"api_key,omitempty"`
-	UserAgent string `json:"ua,omitempty"`
-	Timeout   int    `json:"timeout,omitempty"`
+	// Injected from the encrypted host site options; never serialized by Config.
+	MessageToken string `json:"-"`
+	ID           string `json:"id"`
+	Kind         string `json:"kind"`
+	Name         string `json:"name"`
+	BaseURL      string `json:"base_url"`
+	Cookie       string `json:"cookie,omitempty"`
+	APIKey       string `json:"api_key,omitempty"`
+	UserAgent    string `json:"ua,omitempty"`
+	Timeout      int    `json:"timeout,omitempty"`
 }
 
 type Resource struct {
@@ -102,11 +104,11 @@ func (c *Client) CloseIdleConnections() {
 
 func New(c Config) (*Client, error) {
 	switch c.Kind {
-	case "mteam", "hhanclub", "ubits", "jiayuan", "1ptba", "nexusphp":
+	case "mteam", "hhanclub", "ubits", "jiayuan", "1ptba", "nexusphp", "rousi":
 	default:
 		return nil, errors.New("site_unsupported_kind")
 	}
-	if !configID.MatchString(c.ID) || strings.ContainsAny(c.Cookie+c.APIKey, "\r\n") || !validUserAgent(c.UserAgent) || c.Timeout < 0 || c.Timeout > 120 {
+	if !configID.MatchString(c.ID) || strings.ContainsAny(c.Cookie+c.APIKey+c.MessageToken, "\r\n") || !validUserAgent(c.UserAgent) || c.Timeout < 0 || c.Timeout > 120 {
 		return nil, errors.New("site_invalid_config")
 	}
 	if c.Kind == "nexusphp" {
@@ -131,6 +133,10 @@ func New(c Config) (*Client, error) {
 		}
 		if !mteamAPI(u) {
 			return nil, errors.New("site_mteam_origin_not_allowed")
+		}
+	} else if c.Kind == "rousi" {
+		if !rousiOrigin(u) {
+			return nil, errors.New("site_rousi_origin_not_allowed")
 		}
 	} else if c.Cookie == "" {
 		return nil, errors.New("site_cookie_required")
@@ -164,6 +170,9 @@ func (c *Client) Search(ctx context.Context, query string, page int) (SearchResu
 	if c.config.Kind == "mteam" {
 		return c.searchMTeam(ctx, query, page)
 	}
+	if c.config.Kind == "rousi" {
+		return c.searchRousi(ctx, query, page)
+	}
 	u := c.endpoint("torrents.php")
 	q := url.Values{"search": {query}, "page": {strconv.Itoa(page - 1)}, "search_area": {"0"}, "search_mode": {"0"}}
 	// Nexus' IMDb search area is only valid for an exact IMDb identifier.
@@ -192,6 +201,9 @@ func (c *Client) Torrent(ctx context.Context, resourceID string) ([]byte, error)
 	if c.config.Kind == "mteam" {
 		u, err = c.mteamTorrentURL(ctx, resourceID)
 		headers = nil // Token URLs and the CDN must never receive API credentials.
+	} else if c.config.Kind == "rousi" {
+		u, err = c.rousiTorrentURL(ctx, resourceID)
+		headers = nil
 	} else if c.config.Kind == "hhanclub" {
 		u, err = c.hhanTorrentURL(ctx, resourceID)
 	} else {
@@ -337,3 +349,16 @@ func (c *Client) allowedMaterial(u *url.URL) bool {
 
 // SetRequestGuard installs the owning application admission/quota check. Configure before use.
 func (c *Client) SetRequestGuard(guard func(context.Context) error) { c.requestGuard = guard }
+
+func rousiOrigin(u *url.URL) bool {
+	if u == nil || u.User != nil {
+		return false
+	}
+	switch strings.ToLower(u.Hostname()) {
+	case "rousi.pro", "www.rousi.pro":
+		return u.Scheme == "https" && (u.Port() == "" || u.Port() == "443")
+	case "localhost", "127.0.0.1", "::1":
+		return true
+	}
+	return false
+}

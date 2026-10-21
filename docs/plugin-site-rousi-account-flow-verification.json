@@ -1,0 +1,615 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "5e31c48",
+  "state": "Rousi_source_account_flow_and_native_adapter_verified_not_plugin_completion",
+  "actual_complete": 7,
+  "remaining": [
+    "All rare original dateparser/non-finite/large integer/unusual JSON cases are not universally proven.",
+    "Native search/download protocol is synthetic, not a real user site or full source TorrentInfo proof. Cross-origin material/CDN refused pending provenance.",
+    "Actual configured SitesHelper catalog/schema/alias context and integration.",
+    "SystemError/site message/statistic full producers/channels; source global setting import, final binding, execution handoff and remaining 16 plugins."
+  ],
+  "production_version": "0.4.8",
+  "deployed": false,
+  "python_runtime_added": false,
+  "old_and_production_mutations": 0,
+  "real_business_calls": 0,
+  "real_handoffs": 0,
+  "source_oracle": {
+    "cases": 31,
+    "sha256": "3f1119a1d511b63f993868558e5e073f403c1fcbeaf61dfbba97d9938a92f816",
+    "source_sha256": {
+      "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+      "app/helper/cloudflare.py": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+      "app/utils/site.py": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+      "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+      "app/modules/indexer/parser/__init__.py": "ef73038e897b57f20269ed4141ea0574a027a6e760c78a5577f0aeb9b3ca30ed",
+      "app/modules/indexer/parser/rousi.py": "b790cc7ead74857acf36b3e5c5d8f81f6c82a401e236b56926003e3089335f5e",
+      "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf"
+    },
+    "scope": "installed complete Rousi/BaseParser/Indexer DTO, mocked HTTP only; no real credentials, sites or message writes"
+  },
+  "checks": {
+    "sites-normal": {
+      "top_pass": 48,
+      "inclusive_pass": 290,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "bbe0a0a51376f14e4835b6fd9f5bea8a44adc66e42d634f5c705b1e71fffabb5"
+    },
+    "sites-race": {
+      "top_pass": 48,
+      "inclusive_pass": 290,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "d84cdf7b7c9381d02e6d7671b85e11ee90aaf90073c8a3dfc915b5be44358e56"
+    },
+    "related-normal": {
+      "top_pass": 63,
+      "inclusive_pass": 215,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "cbba4d13e38a3601e1df663ca0ac48c7e04e9ad210c49c80ae50f2cc21feb414"
+    },
+    "related-race-split-nexus": {
+      "top_pass": 1,
+      "inclusive_pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "6efab44394051dad7926521c184cccadc3ed4200bd35625de593f37c262ffbd1"
+    },
+    "related-race-split-mteam": {
+      "top_pass": 2,
+      "inclusive_pass": 25,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "3ce9c461b83637dd99e1af0af73c543bc27e7a0955513a9159d0ca43d0be9d97"
+    },
+    "related-race-split-rousi": {
+      "top_pass": 2,
+      "inclusive_pass": 33,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "c2198146002d106f64fd4479e089206578efe6bb275f9b45de96fed8f1c3fe41"
+    },
+    "related-race-split-remaining": {
+      "top_pass": 58,
+      "inclusive_pass": 129,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "63251d95e6354872971959f04f3962e02d8db234007b95f8c3d375402544ca50"
+    },
+    "actual-normal": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "fb656db049d835837940e18bd9802e754716dd911516b41280d04c702a248ecd"
+    },
+    "actual-race": {
+      "top_pass": 1,
+      "inclusive_pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "8d587103dbc0426fa27f7ee6582fb98ecf68d88e489bf3b41a3b7008be3416b3"
+    },
+    "nas-selected": {
+      "top_pass": 15,
+      "inclusive_pass": 118,
+      "fail": 0,
+      "skip": 0,
+      "sha256": "6c76acf7f79b8f741a340ab6fc5d012207b2dacb6918265a4c320feaeb11efcf"
+    }
+  },
+  "statuses": {
+    "sites-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 48,
+        "inclusive_pass": 290,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "top_pass": 48,
+        "inclusive_pass": 290,
+        "failures": []
+      }
+    ],
+    "related-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "top_pass": 63,
+        "inclusive_pass": 215,
+        "failures": []
+      },
+      {
+        "kind": "race",
+        "exit": 2,
+        "top_pass": 19,
+        "inclusive_pass": 167,
+        "failures": []
+      }
+    ],
+    "actual-status.json": [
+      {
+        "kind": "normal",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "fb656db049d835837940e18bd9802e754716dd911516b41280d04c702a248ecd",
+        "source_account_log_scan_passed": true
+      },
+      {
+        "kind": "race",
+        "exit": 0,
+        "terminal_pass": true,
+        "source_payload_saved": false,
+        "account_rows": 2133,
+        "log_sha256": "8d587103dbc0426fa27f7ee6582fb98ecf68d88e489bf3b41a3b7008be3416b3",
+        "source_account_log_scan_passed": true
+      }
+    ],
+    "build-normal-status.json": [
+      {
+        "name": "app",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate",
+        "exit": 0
+      },
+      {
+        "name": "handoff",
+        "exit": 0
+      },
+      {
+        "name": "sites",
+        "exit": 0
+      }
+    ],
+    "build-race-status.json": [
+      {
+        "name": "app-race",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-race",
+        "exit": 0
+      },
+      {
+        "name": "handoff-race",
+        "exit": 0
+      },
+      {
+        "name": "sites-race",
+        "exit": 0
+      }
+    ],
+    "build-linux-status.json": [
+      {
+        "name": "server-native",
+        "exit": 0
+      },
+      {
+        "name": "server-linux",
+        "exit": 0
+      },
+      {
+        "name": "statistic-migrate-linux",
+        "exit": 0
+      },
+      {
+        "name": "handoff-linux",
+        "exit": 0
+      },
+      {
+        "name": "server-linux-modernconly",
+        "exit": 0
+      },
+      {
+        "name": "app-linux",
+        "exit": 0
+      },
+      {
+        "name": "vet",
+        "exit": 0
+      },
+      {
+        "name": "mod-verify",
+        "exit": 0
+      }
+    ],
+    "related-race-exact-disjoint-groups": [
+      {
+        "group": "mteam",
+        "exit": 0,
+        "selected": [
+          "TestSiteStatisticMTeamOriginalRequestsActualSDKAndColdSnapshot",
+          "TestSiteStatisticMTeamRevocationStopsMarkReadAndSeeding"
+        ],
+        "top_pass": 2,
+        "inclusive_pass": 25,
+        "failures": [],
+        "sha256": "3ce9c461b83637dd99e1af0af73c543bc27e7a0955513a9159d0ca43d0be9d97"
+      },
+      {
+        "group": "nexus",
+        "exit": 0,
+        "selected": [
+          "TestSiteStatisticNexusOriginalRequestsActualSDKAndColdSnapshot"
+        ],
+        "top_pass": 1,
+        "inclusive_pass": 28,
+        "failures": [],
+        "sha256": "6efab44394051dad7926521c184cccadc3ed4200bd35625de593f37c262ffbd1"
+      },
+      {
+        "group": "rousi",
+        "exit": 0,
+        "selected": [
+          "TestSiteStatisticRousiOriginalRequestsActualSDKAndColdSnapshot",
+          "TestManagedRousiImportSecretsAndTokenRevocation"
+        ],
+        "top_pass": 2,
+        "inclusive_pass": 33,
+        "failures": [],
+        "sha256": "c2198146002d106f64fd4479e089206578efe6bb275f9b45de96fed8f1c3fe41"
+      },
+      {
+        "group": "remaining",
+        "exit": 0,
+        "selected": [
+          "TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch",
+          "TestPluginHTTPRevocationWhileCollectingRollsBackPublication",
+          "TestPluginHTTPOriginalASGIContractActualSDKAndCollection",
+          "TestPluginHTTPAuthorityPriorityAndNativeSessionBoundary",
+          "TestPluginHTTPSettingsTokenRemainsEncryptedAndRedacted",
+          "TestPluginHTTPForgeCannotChooseAnotherDomainOrAnonymousGrant",
+          "TestPluginHTTPRegistrationAndQueueTransaction",
+          "TestPluginHTTPInternalFlagPatchAndOldStoredManifest",
+          "TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot",
+          "TestSiteStatisticAPIRevocationBeforeMessageReadStopsSideEffect",
+          "TestSiteStatisticSourceDefaultsStaySeparateFromNativeUnknowns",
+          "TestSiteStatisticConnectionTestDoesNotReadMessages",
+          "TestSiteStatisticJobCancellationBeforeMessageReadStopsSideEffect",
+          "TestSiteStatisticSourceOutcomesActualSDKAndColdRecovery",
+          "TestSiteStatisticErrorDTOCannotOverwriteEarlierSameDay",
+          "TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt",
+          "TestPluginSiteStatisticLiveThreeSecondCallbackToNotification",
+          "TestSiteStatisticSnapshotBackfillActiveAndCredentialBoundary",
+          "TestSiteStatisticNoticeAndOnceRegistrationRollback",
+          "TestPluginSiteStatisticNotificationRollbackAndEnabledGate",
+          "TestPluginMergeSiteSwitchActuallyBindsSiteStatistic",
+          "TestSiteDataRefreshClockCoalescesAndDisables",
+          "TestPriorityRuleDownloadSortAffectsRealIdentitySearch",
+          "TestSourceAccountRowPreservesAllNullableSQLiteFields",
+          "TestSourceAccountEqualTimeNativeAndOriginalOrderIsTransitive",
+          "TestSourceAccountLatestMatchesOriginalSQLiteWithErrorsAndDuplicates",
+          "TestSourceAccountOrdinaryUnreviewedImportDoesNotClaimCoreHistory",
+          "TestSiteAccountDailyFailuresAndRecoveryMatchOriginal",
+          "TestSiteAccountFirstHTTPFailureIsRecordedAndAtomic",
+          "TestSiteAccountSnapshotEncryptionBindingAndLegacyRead",
+          "TestSiteAccountDateLookupRetainsInsertionOrderAcrossSiteSorting",
+          "TestSiteAccountImportedProjectionPreservesFractionsNullAndJSON",
+          "TestManagedSiteResourceBrowseEmptyQueryAndFailure",
+          "TestManagedSiteCRUDProtectsCredentialsAndAdaptation",
+          "TestManagedSiteFailedRefreshPreservesLastSuccessAndUnknown",
+          "TestManagedDownloaderOwnConfigurationAndReferenceGuard",
+          "TestManagedDownloaderTestRequiresRealProtocolNotHTTP200",
+          "TestManagedConnectionsHTTPCRUDAndSecretResponses",
+          "TestManagedCacheFingerprintsAreKeyedAndDoNotInvalidateIntentDestinations",
+          "TestLegacyUnkeyedConnectionCacheIsUnverifiedUntilRefreshed",
+          "TestSiteImportMoviePilotNumericIDsAndSpecificDomain",
+          "TestSiteImportSameOriginMigratesLegacyAdapterWithoutChangingID",
+          "TestManagedSiteEditKeepsLegacySameOriginCredentials",
+          "TestManagedSiteRejectsDuplicateOriginOnAddAndEdit",
+          "TestSiteImportSerialAndBatchKeepDifferentOrigins",
+          "TestSiteImportMoreThan32AndCancelledSaveIsAtomic",
+          "TestSiteStatisticsSnapshotAndFactCommitTogether",
+          "TestSiteStatisticsErrorDTOEmitsSourceRefreshFactsWhileJobFails",
+          "TestSiteRefreshEventRejectsDownloadAuthority",
+          "TestSiteImportMoviePilotNativeArrayAndPartialResults",
+          "TestSiteExportImportRoundTripAuthenticationAndPrivateResponses",
+          "TestSiteImportOriginAndCredentialBinding",
+          "TestSiteImportRejectsDuplicatesWithoutOverwritingOtherSites",
+          "TestSiteImportNativeMultipleOriginsRoundTrip",
+          "TestSiteImportMoviePilotMultipleNewOriginsRemainSeparate",
+          "TestSiteImportMalformedAndLimitedBodiesDoNotMutate",
+          "TestSiteImportMoviePilotOptionalNullFields",
+          "TestSiteExportEmptyDocumentHasExplicitImportResult"
+        ],
+        "top_pass": 58,
+        "inclusive_pass": 129,
+        "failures": [],
+        "sha256": "63251d95e6354872971959f04f3962e02d8db234007b95f8c3d375402544ca50"
+      }
+    ]
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed SiteStatistic 2133 account rows, original views, Go SDK and offline migration in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-site-rousi-account-6d7a1bc85da34c5a84da373a20044d87",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/site-rousi-account-6d7a1bc85da34c5a84da373a20044d87",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "6c76acf7f79b8f741a340ab6fc5d012207b2dacb6918265a4c320feaeb11efcf"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "54cdea6ada8573be4464256a4fc12fb1cd71378b23281ca8b41a2c30b0cc1ce6",
+      "statistic-migrate": "0a14edca4b29dd1a785295cca8ed4a14139ef2ff66e17c1195313236da82ec02",
+      "handoff": "39c7679f0d6c2b4fb837e2bc8068d475d8890093f24f869edf78e8bc93c32d89",
+      "outcomes.json": "a7af2afd71f09adcbf03c45a65ef894e1955ae9c9a6140cf4355b6f9a36e7798",
+      "mteam.json": "b59897ccfe9cd89ea558821e4df4ecdd7e7dbbb017b8eb2409cb2d33b2653cc5",
+      "nexus.json": "37b392aa1108ba4fc5bce862c15c40535c09a5dc72fbf649cd076fee65f89d4d",
+      "rousi.json": "3f1119a1d511b63f993868558e5e073f403c1fcbeaf61dfbba97d9938a92f816"
+    },
+    "container_id": "a36935964aaed424c8774603d4309907c5a890471a204820a36b884be16e18e7",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "live_source_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "production_hashes_after": {
+      "server_unchanged": true,
+      "compose_unchanged": true
+    },
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 126.99
+  },
+  "independent_cleanup": {
+    "container_id_absent": true,
+    "runtime_directory_absent": true
+  },
+  "drift": {
+    "frozen_source_files": 5075,
+    "main_compiler_inputs": 6034,
+    "frozen_drift": 0,
+    "compiler_drift": 0,
+    "product_focus_drift": 0,
+    "complete_compiler_system_headers_linker_closure_claimed": false
+  },
+  "source_manifest_sha256": "bd8ca34d44f82d7f61a9f5000f605c326505ed6ad46a188bb0dc43ff998d378c",
+  "compiler_manifest_sha256": "809ea0c98eb2b5ed2272043a40894f1ee0c38c12d9b3dd96678dd7755b463f23",
+  "focus": [
+    {
+      "path": "internal/app/plugin_site_statistic_rousi_test.go",
+      "sha256": "507f9646cfcde970ebc2cc4f4e392729a20e71a3c0175b8103183c8aae63bdc0"
+    },
+    {
+      "path": "internal/app/search_download.go",
+      "sha256": "6bdd45ebb92383df4e687517a2502823f4a9a968008b263daf8db6387ef2fe0c"
+    },
+    {
+      "path": "internal/app/site_manage.go",
+      "sha256": "e405cdbb52587f33d063d87847b2f4f2e0fde93ab32669345f9eeee71bfb585f"
+    },
+    {
+      "path": "internal/app/site_rousi_test.go",
+      "sha256": "8ec42749a7ae325dea76cdabb6d53dc9c25de1b44ffbd4cce009f4bc590818eb"
+    },
+    {
+      "path": "internal/app/site_transfer.go",
+      "sha256": "8edad9e015e201424b3b8af948834d956b1d27808c15be53c79f86ff143ffd08"
+    },
+    {
+      "path": "internal/sites/client.go",
+      "sha256": "ce8d025d00ed3f41293f8442e160935e2d8d5fe2072a69b986e3ff238a437b0e"
+    },
+    {
+      "path": "internal/sites/rousi.go",
+      "sha256": "b715dc47b2aefb80384efc988844d349b8bfbc8822a71fb889760ca508b0b24a"
+    },
+    {
+      "path": "internal/sites/rousi_test.go",
+      "sha256": "ac78923f8487f0e5e4553f3883a3c27c70fe2af04918c82481c281f6801abd9e"
+    },
+    {
+      "path": "internal/sites/stats.go",
+      "sha256": "3fb300544f3a2493e3ebfade85c8707e98d63a89a97a822d74dd2430ab9f6466"
+    },
+    {
+      "path": "internal/sites/userdata.go",
+      "sha256": "f49cd042ad05e5cc9d3fa40151779598773466103eb80e23cedacbedf3037f9f"
+    },
+    {
+      "path": "internal/sites/userdata_rousi.go",
+      "sha256": "abaede15ab18c8bd98d2841a97be2e5a203dee522960907a0ece35a4f4ffee58"
+    },
+    {
+      "path": "internal/sites/userdata_rousi_test.go",
+      "sha256": "18506be2150f0e86387e3923daf7c4f27a6f380eb3b3aa0736dca8b0ea0c8e36"
+    },
+    {
+      "path": "testdata/plugins/site-rousi-account-original-oracle.json",
+      "sha256": "3f1119a1d511b63f993868558e5e073f403c1fcbeaf61dfbba97d9938a92f816"
+    },
+    {
+      "path": "web/dist/assets/DownloaderConfigDialog-CWKE5A5V.js",
+      "sha256": "7745d067ce132431626021a7bb064af00e64ec59fbd3692971f366bf65bcdd74"
+    },
+    {
+      "path": "web/dist/assets/PluginAppPage-Djfmt7PS.js",
+      "sha256": "571b9cc563dd944a0f9c42bd2e40b764dd43d98b4c491ac689338926472b5bd8"
+    },
+    {
+      "path": "web/dist/assets/PluginConfigDialog-CA6aRtH1.js",
+      "sha256": "01d8ca0ec8f69374d89be930205c2e8f5eb73e5cac2dbf4fa5a7bd33c424d61d"
+    },
+    {
+      "path": "web/dist/assets/PluginCronField-DDBtSdfj.js",
+      "sha256": "bfb5f8e5dbcb37c1bc526274b0ca9fbb471cb8a32e450774c5da9a31ba672a97"
+    },
+    {
+      "path": "web/dist/assets/PluginDashboard-BX-aAD85.js",
+      "sha256": "cf49a2ee5788880311286789ffa7d37399bf354a4813360a9279110a732de721"
+    },
+    {
+      "path": "web/dist/assets/PluginDataDialog-UouLhL1U.js",
+      "sha256": "774ece0b157c54104bb3ce527613172d909b39a98fcee221fb1cef64e97a9e64"
+    },
+    {
+      "path": "web/dist/assets/PluginFolderDialog-CnokRmAi.js",
+      "sha256": "cc60afab7ca5f9817744a38b895faa9e36b460f224a5e69d6c4be81c29a64f0b"
+    },
+    {
+      "path": "web/dist/assets/PluginFormRenderer-sug3vJx3.js",
+      "sha256": "bcc3fb6db4f6024e33ed297d322d6e6f14c90616762b616f79a48dfbfcbcb6bd"
+    },
+    {
+      "path": "web/dist/assets/PluginLogDialog-Bt56geMc.js",
+      "sha256": "9b863ec46f59fac903aae167f88864f568f84b0396318c04a6a1d54aaf698c4a"
+    },
+    {
+      "path": "web/dist/assets/PluginPieChart-BjM3F9GS.js",
+      "sha256": "ada0211b5b188185460de49b1c911919c7a2c9711372b891251b05e63c9fb1e4"
+    },
+    {
+      "path": "web/dist/assets/PluginServices-1lOOgQri.js",
+      "sha256": "d1c3ea53cc9063e2f3c9d64d3723e1f79d18ac234049dec8edeffdfbef85e57a"
+    },
+    {
+      "path": "web/dist/assets/Plugins-BOYmJamC.js",
+      "sha256": "ff056046cd1054dc6ddb7714f49eada55e5d87abbd48f6d5e0174c7d1be8ae8d"
+    },
+    {
+      "path": "web/dist/assets/ResourceMetadataSettings-eSpjquBn.js",
+      "sha256": "28e661e84b6123769c84fe811d1ac1da6119e684922e899c87dfd82fa386d6f8"
+    },
+    {
+      "path": "web/dist/assets/RuleManager-CWfWoU4_.js",
+      "sha256": "2dd511448fdf658cc64c6515afaada5d5b873723b1659af8f9b16bd094450553"
+    },
+    {
+      "path": "web/dist/assets/ShortcutTools-YEHsdZg6.js",
+      "sha256": "a529d64985a0338b52d92e07800aff9414bbdec134862e7c47f75dbbfb624fd4"
+    },
+    {
+      "path": "web/dist/assets/index-BE03DKTN.js",
+      "sha256": "ce13529d53a86b4d4ec8f54213d0ebd1bd69702515fd478c56507b80082dbcbd"
+    },
+    {
+      "path": "web/dist/assets/index-O6Ym8wyT.css",
+      "sha256": "88fa555531387bd6227873a41ae9355e8e90cca59c5df5f86b590d455a8482d5"
+    },
+    {
+      "path": "web/dist/assets/plugin-remote-api-A1i0guTa.js",
+      "sha256": "9716166cb150a138a306919e0ed4761a138b04e4e6a00cb343ce498c48076343"
+    },
+    {
+      "path": "web/dist/index.html",
+      "sha256": "3d41a925211593447188e8e5e7b06894f8b70b24d69f2a454bd58d8e41a086ff"
+    },
+    {
+      "path": "web/src/components/SiteManager.vue",
+      "sha256": "19e9795e5dddc35467079caa9741854c563929d0b94e62a17d3bf0cfbb0065d8"
+    },
+    {
+      "path": "web/tests/site-management.test.mjs",
+      "sha256": "e3edd082e800d0b65202fde53a561c6c3ee6e0d3106c06e8b7cb3e66ebaf5904"
+    }
+  ],
+  "frontend": {
+    "changed": true,
+    "component_tests": 25,
+    "component_failures": 0,
+    "build_exit": 0,
+    "built_assets_in_frozen_Go_app": true,
+    "visual_user_acceptance_claimed": false
+  },
+  "source_history_rows": 2133,
+  "private_scan": {
+    "passed": true,
+    "files": 140,
+    "patterns": 2219,
+    "payload_saved": false
+  },
+  "combined_related_race_passed": false,
+  "related_race_groups_union_matches_normal": true,
+  "combined_timeout": {
+    "exit": 2,
+    "seconds": 600,
+    "top_pass": 19,
+    "inclusive_pass": 167,
+    "assertion_failures": 0,
+    "race_reports": 0,
+    "current_test_elapsed_seconds": 9,
+    "running_test": "TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt"
+  },
+  "retained_rounds": [
+    "r4 combined related race hit aggregate 600s timeout after19top167inclusive passes; no assertion/race report. Same unchanged binary rerun in four exact disjoint groups; combined timeout preserved and not counted as a pass.",
+    "r1: initial 28 original wire/27 SDK cases passed; expanded to 31 including no credentials full SDK, fractional ID and pagination types; native numeric identity corrected before frozen final checks.",
+    "r2: initial capture selected only 15 changed files; no build/test in that incomplete app. New complete r3/r4 used.",
+    "r3 UI-only build failed ENOENT because the original build scripts require sibling internal/plugins; fresh complete ui-project copy built successfully; final r4 includes those exact compiled assets."
+  ]
+}

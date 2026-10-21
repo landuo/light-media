@@ -624,3 +624,33 @@ test('single-site resource browse loads recent items, searches and paginates usi
   assert.equal(download.props.candidate.resource.site_id, 'one');
   assert.deepEqual(download.props.request, { query: 'Example', page: 2, browse: true });
 });
+
+test('Rousi edit opens API credentials and submits its independent mailbox token without exposing saved values', async (t) => {
+  const view = await mount(t, 'SiteManager', {
+    api: async (path, body, method, fixture) => {
+      if (path === '/sites/manage' && !body) {
+        Object.assign(fixture.data.sites[0].config, {
+          kind: 'rousi',
+          base_url: 'https://rousi.pro',
+          token: '',
+        });
+        fixture.data.sites[0].credential_state = { token: true };
+        return fixture.data;
+      }
+    },
+  });
+  await view.click('示例一 更多操作');
+  await view.click('编辑');
+  const token = view.label('Authorization');
+  assert.ok(token, 'API tab is available even when only the saved token exists');
+  assert.ok(!token.props.disabled);
+  assert.equal(token.props.type, 'password');
+  assert.equal(token.props.placeholder, '已保存，保留原配置');
+  await view.update('Authorization', 'synthetic-new-mailbox-token');
+  await view.update('API Key', 'synthetic-profile-key');
+  await view.submit();
+  const body = view.fixture.requests.find((r) => r.path === '/sites/manage' && r.body).body;
+  assert.equal(body.token, 'synthetic-new-mailbox-token');
+  assert.equal(body.api_key, 'synthetic-profile-key');
+  assert.equal(body.cookie, '');
+});

@@ -78,7 +78,11 @@ func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) 
 		if options.Location != nil {
 			at = at.In(options.Location)
 		}
-		s, d, e = c.sourceNexusUserStats(ctx, options, at)
+		if c.config.Kind == "rousi" {
+			s, d, e = c.sourceRousiUserStats(ctx, options, at)
+		} else {
+			s, d, e = c.sourceNexusUserStats(ctx, options, at)
+		}
 	}
 	if ctx.Err() != nil {
 		return s, nil, ctx.Err()

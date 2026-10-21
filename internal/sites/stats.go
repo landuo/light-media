@@ -58,6 +58,10 @@ func (c *Client) UserStatsWithOptions(ctx context.Context, options UserStatsOpti
 			stats.Error = &message
 		}
 	}()
+	if c.config.Kind == "rousi" {
+		value, _, e := c.SourceUserStats(ctx, options)
+		return value, e
+	}
 	ctx = logging.SiteContext(ctx, c.config.ID)
 	ctx, _ = logging.Target(ctx, "site")
 	s := UserStats{CapturedAt: time.Now().UTC().Format(time.RFC3339), Sources: map[string]string{}, Warnings: []string{}}

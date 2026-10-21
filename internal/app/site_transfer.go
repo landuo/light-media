@@ -58,6 +58,8 @@ func siteImportOrigin(value string) (kind, canonical, domain string, err error) 
 		}
 	case "m-team.io", "www.m-team.io", "kp.m-team.io", "api.m-team.io":
 		kind, domain, host = "mteam", "m-team.io", "api.m-team.io"
+	case "rousi.pro", "www.rousi.pro":
+		kind, domain, host = "rousi", "rousi.pro", "rousi.pro"
 	case "hhanclub.net", "www.hhanclub.net":
 		kind, domain = "hhanclub", "hhanclub.net"
 	case "ubits.club", "www.ubits.club":
@@ -113,8 +115,8 @@ func decodeSiteImportEntry(raw json.RawMessage, native bool) (SiteConfig, []stri
 	if in.Proxy || in.Render {
 		warnings = append(warnings, "代理与浏览器仿真选项已保留；当前连接不启用这两项能力")
 	}
-	if in.RSS != "" || in.Downloader != "" || in.Filter != "" || in.Token != "" {
-		warnings = append(warnings, "RSS、下载器绑定、过滤规则及 Token 已保留供导出；当前请求使用 Cookie 或站点专用 API Key")
+	if in.RSS != "" || in.Downloader != "" || in.Filter != "" {
+		warnings = append(warnings, "RSS、下载器绑定及过滤规则已保留供导出")
 	}
 	kind, canonical, actualDomain, err := siteImportOrigin(in.BaseURL)
 	if err != nil {
@@ -266,7 +268,7 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				report.Failed++
 			}
 		} else {
-			if (in.Kind == "mteam" && in.APIKey == "") || (in.Kind != "mteam" && in.Cookie == "") {
+			if (in.Kind == "mteam" && in.APIKey == "") || (in.Kind == "rousi" && in.APIKey == "" && in.Token == "") || (in.Kind != "mteam" && in.Kind != "rousi" && in.Cookie == "") {
 				result.Warnings = append(result.Warnings, "登录凭据尚未配置；已保存站点，补充凭据后再测试连接")
 			}
 			touched[in.ID] = true

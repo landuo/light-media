@@ -140,3 +140,6 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 
 
 2026-10-21：日期解析依赖改为本地 Go 分支，205 份语言构造函数延迟到首次查找并以 sync.Once 保护。仅初始化样本 RSS 从约 84 MiB 降至约 40 MiB；不表示首次解析后或生产峰值降低。依赖自身、站点与相关应用正常/race、2,133 条历史及 NAS 隔离验证分别计证，见 `site-dateparser-resource-initialization.txt` 与对应验证报告。未部署，正式迁移仍为 7/23。
+
+
+2026-10-21：肉丝 RousiPro 单独以 Go 实现账户资料和 Token 消息流程，原版参考采集扩至 31 场景；补原生搜索/签名种子材料获取、API-only 导入和站点 Token 编辑/在途撤销。直接协议、实际插件 SDK、冷恢复及隔离 NAS 分别验证；原生搜索/下载为自有合成协议验证，未访问用户站点或下载器，未部署。详细边界见 `plugin-site-rousi-account-flow.txt` 与验证 JSON；仍为 7/23，不能把本项算作 SiteStatistic 整体迁移完成。

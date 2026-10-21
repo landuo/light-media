@@ -194,7 +194,9 @@ function edit(row: any) {
   );
   menu.value = '';
   credentialTab.value =
-    row.config.kind === 'mteam' || row.credential_state?.api_key ? 'api' : 'cookie';
+    ['mteam', 'rousi'].includes(row.config.kind) || row.credential_state?.api_key
+      ? 'api'
+      : 'cookie';
 }
 async function save() {
   if (transferBusy.value || saving.value) return;
@@ -812,10 +814,11 @@ onUnmounted(() => {
                 ><span class="field-label">Authorization</span
                 ><input
                   v-model="editing.token"
+                  aria-label="Authorization"
                   type="password"
-                  disabled
+                  autocomplete="new-password"
                   :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
-                /><small>暂不支持 Token 认证</small></label
+                /><small>肉丝站点消息使用的 Authorization，支持 Bearer Token</small></label
               ><label class="half"
                 ><span class="field-label">API Key</span
                 ><input

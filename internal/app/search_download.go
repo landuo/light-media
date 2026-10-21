@@ -146,13 +146,15 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 		return bad("SITE_COOLDOWN", "站点因限流或认证异常正在冷却，请稍后重试")
 	}
 	proxySnapshot := a.Settings().ProxyHost
-	client, e := sites.New(s.Config)
+	siteConfig := s.Config
+	siteConfig.MessageToken = s.Token
+	client, e := sites.New(siteConfig)
 	if e == nil && s.Proxy {
 		proxy, proxyErr := resolveProxyConfig(proxySnapshot)
 		if proxyErr != nil {
 			return bad("SITE_PROXY", "全局代理配置无效")
 		}
-		client, e = sites.NewWithProxy(s.Config, proxy)
+		client, e = sites.NewWithProxy(siteConfig, proxy)
 	}
 	if e != nil {
 		return bad("SITE_CONFIG", e.Error())
