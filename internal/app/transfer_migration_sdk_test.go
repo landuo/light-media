@@ -130,6 +130,7 @@ func reviewedTransferSelectedSDK(t *testing.T, source reviewedTransferSnapshot, 
 	if _, e = a.pluginStore.ImportReviewedTorrentTransfer(ctx, m.ID, raw); e != nil {
 		t.Fatal("actual source SDK import failed", e)
 	}
+	ownedStoppedPluginSourceHandoff(t, a.pluginStore, source.PluginID)
 	// Every operational connection is owned before form, configuration or SDK IO.
 	reviewedIYUUOwnedSettings(t, a.Store, owned)
 	a.cfgMu.Lock()

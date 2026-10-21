@@ -20,6 +20,9 @@ func (c *seedRescueCall) guardTx(ctx context.Context, tx *sql.Tx) error {
 	if e := c.o.a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, c.o.instance); e != nil {
 		return e
 	}
+	if e := c.o.a.pluginStore.requirePluginExecutionHandoffTx(ctx, tx, c.o.instance); e != nil {
+		return e
+	}
 	var plugin, version string
 	var gen, revision int64
 	var installed, enabled bool

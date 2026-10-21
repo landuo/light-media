@@ -123,3 +123,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21 稀缺保种完整编号/下载器引用、原数据离线迁移与真实GoSDK/冷恢复、原Vue界面及NAS资源限制验证见[说明](plugin-seed-rescue-reviewed-migration.txt)和[逐项记录](plugin-seed-rescue-reviewed-migration-verification.json)。这是开发交付，尚未生产迁移或切换，正式完成仍7/23。
 
 2026-10-21 自动转移做种与音乐分身的原配置/422+36项历史、独立下载器引用、离线CLI、原表单HTTP及实际Go SDK/qB→TR与冷启动保护，见[迁移说明](plugin-transfer-reviewed-migration.txt)和[逐项验证](plugin-transfer-reviewed-migration-verification.json)。当前生产尚未加入备份目录只读挂载、未切换两边调度，正式完成仍7/23。
+
+2026-10-21 四个已审查迁移实例的执行交接保护见[说明](plugin-execution-handoff.txt)和[逐项验证](plugin-execution-handoff-verification.json)。缺少原程序停止与最终来源核验时，不允许迁入实例执行；普通新建实例保留原流程。真实原版仍运行，未签发真实交接、未改原服务或部署，正式完成仍为7/23。

@@ -1,0 +1,759 @@
+{
+  "version": 1,
+  "date": "2026-10-21",
+  "base_commit": "f158f15750bdcfdbd153eff1b650b62751a6fb29",
+  "state": "four_reviewed_legacy_execution_handoff_guard_verified_not_production_delivered",
+  "canonical_instances": [
+    "IYUUAutoSeed",
+    "SeedRescue",
+    "TorrentTransfer",
+    "TorrentTransfermusic"
+  ],
+  "actual_complete": 7,
+  "remaining_count": 16,
+  "production_version": "0.4.8",
+  "production_deployment": false,
+  "production_writes_performed": 0,
+  "original_writes_performed": 0,
+  "accepted_real_handoffs": 0,
+  "user_downloader_or_site_business_calls": 0,
+  "python_runtime_dependency_added": false,
+  "frontend_or_version_changed": false,
+  "checks": {
+    "related_normal": {
+      "exit": 0,
+      "terminal_pass": true,
+      "top_level_passed": 72,
+      "including_subtests_passed": 136,
+      "skipped": [
+        "TestSeedRescueHistoryImportSelectedStdin"
+      ],
+      "failures": [],
+      "log_sha256": "e6085ed1786f656796f380084e16c9a3fdaec45bf79bfa6ce37e9ed8be485c37"
+    },
+    "related_race_partitioned_same_selection": {
+      "reason": "aggregate package600s timeout after65 completed top tests; partition same frozen race binary and identical73-name union without dropping cases or extending limits",
+      "selection": "^Test(PluginSourceHandoff|Transfer|PluginStore.*Import|SeedRescue|PluginSiteSwitch)",
+      "expected_names": [
+        "TestTransferHistoryProjectsDurablePerFileProgressAndPagination",
+        "TestTransferHistoryOnlyContainsExecutedSelections",
+        "TestTransferHistoryDeletionDefaultsToRecordOnly",
+        "TestTransferHistoryDeletionHonorsIndependentFileChoices",
+        "TestTransferHistoryDeletionRejectsChangedOrDownloaderSourceBeforeTargetDeletion",
+        "TestTransferHistoryDeletionResumesQuarantinedSource",
+        "TestTransferHistoryDeletionPreservesActualSeedingSource",
+        "TestTransferHistoryDeletionCannotRemoveReplacementAsset",
+        "TestTransferHistoryDeletionResumesQuarantinedTarget",
+        "TestPluginSourceHandoffRejectsDataImportedBeforeStop",
+        "TestPluginSourceHandoffRejectsMissingAndRunningObservations",
+        "TestSeedRescueActualHTTPAbortDuringSDKReadIsTerminalNoEffect",
+        "TestSeedRescueActualSDKLegacyRSSListProjectionAndRetain",
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestSeedRescueIndexerIncludesConfiguredTarget",
+        "TestSeedRescueDeletedOrChangedEvidenceNeverAuthorizesReset",
+        "TestSeedRescueStartedAndOwnerFactAreAtomicAndColdNotReplayed",
+        "TestSeedRescueOriginalResetAndBulkUninstallRetirement",
+        "TestSeedRescueReadSDKCannotRequestMutationOrSecretInput",
+        "TestSeedRescueOriginalImportCannotActivateCoincidentNativeID",
+        "TestSeedRescueMissingProtocolPreservesColdPendingAndBlocksHost",
+        "TestSeedRescueActualSDKConfigureFormSidebarAndCold",
+        "TestSeedRescueActualHTTPAllSixRoutesAndNativeAdd",
+        "TestSeedRescueActualLostAddACKColdOnlyObservesSameHash",
+        "TestSeedRescueBusyAPIAndReadDoNotWaitForOwner",
+        "TestPluginSiteSwitchCommittedSaveSurvivesActualLostSDKReply",
+        "TestPluginSiteSwitchColdFailedCommittedReceiptRecoversOriginalIdentity",
+        "TestPluginSiteSwitchColdFailedWithoutReceiptDoesNotInventSuccess",
+        "TestPluginSiteSwitchColdFailedCorruptCommittedReceiptRefusesRecovery",
+        "TestPluginSiteSwitchNormalizationKeepsTwoAdmissionsAndColdRecovery",
+        "TestPluginSiteSwitchLegacyTransferredAdmissionsDoNotDriftOnNormalization",
+        "TestPluginSiteSwitchNormalizationReceiptAuthenticatesOriginalInput",
+        "TestPluginSiteSwitchNormalizationRollbackRetainsQueuedIdentityAndWatcher",
+        "TestPluginSiteSwitchRealSDKCoreScopesAndOriginalExplicitOverride",
+        "TestPluginSiteSwitchFollowUsesInitializedFlagsAndReflectsExternalEdits",
+        "TestPluginSiteSwitchPeerTransactionProtocolFixtureAndUnavailableRollback",
+        "TestPluginSiteSwitchReceiptFailureRollsBackWholeApply",
+        "TestPluginSiteSwitchHostRejectsCrossScopeAndOldConfig",
+        "TestPluginSiteSwitchConcurrentSiteEditsAndScopedReads",
+        "TestPluginSiteSwitchWatcherSurvivesRestartWithoutReplayingSelections",
+        "TestPluginSiteSwitchSelectionsSurviveUnrelatedSettingsSave",
+        "TestPluginSiteSwitchActualNumericFormAndCorePeerNamespaces",
+        "TestPluginSiteSwitchTypedDeleteDuplicateAndSameOriginReadd",
+        "TestPluginSiteSwitchSourceProtocolPreservesCustomCollisionAbsentAndDisabled",
+        "TestPluginSiteSwitchOriginalImportCannotUseCoincidentNativeIDOrClaimLegacy",
+        "TestPluginSiteSwitchUnclaimedColdStartPreservesPendingAndInitializedWatcher",
+        "TestPluginSiteSwitchLegacyTransitionExplicitSelectionsAndStaleSource",
+        "TestPluginSiteSwitchLegacyTransitionRollbackCoversWatcherRunsProofAndQueue",
+        "TestPluginSiteSwitchLegacyTransitionActualSDKColdReopenAndIdempotentReceipt",
+        "TestPluginSiteSwitchProtocolInstallResetReinstallAndTamperedScope",
+        "TestPluginSiteSwitchSourceCoreStringCannotBeGuessedOrPartiallyApplied",
+        "TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates",
+        "TestPluginStoreMigrationReceiptFailureRollsBackWholeImport",
+        "TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues",
+        "TestTransferActualPrequeuedClaimedPreparedUnknown",
+        "TestTransferActualRemovedDownloaderKeepsOldRecheckProof",
+        "TestTransferActualMixedDownloaders",
+        "TestTransferActualPrivateNoticeAndLogOwnership",
+        "TestTransferCatalogPreservesCurrentSixteenPlugins",
+        "TestTransferActualAppSDKInstallConfigRunDualIdentity",
+        "TestTransferActualUnknownAdmissionAndColdRecovery",
+        "TestTransferActualSourceFailureCanBeCorrected",
+        "TestTransferActualOriginalImportRemainsUnclaimed",
+        "TestTransferOriginalRetainedReinstallDoesNotClaimNativeNames",
+        "TestTransferActualOnceAndColdRecheck",
+        "TestTransferActualCloneRunsIndependentSameHistoryKey",
+        "TestTransferActualLifecycleAndMissingEvidence",
+        "TestTransferActualInactiveAndLostHostReply",
+        "TestSeedRescueImportedHistoryHasAuthenticatedColdOwnerState",
+        "TestSeedRescueHistoryImportAtomicFailuresAndDamagedGenesis",
+        "TestSeedRescueHistoryImportKeepsOtherInstancesAndEmptyOwner",
+        "TestSeedRescueAliasesDoNotConfuseNativeAndOriginalNumbers",
+        "TestTransferReviewedOptionsKeepStableIDAndOriginalValue"
+      ],
+      "groups": [
+        {
+          "part": 1,
+          "names": [
+            "TestTransferActualLifecycleAndMissingEvidence",
+            "TestPluginSiteSwitchLegacyTransitionExplicitSelectionsAndStaleSource",
+            "TestPluginSiteSwitchLegacyTransitionRollbackCoversWatcherRunsProofAndQueue",
+            "TestTransferActualCloneRunsIndependentSameHistoryKey",
+            "TestSeedRescueActualSDKLegacyRSSListProjectionAndRetain",
+            "TestTransferActualSourceFailureCanBeCorrected",
+            "TestPluginSiteSwitchSourceProtocolPreservesCustomCollisionAbsentAndDisabled",
+            "TestPluginSiteSwitchRealSDKCoreScopesAndOriginalExplicitOverride",
+            "TestPluginSiteSwitchPeerTransactionProtocolFixtureAndUnavailableRollback",
+            "TestSeedRescueActualHTTPAbortDuringSDKReadIsTerminalNoEffect",
+            "TestPluginSiteSwitchSelectionsSurviveUnrelatedSettingsSave",
+            "TestSeedRescueBusyAPIAndReadDoNotWaitForOwner",
+            "TestPluginSiteSwitchNormalizationRollbackRetainsQueuedIdentityAndWatcher",
+            "TestPluginSiteSwitchSourceCoreStringCannotBeGuessedOrPartiallyApplied",
+            "TestPluginSiteSwitchOriginalImportCannotUseCoincidentNativeIDOrClaimLegacy",
+            "TestSeedRescueOriginalImportCannotActivateCoincidentNativeID",
+            "TestSeedRescueImportedHistoryHasAuthenticatedColdOwnerState",
+            "TestTransferHistoryDeletionCannotRemoveReplacementAsset",
+            "TestTransferHistoryOnlyContainsExecutedSelections",
+            "TestSeedRescueIndexerIncludesConfiguredTarget",
+            "TestPluginSourceHandoffRejectsMissingAndRunningObservations",
+            "TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates",
+            "TestTransferActualOriginalImportRemainsUnclaimed"
+          ],
+          "exit": 0,
+          "passed": true,
+          "top_passed": 23,
+          "top_skipped": [],
+          "including_subtests_passed": 46,
+          "log": "related-race-part-1.log",
+          "sha256": "52cac87f61233e6e7b39dca9a9c2ed3c8ce723c0e61c297c3e93e9c270fad578",
+          "elapsed_seconds": 214.9
+        },
+        {
+          "part": 2,
+          "names": [
+            "TestTransferActualUnknownAdmissionAndColdRecovery",
+            "TestTransferHistoryProjectsDurablePerFileProgressAndPagination",
+            "TestSeedRescueActualLostAddACKColdOnlyObservesSameHash",
+            "TestSeedRescueDeletedOrChangedEvidenceNeverAuthorizesReset",
+            "TestTransferActualMixedDownloaders",
+            "TestSeedRescueHistoryImportAtomicFailuresAndDamagedGenesis",
+            "TestTransferActualRemovedDownloaderKeepsOldRecheckProof",
+            "TestPluginSiteSwitchActualNumericFormAndCorePeerNamespaces",
+            "TestTransferHistoryDeletionHonorsIndependentFileChoices",
+            "TestPluginSiteSwitchLegacyTransferredAdmissionsDoNotDriftOnNormalization",
+            "TestPluginSiteSwitchConcurrentSiteEditsAndScopedReads",
+            "TestSeedRescueActualSDKConfigureFormSidebarAndCold",
+            "TestPluginSiteSwitchColdFailedCommittedReceiptRecoversOriginalIdentity",
+            "TestPluginSiteSwitchReceiptFailureRollsBackWholeApply",
+            "TestPluginSiteSwitchColdFailedWithoutReceiptDoesNotInventSuccess",
+            "TestPluginSiteSwitchHostRejectsCrossScopeAndOldConfig",
+            "TestTransferHistoryDeletionRejectsChangedOrDownloaderSourceBeforeTargetDeletion",
+            "TestTransferHistoryDeletionDefaultsToRecordOnly",
+            "TestTransferHistoryDeletionResumesQuarantinedSource",
+            "TestTransferHistoryDeletionResumesQuarantinedTarget",
+            "TestTransferOriginalRetainedReinstallDoesNotClaimNativeNames",
+            "TestPluginStoreMigrationReceiptFailureRollsBackWholeImport",
+            "TestSeedRescueAliasesDoNotConfuseNativeAndOriginalNumbers"
+          ],
+          "exit": 0,
+          "passed": true,
+          "top_passed": 23,
+          "top_skipped": [],
+          "including_subtests_passed": 51,
+          "log": "related-race-part-2.log",
+          "sha256": "618d31b24fcc1e040c2c0cf01fee8ecf5018d914da1a1736ea2b28947f45ebe6",
+          "elapsed_seconds": 189.12
+        },
+        {
+          "part": 3,
+          "names": [
+            "TestTransferActualPrequeuedClaimedPreparedUnknown",
+            "TestTransferActualAppSDKInstallConfigRunDualIdentity",
+            "TestTransferActualOnceAndColdRecheck",
+            "TestSeedRescueActualHTTPAllSixRoutesAndNativeAdd",
+            "TestTransferActualInactiveAndLostHostReply",
+            "TestPluginSiteSwitchTypedDeleteDuplicateAndSameOriginReadd",
+            "TestPluginSiteSwitchNormalizationKeepsTwoAdmissionsAndColdRecovery",
+            "TestTransferActualPrivateNoticeAndLogOwnership",
+            "TestSeedRescueOriginalResetAndBulkUninstallRetirement",
+            "TestPluginSiteSwitchFollowUsesInitializedFlagsAndReflectsExternalEdits",
+            "TestPluginSiteSwitchWatcherSurvivesRestartWithoutReplayingSelections",
+            "TestPluginSiteSwitchColdFailedCorruptCommittedReceiptRefusesRecovery",
+            "TestPluginSiteSwitchCommittedSaveSurvivesActualLostSDKReply",
+            "TestPluginSiteSwitchLegacyTransitionActualSDKColdReopenAndIdempotentReceipt",
+            "TestPluginSiteSwitchNormalizationReceiptAuthenticatesOriginalInput",
+            "TestPluginSiteSwitchUnclaimedColdStartPreservesPendingAndInitializedWatcher",
+            "TestSeedRescueStartedAndOwnerFactAreAtomicAndColdNotReplayed",
+            "TestSeedRescueReadSDKCannotRequestMutationOrSecretInput",
+            "TestTransferHistoryDeletionPreservesActualSeedingSource",
+            "TestSeedRescueHistoryImportKeepsOtherInstancesAndEmptyOwner",
+            "TestSeedRescueMissingProtocolPreservesColdPendingAndBlocksHost",
+            "TestPluginSiteSwitchProtocolInstallResetReinstallAndTamperedScope",
+            "TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues",
+            "TestPluginSourceHandoffRejectsDataImportedBeforeStop",
+            "TestSeedRescueHistoryImportSelectedStdin",
+            "TestTransferCatalogPreservesCurrentSixteenPlugins",
+            "TestTransferReviewedOptionsKeepStableIDAndOriginalValue"
+          ],
+          "exit": 0,
+          "passed": true,
+          "top_passed": 26,
+          "top_skipped": [
+            "TestSeedRescueHistoryImportSelectedStdin"
+          ],
+          "including_subtests_passed": 39,
+          "log": "related-race-part-3.log",
+          "sha256": "701449bd13c61388447feeff06bef3b90a0e0d772f73503508a471f029831f7b",
+          "elapsed_seconds": 223.36
+        }
+      ],
+      "passed": true,
+      "top_passed": 72,
+      "including_subtests_passed": 136
+    },
+    "actual_source_owned": {
+      "transfer_main_and_music_normal": {
+        "exit": 0,
+        "terminal_pass": true,
+        "top_level_passed": 1,
+        "including_subtests_passed": 40,
+        "skipped": [],
+        "failures": [],
+        "log_sha256": "c21ab8c4003581a1f4f9b73554502a845ee7e6a13d51b3c242922d85cd9b0728"
+      },
+      "transfer_main_and_music_race": {
+        "exit": 0,
+        "terminal_pass": true,
+        "top_level_passed": 1,
+        "including_subtests_passed": 40,
+        "skipped": [],
+        "failures": [],
+        "log_sha256": "ca725d73c700e29b8fb4cdf24ca6ce00cef6ad7d36f79cf5607bd3cc87d1c86c"
+      },
+      "iyuu_normal": {
+        "exit": 0,
+        "terminal_pass": true,
+        "top_level_passed": 1,
+        "including_subtests_passed": 12,
+        "skipped": [],
+        "failures": [],
+        "log_sha256": "5246685731f57f456062110fe0f4500939c0bcbd3382625f801d480fbc38e36e"
+      },
+      "iyuu_race": {
+        "exit": 0,
+        "terminal_pass": true,
+        "top_level_passed": 1,
+        "including_subtests_passed": 12,
+        "skipped": [],
+        "failures": [],
+        "log_sha256": "9d0fa0889c4e7ee8a2a507d08955c9bf3c4182dec624977787cdea424dc2e2b8"
+      },
+      "seed_rescue_normal": {
+        "exit": 0,
+        "terminal_pass": true,
+        "top_level_passed": 1,
+        "including_subtests_passed": 22,
+        "skipped": [],
+        "failures": [],
+        "log_sha256": "d1c95f4604f73d7790f18de047c718cc0ebf1a3e2a5bbe77420770a9d9da79cf"
+      },
+      "seed_rescue_race": {
+        "exit": 0,
+        "terminal_pass": true,
+        "top_level_passed": 1,
+        "including_subtests_passed": 22,
+        "skipped": [],
+        "failures": [],
+        "log_sha256": "b5d9a17776a1e3a066890fedae0259ba7144656991ad3b7dae3132e221865a22"
+      }
+    },
+    "owned_NAS_transfer_40": {
+      "exit": 0,
+      "terminal_pass": true,
+      "top_level_passed": 1,
+      "including_subtests_passed": 40,
+      "skipped": [],
+      "failures": [],
+      "log_sha256": "bbd7b23fbc5857287aa5d6fc969916fb17bad3445fc9200cc5876b2897787426"
+    },
+    "readonly_live_original_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    }
+  },
+  "nas": {
+    "state": "passed_owned_linux_business",
+    "scope": "actual reviewed TorrentTransfer + music data and Go SDK in one owned Linux container",
+    "private_payload_saved": false,
+    "network": "none",
+    "cpu_limit": 1,
+    "memory_limit": 536870912,
+    "created_container": "light-media-execution-handoff-84987f12e4b9467fb03419ecec1aa7a6",
+    "runtime_directory": "/vol2/1000/docker/light-media/owned-tests/execution-handoff-84987f12e4b9467fb03419ecec1aa7a6",
+    "runs": [
+      {
+        "exit": 0,
+        "passed": true,
+        "source_secret_scan_passed": true,
+        "log_sha256": "bbd7b23fbc5857287aa5d6fc969916fb17bad3445fc9200cc5876b2897787426"
+      }
+    ],
+    "before": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "binaries": {
+      "app.test": "d6a92ea694373b01c9b29138699b9286f8b784502cacdad932a4048c56ce5fe5",
+      "transfer-migrate": "15156c206136dc9a27e9824abfdaf72b3be45de6662598a9df880c0b76d66dff",
+      "handoff": "61804216af26b33310ec86b004d42caccad4e2b90e88e648a032ed244248d604"
+    },
+    "container_id": "25e29cd97d38c47ffe21563e7fdd70f78f3216963f4c76f400c40a0cdca89d9d",
+    "execution": {
+      "exit_code": 0,
+      "oom_killed": false,
+      "running": false,
+      "network": "none",
+      "cpu_limit": 1000000000,
+      "memory_limit": 536870912
+    },
+    "live_source_observer": {
+      "exit": 1,
+      "refused_running_source": true,
+      "stdout_bytes": 0,
+      "source_mutations": 0,
+      "accepted_real_handoffs": 0
+    },
+    "owned_container_removed": true,
+    "owned_runtime_directory_removed": true,
+    "after": {
+      "light-media": {
+        "id": "beaede83591e8ed6d25bc532ec2b7bd537df0b1c0a2f8a5e7ba47eb3047df9e6",
+        "pid": 1904492,
+        "started": "2026-10-20T19:52:40.519684989Z",
+        "restarts": 0,
+        "running": true
+      },
+      "moviepilot": {
+        "id": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+        "pid": 6411,
+        "started": "2026-10-17T04:55:22.891471526Z",
+        "restarts": 0,
+        "running": true
+      },
+      "qb": {
+        "id": "98c52871715bbc132c51d73b1664617719ca52bc81b0c2afb58e6847f42ea795",
+        "pid": 1938974,
+        "started": "2026-10-20T21:30:08.603266414Z",
+        "restarts": 4,
+        "running": true
+      }
+    },
+    "original_and_production_containers_unchanged": true,
+    "elapsed_seconds": 24.39
+  },
+  "independent_cleanup": {
+    "owned_container_absent": true,
+    "owned_runtime_directory_absent": true,
+    "production_binary_and_compose_unchanged": true,
+    "writes_performed": 0
+  },
+  "inputs": {
+    "prior_audit_tool_error": "First audit incorrectly resolved logical repo/ compiler paths against cwd; failed assertion retained separately. No source mutation.",
+    "SOURCE-INPUTS.json": {
+      "files": 4099,
+      "manifest_sha256": "96053a3c309ddc1c99761c09518dc8ef07aa92a5327649f22fb6c05c5cf7d43c",
+      "missing_or_changed": []
+    },
+    "COMPILER-INPUTS.json": {
+      "files": 5610,
+      "manifest_sha256": "608c0346a5b3df0e20fe940f5ed4f488be134159e16feb8f9a2d326901727e15",
+      "missing_or_changed": []
+    },
+    "extra_source_files": [],
+    "main_focus_changed": [],
+    "final_after_all_readers": {
+      "SOURCE-INPUTS.json": {
+        "files": 4099,
+        "missing_or_changed": []
+      },
+      "COMPILER-INPUTS.json": {
+        "files": 5610,
+        "missing_or_changed": []
+      },
+      "extra_source_files": [],
+      "main_focus_changed": []
+    }
+  },
+  "focus": [
+    {
+      "path": "internal/app/plugin_migration_handoff.go",
+      "sha256": "6ed0e2338d19da66fb4f38aded76c1cb9b3d05e9d38c84019486ce9d14844ed8"
+    },
+    {
+      "path": "internal/app/plugin_migration_handoff_test.go",
+      "sha256": "9fc138a6b78002fad24b0f0f17848b08e206e2abfc061977f99f0d2f06ed3ea2"
+    },
+    {
+      "path": "internal/app/plugin_transfer_gates.go",
+      "sha256": "14c2215895962a07741acca585ff511422a52d7c07f440b5fe77e94c1af11ec5"
+    },
+    {
+      "path": "internal/app/plugin_seed_rescue_host.go",
+      "sha256": "0f109611f77f2b183084df4d7776c34b7ddf0bc580aa4f96e1b032f78021f8be"
+    },
+    {
+      "path": "internal/app/plugin_runtime.go",
+      "sha256": "fd220ee4dbd801c55bf0b7deeedbc7bf5df03f05379c7bd5438b7714096621a9"
+    },
+    {
+      "path": "internal/app/iyuu_migration_sdk_test.go",
+      "sha256": "7184f35c8ba06a6f06b8058037bfbdfb8a083a7a2d1c784028f3dfd44f26f055"
+    },
+    {
+      "path": "internal/app/seed_rescue_migration_sdk_test.go",
+      "sha256": "b1e8f9ff5d994e4cde84e700191adde23e8ada1c724092028cb0d5376d2d5954"
+    },
+    {
+      "path": "internal/app/transfer_migration_sdk_test.go",
+      "sha256": "9f798148cd765e82336919e8e475e92dd3a23540987e51a9f72cac758081a62d"
+    },
+    {
+      "path": "internal/app/transfer_migration_test.go",
+      "sha256": "7be2cb762e13013faeaaf927158cb71a09ca146180ccc83133de3e1759ea435c"
+    },
+    {
+      "path": "cmd/plugin-handoff-owned/main.go",
+      "sha256": "3be237a9873a8878bed462be78daedf2f16e8d97d0ba72b731cbf2c589cfd2ff"
+    },
+    {
+      "path": "cmd/plugin-handoff-owned/observe.go",
+      "sha256": "d3ba02abbb4b6fb69d941b9321dcfbc7a079494a24c6db1f4e03c7b27f3d6ef6"
+    },
+    {
+      "path": "cmd/plugin-handoff-owned/observe_test.go",
+      "sha256": "fe3633a4f99a25a80a5a422534c03f4426bb0dc7e772728ff8db6416c5596ba8"
+    }
+  ],
+  "builds": {
+    "normal_and_race_app_and_all_four_offline_CLIs": 0,
+    "native_and_linux_CGO0_server": 0,
+    "linux_handoff_and_transfer_CLI_and_app_test": 0,
+    "observer_unit_normal_and_race": 0,
+    "vet": 0,
+    "module_verify": 0,
+    "status_source": "recorded terminal build handles 21522,39122,83239; logs archived individually"
+  },
+  "secret_scan": {
+    "source_secret_variants_checked": 8,
+    "scanned_proof_files": 47,
+    "scan_passed": true,
+    "private_payload_saved": false,
+    "proof_files": [
+      {
+        "path": "SOURCE-INPUTS.json",
+        "sha256": "96053a3c309ddc1c99761c09518dc8ef07aa92a5327649f22fb6c05c5cf7d43c",
+        "bytes": 695733
+      },
+      {
+        "path": "COMPILER-INPUTS.json",
+        "sha256": "608c0346a5b3df0e20fe940f5ed4f488be134159e16feb8f9a2d326901727e15",
+        "bytes": 968031
+      },
+      {
+        "path": "FOCUS.json",
+        "sha256": "86a8e174eaef053a50ab30dea85ed774b1bdc5a125ebc30551e8aa7f6720811f",
+        "bytes": 540
+      },
+      {
+        "path": "DRIFT-REVIEW.json",
+        "sha256": "534a8e8a780950968f8bfdf5d19f56f65d5add7e8369bd863493ea7489fc7801",
+        "bytes": 565
+      },
+      {
+        "path": "DRIFT-REVIEW-PATH-RESOLUTION-ERROR.json",
+        "sha256": "234d7f027607cd2226cd01071e9a0596a8acb1f8b304d31e837b67bbaee66d9b",
+        "bytes": 124352
+      },
+      {
+        "path": "test.log",
+        "sha256": "e6085ed1786f656796f380084e16c9a3fdaec45bf79bfa6ce37e9ed8be485c37",
+        "bytes": 415875
+      },
+      {
+        "path": "test-race.log",
+        "sha256": "eb41200ab71f63d814a72ad17e7d77796658719dcfb5637e2c7f6c2145f39cd6",
+        "bytes": 412645
+      },
+      {
+        "path": "normal-selected.log",
+        "sha256": "c21ab8c4003581a1f4f9b73554502a845ee7e6a13d51b3c242922d85cd9b0728",
+        "bytes": 32741
+      },
+      {
+        "path": "race-selected.log",
+        "sha256": "ca725d73c700e29b8fb4cdf24ca6ce00cef6ad7d36f79cf5607bd3cc87d1c86c",
+        "bytes": 32757
+      },
+      {
+        "path": "seed-normal-selected.log",
+        "sha256": "d1c95f4604f73d7790f18de047c718cc0ebf1a3e2a5bbe77420770a9d9da79cf",
+        "bytes": 49547
+      },
+      {
+        "path": "seed-race-selected.log",
+        "sha256": "b5d9a17776a1e3a066890fedae0259ba7144656991ad3b7dae3132e221865a22",
+        "bytes": 49575
+      },
+      {
+        "path": "iyuu-normal-selected.log",
+        "sha256": "5246685731f57f456062110fe0f4500939c0bcbd3382625f801d480fbc38e36e",
+        "bytes": 16732
+      },
+      {
+        "path": "iyuu-race-selected.log",
+        "sha256": "9d0fa0889c4e7ee8a2a507d08955c9bf3c4182dec624977787cdea424dc2e2b8",
+        "bytes": 16737
+      },
+      {
+        "path": "nas-selected.log",
+        "sha256": "bbd7b23fbc5857287aa5d6fc969916fb17bad3445fc9200cc5876b2897787426",
+        "bytes": 32677
+      },
+      {
+        "path": "selected-verification.json",
+        "sha256": "e4fb366d2cd8c220fd1909e06c364120e35f9ff3a109aed9111fc8b46e786bcf",
+        "bytes": 656
+      },
+      {
+        "path": "seed-selected-verification.json",
+        "sha256": "0cb380b60edb2722b1402ec73534642ced2e9f02821c11f930a45a9a4af5bdf7",
+        "bytes": 631
+      },
+      {
+        "path": "iyuu-selected-verification.json",
+        "sha256": "6db4519fd005246ba58db695dedf7da50db2e419b02b1d33f3d73157211107a4",
+        "bytes": 631
+      },
+      {
+        "path": "nas-verification.json",
+        "sha256": "3ef5355eca908d1acfbac609aa5b9362fa2db89c3e2613d2811434b3716709bd",
+        "bytes": 2867
+      },
+      {
+        "path": "nas-independent-cleanup.json",
+        "sha256": "d0e4e2ddece99bd10c6ba4c6cc5a02a26fa4e8564c3f3559cb8fcae356dfd66a",
+        "bytes": 155
+      },
+      {
+        "path": "related-partitions.json",
+        "sha256": "a9195bf5412d0df73d01f7f8500be61c2a5c75bc42b9a275ed49d6b80e9afa38",
+        "bytes": 11360
+      },
+      {
+        "path": "run-related-partitions.py",
+        "sha256": "40bbc626e536aa90478ae10f643f14f86dfb80ce751c61f9b2cb808a35fef273",
+        "bytes": 2616
+      },
+      {
+        "path": "observe-test.log",
+        "sha256": "011e5c9adf46a41319fbd632ff657d34b93669081e2e61e2c216fa9afc787735",
+        "bytes": 49
+      },
+      {
+        "path": "observe-test-race.log",
+        "sha256": "7f9e0137f691f7564652a664dec24f6b61328cd2e6bac8a08c9435679034f252",
+        "bytes": 49
+      },
+      {
+        "path": "run-transfer-selected.py",
+        "sha256": "8a9c1d5d8025cc99c869b2a04359b72e7280fa2849754e4ecd44d350fa2edecd",
+        "bytes": 2362
+      },
+      {
+        "path": "run-seed-selected.py",
+        "sha256": "487f7817baa7d8826fb1889549f686cdd353cf3bac50fcc83f6a1f19e5b52961",
+        "bytes": 2854
+      },
+      {
+        "path": "run-iyuu-selected.py",
+        "sha256": "86d023a1b50d8676f3d5c2eda43f8b4cddee82887b7a628b0ee0fb3209f5d123",
+        "bytes": 2847
+      },
+      {
+        "path": "run-nas-owned.py",
+        "sha256": "f36af8c9784ac2c8c50e185cb2699a04929954426477e8a7f3d4ec18c4947d93",
+        "bytes": 8633
+      },
+      {
+        "path": "related-race-part-1.log",
+        "sha256": "52cac87f61233e6e7b39dca9a9c2ed3c8ce723c0e61c297c3e93e9c270fad578",
+        "bytes": 150840
+      },
+      {
+        "path": "related-race-part-2.log",
+        "sha256": "618d31b24fcc1e040c2c0cf01fee8ecf5018d914da1a1736ea2b28947f45ebe6",
+        "bytes": 122713
+      },
+      {
+        "path": "related-race-part-3.log",
+        "sha256": "701449bd13c61388447feeff06bef3b90a0e0d772f73503508a471f029831f7b",
+        "bytes": 142709
+      },
+      {
+        "path": "build-race.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-handoff-linux.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-linux.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-iyuu-cli.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-seed-cli.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-handoff-cli.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-iyuu-cli-race.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-linux-test.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-transfer-cli-linux.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-transfer-cli-race.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-handoff-cli-race.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-seed-cli-race.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-transfer-cli.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-native.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "build-test.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "vet.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "mod-verify.log",
+        "sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+        "bytes": 21
+      }
+    ],
+    "source_collections_read_in_memory_only": 3,
+    "reviewed_plugin_instances": 4
+  },
+  "prior_failures": [
+    {
+      "stage": "r2",
+      "exit": 2,
+      "kind": "aggregate600s_timeout",
+      "status": "superseded selection/policy; retained not green"
+    },
+    {
+      "stage": "r3",
+      "exit": 2,
+      "kind": "aggregate600s_timeout",
+      "status": "same final binary exact73-name set rerun in3 partitions with same600s perprocess budget; aggregate failure retained"
+    },
+    {
+      "stage": "r3_auditor",
+      "exit": 1,
+      "kind": "logical_repo_path_resolution_error",
+      "status": "first auditor treated logical repo/ as cwd path; corrected resolution, no source mutation; failed report retained"
+    }
+  ],
+  "limits": [
+    "Guard covers only four canonical reviewed legacy namespaces; all other pending23-plugin work remains.",
+    "Synthetic stopped-host observations occur only in owned test stores, not claims about original source.",
+    "Trusted offline host metadata is not remote attestation.",
+    "StopFinishedAt <= ImportedAt rejects known too-early imports; final post-stop snapshot capture and digest review are still required.",
+    "Original must remain stopped while new scheduled writers are active; no automated rollback/revocation CLI added.",
+    "No production data migration, deployment, original stop/restart-policy mutation or new browser acceptance in this leaf."
+  ]
+}

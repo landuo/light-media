@@ -153,6 +153,7 @@ func reviewedSeedSelectedSDK(t *testing.T, source reviewedSeedSnapshot, raw []by
 		if _, e = a.pluginStore.ImportReviewedSeedRescue(ctx, m.ID, raw); e != nil {
 			t.Fatal("actual source SDK import", e)
 		}
+		ownedStoppedPluginSourceHandoff(t, a.pluginStore, sr.PluginID)
 		// Restore every endpoint the running owner can use before any new admission.
 		tx, e = a.Store.DB.BeginTx(ctx, nil)
 		if e != nil {

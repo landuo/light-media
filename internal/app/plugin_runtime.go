@@ -183,6 +183,10 @@ WHERE instance_id=? AND generation=? AND config_revision=? AND (
 			continue
 		}
 		if _, err := a.pluginStore.EnqueueRun(ctx, installation.InstanceID, "init", nil); err != nil {
+			if pluginHandoffPending(err) {
+				a.log("WARN", "plugins", "source_execution_handoff_pending", "原版执行程序尚未完成交接，迁入插件保持不运行；其他插件继续启动", "", "")
+				continue
+			}
 			return err
 		}
 	}
@@ -466,6 +470,9 @@ func (a *App) validatePluginHostRun(ctx context.Context, installation PluginInst
 		persisted, err := a.pluginStore.Run(ctx, run.ID)
 		if err != nil || persisted.State != "running" {
 			return bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
+		}
+		if err := a.pluginStore.requirePluginExecutionHandoff(ctx, installation.InstanceID); err != nil {
+			return err
 		}
 	} else if method != "category.read" && method != "media.servers" && method != "sites.controls.read" {
 		return bad("PLUGIN_CAPABILITY_DENIED", "插件表单只能调用获授权的只读接口")

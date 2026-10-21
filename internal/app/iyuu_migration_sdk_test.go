@@ -39,6 +39,7 @@ func reviewedIYUUSelectedSDK(t *testing.T, source reviewedIYUUSnapshot, raw []by
 		if _, e = a.pluginStore.ImportReviewedIYUUAutoSeed(ctx, migration.ID, raw); e != nil {
 			t.Fatal("actual source import before SDK failed", e)
 		}
+		ownedStoppedPluginSourceHandoff(t, a.pluginStore, "IYUUAutoSeed")
 		installation, e := a.pluginStore.Installation(ctx, "IYUUAutoSeed")
 		if e != nil || installation.DesiredEnabled {
 			t.Fatal("source import activated the SDK")

@@ -268,6 +268,15 @@ func TestReviewedTransferSelectedStdin(t *testing.T) {
 				})
 			}
 			t.Run("offline-cli", func(t *testing.T) { reviewedTransferSelectedCLI(t, source, raw) })
+			t.Run("execution-handoff", func(t *testing.T) {
+				_, p, _ := reviewedTransferOwned(t, source)
+				m := reviewedTransferRun(t, p, raw, source.PluginID)
+				if _, e := p.ImportReviewedTorrentTransfer(ctx, m.ID, raw); e != nil {
+					t.Fatal(e)
+				}
+				reviewedTransferHandoffAssertions(t, p, source, raw)
+			})
+			t.Run("execution-handoff-cli", func(t *testing.T) { reviewedTransferHandoffCLI(t, source, raw) })
 			t.Run("actual-sdk", func(t *testing.T) { reviewedTransferSelectedSDK(t, source, raw, false) })
 			t.Run("actual-sdk-lost-ack", func(t *testing.T) { reviewedTransferSelectedSDK(t, source, raw, true) })
 		})

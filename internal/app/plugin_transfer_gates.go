@@ -45,12 +45,18 @@ func (p *PluginStore) pluginNativeQueueAdmissionTx(ctx context.Context, tx *sql.
 		return p.scrapeCleanQueueAdmissionTx(ctx, tx, instance, plugin)
 	}
 	if isTorrentTransfer(plugin) {
-		return p.transferQueueAdmissionTx(ctx, tx, instance, plugin)
+		if e := p.transferQueueAdmissionTx(ctx, tx, instance, plugin); e != nil {
+			return e
+		}
+		return p.requirePluginExecutionHandoffTx(ctx, tx, instance)
 	}
-	return p.iyuuQueueAdmissionTx(ctx, tx, instance, plugin)
+	if e := p.iyuuQueueAdmissionTx(ctx, tx, instance, plugin); e != nil {
+		return e
+	}
+	return p.requirePluginExecutionHandoffTx(ctx, tx, instance)
 }
 func pluginNativeUnconfirmedQueueAdmission(e error) bool {
-	return pluginErrorCodeInternal(e) == "LARK_UNCONFIRMED" || scrapeQueueRejected(e) || errors.Is(e, errBrushFlowUnknownAdmission) || iyuuUnconfirmedQueueAdmission(e) || (pluginErrorCodeInternal(e) == "TORRENT_TRANSFER_UNCONFIRMED" && errors.Is(e, transfer.ErrUnconfirmed) && !errors.Is(e, transfer.ErrJournalIntegrity) && !errors.Is(e, transfer.ErrReplayDiverged))
+	return pluginHandoffPending(e) || pluginErrorCodeInternal(e) == "LARK_UNCONFIRMED" || scrapeQueueRejected(e) || errors.Is(e, errBrushFlowUnknownAdmission) || iyuuUnconfirmedQueueAdmission(e) || (pluginErrorCodeInternal(e) == "TORRENT_TRANSFER_UNCONFIRMED" && errors.Is(e, transfer.ErrUnconfirmed) && !errors.Is(e, transfer.ErrJournalIntegrity) && !errors.Is(e, transfer.ErrReplayDiverged))
 }
 func (p *PluginStore) pluginNativeConfigWriteTx(ctx context.Context, tx *sql.Tx, instance string, revision int64, raw json.RawMessage) error {
 	var plugin string
