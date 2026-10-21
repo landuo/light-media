@@ -1,0 +1,2685 @@
+{
+  "scope": "installed complete NexusPHP/HHan/BaseParser and Indexer DTO, mocked HTTP only; source dateparser clock explicitly pinned; unordered user/system mailbox groups normalized in comparisons",
+  "clock": "2026-10-21T12:34:56+08:00",
+  "source_dateparser_version": "1.4.2",
+  "source_sha256": {
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "app/helper/cloudflare.py": "1543472ddccb90704d30f74fb420fe87f9e613a66daf2fbf4402f1ebccecd7a1",
+    "app/utils/site.py": "c278d537bdea0394c4dc083c27726316a815ae26a2e64ddc2f3d42e2921fcf40",
+    "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+    "app/modules/indexer/parser/__init__.py": "ef73038e897b57f20269ed4141ea0574a027a6e760c78a5577f0aeb9b3ca30ed",
+    "app/modules/indexer/parser/nexus_php.py": "b5c47b4ef97683057d0640f0bc8f4ad3e5354a29728f3acc12a4ed49b20382a4",
+    "app/modules/indexer/parser/nexus_hhanclub.py": "479dc354a2de0ebf5eb2fdb7bbbe820de698d1d9079e989c2941e2d59bf9b761",
+    "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf"
+  },
+  "cases": [
+    {
+      "name": "root-profile-and-seed",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "next-page-fixup-and-detail-link-skip",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>100 B</td><td>video</td><td><b><a>2</a></b></td></tr></table><a href=\"getusertorrentlistajax.php?page=1\">下一页</a><a href=\"details.php?id=9\">&gt;</a>"
+          }
+        ],
+        "/getusertorrentlistajax.php?page=1&userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>200 B</td><td>video</td><td><b><a>3</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?page=1&userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 300,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ],
+          [
+            3,
+            200
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "extended-seeding-page",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<a href=\"torrents.php?seeding=1\">extended</a>"
+          }
+        ],
+        "/torrents.php?seeding=1": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/torrents.php?seeding=1",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "direct-seeding-page-from-profile",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><a href=\"getusertorrentlist.php?type=seeding&userid=7\">seed</a>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ],
+        "/getusertorrentlist.php?type=seeding&userid=7": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlist.php?type=seeding&userid=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "csrf-post-from-profile",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><meta name=\"x-csrf\" content=\"synthetic-csrf\"><a href=\"javascript: getusertorrentlistajax('7','seeding')\">seed</a>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ],
+        "/ajax_getusertorrentlist.php": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "POST",
+          "url": "https://owned.example/ajax_getusertorrentlist.php",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "form",
+          "body": {
+            "userid": [
+              "7"
+            ],
+            "type": [
+              "seeding"
+            ],
+            "csrf": [
+              "synthetic-csrf"
+            ]
+          },
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "js-ID-recovery-does-not-use-csrf",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails\">self</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ],
+        "/userdetails": [
+          {
+            "status": 200,
+            "body": "<meta name=\"x-csrf\" content=\"synthetic-csrf\"><a href=\"javascript: getusertorrentlistajax('7','seeding')\">seed</a>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": "7",
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 2,
+        "leeching": 0,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "profile-summary-plus-page-count",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><table><tr><td>做种统计</td><td>总做种数: 10 总做种体积: 1 GB</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 12,
+        "leeching": 2,
+        "seeding_size": 1073744896,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "profile-fallback-rows-plus-page",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><table><tr><td>当前上传</td><td><table><tr><td>name</td><td>x</td><td>y</td><td>尺寸</td><td>做种者</td></tr><tr><td>owned</td><td>x</td><td>y</td><td>100 B</td><td>2</td></tr></table></td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 3,
+        "leeching": 2,
+        "seeding_size": 3172,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ],
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "explicit-tbody-preserved",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><table><tbody><tr><td>当前上传</td><td><table><tr><td>name</td><td>x</td><td>y</td><td>尺寸</td><td>做种者</td></tr><tr><td>owned</td><td>x</td><td>y</td><td>100 B</td><td>2</td></tr></tbody></table></td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 3,
+        "leeching": 2,
+        "seeding_size": 3172,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            2,
+            100
+          ],
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "coin-last-text-and-exact-class",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a><span class=\"ucoin-symbol ucoin-gold\">1<b>2</b>tail</span><span class=\"ucoin-symbol ucoin-silver\">3</span><span class=\"ucoin-symbol ucoin-copper\">4</span>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 304.0,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "detail-bonus-fallback",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传：1 GB 下载：2 GB</div>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><table><tr><td>猫粮</td><td>32.5</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 32.5,
+        "upload": 1073741824,
+        "download": 2147483648,
+        "ratio": 0.5,
+        "seeding": 2,
+        "leeching": 0,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "ratio-infinity-is-calculated",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传：667 B 下载：2000 B 分享率：∞</div>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 0.0,
+        "upload": 667,
+        "download": 2000,
+        "ratio": 0.334,
+        "seeding": 2,
+        "leeching": 0,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "logged-out-error-DTO",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<input type=\"password\">"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": "未检测到已登陆，请检查cookies是否过期",
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "HTTP500-body-accepted",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 500,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "HTTP503-profile-is-empty",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 503,
+            "body": "unavailable"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": null,
+        "join_at": null,
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "password-profile-is-not-login-tested-again",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<input type=\"password\">"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": null,
+        "join_at": null,
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "invalid-size-and-seeders-default",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>bad B</td><td>video</td><td><b><a>bad</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 1,
+        "leeching": 2,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            0,
+            0
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "short-seeder-array-throws",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>name</td><td>大小</td><td>type</td><td>在做种</td></tr><tr><td>a</td><td>1 B</td><td>v</td><td>1</td></tr><tr><td>b</td><td>2 B</td><td>v</td><td></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "IndexError",
+      "source_stdout": ""
+    },
+    {
+      "name": "existing-userid-next-query-is-not-rewritten",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>10 B</td><td>video</td><td><b><a>1</a></b></td></tr></table><a href=\"?page=2&userid=99\">下一页</a>"
+          }
+        ],
+        "/getusertorrentlistajax.php?page=2&userid=99": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>20 B</td><td>video</td><td><b><a>2</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?page=2&userid=99",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 30,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            1,
+            10
+          ],
+          [
+            2,
+            20
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "strong-username-overrides-direct-text",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\">direct</a><a href=\"userdetails.php?id=9\"><strong> other </strong></a><div>上传：1 GB 下载：2 GB</div>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " other ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 0.0,
+        "upload": 1073741824,
+        "download": 2147483648,
+        "ratio": 0.5,
+        "seeding": 2,
+        "leeching": 0,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "hhan-exact-panel",
+      "kind": "NexusHhanclub",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a><div id=\"user-info-panel\"><div></div><div><div><div><div>分享率: 99</div></div></div><div><div></div><div></div><div></div><div> 1.5 TiB</div><div> 256 GiB</div></div></div></div>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table><b class=\"Power_Name\"> Hhan User </b><span>加入日期</span><span><span title=\"2024年1月2日 03:04:05\"></span></span>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": " Hhan User ",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "hhan-missing-panel-throws",
+      "kind": "NexusHhanclub",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": null,
+      "error_type": "IndexError",
+      "source_stdout": ""
+    },
+    {
+      "name": "date-relative-clock",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>加入日期</td><td>2 days ago</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": null,
+        "join_at": "2026-10-19 12:34:56",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "date-invalid-is-retained",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>加入日期</td><td>not_a_date</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": null,
+        "join_at": "not_a_date",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": "'NoneType' object has no attribute 'strftime'\n"
+    },
+    {
+      "name": "messages-box-order-is-unspecified",
+      "kind": "NexusPhp",
+      "read_messages": true,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a><span><a href=\"messages.php\">信息箱</a> (1)</span>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ],
+        "/messages.php?action=viewmailbox&box=1&unread=yes": [
+          {
+            "status": 200,
+            "body": "<table><tr><td><a href=\"messages.php?action=viewmessage&id=1\">new</a></td></tr><tr><td><img alt=\"Read\"><a href=\"messages.php?action=viewmessage&id=2\">old</a></td></tr></table>"
+          }
+        ],
+        "/messages.php?action=viewmailbox&box=-2&unread=yes": [
+          {
+            "status": 200,
+            "body": ""
+          }
+        ],
+        "/messages.php?action=viewmessage&id=1": [
+          {
+            "status": 200,
+            "body": "<h1> heading </h1><table><tr><td class=\"colhead\">head</td></tr><tr><td>date</td><td> 2026-10-21 </td></tr><tr><td> body <b>bold</b> tail </td></tr></table>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmailbox&box=1&unread=yes",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmailbox&box=-2&unread=yes",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmessage&id=1",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 1,
+        "message_unread_contents": [
+          [
+            "heading",
+            "2026-10-21",
+            "body bold tail"
+          ]
+        ],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "message-duplicates-and-null-content",
+      "kind": "NexusPhp",
+      "read_messages": true,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a><div>上传量：2 GB 下载量：1 GB 分享率：2.00 下载中：2 <i>end</i></div><a href=\"mybonus.php\">12.5</a><span><a href=\"messages.php\">信息箱</a> (2)</span>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": "<table><tr><td>等级</td><td><img title=\"Power User\"></td></tr><tr><td>加入日期</td><td>2024-01-02T03:04:05 (2 years ago)</td></tr></table>"
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": "<table class=\"torrents\"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td>owned</td><td>1024 B</td><td>video</td><td><b><a>3</a></b></td></tr><tr><td>owned</td><td>2048 B</td><td>video</td><td><b><a>4</a></b></td></tr></table>"
+          }
+        ],
+        "/messages.php?action=viewmailbox&box=1&unread=yes": [
+          {
+            "status": 200,
+            "body": "<table><tr><td><a href=\"messages.php?action=viewmessage&id=1\">new</a></td></tr><tr><td><img alt=\"Read\"><a href=\"messages.php?action=viewmessage&id=2\">old</a></td></tr></table><table><tr><td><a href=\"messages.php?action=viewmessage&id=1\">new</a></td></tr><tr><td><img alt=\"Read\"><a href=\"messages.php?action=viewmessage&id=2\">old</a></td></tr></table>"
+          }
+        ],
+        "/messages.php?action=viewmailbox&box=-2&unread=yes": [
+          {
+            "status": 200,
+            "body": ""
+          }
+        ],
+        "/messages.php?action=viewmessage&id=1": [
+          {
+            "status": 200,
+            "body": "<h1> title </h1>"
+          },
+          {
+            "status": 200,
+            "body": "<h1> title </h1>"
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmailbox&box=1&unread=yes",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmailbox&box=-2&unread=yes",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmessage&id=1",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/messages.php?action=viewmessage&id=1",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": "Power User",
+        "join_at": "2024-01-02 03:04:05",
+        "bonus": 12.5,
+        "upload": 2147483648,
+        "download": 1073741824,
+        "ratio": 2.0,
+        "seeding": 2,
+        "leeching": 2,
+        "seeding_size": 3072,
+        "leeching_size": 0,
+        "seeding_info": [
+          [
+            3,
+            1024
+          ],
+          [
+            4,
+            2048
+          ]
+        ],
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "title",
+            null,
+            null
+          ],
+          [
+            "title",
+            null,
+            null
+          ]
+        ],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    },
+    {
+      "name": "all-native-values-unknown",
+      "kind": "NexusPhp",
+      "read_messages": false,
+      "replies": {
+        "/": [
+          {
+            "status": 200,
+            "body": "<a href=\"logout.php\">out</a><a href=\"userdetails.php?id=7\"><b> self </b></a>"
+          }
+        ],
+        "/userdetails.php?id=7": [
+          {
+            "status": 200,
+            "body": ""
+          }
+        ],
+        "/getusertorrentlistajax.php?userid=7&type=seeding": [
+          {
+            "status": 200,
+            "body": ""
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://owned.example/",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/userdetails.php?id=7",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        },
+        {
+          "method": "GET",
+          "url": "https://owned.example/getusertorrentlistajax.php?userid=7&type=seeding",
+          "headers": {
+            "User-Agent": "synthetic-cookie-UA",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "synthetic-cookie=1"
+          },
+          "body_kind": "none",
+          "body": null,
+          "timeout": 60
+        }
+      ],
+      "data": {
+        "domain": "owned.example",
+        "username": " self ",
+        "userid": "7",
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": "2026-10-21",
+        "updated_time": null
+      },
+      "error_type": null,
+      "source_stdout": ""
+    }
+  ]
+}

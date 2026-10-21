@@ -50,7 +50,7 @@ func TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch(t *testing.T) {
 	run := enqueueSyntheticPluginHTTP(t, a)
 	a.executePluginRun(ctx, run)
 	failed, err := a.pluginStore.Run(ctx, run.ID)
-	if err != nil || failed.State != "failed" || known.Load() != 2 {
+	if err != nil || failed.State != "failed" || known.Load() != 3 {
 		t.Fatal("late failure path", failed.State, known.Load(), err)
 	}
 	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history"} {
@@ -69,7 +69,7 @@ func TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch(t *testing.T) {
 	run = enqueueSyntheticPluginHTTP(t, a)
 	a.executePluginRun(ctx, run)
 	finished, err := a.pluginStore.Run(ctx, run.ID)
-	if err != nil || finished.State != "succeeded" || known.Load() != 4 {
+	if err != nil || finished.State != "succeeded" || known.Load() != 6 {
 		t.Fatal("actual API did not collect", finished.State, known.Load(), err)
 	}
 	a.Store.DB.Exec(`UPDATE plugin_runs SET state='running',result=NULL WHERE id=?`, run.ID)
@@ -83,7 +83,7 @@ func TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch(t *testing.T) {
 	}
 	defer reopened.Close()
 	recovered, err := reopened.pluginStore.Run(ctx, run.ID)
-	if err != nil || recovered.State != "succeeded" || string(recovered.Result) != string(finished.Result) || known.Load() != 4 {
+	if err != nil || recovered.State != "succeeded" || string(recovered.Result) != string(finished.Result) || known.Load() != 6 {
 		t.Fatal("confirmed API was replayed on restart", recovered.State, known.Load(), err)
 	}
 	if err := reopened.validatePluginHTTPRun(ctx, recovered); err != nil {
@@ -96,7 +96,7 @@ func TestPluginHTTPRevocationWhileCollectingRollsBackPublication(t *testing.T) {
 	ctx := context.Background()
 	entered, release := make(chan struct{}), make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/index.php" {
+		if r.URL.Path == "/" {
 			close(entered)
 			<-release
 		}
@@ -529,7 +529,7 @@ func TestPluginHTTPInternalFlagPatchAndOldStoredManifest(t *testing.T) {
 		t.Fatal("normalized grant invalid", err)
 	}
 	finished := statisticExecute(t, a)
-	if finished.ID != queued.ID || known.Load() != 2 {
+	if finished.ID != queued.ID || known.Load() != 3 {
 		t.Fatal("old stored manifest hid native API capability", finished.ID, known.Load())
 	}
 	// The authenticated global key and site cookie never enter SQLite/WAL in

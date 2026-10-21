@@ -260,7 +260,6 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 			return nil, "", err
 		}
 	}
-	sourceRequestStarted(ctx)
 	res, err := c.http.Do(req)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -272,6 +271,10 @@ func (c *Client) request(ctx context.Context, method string, u *url.URL, body []
 		return nil, "", errors.New("site_transport_error")
 	}
 	defer res.Body.Close()
+	if trace := sourceStatsTrace(ctx); trace != nil {
+		trace.status = res.StatusCode
+		trace.contentType = res.Header.Get("Content-Type")
+	}
 	// MoviePilot's account reader parses bodies for these status codes. Keep
 	// this exception scoped to its DTO collection; searches remain strict.
 	sourceBody := sourceStatsTrace(ctx) != nil && (res.StatusCode == 403 || res.StatusCode == 500)

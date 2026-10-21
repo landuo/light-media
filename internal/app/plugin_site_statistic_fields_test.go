@@ -22,12 +22,12 @@ func TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot(t *testing
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		nav := `<a href="logout.php">退出</a>`
 		switch r.URL.Path {
-		case "/index.php":
+		case "/":
 			fmt.Fprint(w, nav+`<a href="userdetails.php?id=7">owned</a><span><a href="messages.php">信息箱</a> (1)</span><div>上传：1 GB 下载：0 B 做种中：1</div>`)
 		case "/userdetails.php":
 			fmt.Fprint(w, nav)
 		case "/getusertorrentlistajax.php":
-			fmt.Fprint(w, `<table><tr><th>名称</th><th>大小</th><th>做种者</th></tr><tr><td><a href="details.php?id=1">owned</a></td><td>1 KiB</td><td>3</td></tr></table>`)
+			fmt.Fprint(w, `<table class="torrents"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr><tr><td><a href="details.php?id=1">owned</a></td><td>1 KiB</td><td>video</td><td>3</td></tr></table>`)
 		case "/messages.php":
 			fmt.Fprint(w, nav)
 			if r.URL.Query().Get("action") == "viewmessage" {
@@ -103,7 +103,7 @@ func TestSiteStatisticAPIRevocationBeforeMessageReadStopsSideEffect(t *testing.T
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		nav := `<a href="logout.php">退出</a>`
 		switch r.URL.Path {
-		case "/index.php":
+		case "/":
 			fmt.Fprint(w, nav+`<a href="userdetails.php?id=7">owned</a><span><a href="messages.php">信息箱</a> (1)</span><div>上传：1 GB 下载：0 B 总做种数：0 总做种体积：0 B</div>`)
 		case "/userdetails.php":
 			fmt.Fprint(w, nav)
@@ -209,7 +209,7 @@ func TestSiteStatisticJobCancellationBeforeMessageReadStopsSideEffect(t *testing
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		nav := `<a href="logout.php">退出</a>`
 		switch r.URL.Path {
-		case "/index.php":
+		case "/":
 			fmt.Fprint(w, nav+`<a href="userdetails.php?id=7">owned</a><span><a href="messages.php">信息箱</a> (1)</span><div>上传：0 B 下载：0 B 总做种数：0 总做种体积：0 B</div>`)
 		case "/userdetails.php":
 			fmt.Fprint(w, nav)

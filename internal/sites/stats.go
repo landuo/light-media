@@ -42,7 +42,10 @@ type UserStats struct {
 	Warnings      []string          `json:"warnings"`
 }
 
-type UserStatsOptions struct{ ReadMessages bool }
+type UserStatsOptions struct {
+	ReadMessages bool
+	Location     *time.Location
+}
 
 func (c *Client) UserStats(ctx context.Context) (UserStats, error) {
 	return c.UserStatsWithOptions(ctx, UserStatsOptions{})
@@ -71,12 +74,9 @@ func (c *Client) UserStatsWithOptions(ctx context.Context, options UserStatsOpti
 	if err != nil {
 		return s, err
 	}
-	doc, err := sourceAccountDOM(ctx, b)
+	doc, err := pageDOM(b)
 	if err != nil {
 		return s, err
-	}
-	if !sourceIndexStage(ctx, c.config.Kind, doc) {
-		return s, sourceModuleError(nil)
 	}
 	parseUserHTML(&s, doc, "index.php")
 	parseNexusUnread(&s, doc)

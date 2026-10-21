@@ -320,7 +320,7 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 		var err error
 		if hooks != nil {
 			snapshot.SourceOutcome = "none"
-			observed, snapshot.SourceData, err = client.SourceUserStats(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
+			observed, snapshot.SourceData, err = client.SourceUserStats(ctx, sites.UserStatsOptions{ReadMessages: readMessages, Location: shanghai()})
 			if snapshot.SourceData != nil {
 				snapshot.SourceOutcome = "data"
 			}

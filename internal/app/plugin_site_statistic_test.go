@@ -64,10 +64,12 @@ func TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt(t *testing.
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requested.Add(1)
 		switch r.URL.Path {
-		case "/index.php":
+		case "/":
 			fmt.Fprint(w, `<a href="logout.php">退出</a><a href="userdetails.php?id=7">synthetic-user</a><div>上传：2 GB 下载：1 GB 总做种数：0 总做种体积：0 B</div>`)
 		case "/userdetails.php":
 			fmt.Fprint(w, `<a href="logout.php">退出</a>`)
+		case "/getusertorrentlistajax.php":
+			fmt.Fprint(w, `<table class="torrents"><tr><td>名称</td><td>大小</td><td>类型</td><td>在做种</td></tr></table>`)
 		default:
 			t.Error("unexpected", r.URL.Path)
 		}
@@ -120,7 +122,7 @@ func TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt(t *testing.
 	if err := a.safeRun(ctx, job); err != nil {
 		t.Fatal(err)
 	}
-	if requested.Load() != 2 {
+	if requested.Load() != 3 {
 		t.Fatal("no real account protocol request", requested.Load())
 	}
 	// A committed queue receipt recovers without submitting a second host job.

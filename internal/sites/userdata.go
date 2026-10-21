@@ -1,15 +1,14 @@
 package sites
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"math"
 	"strconv"
 	"strings"
+	"time"
 
-	"golang.org/x/net/html"
 	"light-media/internal/logging"
 )
 
@@ -52,9 +51,8 @@ func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 type sourceUserStatsKey struct{}
 type sourceUserStatsTrace struct {
 	guardError  error
-	attempted   bool
-	indexParsed bool
-	none        bool
+	status      int
+	contentType string
 }
 
 func sourceStatsTrace(ctx context.Context) *sourceUserStatsTrace {
@@ -68,39 +66,27 @@ func sourceStatsTrace(ctx context.Context) *sourceUserStatsTrace {
 func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) (UserStats, *SourceUserData, error) {
 	trace := &sourceUserStatsTrace{}
 	ctx = context.WithValue(ctx, sourceUserStatsKey{}, trace)
+	ctx = logging.SiteContext(ctx, c.config.ID)
+	ctx, _ = logging.Target(ctx, "site")
+	var s UserStats
+	var d *SourceUserData
+	var e error
 	if c.config.Kind == "mteam" {
-		ctx = logging.SiteContext(ctx, c.config.ID)
-		ctx, _ = logging.Target(ctx, "site")
-		s, d, e := c.sourceMTeamUserStats(ctx, options)
-		if ctx.Err() != nil {
-			return s, nil, ctx.Err()
+		s, d, e = c.sourceMTeamUserStats(ctx, options)
+	} else {
+		at := time.Now()
+		if options.Location != nil {
+			at = at.In(options.Location)
 		}
-		if trace.guardError != nil {
-			return s, nil, trace.guardError
-		}
-		return s, d, e
+		s, d, e = c.sourceNexusUserStats(ctx, options, at)
 	}
-	stats, err := c.UserStatsWithOptions(ctx, options)
 	if ctx.Err() != nil {
-		return stats, nil, ctx.Err()
+		return s, nil, ctx.Err()
 	}
 	if trace.guardError != nil {
-		return stats, nil, trace.guardError
+		return s, nil, trace.guardError
 	}
-	if !trace.attempted || trace.none {
-		return stats, nil, sourceModuleError(err)
-	}
-	dto := sourceDataFromObserved(stats)
-	if !trace.indexParsed {
-		message := "未检测到已登陆，请检查cookies是否过期"
-		dto.Error = &message
-	} else if stats.Sources["ratio"] == "derived:uploaded/downloaded" || stats.RatioInfinite {
-		dto.Ratio = 0
-		if dto.Download > 0 {
-			dto.Ratio = math.Round(float64(dto.Upload)/float64(dto.Download)*1000) / 1000
-		}
-	}
-	return stats, dto, err
+	return s, d, e
 }
 
 func sourceModuleError(err error) error {
@@ -112,45 +98,6 @@ func sourceModuleError(err error) error {
 
 func emptySourceUserData() *SourceUserData {
 	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]any{}}
-}
-
-func sourceDataFromObserved(s UserStats) *SourceUserData {
-	d := emptySourceUserData()
-	text := func(v string) *string {
-		if v == "" {
-			return nil
-		}
-		return &v
-	}
-	integer := func(v *int64) int64 {
-		if v == nil {
-			return 0
-		}
-		return *v
-	}
-	d.Username, d.UserLevel, d.JoinAt = text(s.Username), text(s.Level), text(s.JoinedAt)
-	if s.UserID != "" {
-		d.UserID = s.UserID
-	}
-	d.Upload, d.Download = integer(s.Uploaded), integer(s.Downloaded)
-	if s.Bonus != nil {
-		d.Bonus = *s.Bonus
-	}
-	if s.Ratio != nil {
-		d.Ratio = *s.Ratio
-	}
-	d.Seeding, d.Leeching = integer(s.Seeding), integer(s.Leeching)
-	d.SeedingSize, d.LeechingSize = integer(s.SeedingBytes), integer(s.LeechingBytes)
-	d.MessageUnread = integer(s.MessageUnread)
-	if s.SeedingInfo != nil {
-		d.SeedingInfo = s.SeedingInfo
-	}
-	if s.Messages != nil {
-		for _, row := range s.Messages {
-			d.Messages = append(d.Messages, [3]any{row[0], row[1], row[2]})
-		}
-	}
-	return d
 }
 
 func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {
@@ -238,96 +185,4 @@ func sourceFloat(v any) (float64, error) {
 		return 0, sourceModuleError(nil)
 	}
 	return f, nil
-}
-
-func sourceAccountDOM(ctx context.Context, raw []byte) (*html.Node, error) {
-	if sourceStatsTrace(ctx) == nil {
-		return pageDOM(raw)
-	}
-	for _, marker := range []string{"cf-chl-", "challenge-platform", "just a moment...", "g-recaptcha", "h-captcha", "turnstile"} {
-		if strings.Contains(strings.ToLower(string(raw)), marker) {
-			return nil, errors.New("site_login_challenge")
-		}
-	}
-	doc, e := html.Parse(bytes.NewReader(raw))
-	if e != nil {
-		return nil, errors.New("site_invalid_html")
-	}
-	for _, n := range find(doc, func(n *html.Node) bool { return n.Data == "input" }) {
-		if attribute(n, "type") == "password" {
-			return nil, errors.New("site_authentication_failed")
-		}
-	}
-	for _, n := range find(doc, func(n *html.Node) bool { return n.Type == html.ElementNode }) {
-		if n.Data == "a" {
-			for _, k := range []string{"href", "data-url", "onclick", "lay-on"} {
-				if strings.Contains(attribute(n, k), "logout") {
-					return doc, nil
-				}
-			}
-			if strings.Contains(attribute(n, "href"), "mybonus") || strings.Contains(attribute(n, "href"), "usercp") || attribute(n, "id") == "myitem" {
-				return doc, nil
-			}
-		}
-		if n.Data == "form" && strings.Contains(attribute(n, "action"), "logout") || n.Data == "div" && attribute(n, "class") == "user-info-side" {
-			return doc, nil
-		}
-	}
-	return nil, errors.New("site_authentication_or_template_changed")
-}
-
-func sourceHhanShape(doc *html.Node) bool {
-	panels := find(doc, func(n *html.Node) bool { return attribute(n, "id") == "user-info-panel" })
-	if len(panels) == 0 {
-		return false
-	}
-	nth := func(n *html.Node, index int) *html.Node {
-		if n == nil {
-			return nil
-		}
-		i := 0
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			if c.Data == "div" {
-				i++
-				if i == index {
-					return c
-				}
-			}
-		}
-		return nil
-	}
-	second := nth(panels[0], 2)
-	traffic := nth(second, 2)
-	// The source XPath indexes text()[0], not merely the element itself.
-	hasText := func(n *html.Node) bool {
-		if n == nil {
-			return false
-		}
-		for ch := n.FirstChild; ch != nil; ch = ch.NextSibling {
-			if ch.Type == html.TextNode {
-				return true
-			}
-		}
-		return false
-	}
-	return hasText(nth(traffic, 4)) && hasText(nth(traffic, 5)) && hasText(nth(nth(nth(second, 1), 1), 1))
-}
-
-func sourceIndexStage(ctx context.Context, kind string, doc *html.Node) bool {
-	trace := sourceStatsTrace(ctx)
-	if trace == nil {
-		return true
-	}
-	trace.indexParsed = true
-	if kind == "hhanclub" && !sourceHhanShape(doc) {
-		trace.none = true
-		return false
-	}
-	return true
-}
-
-func sourceRequestStarted(ctx context.Context) {
-	if trace := sourceStatsTrace(ctx); trace != nil {
-		trace.attempted = true
-	}
 }
