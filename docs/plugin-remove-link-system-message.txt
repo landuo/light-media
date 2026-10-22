@@ -1,0 +1,67 @@
+RemoveLink 2.17: Linux/local monitor-init live diagnostic
+
+Scope: Linux + local storage only, per current user instruction. Windows,
+macOS and non-local storage are excluded, not pending acceptance blockers.
+Instance lifecycle/configuration is owned by the common plugin framework;
+this patch does not introduce a RemoveLink-specific clone implementation.
+
+Baseline: 4e50b3040c7cdb146097953447687f5aa355898e.
+Only remaining producer seam addressed here: a typed native monitor-init
+failure already has sealed local diagnostic history but was not visible in
+the shared MessageHelper FIFO / authenticated SSE used by the UI bell.
+
+Source evidence:
+- testdata/plugins/remove-link-2.17/source.py, calls at lines 506 and 541.
+  Local sanitized copy SHA256:
+  a10aca1b9a55ab3ee64f90c6c5c69c055309ebcb368db45e3c63354ae745b854
+  Installed-source identity and AST equivalence are recorded separately in
+  installed-reference.json; do not describe sanitized bytes as installed bytes.
+- testdata/notice-message-core/input/_notice_message_port/reference/source/helper_message.py
+  SHA256 c2b3626b9efb4de5e698a67ebd4624d8f684f8618a29a925d8c8d5001f052e89
+  put defaults role=plugin, note=None; get ignores role and consumes a shared
+  FIFO. Preserve the existing title and redacted native error text. Do not
+  claim native error strings equal Python exceptions.
+
+Publication rule:
+Only this invocation's newly inserted diagnostic may enter the existing FIFO
+once its transaction is known committed, either by success or exact sealed
+receipt + state + notification read-back following a lost ACK. The old-fact
+branch and cold recovery never publish. Rollback, unverifiable ACK, a corrupt
+receipt, an ordinary untyped factory error or missing blocked checkpoint
+publish nothing. The existing configure Guard and effect lease remain held;
+no watch restart or lifecycle success is inferred from notification delivery.
+
+The queue is intentionally ephemeral. A crash after SQL commit and before
+queue publication may lose the popup but retains diagnostic history. It is
+not a durable exactly-once outbox. Cancellation observed at queue entry and
+a closed queue suppress live delivery; no external notification is sent.
+Shared dedup semantics remain unchanged, including dedup across instances.
+
+Fresh validation so far (candidate hashes recorded in verification evidence):
+- Red on baseline producer: authenticated real SSE returned an empty frame
+  after actual SDK/native watch failure; expected assertion failed. Retained.
+- Green focused App run: 9 top-level tests / 24 including subtests passed,
+  zero failures or skips. Covers actual SDK/native add-watch failure for
+  init/reload and hardlink/STRM, authenticated HTTP/SSE, SQL rollback,
+  lost ACK/corrupt receipt, cold recovery, cancellation and shared dedup.
+- Static AST checks confirm both source calls omit role and the helper
+  default is plugin. This is source inspection, not executing the original.
+- Affected App normal regression: 150 top-level / 513 including subtests,
+  zero failures or skips. Includes original RemoveLink gates and shared
+  SystemMessage/SystemError tests.
+- Real assistant cloud Chrome: authenticated production web.Handler UI
+  received the actual SDK/native failed-watch notification; reload showed
+  an empty system-message list. Owned fixture process exited 0 and was reaped.
+  This was a controlled local fixture, not deployment of the production main.
+- Retained browser fixture failure: initial root 404 from missing web.Handler;
+  corrected only the fixture and repeated using production web.Handler.
+- Shared UI limitation observed: server TZ=UTC / cross-timezone browser showed
+  the just-sent message as 9 hours ago, owing to timezone-less source date.
+  Reported for shared-framework handling; not silently changed or claimed fixed.
+Affected race/CGO_ENABLED=0 modernconly regression remains pending. Prior stage results are provenance, not a pass for
+this change. No deployment or final plugin acceptance claimed yet.
+
+Race follow-up: initial 44-root shard exited 1: 43 passed; one relative-file
+reference test failed because the standalone binary runner used repository
+root instead of internal/app. No race was reported. The runner cwd is fixed;
+that case and remaining race shards are pending. Original failure retained.

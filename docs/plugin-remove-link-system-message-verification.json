@@ -1,0 +1,69 @@
+{
+  "status": "verified normal/browser milestone, NOT final plugin acceptance",
+  "code_base": "4e50b3040c7cdb146097953447687f5aa355898e",
+  "branch_base": "b4a33f6a0cb1c2387d8c948758da2b38a6f9b8c2",
+  "scope": "Linux and local storage only",
+  "source_sha256": {
+    "internal/app/plugin_remove_link_init_diagnostic.go": "474cedf58b18158ded8670a2020d5d874dfd5bc4f9740bba020fba8136b9ac05",
+    "internal/app/plugin_remove_link_system_message.go": "146bdb1c232ad3b9dd33da8c97146f35f093d6dcd867416ddf581b30614203ad",
+    "internal/app/plugin_remove_link_init_diagnostic_test.go": "ec5ecc96ad545f9ddc25f15318208d7d8929c703bdb3a444bc6fbe0c73438284",
+    "internal/app/plugin_remove_link_system_message_test.go": "4cfeeff510b5eda674b59af9abac65f4e1f003e40fb01a793601b3732573ebcc"
+  },
+  "focused": {
+    "exit": 0,
+    "root": 9,
+    "inclusive": 24,
+    "fail": 0,
+    "skip": 0
+  },
+  "affected_normal": {
+    "exit": 0,
+    "root": 150,
+    "inclusive": 513,
+    "fail": 0,
+    "skip": 0
+  },
+  "race": {
+    "compile_exit": 0,
+    "compile_seconds": 87,
+    "first_shard_exit": 1,
+    "first_shard_passed_roots": 43,
+    "first_shard_failed_roots": [
+      "TestPluginRemoveLinkOwnerInstalledMediaExtensionsReference"
+    ],
+    "failure": "standalone runner cwd missing relative reference file; no data race reported",
+    "failed_case_rerun": "pending",
+    "other_shards": "pending"
+  },
+  "modernconly_cgo0": "pending",
+  "browser": {
+    "real_cloud_chrome": true,
+    "actual_app_handler_and_web_handler": true,
+    "authenticated": true,
+    "SDK_and_native_owned_failure": true,
+    "synthetic_sse": false,
+    "notification_displayed": true,
+    "reload_no_replay": true,
+    "fixture_exit": 0,
+    "owned_child_reaped": true,
+    "production_main_deployment": false,
+    "retained_failures": [
+      "v1 fixture root HTTP 404; fixed fixture to mount production web.Handler",
+      "fresh message age displayed nine hours ago for UTC server and cross-timezone browser; shared fix tracked separately"
+    ]
+  },
+  "evidence_sha256": {
+    "validation/red-app.jsonl": "70c56feda926b12fa54d638a29e08c75db93d8a18e7e0cae98c6779a3dc63b1a",
+    "validation/green-app.jsonl": "d7a8938d4571b9698b56cca70fde33e675e2ee3ba38bcbefc90eee1de1f7206f",
+    "validation/app-normal.jsonl": "0afeda1d21566538653e949656fcea30a8c6c21b7eb2b394a6971046416bfa64",
+    "validation/app-race-a1.jsonl": "f5d0d16a89e821a84f4e0a891a2a7dfa805cd05b0a50cdfee735c2127d078a85",
+    "browser-validation/run-v2/live-notice.png": "6fc73298ba13c93d7889281e8b4a20151d49ab0afa62226d7013eba4dcefd489",
+    "browser-validation/run-v2/reload-empty.png": "f01ecf7d1b8d030e3fe1f29c490bb7b9b7bdc62b2bf2f699eb526c467c00f08c"
+  },
+  "migration_boundary": [
+    "shared ephemeral FIFO, not durable exactly-once popup delivery",
+    "existing SQL diagnostic persists; no existing-fact or cold-recovery replay",
+    "no real account, external sender or user media deletion",
+    "source AST inspection not new original Python runtime execution"
+  ]
+}

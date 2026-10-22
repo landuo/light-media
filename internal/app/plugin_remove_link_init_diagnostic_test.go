@@ -71,6 +71,31 @@ func removeLinkInitLocalNotices(t *testing.T, a *App) []Notification {
 	return out
 }
 
+// The source systemmessage helper uses one ephemeral plugin/system FIFO.
+func removeLinkInitSystemMessage(t *testing.T, a *App, want *Notification) {
+	t.Helper()
+	raw := a.systemMessages.get("system") // role is deliberately ignored by source get.
+	if want == nil {
+		if len(raw) != 0 {
+			t.Fatalf("unexpected live diagnostic: %s", raw)
+		}
+		return
+	}
+	var got systemMessage
+	if err := json.Unmarshal(raw, &got); err != nil {
+		t.Fatalf("missing/invalid live diagnostic %s: %v", raw, err)
+	}
+	if got.Type != "plugin" || got.Title == nil || *got.Title != want.Title || got.Text != want.Message || string(got.Note) != "null" {
+		t.Fatalf("source systemmessage mismatch: %s", raw)
+	}
+	if _, err := time.Parse("2006-01-02 15:04:05", got.Date); err != nil {
+		t.Fatal(err)
+	}
+	if extra := a.systemMessages.get("plugin"); len(extra) != 0 {
+		t.Fatalf("duplicate live diagnostic: %s", extra)
+	}
+}
+
 // Only test-owned SQLite and media are used. Returning a closed directory FD
 // injects an actual add-watch syscall error, not real inotify resource exhaustion.
 func TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked(t *testing.T) {
@@ -150,6 +175,16 @@ func TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked(t *testing.T) {
 				if notices[0].Title != "媒体文件清理" || !strings.HasPrefix(notices[0].Message, prefix) || !strings.HasSuffix(notices[0].Message, captured.Unwrap().Error()) {
 					t.Fatalf("source title/prefix/cause mismatch: %#v failure=%v", notices[0], captured)
 				}
+				// Exercise the authenticated real HTTP/SSE path, not a mock UI queue.
+				cookie := setupTestAdmin(t, a)
+				response, reader := openSystemStream(t, a, cookie, "/api/system/message?role=system")
+				var message systemMessage
+				raw := readSystemFrame(t, reader)
+				response.Body.Close()
+				if err := json.Unmarshal([]byte(raw), &message); err != nil || message.Type != "plugin" || message.Title == nil || *message.Title != notices[0].Title || message.Text != notices[0].Message || string(message.Note) != "null" {
+					t.Fatalf("live SSE diagnostic mismatch: %s (%v)", raw, err)
+				}
+				removeLinkInitSystemMessage(t, a, nil)
 				if notices[0].MType != "系统" || notices[0].Link != "" {
 					t.Fatal("systemmessage was converted into a routed source notification", notices[0])
 				}
@@ -237,6 +272,7 @@ func TestRemoveLinkInitDiagnosticActualSDKFailureStaysBlocked(t *testing.T) {
 				if len(removeLinkInitLocalNotices(t, a)) != 1 || sends.Load() != 0 {
 					t.Fatal("diagnostic replay duplicated or externally sent")
 				}
+				removeLinkInitSystemMessage(t, a, nil)
 				for _, table := range []string{"plugin_notice_routes", "plugin_message_queue", "plugin_cleanup_private_outbox"} {
 					if n := cleanupEffectsCount(t, a, table); n != 0 {
 						t.Fatalf("local diagnostic created %s rows: %d", table, n)
@@ -257,6 +293,7 @@ func TestRemoveLinkInitDiagnosticRejectsOrdinaryFactoryError(t *testing.T) {
 	if got := removeLinkInitLocalNotices(t, a); len(got) != 0 {
 		t.Fatalf("ordinary error acquired trusted source diagnostic: %#v", got)
 	}
+	removeLinkInitSystemMessage(t, a, nil)
 }
 
 func TestRemoveLinkInitDiagnosticSQLFailureRollsBackNoticeAndReceipt(t *testing.T) {
@@ -287,6 +324,7 @@ func TestRemoveLinkInitDiagnosticSQLFailureRollsBackNoticeAndReceipt(t *testing.
 			if got := removeLinkInitLocalNotices(t, a); len(got) != 0 {
 				t.Fatalf("failed SQL left unreceipted public notice: %#v", got)
 			}
+			removeLinkInitSystemMessage(t, a, nil)
 			if n := cleanupEffectsCount(t, a, "plugin_cleanup_core_receipts"); n != 0 {
 				t.Fatal("failed SQL left core receipt", n)
 			}
@@ -325,6 +363,7 @@ func TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt(t *testing
 				o := a.pluginRemoveLink.owners["RemoveLink"]
 				o.initDiagnosticCommit = func(tx *sql.Tx) error {
 					commits.Add(1)
+					removeLinkInitSystemMessage(t, a, nil) // Nothing visible before commit.
 					if outcome == "rolled_back" {
 						return errors.New("owned diagnostic commit rejected")
 					}
@@ -371,6 +410,12 @@ func TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt(t *testing
 				t.Fatalf("atomic receipt outcome=%s got=%d want=%d", outcome, n, want)
 			}
 			if outcome == "committed_reply_lost" {
+				notices := removeLinkInitLocalNotices(t, a)
+				removeLinkInitSystemMessage(t, a, &notices[0])
+			} else {
+				removeLinkInitSystemMessage(t, a, nil)
+			}
+			if outcome == "committed_reply_lost" {
 				for _, fact := range state.Effects {
 					if fact.Kind != "watch_init_diagnostic" {
 						continue
@@ -403,6 +448,7 @@ func TestRemoveLinkInitDiagnosticLostCommitACKReadsExactSealedReceipt(t *testing
 			if commits.Load() != 1 || watches.Load() != 1 || len(removeLinkInitLocalNotices(t, a)) != want {
 				t.Fatal("post-failure tick/drain duplicated unknown outcome")
 			}
+			removeLinkInitSystemMessage(t, a, nil)
 			for _, path := range []string{item.Source, item.Target} {
 				if _, err := os.Stat(path); err != nil {
 					t.Fatal("ACK recovery touched media", err)
@@ -432,6 +478,7 @@ func TestRemoveLinkInitDiagnosticBlockedCheckpointFailureDoesNotPublish(t *testi
 	if len(removeLinkInitLocalNotices(t, a)) != 0 || cleanupEffectsCount(t, a, "plugin_cleanup_core_receipts") != 0 {
 		t.Fatal("uncommitted Blocked checkpoint published a diagnostic")
 	}
+	removeLinkInitSystemMessage(t, a, nil)
 	o := a.pluginRemoveLink.owners[run.InstanceID]
 	s, err := o.j.Read(context.Background())
 	if err != nil || s.Active == nil {
@@ -482,6 +529,13 @@ func TestRemoveLinkInitDiagnosticCloneAndColdReceiptIsolation(t *testing.T) {
 	if len(facts) != 2 || facts[0].ID == facts[1].ID || len(removeLinkInitLocalNotices(t, a)) != 2 {
 		t.Fatal("clone failure identity collided")
 	}
+	notices := removeLinkInitLocalNotices(t, a)
+	if notices[0].Message != notices[1].Message {
+		t.Fatal("fixture diagnostics should share original dedup identity")
+	}
+	// Durable facts stay instance-isolated, but source MessageHelper dedups the
+	// same title/text/role/note across instances in its shared live FIFO.
+	removeLinkInitSystemMessage(t, a, &notices[0])
 	for i, o := range owners {
 		var p removeLinkInitDiagnostic
 		if err := json.Unmarshal(facts[i].Payload, &p); err != nil {
@@ -540,6 +594,7 @@ func TestRemoveLinkInitDiagnosticColdOwnerDoesNotRestartOrReplay(t *testing.T) {
 			if len(notices) != 1 {
 				t.Fatal("missing original source diagnostic")
 			}
+			removeLinkInitSystemMessage(t, a, &notices[0])
 			source, err := os.ReadFile(item.Source)
 			if err != nil {
 				t.Fatal(err)
@@ -556,6 +611,7 @@ func TestRemoveLinkInitDiagnosticColdOwnerDoesNotRestartOrReplay(t *testing.T) {
 				t.Fatal(err)
 			}
 			t.Cleanup(func() { _ = reopened.Close() })
+			removeLinkInitSystemMessage(t, reopened, nil)
 			var watches, sends atomic.Int32
 			reopened.pluginRemoveLink.watch = func(context.Context, []removelink.Watch, func(string) (*os.File, error)) (cleanuphost.Watcher, error) {
 				watches.Add(1)
@@ -620,6 +676,7 @@ func TestRemoveLinkInitDiagnosticColdOwnerDoesNotRestartOrReplay(t *testing.T) {
 			if got := removeLinkInitLocalNotices(t, reopened); !reflect.DeepEqual(got, notices) {
 				t.Fatal("cold failure recovery duplicated/changed diagnostic", got)
 			}
+			removeLinkInitSystemMessage(t, reopened, nil)
 			for path, want := range map[string][]byte{item.Source: source, item.Target: target} {
 				got, e := os.ReadFile(path)
 				if e != nil || !reflect.DeepEqual(got, want) {
