@@ -25,7 +25,7 @@ type transferReady struct {
 func transferReadyApp(t *testing.T, kind string) transferReady {
 	t.Helper()
 	a := newTestApp(t)
-	useBuiltInPluginProcess(t, a)
+	useTransferSDKProcess(t, a)
 	cookie := setupTestAdmin(t, a)
 	hash, raw := transferTestMaterial()
 	src := newTransferAppDaemon(t, kind, hash, true)

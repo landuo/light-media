@@ -64,7 +64,7 @@ func transferCold(t *testing.T, f transferReady) transferReady {
 		t.Fatal(e)
 	}
 	t.Cleanup(func() { cold.Close() })
-	useBuiltInPluginProcess(t, cold)
+	useTransferSDKProcess(t, cold)
 	cold.pluginTransfer.pollSleep = func(context.Context, time.Duration) error { return nil }
 	f.a = cold
 	return f
