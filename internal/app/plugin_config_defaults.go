@@ -85,7 +85,7 @@ func (t pluginDefaultsTransaction) QueryRowContext(ctx context.Context, query st
 // The private transaction wrapper deliberately has no Commit/Rollback methods.
 // This remains a trusted-host contract, not a SQL sandbox: SQL transaction
 // control, cross-instance writes, and mutation of memory/cache before success
-// are prohibited. Read-only no-ops do not invoke the projector.
+// are prohibited. Missing-default read-only no-ops do not invoke the projector.
 type PluginDefaultsProjector func(context.Context, PluginDefaultsTransaction, PluginDefaultsChange) error
 
 // NormalizeInstanceDefaultsWithProjection requires a compiled transactional/v1
@@ -107,6 +107,37 @@ func (p *PluginStore) normalizeInstanceDefaults(ctx context.Context, snapshot Pl
 		if !validPluginKey(key) || !json.Valid(value) {
 			return out, bad("INVALID_PLUGIN_VALUE", "插件默认字段无效")
 		}
+	}
+	contract := pluginConfigDefaultsPure
+	if declaration == plugins.ConfigDefaultsTransactional {
+		contract = pluginConfigDefaultsTransactional
+	} else if declaration != plugins.ConfigDefaultsPure {
+		return out, bad("PLUGIN_DEFAULTS_UNSUPPORTED", "插件实现未声明所需默认值保存协议")
+	}
+	return p.transitionInstanceConfig(ctx, snapshot, expectedRevision, contract, func(config map[string]json.RawMessage) (any, bool) {
+		changed := false
+		for key, value := range defaults {
+			if _, exists := config[key]; !exists {
+				config[key] = append(json.RawMessage(nil), value...)
+				changed = true
+			}
+		}
+		return config, changed
+	}, projector)
+}
+
+// transitionInstanceConfig owns the transaction for both missing-default and
+// full Form saves. The private prepare function cannot select authority: the
+// contract is checked against the exact compiled implementation, never caller
+// or persisted manifests. A Form Save always reports changed, even for equal
+// config, because the source Save itself is a business-state transition.
+func (p *PluginStore) transitionInstanceConfig(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, contract pluginConfigTransitionContract, prepare func(map[string]json.RawMessage) (any, bool), projector PluginDefaultsProjector) (PluginStoredValue, error) {
+	var out PluginStoredValue
+	if contract == pluginConfigFormTransactional && projector == nil {
+		return out, contract.unsupported()
+	}
+	if expectedRevision < 0 || !pluginStorageID.MatchString(snapshot.InstanceID) || snapshot.Generation < 1 {
+		return out, bad("INVALID_PLUGIN_VALUE", "插件配置快照无效")
 	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
@@ -145,23 +176,17 @@ func (p *PluginStore) normalizeInstanceDefaults(ctx context.Context, snapshot Pl
 	if out.Revision != expectedRevision {
 		return out, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，请重新打开表单")
 	}
-	changed := false
-	for key, value := range defaults {
-		if _, exists := config[key]; !exists {
-			config[key] = append(json.RawMessage(nil), value...)
-			changed = true
-		}
-	}
+	desired, changed := prepare(config)
 	// Idempotent reads do not increment revision, obtain write capability, affect
 	// active work, or create a synthetic management run.
-	if !changed {
+	if !changed && contract != pluginConfigFormTransactional {
 		return out, tx.Commit()
 	}
 	// Read-only no-ops remain available to every plugin, but mutable stored
 	// manifests cannot opt an implementation into configuration propagation.
 	manifest, _, known := builtin.Lookup(plugin)
-	if !known || manifest.Version != version || manifest.ConfigDefaults != declaration {
-		return out, bad("PLUGIN_DEFAULTS_UNSUPPORTED", "插件实现未声明所需默认值保存协议")
+	if !known || manifest.PluginID != plugin || manifest.Version != version || !contract.allows(manifest) {
+		return out, contract.unsupported()
 	}
 	var active int
 	// Even an opted-in implementation must not rewrite an immutable prepared
@@ -175,7 +200,7 @@ func (p *PluginStore) normalizeInstanceDefaults(ctx context.Context, snapshot Pl
 	if err = p.requireSiteReferenceProtocolTx(ctx, tx, snapshot.InstanceID); err != nil {
 		return out, err
 	}
-	raw, err := p.pluginSnapshotJSON(ctx, tx, snapshot.InstanceID, config, true)
+	raw, err := p.pluginSnapshotJSON(ctx, tx, snapshot.InstanceID, desired, true)
 	if err != nil {
 		return out, err
 	}
