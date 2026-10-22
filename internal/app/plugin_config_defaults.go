@@ -176,6 +176,17 @@ func (p *PluginStore) transitionInstanceConfig(ctx context.Context, snapshot Plu
 	if out.Revision != expectedRevision {
 		return out, bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，请重新打开表单")
 	}
+	// A request-local Form session adds binding/mode/revision admission in this
+	// transaction. Outside Form the original V8 exact-CAS contract is unchanged.
+	session := pluginFormSessionFromContext(ctx)
+	if session != nil {
+		if session.store != p {
+			return PluginStoredValue{}, pluginFormStale()
+		}
+		if err = session.admit(ctx, tx, snapshot, out); err != nil {
+			return PluginStoredValue{}, err
+		}
+	}
 	desired, changed := prepare(config)
 	// Idempotent reads do not increment revision, obtain write capability, affect
 	// active work, or create a synthetic management run.
@@ -229,6 +240,9 @@ func (p *PluginStore) transitionInstanceConfig(ctx context.Context, snapshot Plu
 	}
 	if err = tx.Commit(); err != nil {
 		return PluginStoredValue{}, err
+	}
+	if session != nil {
+		session.acceptCommitted(out, true)
 	}
 	return out, nil
 }

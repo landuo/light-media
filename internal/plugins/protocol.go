@@ -39,6 +39,19 @@ const ConfigDefaultsTransactional = "transactional/v1"
 // is implied, and a compiled adapter must validate its original business proof.
 const ConfigFormProjectionTransactional = "transactional/v1"
 
+// FormModelPolicy controls presentation only. It is independent of defaults or
+// Form write permission and is authoritative only from the compiled catalog.
+// A nil policy preserves the host overlay; a declaration specifies both modes.
+const (
+	FormModelHostOverlay = "host_overlay"
+	FormModelSource      = "source"
+)
+
+type FormModelPolicy struct {
+	Installed string `json:"installed"`
+	Preview   string `json:"preview"`
+}
+
 var identityPattern = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 var versionPattern = regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){0,3}(?:[-+][A-Za-z0-9.-]+)?$`)
 var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
@@ -46,29 +59,37 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
 type Manifest struct {
-	SchemaVersion        int       `json:"schema_version"`
-	PluginID             string    `json:"plugin_id"`
-	Name                 string    `json:"name"`
-	Description          string    `json:"description,omitempty"`
-	Icon                 string    `json:"icon,omitempty"`
-	Author               string    `json:"author,omitempty"`
-	AuthorURL            string    `json:"author_url,omitempty"`
-	Version              string    `json:"version"`
-	Runtime              string    `json:"runtime"`
-	Entry                string    `json:"entry"`
-	HostAPIMin           int       `json:"host_api_min"`
-	HostAPIMax           int       `json:"host_api_max"`
-	Methods              []string  `json:"methods"`
-	Capabilities         []string  `json:"capabilities"`
-	Events               []string  `json:"events,omitempty"`
-	HasPage              bool      `json:"has_page,omitempty"`
-	Dashboards           []string  `json:"dashboards,omitempty"`
-	APIs                 []HTTPAPI `json:"apis,omitempty"`
-	ConfigDefaults       string    `json:"config_defaults,omitempty"`
-	ConfigFormProjection string    `json:"config_form_projection,omitempty"`
+	SchemaVersion        int              `json:"schema_version"`
+	PluginID             string           `json:"plugin_id"`
+	Name                 string           `json:"name"`
+	Description          string           `json:"description,omitempty"`
+	Icon                 string           `json:"icon,omitempty"`
+	Author               string           `json:"author,omitempty"`
+	AuthorURL            string           `json:"author_url,omitempty"`
+	Version              string           `json:"version"`
+	Runtime              string           `json:"runtime"`
+	Entry                string           `json:"entry"`
+	HostAPIMin           int              `json:"host_api_min"`
+	HostAPIMax           int              `json:"host_api_max"`
+	Methods              []string         `json:"methods"`
+	Capabilities         []string         `json:"capabilities"`
+	Events               []string         `json:"events,omitempty"`
+	HasPage              bool             `json:"has_page,omitempty"`
+	Dashboards           []string         `json:"dashboards,omitempty"`
+	APIs                 []HTTPAPI        `json:"apis,omitempty"`
+	ConfigDefaults       string           `json:"config_defaults,omitempty"`
+	ConfigFormProjection string           `json:"config_form_projection,omitempty"`
+	FormModelPolicy      *FormModelPolicy `json:"form_model_policy,omitempty"`
 }
 
 func (m Manifest) Validate() error {
+	if m.FormModelPolicy != nil {
+		for _, mode := range []string{m.FormModelPolicy.Installed, m.FormModelPolicy.Preview} {
+			if mode != FormModelHostOverlay && mode != FormModelSource {
+				return failure("invalid_manifest")
+			}
+		}
+	}
 	if m.ConfigFormProjection != "" && m.ConfigFormProjection != ConfigFormProjectionTransactional {
 		return failure("invalid_manifest")
 	}

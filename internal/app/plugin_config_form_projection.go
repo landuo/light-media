@@ -49,8 +49,11 @@ func (c pluginConfigTransitionContract) unsupported() error {
 // source-defined Config/Stored state, and preserve the original init receipt.
 // Only config, journal and pending snapshot/proof propagation may change in the
 // transaction. This path never activates, initializes, queues work, or creates
-// config-save origin authority. Preview/lifetime and HTTP policy belong to the
-// host adapter and are not supplied by this storage primitive.
+// config-save origin authority. HTTP Form supplies a private request-local
+// session through ctx; the common transaction revalidates its mode and durable
+// snapshot before writing and advances it only after commit. Outside that
+// context the existing exact-CAS contract is unchanged. Business source-state
+// authentication and cold-fallback semantics still belong to the host adapter.
 func (p *PluginStore) ProjectInstanceConfig(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, desiredRaw json.RawMessage, projector PluginDefaultsProjector) (PluginStoredValue, error) {
 	if projector == nil {
 		return PluginStoredValue{}, bad("PLUGIN_FORM_PROJECTION_UNSUPPORTED", "插件缺少可信表单状态投影")
