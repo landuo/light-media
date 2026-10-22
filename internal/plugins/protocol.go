@@ -285,6 +285,11 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		} else if ctx.Err() != nil {
 			err = failure("execution_canceled")
 		}
+		// Cancellation can win after Wait succeeded but before this final check.
+		// Error results retain transport evidence, never a successful payload.
+		if err != nil {
+			out.Result = nil
+		}
 	}()
 	identity := Identity{PluginID: manifest.PluginID, InstanceID: instanceID, Version: manifest.Version}
 	session := wireSession{maxInput: runner.MaxInputBytes, role: "host", closeIO: func() { stdin.Close(); stdout.Close() }, reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, host: host, ctx: ctx, hostBudget: budget}

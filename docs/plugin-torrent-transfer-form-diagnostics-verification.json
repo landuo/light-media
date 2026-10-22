@@ -747,8 +747,10 @@
     {
       "run": "app-race-repeat1",
       "test": "TestTransferActualSourceFailureCanBeCorrected",
-      "phase": "installation form",
-      "http_error": "PLUGIN_FORM_FAILED"
+      "phase": "first installed GET /form inside transferReadyApp, after successful installation and initialization, before invalid-cron/correction test body",
+      "http_error": "PLUGIN_FORM_FAILED",
+      "request_duration_ms": 10027,
+      "preceding_install_post_duration_ms": 1732
     }
   ],
   "protocol_race_baseline": {
