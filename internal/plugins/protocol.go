@@ -155,6 +155,8 @@ type Command struct {
 }
 
 type Runner struct {
+	// ObservePhase is nil by default; it does not alter execution policy.
+	ObservePhase     func(RunObservation)
 	MaxInputBytes    int
 	MaxMessageBytes  int
 	MaxChunkBytes    int
@@ -184,6 +186,15 @@ type RunResult struct {
 // Run starts one short-lived worker, handshakes before sending the invocation,
 // serves bounded host calls, then requests cleanup before accepting success.
 func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest, instanceID, method string, payload json.RawMessage, host HostHandler) (out RunResult, err error) {
+	runner.observe(PhaseRunEntered, ctx)
+	// This closure runs after cleanup and result counters, but before the caller.
+	// Its context is updated below to the actual Runner context.
+	var observationContext context.Context
+	defer func() {
+		if observationContext == nil {
+			runner.observe(PhaseRunReturned, ctx)
+		}
+	}()
 	if err := manifest.Validate(); err != nil {
 		return out, err
 	}
@@ -229,6 +240,8 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	}
 	ctx, cancel, budget := runnerContext(ctx, runner.Timeout, runner.ExcludeHostTime)
 	defer cancel()
+	observationContext = ctx
+	defer func() { runner.observe(PhaseRunReturned, observationContext) }()
 	cmd := exec.CommandContext(ctx, command.Path, command.Args...)
 	cmd.Dir, cmd.WaitDelay = command.Dir, time.Second
 	// Do not inherit provider credentials or management sessions from the host.
@@ -249,7 +262,10 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		stdin.Close()
 		return out, failure("worker_start_failed")
 	}
-	if err = cmd.Start(); err != nil {
+	runner.observe(PhaseStartBegin, ctx)
+	err = cmd.Start()
+	runner.observe(PhaseStartEnd, ctx)
+	if err != nil {
 		stdin.Close()
 		stdout.Close()
 		return out, failure("worker_start_failed")
@@ -258,8 +274,10 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	defer func() {
 		stdin.Close()
 		if !waited {
+			runner.observe(PhaseCleanupWaitBegin, ctx)
 			_ = cmd.Process.Kill()
 			_ = cmd.Wait()
+			runner.observe(PhaseCleanupWaitEnd, ctx)
 		}
 		out.StderrBytes = stderr.bytes
 		if stderr.exceeded {
@@ -280,7 +298,9 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		out.ReadChunks = session.readChunks
 	}()
 	hello, _ := json.Marshal(map[string]int{"protocol": ProtocolVersion, "host_api": HostAPIVersion})
+	runner.observe(PhaseHandshakeBegin, ctx)
 	raw, err := session.exchange("handshake", hello)
+	runner.observe(PhaseHandshakeEnd, ctx)
 	if err != nil {
 		return out, err
 	}
@@ -294,7 +314,9 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		}
 		limits := transportLimits{Version: 1, FrameBytes: min(runner.MaxFrameBytes, 1<<20), LogicalBytes: runner.MaxMessageBytes, HostSendBytes: runner.MaxInputBytes, HostReadBytes: runner.MaxOutputBytes, ChunkBytes: runner.MaxChunkBytes, MessageChunks: runner.MaxMessageChunks, SessionChunks: runner.MaxSessionChunks, Transfers: runner.MaxHostCalls + 4}
 		proposal, _ := json.Marshal(limits)
+		runner.observe(PhaseNegotiateBegin, ctx)
 		answer, negotiateErr := session.exchange("transport.negotiate", proposal)
+		runner.observe(PhaseNegotiateEnd, ctx)
 		var accepted transportLimits
 		if negotiateErr != nil {
 			return out, negotiateErr
@@ -306,16 +328,23 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	} else if !explicitOutput {
 		session.maxOutput = 8 << 20
 	}
+	runner.observe(PhaseInvokeBegin, ctx)
 	result, err := session.exchange(method, payload)
+	runner.observe(PhaseInvokeEnd, ctx)
 	if err != nil {
 		return out, err
 	}
-	if _, err = session.exchange("stop", nil); err != nil {
+	runner.observe(PhaseStopBegin, ctx)
+	_, err = session.exchange("stop", nil)
+	runner.observe(PhaseStopEnd, ctx)
+	if err != nil {
 		return out, err
 	}
 	stdin.Close()
+	runner.observe(PhaseWaitBegin, ctx)
 	err = cmd.Wait()
 	waited = true
+	runner.observe(PhaseWaitEnd, ctx)
 	if err != nil {
 		return out, failure("worker_failed")
 	}

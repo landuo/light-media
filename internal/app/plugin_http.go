@@ -147,14 +147,17 @@ func decodePluginBody(w http.ResponseWriter, r *http.Request, value any) error {
 }
 
 func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (map[string]any, error) {
+	diagnostic := newTransferFormObservation(installation.PluginID)
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	select {
 	case a.pluginProcess <- struct{}{}:
 		defer func() { <-a.pluginProcess }()
 	case <-ctx.Done():
+		a.logTransferFormFailure(diagnostic, installation, ctx, "queue", plugins.RunResult{}, ctx.Err())
 		return nil, bad("PLUGIN_BUSY", "插件正在执行，请稍后重试")
 	}
+	diagnostic.acquired()
 	manifest, _, exists := builtin.Lookup(installation.PluginID)
 	if !exists || manifest.Version != installation.Version {
 		return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的Go实现尚未完成，不能配置或运行")
@@ -163,10 +166,15 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 	if err != nil {
 		return nil, err
 	}
-	result, err := (plugins.Runner{Timeout: 10 * time.Second}).Run(ctx, command, manifest, installation.InstanceID, "config_form", nil, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+	runner := plugins.Runner{Timeout: 10 * time.Second}
+	if diagnostic != nil {
+		runner.ObservePhase = diagnostic.observe
+	}
+	result, err := runner.Run(ctx, command, manifest, installation.InstanceID, "config_form", nil, diagnostic.wrapHost(func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 		return a.pluginHostCall(ctx, installation, nil, identity, method, raw)
-	})
+	}))
 	if err != nil {
+		a.logTransferFormFailure(diagnostic, installation, ctx, "runner", result, err)
 		return nil, bad("PLUGIN_FORM_FAILED", "加载插件配置表单失败")
 	}
 	var form struct {
@@ -176,6 +184,7 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 		RenderMode       string                     `json:"render_mode"`
 	}
 	if json.Unmarshal(result.Result, &form) != nil || form.Model == nil || !json.Valid(form.Conf) {
+		a.logTransferFormFailure(diagnostic, installation, ctx, "form_decode", result, nil)
 		return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回格式无效")
 	}
 	stored, err := a.pluginStore.Config(ctx, installation.InstanceID)
@@ -236,6 +245,7 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 	response := map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}
 	if form.RenderMode != "" {
 		if form.RenderMode != "vue" && form.RenderMode != "vuetify" {
+			a.logTransferFormFailure(diagnostic, installation, ctx, "render_mode", result, nil)
 			return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回界面格式无效")
 		}
 		response["render_mode"] = form.RenderMode
