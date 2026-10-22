@@ -197,5 +197,35 @@
     "Browser visual/layout/manual lifecycle verification remains pending platform access."
   ],
   "unrelated_frozen_work_included": false,
-  "source_after_tests_changes": "Documentation only; code and generated asset bytes remain exact verified input."
+  "source_after_tests_changes": "Documentation only; code and generated asset bytes remain exact verified input.",
+  "browser_followup_2026_10_22": {
+    "commit": "4e50b3040c7cdb146097953447687f5aa355898e",
+    "server_sha256": "30cd30136a8d454046f632110d8f9ea27e882bc7183c6788ecc61e93c868983e",
+    "real_browser_pass": [
+      "actual server login and authenticated SSE",
+      "bell system/task tabs and empty states",
+      "three synthetic display messages, role icons, newest-first and literal HTML escaping",
+      "local mark-all-read preserves items",
+      "logout closes stream, re-login opens fresh stream with no history replay",
+      "SiteStatistic install/config dialog with disabled default"
+    ],
+    "display_fixture_boundary": "Three visual sample messages are synthetic SSE display fixtures, not evidence of backend message production; backend production is covered separately through real SDK/API/job tests.",
+    "native_background": "Not demonstrated: native tab switch/minimize emitted no hidden event. Passive observer does not mutate visibility or app state. Reload pagehide/hidden observed, not confused with background.",
+    "module_background_pass": "Existing tested production-feed module: hidden 4999ms stays open, 5000ms closes, no reopen while hidden, foreground opens once; hidden initial delay and logout/unmount/late callback isolation.",
+    "owned_processes_reaped": true,
+    "first_browser_run_exits": {
+      "server": 0,
+      "actual-proxy": -15,
+      "synthetic-proxy": -15
+    },
+    "visibility_run_exits": {
+      "server": -9,
+      "actual-proxy": -15
+    },
+    "minimize_run_exits": {
+      "server": 0,
+      "actual-proxy": -15
+    },
+    "production_changes": false
+  }
 }
