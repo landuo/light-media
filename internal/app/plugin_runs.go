@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -264,6 +265,9 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 		return PluginRun{}, err
 	}
 	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_runs VALUES(?,?,?,?,?,?,?,?,NULL,'',?,?)`, run.ID, instanceID, run.Version, run.Generation, run.ConfigRevision, action, run.State, sealed, run.CreatedAt, run.UpdatedAt)
+	if err == nil {
+		err = p.recordRunOriginTx(ctx, tx, pluginID, run, clear)
+	}
 	return run, err
 }
 
@@ -639,14 +643,43 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 // Internal full replacements share the same snapshot propagation as patches.
 // Only trusted host adapters choose a replacement; it is not a worker method.
 func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, raw json.RawMessage) error {
+	actual, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, run.ID))
+	if err != nil {
+		return err
+	}
+	if actual.State != "running" || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || !bytes.Equal(actual.Input, run.Input) {
+		return bad("PLUGIN_RUN_PROOF_INVALID", "插件配置写入的执行前像不匹配")
+	}
+	var current bool
+	if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM plugin_installations WHERE instance_id=? AND version=? AND generation=? AND installed=1 AND desired_enabled=1)`, actual.InstanceID, actual.Version, actual.Generation).Scan(&current); err != nil {
+		return err
+	}
+	if !current {
+		return bad("PLUGIN_SNAPSHOT_STALE", "插件配置写入的实例快照已变化")
+	}
 	checked, err := p.pluginSnapshotJSON(ctx, tx, run.InstanceID, raw, true)
 	if err != nil {
 		return err
 	}
 	raw = checked
 	revision := run.ConfigRevision
+	var previousSealed []byte
+	if err = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, run.InstanceID).Scan(&previousSealed); err != nil {
+		return err
+	}
+	previousConfig, err := p.unseal("config", run.InstanceID, "main", previousSealed)
+	if err != nil {
+		return err
+	}
 	value, err := p.saveValueTx(ctx, tx, run.InstanceID, "config", "main", revision, raw)
 	if err != nil {
+		return err
+	}
+	plugin, _, err := p.pluginSnapshotOwner(ctx, tx, run.InstanceID)
+	if err != nil {
+		return err
+	}
+	if err = p.recordRunConfigTransitionTx(ctx, tx, plugin, actual, value.Revision, run.Input, previousConfig, raw); err != nil {
 		return err
 	}
 	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,updated_at=? WHERE id=? AND state='running' AND generation=? AND config_revision=?`, value.Revision, now(), run.ID, run.Generation, revision)
@@ -656,20 +689,35 @@ func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *P
 	if n, _ := changed.RowsAffected(); n != 1 {
 		return bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
 	}
+	if err := p.propagateInstanceConfigTx(ctx, tx, run.InstanceID, run.Generation, revision, value.Revision, previousConfig, raw); err != nil {
+		return err
+	}
+	run.ConfigRevision = value.Revision
+	return nil
+}
+
+// propagateInstanceConfigTx is shared by trusted runtime normalization and
+// quiescent form-default normalization. It never enables an instance, creates a
+// run, changes generation, or adopts snapshots from another revision.
+func (p *PluginStore) propagateInstanceConfigTx(ctx context.Context, tx *sql.Tx, instance string, generation, revision, nextRevision int64, previousConfig, raw json.RawMessage) error {
 	// Internal normalization and clearing one-shot flags must reach already
 	// queued invocations too. Only advance snapshots that still match this
 	// exact generation/revision; a user edit continues to invalidate old work.
 	for {
 		var pendingID string
 		var pendingSealed []byte
-		err := tx.QueryRowContext(ctx, `SELECT id,input FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state='pending' ORDER BY id LIMIT 1`, run.InstanceID, run.Generation, revision).Scan(&pendingID, &pendingSealed)
+		err := tx.QueryRowContext(ctx, `SELECT id,input FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state='pending' ORDER BY id LIMIT 1`, instance, generation, revision).Scan(&pendingID, &pendingSealed)
 		if errors.Is(err, sql.ErrNoRows) {
 			break
 		}
 		if err != nil {
 			return err
 		}
-		pendingRaw, err := p.unseal("run", run.InstanceID, pendingID, pendingSealed)
+		pendingRaw, err := p.unseal("run", instance, pendingID, pendingSealed)
+		if err != nil {
+			return err
+		}
+		previous, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, pendingID))
 		if err != nil {
 			return err
 		}
@@ -678,38 +726,40 @@ func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *P
 			return bad("INVALID_PLUGIN_RUN", "排队插件执行快照无效")
 		}
 		invocation["config"] = raw
-		pendingRaw, err = p.pluginSnapshotJSON(ctx, tx, run.InstanceID, invocation, false)
+		pendingRaw, err = p.pluginSnapshotJSON(ctx, tx, instance, invocation, false)
 		if err != nil {
 			return err
 		}
-		plugin, version, scopeErr := p.pluginSnapshotOwner(ctx, tx, run.InstanceID)
+		plugin, version, scopeErr := p.pluginSnapshotOwner(ctx, tx, instance)
 		if scopeErr != nil {
 			return scopeErr
 		}
-		pendingSealed, err = p.sealPluginSnapshot("run", run.InstanceID, pendingID, plugin, version, pendingRaw)
+		if err = p.recordRunConfigTransitionTx(ctx, tx, plugin, previous, nextRevision, pendingRaw, previousConfig, raw); err != nil {
+			return err
+		}
+		pendingSealed, err = p.sealPluginSnapshot("run", instance, pendingID, plugin, version, pendingRaw)
 		if err != nil {
 			return err
 		}
-		if _, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,input=?,updated_at=? WHERE id=?`, value.Revision, pendingSealed, now(), pendingID); err != nil {
+		if _, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,input=?,updated_at=? WHERE id=?`, nextRevision, pendingSealed, now(), pendingID); err != nil {
 			return err
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_api_calls SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_api_calls SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	run.ConfigRevision = value.Revision
 	return nil
 }
 

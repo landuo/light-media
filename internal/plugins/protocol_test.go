@@ -124,6 +124,34 @@ func TestManifestRejectsUnsafeOrIncompatibleEntries(t *testing.T) {
 	}
 }
 
+func TestManifestConfigDefaultsContract(t *testing.T) {
+	for _, declaration := range []string{"", ConfigDefaultsPure} {
+		manifest := fixtureManifest()
+		manifest.ConfigDefaults = declaration
+		if err := manifest.Validate(); err != nil {
+			t.Fatalf("valid defaults declaration %q rejected: %v", declaration, err)
+		}
+		raw, err := json.Marshal(manifest)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if bytes.Contains(raw, []byte(`"config_defaults"`)) != (declaration != "") {
+			t.Fatal("optional defaults declaration serialization changed", string(raw))
+		}
+		var restored Manifest
+		if json.Unmarshal(raw, &restored) != nil || restored.ConfigDefaults != declaration {
+			t.Fatal("defaults declaration did not round trip")
+		}
+	}
+	for _, declaration := range []string{"pure", "pure/v2", "native/v1", " pure/v1", "PURE/V1"} {
+		manifest := fixtureManifest()
+		manifest.ConfigDefaults = declaration
+		if codeOf(manifest.Validate()) != "invalid_manifest" {
+			t.Fatalf("unknown defaults declaration accepted: %q", declaration)
+		}
+	}
+}
+
 func TestWireIsJSONRPCAndRejectsAmbiguousMessages(t *testing.T) {
 	identity := Identity{PluginID: "Fixture", InstanceID: "Fixture", Version: "1.2.3"}
 	frames := []Frame{

@@ -66,7 +66,7 @@ type ProcessInfo struct {
 }
 
 func SystemProcessManifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "SystemProcess", Name: "系统进程", Description: "查看系统进程，支持仪表板", Icon: "Dsfinder_A.png", Version: "1.1", Author: "hotlcc", AuthorURL: "https://github.com/hotlcc", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{"process.list"}, HasPage: true, Dashboards: []string{"default"}}
+	return plugins.Manifest{SchemaVersion: 1, ConfigDefaults: plugins.ConfigDefaultsPure, PluginID: "SystemProcess", Name: "系统进程", Description: "查看系统进程，支持仪表板", Icon: "Dsfinder_A.png", Version: "1.1", Author: "hotlcc", AuthorURL: "https://github.com/hotlcc", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{"process.list"}, HasPage: true, Dashboards: []string{"default"}}
 }
 
 const systemProcessForm = `[{"component":"VForm","content":[

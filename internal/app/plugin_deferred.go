@@ -31,6 +31,7 @@ type pluginDeferredRecord struct {
 	Plugin, Instance, Version, Run, Action, Method string
 	Generation, Revision                           int64
 	InputSHA                                       string
+	ConfigSHA                                      string `json:",omitempty"`
 	Raw, Ack, Result                               json.RawMessage
 	Phase                                          string
 	ErrorCode                                      string `json:",omitempty"`
@@ -175,7 +176,7 @@ func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJourna
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&r) != nil || d.Decode(new(any)) != io.EOF || r.Run != run.ID || r.Instance != run.InstanceID || r.Schema != 1 || !json.Valid(r.Ack) || !json.Valid(r.Raw) {
+	if d.Decode(&r) != nil || d.Decode(new(any)) != io.EOF || r.Run != run.ID || r.Instance != run.InstanceID || r.Schema != 1 || !json.Valid(r.Ack) || !json.Valid(r.Raw) || (r.ConfigSHA != "" && !pluginStorageDigest.MatchString(r.ConfigSHA)) {
 		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作收据损坏")
 	}
 	switch r.Phase {
@@ -283,6 +284,17 @@ func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, 
 	if errors.Is(err, sql.ErrNoRows) {
 		ack, _ := json.Marshal(map[string]string{"deferred": id("pd_")})
 		r = pluginDeferredRecord{Schema: 1, Plugin: in.PluginID, Instance: in.InstanceID, Version: in.Version, Run: run.ID, Action: run.Action, Method: method, Generation: run.Generation, Revision: run.ConfigRevision, InputSHA: deferredInputSHA(run.Input), Raw: raw, Ack: ack, Phase: "prepared"}
+		var configSealed []byte
+		anchorErr := tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main' AND revision=?`, run.InstanceID, run.ConfigRevision).Scan(&configSealed)
+		if anchorErr == nil {
+			configRaw, decodeErr := a.pluginStore.unseal("config", run.InstanceID, "main", configSealed)
+			if decodeErr != nil {
+				return nil, decodeErr
+			}
+			r.ConfigSHA = deferredInputSHA(configRaw)
+		} else if !errors.Is(anchorErr, sql.ErrNoRows) {
+			return nil, anchorErr
+		}
 		err = a.pluginStore.writeDeferred(ctx, tx, r, nil)
 	} else if err == nil && (!deferredSameRun(r, in, run) || r.Method != method || !bytes.Equal(r.Raw, raw) || r.Phase != "prepared") {
 		err = bad("PLUGIN_DEFERRED_UNCERTAIN", "插件操作已经开始，不能重复执行")
@@ -362,7 +374,7 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 	if err != nil {
 		return err
 	}
-	if !deferredSameRun(r, d.installation, d.run) || r.Method != d.record.Method || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) || r.Phase != from {
+	if !deferredSameRun(r, d.installation, d.run) || r.Method != d.record.Method || r.ConfigSHA != d.record.ConfigSHA || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) || r.Phase != from {
 		return bad("PLUGIN_DEFERRED_CONFLICT", "插件操作执行身份或阶段已变化")
 	}
 	if from == "prepared" {
@@ -431,21 +443,21 @@ func (d *pluginDeferredCall) ready(result plugins.RunResult) error {
 // lifecycle/file locks and cannot be constructed from worker JSON.
 func (a *App) requireDeferredExecution(ctx context.Context, run *PluginRun, method string) error {
 	d, ok := ctx.Value(pluginDeferredExecutionKey{}).(*pluginDeferredCall)
-	if !ok || d == nil || d.a != a || run == nil || !deferredSameRun(d.record, d.installation, *run) || method != d.record.Method || ctx.Err() != nil {
+	if !ok || d == nil || d.a != a || run == nil || !deferredSameRun(d.record, d.installation, d.run) || method != d.record.Method || ctx.Err() != nil {
 		return bad("PLUGIN_DEFERRED_REQUIRED", "操作没有绑定可信宿主执行")
-	}
-	r, _, err := a.pluginStore.readDeferred(ctx, a.Store.DB, *run)
-	if err != nil {
-		return err
-	}
-	if !deferredSameRun(r, d.installation, *run) || r.Phase != "started" || r.Method != method || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) {
-		return bad("PLUGIN_DEFERRED_REQUIRED", "操作没有处于已授权阶段")
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+	r, _, err := a.pluginStore.readDeferred(ctx, tx, d.run)
+	if err != nil {
+		return err
+	}
+	if !deferredSameRun(r, d.installation, d.run) || r.Phase != "started" || r.Method != method || r.ConfigSHA != d.record.ConfigSHA || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) {
+		return bad("PLUGIN_DEFERRED_REQUIRED", "操作没有处于已授权阶段")
+	}
 	return a.pluginStore.validateDeferredRunTx(ctx, tx, r, *run)
 }
 
@@ -454,15 +466,21 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 	if err != nil {
 		return err
 	}
-	if actual.State != "running" || actual.ID != r.Run || actual.InstanceID != r.Instance || actual.Version != r.Version || actual.Generation != r.Generation || actual.ConfigRevision != r.Revision || actual.Action != r.Action || deferredInputSHA(actual.Input) != r.InputSHA || !bytes.Equal(actual.Input, run.Input) {
+	if actual.State != "running" || actual.ID != r.Run || actual.InstanceID != r.Instance || actual.Version != r.Version || actual.Generation != r.Generation || actual.Action != r.Action || deferredInputSHA(actual.Input) != r.InputSHA || actual.ID != run.ID || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || !bytes.Equal(actual.Input, run.Input) {
 		return bad("PLUGIN_SNAPSHOT_STALE", "插件执行已结束或快照已变化")
 	}
+	if err = p.validateDeferredRunRevisionTx(ctx, tx, r, actual); err != nil {
+		return err
+	}
 	var current int
-	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=? AND i.generation=? AND i.installed=1 AND i.desired_enabled=1 AND v.revision=?`, r.Instance, r.Plugin, r.Version, r.Generation, r.Revision).Scan(&current)
+	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=? AND i.generation=? AND i.installed=1 AND i.desired_enabled=1 AND v.revision=?`, r.Instance, r.Plugin, r.Version, r.Generation, actual.ConfigRevision).Scan(&current)
 	if err != nil {
 		return err
 	}
 	if current != 1 {
+		if actual.ConfigRevision != r.Revision {
+			return bad("PLUGIN_SNAPSHOT_STALE", "插件安装或配置已变化")
+		}
 		if r.Plugin == "AutoSignIn" && r.Version == "2.9.14" {
 			handled, proofErr := p.autoSignInScheduleAdmissionTx(ctx, tx, r.Instance, r.Generation, r.Revision)
 			if handled && proofErr == nil {
@@ -736,10 +754,14 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		// An uninstall receipt may have advanced its own revision. That recovery
-		// already completed above; an unfinished deferred record stays conservative.
-		if r.Run != run.ID || r.Instance != run.InstanceID || r.Version != run.Version || r.Generation != run.Generation || r.Action != run.Action || r.InputSHA != deferredInputSHA(run.Input) {
-			return bad("PLUGIN_DEFERRED_INVALID", "插件操作恢复身份不匹配")
+		if err = p.validateDeferredHistory(ctx, r, run); err != nil {
+			if r.Plugin == "PluginUnInstall" && r.Version == "2.2" && r.Method == uninstall.ApplyCapability && (r.Phase == "started" || r.Phase == "uncertain") && pluginErrorCodeInternal(err) == "PLUGIN_UNINSTALL_EVIDENCE_INVALID" {
+				if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code='PLUGIN_UNINSTALL_EVIDENCE_INVALID',updated_at=? WHERE id=?`, now(), run.ID); err != nil {
+					return err
+				}
+				continue
+			}
+			return err
 		}
 
 		if r.Plugin == "RemoteIdentifiers" && r.Version == "2.4.1" && (r.Phase == "started" || r.Phase == "uncertain") {

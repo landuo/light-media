@@ -1,0 +1,333 @@
+{
+  "status": "backend development checkpoint; full race set has one unresolved timeout; not complete framework acceptance",
+  "parent": "d3176ff727543c7142d6b1fdf5d6bb42a33d342e",
+  "branch": "plugins/framework-lifecycle",
+  "go_version": "go1.26.10",
+  "inputs": [
+    {
+      "path": "internal/app/http.go",
+      "sha256": "f5596e48e254f63574da2d2724548379c81513c78ef4b089f3ddef5d30e8c646",
+      "blob": "02a7ddd032f7e4dff112a78192ebfe33b4db7e99",
+      "bytes": 33064,
+      "before_blob": "0fe4561f7f9739f3400f70a9e63c6a3d92814467"
+    },
+    {
+      "path": "internal/app/plugin_config_defaults.go",
+      "sha256": "3fdd60609f77e102bf6121402efe8d674f2784dba7803355809eadf538440a47",
+      "blob": "b829909b42e469ac109ae44693fcd34d24c267c8",
+      "bytes": 4859,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_config_defaults_test.go",
+      "sha256": "ba16436cdd41018cc088998f7403cf628875cc7fc9e7333eaad8eaae3c1ffa6b",
+      "blob": "77b0b83e00539377983a35983638d62787deb3ae",
+      "bytes": 23607,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_deferred.go",
+      "sha256": "689e890f94376fe0ecdfe0fa6dc0635ba4a5640ab97827831d987b7cebf1f8ba",
+      "blob": "b4640bb535de0de600bb7446aa6501e84f914ceb",
+      "bytes": 45432,
+      "before_blob": "6bfcafc2d0115665d371e9cf79550e304645911d"
+    },
+    {
+      "path": "internal/app/plugin_deferred_history.go",
+      "sha256": "41753ed83559a91b639deec015e0badda70f42880980d814ee9c9f598cddf292",
+      "blob": "7034a0390f1d1a18e35135afa7b4afd30622f5f2",
+      "bytes": 2970,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_deferred_history_test.go",
+      "sha256": "76c3c97c04eace6798060a321f1e4534e702c67b373e7a718f5a81a153bd2c9f",
+      "blob": "001d0116686c173e4c53172331986890bf94b53b",
+      "bytes": 10322,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_deferred_revision.go",
+      "sha256": "5092eeb5332758b7e917a6569dcde964c88086309ccb49355401e59c0188e516",
+      "blob": "62d6cd607921f5e41feb5a0cfe15b12a4ee994fe",
+      "bytes": 1765,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_deferred_revision_test.go",
+      "sha256": "df225831ff9ca4d1f0eeba0536fc9402638946a191a6e8ae1ff0c80da9e731eb",
+      "blob": "e32cb1cbc58522bafc225de4a335cbe779144960",
+      "bytes": 7533,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_run_origin.go",
+      "sha256": "6f67a1f04116915270482971f65f94bcc2ae08009e7518d8a2180dc665dde1ff",
+      "blob": "3ff540ef637f5daec615fbe871870d89969917c2",
+      "bytes": 9685,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_run_origin_test.go",
+      "sha256": "f2488290118b774fc5ac836b8e92e5101c082b0ee700399223590b8073aae9cc",
+      "blob": "12623e48c8c8998267630775066042ec9c763fbe",
+      "bytes": 15376,
+      "before_blob": null
+    },
+    {
+      "path": "internal/app/plugin_runs.go",
+      "sha256": "2ef5c6384f7c46ac8245d65423c81db203abe5c1c2b94822d2b32f42aebc7009",
+      "blob": "28a56f84584347d9496274a587259eb08f165cab",
+      "bytes": 32464,
+      "before_blob": "ecf953a5b17135186d6d5922acb3a243943e9f7b"
+    },
+    {
+      "path": "internal/app/plugin_store.go",
+      "sha256": "353be1aa5246eddf6a7a450ae82db2d32a41c959986f906c4c92dea9d9da78f7",
+      "blob": "4ce295a2fc29b195f8b8add12b3253dcf75ad89c",
+      "bytes": 53610,
+      "before_blob": "f391e733060ef4368fb956c77f282e07e0835e95"
+    },
+    {
+      "path": "internal/plugins/builtin/category_editor.go",
+      "sha256": "7ba59c303655fa58472edb989a734c18bafe8193a32a191c75c2357f42c3fe88",
+      "blob": "12f56592ac5ca2bcf8919ad9ef5a602abd35bc84",
+      "bytes": 3515,
+      "before_blob": "e3fe2fa86bbf620dde0d8a177fd06f0d2cf83ff8"
+    },
+    {
+      "path": "internal/plugins/builtin/system_process.go",
+      "sha256": "42a8a921c35f711f8f7cc13445f9da0b3011d9b8e6795d7431219d6e7ea9281e",
+      "blob": "394b6be2699b834cf0bf61c4d4e0b5e6f95e3fd5",
+      "bytes": 6907,
+      "before_blob": "c74f5011ef2bc69a9ebf27e9d0f2767e3c30e581"
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "sha256": "90072141e7d91add7d7aba91468f43d6e7ec3d87bb4268fd28ea434a21de4b4f",
+      "blob": "295d0f22a64b2cb85bb4e004e83cb4fa6370902a",
+      "bytes": 17734,
+      "before_blob": "738be15734db75e8b95e81e9c4eba4cead68b10d"
+    },
+    {
+      "path": "internal/plugins/protocol_test.go",
+      "sha256": "e3893f67992849fe26be9ece846bce359198a7556c43a979f9e2aad62edd04b6",
+      "blob": "ddcedc683d69edb70731b9665a7c26e97d83db24",
+      "bytes": 11811,
+      "before_blob": "41ce35b58752e0de688fb03c6c798eb833fbfdac"
+    }
+  ],
+  "runs": [
+    {
+      "exit": 0,
+      "passed_roots": 78,
+      "passed_inclusive": 222,
+      "failures": [],
+      "changed": [],
+      "checked_files": 5427,
+      "completed_at": "2026-10-22T18:54:17.634239+00:00",
+      "name": "v5-history-normal-2",
+      "evidence_sha256": {
+        "input.json": "83285f0eea2349c1bb50e52f7c05850a53a208816d002f5229788410b63f1490",
+        "test.jsonl": "503bf7d6e2cbce2affe43a3c8107bfdcabe679ddd73fca0fe29adaf7bac05f24",
+        "test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "summary.json": "b36c54c0ef9f30484ef9cb4fedbb2f5a1394b35f6055dbd83e4f04b08a448822"
+      }
+    },
+    {
+      "exit": 0,
+      "passed_roots": 48,
+      "passed_inclusive": 172,
+      "failures": [],
+      "changed": [],
+      "checked_files": 5427,
+      "completed_at": "2026-10-22T19:03:26.281202+00:00",
+      "capture_note": "Initial evidence preparation rejected dict roots at .startswith; shell still launched the exact race command. Reuse full frozen ordinary input after rechecking all 5427 hashes now; record this later metadata capture, not a claimed pre-start capture.",
+      "name": "v5-framework-race-a-1",
+      "evidence_sha256": {
+        "input.json": "af4f2eb21bd5a14b5bc62c655f309c32cf08ce700061a36ef9a9751b15149a83",
+        "test.jsonl": "3b6ad6e473b85bfe9dd5a15cab8473fd91f176c95bb0a65094cfbd3ac95f8def",
+        "test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "summary.json": "67577f477683dbb55f0d1b66166b8ccd8337d207faeeae3d4e52fcb078c5efb3"
+      }
+    },
+    {
+      "exit": 1,
+      "passed_roots": 29,
+      "passed_inclusive": 49,
+      "failures": [
+        "TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned",
+        "light-media/internal/app"
+      ],
+      "changed": [],
+      "checked_files": 5427,
+      "completed_at": "2026-10-22T19:12:21.441842+00:00",
+      "name": "v5-framework-race-b-1",
+      "evidence_sha256": {
+        "input.json": "59804393366202fd768533a7126ac4cf7d04587f2ed8373d9cd6b0eed9512118",
+        "test.jsonl": "3686867da327f35ee781feb007946cb3fd75a3512951f5520d36f9c0ddd7814f",
+        "test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "summary.json": "c01c078f3c7b881998efefde73f369870e02303e8a6b0c1ddf5cfa403bf78e07"
+      }
+    },
+    {
+      "exit": 0,
+      "passed_roots": 1,
+      "passed_inclusive": 1,
+      "changed": [],
+      "checked_files": 5427,
+      "phases": [
+        {
+          "context": "none",
+          "elapsed_ms": 1693,
+          "error_class": "none",
+          "host_calls": 1,
+          "host_ended": 1,
+          "host_error_classes": {},
+          "host_first_start_ms": 674,
+          "host_last_end_ms": 678,
+          "host_started": 1,
+          "host_total_ms": 3,
+          "phases_ms": {
+            "handshake_begin": 1,
+            "handshake_end": 671,
+            "invoke_begin": 673,
+            "invoke_end": 681,
+            "negotiate_begin": 672,
+            "negotiate_end": 673,
+            "run_entered": 0,
+            "run_returned": 1693,
+            "start_begin": 0,
+            "start_end": 1,
+            "stop_begin": 681,
+            "stop_end": 683,
+            "wait_begin": 683,
+            "wait_end": 1693
+          },
+          "queue_ms": 0,
+          "read_wire_bytes": 2262,
+          "runner_context": "active",
+          "sent_wire_bytes": 1246,
+          "stage": "runner"
+        },
+        {
+          "context": "none",
+          "elapsed_ms": 1564,
+          "error_class": "none",
+          "host_calls": 1,
+          "host_ended": 1,
+          "host_error_classes": {},
+          "host_first_start_ms": 549,
+          "host_last_end_ms": 555,
+          "host_started": 1,
+          "host_total_ms": 6,
+          "phases_ms": {
+            "handshake_begin": 0,
+            "handshake_end": 547,
+            "invoke_begin": 548,
+            "invoke_end": 557,
+            "negotiate_begin": 547,
+            "negotiate_end": 548,
+            "run_entered": 0,
+            "run_returned": 1564,
+            "start_begin": 0,
+            "start_end": 0,
+            "stop_begin": 557,
+            "stop_end": 558,
+            "wait_begin": 558,
+            "wait_end": 1564
+          },
+          "queue_ms": 0,
+          "read_wire_bytes": 2323,
+          "runner_context": "active",
+          "sent_wire_bytes": 1363,
+          "stage": "runner"
+        },
+        {
+          "context": "none",
+          "elapsed_ms": 1741,
+          "error_class": "none",
+          "host_calls": 1,
+          "host_ended": 1,
+          "host_error_classes": {},
+          "host_first_start_ms": 727,
+          "host_last_end_ms": 730,
+          "host_started": 1,
+          "host_total_ms": 3,
+          "phases_ms": {
+            "handshake_begin": 0,
+            "handshake_end": 725,
+            "invoke_begin": 726,
+            "invoke_end": 732,
+            "negotiate_begin": 725,
+            "negotiate_end": 726,
+            "run_entered": 0,
+            "run_returned": 1741,
+            "start_begin": 0,
+            "start_end": 0,
+            "stop_begin": 732,
+            "stop_end": 733,
+            "wait_begin": 733,
+            "wait_end": 1741
+          },
+          "queue_ms": 0,
+          "read_wire_bytes": 2262,
+          "runner_context": "active",
+          "sent_wire_bytes": 1246,
+          "stage": "runner"
+        },
+        {
+          "context": "none",
+          "elapsed_ms": 2327,
+          "error_class": "none",
+          "host_calls": 1,
+          "host_ended": 1,
+          "host_error_classes": {},
+          "host_first_start_ms": 1298,
+          "host_last_end_ms": 1303,
+          "host_started": 1,
+          "host_total_ms": 5,
+          "phases_ms": {
+            "handshake_begin": 0,
+            "handshake_end": 1296,
+            "invoke_begin": 1298,
+            "invoke_end": 1306,
+            "negotiate_begin": 1296,
+            "negotiate_end": 1297,
+            "run_entered": 0,
+            "run_returned": 2326,
+            "start_begin": 0,
+            "start_end": 0,
+            "stop_begin": 1306,
+            "stop_end": 1306,
+            "wait_begin": 1306,
+            "wait_end": 2325
+          },
+          "queue_ms": 0,
+          "read_wire_bytes": 2323,
+          "runner_context": "active",
+          "sent_wire_bytes": 1363,
+          "stage": "runner"
+        }
+      ],
+      "completed_at": "2026-10-22T19:22:22.599988+00:00",
+      "interpretation": "One bounded observation rerun passed; it does not establish the exact phase or cause of the original 10.504s failure, which lacked Uninstall observations. Do not relabel the original B suite green.",
+      "name": "uninstall-phase-race-1",
+      "evidence_sha256": {
+        "input.json": "468be3e874288b32d0c77b0eb2654d96ac8e34e415a960b6cd0784c41ef9eed5",
+        "test.jsonl": "65a29399fa9b776e13f65b45618cdc4a38b56df554e028e32e2f851fb84dcf5f",
+        "test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "summary.json": "31b4b8eac372f6a51539a97cb7d2ecb6c6fdb16bea784cd6838886b376f9a902"
+      }
+    }
+  ],
+  "diagnostic_changes_published": false,
+  "v6_projection_included": false,
+  "new_production_business_adapter_included": false,
+  "aggregate_merged": false,
+  "frontend_included": false
+}

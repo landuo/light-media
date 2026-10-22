@@ -23,6 +23,11 @@ import (
 const ProtocolVersion = 1
 const HostAPIVersion = 1
 
+// ConfigDefaultsPure declares that missing-default writes have no independent
+// business-owner state or frozen work to rebind. Only a matching compiled
+// manifest can grant this contract; a stored manifest is not write authority.
+const ConfigDefaultsPure = "pure/v1"
+
 var identityPattern = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 var versionPattern = regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){0,3}(?:[-+][A-Za-z0-9.-]+)?$`)
 var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
@@ -30,27 +35,31 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
 type Manifest struct {
-	SchemaVersion int       `json:"schema_version"`
-	PluginID      string    `json:"plugin_id"`
-	Name          string    `json:"name"`
-	Description   string    `json:"description,omitempty"`
-	Icon          string    `json:"icon,omitempty"`
-	Author        string    `json:"author,omitempty"`
-	AuthorURL     string    `json:"author_url,omitempty"`
-	Version       string    `json:"version"`
-	Runtime       string    `json:"runtime"`
-	Entry         string    `json:"entry"`
-	HostAPIMin    int       `json:"host_api_min"`
-	HostAPIMax    int       `json:"host_api_max"`
-	Methods       []string  `json:"methods"`
-	Capabilities  []string  `json:"capabilities"`
-	Events        []string  `json:"events,omitempty"`
-	HasPage       bool      `json:"has_page,omitempty"`
-	Dashboards    []string  `json:"dashboards,omitempty"`
-	APIs          []HTTPAPI `json:"apis,omitempty"`
+	SchemaVersion  int       `json:"schema_version"`
+	PluginID       string    `json:"plugin_id"`
+	Name           string    `json:"name"`
+	Description    string    `json:"description,omitempty"`
+	Icon           string    `json:"icon,omitempty"`
+	Author         string    `json:"author,omitempty"`
+	AuthorURL      string    `json:"author_url,omitempty"`
+	Version        string    `json:"version"`
+	Runtime        string    `json:"runtime"`
+	Entry          string    `json:"entry"`
+	HostAPIMin     int       `json:"host_api_min"`
+	HostAPIMax     int       `json:"host_api_max"`
+	Methods        []string  `json:"methods"`
+	Capabilities   []string  `json:"capabilities"`
+	Events         []string  `json:"events,omitempty"`
+	HasPage        bool      `json:"has_page,omitempty"`
+	Dashboards     []string  `json:"dashboards,omitempty"`
+	APIs           []HTTPAPI `json:"apis,omitempty"`
+	ConfigDefaults string    `json:"config_defaults,omitempty"`
 }
 
 func (m Manifest) Validate() error {
+	if m.ConfigDefaults != "" && m.ConfigDefaults != ConfigDefaultsPure {
+		return failure("invalid_manifest")
+	}
 	if m.SchemaVersion != 1 || !identityPattern.MatchString(m.PluginID) || !versionPattern.MatchString(m.Version) ||
 		m.Name == "" || len(m.Name) > 256 || m.Runtime != "go-executable" || m.HostAPIMin < 1 || m.HostAPIMax < m.HostAPIMin ||
 		m.Entry == "" || filepath.IsAbs(m.Entry) || strings.Contains(m.Entry, "\\") || filepath.ToSlash(filepath.Clean(m.Entry)) != m.Entry ||
