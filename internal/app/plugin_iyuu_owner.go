@@ -293,6 +293,10 @@ func (a *App) configureIYUU(ctx context.Context, owner *pluginIYUUOwner, run *Pl
 // existing App implementation obtains its usual lifecycle locks. This wrapper
 // never retains lifecycle/process/file locks while waiting for an active run.
 func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	// Clone reads a source snapshot but never publishes a source lifecycle change.
+	if parts := strings.Split(path, "/"); r.Method == "POST" && len(parts) == 2 && parts[1] == "clone" {
+		return a.pluginCloneHTTP(w, r, parts[0])
+	}
 	if r.Method != "GET" {
 		instance := strings.Split(path, "/")[0]
 		if in, e := a.pluginStore.Installation(r.Context(), instance); e == nil && isTorrentTransfer(in.PluginID) && in.Installed {

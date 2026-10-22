@@ -236,7 +236,7 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 			return nil, err
 		}
 	}
-	if _, err = tx.ExecContext(ctx, pluginOrganizationSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, pluginOrganizationSchema+pluginInstanceSchema); err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS plugin_run_startup_blocks(run_id TEXT PRIMARY KEY,FOREIGN KEY(run_id) REFERENCES plugin_runs(id))`); err != nil {

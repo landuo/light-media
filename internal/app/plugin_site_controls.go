@@ -33,10 +33,7 @@ func (p *PluginStore) siteControlPeersTx(ctx context.Context, tx *sql.Tx) ([]str
 			rows.Close()
 			return nil, nil, err
 		}
-		installed = append(installed, peer.PluginID)
-		if peer.PluginID == "CustomSites" || slices.ContainsFunc(builtin.SiteControlSlots, func(slot builtin.SiteControlSlot) bool { return slot.PluginID == peer.PluginID }) {
-			pending = append(pending, peer)
-		}
+		pending = append(pending, peer)
 	}
 	err = rows.Err()
 	rows.Close()
@@ -45,11 +42,22 @@ func (p *PluginStore) siteControlPeersTx(ctx context.Context, tx *sql.Tx) ([]str
 	}
 	peers := map[string]siteControlPeer{}
 	for _, peer := range pending {
+		eligible, err := p.defaultPluginReferenceCandidate(ctx, tx, peer.ID)
+		if err != nil {
+			return nil, nil, err
+		}
+		if !eligible {
+			continue
+		}
+		installed = append(installed, peer.PluginID)
+		if peer.PluginID != "CustomSites" && !slices.ContainsFunc(builtin.SiteControlSlots, func(slot builtin.SiteControlSlot) bool { return slot.PluginID == peer.PluginID }) {
+			continue
+		}
 		if _, exists := peers[peer.PluginID]; exists {
 			return nil, nil, bad("PLUGIN_REFERENCE_AMBIGUOUS", "站点开关关联插件存在多个实例，需先完成引用映射")
 		}
 		var sealed []byte
-		err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, peer.ID).Scan(&peer.Revision, &sealed)
+		err = tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, peer.ID).Scan(&peer.Revision, &sealed)
 		peer.Config = map[string]json.RawMessage{}
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			return nil, nil, err

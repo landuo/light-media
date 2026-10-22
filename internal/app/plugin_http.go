@@ -20,6 +20,8 @@ import (
 )
 
 type pluginCard struct {
+	DisplayVersion   string `json:"display_version,omitempty"`
+	SourceInstanceID string `json:"source_instance_id,omitempty"`
 	plugins.Manifest
 	InstanceID string `json:"instance_id"`
 	Installed  bool   `json:"installed"`
@@ -123,7 +125,12 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 					}
 				}
 			}
-			items = append(items, pluginCard{Manifest: manifest, InstanceID: installation.InstanceID, Installed: true, State: state})
+			card, err := a.pluginStore.presentInstance(ctx, installation, manifest)
+			if err != nil {
+				return nil, err
+			}
+			card.State = state
+			items = append(items, card)
 		}
 	}
 	if market {
