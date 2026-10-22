@@ -1,5 +1,5 @@
 {
-  "status": "verified normal/browser milestone, NOT final plugin acceptance",
+  "status": "producer milestone validated: normal/race/modernconly, real browser, vet and builds; separate host capability notice/integration still pending",
   "code_base": "4e50b3040c7cdb146097953447687f5aa355898e",
   "branch_base": "b4a33f6a0cb1c2387d8c948758da2b38a6f9b8c2",
   "scope": "Linux and local storage only",
@@ -156,7 +156,19 @@
       "elapsed": 332.561
     }
   },
-  "modernconly_cgo0": "pending",
+  "modernconly_cgo0": {
+    "exit": 0,
+    "roots": 150,
+    "inclusive": 513,
+    "fail": 0,
+    "skip": 0,
+    "elapsed": 141.509,
+    "CGO_ENABLED": "0",
+    "tags": [
+      "modernconly"
+    ],
+    "exact_normal_test_set": true
+  },
   "browser": {
     "real_cloud_chrome": true,
     "actual_app_handler_and_web_handler": true,
@@ -183,12 +195,32 @@
     "validation/app-race-a1-cwd.jsonl": "d70daaf23533d0dca1b4d5c45f1c855734e392c72c3ea3a433ebb072159123fe",
     "validation/app-race-a2.jsonl": "d0e308fb8efbfd542c8276ae3bd63b8f39f5b59e6a6a989bda285ed02a68a804",
     "validation/app-race-b1.jsonl": "e0e8fbe31d4622ebfeba818dce394f8ad746760e358ca112a6c839cce09c4292",
-    "validation/app-race-b2.jsonl": "8ff286630b99171a5f6b726c97e55d903120a3919607841bd19d6d8857e1b4d8"
+    "validation/app-race-b2.jsonl": "8ff286630b99171a5f6b726c97e55d903120a3919607841bd19d6d8857e1b4d8",
+    "validation/app-modernconly.jsonl": "650ce94004b3c9a597b9b710776cd7faf334a181a0cfc92f61f2a8f98edbc729",
+    "validation/app-vet.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/all-cmd-build.stderr": "f84e4368c96e9e476670dd47c40ed4512a59b5fef858a5a994a4c88361100ca3",
+    "validation/all-cmd-build-fixed.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/server-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "migration_boundary": [
     "shared ephemeral FIFO, not durable exactly-once popup delivery",
     "existing SQL diagnostic persists; no existing-fact or cold-recovery replay",
     "no real account, external sender or user media deletion",
     "source AST inspection not new original Python runtime execution"
-  ]
+  ],
+  "build_gates": {
+    "CGO_ENABLED": "0",
+    "tags": [
+      "modernconly"
+    ],
+    "app_vet_exit": 0,
+    "all_23_cmd_build_exit": 0,
+    "server_build_exit": 0,
+    "buildvcs": false,
+    "server_sha256": "5dafdf9adabcaa7403245468c4a49c355db1ddf31c2ff2fc571f6b40d63d16a3",
+    "initial_build_exit": 1,
+    "initial_failure": "isolated source directory could not obtain VCS status (git exit128); corrected by explicit -buildvcs=false, no Git/security setting changed",
+    "production_main_run": false
+  },
+  "separate_followup": "Host form must clearly state Linux/local-only using shared capability mechanism, while retaining frozen original form/oracle and checking existing nonlocal rejection. Not part of these frozen producer bytes."
 }

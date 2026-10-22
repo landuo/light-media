@@ -60,7 +60,13 @@ Fresh validation so far (candidate hashes recorded in verification evidence):
   Reported for shared-framework handling; not silently changed or claimed fixed.
 Affected race regression now covers all 150 roots / 513 inclusive tests,
 with the exact same test-name set as normal. No data race or skip was reported.
-CGO_ENABLED=0 modernconly regression remains pending. Prior stage results are provenance, not a pass for
+CGO_ENABLED=0 modernconly also passed all 150 roots / 513 inclusive tests,
+with the exact same test-name set and zero failures or skips.
+Explicit CGO0 modernconly App vet, all 23 CLI packages and the actual
+server binary build passed. The first build failed solely on unavailable
+VCS status in the isolated source copy; -buildvcs=false resolved it without
+changing Git settings. That original exit 1 is preserved. The built main
+program was not run; real UI used the actual App.Handler/web.Handler fixture. Prior stage results are provenance, not a pass for
 this change. No deployment or final plugin acceptance claimed yet.
 
 Race follow-up: initial 44-root shard exited 1: 43 passed; one relative-file
@@ -69,3 +75,10 @@ root instead of internal/app. No race was reported. The runner cwd is fixed;
 the failed case reran successfully using the same binary and package cwd.
 All four disjoint shards plus this one-case rerun now pass. The original
 failed run is retained, not rewritten as exit 0.
+
+This producer milestone has completed its stated development gates. A separate
+host capability display follow-up is required: the frozen original form lists
+cloud storage examples, but this project scope is Linux/local only. The native
+owner, host and local storage operations already reject nonlocal execution;
+those boundaries must remain explicit in the UI. No remote adapter is promised.
+Final plugin-wide integration/acceptance is not claimed by this milestone.
