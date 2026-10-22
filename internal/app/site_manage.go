@@ -414,8 +414,21 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 			return siteSnapshot{}, err
 		}
 	}
+	var finishSystemError func(bool)
+	if hooks != nil {
+		finishSystemError, err = a.stageSiteSystemErrorTx(ctx, tx, hooks.Origin, key, e)
+		if err != nil {
+			return siteSnapshot{}, err
+		}
+		if finishSystemError != nil {
+			defer func() { finishSystemError(false) }()
+		}
+	}
 	if err = tx.Commit(); err != nil {
 		return siteSnapshot{}, err
+	}
+	if finishSystemError != nil {
+		finishSystemError(true)
 	}
 	a.log("INFO", "site", "userdata_refreshed", "站点用户数据刷新完成："+snapshot.Connection.Status, "", "")
 	return snapshot, nil

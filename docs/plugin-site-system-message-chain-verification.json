@@ -1,0 +1,201 @@
+{
+  "base_commit": "5682e36d5370653ad8c0289e23e1d2c2081d286d",
+  "scope": "SiteStatistic native SystemError, shared MessageHelper, authenticated SSE and bell UI; not full repository or production acceptance",
+  "backend_input_manifest_sha256": "80e8d050d5a85bf71c624684c589ebdd520d5ea33d34dc49ecb6b6f93dd3373b",
+  "frontend_v7_input_manifest_sha256": "712f70c074e2b7effad2feb52518ec457e522d7900fc8b64baa96bb0da1b866b",
+  "frontend_v7_final_manifest_sha256": "02779f0b18d5511d91b133b4b880302c7706f1d52dd09fd0863d136d64a029df",
+  "build_input_manifest_sha256": "d9baf1a3f0b506bb6e3409a69eaf53583941edfbb586c8468df2f96be83dc759",
+  "backend_full_source_files_unchanged": 5388,
+  "build_full_source_files_unchanged": 5408,
+  "app_ordinary": {
+    "exit": 0,
+    "root_pass": 166,
+    "test_pass_including_children": 665,
+    "skip": [
+      "TestReviewedStatisticSelectedStdin"
+    ]
+  },
+  "app_race": {
+    "source_manifest_sha256": "80e8d050d5a85bf71c624684c589ebdd520d5ea33d34dc49ecb6b6f93dd3373b",
+    "all_source_files_unchanged": 5388,
+    "race_log_count": 24,
+    "all_race_exits": 0,
+    "test_terminals": {
+      "pass": 665,
+      "skip": 1
+    },
+    "root_terminals": {
+      "pass": 166,
+      "skip": 1
+    },
+    "exact_ordinary_case_set_and_status": true,
+    "duplicates": [],
+    "skips": [
+      "TestReviewedStatisticSelectedStdin"
+    ],
+    "logs": [
+      "app-new-race.stdout",
+      "app-race-group-01.stdout",
+      "app-race-group-02.stdout",
+      "app-race-group-03.stdout",
+      "app-race-group-04.stdout",
+      "app-race-group-05.stdout",
+      "app-race-group-06.stdout",
+      "app-race-group-07.stdout",
+      "app-race-group-08.stdout",
+      "app-race-group-09.stdout",
+      "app-race-group-10.stdout",
+      "app-race-group-11.stdout",
+      "app-race-group-12.stdout",
+      "app-race-group-13.stdout",
+      "app-race-group-14.stdout",
+      "app-race-group-15.stdout",
+      "app-race-group-16.stdout",
+      "app-race-group-17.stdout",
+      "app-race-group-18.stdout",
+      "app-race-group-19.stdout",
+      "app-race-group-20.stdout",
+      "app-race-group-21.stdout",
+      "app-race-group-22.stdout",
+      "app-race-group-23.stdout"
+    ]
+  },
+  "app_modernconly": {
+    "exit": 0,
+    "test_terminals": {
+      "pass": 665,
+      "skip": 1
+    },
+    "exact_ordinary_and_race_case_set": true
+  },
+  "sites_ordinary_and_race_each": {
+    "exit": 0,
+    "root_pass": 64,
+    "test_pass_including_children": 340,
+    "skip": 0
+  },
+  "frontend": {
+    "check_exit": 0,
+    "test_exit": 0,
+    "pass": 200,
+    "skip": 0,
+    "build_exit": 0,
+    "system_message_cases": 22,
+    "dist_files": 54,
+    "dist_manifest_sha256": "0d0e5d5823057215ed69f894d108598f5c9f392a9822bc2fa5f0f9e879e82820"
+  },
+  "vet_exit": 0,
+  "server_build_exit": 0,
+  "server_sha256": "30cd30136a8d454046f632110d8f9ea27e882bc7183c6788ecc61e93c868983e",
+  "modernconly_23_cli_build_exit": 0,
+  "cli_sha256": {
+    "custom-hosts-migrate-owned": "109eb5cafb799d2691966a8301f31f5498353d9bc37055ed66fd688c2f69d0cc",
+    "fnoscheck": "0094659101b48986b12dd65f1a3506417c615fbd5d5ff719044973bf0c181aef",
+    "fnosprovidercheck": "6e3eb9126a72403f5dd4f10d37fb908fa9ea318779e8ed4d1c908de30ca2ab48",
+    "integrationcheck": "a5b41c402fd5aaf47321b227075d4f6ee7b628ecefc264b4adc328d5d312d845",
+    "iyuu-migrate-owned": "a3209080d31f675c50c9fae0df810e43c8400c44b2bfa46d20dfb36ec292b3f7",
+    "media-refresh-migrate-owned": "9e9aedcf1de3bae541bbd3d06f9968a32846ef08a5a6ba8cf7fc57870c1c811d",
+    "mediacheck": "b3cd3e7f53159628e9bf427f50049513f66e59ba67de9cb9da054d272214cd53",
+    "metadatacheck": "bca0883274593f3961ade4df3c57885ae5418f39d87ab2c0f229b7ddef384cf3",
+    "metainfocheck": "3555a0369bccf8890252351c5b7abefc06943db60f5a32af58752e4ebacf88d5",
+    "nasbench": "7eb61534ef95c29883f8c1b0848ed8a204642033f210e617a3d54d3e26b2c6ac",
+    "pathcheck": "015971d88183954b2ef0be3f48f5eef8c52cfe8722c01fb4a954da8beb5a7735",
+    "plugin-handoff-owned": "a5f8f435b8b5cb517af23b701e250f27926df9d23bb6555adfc2ddd4bababf7d",
+    "remote-identifiers-migrate-owned": "21c43b688bedb544eef999fcea56e1cfb307c0772d947660782e1be216160969",
+    "remove-link-migrate-owned": "781fe43e39b4ab537cfc877cdb2b10c59b820b5999bc329159396540f1e087b3",
+    "seed-rescue-migrate-owned": "ed9c48a9605a0445c1a3d2d48a4402a7de73e177dd0c2720c0395ae3828eb117",
+    "server": "b03bb7ba8c6d15d37089bf9297d50ae243cbf913b3a07622d7d51c090d3303fb",
+    "server-status-migrate-owned": "625d943c28d2f5c72c6d50eb5963c0cd3b83e09e2e260e9cb51a67e5d871b1e3",
+    "site-message-settings-migrate-owned": "e006da90dd6d4f886705a20fbd5fc7883544d203794972030dfb4b2ca36d25eb",
+    "site-statistic-migrate-owned": "8410303624ad5d44630d1a8245d337d05aff0528425d9c3b26e9ab04f45ed9a3",
+    "source-settings-migrate-owned": "d2d9a09b985fc5f31accece09ee81eb17ecc3528b477d7ca18b4ffeb3b563d99",
+    "sqlitebench": "1be6740cfa314fa5c5ade2dd06d195763ec41fffc4ac54b873b0db8928d27783",
+    "system-process-migrate-owned": "e119b9c4e06b15d14591b83f3a70a1074d73e831594a001f8becef6ccce87381",
+    "transfer-migrate-owned": "297573afef364782eecd8ad1fc9c5ce50f30d4e06404e0725edebd61d5ca807d"
+  },
+  "actual_server_http_smoke": {
+    "status": "pass",
+    "checks": [
+      "fresh unauthenticated actual server",
+      "all 54 final UI artifacts served byte-exact by actual embedded web handler",
+      "unauthenticated SSE denied 401",
+      "synthetic login succeeds",
+      "cross-site SSE denied 403",
+      "real SSE empty immediate frame then 3-second frame",
+      "logout revokes session and closes existing SSE"
+    ],
+    "frame_interval_seconds": 3.0014,
+    "actual_browser_visual": "blocked: sandbox network namespaces and shared-host launcher read-only sessions error; no visual pass claimed",
+    "binary_sha256": "30cd30136a8d454046f632110d8f9ea27e882bc7183c6788ecc61e93c868983e",
+    "release_manifest_sha256": "d9baf1a3f0b506bb6e3409a69eaf53583941edfbb586c8468df2f96be83dc759"
+  },
+  "actual_browser_visual": {
+    "status": "not_executed_successfully",
+    "reason": "Cloud Chrome and separate sandbox exec could not connect to sandbox localhost. Shared-host launch failed before execution with read-only sandbox session mount error. No network/security settings were changed and no user computer was used.",
+    "application_failure_claimed": false
+  },
+  "preserved_failures": [
+    "UI v4 Intl relative-time assertion failed; replaced implementation with verified original Day.js, not a false expected value.",
+    "UI v6 stale render-clock defect found by review; v7 real App SSR test demonstrates original wrong output and fixed current-time output.",
+    "First vet command named nonexistent internal/plugins/notice and noticetemplate; corrected package arguments, original exit/log preserved.",
+    "First HTTP smoke read raw HTTP chunk framing through response.fp; public dechunking readline used on second run, source and assertions unchanged.",
+    "Normal npm DNS failure and pre-execution shared-host launcher failure retained; verified complete official npm tarball installed offline."
+  ],
+  "dayjs": {
+    "version": "1.11.13",
+    "registry": "https://registry.npmjs.org/dayjs/-/dayjs-1.11.13.tgz",
+    "integrity": "sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==",
+    "official_tarball_sha256": "be0396c0f91583421b68f9a034227fb552eb87d93e59add775d533a65f70e47e",
+    "all_451_installed_files_match": true,
+    "existing_dependency_values_unchanged": true
+  },
+  "retained_old_dist_paths": [
+    "web/dist/assets/DownloaderConfigDialog--cC4ckA4.js",
+    "web/dist/assets/DownloaderConfigDialog-nLMePomQ.js",
+    "web/dist/assets/PluginAppPage-BSCp2TZs.js",
+    "web/dist/assets/PluginAppPage-DrJbODjg.js",
+    "web/dist/assets/PluginConfigDialog-4NjPyFTe.js",
+    "web/dist/assets/PluginConfigDialog-CQololzW.js",
+    "web/dist/assets/PluginCronField-DlHk3Bfq.js",
+    "web/dist/assets/PluginCronField-DpY--_sY.js",
+    "web/dist/assets/PluginDashboard-BqySmErt.js",
+    "web/dist/assets/PluginDashboard-mrKP8RN5.js",
+    "web/dist/assets/PluginDataDialog-BDPvEU-i.js",
+    "web/dist/assets/PluginDataDialog-Cc-7FOFR.js",
+    "web/dist/assets/PluginFolderDialog-CTsJJKpG.js",
+    "web/dist/assets/PluginFolderDialog-uDIO94JX.js",
+    "web/dist/assets/PluginFormRenderer-B4u_56GW.js",
+    "web/dist/assets/PluginFormRenderer-EK3uCcF8.js",
+    "web/dist/assets/PluginLogDialog-CCcspK_H.js",
+    "web/dist/assets/PluginLogDialog-Ctp6fiA9.js",
+    "web/dist/assets/PluginPieChart-CCfxx4f9.js",
+    "web/dist/assets/PluginPieChart-CHT_WXDp.js",
+    "web/dist/assets/PluginServices-B7YZpLJs.js",
+    "web/dist/assets/PluginServices-CEbZ_AUG.js",
+    "web/dist/assets/Plugins-CoCZXNPN.js",
+    "web/dist/assets/Plugins-EPh8Cyof.js",
+    "web/dist/assets/ResourceMetadataSettings-D2JbV1Sz.js",
+    "web/dist/assets/ResourceMetadataSettings-HA8LXVWP.js",
+    "web/dist/assets/RuleManager-BvF1nPSB.js",
+    "web/dist/assets/RuleManager-KZSEwSqN.js",
+    "web/dist/assets/ShortcutTools-CUtKgEQY.js",
+    "web/dist/assets/ShortcutTools-CZpmKA_H.js",
+    "web/dist/assets/index-B1iT5dy7.css",
+    "web/dist/assets/index-BW9CaJ99.css",
+    "web/dist/assets/index-DoPVvkDg.js",
+    "web/dist/assets/index-KYX6N_YU.js",
+    "web/dist/assets/plugin-remote-api-BeGWCXN1.js",
+    "web/dist/assets/plugin-remote-api-YpMcnwIJ.js"
+  ],
+  "limitations": [
+    "Only four provenance-backed native parser failure kinds emit SystemError; Go diagnostic text and stack are not Python traceback parity.",
+    "Public pinned Indexer display name is not claimed equal to unavailable full installed Indexer source.",
+    "No-Origin/no-Fetch-Metadata old clients deliberately rejected; malformed date text renders blank.",
+    "In-memory shared FIFO is destructive consumption, not durable history or broadcast.",
+    "Private stdin test skipped; no live accounts, real notification channels, production migration or deployment.",
+    "40 pre-existing missing source/binary inputs remain missing; no whole-repository acceptance claim.",
+    "Browser visual/layout/manual lifecycle verification remains pending platform access."
+  ],
+  "unrelated_frozen_work_included": false,
+  "source_after_tests_changes": "Documentation only; code and generated asset bytes remain exact verified input."
+}

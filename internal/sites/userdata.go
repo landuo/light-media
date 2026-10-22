@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -154,7 +156,7 @@ func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) 
 		return s, nil, &sourceUserRevokedError{trace.guardError}
 	}
 	if marker, ok := e.(*sourceUserParserFailure); ok && d == nil && marker == trace.parserFailure {
-		e = &sourceUserModuleFailure{kind: marker.kind}
+		e = &sourceUserModuleFailure{kind: marker.kind, stack: marker.stack}
 	}
 	return s, d, e
 }
@@ -170,11 +172,21 @@ func SourceUserModuleFailureKind(err error) (string, bool) {
 	return failure.kind, true
 }
 
-type sourceUserModuleFailure struct{ kind string }
+// SourceUserModuleFailureDiagnostic exposes only an audited fresh failure and
+// Go function names/line numbers, never response bodies, credentials or paths.
+func SourceUserModuleFailureDiagnostic(err error) (kind, stack string, ok bool) {
+	failure, ok := err.(*sourceUserModuleFailure)
+	if !ok || failure == nil || failure.stack == "" {
+		return "", "", false
+	}
+	return failure.kind, failure.stack, true
+}
+
+type sourceUserModuleFailure struct{ kind, stack string }
 
 func (*sourceUserModuleFailure) Error() string { return "site_user_source_module_failed" }
 
-type sourceUserParserFailure struct{ kind string }
+type sourceUserParserFailure struct{ kind, stack string }
 
 func (*sourceUserParserFailure) Error() string { return "site_user_source_module_failed" }
 
@@ -183,6 +195,21 @@ func (*sourceUserParserFailure) Error() string { return "site_user_source_module
 func recordSourceUserParserFailure(ctx context.Context, err error) error {
 	if marker, ok := err.(*sourceUserParserFailure); ok {
 		if trace := sourceStatsTrace(ctx); trace != nil {
+			pcs := make([]uintptr, 32)
+			n := runtime.Callers(2, pcs)
+			frames := runtime.CallersFrames(pcs[:n])
+			var lines strings.Builder
+			lines.WriteString("Go native parser diagnostic (not Python traceback):\n")
+			for {
+				frame, more := frames.Next()
+				if strings.HasPrefix(frame.Function, "light-media/internal/sites.") {
+					fmt.Fprintf(&lines, "%s:%d\n", frame.Function, frame.Line)
+				}
+				if !more {
+					break
+				}
+			}
+			marker.stack = lines.String()
 			trace.parserFailure = marker
 		}
 	}

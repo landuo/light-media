@@ -131,6 +131,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(p, "plugins/") && a.pluginLogHTTP(w, r, strings.TrimPrefix(p, "plugins/")) {
 		return
 	}
+	if p == "system/message" && r.Method == http.MethodGet {
+		a.systemMessageHTTP(w, r)
+		return
+	}
 	method := r.Method
 	var out any
 	var e error

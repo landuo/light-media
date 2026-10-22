@@ -15,6 +15,7 @@ import (
 // committed facts only, never arbitrary payloads, paths or private metainfo.
 // No plugin is started or granted authority by producing or reading an event.
 type DomainEvent struct {
+	SystemErrorID     string `json:"system_error_id,omitempty"`
 	PluginTriggerID   string `json:"plugin_trigger_id,omitempty"`
 	Sequence          int64  `json:"sequence,omitempty"`
 	SchemaVersion     int    `json:"schema_version"`
@@ -59,6 +60,12 @@ func domainEventID(eventType, stableID string) string {
 func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 	invalid := func() (DomainEvent, error) {
 		return in, bad("INVALID_DOMAIN_EVENT", "域事件契约无效，业务结果未提交")
+	}
+	if in.Type == "system.error" {
+		return validateSystemErrorDomainEvent(in)
+	}
+	if in.SystemErrorID != "" {
+		return invalid()
 	}
 	if in.Type == "subscription.completed" {
 		return validateSubscriptionCompletedDomainEvent(in)
@@ -199,6 +206,11 @@ func recordDomainEventTx(ctx context.Context, tx *sql.Tx, in DomainEvent) error 
 	event, err := validateDomainEvent(in)
 	if err != nil {
 		return err
+	}
+	if event.Type == "system.error" {
+		if err = validateSystemErrorBackingTx(ctx, tx, event); err != nil {
+			return err
+		}
 	}
 	if event.Type == "subscription.completed" {
 		if err = validateSubscriptionCompletedBackingTx(ctx, tx, event); err != nil {

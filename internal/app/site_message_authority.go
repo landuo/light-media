@@ -41,6 +41,18 @@ func (a *App) requireSiteMessageAuthorityModeTx(ctx context.Context, tx *sql.Tx,
 	if err != nil {
 		return err
 	}
+	return a.requireSiteCollectionAuthorityModeTx(ctx, tx, receipt, accepted)
+}
+
+// Fresh source error publication must never use the accepted-ordinal exception.
+func (a *App) requireSiteCollectionAuthorityTx(ctx context.Context, tx *sql.Tx, receipt siteMessageCollection) error {
+	return a.requireSiteCollectionAuthorityModeTx(ctx, tx, receipt, false)
+}
+
+// The source producer and message effects share the same persisted grant/site
+// validation. accepted is reserved for already-completed ordinal delivery.
+func (a *App) requireSiteCollectionAuthorityModeTx(ctx context.Context, tx *sql.Tx, receipt siteMessageCollection, accepted bool) error {
+	var err error
 	var sealed []byte
 	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&sealed); err != nil {
 		return err

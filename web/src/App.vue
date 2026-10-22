@@ -2,6 +2,12 @@
 import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
+import {
+  createSystemMessageFeed,
+  systemMessageIcon,
+  systemMessageRelativeTime as formatSystemMessageRelativeTime,
+  type SystemMessageState,
+} from './features/system-messages';
 import { VIcon } from 'vuetify/components/VIcon';
 import Catalog from './components/Catalog.vue';
 import Resources from './components/Resources.vue';
@@ -87,13 +93,34 @@ const navHref = (target: string) =>
     ? 'search?query=' + encodeURIComponent(globalQuery.value.trim())
     : target);
 const notifications = ref<any>({ items: [], unread: 0 }),
-  notificationsOpen = ref(false);
+  notificationsOpen = ref(false),
+  notificationTab = ref<'system' | 'tasks'>('system'),
+  notificationTime = ref(Date.now()),
+  systemMessages = ref<SystemMessageState>({ items: [], hasNew: false });
+const systemMessageFeed = createSystemMessageFeed((state) => {
+  systemMessages.value = state;
+});
+// The reactive argument keeps the existing 15-second render trigger, but its
+// cached value is not the wall clock after a long login page or background pause.
+function systemMessageRelativeTime(date: string | null, _renderTick: number) {
+  return formatSystemMessageRelativeTime(date);
+}
+let authGeneration = 0;
 async function loadNotifications() {
-  notifications.value = await api('/notifications');
+  const generation = authGeneration;
+  const result = await api('/notifications');
+  if (generation === authGeneration && auth.value?.authenticated) notifications.value = result;
+}
+function readAllSystemMessages() {
+  systemMessageFeed.markAllRead();
+  notificationsOpen.value = false;
 }
 async function readNotification(n: any, jump = false) {
+  const generation = authGeneration;
   const r = await action(() => api('/notifications/' + encodeURIComponent(n.id) + '/read', {}));
+  if (generation !== authGeneration || !auth.value?.authenticated) return;
   if (r !== undefined) await loadNotifications();
+  if (generation !== authGeneration || !auth.value?.authenticated) return;
   if (jump && n.job_id) {
     notificationsOpen.value = false;
     go('jobs/' + encodeURIComponent(n.job_id));
@@ -109,6 +136,7 @@ function searchMedia() {
   if (globalQuery.value.trim()) go('search?query=' + encodeURIComponent(globalQuery.value.trim()));
 }
 function searchShortcut(e: KeyboardEvent) {
+  if (e.key === 'Escape') notificationsOpen.value = false;
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault();
     searchInput.value?.focus();
@@ -119,22 +147,35 @@ function organizePaths(paths: string[]) {
   go('files');
 }
 function expired() {
+  authGeneration++;
+  systemMessageFeed.setAuthenticated(false);
+  notifications.value = { items: [], unread: 0 };
+  notificationsOpen.value = false;
+  notificationTab.value = 'system';
+  starting.value = false;
   auth.value = { authenticated: false, setup_required: false };
   ui.settings = null;
   pluginNavigation.reset();
 }
 async function bootstrap() {
+  const generation = authGeneration;
   try {
-    auth.value = await api('/auth/status');
+    const status = await api('/auth/status');
+    if (generation !== authGeneration) return;
+    auth.value = status;
     if (auth.value.authenticated) {
+      systemMessageFeed.setAuthenticated(true);
       await Promise.all([refreshSettings(), refreshStatus()]);
+      if (generation !== authGeneration || !auth.value?.authenticated) return;
       loadNotifications().catch(() => {});
       pluginNavigation.ensure();
+    } else {
+      systemMessageFeed.setAuthenticated(false);
     }
   } catch (e) {
-    authError.value = errorText(e);
+    if (generation === authGeneration) authError.value = errorText(e);
   } finally {
-    starting.value = false;
+    if (generation === authGeneration) starting.value = false;
   }
 }
 async function login() {
@@ -152,8 +193,10 @@ async function login() {
   }
 }
 async function logout() {
-  await action(() => api('/auth/logout', {}));
+  // Stop consuming before the network request: a late frame cannot cross the
+  // logout/login boundary, even if the logout response is delayed or fails.
   expired();
+  await action(() => api('/auth/logout', {}));
 }
 let timer: number;
 onMounted(() => {
@@ -163,12 +206,15 @@ onMounted(() => {
   bootstrap();
   timer = window.setInterval(() => {
     if (auth.value?.authenticated && !document.hidden) {
+      notificationTime.value = Date.now();
       refreshStatus().catch(() => {});
       loadNotifications().catch(() => {});
     }
   }, 15000);
 });
 onUnmounted(() => {
+  authGeneration++;
+  systemMessageFeed.destroy();
   clearInterval(timer);
   window.removeEventListener('hashchange', change);
   window.removeEventListener('session-expired', expired);
@@ -273,16 +319,18 @@ onUnmounted(() => {
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button
             class="bell-button"
-            aria-label="任务通知"
+            aria-label="通知中心"
             :aria-expanded="notificationsOpen"
             @click="
               notificationsOpen = !notificationsOpen;
               loadNotifications().catch(() => {});
             "
           >
-            <AppIcon name="bell" /><span v-if="notifications.unread">{{
-              notifications.unread > 99 ? '99+' : notifications.unread
-            }}</span></button
+            <AppIcon name="bell" /><span
+              v-if="systemMessages.hasNew || notifications.unread"
+              class="notification-unread-dot"
+              aria-label="有未读通知"
+            ></span></button
           ><button class="icon-button" title="退出登录" aria-label="退出登录" @click="logout">
             <AppIcon name="logout" />
           </button>
@@ -301,34 +349,109 @@ onUnmounted(() => {
         class="notification-shade"
         @click="notificationsOpen = false"
       ></div>
-      <section v-if="notificationsOpen" class="notification-panel">
+      <section
+        v-if="notificationsOpen"
+        class="notification-panel"
+        role="dialog"
+        aria-label="通知中心"
+      >
         <div class="section-heading">
-          <h3>
-            后台任务通知 <span class="badge">{{ notifications.unread || 0 }} 条未读</span>
-          </h3>
-          <button class="icon-button" aria-label="关闭通知" @click="notificationsOpen = false">
-            <AppIcon name="close" />
-          </button>
-        </div>
-        <article
-          v-for="n in notifications.items || []"
-          :key="n.id"
-          :class="['notification-item', { unread: !n.read && !n.read_at }]"
-        >
-          <strong>{{ n.title || '后台任务失败' }}</strong>
-          <p>{{ n.message || n.error_message }}</p>
-          <small>{{ date(n.created_at || n.time) }}</small>
+          <h3>通知中心</h3>
           <div class="button-row">
-            <button v-if="n.job_id" class="small" @click="readNotification(n, true)">
-              查看关联任务</button
-            ><button v-if="!n.read && !n.read_at" class="small" @click="readNotification(n)">
-              标记已读
+            <button
+              v-if="notificationTab === 'system'"
+              class="icon-button"
+              title="全部已读"
+              aria-label="系统消息全部已读"
+              @click="readAllSystemMessages"
+            >
+              <VIcon icon="mdi-email-check-outline" size="20" />
+            </button>
+            <button class="icon-button" aria-label="关闭通知" @click="notificationsOpen = false">
+              <AppIcon name="close" />
             </button>
           </div>
-        </article>
-        <div v-if="!notifications.items?.length" class="empty-state">
-          <h3>暂时没有后台失败通知</h3>
-          <p>后台任务失败后会在这里持续保留，便于你回来处理。</p>
+        </div>
+        <div class="notification-tabs" role="tablist" aria-label="通知类型">
+          <button
+            id="system-message-tab"
+            role="tab"
+            :aria-selected="notificationTab === 'system'"
+            aria-controls="system-message-list"
+            @click="notificationTab = 'system'"
+          >
+            系统消息<span
+              v-if="systemMessages.hasNew"
+              class="tab-unread-dot"
+              aria-label="有未读系统消息"
+            ></span>
+          </button>
+          <button
+            id="task-notification-tab"
+            role="tab"
+            :aria-selected="notificationTab === 'tasks'"
+            aria-controls="task-notification-list"
+            @click="notificationTab = 'tasks'"
+          >
+            后台任务<span v-if="notifications.unread" class="badge">{{
+              notifications.unread
+            }}</span>
+          </button>
+        </div>
+        <div
+          v-if="notificationTab === 'system'"
+          id="system-message-list"
+          class="notification-list-container"
+          role="tabpanel"
+          aria-labelledby="system-message-tab"
+        >
+          <article
+            v-for="n in systemMessages.items"
+            :key="n.id"
+            class="system-message-item"
+            @click="notificationsOpen = false"
+          >
+            <span class="system-message-icon"
+              ><VIcon :icon="systemMessageIcon(n.type)" size="28"
+            /></span>
+            <div class="system-message-content">
+              <strong>{{ n.title }}</strong>
+              <p>{{ n.text }}</p>
+              <small>{{ systemMessageRelativeTime(n.date, notificationTime) }}</small>
+            </div>
+          </article>
+          <div v-if="!systemMessages.items.length" class="empty-state">
+            <VIcon icon="mdi-bell-sleep-outline" size="40" />
+            <p>暂无通知</p>
+          </div>
+        </div>
+        <div
+          v-else
+          id="task-notification-list"
+          class="notification-list-container"
+          role="tabpanel"
+          aria-labelledby="task-notification-tab"
+        >
+          <article
+            v-for="n in notifications.items || []"
+            :key="n.id"
+            :class="['notification-item', { unread: !n.read && !n.read_at }]"
+          >
+            <strong>{{ n.title || '后台任务失败' }}</strong>
+            <p>{{ n.message || n.error_message }}</p>
+            <small>{{ date(n.created_at || n.time) }}</small>
+            <div class="button-row">
+              <button v-if="n.job_id" class="small" @click="readNotification(n, true)">
+                查看关联任务</button
+              ><button v-if="!n.read && !n.read_at" class="small" @click="readNotification(n)">
+                标记已读
+              </button>
+            </div>
+          </article>
+          <div v-if="!notifications.items?.length" class="empty-state">
+            <h3>暂时没有后台失败通知</h3>
+            <p>后台任务失败后会在这里持续保留，便于你回来处理。</p>
+          </div>
         </div>
       </section>
       <main>

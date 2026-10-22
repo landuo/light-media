@@ -38,7 +38,7 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 	}
 	seen := map[string]bool{}
 	for _, eventType := range types {
-		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "download.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "site.refreshed", "site.deleted", "subscription.added", "subscription.completed", "notice.message", "plugin.triggered"}, eventType) || seen[eventType] {
+		if !slices.Contains([]string{"download.accepted", "download.completed", "downloadfile.deleted", "download.deleted", "import.completed", "scrape.completed", "library.visible", "job.failed", "system.error", "site.refreshed", "site.deleted", "subscription.added", "subscription.completed", "notice.message", "plugin.triggered"}, eventType) || seen[eventType] {
 			return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件类型无效或重复")
 		}
 		seen[eventType] = true
@@ -163,6 +163,11 @@ func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription
 		cursor = event.Sequence
 		if !slices.Contains(subscription.Types, event.Type) {
 			continue
+		}
+		if event.Type == "system.error" {
+			if _, err := p.systemErrorEvent(ctx, tx, event.SystemErrorID); err != nil {
+				return err
+			}
 		}
 		if event.Type == "plugin.triggered" {
 			if err := p.validateBrushFlowTriggered(ctx, tx, event); err != nil {
@@ -323,6 +328,11 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 	// The App may deliberately run with one SQLite connection.
 	rows.Close()
 	for _, event := range out.Events {
+		if event.Type == "system.error" {
+			if _, err := p.systemErrorEvent(ctx, p.store.DB, event.SystemErrorID); err != nil {
+				return out, err
+			}
+		}
 		if event.Type == "plugin.triggered" {
 			if err := p.validateBrushFlowTriggered(ctx, p.store.DB, event); err != nil {
 				return out, err
