@@ -478,11 +478,23 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			}
 		}
 
-		_, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
+		changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
 		if err != nil {
 			releaseClaim()
 			_ = tx.Rollback()
 			return PluginRun{}, err
+		}
+		if n, e := changed.RowsAffected(); e != nil || n != 1 {
+			releaseClaim()
+			_ = tx.Rollback()
+			return PluginRun{}, pluginLifecycleInvalid()
+		}
+		if state == "running" {
+			if err = p.markPluginExecutionStartedTx(ctx, tx, run); err != nil {
+				releaseClaim()
+				_ = tx.Rollback()
+				return PluginRun{}, err
+			}
 		}
 		if err = tx.Commit(); err != nil {
 			releaseClaim()

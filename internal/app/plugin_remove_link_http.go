@@ -145,6 +145,9 @@ func (a *App) pluginRemoveLinkLifecycleHTTP(w http.ResponseWriter, r *http.Reque
 			if _, err = tx.ExecContext(ctx, query, now(), installation.InstanceID); err != nil {
 				return nil, err
 			}
+			if err = a.pluginStore.recordPluginGenerationLifecycleTx(ctx, tx, installation.InstanceID); err != nil {
+				return nil, err
+			}
 			if operation == "reset" {
 				if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, installation.InstanceID); err != nil {
 					return nil, err

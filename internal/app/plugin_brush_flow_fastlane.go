@@ -35,6 +35,9 @@ func (a *App) executeBrushFlowHTTP(ctx context.Context, run PluginRun) error {
 	if e != nil || n != 1 {
 		return brushFlowEvidenceError()
 	}
+	if e = a.pluginStore.markPluginExecutionStartedTx(ctx, tx, actual); e != nil {
+		return e
+	}
 	if e = tx.Commit(); e != nil {
 		return e
 	}

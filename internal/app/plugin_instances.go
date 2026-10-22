@@ -266,6 +266,12 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	if err = p.cloneOrganizationMemberTx(ctx, tx, source, target); err != nil {
 		return out, err
 	}
+	// Return the actual target manifest, including its fresh lifecycle evidence,
+	// rather than the caller/source copy prepared before installTx.
+	out, err = p.pluginLifecycleInstallation(ctx, tx, target)
+	if err != nil {
+		return out, err
+	}
 	if err = tx.Commit(); err != nil {
 		return out, err
 	}

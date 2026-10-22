@@ -358,7 +358,8 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 	}
 	var previousID string
 	var wasInstalled bool
-	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &wasInstalled)
+	var previousGeneration int64
+	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed,generation FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &wasInstalled, &previousGeneration)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
@@ -413,6 +414,13 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 		if err != nil {
 			return err
 		}
+	}
+	// Fresh host evidence is bound to the target, never copied from a source
+	// manifest. Clone metadata is inserted later in this same transaction.
+	in.Generation = previousGeneration + 1
+	in.Manifest, err = pluginLifecycleManifest(in, pluginLifecycleCold)
+	if err != nil {
+		return err
 	}
 	sealed, err := p.seal("manifest", in.InstanceID, "main", in.Manifest)
 	if err != nil {
@@ -646,6 +654,9 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 	if changed, _ := result.RowsAffected(); changed == 0 {
 		return sql.ErrNoRows
 	}
+	if err = p.recordPluginGenerationLifecycleTx(ctx, tx, instanceID); err != nil {
+		return err
+	}
 	if err = p.updateSourceInstalledMembershipTx(ctx, tx, instanceID, false); err != nil {
 		return err
 	}
@@ -756,6 +767,9 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	}
 	if changed, _ := result.RowsAffected(); changed == 0 {
 		return sql.ErrNoRows
+	}
+	if err = p.recordPluginGenerationLifecycleTx(ctx, tx, instanceID); err != nil {
+		return err
 	}
 	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, instanceID); err != nil {
 		return err

@@ -178,6 +178,10 @@ func (a *App) executeLarkBoundRun(ctx context.Context, run PluginRun, method str
 			tx.Rollback()
 			return nil, larkEvidenceError()
 		}
+		if e = a.pluginStore.markPluginExecutionStartedTx(ctx, tx, actual); e != nil {
+			tx.Rollback()
+			return nil, e
+		}
 		actual.State = "running"
 		claimed = true
 	}
