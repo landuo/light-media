@@ -358,7 +358,7 @@ func (r *sourceMTeamReader) messages(dto *SourceUserData) error {
 		if !sourceTruth(message["unread"]) || !sourceTruth(message["title"]) || !sourceTruth(message["createdDate"]) || !sourceTruth(message["context"]) {
 			continue
 		}
-		row := [3]any{message["title"], message["createdDate"], message["context"]}
+		row := []any{message["title"], message["createdDate"], message["context"]}
 		dto.Messages = append(dto.Messages, row)
 		var observed [3]*string
 		valid := true

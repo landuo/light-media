@@ -111,7 +111,12 @@ func TestPluginNoticeV2ActualOrdinaryLibraryInventoryCompletion(t *testing.T) {
 		t.Fatal(e)
 	}
 	reorgRunJob(t, a, job)
-	workflowConfigure(t, a, "http://127.0.0.1:1", "http://127.0.0.1:1")
+	unexpected := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("inventory-complete subscription unexpectedly attempted remote work")
+		w.WriteHeader(http.StatusServiceUnavailable)
+	}))
+	t.Cleanup(unexpected.Close)
+	workflowConfigure(t, a, unexpected.URL, unexpected.URL)
 	s, e := a.saveSubscription(ctx, "", SubscriptionRequest{MediaType: "movie", TMDBID: m.ID, DownloaderID: "fixture-qb", RootID: "root", Schedule: Schedule{Mode: "manual"}})
 	if e != nil {
 		t.Fatal(e)

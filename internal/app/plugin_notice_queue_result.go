@@ -54,7 +54,7 @@ func (p *PluginStore) writePluginMessageIntentTx(ctx context.Context, tx *sql.Tx
 
 func (p *PluginStore) finishPluginMessageRowTx(ctx context.Context, tx *sql.Tx, intent pluginNoticeQueueRow, q pluginNoticeQueueEntry) (pluginNoticeQueueRow, error) {
 	var row pluginNoticeQueueRow
-	if intent.entry.State != "intent" || len(intent.sealed) == 0 || (q.State != "consumed" && q.State != "unknown") || q.AttemptAt != intent.entry.AttemptAt || noticeQueueInitialSHA(q) != noticeQueueInitialSHA(intent.entry) {
+	if intent.entry.State != "intent" || len(intent.sealed) == 0 || (q.State != "consumed" && q.State != "unknown" && !(q.State == "revoked" && q.ErrorCode == "NOTICE_AUTH_REVOKED" && q.Modules == 0 && q.FinishedAt != "")) || q.AttemptAt != intent.entry.AttemptAt || noticeQueueInitialSHA(q) != noticeQueueInitialSHA(intent.entry) {
 		return row, seedhost.ErrUnsafe
 	}
 	sealed, err := p.noticeSeal("queue", q.ID, q)

@@ -65,8 +65,31 @@ func (p *PluginStore) recoverSiteStatisticRunsMode(ctx context.Context, routedOn
 		return err
 	}
 	for _, run := range runs {
+		fullRun, readErr := p.Run(ctx, run.ID)
+		if readErr != nil {
+			return readErr
+		}
+		run = fullRun
 		result, err := p.siteStatisticReceipt(ctx, run)
 		if errors.Is(err, sql.ErrNoRows) {
+			// An interrupted API must not replay remote reads, even when its
+			// locator was lost before we can prove collection admission.
+			if run.Action == "api" {
+				collection, found, proofErr := p.siteMessageCollectionForRun(ctx, p.store.DB, run)
+				if proofErr != nil {
+					return proofErr
+				}
+				if found && (collection.Stage == "failed" || collection.Stage == "aborted") {
+					code := collection.Failure
+					if code == "" {
+						return siteCollectionError()
+					}
+					if _, e := p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='failed',error_code=?,updated_at=? WHERE id=? AND state='reconcile_pending'`, code, now(), run.ID); e != nil {
+						return e
+					}
+				}
+				continue
+			}
 			if routedOnly {
 				continue
 			}
@@ -81,6 +104,18 @@ func (p *PluginStore) recoverSiteStatisticRunsMode(ctx context.Context, routedOn
 		state, code, routed, err := p.siteStatisticReceiptOutcome(ctx, run, result)
 		if err != nil {
 			return err
+		}
+		if !routed && run.Action == "api" {
+			collection, found, proofErr := p.siteMessageCollectionForRun(ctx, p.store.DB, run)
+			if proofErr != nil {
+				return proofErr
+			}
+			if found {
+				if proofErr = p.validateSiteCollectionCompletion(ctx, p.store.DB, collection); proofErr != nil {
+					return proofErr
+				}
+				routed = true // authenticated normal-return API receipt, not a new SDK call
+			}
 		}
 		if routedOnly && !routed {
 			continue

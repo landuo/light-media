@@ -32,10 +32,18 @@ type SourceUserData struct {
 	LeechingSize  int64      `json:"leeching_size"`
 	SeedingInfo   [][2]int64 `json:"seeding_info"`
 	MessageUnread int64      `json:"message_unread"`
-	Messages      [][3]any   `json:"message_unread_contents"`
-	Error         *string    `json:"err_msg"`
-	Day           string     `json:"updated_day"`
-	Time          *string    `json:"updated_time"`
+	// Messages preserves every source-supplied array element. Parsers that provide
+	// only heading/date/body continue to serialize exactly three values; an optional
+	// fourth source and later metadata must survive private snapshot roundtrips.
+	Messages [][]any `json:"message_unread_contents"`
+	// JSON-decoded snapshots keep authoritative raw rows, including nested object
+	// key order. Messages remains a compatibility view for all-array lists.
+	// Parser-created DTOs have no overlay until serialized and reopened; decoded
+	// snapshots are immutable, so modifying Messages does not replace raw authority.
+	rawMessageRows []json.RawMessage
+	Error          *string `json:"err_msg"`
+	Day            string  `json:"updated_day"`
+	Time           *string `json:"updated_time"`
 }
 
 // Private snapshots must not round an original integer ID or arbitrary JSON
@@ -43,11 +51,63 @@ type SourceUserData struct {
 func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 	type plain SourceUserData
 	var value plain
-	if !decodeJSON(raw, &value) {
+	wire := struct {
+		*plain
+		Rows json.RawMessage `json:"message_unread_contents"`
+	}{plain: &value}
+	if !decodeJSON(raw, &wire) {
 		return sourceModuleError(nil)
+	}
+	var rows []json.RawMessage
+	if len(wire.Rows) != 0 && !decodeJSON(wire.Rows, &rows) {
+		return sourceModuleError(nil)
+	}
+	if rows != nil {
+		value.rawMessageRows = rows
+		value.Messages = make([][]any, len(rows))
+		for i, row := range rows {
+			var array []any
+			if len(row) == 0 || row[0] != '[' || !decodeJSON(row, &array) {
+				value.Messages = nil
+				break
+			}
+			value.Messages[i] = array
+		}
 	}
 	*d = SourceUserData(value)
 	return nil
+}
+
+func (d SourceUserData) MarshalJSON() ([]byte, error) {
+	type plain SourceUserData
+	if d.rawMessageRows == nil {
+		return json.Marshal(plain(d))
+	}
+	return json.Marshal(struct {
+		plain
+		Rows []json.RawMessage `json:"message_unread_contents"`
+	}{plain: plain(d), Rows: d.rawMessageRows})
+}
+
+// SourceMessageRows preserves list entries even when a source row cannot be
+// unpacked. The producer must examine entries in order, rather than rejecting a
+// later invalid row before earlier message side effects and the collected fact.
+func (d SourceUserData) SourceMessageRows() []any {
+	if d.rawMessageRows != nil {
+		rows := make([]any, len(d.rawMessageRows))
+		for i, row := range d.rawMessageRows {
+			rows[i] = row
+		}
+		return rows
+	}
+	if d.Messages == nil {
+		return nil
+	}
+	rows := make([]any, len(d.Messages))
+	for i, row := range d.Messages {
+		rows[i] = row
+	}
+	return rows
 }
 
 type sourceUserStatsKey struct{}
@@ -145,7 +205,7 @@ func sourceModuleError(err error) error {
 }
 
 func emptySourceUserData() *SourceUserData {
-	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]any{}}
+	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][]any{}}
 }
 
 func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {

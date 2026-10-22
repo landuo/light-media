@@ -169,3 +169,5 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21：AutoSignIn 再接显式/环境代理合并、HTTP/HTTPS/SOCKS 与逐跳撤销，保留原 proxy=false 的 trust_env；修复共享传输取消时握手 socket 回调竞态。详见[说明](plugin-auto-signin-proxy-routing.txt)与[验证](plugin-auto-signin-proxy-routing-verification.json)。同字节完整 App 无新增失败，受影响 race/modernconly、核心及构建通过；Browser/OCR/Tjupt 等仍待完成，未部署，正式完成仍7/23。
 
 - AutoSignIn Tjupt 宿主阶段：已接实际 SDK、可信公共图片/逐跳守卫和环境代理，原答案缓存采用分身隔离 SQL 原字节导入导出，冷恢复及未知结果不自动重发。冻结普通/扩大 race/modernconly/core/vet/23 CLI 已验证；完整 App 保留原8顶层失败，新增0。见 `plugin-auto-signin-tjupt-host.txt` 与 verification JSON。Browser/OCR 等代码缺口仍在，未操作真实账户或部署生产，正式完成数不变。
+
+2026-10-22：SiteStatistic 核心未读消息与低分享率提醒接入真实采集、Router、持久通知和原授权冷恢复，修复已接受 FIFO 被后续 job 状态阻断及已观察撤权被吞掉的问题。详见[说明](plugin-site-statistic-core-messages.txt)与[验证](plugin-site-statistic-core-messages-verification.json)。普通、完整分片 race、modernconly 及构建分别计证，原两次聚合 race 超时仍保留失败；SystemError / SSE 后续同插件阶段未验收，未部署，正式迁移仍 7/23。

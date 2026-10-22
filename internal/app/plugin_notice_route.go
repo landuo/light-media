@@ -75,7 +75,7 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	if ordinal != r.Count || r.Complete || ordinal >= pluginNoticeStepLimit {
 		return nil, seedhost.ErrUnknown
 	}
-	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
+	if err = d.a.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
 		return nil, err
 	}
 	value, err := apply(tx, r, ordinal)
@@ -129,7 +129,7 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
 		return err
 	}
-	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
+	if err = d.a.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
 		return err
 	}
 	r.Complete = true
@@ -401,7 +401,11 @@ func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
 		release, ok := p.tryNoticeLock("route/" + v.id)
 		if ok {
 			r, _, e := p.readNoticeRoute(ctx, a.Store.DB, v.id)
-			if e == nil && !r.Complete {
+			// Core collection recovery reconstructs its live job/API authority and
+			// resumes ordinals in order. A generic route scan cannot supply that
+			// authority, even though it can validate the immutable route.
+			siteMessage := r.BusinessV2 != nil && r.BusinessV2.Binding.Kind == "site_message"
+			if e == nil && !r.Complete && !siteMessage {
 				e = a.runNoticeRouteLocked(ctx, v.id)
 			}
 			release()
@@ -419,6 +423,9 @@ func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
 	p.notices.mu.Unlock()
 	// The source worker may have exited while this accepted route was still
 	// incomplete. Finish that original run without invoking its SDK again.
+	if err := a.resumeSiteMessageCollections(ctx); err != nil && first == nil {
+		first = err
+	}
 	if err := p.reconcileSiteStatisticNoticeRuns(ctx); err != nil && first == nil {
 		first = err
 	}

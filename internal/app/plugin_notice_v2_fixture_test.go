@@ -8,21 +8,15 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
-	"os"
 	"strconv"
 	"sync/atomic"
 	"testing"
 
 	"light-media/internal/catalog"
-	"light-media/internal/networkproxy"
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 )
 
 type noticeSourceFixture struct{ Metadata, Sends atomic.Int64 }
-type noticeSourceRoundTrip func(*http.Request) (*http.Response, error)
-
-func (f noticeSourceRoundTrip) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
 func installNoticeSourceFixtures(t *testing.T, a *App, media catalog.Media, season, episodes int) *noticeSourceFixture {
 	t.Helper()
@@ -53,20 +47,13 @@ func installNoticeSourceFixtures(t *testing.T, a *App, media catalog.Media, seas
 		workflowJSON(w, raw)
 	}))
 	t.Cleanup(metadata.Close)
-	target, _ := url.Parse(metadata.URL)
-	a.config.TMDB = TMDBConfig{APIKey: "owned-source-tmdb"}
-	client := catalog.NewWithTransport(catalog.Credentials{APIKey: "owned-source-tmdb"}, noticeSourceRoundTrip(func(r *http.Request) (*http.Response, error) {
+	owned := ownedLoopbackFixtureTransport(t, metadata)
+	installMetadataFixture(t, a, "owned-source-tmdb", []string{"/3/" + media.MediaType + "/" + strconv.FormatInt(media.ID, 10)}, func(r *http.Request) (*http.Response, error) {
 		if r.URL.Scheme != "https" || r.URL.Host != "api.themoviedb.org" {
-			t.Fatal("fresh source metadata escaped its fixed official authority")
+			t.Error("fresh source metadata escaped its fixed official authority")
 		}
-		clone := r.Clone(r.Context())
-		u := *r.URL
-		clone.URL = &u
-		clone.URL.Scheme, clone.URL.Host = target.Scheme, target.Host
-		return metadata.Client().Transport.RoundTrip(clone)
-	}))
-	a.catClient, a.catCreds = client, a.Settings().TMDB
-	a.catProxy, _ = networkproxy.Resolve(a.Settings().ProxyHost, os.Getenv)
+		return owned.RoundTrip(r)
+	})
 	sender := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fixture.Sends.Add(1)
 		var call map[string]any

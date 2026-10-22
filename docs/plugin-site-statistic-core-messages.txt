@@ -1,0 +1,29 @@
+SiteStatistic 核心站内消息链：开发里程碑，2026-10-22
+
+范围
+本轮实现核心采集完成后的未读消息及低分享率提醒真实链路，并与分身统计摘要分开。一次核心采集仅产生一组核心消息，各 SiteStatistic 分身仍保留独立配置、调度、历史和摘要。SystemError / SSE 与通知铃界面仍属后续同插件阶段，本轮不宣称 SiteStatistic 整插件完成，不增加正式生产迁移 7/23 数量。
+
+原版证据与行为
+MoviePilot 1528176beacc0f9f8d8d9cbf1adf048b0da67b5c 的 app/chain/site.py，SHA256 06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa，与已冻结安装来源指纹一致。离线 AST oracle 共 63 个标注案例；生成器要求显式来源文件且校验该 SHA，不下载或运行完整原程序，不成为生产 Python 依赖。MessageOper / schema 的公开来源和 stub 边界见 testdata/plugins/site-message-oracle/README.txt。完整已安装 IndexerModule 尚无精确源码，不能以公开版本替代宣称逐字一致。
+
+顺序为采集、账户事实与单站刷新事件、逐条未读通知、分享率提醒、返回。后条构造或通知失败保留先前已提交事实/通知，停止后条、分享率及批次星号事件。原始 JSON 行保留 null、标量、字典顺序以及延迟逐条解包；第四项为可选 Source，其后忽略。truthy Source 仅按真实通知历史全局去重，不把预留当已发送；无 Source 的重复消息独立保留。核心站内链接使用站点域名，不混成全局 AppDomain 插件摘要链接。
+
+持久化、恢复和权限
+密封采集准入及原始身份/输入证明阻止结果未知时重新采集或阅读。原始 origin 与当前 job lease 分离；每个新副作用重新核对当前 API / 站点执行授权。旧持久摘要、空业务和畸形版本保留冷恢复/拒绝测试，不自动升级成可发送新任务。
+已完成 ordinal 的延迟通知不依赖后续 worker 的 retry_wait / waiting_paused / failed 状态；显式取消及当前撤权仍阻止发送。确定未发送的撤权收据允许后续 FIFO 推进，未知发送状态保持阻断，不自动重发。真实 history 执行证明与历史同事务提交；用户删除 UI 历史不破坏原已完成事实，有记录但被篡改仍拒绝。
+本地 RequestGuard 才可产生私有确定撤权标记，SITE_CHANGED / PLUGIN_API_AUTH_REVOKED 原码保留。即使随后恢复授权，已观察的拒绝也不会变成成功。provider / transport / SQL 的同名错误没有此权限，仍为未知。aborted 不声称此前从未发生网络，只表示已知本地拒绝、未提交当前事实，不重新采集。
+
+失败与修复证据
+v2 真实 App 链暴露 nil RawMessage 编码 null 被误认业务完成；v3 暴露本地撤权分类和双分身事件夹具遗漏；原错误日志均保留。v5 扩大普通回归的三项 API 撤权原断言失败推动私有 guard 来源标记，未修改失败期望。
+独立红对照恢复 v4 authority，retry_wait / waiting_paused / failed 三种真实 job 状态均阻断此前已接受 ordinal；修复版三者通过，显式 cancelled 仍阻断。恢复 v6 site_manage，已观察 guard 拒绝但授权恢复时错误被吞成 provider 失败；修复版保留拒绝，裸 transport 同码反例仍未知。
+v7 新测试的冷恢复零事件断言误含夹具预先删除站点产生的事件。v8 仅修测试：请求前精确认证那一条 site.deleted 及 tombstone，保存完整序号、ID、原始 payload，暖/冷恢复后要求逐字不变；其余副作用全部仍为零。三个既有撤权测试继续要求完全零事件。没有删除证据或弱化业务断言。
+
+最终输入验证
+基线 32f3dc0e81f9fe915be652a882dd59f6691ef0b8，v8 输入 manifest SHA256 c9acfee06c67dae96cd72d94dcf288f2b9e802e2cbff413e1abf6909951b6f13，5376 个现有文件逐一冻结/回验。
+受影响 App 普通及 modernconly：各 152 根 / 632 测试条目通过，1 个真实私密 stdin 缺输入跳过。race 最终完整根/子例集合与普通精确一致：152 根 / 632 条目通过，同一跳过。
+原 race 整包默认 10 分钟总预算超时；按普通耗时分的第一片再次总预算超时。二者都保留失败，不称原整包通过。按同输入已完整终态根合并 77 根，剩 76 根逐根串行，根内子例不拆、产品及默认包预算不变，全部取得真实终态。原中断 PostUnknown 独立 7.13 秒通过；MTeam/Nexus/Rousi 真实 SDK 分页根均有完整通过证据。无 race 报警不单独当通过。
+核心 sites / notice / noticetemplate / statistic 普通与 race 各 4580 inclusive 通过，非 App 输入逐字证明自该轮至 v8 未变。最终 v8 vet、普通实际 server 构建、CGO 禁用 modernconly 的全部 23 CLI 构建均 exit 0。不是完整无限制 App 或全仓验收。
+
+安全与明确限制
+仅本任务合成凭据及 owned HTTP fixture，clean runner 清除真实环境集成/代理/账户来源；这不是操作系统级断网。新增测试 helper 把通知 TMDB 夹具限定为自建目标，无公共 fallback；普通完成夹具以自建 trap 代替非 owned 失效端口，任何请求仍失败。未触碰真实账户/调度/部署，未重跑曾被拒的实网 runner。
+私密 stdin 本轮未复验。仓库原 40 个二进制缺件未删除、伪造或替换，当前列明门禁真实执行通过，不扩展成源码全量完整声明。Go 对孤立 UTF-16 surrogate 的行为未声称 Python 精确一致。原始 parser oracle 为三字段，第四 Source 合成 DTO 覆盖不声称来自真实私有站点响应。后续 SystemError 原生 Go 诊断和 SSE 是尚未验收开发阶段。

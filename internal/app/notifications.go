@@ -8,6 +8,7 @@ import (
 )
 
 type Notification struct {
+	Source     string `json:"source,omitempty"`
 	ID         string `json:"id"`
 	JobID      string `json:"job_id"`
 	WorkflowID string `json:"workflow_id"`

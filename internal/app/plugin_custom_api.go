@@ -444,13 +444,20 @@ func (a *App) validatePluginHTTPAuthorityTx(ctx context.Context, tx *sql.Tx, aut
 func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run PluginRun) (plugins.HTTPRequest, error) {
 	var input plugins.Invocation
 	var request plugins.HTTPRequest
-	var scope pluginAPIScope
 	var sealed []byte
 	if run.Action != "api" || json.Unmarshal(run.Input, &input) != nil || !pluginStrictJSON(input.Input, &request) {
 		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API执行输入无效")
 	}
 	var pluginID string
 	err := tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.version=? AND r.version=i.version AND r.state IN ('pending','running','succeeded') AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND (v.revision=c.config_revision OR (i.plugin_id='SeedRescue' AND i.version='1.6.3') OR (i.plugin_id='BrushFlowLanduo' AND i.version='5.2.15') OR (i.plugin_id='AutoSignIn' AND i.version='2.9.14'))`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed, &pluginID)
+	// A recovered site collection can advance its frozen message sequence, not
+	// invoke the SDK or recollect. Keep this grant narrower than ordinary APIs.
+	if err != nil && run.Action == "api" {
+		collection, found, proofErr := a.pluginStore.siteMessageCollectionForRun(ctx, tx, run)
+		if proofErr == nil && found && (collection.Stage == "collected" || collection.Stage == "complete") {
+			err = tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.plugin_id='SiteStatistic' AND i.version=? AND r.version=i.version AND r.action='api' AND r.state='reconcile_pending' AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND v.revision=c.config_revision`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed, &pluginID)
+		}
+	}
 	if err != nil && a.pluginStore.isCloudflareRun(ctx, tx, run) {
 		revision, proofErr := a.pluginStore.cloudflareAPIRevisionTx(ctx, tx, run)
 		if proofErr == nil {
@@ -479,6 +486,13 @@ func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run Plugi
 			return request, err
 		}
 	}
+	return a.validatePluginHTTPScopeTx(ctx, tx, run, request, pluginID, sealed)
+}
+
+// Shared scope validation grants no execution state by itself. Callers must
+// authenticate their own exact run or accepted-notice identity first.
+func (a *App) validatePluginHTTPScopeTx(ctx context.Context, tx *sql.Tx, run PluginRun, request plugins.HTTPRequest, pluginID string, sealed []byte) (plugins.HTTPRequest, error) {
+	var scope pluginAPIScope
 	raw, err := a.pluginStore.unseal("api_scope", run.InstanceID, run.ID, sealed)
 	if err != nil {
 		return request, err

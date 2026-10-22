@@ -1,0 +1,4978 @@
+{
+  "source": {
+    "repository": "jxxghp/MoviePilot",
+    "commit": "1528176beacc0f9f8d8d9cbf1adf048b0da67b5c",
+    "path": "app/chain/site.py",
+    "sha256": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+    "methods": {
+      "refresh_userdata": {
+        "start": 66,
+        "end": 90
+      },
+      "_post_site_messages": {
+        "start": 92,
+        "end": 122
+      },
+      "refresh_userdatas": {
+        "start": 124,
+        "end": 173
+      }
+    }
+  },
+  "limitations": [
+    "Host dependencies are synthetic stubs, not their source implementations.",
+    "MessageOper source lookup/storage semantics not proven.",
+    "Notification constructor records explicit kwargs; schema validation/defaults not proven.",
+    "StringUtils domain conversion is identity for already-normalized synthetic domains.",
+    "Synthetic errors test source control flow, not real transport or module error classification.",
+    "No real accounts, network, database, production sends, or real parser integration."
+  ],
+  "case_count": 63,
+  "cases": [
+    {
+      "input": {
+        "name": "unread-0",
+        "dto": {
+          "message_unread": 0
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "unread-None",
+        "dto": {
+          "message_unread": null
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": null,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": null,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "unread-False",
+        "dto": {
+          "message_unread": false
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": false,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": false,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "unread--1",
+        "dto": {
+          "message_unread": -1
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": -1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 -1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 -1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": -1,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "unread-1",
+        "dto": {
+          "message_unread": 1
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 1,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "unread-3",
+        "dto": {
+          "message_unread": 3
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 3,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 3 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 3 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 3,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "summary-return-None",
+        "dto": {
+          "message_unread": 2
+        },
+        "post_return": null
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 2 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 2 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "summary-return-False",
+        "dto": {
+          "message_unread": 2
+        },
+        "post_return": false
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 2 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 2 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": false
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "summary-return-True",
+        "dto": {
+          "message_unread": 2
+        },
+        "post_return": true
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 2 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 2 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": true
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "three-items",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body"
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "four-items",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-a"
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": [
+        "source-a"
+      ]
+    },
+    {
+      "input": {
+        "name": "more-items",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a",
+              "ignored",
+              {
+                "unused": 1
+              }
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a",
+                "ignored",
+                {
+                  "unused": 1
+                }
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-a",
+            "ignored",
+            {
+              "unused": 1
+            }
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": [
+        "source-a"
+      ]
+    },
+    {
+      "input": {
+        "name": "null-fields",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              null,
+              null,
+              null
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                null,
+                null,
+                null
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：None\n标题：None\n内容：\nNone",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：None\n标题：None\n内容：\nNone",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            null,
+            null,
+            null
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "false-source",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              ""
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                ""
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            ""
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "null-source",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              null
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                null
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            null
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "same-no-source",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body"
+          ],
+          [
+            "head",
+            "2026-01-02",
+            "body"
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "same-source",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-a"
+          ],
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-a"
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": [
+        "source-a"
+      ]
+    },
+    {
+      "input": {
+        "name": "different-source",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-b"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-a"
+          ],
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-b"
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": [
+        "source-a",
+        "source-b"
+      ]
+    },
+    {
+      "input": {
+        "name": "malformed-short",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "date"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "date"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "not enough values to unpack (expected at least 3, got 2)"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "later-malformed-short",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body"
+            ],
+            [
+              "head"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body"
+              ],
+              [
+                "head"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "not enough values to unpack (expected at least 3, got 1)"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "later-null-row",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body"
+            ],
+            null
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body"
+              ],
+              null
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "TypeError",
+        "message": "cannot unpack non-iterable NoneType object"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "later-number-row",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body"
+            ],
+            7
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body"
+              ],
+              7
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "TypeError",
+        "message": "cannot unpack non-iterable int object"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "string-row-iterable",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            "abc"
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              "abc"
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：b\n标题：a\n内容：\nc",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：b\n标题：a\n内容：\nc",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          "abc"
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "dict-row-iterable",
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            {
+              "head": 1,
+              "date": 2,
+              "body": 3
+            }
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              {
+                "head": 1,
+                "date": 2,
+                "body": 3
+              }
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：date\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": null,
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：date\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          {
+            "head": 1,
+            "date": 2,
+            "body": 3
+          }
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "existing-source",
+        "history": [
+          "source-a"
+        ],
+        "dto": {
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-b"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-a"
+          ],
+          [
+            "head",
+            "2026-01-02",
+            "body",
+            "source-b"
+          ]
+        ],
+        "ratio": 2.0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": [
+        "source-a",
+        "source-b"
+      ]
+    },
+    {
+      "input": {
+        "name": "ratio-None",
+        "dto": {
+          "ratio": null
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": null,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": null,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-False",
+        "dto": {
+          "ratio": false
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": false,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": false,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-0",
+        "dto": {
+          "ratio": 0
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio--0.5",
+        "dto": {
+          "ratio": -0.5
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": -0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 -0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 -0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": -0.5,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-0.5",
+        "dto": {
+          "ratio": 0.5
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-1",
+        "dto": {
+          "ratio": 1
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 1,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 1,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-1.5",
+        "dto": {
+          "ratio": 1.5
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 1.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 1.5,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-'0'",
+        "dto": {
+          "ratio": "0"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_coercion_not_applied",
+        "reason": "Numeric strings are accepted and normalized to float by SiteUserData; this host DTO bypasses that normalization, so its truthiness/text trace is not schema evidence."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": "0",
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": "0",
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-'0.5'",
+        "dto": {
+          "ratio": "0.5"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_coercion_not_applied",
+        "reason": "Numeric strings are accepted and normalized to float by SiteUserData; this host DTO bypasses that normalization, so its truthiness/text trace is not schema evidence."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": "0.5",
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": "0.5",
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "ratio-'bad'",
+        "dto": {
+          "ratio": "bad"
+        }
+      },
+      "schema_scope": {
+        "kind": "invalid_schema",
+        "reason": "Optional[float] rejects the nonnumeric string bad; the unvalidated host stub reaches float() instead."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": "bad",
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "ValueError",
+        "message": "could not convert string to float: 'bad'"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-None",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": null
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": null
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": null
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-''",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": ""
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": ""
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": ""
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'User'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "User"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "User"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'VIP'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "VIP"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "VIP"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "VIP"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'vip'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "vip"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "vip"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "vip"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'VI'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "VI"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "VI"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "VI"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'Vİ'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "Vİ"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "Vİ"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "Vİ"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'Vı'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "Vı"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "Vı"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "Vı"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'V'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "V"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "V"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "V"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'贵宾'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "贵宾"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "贵宾"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "贵宾"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "level-'preVIpost'",
+        "dto": {
+          "ratio": 0.5,
+          "user_level": "preVIpost"
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "preVIpost"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        }
+      ],
+      "result": {
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "ratio": 0.5,
+        "user_level": "preVIpost"
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "post-error-1-after-False",
+        "post_error_at": 1,
+        "error_after_history": false,
+        "dto": {
+          "ratio": 0.5,
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "post-error-1-after-True",
+        "post_error_at": 1,
+        "error_after_history": true,
+        "dto": {
+          "ratio": 0.5,
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception after history"
+      },
+      "host_stub_history": [
+        "source-a"
+      ]
+    },
+    {
+      "input": {
+        "name": "post-error-2-after-False",
+        "post_error_at": 2,
+        "error_after_history": false,
+        "dto": {
+          "ratio": 0.5,
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-b"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception"
+      },
+      "host_stub_history": [
+        "source-a"
+      ]
+    },
+    {
+      "input": {
+        "name": "post-error-2-after-True",
+        "post_error_at": 2,
+        "error_after_history": true,
+        "dto": {
+          "ratio": 0.5,
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-b"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception after history"
+      },
+      "host_stub_history": [
+        "source-a",
+        "source-b"
+      ]
+    },
+    {
+      "input": {
+        "name": "post-error-3-after-False",
+        "post_error_at": 3,
+        "error_after_history": false,
+        "dto": {
+          "ratio": 0.5,
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-b"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "post_call",
+          "ordinal": 3,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception"
+      },
+      "host_stub_history": [
+        "source-a",
+        "source-b"
+      ]
+    },
+    {
+      "input": {
+        "name": "post-error-3-after-True",
+        "post_error_at": 3,
+        "error_after_history": true,
+        "dto": {
+          "ratio": 0.5,
+          "message_unread": 2,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ],
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-b"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 2,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ],
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-b"
+              ]
+            ],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-a",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-b"
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "source": "source-b",
+            "mtype": "SiteMessage",
+            "title": "【站点 Synthetic a 消息】",
+            "text": "时间：2026-01-02\n标题：head\n内容：\nbody",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "post_call",
+          "ordinal": 3,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic a 分享率 0.5，请注意！"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception after history"
+      },
+      "host_stub_history": [
+        "source-a",
+        "source-b"
+      ]
+    },
+    {
+      "input": {
+        "name": "lookup-error",
+        "lookup_error_at": 1,
+        "dto": {
+          "message_unread": 1,
+          "message_unread_contents": [
+            [
+              "head",
+              "2026-01-02",
+              "body",
+              "source-a"
+            ]
+          ]
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [
+              [
+                "head",
+                "2026-01-02",
+                "body",
+                "source-a"
+              ]
+            ],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "exists_by_source",
+          "source": "source-a"
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticLookupError",
+        "message": "synthetic history read exception"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "no-dto",
+        "dto": null
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        }
+      ],
+      "result": null,
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "module-raises",
+        "dto": "raise"
+      },
+      "schema_scope": {
+        "kind": "module_exception",
+        "reason": "Synthetic module outcome, not a DTO value."
+      },
+      "trace": [
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic module exception"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-normal",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "by_site": {
+          "a": {
+            "message_unread": 1
+          },
+          "b": {
+            "ratio": 0.5
+          }
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）Synthetic a ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": "a"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "站点数据（1/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 1
+          }
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "正在刷新站点数据（2/2）Synthetic b ...",
+          "data": {
+            "total": 2,
+            "finished": 1,
+            "current": "b"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "b"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-b.invalid",
+          "name": "Synthetic b",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 0.5,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "b"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic b 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "【站点分享率低预警】",
+            "text": "站点 Synthetic b 分享率 0.5，请注意！"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "progress",
+          "value": 100.0,
+          "text": "站点数据（2/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 2
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "*"
+          }
+        },
+        {
+          "op": "progress",
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ],
+      "result": {
+        "Synthetic a": {
+          "message_unread": 1,
+          "message_unread_contents": [],
+          "ratio": 2.0,
+          "user_level": "User"
+        },
+        "Synthetic b": {
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "ratio": 0.5,
+          "user_level": "User"
+        }
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-none",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "dto": null
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）Synthetic a ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": "a"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "站点数据（1/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 1
+          }
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "正在刷新站点数据（2/2）Synthetic b ...",
+          "data": {
+            "total": 2,
+            "finished": 1,
+            "current": "b"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "b"
+        },
+        {
+          "op": "progress",
+          "value": 100.0,
+          "text": "站点数据（2/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 2
+          }
+        },
+        {
+          "op": "progress",
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ],
+      "result": {},
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-partial",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "by_site": {
+          "a": null,
+          "b": {}
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）Synthetic a ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": "a"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "站点数据（1/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 1
+          }
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "正在刷新站点数据（2/2）Synthetic b ...",
+          "data": {
+            "total": 2,
+            "finished": 1,
+            "current": "b"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "b"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-b.invalid",
+          "name": "Synthetic b",
+          "payload": {
+            "message_unread": 0,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "b"
+          }
+        },
+        {
+          "op": "progress",
+          "value": 100.0,
+          "text": "站点数据（2/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 2
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "*"
+          }
+        },
+        {
+          "op": "progress",
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ],
+      "result": {
+        "Synthetic b": {
+          "message_unread": 0,
+          "message_unread_contents": [],
+          "ratio": 2.0,
+          "user_level": "User"
+        }
+      },
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-post-error",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "post_error_at": 1,
+        "dto": {
+          "message_unread": 1
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）Synthetic a ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": "a"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-second-post-error",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "post_error_at": 2,
+        "dto": {
+          "message_unread": 1
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）Synthetic a ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": "a"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "站点数据（1/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 1
+          }
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "正在刷新站点数据（2/2）Synthetic b ...",
+          "data": {
+            "total": 2,
+            "finished": 1,
+            "current": "b"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "b"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-b.invalid",
+          "name": "Synthetic b",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "b"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic b 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-b.invalid/"
+          }
+        }
+      ],
+      "result": null,
+      "error": {
+        "class": "SyntheticPostError",
+        "message": "synthetic post exception"
+      },
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-stopped",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "stopped": true
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        }
+      ],
+      "result": null,
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-stop-after-post",
+        "batch": true,
+        "sites": [
+          {
+            "id": "a",
+            "name": "Synthetic a",
+            "domain": "synthetic-a.invalid",
+            "url": "https://synthetic-a.invalid/",
+            "is_active": true
+          },
+          {
+            "id": "disabled",
+            "name": "Synthetic disabled",
+            "domain": "synthetic-disabled.invalid",
+            "url": "https://synthetic-disabled.invalid/",
+            "is_active": false
+          },
+          {
+            "id": "b",
+            "name": "Synthetic b",
+            "domain": "synthetic-b.invalid",
+            "url": "https://synthetic-b.invalid/",
+            "is_active": true
+          }
+        ],
+        "stop_after_post": 1,
+        "dto": {
+          "message_unread": 1
+        }
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 2 个站点 ...",
+          "data": {
+            "total": 2,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 0.0,
+          "text": "正在刷新站点数据（1/2）Synthetic a ...",
+          "data": {
+            "total": 2,
+            "finished": 0,
+            "current": "a"
+          }
+        },
+        {
+          "op": "run_module",
+          "method": "refresh_userdata",
+          "site": "a"
+        },
+        {
+          "op": "save_userdata",
+          "domain": "synthetic-a.invalid",
+          "name": "Synthetic a",
+          "payload": {
+            "message_unread": 1,
+            "message_unread_contents": [],
+            "ratio": 2.0,
+            "user_level": "User"
+          }
+        },
+        {
+          "op": "event",
+          "event": "SiteRefreshed",
+          "data": {
+            "site_id": "a"
+          }
+        },
+        {
+          "op": "post_call",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "host_history_stub",
+          "kwargs": {
+            "mtype": "SiteMessage",
+            "title": "站点 Synthetic a 收到 1 条新消息，请登陆查看",
+            "link": "https://synthetic-a.invalid/"
+          }
+        },
+        {
+          "op": "post_return",
+          "value": null
+        },
+        {
+          "op": "progress",
+          "value": 50.0,
+          "text": "站点数据（1/2）刷新完成",
+          "data": {
+            "total": 2,
+            "finished": 1
+          }
+        }
+      ],
+      "result": null,
+      "error": null,
+      "host_stub_history": []
+    },
+    {
+      "input": {
+        "name": "batch-empty",
+        "batch": true,
+        "sites": []
+      },
+      "schema_scope": {
+        "kind": "schema_representable",
+        "reason": "DTO fields are representable by the pinned schema; null/bool numeric cases exercise equivalent false branches, not complete schema coercion fidelity."
+      },
+      "trace": [
+        {
+          "op": "progress",
+          "value": 0,
+          "text": "开始刷新站点数据，共 0 个站点 ...",
+          "data": {
+            "total": 0,
+            "finished": 0
+          }
+        },
+        {
+          "op": "progress",
+          "value": 100,
+          "text": "站点数据刷新完成"
+        }
+      ],
+      "result": {},
+      "error": null,
+      "host_stub_history": []
+    }
+  ]
+}

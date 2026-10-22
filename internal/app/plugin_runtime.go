@@ -418,6 +418,36 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_SITE_RECEIPT_INVALID"
 		}
 	}
+	if installation.PluginID == "SiteStatistic" && run.Action == "api" {
+		collection, found, collectionErr := a.pluginStore.siteMessageCollectionForRun(finishCtx, a.Store.DB, run)
+		if collectionErr != nil {
+			err, state, errorCode = collectionErr, "reconcile_pending", "SITE_MESSAGE_COLLECTION_UNCONFIRMED"
+		} else if found {
+			committed, receiptErr := a.pluginStore.siteStatisticReceipt(finishCtx, run)
+			if collection.Stage == "failed" || collection.Stage == "aborted" {
+				// The original synchronous exception is terminal. A restart must
+				// neither publish later ordinals nor turn the API into success.
+				errorCode = collection.Failure
+				if errorCode == "" {
+					errorCode = "SITE_MESSAGE_POST_FAILED"
+				}
+				err, state = bad(errorCode, "站点采集或消息发布已终止，未重试外部操作"), "failed"
+				result.Result = nil
+			} else if receiptErr == nil && collection.Stage == "complete" {
+				if proofErr := a.pluginStore.validateSiteCollectionCompletion(finishCtx, a.Store.DB, collection); proofErr != nil {
+					err, state, errorCode = proofErr, "reconcile_pending", "SITE_MESSAGE_COLLECTION_UNCONFIRMED"
+				} else {
+					result.Result, err, state, errorCode = committed, nil, "succeeded", ""
+				}
+			} else {
+				// Includes an interrupted HTTP/mark-read admission and a completed
+				// source sequence whose final API-result write was not confirmed.
+				// Recovery may use persisted facts only; never run the SDK again.
+				err, state, errorCode = bad("SITE_MESSAGE_COLLECTION_UNCONFIRMED", "站点采集或通知结果尚待核对，未重复执行"), "reconcile_pending", "SITE_MESSAGE_COLLECTION_UNCONFIRMED"
+				result.Result = nil
+			}
+		}
+	}
 	if installation.PluginID == "SiteStatistic" && run.Action == "event" {
 		committed, receiptErr := a.pluginStore.siteStatisticReceipt(finishCtx, run)
 		if receiptErr == nil {

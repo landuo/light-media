@@ -287,13 +287,15 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 // connection and optional owning job. A failed response never replaces an
 // existing day; its first failure can create that day's error observation.
 type siteCollectionHooks struct {
-	Auto         bool
-	RequestGuard func(context.Context) error
-	Guard        func(*sql.Tx) error
-	Commit       func(*sql.Tx, siteSnapshot) error
+	Origin                siteCollectionOrigin
+	ExpectedMessagePolicy *siteMessagePolicy
+	Auto                  bool
+	RequestGuard          func(context.Context) error
+	Guard                 func(*sql.Tx) error
+	Commit                func(*sql.Tx, siteSnapshot) error
 }
 
-func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hooks *siteCollectionHooks) (siteSnapshot, error) {
+func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey string, hooks *siteCollectionHooks) (siteSnapshot, error) {
 	s, e := a.siteForRequest(ctx, key)
 	if e != nil {
 		return siteSnapshot{}, e
@@ -313,6 +315,9 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	messageOption, policyErr := readPolicy(ctx)
 	if policyErr != nil {
 		return siteSnapshot{}, policyErr
+	}
+	if hooks != nil && hooks.ExpectedMessagePolicy != nil && *hooks.ExpectedMessagePolicy != messageOption {
+		return siteSnapshot{}, siteCollectionError()
 	}
 	// The existing site-card endpoint is a connection test. Only real refresh
 	// jobs and the plugin refresh API may read/mark messages, as in MoviePilot.
@@ -346,6 +351,13 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 	if err := ctx.Err(); err != nil {
 		return siteSnapshot{}, err
 	}
+	// A host request guard's definite rejection remains terminal even if the
+	// grant is restored before the final transaction guard. Do not turn it into
+	// a connection failure/no-data success. Unmarked provider errors keep their
+	// existing treatment and cannot claim this local authority evidence.
+	if hooks != nil && siteMessageAdmissionFailureCode(e) != "" {
+		return siteSnapshot{}, e
+	}
 	snapshot.Connection = managedConnection{Status: "ok", CheckedAt: now(), DurationMS: time.Since(started).Milliseconds()}
 	if e != nil {
 		snapshot.Connection.Status = "failed"
@@ -368,7 +380,11 @@ func (a *App) collectManagedSite(ctx context.Context, key, eventKey string, hook
 		return siteSnapshot{}, policyErr
 	}
 	if err != nil || a.managedSiteKey(current) != snapshot.ConfigKey || messageOption != currentPolicy {
-		return siteSnapshot{}, bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
+		changed := bad("SITE_CHANGED", "站点设置已变化，请重新刷新")
+		if hooks != nil {
+			return siteSnapshot{}, siteMessageDefiniteGuardError(changed)
+		}
+		return siteSnapshot{}, changed
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
