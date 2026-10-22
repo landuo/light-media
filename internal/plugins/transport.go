@@ -89,10 +89,16 @@ func (s *wireSession) writePhysical(frame Frame) error {
 	if s.aborted.Load() || s.ctx.Err() != nil {
 		return failure("execution_canceled")
 	}
-	raw, err := json.Marshal(frame)
+	raw, err := frame.MarshalJSON()
 	if err != nil || len(raw)+1 > s.maxFrame {
 		return failure("frame_limit")
 	}
+	return s.writeEncodedPhysical(raw)
+}
+
+// writeEncodedPhysical accepts only output from Frame.MarshalJSON after the
+// caller has checked cancellation and the physical frame ceiling.
+func (s *wireSession) writeEncodedPhysical(raw []byte) error {
 	if s.maxInput == 0 {
 		s.maxInput = defaultWireBytes
 	}
@@ -131,7 +137,7 @@ func (s *wireSession) readPhysical() (Frame, error) {
 	if s.aborted.Load() || s.ctx.Err() != nil {
 		return frame, failure("execution_canceled")
 	}
-	if strictJSON(raw, &frame) != nil {
+	if decodeTransportFrame(raw, &frame) != nil {
 		return frame, failure("invalid_frame")
 	}
 	return frame, nil
@@ -147,7 +153,7 @@ func (s *wireSession) write(frame Frame) error {
 		}
 		return failure("frame_limit")
 	}
-	raw, err := json.Marshal(frame)
+	raw, err := frame.MarshalJSON()
 	if err != nil {
 		return failure("invalid_frame")
 	}
@@ -155,7 +161,10 @@ func (s *wireSession) write(frame Frame) error {
 		return failure("message_limit")
 	}
 	if len(raw)+1 <= s.maxFrame {
-		return s.writePhysical(frame)
+		if s.aborted.Load() || s.ctx.Err() != nil {
+			return failure("execution_canceled")
+		}
+		return s.writeEncodedPhysical(raw)
 	}
 	if !s.enabled {
 		return failure("frame_limit")
@@ -182,7 +191,7 @@ func (s *wireSession) write(frame Frame) error {
 		chunk := transportChunk{transfer, frame.ID, frame.Type, seq, len(raw), false, []byte{}}
 		payload, _ := json.Marshal(chunk)
 		control := Frame{Protocol: ProtocolVersion, ID: id, Type: controlType, Identity: s.identity, Method: "transport.chunk", Payload: payload}
-		empty, err := json.Marshal(control)
+		empty, err := control.MarshalJSON()
 		if err != nil {
 			return failure("invalid_frame")
 		}
@@ -279,7 +288,7 @@ func (s *wireSession) acceptChunk(control Frame) (Frame, *Frame, error) {
 	var result *Frame
 	if c.Last {
 		var original Frame
-		if strictJSON(a.raw, &original) != nil || original.Protocol != ProtocolVersion || original.Identity != s.identity || original.ID != a.logicalID || original.Type != a.logicalType || strings.HasPrefix(original.Method, "transport.") {
+		if decodeTransportFrame(a.raw, &original) != nil || original.Protocol != ProtocolVersion || original.Identity != s.identity || original.ID != a.logicalID || original.Type != a.logicalType || strings.HasPrefix(original.Method, "transport.") {
 			return empty, nil, failure("invalid_transport_message")
 		}
 		result = &original
@@ -336,4 +345,13 @@ func workerReplyFailure(code string) error {
 	default:
 		return failure("plugin_operation_failed")
 	}
+}
+
+// Decode once on the successful hot path. The old outer Decoder can update
+// frame before rejecting trailing data, so retain its exact failure behavior.
+func decodeTransportFrame(raw []byte, frame *Frame) error {
+	if err := frame.UnmarshalJSON(raw); err != nil {
+		return strictJSON(raw, frame)
+	}
+	return nil
 }

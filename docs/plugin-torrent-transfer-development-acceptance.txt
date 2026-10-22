@@ -1,0 +1,15 @@
+TorrentTransfer 开发验收矩阵，2026-10-22
+
+范围：已发布 d4f671f4 测试层加本次独立 codec 修复的精确冻结输入。仅首项 TorrentTransfer 与其音乐分身，不是全部插件完成或生产部署验收。
+
+1. 原业务与真实适配器：Transfer 核心/原生宿主普通及 race 各 16 顶层/138 含子例通过。冻结原版表单、默认值、源业务和 bencode oracle 均存在；覆盖筛选、添加/校验/做种、确定失败、未知副作用阻断、持久 checkpoint 及冷恢复。没有发现可具体指出的正常业务未实现项。
+2. 分身/持久链：App 普通及 race 各 28 顶层/73 含子例通过。独立配置、引用/下载器归属、KV、历史、队列、恢复与互斥断言保留。三处既有测试仅替换 worker helper，不删业务断言。
+3. 真实入口：真实轻量 Transfer SDK 的 Manifest/Handle/Serve 与 App/Runner 双方 race；另默认执行实际普通 cmd/server --plugin-worker，不以最小 SDK 代替生产入口。qBittorrent/Transmission × TorrentTransfer/TorrentTransfermusic 完整安装、动态表单、配置、服务、持久成功、目标副作用及源文件保留均通过；普通 server 不是 race 二进制，不冒称双方 race。这不是长期 HTTP/bootstrap/scheduler 或真实 swarm 运行证明。
+4. 失败处理修复：0b4d4c48 修复最后取消覆盖成功返回时仍带成功 Result 的不一致，真实 SDK 退出边界正反例通过；d4f671f4 去除 App race 测试二进制的多余启动依赖，同时补足真实普通主程序路径。固定 1CPU/16 子进程负载下旧 App-race 10.168s handshake 失败，SDK-race 1.821s、普通 server 3.168s 完整 Form/host/stop/Wait 通过，16/16 各自回收。不改变 10 秒预算或强迫所有入口通过人工资源枯竭；历史两次现场原因不能还原，旧日志仍保留。
+5. 当前可复现共享门禁：重复 JSON 编解码工作已优化，冻结旧实现逐字节/错误码/状态/计数等价回归通过。完整 shared plugins 普通/race 各 41 顶层/236 含子例通过，0 skip/0 fail；未改 90 秒预算的四向 16MiB 最大载荷 race 73.31s 通过，普通 7.84s。旧 90 秒失败未被覆盖；此前独立专项 79.33s 与本轮完整包证据分开。不是任意机器性能保证。
+6. 工程门禁：两个 CLI 包测试 exit 0（1 个实际测试）；vet、CGO=0 modernconly server/两 CLI 构建通过。所有最终输入前后哈希相同，没有把未发布 OCR/其他插件改动混入。
+7. private stdin：本轮 App 每种模式各 1 个 TestReviewedTransferSelectedStdin 明确 skip，不计通过。历史 docs/plugin-transfer-reviewed-migration-verification.json 记录 actual_source_normal、actual_source_race、owned_NAS_actual_source 各 36 pass/0 skip 及日志 SHA；支持原来源迁移能力的历史开发证据，但不称本轮重新读取私密来源或执行迁移。
+8. 40 原缺件：36 个 IYUU 站点编码运行时表、2 个其他专项参考、2 个历史全仓日志。Transfer 实际使用 iyuuautoseed/native 下载器适配器，不调用 encodingdetector；自己的 form/defaults/source/bencode 参考完整。它们不构成首项当前实际业务路径的未完成项，不能以不相关全仓缺件无限阻塞首项；但缺表对应站点解码、其他专项及历史总日志全文复核仍不可声称完整。精确清单见 docs/plugin-auto-signin-host-source-verification.json:495–699，使用方为 encodingdetector/codec.go、iso2022.go、iyuuautoseed/site_http.go，Transfer 引用见 torrenttransfer/native_host.go 与 app/plugin_transfer_owner.go。
+9. 生产交付边界：正式部署、真实账户迁移、种子备份目录只读挂载、新旧定时写操作交接未执行。它们不是本轮新发现的代码功能缺口，不授权自动操作用户生产服务。
+
+结论：正常业务开发、分身隔离、真实入口与当前相关可复现门禁已具备开发完成依据；历史现场不可还原、私密来源本轮未重验及生产交付边界如上分别保留。不是全项目验收、真实账户迁移完成或用户生产验收声明。

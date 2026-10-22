@@ -1,0 +1,213 @@
+{
+  "parent": "d4f671f4ea23692373ceabfe9b2d18204d9b0d60",
+  "input_manifest_sha256": "9c3b5fdfe55b897c09ae92578e9dc6b5bd1e87ada7f972dae528ca311f629b32",
+  "session_exit": 0,
+  "gates": {
+    "plugins-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": 236
+      },
+      "roots": {
+        "pass": 41
+      },
+      "skipped": [],
+      "artifacts": {
+        "plugins-normal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "plugins-normal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "plugins-normal.stdout": "359e25855653ad74777634a30a522a118cb1685bce18c5313d0ce44f0198b75b",
+        "plugins-normal.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "plugins-normal.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "plugins-normal.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "plugins-normal.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "maximum_payload": [
+        {
+          "test": "TestActualMaximumPayloadFourWays",
+          "action": "pass",
+          "elapsed_seconds": 7.84
+        }
+      ]
+    },
+    "plugins-race": {
+      "exit": 0,
+      "tests": {
+        "pass": 236
+      },
+      "roots": {
+        "pass": 41
+      },
+      "skipped": [],
+      "artifacts": {
+        "plugins-race.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "plugins-race.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "plugins-race.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "plugins-race.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "plugins-race.stdout": "519a638a364c850b21ddb4eeb96f95b22ddc0ace87633739821a00238df34a13",
+        "plugins-race.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "plugins-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "maximum_payload": [
+        {
+          "test": "TestActualMaximumPayloadFourWays",
+          "action": "pass",
+          "elapsed_seconds": 73.31
+        }
+      ]
+    },
+    "core-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": 138
+      },
+      "roots": {
+        "pass": 16
+      },
+      "skipped": [],
+      "artifacts": {
+        "core-normal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "core-normal.stdout": "a2bf040940d9c1256f84bc8efb7a71d0348be7cd71caeb7f202c45b3e1546aa2",
+        "core-normal.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "core-normal.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "core-normal.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "core-normal.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "core-normal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "maximum_payload": []
+    },
+    "core-race": {
+      "exit": 0,
+      "tests": {
+        "pass": 138
+      },
+      "roots": {
+        "pass": 16
+      },
+      "skipped": [],
+      "artifacts": {
+        "core-race.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "core-race.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "core-race.stdout": "7e085969dcf2a2f5c74c6187e4aebd50e17e795e13ee9696b29de0325c5c5b47",
+        "core-race.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "core-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "core-race.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "core-race.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2"
+      },
+      "maximum_payload": []
+    },
+    "app-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": 73,
+        "skip": 1
+      },
+      "roots": {
+        "pass": 28,
+        "skip": 1
+      },
+      "skipped": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "artifacts": {
+        "app-normal.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "app-normal.stdout": "4193f6bfc6296415915a76a6c4b9b6420f9a33db976810a86684454566789ca3",
+        "app-normal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "app-normal.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "app-normal.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "app-normal.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "app-normal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "maximum_payload": []
+    },
+    "app-race": {
+      "exit": 0,
+      "tests": {
+        "pass": 73,
+        "skip": 1
+      },
+      "roots": {
+        "pass": 28,
+        "skip": 1
+      },
+      "skipped": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "artifacts": {
+        "app-race.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "app-race.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "app-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "app-race.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "app-race.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "app-race.stdout": "cb22417dc117fb2587e281e4703f2af73a636bda0c7f57c875c4eaccf3998e9d",
+        "app-race.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2"
+      },
+      "maximum_payload": []
+    },
+    "cli-test": {
+      "exit": 0,
+      "tests": {
+        "pass": 1
+      },
+      "roots": {
+        "pass": 1
+      },
+      "skipped": [],
+      "artifacts": {
+        "cli-test.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "cli-test.stdout": "12b29f58c908550af29916b72579dbea5e0155f457c01d5e39af7ca7974d19bb",
+        "cli-test.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "cli-test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cli-test.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "cli-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "cli-test.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2"
+      },
+      "maximum_payload": []
+    },
+    "vet": {
+      "exit": 0,
+      "tests": {},
+      "roots": {},
+      "skipped": [],
+      "artifacts": {
+        "vet.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "vet.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "vet.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "vet.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "vet.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "vet.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2"
+      },
+      "maximum_payload": []
+    },
+    "build": {
+      "exit": 0,
+      "tests": {},
+      "roots": {},
+      "skipped": [],
+      "artifacts": {
+        "build.input-after.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "build.input-after.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "build.input-before.jsonl": "adb87bf7c4e93bcd21053502d59df77b8f32650c7aa5c43307983fc77cbc4fe2",
+        "build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "build.input-before.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "maximum_payload": []
+    }
+  },
+  "source_sha256": {
+    "internal/plugins/transport.go": "9b4120ff66919269e74027f1282a7fe43e08ea7a806d73a7241c40f88fa40d97",
+    "internal/plugins/transport_codec_equivalence_test.go": "4cfcbdb9dadcd9a89a4cf999c62380bd75630a27502cecd936bee70afa034bfe",
+    "internal/plugins/transport_codec_legacy_test.go": "2416200dc00d4fe04e390dedbbb3147b39230b592f476fa660c503774c3bc74d",
+    "docs/plugin-torrent-transfer-codec-validation.txt": "c07dace4304b4364e728e5f9e509043ab7a851130f65b6828249e4136927a267"
+  },
+  "limits_unchanged": {
+    "runner_seconds": 90,
+    "logical_payload_MiB": 16,
+    "wire_MiB": 64,
+    "transfer_form_seconds": 10
+  },
+  "fuzz": "seed corpus only; no fuzz campaign",
+  "scope": "Complete shared plugins package and selected Transfer/App/CLI gates, not full-repository validation."
+}

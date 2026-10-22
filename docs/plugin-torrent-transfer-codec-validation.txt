@@ -1,0 +1,29 @@
+共享 Runner 传输 codec：去除重复 JSON 工作的独立发布验证记录
+2026-10-22。以下为最终冻结输入的真实终态。
+
+范围
+本轮发布父版本为 d4f671f4ea23692373ceabfe9b2d18204d9b0d60，最终输入 manifest SHA256 为 9c3b5fdfe55b897c09ae92578e9dc6b5bd1e87ada7f972dae528ca311f629b32。生产增量只涉及共享 transport.go，另增独立等价回归及冻结旧实现。最终验证组合保留已发布取消返回值修复、SDK/普通 server 测试层，并加入三份 codec 文件；使用同一冻结 overlay 和输入前后校验，不混入 OCR、其他未发布插件或压力诊断代码。不能用早先五文件专项验证冒充当前最终组合验收。
+
+改动及严格行为
+通过直接调用 Frame.MarshalJSON，去掉 json.Marshal(Frame) 对自定义 Marshaler 结果的重复标准库扫描；小帧复用已经编码的字节，避免再次序列化。内部仍通过 encoding/json 编码 rpcMessage/rpcValue，RawMessage 验证、压缩、HTML 及 U+2028/U+2029 转义没有改为自制 JSON 实现。
+成功读取物理帧和重组消息时直接调用 Frame.UnmarshalJSON，内部 strictJSON 对字段、尾部和类型的检查保持，不全局替换通用 strictJSON。直接解码失败时回退原 strictJSON(raw, frame)：旧外层 Decoder 可能先写入接收对象，再因尾随对象/null/垃圾拒绝；回退保留成功与失败后的完整 receiver 状态，而非只比较是否报错。非法输入可能多解析一次，本轮不宣称改善恶意或错误输入吞吐。
+直接 MarshalJSON 的错误不再被外层 json.MarshalerError 包裹，但这些传输调用点原本就映射为固定本地错误码；原 invalid_frame/frame_limit 等对外分类不变。保留取消/abort 与编码的原顺序、字节计数、newline、短写/I/O 错误、物理/逻辑/会话限额、ACK、身份及序列验证。不改 16MiB 载荷、64MiB wire 限额或原 90 秒 Runner 预算，也不延长 TorrentTransfer 表单的 10 秒预算。
+
+回归证据设计
+transport_codec_legacy_test.go 保存基线 writePhysical/readPhysical/write/read/acceptChunk 独立旧实现，不随优化同步改写。等价测试覆盖四类 frame、小帧/分块、编码精确字节、成功/失败及零值/非零 receiver、未知字段、尾随值、null、非法 RawMessage/UTF-8、取消/abort、边界相等与超限、短写、ACK 身份/顺序及组装状态和全部计数。跨独立调用只归一化随机 request/transfer ID，实际物理帧另逐字节对照旧编码；相同具体输入流的 ACK 精确比较。
+错误比较独立核对 nilness，并对用例定义预期本地错误，防止未知错误被 codeOf 空串误判成功。共享 oracle 的 jsonrpc.go、protocol_test.go 和 large_transport_test.go 以 SHA 锁定，避免两侧随共同依赖一起漂移；原最大载荷测试及断言未改。FuzzTransportCodecDecodeEquivalence 仅执行普通 go test 的种子，未开展 fuzz campaign，不宣称完成随机模糊测试。
+
+最终冻结输入下的验证结果
+- 完整 ./internal/plugins 普通与 race 均 exit 0，各 41 个顶层、含子例 236 个通过，0 跳过、0 失败。命令未使用 -run/-skip 排除测试。
+- 未修改的 TestActualMaximumPayloadFourWays 在原 90 秒预算内通过：普通 7.84 秒、race 73.31 秒。这是本轮完整共享包的实际结果，不是此前独立专项的 79.33 秒；两组证据分别保留，不混算。
+- Transfer core 普通与 race 均 exit 0，各 16 个顶层、含子例 138 个通过，0 跳过、0 失败。
+- 所选 App 普通/race 均 exit 0，各 28 顶层、含子例 73 通过，既有 TestReviewedTransferSelectedStdin 各 1 skip。真实普通 cmd/server 的双身份全链路与原两失败所在场景均重新验证。
+- 两个 CLI 包 exit 0，其中 1 个实际测试通过；vet、CGO=0 modernconly 的 server/两 CLI 构建通过。全部计划步骤实际终态 exit 0，前后冻结输入无变化，结束时无测试 worker 残留。不是全仓所有插件测试通过。
+
+
+历史及结论边界
+原 90 秒最大载荷 race 失败日志继续保留，包括精确 bdfab 前像对照约 91.34 秒的 execution_canceled；不能覆盖或改写为历史通过。本轮可以说明重复 JSON 工作被减少，并在当前最终冻结输入及当前环境中使未改最大载荷门禁通过；单轮耗时不是跨机器性能保证。
+这项改动不证明已找到或解决 TorrentTransfer 两次历史 10 秒现场失败原因。第一次为安装 POST 10809ms 失败；第二次安装 POST 1732ms 成功后，初始化完成，transferReadyApp 初始 GET /form 10027ms 失败，尚未进入 invalid-cron 主体。协议最大载荷与小表单启动/握手风险不能混为一个已确定根因。
+真实 cmd/server 非默认跳过的主链路及分身覆盖来自已发布测试层，已对本轮 codec 新字节重新执行普通/race App 门禁。40 个原二进制缺件、private stdin 的本轮跳过边界，以及正式部署/真实账户迁移/只读备份挂载/新旧定时写操作交接仍分别记录。没有新增生产网络、账户、真实下载器或通知操作，不计为整插件完整交付或用户验收。
+
+本轮逐门禁数量、退出码与证据 SHA256 见 plugin-torrent-transfer-codec-verification.json。首项开发验收与生产/来源边界见 plugin-torrent-transfer-development-acceptance.txt。旧失败证据继续见 form-diagnostics 和 cancel-result-consistency 报告。
