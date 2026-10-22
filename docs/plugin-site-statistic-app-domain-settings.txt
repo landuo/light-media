@@ -1,0 +1,19 @@
+SiteStatistic AppDomain settings delivery
+
+Base: ae0835e43da0caa1d3e115e74101c9fee00e7f2d.
+
+The system settings page now exposes the existing global app_domain field. It saves only this section against freshly loaded settings, preserves unrelated drafts and nullable read-site-messages preferences, adopts the server response, supports clearing, and prevents duplicate concurrent saves. It does not probe the address, impose new URL validation, or change plugin-instance configuration. Existing notification acceptance-time link freezing and class-vs-instance rules are unchanged.
+
+Validation on frozen source input:
+- Actual Vue SFC setup/render/event tests plus existing connection-settings tests: 13 passed.
+- Complete frontend test suite: 178 passed, 0 failed/skipped. Type check and production build passed.
+- Actual authenticated Handler GET/PUT, encrypted settings persistence, cold restart and clear: inherited/null, explicit false and explicit true preferences; all other Settings fields retained. These use ResponseRecorder and synthetic identities; default HTTP dials are rejected and counted. This is test-layer isolation, not system-wide network isolation.
+- This new test and existing default-link, clone, cold-replay, corruption and rollback tests: ordinary and race each 7 root / 29 inclusive passed, 0 failed/skipped.
+- go vet ./internal/app ./web and CGO_ENABLED=0 modernconly cmd/server build passed.
+- Final code/build input remained unchanged across gates. Exact hashes and log hashes are in the companion verification JSON.
+
+The first frontend full-suite attempt used a web-only directory and lacked repository-relative plugin/oracle fixtures, producing 10 ENOENT failures. The original failure remains recorded; adding read-only links to the exact baseline internal/ and testdata/ restored the expected layout without changing tests. An independent baseline frontend build also passed after using that same layout. Hash-normalized baseline/candidate output differs only in the main JS/CSS.
+
+Fresh compiled assets and index are included so the normal server exposes this UI. Existing hashed assets are retained; no source, evidence, or prior assets are deleted. No dependency/version changes. No other frozen plugin changes are included.
+
+Limits: this is one validated SiteStatistic milestone, not completion of the plugin or a full-repository test claim. Real source-message production, error notification/SSE and remaining installed-core provenance work are still in progress. Default URL edge rules retain their previously documented public-source (not full installed-core oracle) evidence boundary. No production settings, domain, account, deployment or migration action was performed.
