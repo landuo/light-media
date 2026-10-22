@@ -95,7 +95,7 @@ func (p *PluginStore) recordRunConfigTransitionTx(ctx context.Context, tx *sql.T
 // verifyRunConfigChainTx proves an immutable authority snapshot reaches the
 // exact current invocation, including pending invocations whose input changed.
 // Missing, corrupted, discontinuous, cross-instance or forked edges fail closed.
-func (p *PluginStore) verifyRunConfigChainTx(ctx context.Context, tx *sql.Tx, plugin string, run PluginRun, revision int64, inputSHA, configSHA string) (string, error) {
+func (p *PluginStore) verifyRunConfigChainTx(ctx context.Context, tx PluginProofReader, plugin string, run PluginRun, revision int64, inputSHA, configSHA string) (string, error) {
 	if revision < 0 || revision > run.ConfigRevision {
 		return "", bad("PLUGIN_RUN_PROOF_INVALID", "插件配置修订链无效")
 	}

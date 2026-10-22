@@ -125,7 +125,7 @@ func TestManifestRejectsUnsafeOrIncompatibleEntries(t *testing.T) {
 }
 
 func TestManifestConfigDefaultsContract(t *testing.T) {
-	for _, declaration := range []string{"", ConfigDefaultsPure} {
+	for _, declaration := range []string{"", ConfigDefaultsPure, ConfigDefaultsTransactional} {
 		manifest := fixtureManifest()
 		manifest.ConfigDefaults = declaration
 		if err := manifest.Validate(); err != nil {
@@ -143,7 +143,7 @@ func TestManifestConfigDefaultsContract(t *testing.T) {
 			t.Fatal("defaults declaration did not round trip")
 		}
 	}
-	for _, declaration := range []string{"pure", "pure/v2", "native/v1", " pure/v1", "PURE/V1"} {
+	for _, declaration := range []string{"pure", "pure/v2", "native/v1", " pure/v1", "PURE/V1", "transactional", "transactional/v2"} {
 		manifest := fixtureManifest()
 		manifest.ConfigDefaults = declaration
 		if codeOf(manifest.Validate()) != "invalid_manifest" {

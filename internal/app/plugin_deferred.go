@@ -164,7 +164,7 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 func deferredSameRun(r pluginDeferredRecord, in PluginInstallation, run PluginRun) bool {
 	return run.InstanceID == r.Instance && run.Version == r.Version && r.Schema == 1 && r.Plugin == in.PluginID && r.Instance == in.InstanceID && r.Version == in.Version && r.Run == run.ID && r.Action == run.Action && r.Generation == run.Generation && r.Revision == run.ConfigRevision && r.InputSHA == deferredInputSHA(run.Input)
 }
-func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJournalReader, run PluginRun) (pluginDeferredRecord, []byte, error) {
+func (p *PluginStore) readDeferred(ctx context.Context, q PluginProofReader, run PluginRun) (pluginDeferredRecord, []byte, error) {
 	var r pluginDeferredRecord
 	var sealed []byte
 	if err := q.QueryRowContext(ctx, `SELECT sealed FROM plugin_deferred_operations WHERE run_id=?`, run.ID).Scan(&sealed); err != nil {

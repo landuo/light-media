@@ -18,6 +18,87 @@ import (
 // Actual writes require the exact compiled implementation to declare pure/v1;
 // native business owners need a separate transactional normalization hook.
 func (p *PluginStore) NormalizeInstanceDefaults(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, defaults map[string]json.RawMessage) (PluginStoredValue, error) {
+	return p.normalizeInstanceDefaults(ctx, snapshot, expectedRevision, defaults, plugins.ConfigDefaultsPure, nil)
+}
+
+// PluginDefaultsChange contains database-current identity/state, the compiled
+// implementation manifest (not full installation history), and isolated
+// before/after configuration snapshots. Mutating these copies cannot rewrite
+// configuration, pending inputs, or the framework's result.
+type PluginDefaultsChange struct {
+	Installation PluginInstallation
+	Previous     PluginStoredValue
+	Next         PluginStoredValue
+}
+
+// PluginDefaultsTransaction is only supplied to a trusted, compiled host adapter,
+// not to an RPC or SDK
+// capability. It may validate and project its business journal in this transaction
+// only; it must not start work, emit notices, initialize owners, perform external
+// effects, or replace an original run/deferred receipt. It must not commit tx.
+type PluginDefaultsTransaction interface {
+	PluginProofReader
+	Data(context.Context, string) (PluginStoredValue, error)
+	SaveData(context.Context, string, int64, any) (PluginStoredValue, error)
+	ExecContext(context.Context, string, ...any) (sql.Result, error)
+	QueryContext(context.Context, string, ...any) (*sql.Rows, error)
+}
+
+type pluginDefaultsTransaction struct {
+	tx       *sql.Tx
+	store    *PluginStore
+	instance string
+}
+
+// Data and SaveData bind the namespace and retain framework encryption/CAS.
+// Projectors need not duplicate the storage codec or choose an instance ID.
+func (t pluginDefaultsTransaction) Data(ctx context.Context, key string) (PluginStoredValue, error) {
+	var value PluginStoredValue
+	if !validPluginKey(key) {
+		return value, bad("INVALID_PLUGIN_VALUE", "插件数据键无效")
+	}
+	var sealed []byte
+	if err := t.tx.QueryRowContext(ctx, `SELECT revision,sealed,updated_at FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, t.instance, key).Scan(&value.Revision, &sealed, &value.UpdatedAt); err != nil {
+		return value, err
+	}
+	var err error
+	value.Value, err = t.store.unseal("data", t.instance, key, sealed)
+	return value, err
+}
+func (t pluginDefaultsTransaction) SaveData(ctx context.Context, key string, expected int64, value any) (PluginStoredValue, error) {
+	raw, err := pluginJSONLimit(value, false, pluginDataValueLimit)
+	if err != nil {
+		return PluginStoredValue{}, err
+	}
+	return t.store.saveValueTx(ctx, t.tx, t.instance, "data", key, expected, raw)
+}
+func (t pluginDefaultsTransaction) ExecContext(ctx context.Context, query string, args ...any) (sql.Result, error) {
+	return t.tx.ExecContext(ctx, query, args...)
+}
+func (t pluginDefaultsTransaction) QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error) {
+	return t.tx.QueryContext(ctx, query, args...)
+}
+func (t pluginDefaultsTransaction) QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row {
+	return t.tx.QueryRowContext(ctx, query, args...)
+}
+
+// The private transaction wrapper deliberately has no Commit/Rollback methods.
+// This remains a trusted-host contract, not a SQL sandbox: SQL transaction
+// control, cross-instance writes, and mutation of memory/cache before success
+// are prohibited. Read-only no-ops do not invoke the projector.
+type PluginDefaultsProjector func(context.Context, PluginDefaultsTransaction, PluginDefaultsChange) error
+
+// NormalizeInstanceDefaultsWithProjection requires a compiled transactional/v1
+// declaration. The framework owns CAS, missing-only writes, busy checks and
+// propagation. A projector failure rolls back both config and business state.
+func (p *PluginStore) NormalizeInstanceDefaultsWithProjection(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, defaults map[string]json.RawMessage, projector PluginDefaultsProjector) (PluginStoredValue, error) {
+	if projector == nil {
+		return PluginStoredValue{}, bad("PLUGIN_DEFAULTS_UNSUPPORTED", "插件缺少可信默认值状态投影")
+	}
+	return p.normalizeInstanceDefaults(ctx, snapshot, expectedRevision, defaults, plugins.ConfigDefaultsTransactional, projector)
+}
+
+func (p *PluginStore) normalizeInstanceDefaults(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, defaults map[string]json.RawMessage, declaration string, projector PluginDefaultsProjector) (PluginStoredValue, error) {
 	var out PluginStoredValue
 	if expectedRevision < 0 || !pluginStorageID.MatchString(snapshot.InstanceID) || snapshot.Generation < 1 {
 		return out, bad("INVALID_PLUGIN_VALUE", "插件默认值快照无效")
@@ -34,8 +115,8 @@ func (p *PluginStore) NormalizeInstanceDefaults(ctx context.Context, snapshot Pl
 	defer tx.Rollback()
 	var plugin, version string
 	var generation int64
-	var installed bool
-	if err = tx.QueryRowContext(ctx, `SELECT plugin_id,version,generation,installed FROM plugin_installations WHERE instance_id=?`, snapshot.InstanceID).Scan(&plugin, &version, &generation, &installed); err != nil {
+	var installed, desiredEnabled bool
+	if err = tx.QueryRowContext(ctx, `SELECT plugin_id,version,generation,installed,desired_enabled FROM plugin_installations WHERE instance_id=?`, snapshot.InstanceID).Scan(&plugin, &version, &generation, &installed, &desiredEnabled); err != nil {
 		return out, err
 	}
 	if !installed || plugin != snapshot.PluginID || version != snapshot.Version || generation != snapshot.Generation {
@@ -79,8 +160,8 @@ func (p *PluginStore) NormalizeInstanceDefaults(ctx context.Context, snapshot Pl
 	// Read-only no-ops remain available to every plugin, but mutable stored
 	// manifests cannot opt an implementation into configuration propagation.
 	manifest, _, known := builtin.Lookup(plugin)
-	if !known || manifest.Version != version || manifest.ConfigDefaults != plugins.ConfigDefaultsPure {
-		return out, bad("PLUGIN_DEFAULTS_UNSUPPORTED", "插件实现未声明支持纯默认值保存")
+	if !known || manifest.Version != version || manifest.ConfigDefaults != declaration {
+		return out, bad("PLUGIN_DEFAULTS_UNSUPPORTED", "插件实现未声明所需默认值保存协议")
 	}
 	var active int
 	// Even an opted-in implementation must not rewrite an immutable prepared
@@ -98,10 +179,25 @@ func (p *PluginStore) NormalizeInstanceDefaults(ctx context.Context, snapshot Pl
 	if err != nil {
 		return out, err
 	}
+	previous := out
 	previousConfig := append(json.RawMessage(nil), out.Value...)
 	out, err = p.saveValueTx(ctx, tx, snapshot.InstanceID, "config", "main", expectedRevision, raw)
 	if err != nil {
 		return out, err
+	}
+	if projector != nil {
+		// Do not give a callback stale caller metadata or aliases of stored bytes.
+		current := PluginInstallation{InstanceID: snapshot.InstanceID, PluginID: plugin, Version: version, Generation: generation, DesiredEnabled: desiredEnabled, Installed: installed, ManifestSchemaVersion: manifest.SchemaVersion}
+		current.Manifest, err = json.Marshal(manifest)
+		if err != nil {
+			return PluginStoredValue{}, err
+		}
+		previous.Value = append(json.RawMessage(nil), previousConfig...)
+		next := out
+		next.Value = append(json.RawMessage(nil), out.Value...)
+		if err = projector(ctx, pluginDefaultsTransaction{tx: tx, store: p, instance: snapshot.InstanceID}, PluginDefaultsChange{Installation: current, Previous: previous, Next: next}); err != nil {
+			return PluginStoredValue{}, err
+		}
 	}
 	if err = p.propagateInstanceConfigTx(ctx, tx, snapshot.InstanceID, generation, expectedRevision, out.Revision, previousConfig, raw); err != nil {
 		return out, err

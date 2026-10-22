@@ -28,6 +28,11 @@ const HostAPIVersion = 1
 // manifest can grant this contract; a stored manifest is not write authority.
 const ConfigDefaultsPure = "pure/v1"
 
+// ConfigDefaultsTransactional additionally requires a trusted host projection of
+// business-owner state in the configuration transaction. This is not permission
+// for worker-supplied hooks, arbitrary config replacement, or lifecycle actions.
+const ConfigDefaultsTransactional = "transactional/v1"
+
 var identityPattern = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 var versionPattern = regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){0,3}(?:[-+][A-Za-z0-9.-]+)?$`)
 var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
@@ -57,7 +62,7 @@ type Manifest struct {
 }
 
 func (m Manifest) Validate() error {
-	if m.ConfigDefaults != "" && m.ConfigDefaults != ConfigDefaultsPure {
+	if m.ConfigDefaults != "" && m.ConfigDefaults != ConfigDefaultsPure && m.ConfigDefaults != ConfigDefaultsTransactional {
 		return failure("invalid_manifest")
 	}
 	if m.SchemaVersion != 1 || !identityPattern.MatchString(m.PluginID) || !versionPattern.MatchString(m.Version) ||
