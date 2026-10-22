@@ -58,10 +58,14 @@ Fresh validation so far (candidate hashes recorded in verification evidence):
 - Shared UI limitation observed: server TZ=UTC / cross-timezone browser showed
   the just-sent message as 9 hours ago, owing to timezone-less source date.
   Reported for shared-framework handling; not silently changed or claimed fixed.
-Affected race/CGO_ENABLED=0 modernconly regression remains pending. Prior stage results are provenance, not a pass for
+Affected race regression now covers all 150 roots / 513 inclusive tests,
+with the exact same test-name set as normal. No data race or skip was reported.
+CGO_ENABLED=0 modernconly regression remains pending. Prior stage results are provenance, not a pass for
 this change. No deployment or final plugin acceptance claimed yet.
 
 Race follow-up: initial 44-root shard exited 1: 43 passed; one relative-file
 reference test failed because the standalone binary runner used repository
 root instead of internal/app. No race was reported. The runner cwd is fixed;
-that case and remaining race shards are pending. Original failure retained.
+the failed case reran successfully using the same binary and package cwd.
+All four disjoint shards plus this one-case rerun now pass. The original
+failed run is retained, not rewritten as exit 0.
