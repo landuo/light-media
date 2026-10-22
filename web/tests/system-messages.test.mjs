@@ -703,3 +703,35 @@ test('actual App rendering reads the current clock after login/background while 
   assert.match(script, /if \(auth\.value\?\.authenticated && !document\.hidden\) \{\s*notificationTime\.value = Date\.now\(\);/);
   assert.match(script, /\}, 15000\);/);
 });
+
+
+test('native absolute message timestamp fixes cross-zone age without changing legacy interpretation', (t) => {
+  relativeTimeTimezone(t, 'UTC');
+  const examples = [
+    ['2026-10-22T14:00:00Z', '2026-10-22 14:00:00'],
+    ['2026-10-23T00:30:00+09:00', '2026-10-23 00:30:00'],
+    ['2026-10-22T23:30:00-08:00', '2026-10-22 23:30:00'],
+    ['2026-03-08T01:59:59-05:00', '2026-03-08 01:59:59'],
+    ['2026-03-08T03:00:00-04:00', '2026-03-08 03:00:00'],
+    ['2026-11-01T01:30:00-04:00', '2026-11-01 01:30:00'],
+    ['2026-11-01T01:30:00-05:00', '2026-11-01 01:30:00'],
+  ];
+  for (const zone of ['UTC', 'Asia/Tokyo', 'America/New_York', 'Pacific/Honolulu']) {
+    process.env.TZ = zone;
+    for (const [timestamp, date] of examples) {
+      const message = parseSystemMessage(body('owned', { timestamp, date }));
+      assert.equal(message.date, timestamp);
+      assert.equal(systemMessageRelativeTime(message.date, Date.parse(timestamp)), '几秒前', zone + timestamp);
+    }
+  }
+  process.env.TZ = 'Asia/Tokyo';
+  const legacy = parseSystemMessage(body('old', { date: '2026-10-22 14:00:00' }));
+  assert.equal(legacy.date, '2026-10-22 14:00:00');
+  assert.equal(systemMessageRelativeTime(legacy.date, Date.parse('2026-10-22T14:00:00Z')), '9 小时前');
+});
+
+test('present native timestamp must be an explicit valid absolute instant', () => {
+  for (const timestamp of [null, 0, {}, '', '2026-10-22 14:00:00', '2026-10-22T14:00:00', 'badZ', '2026-13-22T14:00:00Z', '2026-10-22T14:00:00+99:99']) {
+    assert.equal(parseSystemMessage(body('owned', { timestamp })), null);
+  }
+});

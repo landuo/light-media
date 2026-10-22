@@ -12,11 +12,12 @@ import (
 // unbounded. 500/60s limits its duplicate-key cache, never queue capacity.
 // It is deliberately not persisted, broadcast, or rebuilt from error receipts.
 type systemMessage struct {
-	Type  string          `json:"type"`
-	Title *string         `json:"title"`
-	Text  string          `json:"text"`
-	Date  string          `json:"date"`
-	Note  json.RawMessage `json:"note"`
+	Type      string          `json:"type"`
+	Title     *string         `json:"title"`
+	Text      string          `json:"text"`
+	Date      string          `json:"date"`
+	Timestamp string          `json:"timestamp"`
+	Note      json.RawMessage `json:"note"`
 }
 type systemMessageRuntime struct {
 	mu      sync.Mutex
@@ -125,7 +126,7 @@ func (m *systemMessageRuntime) putLocked(role string, title *string, text string
 		m.order = m.order[1:]
 	}
 	rawNote, _ := json.Marshal(n)
-	raw, err := json.Marshal(systemMessage{Type: role, Title: title, Text: text, Date: at.Format("2006-01-02 15:04:05"), Note: rawNote})
+	raw, err := json.Marshal(systemMessage{Type: role, Title: title, Text: text, Date: at.Format("2006-01-02 15:04:05"), Timestamp: at.Format(time.RFC3339Nano), Note: rawNote})
 	if err != nil {
 		return false
 	}

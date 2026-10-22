@@ -335,3 +335,42 @@ func TestSystemMessageSSEFetchMetadataRejectsSiblingWithoutOrigin(t *testing.T) 
 		}
 	}
 }
+
+// The original date and minute dedup key remain unchanged. The additive wire
+// instant prevents a UTC server being displayed nine hours old in UTC+9.
+func TestSystemMessageAbsoluteTimestampPreservesSourceDate(t *testing.T) {
+	for _, stamp := range []string{
+		"2026-10-22T14:00:00.123456789Z",
+		"2026-10-23T00:30:00+09:00",
+		"2026-10-22T23:30:00-08:00",
+		"2026-03-08T01:59:59-05:00",
+		"2026-03-08T03:00:00-04:00",
+		"2026-11-01T01:30:00-04:00",
+		"2026-11-01T01:30:00-05:00",
+	} {
+		t.Run(stamp, func(t *testing.T) {
+			at, err := time.Parse(time.RFC3339Nano, stamp)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var m systemMessageRuntime
+			if !m.put("plugin", nil, "owned", nil, at) {
+				t.Fatal("message rejected")
+			}
+			var got systemMessage
+			if err := json.Unmarshal(m.get(""), &got); err != nil {
+				t.Fatal(err)
+			}
+			if got.Date != at.Format("2006-01-02 15:04:05") || got.Timestamp != stamp {
+				t.Fatalf("wire time changed: %+v", got)
+			}
+			instant, err := time.Parse(time.RFC3339Nano, got.Timestamp)
+			if err != nil || !instant.Equal(at) {
+				t.Fatal("absolute instant lost", err)
+			}
+			if m.put("plugin", nil, "owned", nil, at) {
+				t.Fatal("timestamp altered dedup identity")
+			}
+		})
+	}
+}

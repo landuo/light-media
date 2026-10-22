@@ -53,12 +53,23 @@ export function parseSystemMessage(data: unknown): Omit<SystemMessage, 'id' | 'r
     for (const key of ['title', 'text', 'date']) {
       if (row[key] !== undefined && row[key] !== null && typeof row[key] !== 'string') return null;
     }
+    // New native frames retain source-compatible date and add an absolute instant.
+    // Legacy frames have no timestamp: do not invent their original timezone.
+    let displayDate = typeof row.date === 'string' ? row.date : null;
+    if (row.timestamp !== undefined) {
+      if (
+        typeof row.timestamp !== 'string' ||
+        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/.test(row.timestamp) ||
+        !Number.isFinite(Date.parse(row.timestamp))
+      ) return null;
+      displayDate = row.timestamp;
+    }
     // Never retain or interpret note, URLs, components, or caller-supplied IDs.
     return {
       type: row.type,
       title: typeof row.title === 'string' ? row.title : null,
       text: typeof row.text === 'string' ? row.text : null,
-      date: typeof row.date === 'string' ? row.date : null,
+      date: displayDate,
     };
   } catch {
     return null;
