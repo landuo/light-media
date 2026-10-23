@@ -17,6 +17,11 @@ func (p *PluginStore) readPluginInstanceView(ctx context.Context, in PluginInsta
 	if err != nil {
 		return nil, err
 	}
+	requested := session.anchor
+	requested.installation = in
+	if !samePluginFormIdentity(requested, session.anchor) {
+		return nil, pluginFormStale()
+	}
 	ctx = withPluginFormSession(ctx, session)
 	readonly := func(ctx context.Context, view pluginFormView) (json.RawMessage, error) {
 		ctx = context.WithValue(ctx, pluginFormCallbackScopeKey{}, &pluginFormCallbackScope{session: session, readOnly: true})

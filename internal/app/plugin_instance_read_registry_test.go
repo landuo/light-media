@@ -87,6 +87,26 @@ func TestPluginInstanceReadCommonScopeAcrossCompiledPlugins(t *testing.T) {
 			if e != nil || len(got) == 0 {
 				t.Fatal(string(got), e)
 			}
+			for name, mutate := range map[string]func(*PluginInstallation){
+				"enabled":  func(v *PluginInstallation) { v.DesiredEnabled = !v.DesiredEnabled },
+				"manifest": func(v *PluginInstallation) { v.Manifest = json.RawMessage(`{}`) },
+			} {
+				t.Run("reject stale requested "+name, func(t *testing.T) {
+					stale := in
+					mutate(&stale)
+					called := false
+					_, err := p.readPluginInstanceView(ctx, stale, func(context.Context, pluginFormView) (json.RawMessage, error) {
+						called = true
+						return json.RawMessage(`{}`), nil
+					})
+					if err == nil || called {
+						t.Fatal("stale requested snapshot entered trusted callback")
+					}
+					if !reflect.DeepEqual(before, instanceReadTables(t, a)) {
+						t.Fatal("rejected snapshot changed state")
+					}
+				})
+			}
 			_, e = p.readPluginInstanceView(ctx, in, func(c context.Context, v pluginFormView) (json.RawMessage, error) {
 				// Ignoring a denied write must not turn the request into success.
 				_, _ = p.SaveConfig(c, in.InstanceID, v.durable.Revision, json.RawMessage(`{"text":"bad"}`))

@@ -3,7 +3,9 @@ package app
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -82,6 +84,54 @@ func TestPluginReviewRestoreActualHTTPAndServer(t *testing.T) {
 						t.Fatal("lineage presentation lost", card)
 					}
 				}
+			}
+			if clone {
+				if count != 0 || offer != nil {
+					t.Fatal("deleted clone offered retained-review restore", count, offer)
+				}
+				removed := lifecycleInstallation(t, p, id)
+				if _, err := p.Config(ctx, id); !errors.Is(err, sql.ErrNoRows) {
+					t.Fatal("deleted clone config survived", err)
+				}
+				if _, err := p.Data(ctx, id, "owned"); !errors.Is(err, sql.ErrNoRows) {
+					t.Fatal("deleted clone KV survived", err)
+				}
+				stale, _ := json.Marshal(pluginReviewRestoreRequest{removed.Version, removed.Generation, c.Revision})
+				if w = callTest(t, a.Handler(), "POST", "/api/plugins/"+id+"/restore-reviewed", string(stale), cookie, ""); w.Code == 200 {
+					t.Fatal("deleted clone restored old review")
+				}
+				w = callTest(t, a.Handler(), "POST", "/api/plugins/CategoryEditor/clone", `{"suffix":"restored","name":"Fresh clone"}`, cookie, "")
+				if w.Code != 200 {
+					t.Fatal(w.Code, w.Body.String())
+				}
+				freshInstance := lifecycleInstallation(t, p, id)
+				fresh, err := p.Config(ctx, id)
+				if err != nil || freshInstance.Generation <= removed.Generation || !bytes.Equal(fresh.Value, sourceBefore.Value) {
+					t.Fatal("recreated clone did not start from source", err)
+				}
+				gate, err := p.pluginUpdateReviewRead(ctx, p.store.DB, freshInstance)
+				if err != nil || gate != nil {
+					t.Fatal("recreated clone revived review", gate, err)
+				}
+				if _, err := p.Data(ctx, id, "owned"); !errors.Is(err, sql.ErrNoRows) {
+					t.Fatal("recreated clone revived KV", err)
+				}
+				sourceAfter, err := p.Config(ctx, "CategoryEditor")
+				if err != nil || sourceBefore.Revision != sourceAfter.Revision || !bytes.Equal(sourceBefore.Value, sourceAfter.Value) {
+					t.Fatal("clone cleanup affected source", err)
+				}
+				if w = callTest(t, a.Handler(), "GET", "/api/plugins/"+id+"/form", "", cookie, ""); w.Code != 200 {
+					t.Fatal(w.Code, w.Body.String())
+				}
+				var runs int
+				if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_runs WHERE instance_id=?`, id).Scan(&runs); err != nil || runs != 0 {
+					t.Fatal("clone recreation executed old intent", runs, err)
+				}
+				if _, err := os.Stat(filepath.Join(a.Dir, "category.yaml")); !os.IsNotExist(err) {
+					t.Fatal("clone recreation executed file write", err)
+				}
+				executionLeaseAssertCount(t, p, 0)
+				return
 			}
 			if count != 1 || offer == nil {
 				t.Fatal("retained instance is not uniquely discoverable", count, offer)

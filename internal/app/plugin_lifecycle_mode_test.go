@@ -282,21 +282,36 @@ func TestPluginFormModePreviewAuthenticatesTargetAndNeverReadsRetainedConfig(t *
 	if err = p.Uninstall(ctx, clone.InstanceID); err != nil {
 		t.Fatal(err)
 	}
+	// Ordinary uninstall retains its own config; clone uninstall clears only
+	// the clone. Both preview paths must remain authenticated and read-only.
+	if err = p.Uninstall(ctx, m.PluginID); err != nil {
+		t.Fatal(err)
+	}
+	ordinary := lifecycleInstallation(t, p, m.PluginID)
 	preview := lifecyclePreview(clone)
 	var changesBefore, changesAfter int64
 	if err = s.DB.QueryRow(`SELECT total_changes()`).Scan(&changesBefore); err != nil {
 		t.Fatal(err)
 	}
-	got := lifecycleWantMode(t, p, preview, pluginFormPreview)
-	if !bytes.Equal(got.installation.Manifest, raw) || got.installation.Installed || got.installation.Generation != 0 || got.installation.DesiredEnabled {
-		t.Fatal("preview leaked tombstone metadata", got.installation)
+	for _, target := range []PluginInstallation{preview, lifecyclePreview(ordinary)} {
+		got := lifecycleWantMode(t, p, target, pluginFormPreview)
+		if !bytes.Equal(got.installation.Manifest, raw) || got.installation.Installed || got.installation.Generation != 0 || got.installation.DesiredEnabled {
+			t.Fatal("preview leaked tombstone metadata", got.installation)
+		}
 	}
 	if err = s.DB.QueryRow(`SELECT total_changes()`).Scan(&changesAfter); err != nil || changesAfter != changesBefore {
 		t.Fatal("read-only resolver wrote state", changesBefore, changesAfter, err)
 	}
-	retained, err := p.Config(ctx, clone.InstanceID)
+	if _, err = p.Config(ctx, clone.InstanceID); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatal("clone preview resurrected deleted config", err)
+	}
+	var cloneValues int
+	if err = s.DB.QueryRow(`SELECT COUNT(*) FROM plugin_values WHERE instance_id=?`, clone.InstanceID).Scan(&cloneValues); err != nil || cloneValues != 0 {
+		t.Fatal("clone preview resurrected deleted values", cloneValues, err)
+	}
+	retained, err := p.Config(ctx, m.PluginID)
 	if err != nil || !bytes.Contains(retained.Value, []byte("tombstone-private")) {
-		t.Fatal("preview changed retained config", err)
+		t.Fatal("ordinary preview changed retained config", err)
 	}
 	// Simulate an authenticated tombstone from an older compiled target. The
 	// current compiled version, not the tombstone version, selects preview.

@@ -3,7 +3,9 @@ package app
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
@@ -109,34 +111,42 @@ func TestPluginReviewRestoreFormalCloneKeepsIdentity(t *testing.T) {
 	if out, err := p.updateBuiltin(ctx, clone.InstanceID, update); err != nil || !out.ReviewPending {
 		t.Fatal(out, err)
 	}
-	if err = p.Uninstall(ctx, clone.InstanceID); err != nil {
-		t.Fatal(err)
-	}
 	before := lifecycleInstallation(t, p, clone.InstanceID)
-	metadata, err := p.instanceMetadata(ctx, p.store.DB, clone.InstanceID)
+	oldConfig, err := p.Config(ctx, clone.InstanceID)
 	if err != nil {
 		t.Fatal(err)
 	}
 	source := lifecycleInstallation(t, p, "CategoryEditor")
 	sourceValues := reviewRestoreValues(t, p, source.InstanceID)
-	cloneValues := reviewRestoreValues(t, p, clone.InstanceID)
-	cfg, err = p.Config(ctx, clone.InstanceID)
-	if err != nil {
+	if err = p.Uninstall(ctx, clone.InstanceID); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := p.restoreReviewedPlugin(ctx, clone.InstanceID, pluginReviewRestoreRequest{before.Version, before.Generation, cfg.Revision}); err != nil || !out.Restored {
-		t.Fatal(out, err)
+	if _, err = p.Config(ctx, clone.InstanceID); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatal("clone retained old review config", err)
 	}
-	after := lifecycleInstallation(t, p, clone.InstanceID)
-	afterMetadata, err := p.instanceMetadata(ctx, p.store.DB, clone.InstanceID)
-	if err != nil {
-		t.Fatal(err)
+	var count int
+	if err = p.store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_values WHERE instance_id=?`, clone.InstanceID).Scan(&count); err != nil || count != 0 {
+		t.Fatal("clone values survived", count, err)
 	}
-	a, _ := json.Marshal(metadata)
-	b, _ := json.Marshal(afterMetadata)
+	removed := lifecycleInstallation(t, p, clone.InstanceID)
+	if out, err := p.restoreReviewedPlugin(ctx, clone.InstanceID, pluginReviewRestoreRequest{removed.Version, removed.Generation, oldConfig.Revision}); err == nil || out.Restored {
+		t.Fatal("deleted clone restored old review", out, err)
+	}
+	rebuilt, err := p.Clone(ctx, "CategoryEditor", PluginCloneRequest{Suffix: "Restore", Name: "owned rebuilt clone"})
+	if err != nil || rebuilt.InstanceID != clone.InstanceID || rebuilt.Generation <= before.Generation {
+		t.Fatal("same ID did not rebuild fresh generation", rebuilt, err)
+	}
+	fresh, err := p.Config(ctx, rebuilt.InstanceID)
+	if err != nil || bytes.Contains(fresh.Value, []byte("owned clone")) || !bytes.Contains(fresh.Value, []byte("owned source")) {
+		t.Fatal("rebuilt clone revived old config", err)
+	}
+	gate, err := p.pluginUpdateReviewRead(ctx, p.store.DB, rebuilt)
+	if err != nil || gate != nil {
+		t.Fatal("rebuilt clone revived review", gate, err)
+	}
 	sourceAfter := lifecycleInstallation(t, p, source.InstanceID)
-	if !bytes.Equal(a, b) || after.Generation != before.Generation+1 || !bytes.Equal(cloneValues, reviewRestoreValues(t, p, clone.InstanceID)) || !bytes.Equal(sourceValues, reviewRestoreValues(t, p, source.InstanceID)) || !bytes.Equal(source.Manifest, sourceAfter.Manifest) {
-		t.Fatal("clone restore crossed namespace or lost lineage")
+	if !bytes.Equal(sourceValues, reviewRestoreValues(t, p, source.InstanceID)) || !bytes.Equal(source.Manifest, sourceAfter.Manifest) || source.Generation != sourceAfter.Generation {
+		t.Fatal("clone cleanup/rebuild changed source")
 	}
 }
 func TestPluginReviewRestoreRejectsStaleOrCorrupt(t *testing.T) {

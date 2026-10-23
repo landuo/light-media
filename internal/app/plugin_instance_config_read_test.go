@@ -121,7 +121,7 @@ func TestPluginInstanceConfigurationReadUsesOwnColdCloneWithoutExecution(t *test
 			t.Errorf("missing copied configuration: %s", response.Body.String())
 		}
 	}
-	for _, endpoint := range []string{"tasks/capacity00000000/run", "tasks/capacity00000000/check", "settings"} {
+	for _, endpoint := range []string{"tasks/capacity00000000/run", "tasks/capacity00000000/check"} {
 		response := callTest(t, a.Handler(), "POST", "/api/plugins/"+clone.InstanceID+"/api/"+endpoint, `{}`, cookie, "")
 		if response.Code < 400 {
 			t.Errorf("disabled execution/write admitted: %s %d", endpoint, response.Code)

@@ -13,6 +13,16 @@ import (
 // Genesis is already authenticated by install; absence/corruption is never
 // treated as a new empty owner and this reader never initializes business state.
 func (a *App) brushFlowReadInstanceConfiguration(ctx context.Context, view pluginFormView, req plugins.HTTPRequest) (json.RawMessage, error) {
+	return a.brushFlowInstanceProjection(ctx, view, func(cfg bf.Config, host *brushFlowReadHost, runtime map[string]bf.Row) (json.RawMessage, error) {
+		core := bf.NewReadProjection(host, cfg)
+		for id, value := range runtime {
+			core.SetRuntime(id, value)
+		}
+		return brushFlowReadProjectionResponse(ctx, cfg, core, req)
+	})
+}
+
+func (a *App) brushFlowInstanceProjection(ctx context.Context, view pluginFormView, project func(bf.Config, *brushFlowReadHost, map[string]bf.Row) (json.RawMessage, error)) (json.RawMessage, error) {
 	in := view.installation
 	tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
@@ -71,9 +81,5 @@ func (a *App) brushFlowReadInstanceConfiguration(ctx context.Context, view plugi
 	}
 	session := pluginFormSessionFromContext(ctx)
 	host := brushFlowReadHost{a: a, data: data, sites: sites, users: users, downloaders: brushFlowDownloaderOptions(a.Settings()), guard: session.validateAnchor}
-	core := bf.NewReadProjection(&host, cfg)
-	for id, value := range runtime {
-		core.SetRuntime(id, value)
-	}
-	return brushFlowReadProjectionResponse(ctx, cfg, core, req)
+	return project(cfg, &host, runtime)
 }

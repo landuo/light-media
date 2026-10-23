@@ -130,6 +130,12 @@ func (a *App) seedRescueReadAPI(ctx context.Context, in PluginInstallation, run 
 	if !seedRescueReadRun(run) || req.RequestID != token.RequestID {
 		return nil, bad("SEED_RESCUE_SCOPE_DENIED", "稀缺保种只读路由不匹配")
 	}
+	return a.seedRescueReadProjectionTx(ctx, tx, in, run, req, nil, nil)
+}
+
+// Private data decoding is shared by normal API reads and the common trusted
+// configuration view. The caller authenticates its scope in this same TX.
+func (a *App) seedRescueReadProjectionTx(ctx context.Context, tx *sql.Tx, in PluginInstallation, run PluginRun, req plugins.HTTPRequest, configOverride json.RawMessage, guard func(context.Context) error) (json.RawMessage, error) {
 	if hook := a.pluginSeedRescue.beforeRead; hook != nil {
 		hook(ctx)
 	}
@@ -137,16 +143,24 @@ func (a *App) seedRescueReadAPI(ctx context.Context, in PluginInstallation, run 
 	if e != nil {
 		return nil, e
 	}
-	var current PluginStoredValue
-	var sealed []byte
-	if e = tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, in.InstanceID).Scan(&current.Revision, &sealed); e != nil {
-		return nil, e
-	}
-	current.Value, e = a.pluginStore.unseal("config", in.InstanceID, "main", sealed)
-	if e != nil {
-		return nil, e
+	// A common read session has already authenticated configuration presence or
+	// absence in this same transaction. Legacy execution reads retain their
+	// original persisted-config requirement.
+	if guard == nil {
+		var current PluginStoredValue
+		var sealed []byte
+		if e = tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, in.InstanceID).Scan(&current.Revision, &sealed); e != nil {
+			return nil, e
+		}
+		current.Value, e = a.pluginStore.unseal("config", in.InstanceID, "main", sealed)
+		if e != nil {
+			return nil, e
+		}
 	}
 	effective := state.Config
+	if guard != nil || len(configOverride) != 0 {
+		effective = configOverride
+	}
 	if len(effective) == 0 || string(effective) == "null" {
 		effective = mustCleanSeedJSON(sr.ParseConfig(sr.Object{}).Current())
 	}
@@ -186,7 +200,7 @@ func (a *App) seedRescueReadAPI(ctx context.Context, in PluginInstallation, run 
 		busy = busy || len(owner.gate) > 0
 	}
 	a.pluginSeedRescue.mu.Unlock()
-	host := seedRescueReadHost{a: a, run: run, data: snapshot, options: options}
+	host := seedRescueReadHost{a: a, run: run, data: snapshot, options: options, guard: guard}
 	m := sr.NewReadProjection(ctx, &host, config, status, busy)
 	var result sr.Response
 	if req.Key == "status" {
@@ -221,9 +235,13 @@ type seedRescueReadHost struct {
 	run     PluginRun
 	data    map[string]json.RawMessage
 	options sr.Object
+	guard   func(context.Context) error
 }
 
 func (h *seedRescueReadHost) Guard(ctx context.Context) error {
+	if h.guard != nil {
+		return h.guard(ctx)
+	}
 	return h.a.validatePluginHTTPRun(ctx, h.run)
 }
 func (h *seedRescueReadHost) LoadData(ctx context.Context, key string) (json.RawMessage, error) {

@@ -104,6 +104,10 @@ func (p *PluginStore) Installations(ctx context.Context) ([]PluginInstallation, 
 // SaveConfigAndQueue commits the user's config and its init invocation together.
 // This explicit user save releases migration staging, not config.enabled.
 func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string, revision int64, config any) (PluginStoredValue, PluginRun, error) {
+	return p.saveConfigAndQueueChecked(ctx, instanceID, revision, config, nil)
+}
+
+func (p *PluginStore) saveConfigAndQueueChecked(ctx context.Context, instanceID string, revision int64, config any, check func(context.Context, *sql.Tx) error) (PluginStoredValue, PluginRun, error) {
 	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -116,6 +120,11 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	defer tx.Rollback()
+	if check != nil {
+		if err = check(ctx, tx); err != nil {
+			return PluginStoredValue{}, PluginRun{}, err
+		}
+	}
 	if err = p.releasePluginUpdateReviewForSaveTx(ctx, tx, instanceID, revision); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -315,6 +324,11 @@ func (p *PluginStore) EnqueueRun(ctx context.Context, instanceID, action string,
 		return PluginRun{}, err
 	}
 	defer tx.Rollback()
+	if action == "reload" {
+		if err := p.preparePluginReloadTx(ctx, tx, instanceID); err != nil {
+			return PluginRun{}, err
+		}
+	}
 	run, err := p.enqueueRunTx(ctx, tx, instanceID, action, input)
 	if err != nil {
 		return PluginRun{}, err

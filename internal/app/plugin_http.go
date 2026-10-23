@@ -494,9 +494,6 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		}
 		return map[string]any{"revision": config.Revision, "run": run}, err
 	case parts[1] == "reload" && r.Method == "POST":
-		if !installation.DesiredEnabled {
-			return nil, bad("PLUGIN_MIGRATION_STAGED", "迁移插件仍在暂存，请先核对并保存配置")
-		}
 		if err := a.drainMediaRefresh(ctx, installation); err != nil {
 			return nil, err
 		}

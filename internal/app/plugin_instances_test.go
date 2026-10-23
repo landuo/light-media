@@ -159,11 +159,59 @@ func TestPluginInstanceCloneConflictRollbackAndConcurrentCreation(t *testing.T) 
 	if success.Load() != 1 {
 		t.Fatal("non-atomic creation", success.Load())
 	}
-	if e := p.Uninstall(ctx, m.PluginID+"one"); e != nil {
+	old, e := p.Installation(ctx, m.PluginID+"one")
+	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e := p.Clone(ctx, m.PluginID, request); pluginErrorCode(e) != "PLUGIN_CLONE_CONFLICT" {
-		t.Fatal("reused tombstone", e)
+	oldConfig, e := p.Config(ctx, old.InstanceID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if _, e = p.SaveConfig(ctx, old.InstanceID, oldConfig.Revision, map[string]any{"old_clone_only": true}); e != nil {
+		t.Fatal(e)
+	}
+	if _, e = p.SaveData(ctx, old.InstanceID, "history", 0, []string{"old clone"}); e != nil {
+		t.Fatal(e)
+	}
+	if e = p.Uninstall(ctx, old.InstanceID); e != nil {
+		t.Fatal(e)
+	}
+	tombstone, e := p.Installation(ctx, old.InstanceID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	rebuilt, e := p.Clone(ctx, m.PluginID, request)
+	if e != nil || rebuilt.InstanceID != old.InstanceID || rebuilt.Generation <= tombstone.Generation {
+		t.Fatal("original clone ID was not rebuilt in a fresh generation", rebuilt, e)
+	}
+	var stale int
+	if e = s.DB.QueryRow(`SELECT COUNT(*) FROM plugin_values WHERE instance_id=? AND kind='data'`, rebuilt.InstanceID).Scan(&stale); e != nil || stale != 0 {
+		t.Fatal("rebuilt clone revived old data", stale, e)
+	}
+	fresh, e := p.Config(ctx, rebuilt.InstanceID)
+	if e != nil || bytes.Contains(fresh.Value, []byte("old_clone_only")) {
+		t.Fatal("rebuilt clone revived old config", e)
+	}
+	// An ordinary retained namespace is not a deleted clone and cannot be
+	// stolen by suffix reuse, even though its public instance ID looks similar.
+	raw, _ := json.Marshal(m)
+	ordinary := PluginInstallation{InstanceID: m.PluginID + "ordinary", PluginID: m.PluginID, Version: m.Version, ManifestSchemaVersion: m.SchemaVersion, Manifest: raw, DesiredEnabled: true}
+	if e = p.Install(ctx, ordinary); e != nil {
+		t.Fatal(e)
+	}
+	retained, e := p.SaveConfig(ctx, ordinary.InstanceID, 0, map[string]any{"ordinary_private": "retained"})
+	if e != nil {
+		t.Fatal(e)
+	}
+	if e = p.Uninstall(ctx, ordinary.InstanceID); e != nil {
+		t.Fatal(e)
+	}
+	if _, e = p.Clone(ctx, m.PluginID, PluginCloneRequest{Suffix: "ordinary"}); pluginErrorCode(e) != "PLUGIN_CLONE_CONFLICT" {
+		t.Fatal("ordinary retained namespace was reused", e)
+	}
+	after, e := p.Config(ctx, ordinary.InstanceID)
+	if e != nil || after.Revision != retained.Revision || !bytes.Equal(after.Value, retained.Value) {
+		t.Fatal("ordinary retained data changed", e)
 	}
 	if _, e := s.DB.Exec(`CREATE TRIGGER clone_metadata_fail BEFORE INSERT ON plugin_instance_metadata BEGIN SELECT RAISE(ABORT,'synthetic clone metadata failure'); END;`); e != nil {
 		t.Fatal(e)

@@ -202,6 +202,12 @@ func (a *App) pluginAutoSignInHost(ctx context.Context, i PluginInstallation, ru
 		}
 		return json.Marshal(inventory)
 	}
+	if method == autosignin.SnapshotCapability {
+		if run != nil {
+			return nil, durable.ErrStale
+		}
+		return a.autoSignInReadOnlyPage(ctx, i)
+	}
 	if !i.Installed || !i.DesiredEnabled {
 		return nil, durable.ErrStale
 	}
@@ -209,28 +215,20 @@ func (a *App) pluginAutoSignInHost(ctx context.Context, i PluginInstallation, ru
 	if err != nil || current.PluginID != i.PluginID || current.Version != i.Version || current.Generation != i.Generation || !current.Installed || !current.DesiredEnabled {
 		return nil, durable.ErrStale
 	}
-	readOnly := method == autosignin.SnapshotCapability
-	if readOnly {
-		if run != nil {
-			return nil, durable.ErrStale
-		}
-		return a.autoSignInReadOnlyPage(ctx, i)
-	} else {
-		if run == nil || run.InstanceID != i.InstanceID || run.Generation != i.Generation || run.Version != i.Version {
-			return nil, durable.ErrStale
-		}
-		want, _, err := autoSignInDeferredSpec(*run)
-		if err != nil || want != method {
-			return nil, durable.ErrStale
-		}
-		if err := a.requireDeferredExecution(ctx, run, method); err != nil {
-			return nil, err
-		}
-		if err := a.pluginStore.requirePluginExecutionHandoff(ctx, i.InstanceID); err != nil {
-			return nil, err
-		}
+	if run == nil || run.InstanceID != i.InstanceID || run.Generation != i.Generation || run.Version != i.Version {
+		return nil, durable.ErrStale
 	}
-	slot, err := a.autoSignInGetSlot(ctx, i, !readOnly)
+	want, _, err := autoSignInDeferredSpec(*run)
+	if err != nil || want != method {
+		return nil, durable.ErrStale
+	}
+	if err := a.requireDeferredExecution(ctx, run, method); err != nil {
+		return nil, err
+	}
+	if err := a.pluginStore.requirePluginExecutionHandoff(ctx, i.InstanceID); err != nil {
+		return nil, err
+	}
+	slot, err := a.autoSignInGetSlot(ctx, i, true)
 	if err != nil {
 		return nil, err
 	}
@@ -560,56 +558,73 @@ func (a *App) shouldInitializeAutoSignIn(ctx context.Context, i PluginInstallati
 // A page reads authenticated persisted state without claiming an execution
 // owner. Cold startup intentionally has no process-local owner yet.
 func (a *App) autoSignInReadOnlyPage(ctx context.Context, i PluginInstallation) (json.RawMessage, error) {
-	tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-	var revision int64
-	if err = tx.QueryRowContext(ctx, `SELECT revision FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, i.InstanceID).Scan(&revision); err != nil {
-		return nil, err
-	}
-	handled, state, err := a.pluginStore.autoSignInScheduleStateTx(ctx, tx, i.InstanceID, i.Generation, revision)
-	if err != nil {
-		return nil, err
-	}
-	if !handled || state.Scope.Instance != i.InstanceID || state.Scope.Generation != uint64(i.Generation) || state.Scope.Implementation != autoSignInImplementation || state.RuntimeEpoch == "" || len(state.Runtime) == 0 {
-		return nil, durable.ErrStale
-	}
-	// End the SQL snapshot before inventory acquires settings locks.
-	if err = tx.Rollback(); err != nil {
-		return nil, err
-	}
-	zone, err := autoBackupHostTimezone()
-	if err != nil {
-		return nil, err
-	}
-	var runtime autosignin.Object
-	history := autosignin.Object{}
-	if autosignin.Decode(state.Runtime, &runtime) != nil {
-		return nil, durable.ErrStore
-	}
-	for key, raw := range state.History {
-		var v any
-		if autosignin.Decode(raw, &v) != nil {
+	return a.pluginStore.readPluginInstanceView(ctx, i, func(ctx context.Context, view pluginFormView) (json.RawMessage, error) {
+		tx, err := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if err != nil {
+			return nil, err
+		}
+		defer tx.Rollback()
+		if err = a.pluginStore.validatePluginInstanceReadTx(ctx, tx, view.installation); err != nil {
+			return nil, err
+		}
+		anchor := pluginFormSessionFromContext(ctx).anchor
+		cold := anchor.resolution.mode == pluginFormInstalledCold
+		var state durable.State
+		if cold {
+			err = a.pluginStore.autoSignInColdPageEmptyTx(ctx, tx, anchor.installation)
+		} else {
+			state, err = a.pluginStore.autoSignInPageStateTx(ctx, tx, anchor)
+		}
+		if err != nil {
+			return nil, err
+		}
+		// End the SQL snapshot before inventory acquires settings locks.
+		if err = tx.Rollback(); err != nil {
+			return nil, err
+		}
+		zone, err := autoBackupHostTimezone()
+		if err != nil {
+			return nil, err
+		}
+		var runtime autosignin.Object
+		history := autosignin.Object{}
+		if !cold && autosignin.Decode(state.Runtime, &runtime) != nil {
 			return nil, durable.ErrStore
 		}
-		history[key] = v
+		for key, raw := range state.History {
+			var v any
+			if autosignin.Decode(raw, &v) != nil {
+				return nil, durable.ErrStore
+			}
+			history[key] = v
+		}
+		inventory, e := a.autoSignInFormInventory(ctx)
+		if e != nil {
+			return nil, e
+		}
+		engine, e := autosignin.NewAtZone(inventory, time.Now, zone)
+		if e != nil {
+			return nil, e
+		}
+		if !cold {
+			if e = engine.Restore(runtime, history); e != nil {
+				return nil, e
+			}
+		}
+		page, e := engine.Page()
+		if e != nil {
+			return nil, e
+		}
+		return autoSignInPageResponse(page)
+	})
+}
+
+func autoSignInPageResponse(page []any) (json.RawMessage, error) {
+	if page == nil {
+		return nil, errors.New("invalid signin page node array")
 	}
-	inventory, e := a.autoSignInFormInventory(ctx)
-	if e != nil {
-		return nil, e
-	}
-	engine, e := autosignin.NewAtZone(inventory, time.Now, zone)
-	if e != nil {
-		return nil, e
-	}
-	if e = engine.Restore(runtime, history); e != nil {
-		return nil, e
-	}
-	page, e := engine.Page()
-	if e != nil {
-		return nil, e
-	}
-	return json.Marshal(page)
+	return json.Marshal(struct {
+		RenderMode string `json:"render_mode"`
+		Page       []any  `json:"page"`
+	}{"vuetify", page})
 }

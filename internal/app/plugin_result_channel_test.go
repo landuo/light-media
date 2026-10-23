@@ -131,8 +131,8 @@ func TestPluginResultChannelSideEffectBlocksStartupAndAllowsExplicitRevision(t *
 				if _, err := a.Store.DB.Exec(`CREATE TRIGGER synthetic_startup_marker_failure BEFORE INSERT ON plugin_run_startup_blocks BEGIN SELECT RAISE(ABORT,'synthetic marker write failure'); END`); err != nil {
 					t.Fatal(err)
 				}
-				// The transactional finish rolls back; its state-only fallback must
-				// retain the older SAVE_FAILED startup protection without a marker.
+				// The marker transaction rolls back; the authenticated fallback must
+				// seal only null and retain SAVE_FAILED protection without a marker.
 				wantBlocks = 0
 			}
 			a.executePluginRun(ctx, run)
@@ -144,8 +144,23 @@ func TestPluginResultChannelSideEffectBlocksStartupAndAllowsExplicitRevision(t *
 			if err != nil || failed.State != "failed" || failed.ErrorCode != scenario.code || resultChannelStartupBlocks(t, a, run.ID) != wantBlocks {
 				t.Fatal("uncertain result lost its error or startup block", failed.State, failed.ErrorCode, err)
 			}
-			if !scenario.rejectMarker && string(failed.Result) != "null" || scenario.rejectMarker && len(failed.Result) != 0 {
-				t.Fatal("result bytes escaped the rejected marker transaction", len(failed.Result))
+			if string(failed.Result) != "null" {
+				t.Fatal("uncertain worker result escaped canonical null", len(failed.Result))
+			}
+			tx, err := a.Store.DB.BeginTx(ctx, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			head, proofErr := a.pluginStore.runJournal.loadHead(ctx, tx, run.InstanceID, run.ID)
+			if proofErr != nil {
+				tx.Rollback()
+				t.Fatal(proofErr)
+			}
+			completion, proofErr := a.pluginStore.runJournal.loadCompletion(head)
+			actual, resultErr := newPluginRunAttemptResult(failed.State, failed.ErrorCode, failed.Result)
+			tx.Rollback()
+			if proofErr != nil || resultErr != nil || completion.Result != actual || completion.FinalRevision != failed.ConfigRevision {
+				t.Fatal("canonical null lacks matching authenticated completion", proofErr, resultErr)
 			}
 			stored, err := a.pluginStore.Config(ctx, "CategoryEditor")
 			if err != nil || stored.Revision != run.ConfigRevision || !bytes.Contains(stored.Value, []byte(`"enabled":true`)) {

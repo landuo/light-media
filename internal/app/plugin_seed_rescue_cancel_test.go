@@ -2,7 +2,9 @@ package app
 
 import (
 	"context"
+	"light-media/internal/plugins"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -13,6 +15,7 @@ func TestSeedRescueActualHTTPAbortDuringSDKReadIsTerminalNoEffect(t *testing.T) 
 	cookie := setupTestAdmin(t, a)
 	entered := make(chan struct{})
 	a.pluginSeedRescue.beforeRead = func(ctx context.Context) { close(entered); <-ctx.Done() }
+	before := instanceReadTables(t, a)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	request := httptest.NewRequest("GET", "/api/plugins/SeedRescue/api/status", nil).WithContext(ctx)
@@ -30,6 +33,37 @@ func TestSeedRescueActualHTTPAbortDuringSDKReadIsTerminalNoEffect(t *testing.T) 
 	case <-done:
 	case <-time.After(10 * time.Second):
 		t.Fatal("aborted SDK read did not terminate")
+	}
+	if !reflect.DeepEqual(before, instanceReadTables(t, a)) {
+		t.Fatal("aborted common read changed configuration, queue or native state")
+	}
+	// Preserve the real older SDK read path independently: it has authenticated
+	// queued API metadata, unlike the current zero-queue HTTP projection.
+	legacyEntered := make(chan struct{})
+	a.pluginSeedRescue.beforeRead = func(c context.Context) { close(legacyEntered); <-c.Done() }
+	input := plugins.HTTPRequest{Key: "status", Method: "GET", Path: "/status", RequestID: "owned-legacy-read-cancel"}
+	queued, err := a.enqueuePluginHTTP(context.Background(), in, input, pluginAPIScope{Key: input.Key, Method: input.Method, RequestID: input.RequestID, Authority: pluginAPIAuthority{Kind: "session", Proof: tokenHash(cookie.Value)}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	claimed, err := a.pluginStore.ClaimRun(context.Background())
+	if err != nil || claimed.ID != queued.ID {
+		t.Fatal("legacy read claim", err)
+	}
+	legacyCtx, legacyCancel := context.WithCancel(context.Background())
+	defer legacyCancel()
+	legacyDone := make(chan struct{})
+	go func() { a.executePluginRun(legacyCtx, claimed); close(legacyDone) }()
+	select {
+	case <-legacyEntered:
+	case <-time.After(5 * time.Second):
+		t.Fatal("actual legacy SDK did not enter read")
+	}
+	legacyCancel()
+	select {
+	case <-legacyDone:
+	case <-time.After(10 * time.Second):
+		t.Fatal("actual legacy SDK cancellation did not join")
 	}
 	var state, code, run string
 	if e := a.Store.DB.QueryRow(`SELECT id,state,error_code FROM plugin_runs WHERE instance_id=? AND action='api' ORDER BY created_at DESC LIMIT 1`, in.InstanceID).Scan(&run, &state, &code); e != nil || state != "failed" || code != "execution_canceled" {

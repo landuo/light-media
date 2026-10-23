@@ -206,6 +206,14 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 			config[key] = json.RawMessage(`false`)
 		}
 	}
+	// Copying an instance is not an explicit request to repeat an old one-shot
+	// operation. Business code declares the parameters; clone handling remains
+	// here, with exact compiled identity and no guessed key names.
+	for key, neutral := range builtin.CloneExecutionDefaults(out.PluginID, out.Version) {
+		if _, present := config[key]; present {
+			config[key] = append(json.RawMessage(nil), neutral...)
+		}
+	}
 	raw, err = json.Marshal(config)
 	if err != nil {
 		return out, err

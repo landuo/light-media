@@ -233,11 +233,16 @@ func TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations(t *testing.T) {
 	if err != nil || p.recoverPluginRuns(ctx) != nil {
 		t.Fatal("restart failed", err)
 	}
-	category, _ := p.Runs(ctx, "CategoryEditor", 50)
-	process, _ := p.Runs(ctx, "SystemProcess", 50)
-	other, _ := p.Runs(ctx, "SyntheticPlugin", 50)
-	if len(category) != 1 || category[0].State != "pending" || len(process) != 1 || process[0].State != "pending" || len(other) != 1 || other[0].State != "reconcile_pending" {
-		t.Fatal("restart blindly replayed a side effect", category, other)
+	// These are synthetic v1.2.3 manifests borrowing compiled names, not
+	// authenticated completed runs or certified no-effects retry attempts.
+	for _, id := range []string{"CategoryEditor", "SystemProcess", "SyntheticPlugin"} {
+		runs, err := p.Runs(ctx, id, 50)
+		if err != nil || len(runs) != 1 || runs[0].State != "reconcile_pending" || runs[0].ErrorCode != "PLUGIN_ATTEMPT_UNRESOLVED" {
+			t.Fatal("unproven attempt borrowed compiled name to replay", id, runs, err)
+		}
+	}
+	if _, err := p.ClaimRun(ctx); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatal("unproven restart work became executable", err)
 	}
 }
 
