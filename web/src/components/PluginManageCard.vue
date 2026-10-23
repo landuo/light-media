@@ -84,6 +84,12 @@ watch(icon, () => {
               title="分身"
               :disabled="busy"
               @click="!busy && emit('action', 'clone', plugin)" /><VListItem
+              v-if="plugin.has_update && plugin.update"
+              :title="'更新至 v' + plugin.update.target_version"
+              @click="emit('action', 'update', plugin)" /><VListItem
+              v-if="plugin.update_blocked_reason"
+              disabled
+              :title="'更新暂不可用：' + plugin.update_blocked_reason" /><VListItem
               title="重置"
               @click="emit('action', 'reset', plugin)" /><VListItem
               title="卸载"

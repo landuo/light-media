@@ -229,7 +229,7 @@ async function mount(t, name, { props = {}, api, emit, desktop = true } = {}) {
   };
   for (const fn of mounted) await fn();
   await flush();
-  const nodes = () => {
+  const nodes = (root) => {
     const all = [];
     function visit(node) {
       if (!node || typeof node !== 'object') return;
@@ -241,7 +241,7 @@ async function mount(t, name, { props = {}, api, emit, desktop = true } = {}) {
       else visit(node.children);
       if (node.children?.activator) visit(node.children.activator({ props: {} }));
     }
-    visit(render({}, []));
+    visit(root ?? render({}, []));
     return all;
   };
   const component = (name) => nodes().find((node) => node.type?.name === name);
@@ -632,4 +632,89 @@ test('creation remains successful when the subsequent list refresh fails and nev
   await dialog.submit();
   await app.polls[0]();
   assert.equal(writes.length, 1);
+});
+
+test('update menu exists only for an executable compiled offer, not a display version', async (t) => {
+  for (const values of [{}, { has_update: true }, { update: { target_version: '1.3' } }]) {
+    const card = await mount(t, 'PluginManageCard', { props: { plugin: plugin(values) } });
+    assert.equal(
+      card
+        .nodes()
+        .find((n) => n.type?.name === 'VListItem' && String(n.props.title).startsWith('更新至')),
+      undefined,
+    );
+  }
+  const blocked = await mount(t, 'PluginManageCard', {
+    props: { plugin: plugin({ update_blocked_reason: '存在未确认的一次性操作' }) },
+  });
+  const blockedItem = blocked
+    .nodes()
+    .find((n) => n.type?.name === 'VListItem' && String(n.props.title).startsWith('更新暂不可用'));
+  assert.ok(blockedItem);
+  assert.equal(blockedItem.props.disabled, ''); // compiled Boolean attribute; Vuetify coerces it to true
+  assert.match(blockedItem.props.title, /一次性操作/);
+  const source = plugin({
+    display_version: 'display-99',
+    has_update: true,
+    update: { from_version: '1.2', target_version: '1.3', generation: 4, revision: 7 },
+  });
+  const card = await mount(t, 'PluginManageCard', { props: { plugin: source } });
+  const item = card
+    .nodes()
+    .find((n) => n.type?.name === 'VListItem' && n.props.title === '更新至 v1.3');
+  assert.ok(item);
+  item.props.onClick();
+  assert.equal(card.events[0][1], 'update');
+  assert.equal(card.events[0][2].instance_id, source.instance_id);
+});
+
+test('update confirmation sends the captured instance snapshot and does not claim initialization passed', async (t) => {
+  const offer = { from_version: '1.2', target_version: '1.3', generation: 4, revision: 7 };
+  const source = plugin({
+    plugin_id: 'CategoryEditor',
+    instance_id: 'CategoryEditorcopy',
+    version: '1.2',
+    has_update: true,
+    update: offer,
+  });
+  let migrated = false;
+  const api = async (path, body) => {
+    if (path === '/plugins')
+      return [
+        migrated ? { ...source, version: '1.3', has_update: false, update: undefined } : source,
+      ];
+    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
+    if (path === '/plugins/CategoryEditorcopy/update') {
+      migrated = true;
+      return { migration_committed: true, initialization: { id: 'owned-run', state: 'pending' } };
+    }
+    throw new Error('Unexpected request ' + path);
+  };
+  const app = await mount(t, 'Plugins', { api });
+  await app.component('PluginManageCard').props.onAction('update', source);
+  await app.flush();
+  const updateDialog = () =>
+    app
+      .nodes()
+      .find(
+        (n) =>
+          n.type?.name === 'VDialog' &&
+          (n.props.modelValue ?? n.props['model-value']) === true &&
+          app.text(n).includes('迁移提交与初始化执行结果分别记录'),
+      );
+  const updateButton = (label) =>
+    app.nodes(updateDialog()).find((n) => n.type?.name === 'VBtn' && app.text(n).trim() === label);
+  assert.ok(updateDialog());
+  await updateButton('取消').props.onClick();
+  await app.flush();
+  assert.equal(app.requests.filter((r) => r.body).length, 0);
+  await app.component('PluginManageCard').props.onAction('update', source);
+  await app.flush();
+  await updateButton('确认').props.onClick();
+  await app.flush();
+  const writes = app.requests.filter((r) => r.body);
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].path, '/plugins/CategoryEditorcopy/update');
+  assert.deepEqual(writes[0].body, offer);
+  assert.equal(app.toasts.at(-1), '内置版本迁移已提交，初始化结果请查看执行记录');
 });

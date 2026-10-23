@@ -20,8 +20,11 @@ import (
 )
 
 type pluginCard struct {
-	DisplayVersion   string `json:"display_version,omitempty"`
-	SourceInstanceID string `json:"source_instance_id,omitempty"`
+	UpdateBlockedReason string               `json:"update_blocked_reason,omitempty"`
+	Update              *pluginUpdateRequest `json:"update,omitempty"`
+	HasUpdate           bool                 `json:"has_update,omitempty"`
+	DisplayVersion      string               `json:"display_version,omitempty"`
+	SourceInstanceID    string               `json:"source_instance_id,omitempty"`
 	plugins.Manifest
 	InstanceID string `json:"instance_id"`
 	Installed  bool   `json:"installed"`
@@ -129,6 +132,11 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 			if err != nil {
 				return nil, err
 			}
+			card.Update, card.UpdateBlockedReason, err = a.pluginStore.builtinUpdateOffer(ctx, installation)
+			if err != nil {
+				return nil, err
+			}
+			card.HasUpdate = card.Update != nil
 			card.State = state
 			items = append(items, card)
 		}

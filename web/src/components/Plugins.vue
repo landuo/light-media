@@ -81,7 +81,7 @@ const loading = ref(true),
   error = ref(''),
   busy = ref(false),
   selected = ref<PluginCard>();
-const confirmation = ref<{ plugin: PluginCard; action: 'reset' | 'uninstall' }>();
+const confirmation = ref<{ plugin: PluginCard; action: 'reset' | 'uninstall' | 'update' }>();
 const history = ref<any[] | null>(null),
   historyName = ref(''),
   historyInstance = ref(''),
@@ -308,6 +308,8 @@ async function cardAction(action: string, plugin: PluginCard) {
   else if (action === 'detail') detail.value = plugin;
   else if (action === 'settings') selected.value = plugin;
   else if (action === 'clone' && plugin.installed) cloneSource.value = plugin;
+  else if (action === 'update' && plugin.update && plugin.has_update)
+    confirmation.value = { plugin, action };
   else if (action === 'reset' || action === 'uninstall') confirmation.value = { plugin, action };
   else if (action === 'runs') await showRuns(plugin);
   else if (action === 'logs') logPlugin.value = plugin;
@@ -344,11 +346,20 @@ async function confirmAction() {
   if (!choice || busy.value) return;
   busy.value = true;
   try {
-    await api(
+    if (choice.action === 'update' && !choice.plugin.update) return;
+    const result = await api(
       '/plugins/' + encodeURIComponent(choice.plugin.instance_id) + '/' + choice.action,
-      {},
+      choice.action === 'update' ? choice.plugin.update : {},
     );
-    toast(choice.action === 'reset' ? '插件配置及数据已重置' : '插件已卸载，配置及数据保留');
+    toast(
+      choice.action === 'update'
+        ? result.initialization
+          ? '内置版本迁移已提交，初始化结果请查看执行记录'
+          : '内置版本已确认，配置和数据保留'
+        : choice.action === 'reset'
+          ? '插件配置及数据已重置'
+          : '插件已卸载，配置及数据保留',
+    );
     confirmation.value = undefined;
     await load();
   } catch (e) {
@@ -698,11 +709,19 @@ onUnmounted(() => clearInterval(timer));
       @update:model-value="!busy && (confirmation = undefined)"
       ><VCard v-if="confirmation"
         ><VCardTitle class="plugin-dialog-title"
-          >确认{{ confirmation.action === 'reset' ? '重置' : '卸载' }}</VCardTitle
+          >确认{{
+            confirmation.action === 'update'
+              ? '更新'
+              : confirmation.action === 'reset'
+                ? '重置'
+                : '卸载'
+          }}</VCardTitle
         ><VCardText class="plugin-dialog-content">{{
-          confirmation.action === 'reset'
-            ? '重置将清除该插件的配置及运行数据，是否继续？'
-            : '卸载此插件？配置及运行数据会保留。'
+          confirmation.action === 'update'
+            ? '更新到当前已编译版本，保留该实例配置、数据和分身信息。迁移提交与初始化执行结果分别记录，是否继续？'
+            : confirmation.action === 'reset'
+              ? '重置将清除该插件的配置及运行数据，是否继续？'
+              : '卸载此插件？配置及运行数据会保留。'
         }}</VCardText>
         <div class="plugin-confirm-actions">
           <VBtn variant="text" :disabled="busy" @click="confirmation = undefined">取消</VBtn
