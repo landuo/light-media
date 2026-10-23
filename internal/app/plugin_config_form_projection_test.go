@@ -110,7 +110,7 @@ func TestPluginFormProjectionMechanicalReplacementSequenceAndIsolation(t *testin
 			}
 			var headRevision int64
 			var sealed []byte
-			if e = tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, clone.InstanceID).Scan(&headRevision, &sealed); e != nil {
+			if e = pluginProjectionSQLForTest(t, tx).QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, clone.InstanceID).Scan(&headRevision, &sealed); e != nil {
 				return e
 			}
 			head, e := p.unseal("config", clone.InstanceID, "main", sealed)
@@ -333,11 +333,11 @@ func TestPluginFormProjectionMechanicalPendingOriginChain(t *testing.T) {
 			calls++
 			// The callback sees the unchanged pending head (Previous), not a
 			// synthetic receipt rebound to the already-written Next config.
-			pending, e := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, original.ID))
+			pending, e := p.scanPluginRun(pluginProjectionSQLForTest(t, tx).QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, original.ID))
 			if e != nil {
 				return e
 			}
-			sha, e := p.verifyRunConfigChainTx(ctx, tx, m.PluginID, pending, original.ConfigRevision, deferredInputSHA(original.Input), deferredInputSHA(before.Value))
+			sha, e := p.verifyRunConfigChainTx(ctx, pluginProjectionSQLForTest(t, tx), m.PluginID, pending, original.ConfigRevision, deferredInputSHA(original.Input), deferredInputSHA(before.Value))
 			if e != nil || pending.ConfigRevision != c.Previous.Revision || sha != deferredInputSHA(c.Previous.Value) {
 				t.Fatal("callback lost original previous-image proof", e)
 			}

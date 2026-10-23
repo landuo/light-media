@@ -43,6 +43,9 @@ func sourceNoticeError(err error) string {
 	return "RuntimeError"
 }
 func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, apply func(*sql.Tx, pluginNoticeRoute, int) (any, error)) (any, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	raw, err := cleanupJournalJSON(input)
 	if err != nil {
 		return nil, err
@@ -114,6 +117,9 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	return noticeValue(output)
 }
 func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := d.a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -164,6 +170,9 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 // callbacks. A callback replays only its own recorded result; it never repeats a
 // publication, an accepted core queue call or an external attempt.
 func (a *App) runNoticeRoute(ctx context.Context, id string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	release, err := a.pluginStore.noticeLock(ctx, "route/"+id)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -172,6 +181,9 @@ func (a *App) runNoticeRoute(ctx context.Context, id string) error {
 	return a.runNoticeRouteLocked(ctx, id)
 }
 func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if _, err := a.pluginStore.noticePeriods(ctx); err != nil {
 		return seedhost.ErrUnknown
 	}
@@ -362,6 +374,9 @@ func (c *pluginCleanInvalidSeedCore) AfterNotice(ctx context.Context, inv seedho
 // the original Clean function or granting its interrupted run new effects.
 
 func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if limit < 1 || limit > 200 {
 		return seedhost.ErrUnsafe
 	}

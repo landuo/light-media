@@ -193,6 +193,9 @@ func (p *PluginStore) noticeTemplateHelper() *noticetemplate.Helper {
 }
 
 func (a *App) runNoticeBusinessV2(ctx context.Context, initial pluginNoticeRoute) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if e := a.requireNoticeV2Execution(ctx, initial); e != nil {
 		return e
 	}

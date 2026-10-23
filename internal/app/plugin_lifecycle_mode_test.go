@@ -606,7 +606,7 @@ func TestPluginFormModeReaderRevalidatesInsideDefaultsTransaction(t *testing.T) 
 			defer cancel()
 			_, err := p.normalizeInstanceDefaults(readCtx, in, 1, map[string]json.RawMessage{"new_default": json.RawMessage(`false`)}, plugins.ConfigDefaultsPure, func(ctx context.Context, tx PluginDefaultsTransaction, change PluginDefaultsChange) error {
 				calls++
-				got, err := p.resolvePluginFormModeRead(ctx, tx, change.Installation)
+				got, err := p.resolvePluginFormModeRead(ctx, pluginProjectionSQLForTest(t, tx), change.Installation)
 				if err != nil {
 					return err
 				}

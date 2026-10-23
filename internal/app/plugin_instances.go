@@ -107,6 +107,9 @@ func validatePluginCloneRequest(in PluginCloneRequest) error {
 // Clone creates a new namespace atomically. An existing ID, including a retained
 // tombstone, can never be overwritten/reinstalled through this operation.
 func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCloneRequest) (PluginInstallation, error) {
+	if err := p.checkPluginFormWrite(ctx, source, pluginFormWriteLifecycle); err != nil {
+		return PluginInstallation{}, err
+	}
 	var out PluginInstallation
 	if !pluginStorageID.MatchString(source) {
 		return out, bad("INVALID_PLUGIN_CLONE", "来源实例编号无效")
@@ -279,6 +282,9 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 }
 
 func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx, source, target string) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	org, err := p.organization(ctx, tx)
 	if err != nil {
 		return err

@@ -54,6 +54,9 @@ type pluginRunConfigTransition struct {
 }
 
 func (p *PluginStore) recordRunOriginTx(ctx context.Context, tx *sql.Tx, plugin string, run PluginRun, config json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	instance, _ := ctx.Value(pluginConfigSaveRequestKey{}).(string)
 	if instance != run.InstanceID || run.Action != "init" {
 		return nil
@@ -75,6 +78,9 @@ func (p *PluginStore) recordRunOriginTx(ctx context.Context, tx *sql.Tx, plugin 
 // configuration propagation. It never rewrites the original run origin or an
 // accepted external-operation receipt. Unique edges prevent forked history.
 func (p *PluginStore) recordRunConfigTransitionTx(ctx context.Context, tx *sql.Tx, plugin string, run PluginRun, nextRevision int64, nextInput, previousConfig, nextConfig json.RawMessage) error {
+	if err := p.checkPluginFormConfigProjection(ctx, tx, run.InstanceID); err != nil {
+		return err
+	}
 	if nextRevision <= run.ConfigRevision {
 		return bad("PLUGIN_RUN_PROOF_INVALID", "插件配置修订链无效")
 	}

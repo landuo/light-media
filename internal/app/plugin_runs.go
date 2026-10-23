@@ -34,6 +34,9 @@ const pluginRunColumns = `id,instance_id,version,generation,config_revision,acti
 const pluginRunListColumns = `id,instance_id,version,generation,config_revision,action,state,input,NULL,error_code,created_at,updated_at`
 
 func (p *PluginStore) InstallAndQueue(ctx context.Context, in PluginInstallation, defaults any) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, in.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	in, err := validatePluginInstallation(in)
 	if err != nil {
 		return PluginRun{}, err
@@ -100,6 +103,9 @@ func (p *PluginStore) Installations(ctx context.Context) ([]PluginInstallation, 
 // SaveConfigAndQueue commits the user's config and its init invocation together.
 // This explicit user save releases migration staging, not config.enabled.
 func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string, revision int64, config any) (PluginStoredValue, PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	raw, err := p.pluginSnapshotJSON(ctx, p.store.DB, instanceID, config, true)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -124,7 +130,7 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
-	activation, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
+	mediaCursor, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -144,6 +150,10 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
+	var activation json.RawMessage
+	if mediaCursor != nil {
+		activation, _ = json.Marshal(map[string]int64{"event_after": mediaCursor.after})
+	}
 	var pluginID string
 	if err := tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&pluginID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -151,7 +161,7 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if pluginID == "MergeSiteSwitch" {
 		activation = json.RawMessage(`{"config_saved":true}`)
 	}
-	run, err := p.enqueueRunTx(ctx, tx, instanceID, "init", activation)
+	run, err := p.enqueueRunWithMediaCursorTx(ctx, tx, instanceID, "init", activation, mediaCursor)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -161,7 +171,7 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 // Carry the last drained cursor across an enabled-to-enabled config handoff.
 // Facts committed after drain froze its high water must reach the replacement
 // config. A previously disabled config still starts from the new save boundary.
-func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, instanceID string, revision int64, next json.RawMessage) (json.RawMessage, error) {
+func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, instanceID string, revision int64, next json.RawMessage) (*mediaRefreshAdmissionCursor, error) {
 	var sealed []byte
 	err := tx.QueryRowContext(ctx, `SELECT v.sealed FROM plugin_values v JOIN plugin_installations i ON i.instance_id=v.instance_id WHERE i.instance_id=? AND i.plugin_id='MediaServerRefresh' AND v.kind='config' AND v.item_key='main' AND v.revision=?`, instanceID, revision).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -193,10 +203,20 @@ func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, ins
 	if err != nil {
 		return nil, err
 	}
-	return json.Marshal(map[string]int64{"event_after": cursor})
+	return &mediaRefreshAdmissionCursor{after: cursor}, nil
 }
 
 func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, action string, input json.RawMessage) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
+	return p.enqueueRunWithMediaCursorTx(ctx, tx, instanceID, action, input, nil)
+}
+
+func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.Tx, instanceID, action string, input json.RawMessage, mediaCursor *mediaRefreshAdmissionCursor) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	if !pluginStorageID.MatchString(instanceID) || !pluginStorageID.MatchString(action) || (len(input) > 0 && !json.Valid(input)) {
 		return PluginRun{}, bad("INVALID_PLUGIN_RUN", "插件执行参数无效")
 	}
@@ -225,28 +245,28 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err := p.pluginNativeQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
 		return PluginRun{}, err
 	}
+	var config []byte
+	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config); err != nil {
+		return PluginRun{}, err
+	}
+	if pluginID == "MediaServerRefresh" && action == "reload" {
+		var err error
+		mediaCursor, err = p.mediaRefreshReloadCursorTx(ctx, tx, run)
+		if err != nil {
+			return PluginRun{}, err
+		}
+	}
 	if pluginID == "MediaServerRefresh" && (action == "init" || action == "reload") && len(input) == 0 {
-		// Save the activation boundary with the queued config, not when the
-		// asynchronous worker eventually starts. Imports committed in between
-		// must be delivered without replaying earlier disabled history.
+		// Preserve the original worker payload. The separate host cursor, not
+		// this JSON, conveys authority to the sealed event admission.
 		var cursor int64
 		if err := tx.QueryRowContext(ctx, `SELECT COALESCE(MAX(seq),0) FROM domain_events`).Scan(&cursor); err != nil {
 			return PluginRun{}, err
 		}
-		if action == "reload" {
-			var drained int64
-			err := tx.QueryRowContext(ctx, `SELECT s.cursor FROM plugin_event_subscriptions s JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.instance_id=? AND s.handler_key='refresh' AND s.generation=? AND s.config_revision=v.revision`, instanceID, run.Generation).Scan(&drained)
-			if err == nil {
-				cursor = drained
-			} else if !errors.Is(err, sql.ErrNoRows) {
-				return PluginRun{}, err
-			}
+		if mediaCursor != nil {
+			cursor = mediaCursor.after
 		}
 		input, _ = json.Marshal(map[string]int64{"event_after": cursor})
-	}
-	var config []byte
-	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config); err != nil {
-		return PluginRun{}, err
 	}
 	clear, err := p.unseal("config", instanceID, "main", config)
 	if err != nil {
@@ -260,7 +280,12 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err != nil {
 		return PluginRun{}, err
 	}
-	sealed, err := p.sealPluginSnapshot("run", instanceID, run.ID, pluginID, run.Version, run.Input)
+	var sealed []byte
+	if action == "init" || action == "reload" {
+		sealed, err = p.sealEventAdmissionRun(instanceID, run.ID, pluginID, run.Version, run.Input)
+	} else {
+		sealed, err = p.sealPluginSnapshot("run", instanceID, run.ID, pluginID, run.Version, run.Input)
+	}
 	if err != nil {
 		return PluginRun{}, err
 	}
@@ -268,10 +293,16 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err == nil {
 		err = p.recordRunOriginTx(ctx, tx, pluginID, run, clear)
 	}
+	if err == nil {
+		err = p.recordEventAdmissionTx(ctx, tx, pluginID, run, clear, mediaCursor)
+	}
 	return run, err
 }
 
 func (p *PluginStore) EnqueueRun(ctx context.Context, instanceID, action string, input json.RawMessage) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return PluginRun{}, err
@@ -343,6 +374,9 @@ func (p *PluginStore) ClaimRun(ctx context.Context) (PluginRun, error) {
 }
 
 func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	afterCreated, afterID := "", ""
 	for {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
@@ -513,6 +547,9 @@ func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode str
 }
 
 func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode string, result json.RawMessage, blockStartup bool) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if state != "succeeded" && state != "failed" && state != "reconcile_pending" || (errorCode != "" && !pluginStorageID.MatchString(errorCode)) || (state == "succeeded" && errorCode != "") {
 		return bad("INVALID_PLUGIN_RUN", "插件执行终态无效")
 	}
@@ -560,6 +597,9 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 }
 
 func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	// These native operations are idempotent: category replaces a validated
 	// file; Hosts replaces only its marked tail; process init has no side effect.
 	// Other plugins require their own external-operation reconciliation.
@@ -609,6 +649,9 @@ func (p *PluginStore) recoverMediaRefreshRuns(ctx context.Context) error {
 }
 
 func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch map[string]json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -626,6 +669,9 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 }
 
 func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, patch map[string]json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	var revision int64
 	var sealed []byte
 	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, run.InstanceID).Scan(&revision, &sealed); err != nil {
@@ -655,6 +701,9 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 // Internal full replacements share the same snapshot propagation as patches.
 // Only trusted host adapters choose a replacement; it is not a worker method.
 func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, raw json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	actual, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, run.ID))
 	if err != nil {
 		return err
@@ -712,6 +761,9 @@ func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *P
 // quiescent form-default normalization. It never enables an instance, creates a
 // run, changes generation, or adopts snapshots from another revision.
 func (p *PluginStore) propagateInstanceConfigTx(ctx context.Context, tx *sql.Tx, instance string, generation, revision, nextRevision int64, previousConfig, raw json.RawMessage) error {
+	if err := p.checkPluginFormConfigProjection(ctx, tx, instance); err != nil {
+		return err
+	}
 	// Internal normalization and clearing one-shot flags must reach already
 	// queued invocations too. Only advance snapshots that still match this
 	// exact generation/revision; a user edit continues to invalidate old work.
@@ -749,7 +801,7 @@ func (p *PluginStore) propagateInstanceConfigTx(ctx context.Context, tx *sql.Tx,
 		if err = p.recordRunConfigTransitionTx(ctx, tx, plugin, previous, nextRevision, pendingRaw, previousConfig, raw); err != nil {
 			return err
 		}
-		pendingSealed, err = p.sealPluginSnapshot("run", instance, pendingID, plugin, version, pendingRaw)
+		pendingSealed, err = p.resealRunSnapshot(instance, pendingID, plugin, version, pendingSealed, pendingRaw)
 		if err != nil {
 			return err
 		}

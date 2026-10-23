@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -88,10 +89,6 @@ func TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt(t *testing.
 	if saved.OnlyOnce || stored.Revision != configured.ConfigRevision {
 		t.Fatal("date flag not atomically cleared")
 	}
-	form := callTest(t, a.Handler(), "GET", "/api/plugins/SiteStatistic/form", "", cookie, "")
-	if form.Code != 200 || !strings.Contains(form.Body.String(), `"notify_type":"all"`) {
-		t.Fatal("saved notification lost on reopen", form.Body.String())
-	}
 	var due string
 	if err := a.Store.DB.QueryRow(`SELECT next_due FROM plugin_schedules WHERE service_id='SiteStatistic.once' AND active=1`).Scan(&due); err != nil {
 		t.Fatal(err)
@@ -111,6 +108,29 @@ func TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt(t *testing.
 	json.Unmarshal(service.Result, &result)
 	if !result.Queued || result.JobID == "" || requested.Load() != 0 {
 		t.Fatal("slow network occupied plugin process", string(service.Result), requested.Load())
+	}
+	// The synthetic scheduler dispatches exactly at its captured due instant.
+	// Claim and execute that occurrence before unrelated synchronous Form work:
+	// a real App scheduler does not wait for a user's Form request. The original
+	// 3s delay and 1s misfire grace remain unchanged and enforced by production.
+	// Reopening still must preserve the same saved notify_type and all plugin
+	// configuration, history, schedules, occurrences and the queued host job.
+	formState := func() map[string][]string {
+		rows := pluginCommonFormRows(t, a.pluginStore)
+		for table := range rows {
+			if !strings.HasPrefix(table, "plugin_") && table != "jobs" {
+				delete(rows, table)
+			}
+		}
+		return rows
+	}
+	beforeForm := formState()
+	form := callTest(t, a.Handler(), "GET", "/api/plugins/SiteStatistic/form", "", cookie, "")
+	if form.Code != 200 || !strings.Contains(form.Body.String(), `"notify_type":"all"`) {
+		t.Fatal("saved notification lost on reopen", form.Body.String())
+	}
+	if !reflect.DeepEqual(beforeForm, formState()) || requested.Load() != 0 {
+		t.Fatal("Form reopen changed plugin state, pending host job or performed collection")
 	}
 	job, err := a.claim(ctx)
 	if err != nil {

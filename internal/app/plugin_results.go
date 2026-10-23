@@ -26,6 +26,9 @@ func pluginResultJSON(value json.RawMessage) (json.RawMessage, error) {
 // result column could not be saved. This fallback writes no result bytes, never
 // replaces another terminal decision, and cannot replay the completed worker.
 func (p *PluginStore) failPluginResult(ctx context.Context, runID, code string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if code != "PLUGIN_RESULT_TOO_LARGE" && code != "INVALID_PLUGIN_RESULT" {
 		code = "PLUGIN_RESULT_SAVE_FAILED"
 	}

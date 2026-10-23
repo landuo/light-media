@@ -101,6 +101,9 @@ func (p *PluginStore) pluginLifecycleInstallation(ctx context.Context, q PluginP
 }
 
 func (p *PluginStore) writePluginLifecycleTx(ctx context.Context, tx *sql.Tx, in PluginInstallation, state string) error {
+	if err := p.checkPluginFormWrite(ctx, in.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	raw, err := pluginLifecycleManifest(in, state)
 	if err != nil {
 		return err
@@ -124,6 +127,9 @@ func (p *PluginStore) writePluginLifecycleTx(ctx context.Context, tx *sql.Tx, in
 // remain at their original entry points. A failed stamp rolls back the bump and
 // all effects; reset of an already-uninstalled row remains inactive, not cold.
 func (p *PluginStore) recordPluginGenerationLifecycleTx(ctx context.Context, tx *sql.Tx, instance string) error {
+	if err := p.checkPluginFormWrite(ctx, instance, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	in, err := p.pluginLifecycleInstallation(ctx, tx, instance)
 	if err != nil {
 		return err
@@ -144,6 +150,9 @@ func (p *PluginStore) recordPluginGenerationLifecycleTx(ctx context.Context, tx 
 // before commit. Any action counts, even a read action or one that later fails.
 // Admission, cancellation and an uncommitted claim do not count as execution.
 func (p *PluginStore) markPluginExecutionStartedTx(ctx context.Context, tx *sql.Tx, run PluginRun) error {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	in, err := p.pluginLifecycleInstallation(ctx, tx, run.InstanceID)
 	if err != nil {
 		return err

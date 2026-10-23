@@ -31,29 +31,37 @@ type PluginDefaultsChange struct {
 	Next         PluginStoredValue
 }
 
-// PluginDefaultsTransaction is only supplied to a trusted, compiled host adapter,
-// not to an RPC or SDK
-// capability. It may validate and project its business journal in this transaction
-// only; it must not start work, emit notices, initialize owners, perform external
-// effects, or replace an original run/deferred receipt. It must not commit tx.
+// PluginDefaultsTransaction is a bounded view of the current config projection.
+// Public callbacks receive no general SQL, Store, transaction, or proof reader.
+// The host owns transaction completion. Hooks must remain synchronous and must
+// not initialize owners or perform external effects. This capability boundary
+// is not a Go sandbox: trusted same-package code can still capture private state.
 type PluginDefaultsTransaction interface {
-	PluginProofReader
 	Data(context.Context, string) (PluginStoredValue, error)
 	SaveData(context.Context, string, int64, any) (PluginStoredValue, error)
-	ExecContext(context.Context, string, ...any) (sql.Result, error)
-	QueryContext(context.Context, string, ...any) (*sql.Rows, error)
+	Config(context.Context) (PluginStoredValue, error)
+	VerifyInitialization(context.Context, PluginInitializationProof) error
 }
 
 type pluginDefaultsTransaction struct {
-	tx       *sql.Tx
-	store    *PluginStore
-	instance string
+	tx            *sql.Tx
+	store         *PluginStore
+	instance      string
+	formAdmission *pluginFormDataWrite
+	installation  PluginInstallation
+	projection    *pluginDefaultsProjectionState
 }
 
 // Data and SaveData bind the namespace and retain framework encryption/CAS.
 // Projectors need not duplicate the storage codec or choose an instance ID.
-func (t pluginDefaultsTransaction) Data(ctx context.Context, key string) (PluginStoredValue, error) {
-	var value PluginStoredValue
+func (t pluginDefaultsTransaction) Data(ctx context.Context, key string) (value PluginStoredValue, returnErr error) {
+	callerCtx := ctx
+	defer func() { returnErr = t.projectionContextError(callerCtx, returnErr) }()
+	ctx, cancel, err := t.projectionContext(ctx)
+	if err != nil {
+		return value, err
+	}
+	defer cancel()
 	if !validPluginKey(key) {
 		return value, bad("INVALID_PLUGIN_VALUE", "插件数据键无效")
 	}
@@ -61,37 +69,55 @@ func (t pluginDefaultsTransaction) Data(ctx context.Context, key string) (Plugin
 	if err := t.tx.QueryRowContext(ctx, `SELECT revision,sealed,updated_at FROM plugin_values WHERE instance_id=? AND kind='data' AND item_key=?`, t.instance, key).Scan(&value.Revision, &sealed, &value.UpdatedAt); err != nil {
 		return value, err
 	}
-	var err error
 	value.Value, err = t.store.unseal("data", t.instance, key, sealed)
 	return value, err
 }
-func (t pluginDefaultsTransaction) SaveData(ctx context.Context, key string, expected int64, value any) (PluginStoredValue, error) {
+func (t pluginDefaultsTransaction) SaveData(ctx context.Context, key string, expected int64, value any) (out PluginStoredValue, returnErr error) {
+	callerCtx := ctx
+	defer func() { returnErr = t.projectionContextError(callerCtx, returnErr) }()
+	// Reject read-only/foreign scope before even invoking custom JSON code.
+	if err := t.store.checkPluginFormWrite(ctx, t.instance, pluginFormWriteData); err != nil {
+		return PluginStoredValue{}, err
+	}
+	ctx, cancel, err := t.projectionContext(ctx)
+	if err != nil {
+		return PluginStoredValue{}, err
+	}
+	defer cancel()
+	// Also check the immutable original scope before custom serialization;
+	// replacing a restricted caller context with Background cannot erase it.
+	if err := t.store.checkPluginFormWrite(ctx, t.instance, pluginFormWriteData); err != nil {
+		return PluginStoredValue{}, err
+	}
 	raw, err := pluginJSONLimit(value, false, pluginDataValueLimit)
 	if err != nil {
 		return PluginStoredValue{}, err
 	}
+	// Inspect the ORIGINAL caller synchronously, not just its asynchronously
+	// canceled derivative. Custom JSON code may cancel a narrower caller.
+	if err := t.checkProjection(callerCtx); err != nil {
+		return PluginStoredValue{}, err
+	}
+	if t.formAdmission != nil {
+		// Only a successfully admitted config transition creates this proof.
+		// It is data-only and never passed in the business projector's context.
+		ctx = context.WithValue(ctx, pluginFormDataWriteKey{}, *t.formAdmission)
+	}
 	return t.store.saveValueTx(ctx, t.tx, t.instance, "data", key, expected, raw)
 }
-func (t pluginDefaultsTransaction) ExecContext(ctx context.Context, query string, args ...any) (sql.Result, error) {
-	return t.tx.ExecContext(ctx, query, args...)
-}
-func (t pluginDefaultsTransaction) QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error) {
-	return t.tx.QueryContext(ctx, query, args...)
-}
-func (t pluginDefaultsTransaction) QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row {
-	return t.tx.QueryRowContext(ctx, query, args...)
-}
 
-// The private transaction wrapper deliberately has no Commit/Rollback methods.
-// This remains a trusted-host contract, not a SQL sandbox: SQL transaction
-// control, cross-instance writes, and mutation of memory/cache before success
-// are prohibited. Missing-default read-only no-ops do not invoke the projector.
+// Missing-default read-only no-ops do not invoke the projector. The actual
+// dynamic value deliberately has only the same four public methods as the
+// interface, so structural assertions cannot recover raw SQL capabilities.
 type PluginDefaultsProjector func(context.Context, PluginDefaultsTransaction, PluginDefaultsChange) error
 
 // NormalizeInstanceDefaultsWithProjection requires a compiled transactional/v1
 // declaration. The framework owns CAS, missing-only writes, busy checks and
 // propagation. A projector failure rolls back both config and business state.
 func (p *PluginStore) NormalizeInstanceDefaultsWithProjection(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, defaults map[string]json.RawMessage, projector PluginDefaultsProjector) (PluginStoredValue, error) {
+	if err := p.checkPluginFormWrite(ctx, snapshot.InstanceID, pluginFormWriteProjection); err != nil {
+		return PluginStoredValue{}, err
+	}
 	if projector == nil {
 		return PluginStoredValue{}, bad("PLUGIN_DEFAULTS_UNSUPPORTED", "插件缺少可信默认值状态投影")
 	}
@@ -99,6 +125,9 @@ func (p *PluginStore) NormalizeInstanceDefaultsWithProjection(ctx context.Contex
 }
 
 func (p *PluginStore) normalizeInstanceDefaults(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, defaults map[string]json.RawMessage, declaration string, projector PluginDefaultsProjector) (PluginStoredValue, error) {
+	if err := p.checkPluginFormWrite(ctx, snapshot.InstanceID, pluginFormWriteProjection); err != nil {
+		return PluginStoredValue{}, err
+	}
 	var out PluginStoredValue
 	if expectedRevision < 0 || !pluginStorageID.MatchString(snapshot.InstanceID) || snapshot.Generation < 1 {
 		return out, bad("INVALID_PLUGIN_VALUE", "插件默认值快照无效")
@@ -133,6 +162,9 @@ func (p *PluginStore) normalizeInstanceDefaults(ctx context.Context, snapshot Pl
 // config, because the source Save itself is a business-state transition.
 func (p *PluginStore) transitionInstanceConfig(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, contract pluginConfigTransitionContract, prepare func(map[string]json.RawMessage) (any, bool), projector PluginDefaultsProjector) (PluginStoredValue, error) {
 	var out PluginStoredValue
+	if err := p.checkPluginFormWrite(ctx, snapshot.InstanceID, pluginFormWriteProjection); err != nil {
+		return out, err
+	}
 	if contract == pluginConfigFormTransactional && projector == nil {
 		return out, contract.unsupported()
 	}
@@ -217,7 +249,7 @@ func (p *PluginStore) transitionInstanceConfig(ctx context.Context, snapshot Plu
 	}
 	previous := out
 	previousConfig := append(json.RawMessage(nil), out.Value...)
-	out, err = p.saveValueTx(ctx, tx, snapshot.InstanceID, "config", "main", expectedRevision, raw)
+	out, err = p.saveValueTx(p.pluginFormConfigWriteContext(ctx, tx, snapshot.InstanceID), tx, snapshot.InstanceID, "config", "main", expectedRevision, raw)
 	if err != nil {
 		return out, err
 	}
@@ -231,11 +263,21 @@ func (p *PluginStore) transitionInstanceConfig(ctx context.Context, snapshot Plu
 		previous.Value = append(json.RawMessage(nil), previousConfig...)
 		next := out
 		next.Value = append(json.RawMessage(nil), out.Value...)
-		if err = projector(ctx, pluginDefaultsTransaction{tx: tx, store: p, instance: snapshot.InstanceID}, PluginDefaultsChange{Installation: current, Previous: previous, Next: next}); err != nil {
+		transaction := newPluginDefaultsTransaction(ctx, tx, p, current)
+		if session != nil {
+			transaction.formAdmission = &pluginFormDataWrite{store: p, tx: tx, instance: snapshot.InstanceID, session: session}
+		}
+		if err = invokePluginDefaultsProjector(ctx, transaction, PluginDefaultsChange{Installation: current, Previous: previous, Next: next}, projector); err != nil {
 			return PluginStoredValue{}, err
 		}
 	}
-	if err = p.propagateInstanceConfigTx(ctx, tx, snapshot.InstanceID, generation, expectedRevision, out.Revision, previousConfig, raw); err != nil {
+	// A trusted projector cannot hide a denied common-API write and still
+	// commit this otherwise valid transition. Preserve the sticky failure.
+	if session != nil && session.hostFailure != nil {
+		failure := *session.hostFailure
+		return PluginStoredValue{}, &failure
+	}
+	if err = p.propagateInstanceConfigTx(p.pluginFormConfigWriteContext(ctx, tx, snapshot.InstanceID), tx, snapshot.InstanceID, generation, expectedRevision, out.Revision, previousConfig, raw); err != nil {
 		return out, err
 	}
 	if err = tx.Commit(); err != nil {

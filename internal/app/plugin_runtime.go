@@ -48,6 +48,9 @@ func (a *App) wakePlugins() {
 }
 
 func (a *App) initializeNativePlugins(ctx context.Context) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	installations, err := a.pluginStore.Installations(ctx)
@@ -252,6 +255,9 @@ func (a *App) pluginWorker(ctx context.Context) {
 }
 
 func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return
+	}
 	if run.RequestID != "" {
 		ctx = a.traceContext(ctx, "", "", run.RequestID)
 	}

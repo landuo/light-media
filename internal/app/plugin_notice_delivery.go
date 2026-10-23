@@ -57,6 +57,9 @@ func validateNoticeMessageBackingTx(ctx context.Context, tx *sql.Tx, event Domai
 	return nil
 }
 func (a *App) publishPluginNoticeTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute, ordinal int, data notice.Object) (any, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	id := "pnm_" + a.pluginStore.noticeID("publication", r.ID, ordinal)
 	raw, err := cleanupJournalJSON(data)
 	if err != nil {
@@ -143,6 +146,9 @@ func noticeQueueInitialSHA(q pluginNoticeQueueEntry) string {
 	return tokenHash(string(mustCleanSeedJSON(q)))
 }
 func (a *App) acceptPluginMessageTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute, ordinal int, call notice.Call) (any, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	if len(call.Args) != 1 || call.Args[0] != "post_message" {
 		return nil, seedhost.ErrUnsafe
 	}
@@ -217,6 +223,9 @@ func (p *PluginStore) readPluginMessage(ctx context.Context, qry pluginRemoveLin
 	return q, nil
 }
 func (p *PluginStore) savePluginMessageTx(ctx context.Context, tx *sql.Tx, q pluginNoticeQueueEntry) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	sealed, err := p.noticeSeal("queue", q.ID, q)
 	if err != nil {
 		return err
@@ -233,6 +242,9 @@ func (p *PluginStore) savePluginMessageTx(ctx context.Context, tx *sql.Tx, q plu
 }
 
 func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, operation string, expected pluginNoticeQueueEntry) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if err := p.commitNoticeTx(tx, operation); err != nil {
 		_ = tx.Rollback()
 		readCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
@@ -249,9 +261,15 @@ func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, opera
 // Their private producers freeze recipients; neither queue JSON nor an SDK can
 // select a transport or acquire a native owner grant.
 func (a *App) sendPluginMessageModules(ctx context.Context, q pluginNoticeQueueEntry) (int, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return 0, err
+	}
 	return a.larkMessageModules(ctx, q)
 }
 func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	release, err := a.pluginStore.noticeLock(ctx, "queue/"+id)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -386,6 +404,9 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 }
 
 func invokePluginNoticeSender(ctx context.Context, send func(context.Context, pluginNoticeQueueEntry) (int, error), q pluginNoticeQueueEntry) (modules int, err error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return 0, err
+	}
 	defer func() {
 		if recover() != nil {
 			modules = 0
@@ -395,6 +416,9 @@ func invokePluginNoticeSender(ctx context.Context, send func(context.Context, pl
 	return send(ctx, q)
 }
 func (a *App) drainPluginMessages(ctx context.Context, limit int) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if limit < 1 || limit > 200 {
 		return seedhost.ErrUnsafe
 	}

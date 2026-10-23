@@ -21,6 +21,9 @@ type pluginEventSubscription struct {
 }
 
 func (p *PluginStore) configureEventSubscription(ctx context.Context, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -33,6 +36,9 @@ func (p *PluginStore) configureEventSubscription(ctx context.Context, run Plugin
 }
 
 func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.Tx, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if !pluginStorageID.MatchString(handler) || len(types) == 0 || len(types) > 8 || delay < 0 {
 		return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件订阅参数无效")
 	}
@@ -43,39 +49,58 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 		}
 		seen[eventType] = true
 	}
-	var current int
-	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=? AND i.version=? AND v.revision=? AND EXISTS(SELECT 1 FROM plugin_runs r WHERE r.id=? AND r.instance_id=i.instance_id AND r.generation=i.generation AND r.config_revision=v.revision AND r.state='running')`, run.InstanceID, run.Generation, run.Version, run.ConfigRevision, run.ID).Scan(&current); err != nil {
+	admission, err := p.readEventAdmissionTx(ctx, tx, run)
+	if err != nil {
 		return err
-	}
-	if current != 1 {
-		return bad("PLUGIN_SNAPSHOT_STALE", "插件配置已变化，未注册旧事件订阅")
 	}
 	var highWater int64
 	if err := tx.QueryRowContext(ctx, `SELECT COALESCE(MAX(seq),0) FROM domain_events`).Scan(&highWater); err != nil {
 		return err
 	}
+	if admission != nil && admission.HighWater > highWater {
+		return bad("PLUGIN_RUN_PROOF_INVALID", "插件事件准入边界超出已提交事件")
+	}
 	var generation, revision, cursor int64
 	var wasActive bool
-	err := tx.QueryRowContext(ctx, `SELECT generation,config_revision,active,cursor FROM plugin_event_subscriptions WHERE instance_id=? AND handler_key=?`, run.InstanceID, handler).Scan(&generation, &revision, &wasActive, &cursor)
+	err = tx.QueryRowContext(ctx, `SELECT generation,config_revision,active,cursor FROM plugin_event_subscriptions WHERE instance_id=? AND handler_key=?`, run.InstanceID, handler).Scan(&generation, &revision, &wasActive, &cursor)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
-	if err != nil || generation != run.Generation || revision != run.ConfigRevision || !wasActive {
-		cursor = highWater // First enable/re-enable never silently replays history.
-		var invocation struct {
-			Input *struct {
-				EventAfter int64 `json:"event_after"`
-			} `json:"input"`
+	matchingActive := err == nil && generation == run.Generation && revision == run.ConfigRevision && wasActive
+	if matchingActive && admission != nil {
+		if cursor < 0 || cursor > highWater {
+			return bad("PLUGIN_RUN_PROOF_INVALID", "插件活动事件游标超出已提交事件")
 		}
-		if (run.Action == "init" || run.Action == "reload") && len(run.Input) != 0 {
-			if json.Unmarshal(run.Input, &invocation) != nil {
-				return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无法读取")
+		if floor, captured := admission.ActiveCursorFloor[handler]; captured && cursor < floor {
+			return bad("PLUGIN_RUN_PROOF_INVALID", "插件活动事件游标低于准入时的已知边界")
+		}
+		// No enqueue-time row means no captured lower floor. An older in-flight
+		// init may legitimately register a smaller cursor after this admission.
+		// This is not authentication of all mutable subscription table state.
+	}
+	if !matchingActive {
+		cursor = highWater // Historical unmarked runs keep their original behavior.
+		if admission != nil {
+			cursor = admission.HighWater
+			if after, exists := admission.PerHandlerReloadCursor[handler]; exists {
+				cursor = after
 			}
-			if invocation.Input != nil {
-				if invocation.Input.EventAfter < 0 || invocation.Input.EventAfter > highWater {
-					return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无效")
+		} else {
+			var invocation struct {
+				Input *struct {
+					EventAfter int64 `json:"event_after"`
+				} `json:"input"`
+			}
+			if (run.Action == "init" || run.Action == "reload") && len(run.Input) != 0 {
+				if json.Unmarshal(run.Input, &invocation) != nil {
+					return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无法读取")
 				}
-				cursor = invocation.Input.EventAfter
+				if invocation.Input != nil {
+					if invocation.Input.EventAfter < 0 || invocation.Input.EventAfter > highWater {
+						return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无效")
+					}
+					cursor = invocation.Input.EventAfter
+				}
 			}
 		}
 	}
@@ -115,6 +140,9 @@ func (p *PluginStore) collectPluginEvents(ctx context.Context, subscription plug
 }
 
 func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription pluginEventSubscription, at time.Time, highWater int64) error {
+	if err := p.checkPluginFormWrite(ctx, subscription.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -242,6 +270,9 @@ func (p *PluginStore) enqueueDuePluginEvents(ctx context.Context, at time.Time) 
 }
 
 func (p *PluginStore) enqueueDuePluginEventsFor(ctx context.Context, at time.Time, drainingInstance string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	for count := 0; count < 200; count++ {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
@@ -350,6 +381,9 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 }
 
 func (a *App) dispatchPluginEvents(ctx context.Context, at time.Time) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	// Transfer only previously committed effects. No filesystem/downloader or

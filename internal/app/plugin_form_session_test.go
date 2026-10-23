@@ -439,7 +439,7 @@ func TestPluginFormSessionFailedTransitionDoesNotAdvanceDurable(t *testing.T) {
 				assertPluginFormSessionValue(t, session.durable, before)
 				if stage == "commit" {
 					var pending int
-					if e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM session_commit_child`).Scan(&pending); e != nil || pending != 1 {
+					if e := pluginProjectionSQLForTest(t, tx).QueryRowContext(ctx, `SELECT COUNT(*) FROM session_commit_child`).Scan(&pending); e != nil || pending != 1 {
 						t.Fatal("deferred commit failure was not armed", pending, e)
 					}
 				}

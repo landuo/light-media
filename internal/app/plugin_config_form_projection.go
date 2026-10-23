@@ -55,6 +55,9 @@ func (c pluginConfigTransitionContract) unsupported() error {
 // context the existing exact-CAS contract is unchanged. Business source-state
 // authentication and cold-fallback semantics still belong to the host adapter.
 func (p *PluginStore) ProjectInstanceConfig(ctx context.Context, snapshot PluginInstallation, expectedRevision int64, desiredRaw json.RawMessage, projector PluginDefaultsProjector) (PluginStoredValue, error) {
+	if err := p.checkPluginFormWrite(ctx, snapshot.InstanceID, pluginFormWriteProjection); err != nil {
+		return PluginStoredValue{}, err
+	}
 	if projector == nil {
 		return PluginStoredValue{}, bad("PLUGIN_FORM_PROJECTION_UNSUPPORTED", "插件缺少可信表单状态投影")
 	}

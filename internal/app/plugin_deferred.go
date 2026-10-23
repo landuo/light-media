@@ -231,6 +231,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 		(r.ErrorCode == "CLEAN_SEED_SOURCE_FAILED" || r.ErrorCode == "CLEAN_SEED_HOST_DENIED") && json.Valid(r.Result)
 }
 func (p *PluginStore) writeDeferred(ctx context.Context, tx *sql.Tx, r pluginDeferredRecord, previous []byte) error {
+	if err := p.checkPluginFormWrite(ctx, r.Instance, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if !validPluginDeferredOutcome(r) {
 		return bad("PLUGIN_DEFERRED_INVALID", "插件操作终态收据无效")
 	}
@@ -259,6 +262,10 @@ func (p *PluginStore) writeDeferred(ctx context.Context, tx *sql.Tx, r pluginDef
 	return nil
 }
 func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, run PluginRun) (*pluginDeferredCall, error) {
+	// A scoped Form must fail before dereferencing the app/call or preparing effects.
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	method, raw, err := pluginDeferredSpec(in, run)
 	if err != nil || method == "" {
 		return nil, err
@@ -308,6 +315,9 @@ func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, 
 	return &pluginDeferredCall{a: a, installation: in, run: run, record: r}, nil
 }
 func (d *pluginDeferredCall) handshake(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Compare semantic JSON after strict decoding: SDK whitespace is irrelevant,
@@ -365,6 +375,10 @@ func (d *pluginDeferredCall) changePhase(ctx context.Context, from, to string, r
 	return d.changeOutcome(ctx, from, to, result, "")
 }
 func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string, result json.RawMessage, code string) error {
+	// A scoped Form must fail before dereferencing the app/call or preparing effects.
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := d.a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -498,6 +512,9 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 }
 
 func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.RawMessage, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	if d.installation.PluginID == "LarkMessager" {
 		var release func()
 		var err error
@@ -725,6 +742,9 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 // old run even after reset/reinstallation; prepared interrupted workers can be
 // retried because the actual owner entry was never entered.
 func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	rows, err := p.store.DB.QueryContext(ctx, `SELECT r.id,r.instance_id FROM plugin_runs r JOIN plugin_deferred_operations d ON d.run_id=r.id WHERE r.state IN ('pending','running','reconcile_pending','failed')`)
 	if err != nil {
 		return err
@@ -1008,6 +1028,10 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 // Only a failed worker whose trusted owner entry was never started is eligible.
 // The existing run/input and transition are retained; reload is not repurposed.
 func (a *App) retryPluginDeferred(ctx context.Context, instance, runID string) (PluginRun, error) {
+	// A scoped Form must fail before dereferencing the app/call or preparing effects.
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	a.pluginLifecycleMu.Lock()
 	defer a.pluginLifecycleMu.Unlock()
 	a.pluginMu.Lock()

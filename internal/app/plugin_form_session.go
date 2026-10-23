@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"time"
 
 	"light-media/internal/plugins"
 )
@@ -46,6 +47,7 @@ type pluginFormSession struct {
 	display      PluginStoredValue
 	configExists bool
 	hostFailure  *APIError
+	deadline     time.Time
 }
 
 func pluginFormValueCopy(value PluginStoredValue) PluginStoredValue {
@@ -63,6 +65,9 @@ func withPluginFormSession(ctx context.Context, session *pluginFormSession) cont
 }
 
 func pluginFormSessionFromContext(ctx context.Context) *pluginFormSession {
+	if ctx == nil {
+		return nil
+	}
 	session, _ := ctx.Value(pluginFormSessionKey{}).(*pluginFormSession)
 	return session
 }
@@ -163,6 +168,24 @@ func comparePluginFormAnchors(left, right pluginFormAnchor) error {
 // update is NOT detected: display is a point-in-time snapshot, not a cache epoch.
 // The durable revision and raw SHA must remain equal around that read.
 func (p *PluginStore) beginPluginFormSession(ctx context.Context, requested PluginInstallation, origin pluginFormOrigin) (*pluginFormSession, error) {
+	if ctx == nil || p == nil {
+		return nil, pluginFormViewDenied()
+	}
+	// Never replace a request snapshot or escape an outer read-only callback.
+	// An outer scope owns the failure even if a caller rebound the session.
+	if scope := pluginFormCallbackScopeFromContext(ctx); scope != nil {
+		err := pluginFormViewDenied()
+		if scope.session != nil {
+			scope.session.captureHostError(err)
+		}
+		return nil, err
+	}
+	if existing := pluginFormSessionFromContext(ctx); existing != nil {
+		err := pluginFormViewDenied()
+		existing.captureHostError(err)
+		return nil, err
+	}
+	deadline := pluginFormDeadline(ctx)
 	before, err := p.pluginFormAnchor(ctx, requested, origin)
 	if err != nil {
 		return nil, err
@@ -184,13 +207,16 @@ func (p *PluginStore) beginPluginFormSession(ctx context.Context, requested Plug
 	if displayErr != nil {
 		display = pluginFormValueCopy(before.durable)
 	}
-	return &pluginFormSession{store: p, requested: pluginFormInstallationCopy(requested), origin: origin, resolution: before.resolution, anchor: before, durable: pluginFormValueCopy(before.durable), display: pluginFormValueCopy(display), configExists: before.configExists}, nil
+	return &pluginFormSession{deadline: deadline, store: p, requested: pluginFormInstallationCopy(requested), origin: origin, resolution: before.resolution, anchor: before, durable: pluginFormValueCopy(before.durable), display: pluginFormValueCopy(display), configExists: before.configExists}, nil
 }
 
 // admit runs BEFORE prepare/saveValueTx in the SAME transaction. The earlier
 // resolution is not an authorization token. In particular cold->started cannot
 // use a prior cold fallback. Unknown->unknown is valid, not assumed cold.
 func (s *pluginFormSession) admit(ctx context.Context, q PluginProofReader, snapshot PluginInstallation, previous PluginStoredValue) error {
+	if err := s.store.checkPluginFormWrite(ctx, snapshot.InstanceID, pluginFormWriteProjection); err != nil {
+		return err
+	}
 	if s.resolution.mode == pluginFormPreview || snapshot.InstanceID != s.requested.InstanceID || snapshot.PluginID != s.requested.PluginID || snapshot.Version != s.requested.Version || snapshot.Generation != s.requested.Generation {
 		return bad("PLUGIN_CAPABILITY_DENIED", "插件表单不能修改预览或其他实例")
 	}
@@ -261,6 +287,8 @@ func canonicalPluginFormHostError(err error) *APIError {
 		message = "插件实例身份记录无效"
 	case "PLUGIN_DATA_CORRUPT":
 		message = "插件存储数据校验失败"
+	case "PLUGIN_FORM_CALLBACK_UNSUPPORTED":
+		message = "插件实现未提供当前模式的可信表单回调"
 	case "PLUGIN_FORM_PROJECTION_UNSUPPORTED", "PLUGIN_DEFAULTS_UNSUPPORTED":
 		message = "插件实现未声明所需的可信表单保存协议"
 	case "PLUGIN_CAPABILITY_DENIED", "PLUGIN_IDENTITY_MISMATCH":

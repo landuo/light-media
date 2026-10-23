@@ -1,0 +1,3268 @@
+{
+  "updated_at": "2026-10-23T03:05:48.309513+00:00",
+  "candidate": "closed-boundary-candidate6.json",
+  "tree_sha256": "192000c4b01cb435d6bc12956f57a9936afe51b51d93d49827d18a58a5d0d75d",
+  "files": 5461,
+  "plan_roots": 355,
+  "local_runnable_roots": 354,
+  "external_fixture_roots": 1,
+  "counts": {
+    "ordinary": {
+      "pass": 322,
+      "pass_by_exact_byte_association": 32,
+      "skip": 1
+    },
+    "race": {
+      "declared_external_fixture_not_run": 1,
+      "fail": 1,
+      "pass": 321,
+      "pass_by_exact_leaf_association": 32
+    }
+  },
+  "candidate5_association": "site-once-order6-test-only-proof.json",
+  "N_association": "closed-boundary-N-complete.json",
+  "original_failures_retained": [
+    "closed-boundary-race-common-1",
+    "closed-boundary-F21-race-1",
+    "site-once-diagnostic-race-1",
+    "closed-boundary-G60-race-1"
+  ],
+  "all_local_complete": false,
+  "coverage": {
+    "TestPluginFormClosedCommonEntriesDenyBeforePreparation": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-fresh-preview-race-1",
+        "closed-boundary-fresh-cold-race-1",
+        "closed-boundary-setup3-started-race-1",
+        "closed-boundary-setup3-unknown-race-1"
+      ]
+    },
+    "TestPluginFormClosedCoreMutationsDenyBeforeDurableEffects": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormClosedCoreScopeFreeContractsRemain": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormClosedRuntimeCannotFinishViaDetachedContext": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonEntryGuardsPrecedePointerDereference": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonEventDispatcherDeniesBeforePendingOutbox": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-notice5-race-1"
+      ]
+    },
+    "TestPluginFormCommonGenerationStampAllowsScopeFreeAtomicBump": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginFormCommonLifecycleSourceInstanceStillDenied": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginFormCommonNoticeBoundariesDenyBeforeEffects": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-notice5-race-1"
+      ]
+    },
+    "TestPluginFormCommonNoticeBoundariesRemainAvailableOutsideDispatch": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-notice5-race-1"
+      ]
+    },
+    "TestPluginFormCommonProjectionCapabilityCannotRebind": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonProjectionDirectWritesDeniedAndDurable": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonProjectionProjectorHasNoInternalCapability": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonProjectionProofCannotOverrideReadOnlyOrStickyDenial": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonProjectionWarmAndScopeFreeKeepNineProofEdges": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonRetainedCallbackContextIsCanceled": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-race-common-1"
+      ]
+    },
+    "TestPluginFormCommonStateMutationsDeniedBeforeEffects": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-matrix4-preview-race-1",
+        "closed-boundary-matrix4-cold-race-1",
+        "closed-boundary-matrix4-started-race-1",
+        "closed-boundary-matrix4-unknown-race-1"
+      ]
+    },
+    "TestPluginFormCommonStateMutationsRemainAvailableOutsideDispatch": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionCombinedContextRetainsEarlierDeadlineAndReason": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionConfigReadsSameTXNextAndIsolated": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionConfigRejectsBoundIdentityAndIntegrityDrift": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionFacadeDynamicMethodSet": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionInitializationProofRejectsEveryRequestMutation": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionInitializationProofRejectsForeignInstanceRun": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionInitializationProofRejectsStoredEvidenceDrift": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionInitializationProofValidHistoricalHead": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionNarrowCallerCancellationRollsBackSwallowedSave": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionOperationalErrorsRemainIdentifiable": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionSaveDataCannotEraseOriginalFormScope": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionSaveDataRechecksAfterUserSerialization": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionTypedFailureCannotBeSwallowed": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestPluginProjectionUnboundWrapperCannotFallback": {
+      "group": "N_boundary32",
+      "ordinary": "pass_by_exact_byte_association",
+      "race": "pass_by_exact_leaf_association",
+      "evidence": [
+        "closed-boundary-N-complete.json",
+        "closed-boundary-N17-ordinary-reuse.json",
+        "closed-boundary-N17-race-1"
+      ]
+    },
+    "TestBrushFlowLargeSnapshotsKeepNativeScopeAndOtherPluginLimits": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestCategoryEditorDeliveryOriginalFormContract": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestIYUUActualAppSDKConfigScheduleAndNativeHTTP": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestManifestFormModelPolicyIsPresentationOnly": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestManifestFormModelPolicyRejectsUnknownOrPartialValues": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionAbsentHandlerPreservesLateInitRegistration": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionActiveConfigChainAndSuccessorRejection": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionActiveFloorRejectsCapturedRewind": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionAuthenticLegacyCipherCannotReplaceNewRun": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionBrushFlowMarkersAndOrdinaryLimits": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionCloneMetadataCannotBeDeleted": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionColdReopenRetainsQueuedBoundary": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionInitFloorDoesNotChangeInactiveFallback": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionInsertFailureRollsBack": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionMarkerCannotDowngradeToLegacy": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionNonInitRunsRemainLegacy": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionPendingDefaultsPreserveImmutableProof": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionPendingLargeBrushFlowPropagation": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionQueuedBoundaryIgnoresWorkerPayload": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionRejectsForgedCallerAndProof": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionReloadHandlerCursorsAndProgress": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionSchemaOneWithoutActiveFloor": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventAdmissionUncapturedActiveCursorStillChecksBounds": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventsCollectionFailureRollsBackCursorAndDelivery": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventsFirstEnableUsesCommittedHighWater": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventsInternalConfigPatchPreservesActiveConsumerAndBatch": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventsQueueFailureRetainsBatchAndRetriesWithoutDuplicates": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventsRestartRetainsCursorAndPendingBatch": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginEventsUserEditCancelsOldDelayAndSkipsDisabledHistory": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormAuditedCompiledHandlersPropagateHostFailure": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchAdmittedProjectorDataProofStaysPrivate": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchBusinessRestorationFailureNeverInitializes": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchCancellationAndResultOwnership": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchDataProofRejectsWrongBindingAndConfig": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchDriftChecksSurroundBusinessCallback": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchIgnoredProjectorDenialRollsBack": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchInitialFailuresAreSticky": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchMediaAdmissionInnerHelperCannotBypassScope": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchMissingHookNeverFallsBack": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchNestedBeginLatchesOwningScope": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchPanicIsRedactedAndSticky": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchReadOnlyCommonWritesDeniedBeforeEffects": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchRejectsCrossScopeAndNestedSessions": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchScopeFreeColdDefaultsRemainCompatible": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchScopeFreeMediaAdmissionInnerHelperRemainsLegal": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchScopeFreeTransactionLifecycleHelpersRemainLegal": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchScopeFreeTransactionWrapperStillSerializes": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchSelectsAuthenticatedModeForCompiledInstances": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchTransactionDataHelpersRecheckAnchor": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchTransactionLifecycleHelpersDenied": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchTransactionWrapperChecksScopeBeforeSerialization": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchWarmCannotBypassConfigProjection": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormDispatchWarmNineMechanicalSavesAdvanceTrustedAnchor": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHTTPActualCompiledFormsAndExternalEdit": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHTTPCompiledModelPolicyAndUntrustedRevision": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHTTPDeniedHostCannotBeIgnoredAndWorkerErrorIsGeneric": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHTTPHostGuardDistinguishesDriftFromBusinessFailure": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHTTPInstallOriginRetainsTombstonePrefill": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHTTPRedactionRetainedForCapturedDisplay": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHostGuardAllowsCommittedWritesAndNoop": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHostGuardFailedWriteRetainsCommittedAnchor": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHostGuardRejectsDriftBeforeCallback": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormHostGuardUnknownErrorsRemainGeneric": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormModeIgnoresCallerManifestAndRejectsIdentitySpoof": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormModePreviewAuthenticatesTargetAndNeverReadsRetainedConfig": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormModeReaderRevalidatesInsideDefaultsTransaction": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormPolicySeparatesPreviewAndInstalledWithoutWriteGrant": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionAuthenticatedMetadataAndExactCompiledVersion": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionMechanicalBusyAndImmutableDeferred": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionMechanicalEmptyReplacementAndMissingConfig": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionMechanicalPendingOriginChain": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionMechanicalReplacementSequenceAndIsolation": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionMechanicalRollback": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionPublicRequiresDedicatedCompiledContract": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormProjectionPublicValidationAndExactSnapshot": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionAdmitUsesSameTransactionReadView": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionCanonicalTypedHostErrorThroughSDK": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionCapturesCommittedDefaultsNoopAndEqualSave": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionClaimBeforeNormalizationIsStale": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionFailedTransitionDoesNotAdvanceDurable": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionInitialImagesAndCloneIsolation": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionMissingConfigRemainsAbsentOnNoop": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionPreviewIsReadOnlyAndPreservesRetainedConfig": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionRejectsConfigAndResetDrift": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionUninstallDisplayIsNotDurableAuthority": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormSessionUnknownModeMayStayUnknown": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewAdvancesOnlyWithCommittedSourceWrites": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewCannotClearStickyHostFailure": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewCopiesAuthenticatedImages": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewIsCapturedReadNotTransactionAuthority": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewKeepsDisplaySeparateFromDurable": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewPreviewRetainsAuthenticatedPrefill": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginFormViewRejectsMissingScopeAndIdentity": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneActualWorkersAndHTTP": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneBuiltinCatalogNamespaces": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneColdReopenAndNestedLineage": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneConflictRollbackAndConcurrentCreation": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneCopiesConfigNotHistoryAndKeepsFolder": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneDefaultReferenceIsolation": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneDoesNotBorrowUnclaimedReferencesOrRuns": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneInputAndUnavailableSource": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneMissingMetadataDoesNotRetargetReferences": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceClonePinnedOriginalOrchestration": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginInstanceCloneRollbackMatrixAndCanceledRequest": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleAnyClaimedActionStartsGeneration": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleAuthenticatedSnapshotIsNotMonotonicLedger": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleClaimsAndResetRollbackAtomically": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleCloneFinalFailureLeavesNoColdInstallation": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleCloneIdentityAndCrossGenerationReplay": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleDedicatedHTTPGenerationCommitAndRollback": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleFreshInstallAndCloneChain": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleMalformedAndCrossBoundEvidenceFailClosed": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleManifestCiphertextRejectsOtherInstanceOnly": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleOwnerAbsenceDoesNotChooseMode": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecyclePrivateHTTPClaimsCommitColdToStarted": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecyclePrivateHTTPClaimsRejectMarkerBeforeCommit": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecyclePrivateLarkClaimCommitsColdToStarted": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecyclePrivateLarkClaimRejectsMarkerBeforeCommit": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleProductionClaimAndGenerationHooks": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleResetReinstallAndInactiveGenerations": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginLifecycleUninstallManagerStampsEveryTarget": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshConfigQueueDoesNotLoseImportsBeforeWorkerInit": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshDisableAndUninstallFlushOriginalDelay": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshHandoffRetainsFactsCommittedDuringDrain": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshReenableDoesNotReplayDisabledHistory": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsKeepsSyntheticScheduleAnchorAndOccurrence": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsMissingAndInvalidSnapshots": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsPreservesPendingPreparedDeferredReceipt": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsPreservesValuesAndInactiveClones": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsPropagatesPendingSnapshotsAndSyntheticEventCursor": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsRealHelperThenFormAndExplicitInit": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsRejectsBusyStaleAndConcurrentWrites": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsRejectsUndeclaredCompiledCatalogOwners": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsRequiresKnownExactCompiledVersion": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsRollbackKeepsPendingAndConfig": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginNormalizeDefaultsStoredManifestCannotGrantPureContract": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginRunsAtomicSaveAndEncryptedSnapshot": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginRunsClaimOnceAndCancelStaleSnapshots": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginRunsGenerationSurvivesResetAndReinstall": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginRunsInternalPatchPreservesQueuedEventAndClearsOneShot": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreMigrationReceiptFailureRollsBackWholeImport": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreRejectsCiphertextMovedAcrossInstanceKindAndKey": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreSupportsActualLargeMigratingHistory": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginStoreUninstallPreservesAndResetDeletesOnlyTargetValues": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestSiteStatisticNoticeAndOnceRegistrationRollback": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestSubscribeGroupInitClearIsAtomicAndSourceFullReplacement": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestTransferFormObservationActualProductFailure": {
+      "group": "A_common_forms_events_adjacent151",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-A151-normal-1",
+        "closed-boundary-A151-race-1"
+      ]
+    },
+    "TestPluginUninstallCanceledRefreshDrainKeepsTargetAndRestoresConsumer": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallHTTPFreshInstallAndReinstallActualServer": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallHostOriginalOrderRetainsDataAndStopsRealLifecycle": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallHostRejectsPayloadForgedStaleAndReadOnlyRequests": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallHostSelfReceiptSurvivesReplyLossAndReinstallation": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallReadOnlyOptionsUseInstalledOrderAndDoNotExposeConfiguration": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallRealSDKFailureBeforeTerminalCompletionCannotUninstall": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallRealSDKOriginalFormSelfRemovalAndSharedExecutableSurvives": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallReplyLossFixture": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallRestartRestoresOnlyItsUncommittedSameSnapshotDrain": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceCommitProofRequiresExactExpectedOrPreviousCiphertext": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceCompletionDoesNotDependOnLegacyReceipt": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceCrossRunInstalledASTOracle": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceEmptySelectionDoesNotReadDamagedGlobalList": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceGlobalAbsentThenEqualEmptyFollowsSystemConfigSet": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceHTTPNewRunUsesWarmOrColdInstalledListAfterCommitFailure": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceHTTPReinstallAppendsAndSelfFirstStillCompletes": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceHTTPWorkerFailureWarmCacheAndActualColdReopen": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceInstalledCommitFailureKeepsCacheAndEarlierPackages": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceInterruptedOrMissingProofCannotReplayReplacement": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceLaterOwnerPreparationCannotPreemptEarlierRemoval": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceLocalSequenceSurvivesResetUpgradeAndColdReopen": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceNewRunAfterMiddleFailureSeesEarlierRemovedClass": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceOwnResetFailureKeepsEarlierRemoval": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceOwnWarmCacheReturnsBeforeInventoryOnNextInvocation": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceReinstallAfterFailedInstalledCommitUsesSourceWarmOrColdOrder": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceSchedulerCatchAndNotificationFailureKeepEarlierPackages": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceSequenceLegacyBackfillOnceAndMissingRowsAreNotRebased": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestPluginUninstallSourceStopExceptionDoesNotRetainTarget": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestTransferActualServerInstallConfigServiceDualIdentity": {
+      "group": "B_published_uninstall_transfer32",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-B32-race-1"
+      ]
+    },
+    "TestBrushFlowOriginalConfigBeyondHostCellCeilingsUsesActualSDK": {
+      "group": "C_real_sdk_large17MiB1",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-C17-normal-1",
+        "closed-boundary-C17-race-1"
+      ]
+    },
+    "TestNotificationChannelActualEncryptedCASAndCold": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestNotificationChannelMissingHistoryOrHeadCannotReinitialize": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginAuthenticatedHTTP": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginCloneIsolation": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginIgnoresPayloadAndProgrammaticInit": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginInsertFailureRollsBackHTTP": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginPendingDefaultsChain": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginPendingProofFailureRollsBackAll": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginProofFailuresRollbackAndReplay": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginRejectsUnauthorizedHTTP": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginRejectsWrongRuntimePreimage": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginConfigSaveOriginRuntimeChainImmutable": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginEventsCapacityCanDrainWhileMoreFactsAreWaiting": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginEventsDebounceExtendsAndEnqueuesOneDurableBatch": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginEventsDeliverOnlyCommittedMatchingFactsOnce": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginEventsLargeDebouncedBatchStaysOneBatchAndReadsBoundedPages": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationCompatAuthorityRollbackAndConcurrentOwnership": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationCompatInstalledASGIReference": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationHTTPAuthOriginAndRevision": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationOrderPresenceAndLegacyEncryptedRow": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationOriginalShapesCASAndEncryptedRestart": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationUninstallAndBulkUninstallPreserveOtherContents": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginOrganizationUninstallRollbackAndInvalidMembership": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesCoalesceOutageAndRespectMisfireAndBusyLimits": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesCoalescingCalendarGapsFoldsAndCenturies": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesDateDoesNotReplayOnSameConfigRestart": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesGroupReplacementAndLifecycleStopNewTriggers": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesInternalFlagPatchPreservesQueuedWorkAndAnchor": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesManualDoesNotMovePeriodAndCannotOverlap": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesPersistDueAndBindPrivateInvocation": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesQueueAndFinishFailuresAreAtomic": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesReopenRetainsNextDueAndDoesNotReplayUncertainRun": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginSchedulesWaitingRunExpiresAndConfigEditCancelsOldSnapshot": {
+      "group": "D_origin_events_schedule_org_notification",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredCleanPrivateProofCannotHideUnknownEffects": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredCleanSpecificationMatchesNativeSDKWithoutWorkerAuthority": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredFailureReceiptRejectsForeignPluginAndUntrustedErrorCode": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredHandshakeHasNoBusinessEffectAndRequiresTrustedExecution": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredHistoryNativeSelfResetBridgeAndColdQuarantine": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredHistoryNeverReplaysEvolvedOperations": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredHistoryPendingSnapshotChainCancelsPrepared": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredHistoryRejectsMissingCorruptAndRollbackProof": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredHistoryRetainsTerminalAcrossLifecycle": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredPayloadAndTerminalProtocolRejectTampering": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRealWorkerFailureDoesNotStartOperation": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRetryHTTPUsesOriginalRunAndShowsOnlySafeActionMetadata": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurrentWork": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRevisionAnchorsFirstConfigBytes": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRevisionContinuesImmutableReceipt": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRevisionLegacyReceiptStaysExact": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRevisionPreparedCannotAdoptChain": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRevisionRejectsStaleProofAndIdentity": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredRunIdentityAndSealedTamperingFailClosed": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredStartedRequiresCurrentRunningInstallation": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestPluginDeferredTerminalFailureRecoveryPreservesFailureAndRejectsRetry": {
+      "group": "E_deferred",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-DE57-race-1"
+      ]
+    },
+    "TestIYUUActualNativeSiteDeletedConsumer": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestIsolatedFNOSProductWorkflow": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "skip",
+      "race": "declared_external_fixture_not_run",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-remote-fnos-explicit-skip.json"
+      ]
+    },
+    "TestNativeDownloadProducerThroughActualGoSubscribeWorker": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestNativeSiteDeletedActualEventCollectionAuthenticatesTombstoneBeforeCursor": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshActualImportSDKDebounceAndVisibilityWithoutDuplicateScan": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshCloseFlushesCollectedAndUncollectedFacts": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshDurableBoundariesCannotBeSkipped": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshFailedScanStillRequiresIndependentVisibilityProof": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshHTTP200RejectionAndChangedAssetNeverClaimSuccess": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginMediaRefreshUncertainSubmitIsNotReplayedAndConfirmedReceiptIsReused": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginNoticeEventsUseActualCollectionAndRejectMissingPrivateFacts": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxActualSDKOwnerCleanupFeedsEventBusAndInbox": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxAuditFailureStillDrainsUnrelatedPluginEvents": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxCommittedIntentSurvivesRetirementAndRestart": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxForgedExistenceAndLostHandoffDoNotAcknowledgeIntent": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxHandoffAuditDetectsCorruptTransferredFacts": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxPublishesSrcWithoutInventingHashOrDeletingDownloads": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginRemoveLinkOutboxUsesExistingBoundConsumerBatch": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginScrapeCleanActualImmediateHistoryAndPrivateEvent": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginSiteStatisticNotificationRollbackAndEnabledGate": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestPluginSiteStatisticRealCollectionEventNoticeAndCrashReceipt": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1",
+        "site-once-order6-normal-1",
+        "site-once-order6-race-1"
+      ]
+    },
+    "TestSiteMessageActualBatchTwoStatisticClonesCollectOnlyOnce": {
+      "group": "F_existing_event_dispatch_callers22",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-F21-race-1"
+      ]
+    },
+    "TestNotificationSourceRetainsLegacyHistoryJSON": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginCleanInvalidSeedNoticeAcceptedEnvelopeAuthenticationAndColdRead": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginCleanInvalidSeedNoticeSourceEnumBecomesOriginalNotificationValue": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginCleanInvalidSeedNoticeValidationPrecedesConfigThroughRuntime": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeQueueActualResultCASAndSourceChanges": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeQueueUsesExplicitReloadedWindowSnapshot": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeQueueUsesHostLocalClockRatherThanPluginScheduleZone": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteCommittedAcceptanceReplyLossReadsBackBeforeContinuation": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteCommittedStageReplyLossDoesNotRepeatSend": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteDirectPendingCannotStarveBoundedFIFOScan": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteDirectWaitsOutsideSQLAndConsumesSenderUnknown": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteFailurePreservesHistoryAndPublicationBeforeSourceConfig": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteIsolationAndOpaqueEventBacking": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteSenderOwnsNestedCopy": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeRouteWindowDirectBypassAndColdUnknownFIFOContinues": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2ActualOrdinaryLibraryInventoryCompletion": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2ActualOrdinaryMovieAndSeasonCompletion": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2ActualQualityAcceptedPrepareHistoryDeleteNoticeColdAndGuard": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2ActualTemplateHistoryReceiptColdAndLostACK": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "fail",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2CompletionBuildsOriginalMetaAndFreshMedia": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2ExactSourceInputAndSealedCompletionGuard": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2HTTPUnknownRemainsSeparateFromSourceReturn": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2NativeDependencyAndMissingHistoryBlockSourceEvent": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2ProductionDefaultsSeedOnceAndPreserveExplicitValues": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2SourceCaughtTemplateErrorIsNormalReturn": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2SourceRawObjectDependencyIsExplicit": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2TMDBMediaInfoOriginalAST": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2TypedContextColdCodec": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginNoticeV2TypedContextRejectsUnknownOrMalformed": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginResultChannelFixture": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginResultChannelNoHostCallsDoesNotBlockStartup": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginResultChannelSideEffectBlocksStartupAndAllowsExplicitRevision": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginResultChannelStartupMarkerSharesFinishTransaction": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginSourceHandoffRejectsDataImportedBeforeStop": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestPluginSourceHandoffRejectsMissingAndRunningObservations": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterCloneSameEffectIDsStayIndependent": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterCommittedAcknowledgementLoss": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterCompiledSDKOwnerNativeCleanupToStub": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterConcurrentHandoffUnknownNoResend": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterFreezesAcceptanceBeforeHandoff": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterHandoffHistoryAndRouteRemainAuthenticated": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterLegacyPendingStaysLocalOnly": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterResealedAcceptanceCorruptionFailsClosed": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterRetiredColdAcceptanceDoesNotGrantCleanup": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestRemoveLinkNoticeRouterRollbackLeavesOnlyAcceptance": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteMessageBindingRejectsForeignIdentityBeforeReceiptRead": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterAcceptanceRollback": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterColdRecoveryAndLegacyReceipt": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterColdRecoveryPreservesTerminalRouteFailure": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterCommittedReplyLossAndUnknownNoResend": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterConcurrentAcceptedRouteSendsOnce": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterFailurePreservesPreviousSuccessfulFingerprint": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterNotificationWindowQueuesWithoutSending": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterOldCompletionPreservesNewDedupValue": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterPendingFingerprintSuppressesDuplicateAcceptance": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterProofCorruptionFailsClosed": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterRejectsReloadAndForgedPayload": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterSDKInstancesAndPreferences": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterStaleAcceptanceVersusHistoricalReplay": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    },
+    "TestSiteStatisticRouterTerminalFailureDoesNotCommitFingerprint": {
+      "group": "G_notice_migration_result",
+      "ordinary": "pass",
+      "race": "pass",
+      "evidence": [
+        "closed-boundary-BDEFG171-normal-1",
+        "closed-boundary-G60-race-1"
+      ]
+    }
+  }
+}
