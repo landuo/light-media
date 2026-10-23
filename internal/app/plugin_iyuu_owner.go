@@ -668,11 +668,10 @@ func (a *App) iyuuCustomSites(ctx context.Context) ([]map[string]any, error) {
 		return nil, e
 	}
 	defer tx.Rollback()
-	_, peers, e := a.pluginStore.siteControlPeersTx(ctx, tx)
+	peer, ok, e := a.pluginStore.siteControlDependencyPeerTx(ctx, tx, "CustomSites")
 	if e != nil {
 		return nil, e
 	}
-	peer, ok := peers["CustomSites"]
 	out := []map[string]any{}
 	if !ok || !peer.Desired {
 		return out, nil

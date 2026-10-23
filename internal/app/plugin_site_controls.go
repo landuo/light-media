@@ -21,7 +21,35 @@ type siteControlPeer struct {
 }
 
 func (p *PluginStore) siteControlPeersTx(ctx context.Context, tx *sql.Tx) ([]string, map[string]siteControlPeer, error) {
-	rows, err := tx.QueryContext(ctx, `SELECT instance_id,plugin_id,version,generation,desired_enabled FROM plugin_installations WHERE installed=1 ORDER BY created_at,instance_id`)
+	return p.siteControlPeersFilteredTx(ctx, tx, "")
+}
+
+// siteControlDependencyPeerTx reads one explicit dependency namespace. Unrelated
+// plugin instances cannot make that lookup ambiguous or expose their config.
+// The selected dependency must still be unique, and uses the same sealed
+// config identity and validation as the full aggregation path.
+func (p *PluginStore) siteControlDependencyPeerTx(ctx context.Context, tx *sql.Tx, pluginID string) (siteControlPeer, bool, error) {
+	if pluginID == "" {
+		return siteControlPeer{}, false, bad("INVALID_PLUGIN_DEPENDENCY", "依赖插件标识不能为空")
+	}
+	_, peers, err := p.siteControlPeersFilteredTx(ctx, tx, pluginID)
+	if err != nil {
+		return siteControlPeer{}, false, err
+	}
+	peer, ok := peers[pluginID]
+	return peer, ok, nil
+}
+
+// An empty dependency preserves the original full-table aggregation behavior.
+func (p *PluginStore) siteControlPeersFilteredTx(ctx context.Context, tx *sql.Tx, dependency string) ([]string, map[string]siteControlPeer, error) {
+	query := `SELECT instance_id,plugin_id,version,generation,desired_enabled FROM plugin_installations WHERE installed=1`
+	args := []any{}
+	if dependency != "" {
+		query += ` AND plugin_id=?`
+		args = append(args, dependency)
+	}
+	query += ` ORDER BY created_at,instance_id`
+	rows, err := tx.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, nil, err
 	}
