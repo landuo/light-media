@@ -15,14 +15,23 @@ export function resourceReviewReasons(candidate: Candidate | undefined, showIden
 }
 export type ResourceFilters = {
   text: string;
-  site: string;
-  resolution: string;
-  codec: string;
-  source: string;
-  promotion: string;
+  site: string | string[];
+  resolution: string | string[];
+  codec: string | string[];
+  source: string | string[];
+  promotion: string | string[];
   seeders: string;
   state: string;
+  season: string | string[];
+  group: string | string[];
 };
+export function filterValues(value: string | string[]) {
+  return Array.isArray(value) ? value : value ? [value] : [];
+}
+function matchesFilter(value: string | string[], actual: string) {
+  const selected = filterValues(value);
+  return !selected.length || selected.includes(actual);
+}
 export const emptyResourceFilters = (): ResourceFilters => ({
   text: '',
   site: '',
@@ -32,7 +41,16 @@ export const emptyResourceFilters = (): ResourceFilters => ({
   promotion: '',
   seeders: '',
   state: '',
+  season: '',
+  group: '',
 });
+export function resourceGroup(c: Candidate) {
+  return String(
+    c.resource.release_group ||
+      c.resource.title?.match(/-([A-Za-z0-9][A-Za-z0-9._]*)\s*$/)?.[1] ||
+      '',
+  );
+}
 export function candidateKey(c: Candidate) {
   return c.resource.site_id + ':' + c.resource.id;
 }
@@ -52,6 +70,8 @@ export function filterResources(
 ) {
   const result = items.filter((c) => {
     const r = c.resource;
+    if (!matchesFilter(f.season, String(c.season || 0))) return false;
+    if (!matchesFilter(f.group, resourceGroup(c))) return false;
     if (
       f.text &&
       !(String(r.title || '') + ' ' + String(r.subtitle || ''))
@@ -61,9 +81,9 @@ export function filterResources(
       return false;
     for (const k of ['site', 'resolution', 'codec', 'source'] as const) {
       const value = String(r[k === 'site' ? 'site_id' : k] || 'unknown');
-      if (f[k] && f[k] !== value) return false;
+      if (!matchesFilter(f[k], value)) return false;
     }
-    if (f.promotion && f.promotion !== promotionKind(r)) return false;
+    if (!matchesFilter(f.promotion, promotionKind(r))) return false;
     const seeders = typeof r.seeders === 'number' ? r.seeders : -1;
     if (
       (f.seeders === 'unknown' && seeders >= 0) ||

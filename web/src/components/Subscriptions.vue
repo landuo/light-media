@@ -102,6 +102,9 @@ function percent(s: any) {
     : 0;
 }
 const isCalendar = computed(() => props.view.split('?')[0] === 'calendar');
+const typedView = computed(() =>
+  ['movie', 'tv'].includes(new URLSearchParams(props.view.split('?')[1]).get('type') || ''),
+);
 const days = computed(() => {
   try {
     return calendarDates(calendarAnchor.value, calendarView.value);
@@ -508,7 +511,7 @@ watch(() => props.view, applyView);
     </div>
   </template>
   <template v-else>
-    <div class="toolbar">
+    <div v-if="!typedView" class="toolbar">
       <input v-model="filterText" placeholder="搜索订阅" aria-label="搜索订阅" />
       <select v-model="filterKind">
         <option value="all">全部类型</option>

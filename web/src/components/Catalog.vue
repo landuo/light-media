@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { api, action, go, image, date, ui, label, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
+import { startSearch, useExplicitSearch } from '../features/search-session';
 let loadSeq = 0,
   seasonSeq = 0;
 const creditsKind = ref('all'),
@@ -15,7 +16,6 @@ const [routePath, routeQuery] = props.route.split('?'),
   kind = ref(parts[0] === 'detail' ? parts[1] : 'movie'),
   list = ref('popular'),
   query = ref(routeParams.get('query') || routeParams.get('q') || ''),
-  searchKind = ref('all'),
   hasMore = ref(false),
   results = ref<any[]>([]),
   total = ref(0),
@@ -27,13 +27,9 @@ const [routePath, routeQuery] = props.route.split('?'),
   seasonData = ref<any>(null),
   seasonLoading = ref(false),
   selected = ref<number[]>([]),
-  loading = ref(true),
+  loading = ref(parts[0] !== 'search'),
   error = ref('');
-const visibleResults = computed(() =>
-  results.value.filter(
-    (m) => !query.value || searchKind.value === 'all' || m.media_type === searchKind.value,
-  ),
-);
+const visibleResults = computed(() => results.value);
 const filteredCredits = computed(() =>
   credits.value
     .filter((m) => creditsKind.value === 'all' || m.media_type === creditsKind.value)
@@ -98,7 +94,7 @@ function change() {
   load();
 }
 function resource() {
-  go(
+  startSearch(
     'resources/' +
       kind.value +
       '/' +
@@ -109,17 +105,11 @@ function resource() {
       selected.value.join(','),
   );
 }
-function submitSearch() {
-  if (query.value.trim()) {
-    const target = 'search?query=' + encodeURIComponent(query.value.trim());
-    if (props.route === target) {
-      page.value = 1;
-      load();
-    } else go(target);
-  } else {
+if (parts[0] === 'search') {
+  useExplicitSearch(props.route, () => {
     page.value = 1;
-    load();
-  }
+    return load();
+  });
 }
 function subscribe() {
   go(
@@ -132,7 +122,9 @@ function subscribe() {
       '&start_episode=1',
   );
 }
-onMounted(load);
+onMounted(() => {
+  if (parts[0] !== 'search') void load();
+});
 </script>
 <template>
   <div v-if="error" class="error-box">
@@ -142,37 +134,9 @@ onMounted(load);
     </button>
   </div>
   <template v-if="parts[0] === 'discover' || parts[0] === 'search'"
-    ><div v-if="parts[0] === 'search'" class="page-actions">
-      <form class="search-field" @submit.prevent="submitSearch">
-        <span>⌕</span
-        ><input v-model="query" placeholder="搜索电影、剧集…" aria-label="搜索影视" /><button
-          class="small primary"
-        >
-          搜索
-        </button>
-      </form>
-    </div>
-    <div class="toolbar">
-      <div v-if="query" class="segmented">
-        <button class="selected">影视</button>
-        <button @click="go('resource-search?query=' + encodeURIComponent(query))">资源</button>
-      </div>
-      <div v-if="query" class="segmented">
-        <button
-          v-for="t in [
-            { id: 'all', name: '全部' },
-            { id: 'movie', name: '电影' },
-            { id: 'tv', name: '剧集' },
-          ]"
-          :key="t.id"
-          :class="{ selected: searchKind === t.id }"
-          @click="searchKind = t.id"
-        >
-          {{ t.name }}
-          <small>{{ results.filter((m) => t.id === 'all' || m.media_type === t.id).length }}</small>
-        </button>
-      </div>
-      <div v-else class="segmented">
+    ><h2 v-if="parts[0] === 'search' && query" class="search-keyword">{{ query }}</h2>
+    <div v-if="parts[0] === 'discover'" class="toolbar">
+      <div class="segmented">
         <button
           :class="{ selected: kind === 'movie' }"
           @click="
@@ -211,8 +175,10 @@ onMounted(load);
       ><MediaCards :items="visibleResults" :quick-actions="true" />
       <div v-if="!visibleResults.length && !error" class="empty-state">
         <span>⌕</span>
-        <h3>没有找到相关作品</h3>
-        <p>试试原名、中文名或其他关键词。</p>
+        <h3>{{ query ? '没有找到相关作品' : '暂无搜索结果' }}</h3>
+        <p>
+          {{ query ? '点击顶部搜索按钮搜索，或尝试其他关键词。' : '在顶部输入关键词并点击搜索。' }}
+        </p>
       </div>
       <div class="pagination" v-if="total > 1 || hasMore">
         <button
@@ -280,9 +246,8 @@ onMounted(load);
           </button>
         </div>
         <div class="tags">
-          <span v-if="detail.library_state">{{
-            detail.library_state === 'present' ? '已入库' : label(detail.library_state)
-          }}</span
+          <span v-if="['present', 'managed', 'external'].includes(detail.library_state)"
+            >已入库</span
           ><span v-if="detail.subscription_id">已订阅</span
           ><span v-if="detail.download_state">{{ label(detail.download_state) }}</span>
         </div>
@@ -380,6 +345,16 @@ onMounted(load);
   <div v-else-if="loading" class="panel loading-state">正在加载影视资料…</div>
 </template>
 <style scoped>
+.search-keyword {
+  margin: 12px 16px 24px;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 32px;
+}
+.search-keyword ~ .media-grid {
+  margin: 0 8px;
+}
 .toolbar {
   gap: 12px;
   margin-bottom: 22px;

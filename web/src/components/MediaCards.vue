@@ -1,30 +1,44 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { go, image, label } from '../api';
 import AppIcon from './AppIcon.vue';
+import { startSearch } from '../features/search-session';
+import tmdbLogo from '../assets/tmdb.png';
 defineProps<{ items: any[]; quickActions?: boolean }>();
+const failedImages = ref(new Set<string>());
 function detail(m: any) {
   go('detail/' + m.media_type + '/' + m.id);
 }
 </script>
 <template>
   <div class="media-grid">
-    <article v-for="m in items" :key="m.media_type + ':' + m.id" class="media-card">
+    <article
+      v-for="m in items"
+      :key="m.media_type + ':' + m.id"
+      class="media-card"
+      :class="{ 'no-poster': !image(m.poster_path) || failedImages.has(m.media_type + ':' + m.id) }"
+    >
       <button class="poster poster-action" @click="detail(m)" :aria-label="'查看' + m.title">
         <img
-          v-if="image(m.poster_path)"
+          v-if="image(m.poster_path) && !failedImages.has(m.media_type + ':' + m.id)"
           :src="image(m.poster_path)"
           :alt="m.title"
           loading="lazy"
+          @error="failedImages.add(m.media_type + ':' + m.id)"
         />
         <div v-else class="poster-empty">◈<small>暂无海报</small></div>
-        <span v-if="m.vote_average > 0" class="rating">★ {{ m.vote_average.toFixed(1) }}</span>
-        <span class="poster-kind" :class="m.media_type">{{ label(m.media_type) }}</span>
-        <div class="media-state">
-          <span v-if="m.library_state === 'present' || m.library_state === 'managed'">已入库</span>
-          <span v-else-if="m.library_state">{{ label(m.library_state) }}</span>
-          <span v-if="m.subscription_id">已订阅</span>
-          <span v-if="m.download_state">{{ label(m.download_state) }}</span>
-        </div>
+        <span v-if="m.vote_average > 0" class="rating">{{ m.vote_average.toFixed(1) }}</span>
+        <span class="poster-kind" :class="m.media_type">{{
+          m.media_type === 'tv' ? '电视剧' : label(m.media_type)
+        }}</span>
+        <span
+          v-if="['present', 'managed', 'external'].includes(m.library_state)"
+          class="media-exists"
+          title="已入库"
+          aria-label="已入库"
+          ><AppIcon name="check-circle"
+        /></span>
+        <img class="media-source" :src="tmdbLogo" alt="TheMovieDb" />
       </button>
       <div class="media-overlay" @click="detail(m)">
         <span class="media-year">{{ m.year || '日期待定' }}</span>
@@ -39,7 +53,7 @@ function detail(m: any) {
             class="icon-button"
             :aria-label="'搜索' + m.title + '资源'"
             title="搜索资源"
-            @click.stop="go('resources/' + m.media_type + '/' + m.id)"
+            @click.stop="startSearch('resources/' + m.media_type + '/' + m.id)"
           >
             <AppIcon name="search" />
           </button>
@@ -66,7 +80,7 @@ function detail(m: any) {
 <style scoped>
 .media-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(144px, 1fr));
   gap: 16px;
 }
 .media-card {
@@ -134,18 +148,36 @@ function detail(m: any) {
 .poster-kind.movie {
   background: #2563ebcc;
 }
-.media-state {
-  top: 40px;
-  left: 8px;
-  right: auto;
-  align-items: flex-start;
-}
-.media-state > span {
-  padding: 2px 6px;
-  border-radius: 12px;
+.media-exists {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 4;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
   background: var(--success);
   color: white;
-  font-size: 11px;
+  display: grid;
+  place-items: center;
+}
+.media-exists svg {
+  width: 20px;
+  height: 20px;
+}
+.media-card:hover .media-exists {
+  display: none;
+}
+.poster-action .media-source {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.media-card:hover .media-source {
+  visibility: hidden;
 }
 .media-overlay {
   position: absolute;
@@ -162,6 +194,7 @@ function detail(m: any) {
   transition: opacity 0.2s;
 }
 .media-card:hover .media-overlay,
+.media-card.no-poster .media-overlay,
 .media-card:focus-within .media-overlay {
   opacity: 1;
   visibility: visible;
@@ -239,7 +272,7 @@ function detail(m: any) {
 @media (max-width: 600px) {
   .media-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 16px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

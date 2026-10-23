@@ -1,0 +1,69 @@
+{
+  "state": "deployed_verified",
+  "version": "0.4.9",
+  "baseline": "110ffc7b22755b53accaa3992ab2eb5c79ab91f3",
+  "source_changes": [
+    "internal/app/runtime.go",
+    "web/package-lock.json",
+    "web/package.json",
+    "web/src/App.vue",
+    "web/src/assets/material-design-icons.json",
+    "web/src/components/Catalog.vue",
+    "web/src/components/KeywordResources.vue",
+    "web/src/components/MediaCards.vue",
+    "web/src/components/ResourceCard.vue",
+    "web/src/components/Resources.vue",
+    "web/src/components/Subscriptions.vue",
+    "web/src/features/resources.ts",
+    "web/tests/resources.test.mjs"
+  ],
+  "new_files": [
+    "web/src/components/ResourceFilterBar.vue",
+    "web/src/features/search-session.ts",
+    "web/src/assets/tmdb.png",
+    "web/tests/search-session.test.mjs"
+  ],
+  "backend_change": "version constant only",
+  "server_sha256": "96b5fb0de0ef3159d514bfa83deefd12be10f2f9cfd9f6926f3263deadce20c1",
+  "server_bytes": 59633806,
+  "frontend_tests": 172,
+  "typescript_and_vite_build": "passed",
+  "linux_cgo0_modernconly_build": "passed",
+  "web_embed_tests": "passed",
+  "owned_test": {
+    "state": "passed",
+    "version": "0.4.9",
+    "network": "none",
+    "memory_limit_mib": 256,
+    "cpu_limit": 0.5,
+    "setup_required": true,
+    "oom": false,
+    "owned_container_removed": true
+  },
+  "original_services_unchanged": true,
+  "backend_business_changes": false,
+  "main_frontend_tests": 176,
+  "migration_receipts": 7,
+  "new_migrations": 0,
+  "settings_preserved": true,
+  "plugin_configurations_preserved": true,
+  "key_and_hosts_preserved": true,
+  "production_browser": {
+    "query": "诛仙",
+    "initial_search_requests": 1,
+    "result_cards": 8,
+    "search_requests_after_movie_tv_navigation": 0,
+    "movie_tv_filters_removed": true,
+    "removed_badge_absent": true,
+    "warnings_and_errors": 0
+  },
+  "synthetic_browser": {
+    "same_query_explicit_requests": 2,
+    "empty_result_requests_after_return": 1,
+    "resource_requests_after_return": 1,
+    "inflight_requests_after_return": 1,
+    "inflight_result_cards": 6,
+    "resource_list_and_filter_retained": true,
+    "unsubmitted_draft_does_not_search": true
+  }
+}
