@@ -38,8 +38,20 @@ const PluginFolderDialog = defineAsyncComponent(() => import('./PluginFolderDial
 const PluginConfigDialog = defineAsyncComponent(() => import('./PluginConfigDialog.vue'));
 const PluginDataDialog = defineAsyncComponent(() => import('./PluginDataDialog.vue'));
 const PluginLogDialog = defineAsyncComponent(() => import('./PluginLogDialog.vue'));
+const PluginCloneDialog = defineAsyncComponent(() => import('./PluginCloneDialog.vue'));
 const detail = ref<PluginCard>();
 const logPlugin = ref<PluginCard>();
+const cloneSource = ref<PluginCard>();
+async function cloneCreated() {
+  // The clone transaction already preserves its source folder. Refresh both
+  // lists instead of racing it with a second organization write.
+  cloneSource.value = undefined;
+  installedQuery.value = null;
+  runningFilter.value = false;
+  updateFilter.value = false;
+  toast('插件分身已创建，默认暂停');
+  await load();
+}
 function openPlugin(plugin: PluginCard) {
   if (!plugin.installed) return;
   if (plugin.has_page) detail.value = plugin;
@@ -291,10 +303,11 @@ async function dropToFolder(name: string) {
   }
 }
 async function cardAction(action: string, plugin: PluginCard) {
-  if (sortMode.value || organizing.value) return;
+  if (sortMode.value || organizing.value || busy.value) return;
   if (action === 'open') openPlugin(plugin);
   else if (action === 'detail') detail.value = plugin;
   else if (action === 'settings') selected.value = plugin;
+  else if (action === 'clone' && plugin.installed) cloneSource.value = plugin;
   else if (action === 'reset' || action === 'uninstall') confirmation.value = { plugin, action };
   else if (action === 'runs') await showRuns(plugin);
   else if (action === 'logs') logPlugin.value = plugin;
@@ -383,8 +396,11 @@ async function abandonUnknownRun() {
     history.value = await api('/plugins/' + encodeURIComponent(historyInstance.value) + '/runs');
     abandonChoice.value = undefined;
     toast('已放弃旧执行并保留未知证据，旧动作不会重放');
-  } catch (e) { toast(errorText(e)); }
-  finally { abandoningRun.value = ''; }
+  } catch (e) {
+    toast(errorText(e));
+  } finally {
+    abandoningRun.value = '';
+  }
 }
 const states: Record<string, string> = {
   pending: '等待执行',
@@ -641,6 +657,13 @@ onUnmounted(() => clearInterval(timer));
       :plugin="logPlugin"
       @close="logPlugin = undefined"
     />
+    <PluginCloneDialog
+      v-if="cloneSource"
+      :key="cloneSource.instance_id"
+      :plugin="cloneSource"
+      @close="cloneSource = undefined"
+      @created="cloneCreated"
+    />
     <PluginDataDialog
       v-if="detail"
       :key="detail.instance_id"
@@ -658,7 +681,10 @@ onUnmounted(() => clearInterval(timer));
       :plugin="selected"
       @changed="load"
       @close="selected = undefined"
-      @switch="detail = selected; selected = undefined"
+      @switch="
+        detail = selected;
+        selected = undefined;
+      "
       @saved="
         selected = undefined;
         load();
@@ -709,8 +735,15 @@ onUnmounted(() => clearInterval(timer));
               <div v-if="run.recovery" class="plugin-run-recovery" role="status">
                 <strong>{{ run.recovery.stage }}</strong>
                 <p>{{ run.recovery.message }}</p>
-                <VBtn v-if="run.recovery.abandon_allowed" size="small" color="warning" variant="tonal"
-                  :disabled="!!abandoningRun" @click="abandonChoice = run">核对后放弃旧执行</VBtn>
+                <VBtn
+                  v-if="run.recovery.abandon_allowed"
+                  size="small"
+                  color="warning"
+                  variant="tonal"
+                  :disabled="!!abandoningRun"
+                  @click="abandonChoice = run"
+                  >核对后放弃旧执行</VBtn
+                >
               </div>
               <VBtn
                 v-if="run.retryable"
@@ -726,24 +759,58 @@ onUnmounted(() => clearInterval(timer));
         ></VCard
       ></VDialog
     >
-    <VDialog :model-value="!!abandonChoice" max-width="500" content-class="plugin-dialog-surface"
-      @update:model-value="value => { if (!value && !abandoningRun) abandonChoice = undefined }">
-      <VCard><VCardTitle>确认放弃旧执行</VCardTitle><VCardText>
-        <p>请先核对备份目录及相关 WebDAV 文件。当前待核对阶段：{{ abandonChoice?.recovery?.stage }}。</p>
-        <p>此操作保留全部未知副作用证据，取消旧任务及其定时触发，不回滚文件，不重试旧动作。完成后可修改配置或发起新备份。</p>
-        <div class="plugin-run-abandon-actions">
-          <VBtn variant="text" :disabled="!!abandoningRun" @click="abandonChoice = undefined">返回核对</VBtn>
-          <VBtn color="warning" :loading="!!abandoningRun" @click="abandonUnknownRun">已核对，确认放弃</VBtn>
-        </div>
-      </VCardText></VCard>
+    <VDialog
+      :model-value="!!abandonChoice"
+      max-width="500"
+      content-class="plugin-dialog-surface"
+      @update:model-value="
+        (value) => {
+          if (!value && !abandoningRun) abandonChoice = undefined;
+        }
+      "
+    >
+      <VCard
+        ><VCardTitle>确认放弃旧执行</VCardTitle
+        ><VCardText>
+          <p>
+            请先核对备份目录及相关 WebDAV 文件。当前待核对阶段：{{
+              abandonChoice?.recovery?.stage
+            }}。
+          </p>
+          <p>
+            此操作保留全部未知副作用证据，取消旧任务及其定时触发，不回滚文件，不重试旧动作。完成后可修改配置或发起新备份。
+          </p>
+          <div class="plugin-run-abandon-actions">
+            <VBtn variant="text" :disabled="!!abandoningRun" @click="abandonChoice = undefined"
+              >返回核对</VBtn
+            >
+            <VBtn color="warning" :loading="!!abandoningRun" @click="abandonUnknownRun"
+              >已核对，确认放弃</VBtn
+            >
+          </div>
+        </VCardText></VCard
+      >
     </VDialog>
-
   </VThemeProvider>
 </template>
 <style scoped>
-.plugin-run-recovery { flex-basis: 100%; border-inline-start: 3px solid rgb(var(--v-theme-warning)); padding: 10px 12px; background: rgba(var(--v-theme-warning), 0.06); border-radius: 4px; }
-.plugin-run-recovery p { margin: 4px 0 10px; line-height: 1.6; }
-.plugin-run-abandon-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.plugin-run-recovery {
+  flex-basis: 100%;
+  border-inline-start: 3px solid rgb(var(--v-theme-warning));
+  padding: 10px 12px;
+  background: rgba(var(--v-theme-warning), 0.06);
+  border-radius: 4px;
+}
+.plugin-run-recovery p {
+  margin: 4px 0 10px;
+  line-height: 1.6;
+}
+.plugin-run-abandon-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
 .plugin-surface {
   background: transparent !important;
   min-height: 320px;

@@ -270,6 +270,9 @@ export type PluginCard = {
   name: string;
   description: string;
   version: string;
+  display_version?: string;
+  icon?: string;
+  source_instance_id?: string;
   author: string;
   author_url: string;
   installed: boolean;

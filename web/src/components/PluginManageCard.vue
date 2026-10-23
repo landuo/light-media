@@ -1,13 +1,25 @@
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue';
 import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VMenu } from 'vuetify/components/VMenu';
 import { VList, VListItem } from 'vuetify/components/VList';
 import { VIcon } from 'vuetify/components/VIcon';
 import type { PluginCard } from '../features/plugin-forms';
+import { safePluginIcon } from '../features/plugin-clone';
 import AppIcon from './AppIcon.vue';
-defineProps<{ plugin: PluginCard; busy?: boolean; sortable?: boolean; inFolder?: boolean }>();
+const props = defineProps<{
+  plugin: PluginCard;
+  busy?: boolean;
+  sortable?: boolean;
+  inFolder?: boolean;
+}>();
 const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
+const icon = computed(() => safePluginIcon(props.plugin.icon));
+const iconFailed = ref(false);
+watch(icon, () => {
+  iconFailed.value = false;
+});
 </script>
 <template>
   <div class="plugin-item-wrapper">
@@ -19,11 +31,23 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
       <div class="plugin-card-cover">
         <VCardTitle class="plugin-card-title"
           ><span class="plugin-state-dot" :class="{ active: plugin.state }"></span>{{ plugin.name
-          }}<span class="plugin-version">v{{ plugin.version }}</span></VCardTitle
+          }}<span class="plugin-version"
+            >v{{ plugin.display_version ?? plugin.version }}</span
+          ></VCardTitle
         >
         <div class="plugin-card-description">
           <span>{{ plugin.description }}</span>
-          <div class="plugin-card-icon"><AppIcon name="plugin" /></div>
+          <div class="plugin-card-icon">
+            <img
+              v-if="icon && !iconFailed"
+              :key="icon"
+              :src="icon"
+              alt=""
+              referrerpolicy="no-referrer"
+              @error="iconFailed = true"
+            />
+            <AppIcon v-else name="plugin" />
+          </div>
         </div>
       </div>
       <VCardText class="plugin-card-footer"
@@ -46,6 +70,7 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
               icon
               size="small"
               :aria-label="plugin.name + '操作'"
+              :disabled="busy"
               @click.stop
               ><AppIcon name="more" /></VBtn
           ></template>
@@ -56,6 +81,9 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
               @click="emit('action', 'detail', plugin)" /><VListItem
               title="设置"
               @click="emit('action', 'settings', plugin)" /><VListItem
+              title="分身"
+              :disabled="busy"
+              @click="!busy && emit('action', 'clone', plugin)" /><VListItem
               title="重置"
               @click="emit('action', 'reset', plugin)" /><VListItem
               title="卸载"
@@ -146,6 +174,11 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
 .plugin-card-icon .app-icon {
   width: 28px;
   height: 28px;
+}
+.plugin-card-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 .plugin-card-footer {
   display: flex;
