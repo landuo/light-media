@@ -207,8 +207,11 @@ func (p *PluginStore) cloneWithOriginalClass(ctx context.Context, source string,
 			return out, err
 		}
 	}
+	if cached, ok := ctx.Value(originalCloneConfigKey{}).(originalCloneConfiguration); originalClass && ok && cached.source == source {
+		raw = cached.raw
+	}
 	var config map[string]json.RawMessage
-	if json.Unmarshal(raw, &config) != nil {
+	if originalBaseJSONTruthy(raw) && json.Unmarshal(raw, &config) != nil {
 		return out, bad("INVALID_PLUGIN_CONFIG", "来源插件配置不是对象")
 	}
 	// MoviePilot 8a83efe core/plugin.py clone_plugin: only a nonempty
@@ -395,6 +398,11 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 			return map[string]any{"success": false, "message": copyErr.Error()}, nil
 		}
 	}
+	cached, _, cacheErr := a.readOriginalBaseConfigForInit(ctx, source)
+	if cacheErr != nil {
+		return map[string]any{"success": false, "message": cacheErr.Error()}, nil
+	}
+	ctx = context.WithValue(ctx, originalCloneConfigKey{}, originalCloneConfiguration{source: source, raw: cached})
 	in, err := a.pluginStore.cloneWithOriginalClass(ctx, source, request, true)
 	if err != nil {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
@@ -445,4 +453,10 @@ func (p *PluginStore) presentInstance(ctx context.Context, in PluginInstallation
 func (p *PluginStore) defaultPluginReferenceCandidate(ctx context.Context, q pluginOrganizationReader, instance string) (bool, error) {
 	metadata, err := p.instanceMetadata(ctx, q, instance)
 	return metadata.SourceInstanceID == "", err
+}
+
+type originalCloneConfigKey struct{}
+type originalCloneConfiguration struct {
+	source string
+	raw    json.RawMessage
 }

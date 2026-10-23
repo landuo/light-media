@@ -203,6 +203,9 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err != nil {
 		return nil, err
 	}
+	if err = migrateOriginalBaseNamespaces(ctx, tx); err != nil {
+		return nil, err
+	}
 	if _, err = tx.ExecContext(ctx, siteReferenceProtocolSchema); err != nil {
 		return nil, err
 	}

@@ -11,6 +11,13 @@ import (
 
 func originalPluginConfigurationRoute(path, method string) bool {
 	parts := strings.Split(path, "/")
+	if method == http.MethodGet && len(parts) == 1 && pluginStorageID.MatchString(path) {
+		switch path {
+		case "markets", "market", "organization", "navigation", "install":
+			return false
+		}
+		return true
+	}
 	return pluginStorageID.MatchString(parts[0]) && ((method == http.MethodPut && (len(parts) == 1 || len(parts) == 2 && parts[1] == "config")) || (method == http.MethodPost && len(parts) == 2 && (parts[1] == "reload" || parts[1] == "reset")))
 }
 
@@ -63,6 +70,16 @@ func (a *App) initOriginalLoadedPlugin(ctx context.Context, instance string) err
 func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	parts := strings.Split(path, "/")
 	instance := parts[0]
+	if r.Method == http.MethodGet {
+		raw, _, err := a.readOriginalBaseConfigForInit(r.Context(), instance)
+		if err != nil {
+			return nil, err
+		}
+		if len(raw) == 0 {
+			raw = json.RawMessage("null")
+		}
+		return raw, nil
+	}
 	var config map[string]json.RawMessage
 	if r.Method == http.MethodPut {
 		if len(parts) == 2 {
@@ -97,7 +114,13 @@ func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Req
 		// Original save_plugin_config returns false when its class is absent;
 		// the endpoint deliberately ignores that boolean and still init/registers.
 		if class, exists := a.pluginOriginalClasses.Load(instance); exists {
-			if _, err = a.pluginStore.saveOriginalPluginConfiguration(ctx, class.(originalPluginClass).installation, raw); err != nil {
+			a.pluginMu.Lock()
+			_, err = a.pluginStore.saveOriginalPluginConfiguration(ctx, class.(originalPluginClass).installation, raw)
+			if err == nil {
+				a.invalidateOriginalBaseConfig(instance)
+			}
+			a.pluginMu.Unlock()
+			if err != nil {
 				return nil, err
 			}
 		}

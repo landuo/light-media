@@ -13,7 +13,13 @@ func (a *App) resetOriginalPluginData(ctx context.Context, instance string) erro
 	if err := a.stopOriginalPlugin(ctx, instance); err != nil {
 		return err
 	}
-	if _, err := a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='config'`, instance); err != nil {
+	a.pluginMu.Lock()
+	_, err := a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='config'`, instance)
+	if err == nil {
+		a.invalidateOriginalBaseConfig(instance)
+	}
+	a.pluginMu.Unlock()
+	if err != nil {
 		return err
 	}
 	return a.pluginStore.deleteOriginalPluginData(ctx, instance)

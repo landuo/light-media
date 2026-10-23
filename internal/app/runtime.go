@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	pluginOriginalBase             originalBaseState
 	pluginImplementationMu         sync.RWMutex
 	pluginOriginalInitializingRuns sync.Map
 	pluginOriginalEventsMu         sync.Mutex

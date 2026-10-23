@@ -295,6 +295,9 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 			return PluginRun{}, err
 		}
 	}
+	if call, ok := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall); ok && originalInitializationMatches(ctx, instanceID, pluginID, run.Version, run.Generation, action) && call.configForInitRead {
+		clear = append([]byte(nil), call.configForInit...)
+	}
 	run.Input, err = pluginSnapshotJSON(pluginID, run.Version, struct {
 		Action string          `json:"action"`
 		Config json.RawMessage `json:"config"`

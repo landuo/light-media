@@ -46,7 +46,9 @@ func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins
 	}
 	client := p.session
 	p.sessionMu.Unlock()
-	return client.CallWithOptions(ctx, method, payload, host, plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime})
+	callback, closePhase := p.originalBaseSessionHost(ctx, method, host)
+	defer closePhase()
+	return client.CallWithOptions(ctx, method, payload, callback, plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime})
 }
 func (p *originalPluginInstance) readSession(ctx context.Context, method string, output any) error {
 	select {
@@ -71,7 +73,10 @@ func (p *originalPluginInstance) stopSession(ctx context.Context) error {
 	}
 	// Pure contract has no cleanup host capability. Native contracts keep their
 	// existing actual owner stop method; no old invocation authorization is reused.
-	return client.Stop(ctx)
+	ctx = context.WithValue(ctx, originalBaseStopKey{}, &originalBaseStopCall{object: p, client: client})
+	callback, closePhase := p.originalBaseSessionHost(ctx, "stop", nil)
+	defer closePhase()
+	return client.StopWithHost(ctx, callback)
 }
 func (a *App) closeOriginalSessions() {
 	a.pluginRunningInstances.Range(func(_, value any) bool {

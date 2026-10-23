@@ -74,6 +74,7 @@ type originalPluginInstance struct {
 	nativeState          any
 	originalAbsentEngine any
 	external             bool
+	hostContract         string
 	sessionMu            sync.Mutex
 	session              *plugins.Client
 	sessionStarted       bool
@@ -81,12 +82,14 @@ type originalPluginInstance struct {
 
 type originalInitializingObjectKey struct{}
 type originalInitializationCall struct {
-	object       *originalPluginInstance
-	mu           sync.Mutex
-	applied      json.RawMessage
-	captured     bool
-	nativeState  any
-	nativeBefore any
+	object            *originalPluginInstance
+	mu                sync.Mutex
+	applied           json.RawMessage
+	captured          bool
+	nativeState       any
+	nativeBefore      any
+	configForInit     json.RawMessage
+	configForInitRead bool
 }
 
 // Keep the actual Config object even when initialization throws after member
@@ -131,6 +134,13 @@ func (p *originalPluginInstance) init(ctx context.Context) error {
 	previous := p.nativeState
 	p.configMu.RUnlock()
 	call := &originalInitializationCall{object: p, nativeBefore: previous}
+	if p.hostContract == pluginBaseSDKContract {
+		raw, _, err := p.app.readOriginalBaseConfigForInit(ctx, p.installation.InstanceID)
+		if err != nil {
+			return err
+		}
+		call.configForInit, call.configForInitRead = raw, true
+	}
 	run, err := p.app.initializeOriginalPlugin(context.WithValue(ctx, originalInitializingObjectKey{}, call), p.installation.InstanceID)
 	if run.ID != "" {
 		p.app.pluginOriginalInitializingRuns.Delete(run.ID)
@@ -179,7 +189,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			return nil
 		}
 		a.pluginOriginalClasses.Store(instance, originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""})
-		object := &originalPluginInstance{app: a, installation: in, handler: handler, manifest: manifest, external: implementation.External}
+		object := &originalPluginInstance{app: a, installation: in, handler: handler, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
 		err = object.init(ctx)
 		if err != nil && object.external {
 			_ = object.stopSession(context.WithoutCancel(ctx))
@@ -215,6 +225,13 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 	}
 	if object != nil {
 		config, err := a.pluginStore.Config(ctx, instance)
+		if object.hostContract == pluginBaseSDKContract {
+			var present bool
+			config.Value, present, err = a.readOriginalBaseConfigForInit(ctx, instance)
+			if err == nil && !present {
+				err = sql.ErrNoRows
+			}
+		}
 		if err != nil && !missingPluginValue(err) {
 			return err
 		}

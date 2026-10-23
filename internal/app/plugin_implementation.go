@@ -15,20 +15,27 @@ import (
 // This contract has no host capabilities. Repository metadata never grants a
 // native owner operation or relaxes an existing compiled business version pin.
 const pluginPureSDKContract = "light-media.sdk-pure/v1"
+const pluginBaseSDKContract = "light-media.sdk-base/v1"
 
 type pluginImplementation struct {
-	Manifest plugins.Manifest
-	Command  plugins.Command
-	Digest   string
-	External bool
+	Manifest     plugins.Manifest
+	Command      plugins.Command
+	Digest       string
+	External     bool
+	HostContract string
 }
 
 func validatePluginArtifactContract(m plugins.Manifest, contract string) error {
 	if err := m.Validate(); err != nil {
 		return err
 	}
-	if contract != pluginPureSDKContract || len(m.Capabilities) != 0 {
+	if contract != pluginPureSDKContract && contract != pluginBaseSDKContract {
 		return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件制品声明的宿主契约尚不受支持")
+	}
+	for _, capability := range m.Capabilities {
+		if contract != pluginBaseSDKContract || !plugins.IsBaseMethod(capability) {
+			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件宿主能力不属于已知契约")
+		}
 	}
 	if _, _, native := builtin.Lookup(m.PluginID); native {
 		return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "不能用独立制品替换未匹配的已编译业务宿主")
@@ -56,7 +63,7 @@ func (a *App) resolvePluginImplementation(ctx context.Context, in PluginInstalla
 		if acquired.Manifest.PluginID != in.PluginID || acquired.Manifest.Version != in.Version {
 			return pluginImplementation{}, bad("PLUGIN_IMPLEMENTATION_MISMATCH", "实例与实际插件制品版本不一致")
 		}
-		return pluginImplementation{Manifest: acquired.Manifest, Command: acquired.Command, Digest: acquired.SHA256, External: true}, nil
+		return pluginImplementation{Manifest: acquired.Manifest, Command: acquired.Command, Digest: acquired.SHA256, External: true, HostContract: acquired.HostContract}, nil
 	}
 	if codePresent || !errors.Is(err, os.ErrNotExist) {
 		return pluginImplementation{}, err
@@ -91,7 +98,7 @@ func (a *App) resolvePluginInvocation(ctx context.Context, in PluginInstallation
 		loaded := object.session != nil
 		object.sessionMu.Unlock()
 		if loaded {
-			return pluginImplementation{Manifest: object.manifest, External: true}, nil
+			return pluginImplementation{Manifest: object.manifest, External: true, HostContract: object.hostContract}, nil
 		}
 	}
 	return a.resolvePluginImplementation(ctx, in)

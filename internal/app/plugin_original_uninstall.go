@@ -32,8 +32,14 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 	if value, ok := a.pluginOriginalClasses.Load(instance); ok {
 		class := value.(originalPluginClass)
 		if class.isClone {
-			if _, err := a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='config'`, instance); err != nil {
-				return nil, err
+			a.pluginMu.Lock()
+			_, deleteErr := a.Store.DB.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='config'`, instance)
+			if deleteErr == nil {
+				a.invalidateOriginalBaseConfig(instance)
+			}
+			a.pluginMu.Unlock()
+			if deleteErr != nil {
+				return nil, deleteErr
 			}
 			if err := a.pluginStore.deleteOriginalPluginData(ctx, instance); err != nil {
 				return nil, err

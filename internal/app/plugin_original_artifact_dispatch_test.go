@@ -112,27 +112,49 @@ func TestPluginOriginalArtifactDueServiceCallsLoadedHandler(t *testing.T) {
 	if got := originalArtifactSnapshot(t, clone); got["tick_count"] != float64(2) {
 		t.Errorf("clone service did not run independently: %+v", got)
 	}
-	// Original manager stop is not Scheduler.remove_plugin_job. A retained job
-	// may enqueue, but it must not silently restart the stopped instance.
+	// Original core.stop does not remove the central job. In the Go process
+	// transport a stopped binding cannot execute or silently restart; this is
+	// not a claim that Python's scheduler checks the manager's running map.
 	if err := a.stopOriginalPlugin(ctx, clone.installation.InstanceID); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := a.pluginStore.enqueueDuePluginSchedules(ctx, originalDispatchDue(t, a)); err != nil {
-		t.Fatal(err)
-	}
-	queued, err := a.pluginStore.ClaimRun(ctx)
-	if err == nil {
-		_ = a.executePluginRun(ctx, queued)
-		done, e := a.pluginStore.Run(ctx, queued.ID)
-		if e != nil || done.State == "succeeded" {
-			t.Errorf("stopped object service succeeded: %+v %v", done, e)
+	save(source.installation.InstanceID, true)
+	readStoppedSchedule := func() (string, int) {
+		t.Helper()
+		var nextDue string
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT next_due FROM plugin_schedules WHERE instance_id=? AND group_key='original_services' AND active=1`, clone.installation.InstanceID).Scan(&nextDue); err != nil {
+			t.Fatal(err)
 		}
-	} else if !errors.Is(err, sql.ErrNoRows) {
-		t.Fatal(err)
+		var occurrences int
+		if err := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_schedule_occurrences WHERE instance_id=?`, clone.installation.InstanceID).Scan(&occurrences); err != nil {
+			t.Fatal(err)
+		}
+		return nextDue, occurrences
+	}
+	stoppedDue, stoppedOccurrences := readStoppedSchedule()
+	if _, ok := a.pluginRunningInstances.Load(clone.installation.InstanceID); ok {
+		t.Fatal("source save revived stopped clone")
+	}
+	if n, err := a.pluginStore.enqueueDuePluginSchedules(ctx, originalDispatchDue(t, a)); err != nil || n != 1 {
+		t.Fatalf("stopped binding blocked live sibling or queued itself: count=%d error=%v", n, err)
+	}
+	run = originalDispatchExecute(t, a)
+	if run.InstanceID != source.installation.InstanceID || run.Action != "service" {
+		t.Errorf("expected only live source service, got instance=%s action=%s", run.InstanceID, run.Action)
+	}
+	if got := originalArtifactSnapshot(t, source); got["tick_count"] != float64(2) {
+		t.Errorf("live source did not execute its handler independently: %+v", got)
+	}
+	if _, err := a.pluginStore.ClaimRun(ctx); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatalf("unexpected extra pending run after live sibling: %v", err)
+	}
+	if nextDue, occurrences := readStoppedSchedule(); nextDue != stoppedDue || occurrences != stoppedOccurrences {
+		t.Errorf("stopped binding consumed due/occurrence: due %s -> %s, occurrences %d -> %d", stoppedDue, nextDue, stoppedOccurrences, occurrences)
 	}
 	if _, ok := a.pluginRunningInstances.Load(clone.installation.InstanceID); ok {
 		t.Fatal("service silently reloaded stopped clone")
 	}
+
 }
 func TestPluginOriginalArtifactRegisteredCommandCallsLoadedInstance(t *testing.T) {
 	a, source, clone, save := originalDispatchFixture(t)
