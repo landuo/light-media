@@ -142,12 +142,15 @@ and race tests plus actual cmd/server worker and browser paths when UI changes.
 Never substitute compilation or a mock for the required real behavior.
 
 The 21 compiled catalog entries have common instance creation coverage; this is
-not acceptance of every plugin's entire business implementation. Sources bound
-to original migration reference receipts still have a known clone limitation:
-`PLUGIN_CLONE_REFERENCE_MIGRATION_REQUIRED`. A valid old source mapping is not yet
-projected into a fresh clone binding by this release. Site-reference and Transfer
-binding support must be completed separately; do not erase old receipts, relabel
-an imported binding as native, or Reset user configuration to bypass the check.
+not acceptance of every plugin's entire business implementation. The user chose
+fresh use with no old-system data migration. MoviePilot configuration/history/
+reference imports and clones of imported reference-bound instances are outside
+this task, not required follow-up work. Their existing
+`PLUGIN_CLONE_REFERENCE_MIGRATION_REQUIRED` guard remains; do not erase old
+receipts or relabel imported bindings to bypass it. Ordinary native clones use
+the delivered shared framework. Internal plugin version/data-structure updates
+still require the exact compiled declarations above; that contract is separate
+from importing data from another product.
 
 See [reviewed update/restoration acceptance](plugin-framework-reviewed-update-and-restore.md)
 and [runtime reset contract](plugin-framework-runtime-reset-stage.md). Historical

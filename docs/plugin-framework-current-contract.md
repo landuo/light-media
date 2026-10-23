@@ -46,15 +46,27 @@ actual production worker/build and browser checks. It is not a full-repository o
 remote-CI success claim. Race instrumentation applies to the test host; fixtures
 explicitly selecting ordinary cmd/server retain that real production worker.
 
-## Boundaries that are still explicit
+## Agreed fresh-start scope (2026-10-23)
 
-- Cloning a source attached to original migration reference receipts still
-  returns `PLUGIN_CLONE_REFERENCE_MIGRATION_REQUIRED`. Site-reference and
-  Transfer mappings need a reviewed common clone-binding implementation. Do not
-  erase receipts, relabel migrated state as native, or reset user data to bypass
-  this limitation.
-- The audited version transition is CategoryEditor 1.2 to 1.3. Unknown historical
-  versions and arbitrary business-owner schema migrations remain unsupported.
+The user explicitly chose to start plugins afresh: old-system configuration,
+history and reference data do not need to be migrated. Acceptance therefore
+covers fresh installation, native configuration, ordinary framework-created
+clones, Reset and reviewed version updates within this application. Importing
+MoviePilot data and cloning instances bound to imported reference receipts are
+outside this task, not remaining delivery gates. Existing imported-state guards
+and historical evidence are retained; no user data is erased or relabelled.
+
+## Explicit supported boundaries
+
+- Imported reference-bound instances remain guarded by
+  `PLUGIN_CLONE_REFERENCE_MIGRATION_REQUIRED`. They are outside the agreed
+  fresh-start scope. The unpublished reference-projection experiment is not
+  included in this delivery and is not required for ordinary native clones.
+- The audited internal plugin version transition is CategoryEditor 1.2 to 1.3.
+  Each additional internal version/data-structure transition requires an exact
+  compiled compatibility declaration and verification. This is an application
+  version-update contract, not a requirement to import old MoviePilot data.
+  Unknown version transitions and arbitrary owner-schema conversions fail closed.
   This framework is not an external-repository installer or dynamic-code updater.
 - Common instance coverage is not acceptance of every catalog plugin's entire
   business implementation. Unpublished independent plugin work is not included.
@@ -65,6 +77,7 @@ explicitly selecting ordinary cmd/server retain that real production worker.
 - The new authenticated attempt/recovery evidence is not an established database
   downgrade path for older binaries.
 
-These boundaries prevent describing this integration as every possible framework
-or migration scenario being complete. They do not invalidate the explicitly
-verified supported lifecycle and user-facing paths listed in its evidence.
+Completion is judged against the agreed native fresh-start scope, not every
+possible historical import or arbitrary version transition. The integration
+verification and remote publication establish the delivered paths; independent
+plugin business completion and unrelated historical risks remain separate.
