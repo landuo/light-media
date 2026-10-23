@@ -2,6 +2,8 @@ import { apiURL } from './base-path.ts';
 
 const pages = new Set([
   'discover',
+  'explore',
+  'explore-detail',
   'detail',
   'search',
   'subscriptions',

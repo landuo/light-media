@@ -1,30 +1,53 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { VIcon } from 'vuetify/components/VIcon';
 import { go, image, label } from '../api';
 import AppIcon from './AppIcon.vue';
 import { startSearch } from '../features/search-session';
 import tmdbLogo from '../assets/tmdb.png';
-defineProps<{ items: any[]; quickActions?: boolean }>();
+import doubanLogo from '../assets/douban.png';
+import bangumiLogo from '../assets/bangumi.png';
+import ExploreActions from './ExploreActions.vue';
+import { exploreMediaKey } from '../features/explore-feed';
+import { exploreImage, exploreDetailRoute } from '../features/explore-media';
+const props = defineProps<{ items: any[]; quickActions?: boolean; originalActions?: boolean }>();
+const actions = ref<InstanceType<typeof ExploreActions>>();
+const sourceLogos: Record<string, string> = {
+  themoviedb: tmdbLogo,
+  douban: doubanLogo,
+  bangumi: bangumiLogo,
+};
 const failedImages = ref(new Set<string>());
 function detail(m: any) {
-  go('detail/' + m.media_type + '/' + m.id);
+  go(props.originalActions ? exploreDetailRoute(m) : 'detail/' + m.media_type + '/' + m.id);
+}
+function poster(m: any) {
+  return props.originalActions ? exploreImage(m) : image(m.poster_path);
+}
+function search(m: any) {
+  if (props.originalActions) actions.value?.open(m, 'search');
+  else startSearch('resources/' + m.media_type + '/' + m.id);
+}
+function subscribe(m: any) {
+  if (props.originalActions) actions.value?.open(m, 'subscribe');
+  else go(m.subscription_id ? 'subscriptions' : 'subscriptions/new/' + m.media_type + '/' + m.id);
 }
 </script>
 <template>
   <div class="media-grid">
     <article
       v-for="m in items"
-      :key="m.media_type + ':' + m.id"
+      :key="exploreMediaKey(m)"
       class="media-card"
-      :class="{ 'no-poster': !image(m.poster_path) || failedImages.has(m.media_type + ':' + m.id) }"
+      :class="{ 'no-poster': !poster(m) || failedImages.has(exploreMediaKey(m)) }"
     >
       <button class="poster poster-action" @click="detail(m)" :aria-label="'查看' + m.title">
         <img
-          v-if="image(m.poster_path) && !failedImages.has(m.media_type + ':' + m.id)"
-          :src="image(m.poster_path)"
+          v-if="poster(m) && !failedImages.has(exploreMediaKey(m))"
+          :src="poster(m)"
           :alt="m.title"
           loading="lazy"
-          @error="failedImages.add(m.media_type + ':' + m.id)"
+          @error="failedImages.add(exploreMediaKey(m))"
         />
         <div v-else class="poster-empty">◈<small>暂无海报</small></div>
         <span v-if="m.vote_average > 0" class="rating">{{ m.vote_average.toFixed(1) }}</span>
@@ -38,7 +61,18 @@ function detail(m: any) {
           aria-label="已入库"
           ><AppIcon name="check-circle"
         /></span>
-        <img class="media-source" :src="tmdbLogo" alt="TheMovieDb" />
+        <img
+          v-if="sourceLogos[m.source || 'themoviedb']"
+          class="media-source"
+          :src="sourceLogos[m.source || 'themoviedb']"
+          :alt="m.source || 'TheMovieDb'"
+        />
+        <span
+          v-else-if="m.source === 'anilist'"
+          class="media-source source-anilist"
+          aria-label="AniList"
+          >A</span
+        >
       </button>
       <div class="media-overlay" @click="detail(m)">
         <span class="media-year">{{ m.year || '日期待定' }}</span>
@@ -53,29 +87,32 @@ function detail(m: any) {
             class="icon-button"
             :aria-label="'搜索' + m.title + '资源'"
             title="搜索资源"
-            @click.stop="startSearch('resources/' + m.media_type + '/' + m.id)"
+            @click.stop="search(m)"
           >
-            <AppIcon name="search" />
+            <VIcon v-if="originalActions" icon="mdi-magnify" size="20" /><AppIcon
+              v-else
+              name="search"
+            />
           </button>
           <button
             class="icon-button"
             :class="{ subscribed: m.subscription_id }"
-            :aria-label="(m.subscription_id ? '查看' : '添加') + m.title + '订阅'"
-            :title="m.subscription_id ? '查看订阅' : '添加订阅'"
-            @click.stop="
-              go(
-                m.subscription_id
-                  ? 'subscriptions'
-                  : 'subscriptions/new/' + m.media_type + '/' + m.id,
-              )
+            :aria-label="
+              (m.subscription_id ? (originalActions ? '取消' : '查看') : '添加') + m.title + '订阅'
             "
+            :title="m.subscription_id ? (originalActions ? '取消订阅' : '查看订阅') : '添加订阅'"
+            @click.stop="subscribe(m)"
           >
-            <AppIcon name="heart" />
+            <VIcon v-if="originalActions" icon="mdi-heart" size="20" /><AppIcon
+              v-else
+              name="heart"
+            />
           </button>
         </div>
       </div>
     </article>
   </div>
+  <ExploreActions v-if="originalActions" ref="actions" />
 </template>
 <style scoped>
 .media-grid {
@@ -178,6 +215,20 @@ function detail(m: any) {
 }
 .media-card:hover .media-source {
   visibility: hidden;
+}
+.source-anilist {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #53b5ed;
+  color: #143447;
+  font-size: 15px;
+  font-weight: 900;
 }
 .media-overlay {
   position: absolute;

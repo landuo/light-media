@@ -245,7 +245,7 @@ function downloadAdded() {
 }
 onMounted(async () => {
   selectedSites.value = (ui.settings?.sites || [])
-    .filter((s: any) => s.enabled)
+    .filter((s: any) => s.enabled && (!q.has('sites') || q.get('sites')!.split(',').includes(s.id)))
     .map((s: any) => s.id);
   void loadDownloads();
   await Promise.all([

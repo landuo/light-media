@@ -5,6 +5,8 @@ import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } 
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
 import { VIcon } from 'vuetify/components/VIcon';
 import Catalog from './components/Catalog.vue';
+import Explore from './components/Explore.vue';
+import ExploreDetail from './components/ExploreDetail.vue';
 import Resources from './components/Resources.vue';
 import DownloaderTasks from './components/DownloaderTasks.vue';
 import KeywordResources from './components/KeywordResources.vue';
@@ -59,6 +61,7 @@ const nav = [
     label: '发现',
     items: [
       ['discover', 'star', '推荐'],
+      ['explore', 'compass', '探索'],
       ['dashboard', 'chart', '仪表板'],
     ],
   },
@@ -334,6 +337,7 @@ onUnmounted(() => {
           </button>
         </div>
       </header>
+      <div id="explore-header" v-show="pageKey === 'explore'" class="explore-tabs-host"></div>
       <div
         v-if="ui.status?.logging?.error || ui.status?.logging?.status === 'failed'"
         class="service-alert"
@@ -378,6 +382,10 @@ onUnmounted(() => {
         </div>
       </section>
       <main>
+        <KeepAlive>
+          <Explore v-if="pageKey === 'explore'" />
+        </KeepAlive>
+        <ExploreDetail v-if="pageKey === 'explore-detail'" :key="route" :route="route" />
         <KeepAlive :max="24">
           <component :is="searchComponent" v-if="searchComponent" :key="route" :route="route" />
         </KeepAlive>
@@ -413,7 +421,7 @@ onUnmounted(() => {
         <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
           v-else-if="pageKey === 'downloads'"
         /><Operations
-          v-else-if="!searchComponent"
+          v-else-if="!searchComponent && !['explore', 'explore-detail'].includes(pageKey)"
           :key="route"
           :view="route.split('/')[0]!"
           :initial-job="
@@ -438,6 +446,14 @@ onUnmounted(() => {
   </div>
 </template>
 <style scoped>
+.explore-tabs-host {
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 34;
+  min-height: 48px;
+  padding: 0 8px;
+  background: rgba(244, 245, 250, 0.98);
+}
 .global-search {
   position: relative;
 }

@@ -2,6 +2,7 @@
 defineProps<{ name: string }>();
 
 const paths: Record<string, string> = {
+  compass: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z m-6-3-2 4-4 2 2-4 4-2Z',
   search: 'M15.5 15.5 21 21 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z',
   plus: 'M12 5v14 M5 12h14',
   plugin:
