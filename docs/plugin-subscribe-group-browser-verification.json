@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-23",
+  "task_branch": "plugins/subscribe-group",
+  "base_commit": "18bbe535893f40c3be68b5d32cc9e89c40e9cfa2",
+  "production_base": "c01ced21a297fefe4eb940115b5a347bcffbbb25",
+  "build": {
+    "fixture_sha256": "19693e619c5798fd34421759288226367d4709b9c3d82bd60f821864c0cccabd",
+    "worker_sha256": "269fc7f46720879527dba59a0b06722c1157cbbda26e04b166223723d63f91fa",
+    "files": 5519,
+    "source_manifest_sha256": "2add1484a768772e5c152d946d672ba36e45c719aea6aa2aefa20b557ed1fa37",
+    "production_base": "c01ced21a297fefe4eb940115b5a347bcffbbb25",
+    "test_only_overlay": "internal/app/plugin_subscribe_browser_fixture_test.go"
+  },
+  "browser": "assistant cloud Chromium, real App/web and ordinary cmd/server worker, native Xfce Terminal launcher",
+  "scope": "Synthetic bound instances, configurations and histories only. Generic clone creation UI and production migration not claimed.",
+  "ui_observed": [
+    "Original six fields render; switches, multiselect and Unicode rule input save through actual worker.",
+    "Saved first instance reopens exactly; cancelled edit is absent after browser refresh and reopen.",
+    "Second instance retains independent initial values, saves different configuration and does not overwrite first.",
+    "Both histories show four original columns, newest first, and only corresponding instance names.",
+    "Clearing first instance history and handled flags leaves first history empty, flags false, preserves configuration, and does not clear second history or change its configuration."
+  ],
+  "evidence": "ui-observations.json plus owned server save receipts",
+  "launcher_failure": {
+    "run": "run-ui-1",
+    "exit": -2,
+    "child_reaped": true,
+    "meaning": "Original launcher shared terminal process group. Ctrl-C interrupted fixture directly, after all UI observations. Not a passing fixture termination."
+  },
+  "launcher_fix": {
+    "change": "start_new_session=True for child",
+    "run": "run-ui-2",
+    "same_binaries": true,
+    "normal_exit": {
+      "exit": 0,
+      "owned_child_reaped": true
+    },
+    "completion": {
+      "owned_processes": 0,
+      "saves": {
+        "SubscribeGroup": 1,
+        "SubscribeGroup.owned-second": 1
+      }
+    },
+    "validation": "Fresh actual browser login and both instance saves, then graceful stop, fixture PASS, no remaining fixture/server process."
+  },
+  "remaining_normal": {
+    "exit": 0,
+    "roots": [
+      "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP",
+      "TestSubscribeGroupFillIntentContinuationRollsBackWithLateReceiptFailure",
+      "TestSubscribeGroupFillDoesNotBlessIntentsInvalidatedByUserEdit",
+      "TestSubscribeGroupFillWaitsForRunningSelectedDownloadContext",
+      "TestSubscribeGroupDownloadRangeMeansAllSeasonsAndBadSingleSeasonRollsBack",
+      "TestSubscribeGroupDownloadKVFalseyAndTruthyScalarBehavior",
+      "TestSubscribeGroupDownloadHandledContainerMembershipAndEarlyExits",
+      "TestSubscribeGroupDownloadProjectionPreservesSourceEmptyPresence",
+      "TestSubscribeGroupDownloadPrerequisitesDoNotReadHistoryOrMarkHandled",
+      "TestSubscribeGroupDownloadScopesAndCurrentExecutionAuthority",
+      "TestSubscribeGroupAddedEmptyPatchAndLegacyHistoryTruthiness",
+      "TestSubscribeGroupAddedRejectsUnownedAndInvalidatedRuns",
+      "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation",
+      "TestSubscribeGroupAPIRealWorkerInitializesClearsAndProcessesDownload"
+    ],
+    "nodes": 88,
+    "failures": [],
+    "skips": []
+  },
+  "remaining_race": {
+    "exit": 1,
+    "roots": [
+      "TestSubscribeGroupFillIntentContinuationRollsBackWithLateReceiptFailure",
+      "TestSubscribeGroupFillDoesNotBlessIntentsInvalidatedByUserEdit",
+      "TestSubscribeGroupFillWaitsForRunningSelectedDownloadContext",
+      "TestSubscribeGroupDownloadRangeMeansAllSeasonsAndBadSingleSeasonRollsBack",
+      "TestSubscribeGroupDownloadKVFalseyAndTruthyScalarBehavior",
+      "TestSubscribeGroupDownloadHandledContainerMembershipAndEarlyExits",
+      "TestSubscribeGroupDownloadProjectionPreservesSourceEmptyPresence",
+      "TestSubscribeGroupDownloadPrerequisitesDoNotReadHistoryOrMarkHandled",
+      "TestSubscribeGroupDownloadScopesAndCurrentExecutionAuthority",
+      "TestSubscribeGroupAddedEmptyPatchAndLegacyHistoryTruthiness",
+      "TestSubscribeGroupAddedRejectsUnownedAndInvalidatedRuns",
+      "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation",
+      "TestSubscribeGroupAPIRealWorkerInitializesClearsAndProcessesDownload"
+    ],
+    "nodes": 86,
+    "failures": [
+      "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP/large_input_large_page",
+      "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP",
+      "package"
+    ],
+    "skips": []
+  },
+  "remaining_race_failure": "Original remaining14 race failed on 4500 large-input page and reopen (HTTP400). Test-only body diagnostic later passed unchanged production; not a fix and not full acceptance.",
+  "whole_plugin_complete": false,
+  "not_claimed": [
+    "unbounded expanded 16MiB history",
+    "complete generic RSS Context integration",
+    "production migration/deployment",
+    "full repository CI"
+  ],
+  "history_diagnostic": {
+    "production_changed": false,
+    "change": "Only failed HTTP assertion prints owned synthetic response body",
+    "single_root_race_exit": 0,
+    "root_seconds": 25.61,
+    "large_input_seconds": 8.68,
+    "original_failure_retained": true,
+    "failure_reproduced": false,
+    "root_cause": "not yet proven; near 10-second budget is a hypothesis, not confirmed cause"
+  }
+}

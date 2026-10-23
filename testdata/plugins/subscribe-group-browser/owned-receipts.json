@@ -1,0 +1,80 @@
+{
+  "run-ui-1": {
+    "native-fixture-exit.json": {
+      "exit": -2,
+      "owned_child_reaped": true
+    },
+    "last-save-SubscribeGroup.json": {
+      "config": {
+        "category": true,
+        "clear": false,
+        "clear_handle": false,
+        "enabled": true,
+        "update_confs": "category:国漫#include:owned-ui-first#resolution:1080İ#quality:WEB-RİP#effect:DOVı",
+        "update_details": [
+          "资源质量",
+          "分辨率"
+        ]
+      },
+      "instance": "SubscribeGroup",
+      "revision": 5,
+      "run_state": "succeeded",
+      "saves": 2
+    },
+    "last-save-SubscribeGroup.owned-second.json": {
+      "config": {
+        "category": true,
+        "clear": false,
+        "clear_handle": false,
+        "enabled": false,
+        "update_confs": "category:日番#include:owned-ui-second",
+        "update_details": []
+      },
+      "instance": "SubscribeGroup.owned-second",
+      "revision": 2,
+      "run_state": "succeeded",
+      "saves": 1
+    }
+  },
+  "run-ui-2": {
+    "native-fixture-exit.json": {
+      "exit": 0,
+      "owned_child_reaped": true
+    },
+    "last-save-SubscribeGroup.json": {
+      "config": {
+        "category": false,
+        "clear": false,
+        "clear_handle": false,
+        "enabled": false,
+        "update_confs": "category:国漫#include:owned-instance-1",
+        "update_details": []
+      },
+      "instance": "SubscribeGroup",
+      "revision": 2,
+      "run_state": "succeeded",
+      "saves": 1
+    },
+    "last-save-SubscribeGroup.owned-second.json": {
+      "config": {
+        "category": false,
+        "clear": false,
+        "clear_handle": false,
+        "enabled": false,
+        "update_confs": "category:国漫#include:owned-instance-2",
+        "update_details": []
+      },
+      "instance": "SubscribeGroup.owned-second",
+      "revision": 2,
+      "run_state": "succeeded",
+      "saves": 1
+    },
+    "completed.json": {
+      "owned_processes": 0,
+      "saves": {
+        "SubscribeGroup": 1,
+        "SubscribeGroup.owned-second": 1
+      }
+    }
+  }
+}

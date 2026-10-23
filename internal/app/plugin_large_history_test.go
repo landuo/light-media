@@ -38,7 +38,7 @@ func TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP(t *testing.T) {
 			revision = stored.Revision
 			response := callTest(t, a.Handler(), "GET", "/api/plugins/SubscribeGroup/page", "", cookie, "")
 			if response.Code != 200 || response.Body.Len() <= 1<<20 {
-				t.Fatal("full expanded history did not cross the real worker/HTTP boundary", response.Code, response.Body.Len())
+				t.Fatal("full expanded history did not cross the real worker/HTTP boundary", response.Code, response.Body.Len(), response.Body.String())
 			}
 			var envelope any
 			if err := json.Unmarshal(response.Body.Bytes(), &envelope); err != nil {
@@ -88,6 +88,6 @@ func TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP(t *testing.T) {
 	useBuiltInPluginProcess(t, reopened)
 	response := callTest(t, reopened.Handler(), "GET", "/api/plugins/SubscribeGroup/page", "", cookie, "")
 	if response.Code != 200 || strings.Count(response.Body.String(), `"component":"tr"`) != 4500 {
-		t.Fatal("large complete page failed after actual application reopen", response.Code, response.Body.Len())
+		t.Fatal("large complete page failed after actual application reopen", response.Code, response.Body.Len(), response.Body.String())
 	}
 }
