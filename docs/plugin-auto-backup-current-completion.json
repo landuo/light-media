@@ -1,0 +1,82 @@
+{
+  "status": "Full scoped Linux/local fresh-use acceptance passed locally; dedicated final commit and aggregate ref readback are separate publication steps",
+  "baseline": "2f4ab1e5333501d890c2c803d11cbe0d32487329",
+  "prior_verified_stage": "704326f310bd8e030e0114baf90783159cc0a0f3",
+  "form_ui_stage": "efbce4c99233424ba7719cff5ba8bb4bc1b1da06",
+  "shared_renderer": "bfd2489200c29aa82220c0d921bb5b5219c0d1ea",
+  "scope": "Linux local, fresh install/config. No migration or NAS deployment. Owned synthetic SQLite/backups/notices only.",
+  "coverage": {
+    "prior_full_app_ordinary": "42 roots /104 nodes; zero skip",
+    "prior_full_app_race": "42 roots /104 nodes; zero skip; applies to prior exact implementation",
+    "prior_pure_ordinary_and_race": "11 roots /102 nodes each; zero skip; pure business bytes unchanged",
+    "new_form_delta_ordinary": "3 new roots +3 old path neighbors pass, zero skip",
+    "new_form_delta_race": {
+      "roots": [
+        "TestPluginAutoBackupFreshInstallFormCloneImplicitArchiveIsolation",
+        "TestAutoBackupActualServerFreshInstallFormCloneImplicitArchiveIsolation",
+        "TestPluginAutoBackupExplicitCurrentDefaultPathRemainsExplicit",
+        "TestPluginAutoBackupNativeClonePrivateArchiveIsolation",
+        "TestAutoBackupActualServerNativeClonePrivateArchiveIsolation",
+        "TestPluginAutoBackupNativeCloneExplicitDestinationIsNotRewritten"
+      ],
+      "result": {
+        "exit": 0,
+        "seconds": 475.89259791374207,
+        "source_changes": []
+      },
+      "scope": "App race; actual cmd/server worker intentionally ordinary under existing fixture contract"
+    }
+  },
+  "builds": {
+    "joint-linux-build": {
+      "exit": 0,
+      "seconds": 22.22598433494568,
+      "source_changes": []
+    },
+    "joint-vet": {
+      "exit": 0,
+      "seconds": 24.11077308654785,
+      "source_changes": []
+    },
+    "joint-ui-build": {
+      "exit": 0,
+      "seconds": 3.9889280796051025,
+      "source_changes": []
+    }
+  },
+  "ui": {
+    "source_archive_unchanged": true,
+    "clone_private_archive_count": 1,
+    "clone_succeeded_runs": 2,
+    "native_recovery_count": 1,
+    "retry_count": 0,
+    "ui_observed": [
+      "VSubheader rendered",
+      "six show conditions toggle normally",
+      "hide/show retains 7 and digest true draft",
+      "cancel discards draft",
+      "unknown config save conservatively blocked",
+      "explicit abandon preserved archive",
+      "source full form UI save succeeded",
+      "official UI clone inherits hidden saved7/digest true",
+      "clone path empty model with clone-private placeholder",
+      "onlyonce UI save completed actual local backup",
+      "onlyonce cleared after completed run"
+    ],
+    "scope": "owned synthetic Linux local only; no WebDAV enabled save or external notice"
+  },
+  "ui_exit": {
+    "exit": 0,
+    "owned_child_reaped": true
+  },
+  "evidence_boundaries": [
+    "Earlier native classification/lifecycle baseline failures retained",
+    "Implicit Form regression first reproduced before production fix",
+    "Initial new restore fixture seed mismatch retained; old restore assertions unchanged",
+    "Intermediate ENOSPC export/build failures not represented as business passes",
+    "1.2MB stage evidence archive content-addressed SHA verified remotely; GitHub connector could not return full binary bytes",
+    "UI uses public synthetic test account in owned loopback App, no production auth bypass",
+    "Remote WebDAV/PostgreSQL/Windows/macOS/migration are outside current scope"
+  ],
+  "finished_utc": "2026-10-23T12:50:58.004417+00:00"
+}
