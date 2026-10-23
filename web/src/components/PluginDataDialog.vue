@@ -2,12 +2,12 @@
 import { ref, shallowRef, markRaw, computed, onMounted, onUnmounted, type Component } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
-import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
+import { VCard, VCardText } from 'vuetify/components/VCard';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VAlert } from 'vuetify/components/VAlert';
 import { api, errorText } from '../api';
 import { pluginPageIssues, type PluginCard, type PluginFormNode } from '../features/plugin-forms';
-import AppIcon from './AppIcon.vue';
+import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 import PluginFormRenderer from './PluginFormRenderer.vue';
 import { loadPluginRemote } from '../features/plugin-federation';
 import { createPluginRemoteAPI } from '../features/plugin-remote-api';
@@ -74,17 +74,8 @@ onUnmounted(() => {
     content-class="plugin-dialog-surface"
     @update:model-value="emit('close')"
   >
-    <VCard v-if="renderMode === 'vuetify'" class="plugin-data-card">
-      <VCardTitle class="plugin-data-title"
-        >{{ plugin.name
-        }}<VBtn
-          variant="text"
-          color="secondary"
-          icon
-          aria-label="关闭插件详情"
-          @click="emit('close')"
-          ><AppIcon name="close" /></VBtn
-      ></VCardTitle>
+    <VCard v-if="renderMode === 'vuetify'" :title="plugin.name" class="plugin-data-card">
+      <PluginDialogCloseBtn aria-label="关闭插件详情" @click="emit('close')" />
       <VCardText class="plugin-data-content">
         <p v-if="loading" role="status">正在加载…</p>
         <VAlert v-if="error" type="error" variant="tonal"
@@ -106,12 +97,11 @@ onUnmounted(() => {
       <VBtn
         class="plugin-data-settings"
         color="primary"
-        icon
+        icon="mdi-cog"
         size="x-large"
         aria-label="插件设置"
         @click="emit('switch')"
-        ><AppIcon name="settings"
-      /></VBtn>
+      />
     </VCard>
     <VCard v-else class="plugin-data-card">
       <VCardText class="pa-0">
@@ -132,20 +122,12 @@ onUnmounted(() => {
   </VDialog>
 </template>
 <style scoped>
-.plugin-data-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  font-size: 20px;
-}
 .plugin-data-content {
-  padding: 16px 24px 88px;
   min-height: 160px;
 }
 .plugin-data-settings {
-  /* Installed PluginDataDialog uses VFab location="bottom" app: its default
-     end alignment and 12px app margin place the action at the viewport edge. */
+  /* The host has no Vuetify app layout; retain VFab's bottom-end position
+     without requiring its global layout provider. */
   position: fixed;
   bottom: 12px;
   right: 12px;

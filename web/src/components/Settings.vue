@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextField } from 'vuetify/components/VTextField';
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 import { api, action, ui, refreshSettings, toast, errorText, date, bytes } from '../api';
 import DownloaderManager from './DownloaderManager.vue';
@@ -154,20 +156,20 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
           <span class="badge">{{ form.secret_state?.tmdb ? '凭据已保存' : '尚未配置' }}</span>
         </header>
         <div class="form-grid">
-          <label
-            >API Key<input
-              v-model="form.tmdb.api_key"
-              type="password"
-              autocomplete="off"
-              placeholder="留空保留已保存值"
-          /></label>
-          <label
-            >Access Token<input
-              v-model="form.tmdb.access_token"
-              type="password"
-              autocomplete="off"
-              placeholder="与 API Key 二选一"
-          /></label>
+          <VTextField
+            v-model="form.tmdb.api_key"
+            type="password"
+            autocomplete="off"
+            placeholder="留空保留已保存值"
+            label="API Key"
+          />
+          <VTextField
+            v-model="form.tmdb.access_token"
+            type="password"
+            autocomplete="off"
+            placeholder="与 API Key 二选一"
+            label="Access Token"
+          />
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('tmdb')">保存</button
@@ -179,16 +181,18 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
       <section class="panel">
         <header class="section-heading"><h2>站点选项</h2></header>
         <div class="form-grid">
-          <label
-            >站点数据刷新间隔<select v-model="form.site_data_refresh_hours">
-              <option :value="1">每小时</option>
-              <option :value="6">每 6 小时</option>
-              <option :value="12">每 12 小时</option>
-              <option :value="24">每天</option>
-              <option :value="168">每周</option>
-              <option :value="0">从不</option>
-            </select></label
-          >
+          <VSelect
+            v-model="form.site_data_refresh_hours"
+            label="站点数据刷新间隔"
+            :items="[
+              { title: '每小时', value: 1 },
+              { title: '每 6 小时', value: 6 },
+              { title: '每 12 小时', value: 12 },
+              { title: '每天', value: 24 },
+              { title: '每周', value: 168 },
+              { title: '从不', value: 0 },
+            ]"
+          />
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('site')">保存</button>
@@ -197,19 +201,23 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
       <section class="panel">
         <header class="section-heading"><h2>媒体服务器</h2></header>
         <div class="form-grid">
-          <label>类型<input value="飞牛影视" readonly /></label>
+          <VTextField model-value="飞牛影视" readonly label="类型" />
           <label class="check"><input v-model="form.fnos.enabled" type="checkbox" />启用</label>
-          <label class="span-two"
-            >地址<input v-model="form.fnos.host" type="url" placeholder="http://192.168.1.10:5666"
-          /></label>
-          <label>用户名<input v-model="form.fnos.username" autocomplete="off" /></label>
-          <label
-            >密码<input
-              v-model="form.fnos.password"
-              type="password"
-              autocomplete="new-password"
-              :placeholder="form.secret_state?.fnos ? '已保存，留空保留' : '登录密码'"
-          /></label>
+          <VTextField
+            class="span-two"
+            v-model="form.fnos.host"
+            type="url"
+            placeholder="http://192.168.1.10:5666"
+            label="地址"
+          />
+          <VTextField v-model="form.fnos.username" autocomplete="off" label="用户名" />
+          <VTextField
+            v-model="form.fnos.password"
+            type="password"
+            autocomplete="new-password"
+            :placeholder="form.secret_state?.fnos ? '已保存，留空保留' : '登录密码'"
+            label="密码"
+          />
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('fnos')">保存</button
@@ -228,49 +236,64 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
       <section v-if="logging" class="panel">
         <h2>日志与保留策略</h2>
         <div class="form-grid">
-          <label
-            >基础级别<select v-model="logging.level">
-              <option>INFO</option>
-              <option>WARN</option>
-              <option>ERROR</option>
-            </select></label
-          ><label
-            >单文件上限（MiB）<input
-              v-model.number="logging.rotate_mib"
-              type="number"
-              min="1"
-              max="20" /></label
-          ><label
-            >保留天数<input v-model.number="logging.retain_days" type="number" min="1" max="90"
-          /></label>
-          <label
-            >日志总空间上限（MiB）<input
-              v-model.number="logging.total_mib"
-              type="number"
-              min="1"
-              max="1024"
-          /></label>
+          <VSelect
+            v-model="logging.level"
+            label="基础级别"
+            :items="[
+              { title: 'INFO', value: 'INFO' },
+              { title: 'WARN', value: 'WARN' },
+              { title: 'ERROR', value: 'ERROR' },
+            ]"
+          /><VTextField
+            v-model.number="logging.rotate_mib"
+            type="number"
+            min="1"
+            max="20"
+            label="单文件上限（MiB）"
+          /><VTextField
+            v-model.number="logging.retain_days"
+            type="number"
+            min="1"
+            max="90"
+            label="保留天数"
+          />
+          <VTextField
+            v-model.number="logging.total_mib"
+            type="number"
+            min="1"
+            max="1024"
+            label="日志总空间上限（MiB）"
+          />
         </div>
         <button class="primary" @click="saveLogging()">保存日志策略</button>
         <h3>临时 DEBUG</h3>
         <div class="form-grid">
-          <label
-            >范围<select v-model="debugScope">
-              <option value="module">指定模块</option>
-              <option value="site">指定站点</option>
-            </select></label
-          >
-          <label v-if="debugScope === 'module'"
-            >模块<input v-model="debugID" placeholder="如 download、import、fnos"
-          /></label>
-          <label v-else
-            >站点<select v-model="debugID">
-              <option value="">请选择站点</option>
-              <option v-for="site in form.sites" :key="site.id" :value="site.id">
-                {{ site.name || site.id }}
-              </option>
-            </select></label
-          >
+          <VSelect
+            v-model="debugScope"
+            label="范围"
+            :items="[
+              { title: '指定模块', value: 'module' },
+              { title: '指定站点', value: 'site' },
+            ]"
+          />
+          <VTextField
+            v-if="debugScope === 'module'"
+            v-model="debugID"
+            placeholder="如 download、import、fnos"
+            label="模块"
+          />
+          <VSelect
+            v-else
+            v-model="debugID"
+            label="站点"
+            :items="[
+              { title: '请选择站点', value: '' },
+              ...form.sites.map((site: any) => ({
+                title: String(site.name || site.id).trim(),
+                value: site.id,
+              })),
+            ]"
+          />
         </div>
         <div class="button-row">
           <button @click="debug(true)">为此范围开启 DEBUG 30 分钟</button
@@ -360,25 +383,11 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
 .settings-page .form-grid {
   gap: 24px;
 }
-.settings-page .form-grid label:not(.check) {
-  font-size: 12px;
-  color: var(--muted);
-}
-.settings-page .form-grid input:not([type='checkbox']),
-.settings-page .form-grid select {
-  min-height: 48px;
-  font-size: 16px;
-  color: var(--text);
-}
 .settings-page .form-grid .check {
   align-self: center;
   min-height: 48px;
   font-size: 16px;
   gap: 12px;
-}
-.settings-page .form-grid input[readonly] {
-  background: var(--surface);
-  color: var(--muted);
 }
 .settings-page .notice {
   display: flex;

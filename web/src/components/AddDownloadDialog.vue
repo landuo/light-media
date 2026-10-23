@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextField } from 'vuetify/components/VTextField';
 import { computed, ref, watch } from 'vue';
 import { api, bytes, errorText, ui } from '../api';
 import AppIcon from './AppIcon.vue';
@@ -95,19 +97,21 @@ async function start() {
           {{ advanced ? '收起高级选项' : '高级选项' }}
         </button>
         <div v-if="advanced" class="form-grid advanced-download">
-          <label
-            >媒体类型<select v-model="mediaType">
-              <option value="movie">电影</option>
-              <option value="tv">电视剧</option>
-            </select></label
-          >
-          <label
-            >TMDB ID<input
-              v-model.number="tmdbID"
-              type="number"
-              min="1"
-              placeholder="辅助识别，可不填"
-          /></label>
+          <VSelect
+            v-model="mediaType"
+            label="媒体类型"
+            :items="[
+              { title: '电影', value: 'movie' },
+              { title: '电视剧', value: 'tv' },
+            ]"
+          />
+          <VTextField
+            v-model.number="tmdbID"
+            type="number"
+            min="1"
+            placeholder="辅助识别，可不填"
+            label="TMDB ID"
+          />
         </div>
         <p v-if="error" class="error-box" role="alert">{{ error }}</p>
       </div>

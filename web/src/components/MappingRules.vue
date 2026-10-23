@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
+import { VSelect } from 'vuetify/components/VSelect';
 const props = defineProps<{ model: any[]; mediaId: string; season: number }>();
 function add() {
   props.model.push({
@@ -21,23 +23,36 @@ function add() {
   </div>
   <article v-for="(m, i) in model" :key="m.id" class="mapping-rule">
     <div class="form-grid">
-      <label>原始起始集<input v-model.number="m.from" type="number" min="1" /></label
-      ><label>原始结束集<input v-model.number="m.to" type="number" min="1" /></label
-      ><label>标准目标季<input v-model.number="m.target_season" type="number" min="1" /></label
-      ><label v-if="m.offset !== undefined && m.offset !== null"
-        >集号偏移（标准 = 原始 + 偏移）<input v-model.number="m.offset" type="number"
-      /></label>
+      <VTextField v-model.number="m.from" type="number" min="1" label="原始起始集" /><VTextField
+        v-model.number="m.to"
+        type="number"
+        min="1"
+        label="原始结束集"
+      /><VTextField
+        v-model.number="m.target_season"
+        type="number"
+        min="1"
+        label="标准目标季"
+      /><VTextField
+        v-if="m.offset !== undefined && m.offset !== null"
+        v-model.number="m.offset"
+        type="number"
+        label="集号偏移（标准 = 原始 + 偏移）"
+      />
     </div>
     <div class="form-grid">
-      <label>限定来源站点（留空不限）<input v-model="m.source.site" /></label
-      ><label>限定发布组（留空不限）<input v-model="m.source.group" /></label
-      ><label
-        >原始编号形式<select v-model="m.source.form">
-          <option value="absolute_episode">绝对集号 EPxxx / 第xxx集</option>
-          <option value="season_episode">标准形式 SxxExx</option>
-          <option value="">不限</option>
-        </select></label
-      >
+      <VTextField v-model="m.source.site" label="限定来源站点（留空不限）" /><VTextField
+        v-model="m.source.group"
+        label="限定发布组（留空不限）"
+      /><VSelect
+        v-model="m.source.form"
+        label="原始编号形式"
+        :items="[
+          { title: '绝对集号 EPxxx / 第xxx集', value: 'absolute_episode' },
+          { title: '标准形式 SxxExx', value: 'season_episode' },
+          { title: '不限', value: '' },
+        ]"
+      />
     </div>
     <p class="hint" v-if="m.offset !== undefined && m.offset !== null">
       示例：原始 {{ m.from }} → S{{ m.target_season }}E{{ Number(m.from) + Number(m.offset) }}；原始

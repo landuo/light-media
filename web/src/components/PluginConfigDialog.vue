@@ -2,14 +2,15 @@
 import { ref, shallowRef, markRaw, computed, onMounted, onUnmounted, type Component } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
-import { VCard, VCardTitle, VCardText, VCardActions } from 'vuetify/components/VCard';
+import { VCard, VCardText, VCardActions } from 'vuetify/components/VCard';
 import { VDivider } from 'vuetify/components/VDivider';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VProgressLinear } from 'vuetify/components/VProgressLinear';
 import { api, errorText, toast } from '../api';
 import { pluginFormIssues, type PluginFormNode, type PluginCard } from '../features/plugin-forms';
-import AppIcon from './AppIcon.vue';
+import { VSpacer } from 'vuetify/components/VGrid';
+import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 import PluginFormRenderer from './PluginFormRenderer.vue';
 import { loadPluginRemote } from '../features/plugin-federation';
 import { createPluginRemoteAPI } from '../features/plugin-remote-api';
@@ -147,19 +148,12 @@ onUnmounted(() => {
     @mousedown.capture="keepPointerTarget"
     @click.capture="focusAfterClick"
   >
-    <VCard v-if="renderMode === 'vuetify'" class="plugin-config-card">
-      <VCardTitle class="plugin-dialog-title"
-        >{{ plugin.name }} - 配置
-        <VBtn
-          variant="text"
-          color="secondary"
-          icon
-          :disabled="saving"
-          aria-label="关闭配置"
-          @click="emit('close')"
-          ><AppIcon name="close"
-        /></VBtn>
-      </VCardTitle>
+    <VCard
+      v-if="renderMode === 'vuetify'"
+      :title="`${plugin.name} - 插件配置`"
+      class="plugin-config-card"
+    >
+      <PluginDialogCloseBtn :disabled="saving" aria-label="关闭配置" @click="emit('close')" />
       <VDivider />
       <VCardText class="plugin-dialog-content">
         <p v-if="loading" role="status">正在加载配置…</p>
@@ -179,14 +173,26 @@ onUnmounted(() => {
           <p v-if="!nodes.length && !error">此插件没有可配置项</p>
         </template>
       </VCardText>
-      <VCardActions class="plugin-dialog-actions">
+      <VCardActions class="app-dialog-actions plugin-dialog-actions">
+        <VBtn
+          v-if="plugin.has_page"
+          color="info"
+          variant="tonal"
+          prepend-icon="mdi-database-eye-outline"
+          :disabled="saving"
+          @click="emit('switch')"
+          >查看数据</VBtn
+        >
+        <VSpacer />
         <VBtn
           color="primary"
           variant="flat"
+          prepend-icon="mdi-content-save"
+          class="px-5"
           :loading="saving"
           :disabled="loading || !!issues.length || (!nodes.length && !!error)"
           @click="save()"
-          ><AppIcon name="save" />保存</VBtn
+          >保存</VBtn
         >
       </VCardActions>
     </VCard>

@@ -1,0 +1,99 @@
+/* MoviePilot's outlined controls share the same field geometry and theme.
+   Native form styles are excluded in style.css; Vuetify owns labels, focus,
+   validation, disabled states and dropdown keyboard interaction. */
+.v-input {
+  min-width: 0;
+  align-self: start;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+.v-input ::before,
+.v-input ::after {
+  box-sizing: border-box;
+}
+.v-field:not(.v-field--variant-plain, .v-field--variant-underlined, .v-field--rounded) {
+  border-radius: var(--app-field-radius);
+}
+.v-field--variant-outlined.v-field--prepended {
+  --app-field-outline-start-size: max(12px, calc(var(--app-field-radius) + 8px));
+}
+.v-field--variant-outlined.v-field--prepended .v-field__outline__start {
+  flex-basis: var(--app-field-outline-start-size);
+}
+.v-field--variant-outlined.v-field--prepended .v-field__outline__notch {
+  max-inline-size: calc(100% - var(--app-field-outline-start-size));
+}
+.v-field:hover .v-field__outline {
+  --v-field-border-opacity: var(--v-medium-emphasis-opacity);
+}
+.v-label {
+  flex-direction: row;
+  gap: 0;
+  font-weight: 400;
+  opacity: 1;
+}
+.v-label:not(.v-field-label--floating) {
+  color: rgba(var(--v-theme-on-background), var(--v-medium-emphasis-opacity));
+}
+.v-field :is(input, textarea) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  min-width: 0;
+}
+.v-field__input > input {
+  padding: 0;
+}
+.v-field textarea {
+  resize: none;
+}
+.v-field :is(.app-icon, .file-icon) {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+}
+.v-field__append-inner > .icon-button {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  padding: 0;
+  margin-inline-start: 4px;
+}
+.v-messages {
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+  opacity: 1;
+  line-height: 18px;
+}
+.v-input__details {
+  padding-inline: 12px;
+}
+.form-grid {
+  align-items: start;
+  gap: 24px;
+}
+.toolbar > .v-input {
+  flex: 0 1 210px;
+}
+.inline-form > .v-input {
+  flex: 1 1 180px;
+}
+.form-grid > .check {
+  min-height: 56px;
+  align-self: start;
+}
+.auth-card > form > .v-input,
+.auth-card > .v-input {
+  margin-bottom: 20px;
+}
+@media (max-width: 600px) {
+  .toolbar > .v-input {
+    flex: 1 1 140px;
+  }
+}

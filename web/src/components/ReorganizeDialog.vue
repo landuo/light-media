@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextField } from 'vuetify/components/VTextField';
 import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue';
 import { api, errorText, image, label, toast, ui } from '../api';
 import FileManagerIcon from './FileManagerIcon.vue';
@@ -338,64 +340,77 @@ onUnmounted(() => {
         <div ref="formScroll" class="organize-form">
           <p v-if="error" class="error-box" role="alert">{{ error }}</p>
           <div class="organize-grid">
-            <label
-              >目的存储<select v-model="storage" :disabled="busy">
-                <option value="">自动</option>
-                <option value="local">本地</option></select
-              ><small>整理目的存储，选择自动时由后端匹配</small></label
+            <VSelect
+              v-model="storage"
+              :disabled="busy"
+              label="目的存储"
+              hint="整理目的存储，选择自动时由后端匹配"
+              persistent-hint
+              :items="[
+                { title: '自动', value: '' },
+                { title: '本地', value: 'local' },
+              ]"
+            />
+            <VSelect
+              v-model="mode"
+              :disabled="busy"
+              label="整理方式"
+              hint="选择自动时使用目录配置的整理方式"
+              persistent-hint
+              :items="[
+                { title: '自动', value: '' },
+                { title: '复制', value: 'copy' },
+                { title: '硬链接', value: 'hardlink' },
+              ]"
+            />
+            <VTextField
+              :model-value="targetPath"
+              :list="targetListID"
+              class="span-all"
+              label="目的路径"
+              aria-label="目的路径"
+              placeholder="自动（可输入路径）"
+              hint="整理目的路径，选择自动将按源路径匹配"
+              persistent-hint
+              :disabled="busy"
+              @focus="($event.target as HTMLInputElement).select()"
+              @update:model-value="targetPath = $event === '自动' ? '' : ($event ?? '')"
             >
-            <label
-              >整理方式<select v-model="mode" :disabled="busy">
-                <option value="">自动</option>
-                <option value="copy">复制</option>
-                <option value="hardlink">硬链接</option></select
-              ><small>选择自动时使用目录配置的整理方式</small></label
-            >
-            <label class="span-all"
-              >目的路径
-              <div class="target-combobox">
-                <input
-                  :value="targetPath"
-                  :list="targetListID"
-                  aria-label="目的路径"
-                  placeholder="自动（可输入路径）"
-                  :disabled="busy"
-                  @focus="($event.target as HTMLInputElement).select()"
-                  @input="
-                    targetPath =
-                      ($event.target as HTMLInputElement).value === '自动'
-                        ? ''
-                        : ($event.target as HTMLInputElement).value
-                  "
-                />
-                <datalist :id="targetListID">
-                  <option value="自动" />
-                  <option v-for="path in targetPaths" :key="path" :value="path" />
-                </datalist>
+              <template #append-inner>
                 <DirectoryPathPicker
                   v-model="targetPath"
                   :suggestions="targetPaths"
                   :disabled="busy"
                 />
-              </div>
-              <small>整理目的路径，选择自动将按源路径匹配</small></label
+              </template>
+            </VTextField>
+            <datalist :id="targetListID">
+              <option value="自动" />
+              <option v-for="path in targetPaths" :key="path" :value="path" />
+            </datalist>
+            <VSelect
+              v-model="mediaType"
+              :disabled="busy"
+              label="类型"
+              hint="文件的媒体类型"
+              persistent-hint
+              :items="[
+                { title: '自动', value: '' },
+                { title: '电影', value: 'movie' },
+                { title: '电视剧', value: 'tv' },
+              ]"
+            />
+            <VTextField
+              v-model="mediaID"
+              inputmode="numeric"
+              label="TheMovieDb编号"
+              placeholder="留空自动识别"
+              hint="按名称查询媒体编号，留空自动识别"
+              persistent-hint
+              :disabled="busy || !mediaType"
             >
-            <label
-              >类型<select v-model="mediaType" :disabled="busy">
-                <option value="">自动</option>
-                <option value="movie">电影</option>
-                <option value="tv">电视剧</option></select
-              ><small>文件的媒体类型</small></label
-            >
-            <label
-              >TheMovieDb编号
-              <div class="id-input">
-                <input
-                  v-model="mediaID"
-                  inputmode="numeric"
-                  placeholder="留空自动识别"
-                  :disabled="busy || !mediaType"
-                /><button
+              <template #append-inner>
+                <button
                   class="icon-button"
                   aria-label="查询媒体编号"
                   :disabled="busy || !mediaType"
@@ -403,54 +418,66 @@ onUnmounted(() => {
                 >
                   <FileManagerIcon name="search" />
                 </button>
-              </div>
-              <small>按名称查询媒体编号，留空自动识别</small></label
-            >
+              </template>
+            </VTextField>
             <template v-if="mediaType === 'tv'">
-              <label
-                >季<select v-model="season" :disabled="busy">
-                  <option value="">自动</option>
-                  <option v-for="number in 101" :key="number - 1" :value="number - 1">
-                    第 {{ number - 1 }} 季
-                  </option></select
-                ><small>第几季</small></label
-              >
-              <label
-                >集<input
-                  v-model="episodeDetail"
-                  placeholder="起始集,终止集"
-                  :disabled="busy || episodeDetailDisabled"
-                /><small>集数或范围，如1或1,2</small></label
-              >
-              <label
-                >集数定位<input
-                  v-model="episodeFormat"
-                  placeholder="使用{ep}定位集数"
-                  :disabled="busy"
-                /><small>使用{ep}定位文件名中的集数部分以辅助识别</small></label
-              >
-              <label
-                >集数偏移<input
-                  v-model="episodeOffset"
-                  placeholder="如-10"
-                  :disabled="busy"
-                /><small>集数偏移运算，如-10或EP*2</small></label
-              >
-            </template>
-            <label
-              >指定Part<input v-model="episodePart" placeholder="如part1" :disabled="busy" /><small
-                >指定Part，如part1</small
-              ></label
-            >
-            <label
-              >最小文件大小（MB）<input
-                v-model.number="minFilesize"
-                type="number"
-                min="0"
-                placeholder="0"
+              <VSelect
+                v-model="season"
                 :disabled="busy"
-              /><small>只整理大于最小文件大小的文件</small></label
-            >
+                label="季"
+                hint="第几季"
+                persistent-hint
+                :items="[
+                  { title: '自动', value: '' },
+                  ...Array.from({ length: 101 }, (_, index) => index + 1).map((number) => ({
+                    title: (' 第 ' + String(number - 1) + ' 季 ').trim(),
+                    value: number - 1,
+                  })),
+                ]"
+              />
+              <VTextField
+                v-model="episodeDetail"
+                placeholder="起始集,终止集"
+                :disabled="busy || episodeDetailDisabled"
+                label="集"
+                hint="集数或范围，如1或1,2"
+                persistent-hint
+              />
+              <VTextField
+                v-model="episodeFormat"
+                placeholder="使用{ep}定位集数"
+                :disabled="busy"
+                label="集数定位"
+                hint="使用{ep}定位文件名中的集数部分以辅助识别"
+                persistent-hint
+              />
+              <VTextField
+                v-model="episodeOffset"
+                placeholder="如-10"
+                :disabled="busy"
+                label="集数偏移"
+                hint="集数偏移运算，如-10或EP*2"
+                persistent-hint
+              />
+            </template>
+            <VTextField
+              v-model="episodePart"
+              placeholder="如part1"
+              :disabled="busy"
+              label="指定Part"
+              hint="指定Part，如part1"
+              persistent-hint
+            />
+            <VTextField
+              v-model.number="minFilesize"
+              type="number"
+              min="0"
+              placeholder="0"
+              :disabled="busy"
+              label="最小文件大小（MB）"
+              hint="只整理大于最小文件大小的文件"
+              persistent-hint
+            />
             <label class="organize-switch"
               ><input
                 type="checkbox"
@@ -542,7 +569,7 @@ onUnmounted(() => {
           <button class="icon-button" aria-label="关闭媒体选择" @click="picker = false">×</button>
         </header>
         <form @submit.prevent="search">
-          <input v-model="query" placeholder="搜索影视名称" autofocus /><button
+          <VTextField v-model="query" label="搜索影视名称" density="compact" autofocus /><button
             class="primary"
             :disabled="searchBusy"
           >
@@ -631,16 +658,6 @@ onUnmounted(() => {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
 }
-.organize-grid label {
-  display: block;
-  font-size: 14px;
-}
-.organize-grid label > select,
-.organize-grid label > input,
-.target-combobox,
-.id-input {
-  margin-top: 7px;
-}
 .organize-grid small {
   display: block;
   color: var(--muted);
@@ -650,33 +667,6 @@ onUnmounted(() => {
 }
 .span-all {
   grid-column: 1 / -1;
-}
-.target-combobox {
-  display: flex;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.target-combobox select {
-  width: 94px;
-  flex: none;
-  border: 0;
-  background: var(--accent-soft);
-  padding: 10px 8px;
-}
-.target-combobox input {
-  border: 0;
-  box-shadow: none;
-  min-width: 0;
-}
-.id-input {
-  display: flex;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.id-input input {
-  min-width: 0;
-  border: 0;
-  box-shadow: none;
 }
 .organize-grid .organize-switch {
   display: flex;

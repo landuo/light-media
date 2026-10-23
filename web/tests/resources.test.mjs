@@ -125,3 +125,42 @@ test('raw keyword results suppress only the optional identity prerequisite, keep
     ['media_identity_required_extra'],
   );
 });
+
+test('season and release-group filters only narrow the existing results', () => {
+  const a = item('one', { title: 'Synthetic S01E03 1080p-GROUPA' });
+  const b = { ...item('two', { title: 'Synthetic S02E01 2160p-GROUPB' }), season: 2 };
+  assert.deepEqual(
+    filterResources([a, b], { ...emptyResourceFilters(), season: '2' }, 'default', true),
+    [b],
+  );
+  assert.deepEqual(
+    filterResources([a, b], { ...emptyResourceFilters(), group: 'GROUPA' }, 'default', true),
+    [a],
+  );
+  assert.deepEqual(
+    filterResources(
+      [a, b],
+      { ...emptyResourceFilters(), season: '2', group: 'GROUPA' },
+      'default',
+      true,
+    ),
+    [],
+  );
+});
+
+test('multiple filter selections match any selected value within a field and combine across fields', () => {
+  const a = item('one', { site_id: 'site-a', resolution: '1080p' });
+  const b = item('two', { site_id: 'site-b', resolution: '2160p' });
+  const c = item('three', { site_id: 'site-c', resolution: '1080p' });
+  const filters = { ...emptyResourceFilters(), site: ['site-a', 'site-b'] };
+  assert.deepEqual(filterResources([a, b, c], filters, 'default', true), [a, b]);
+  assert.deepEqual(
+    filterResources([a, b, c], { ...filters, resolution: ['1080p'] }, 'default', true),
+    [a],
+  );
+  assert.deepEqual(filterResources([a, b, c], { ...filters, site: [] }, 'default', true), [
+    a,
+    b,
+    c,
+  ]);
+});

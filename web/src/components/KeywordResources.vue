@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {
   api,
@@ -14,6 +15,7 @@ import {
   errorText,
 } from '../api';
 import { keywordResourceSearch } from '../features/keyword-search';
+import { startSearch, useExplicitSearch } from '../features/search-session';
 import {
   candidateKey,
   emptyResourceFilters,
@@ -26,6 +28,8 @@ import {
   type Candidate,
 } from '../features/resources';
 import Policy from './Policy.vue';
+import AppIcon from './AppIcon.vue';
+import ResourceFilterBar from './ResourceFilterBar.vue';
 import ResourceCard from './ResourceCard.vue';
 import AddDownloadDialog from './AddDownloadDialog.vue';
 import {
@@ -34,6 +38,7 @@ import {
   searchPending,
   siteElapsed,
 } from '../features/search-progress';
+const searchOptionsOpen = ref(false);
 const props = defineProps<{ route: string }>(),
   params = new URLSearchParams(props.route.split('?')[1]);
 const query = ref(params.get('query') || ''),
@@ -41,6 +46,7 @@ const query = ref(params.get('query') || ''),
   output = ref<any>(null),
   error = ref(''),
   loading = ref(false),
+  initialized = ref(false),
   selectedSites = ref<string[]>([]),
   policy = ref(emptyPolicy()),
   filters = ref(emptyResourceFilters()),
@@ -159,10 +165,7 @@ async function search() {
 }
 function submitSearch() {
   const target = 'resource-search?query=' + encodeURIComponent(query.value.trim());
-  if (props.route === target) {
-    page.value = 1;
-    void search();
-  } else go(target);
+  if (query.value.trim()) startSearch(target);
 }
 function close() {
   active.value = null;
@@ -192,29 +195,50 @@ onMounted(() => {
     .filter((s: any) => s.enabled)
     .map((s: any) => s.id);
   void loadDownloads();
-  if (query.value.trim() && selectedSites.value.length) void search();
+  initialized.value = true;
 });
+useExplicitSearch(
+  props.route,
+  () => {
+    page.value = 1;
+    if (query.value.trim() && selectedSites.value.length) return search();
+  },
+  initialized,
+);
 onUnmounted(() => {
   disposed = true;
   controller?.abort();
 });
 </script>
 <template>
-  <div class="page-actions">
+  <div class="resource-page-actions">
+    <span class="resource-search-term">{{ request?.query || query }}</span>
+    <button
+      class="icon-button"
+      aria-label="搜索设置"
+      title="搜索设置"
+      @click="searchOptionsOpen = !searchOptionsOpen"
+    >
+      <AppIcon name="settings" />
+    </button>
+    <button
+      class="icon-button"
+      aria-label="重新搜索"
+      title="重新搜索"
+      :disabled="loading"
+      @click="search"
+    >
+      <AppIcon name="refresh" />
+    </button>
+  </div>
+  <section v-if="searchOptionsOpen" class="panel">
     <form class="search-field" @submit.prevent="submitSearch">
-      <input v-model="query" placeholder="搜索资源关键词" required /><button class="small primary">
+      <VTextField v-model="query" label="搜索资源关键词" density="compact" required /><button
+        class="primary"
+      >
         搜索
       </button>
     </form>
-  </div>
-  <div class="toolbar">
-    <div class="segmented">
-      <button @click="go('search?query=' + encodeURIComponent(query))">影视</button
-      ><button class="selected">资源</button>
-    </div>
-    <span class="hint"></span>
-  </div>
-  <section class="panel">
     <div class="site-selector">
       <label
         v-for="s in (ui.settings?.sites || []).filter((s: any) => s.enabled)"
@@ -244,85 +268,51 @@ onUnmounted(() => {
   <div v-if="loading" class="notice">
     正在并行搜索 {{ selectedSites.length }} 个站点，结果将陆续显示…
   </div>
-  <div v-if="output" class="status-strip">
-    <span
-      v-for="s in output.sites"
-      :key="s.id"
-      :class="[
-        'badge',
-        { bad: ['failed', 'partial', 'timeout', 'interrupted'].includes(s.status) },
-      ]"
-      :title="friendly(s.message || '')"
-    >
-      {{ names[s.id] || s.id }} · {{ siteSearchLabel(s.status)
-      }}{{ searchPending(s.status) ? '' : ' · ' + s.count + ' 条' }}{{ siteElapsed(s) }}</span
-    >
-  </div>
-  <template v-if="output"
-    ><section class="panel filters">
-      <div class="filter-row">
-        <input v-model="filters.text" placeholder="在结果中搜索" /><select v-model="filters.site">
-          <option value="">全部站点</option>
-          <option v-for="s in options('site_id')" :key="s" :value="s">
-            {{ names[s] || s }}
-          </option></select
-        ><select v-model="filters.resolution">
-          <option value="">全部分辨率</option>
-          <option v-for="v in options('resolution')" :key="v" :value="v">
-            {{ v === 'unknown' ? '未知' : v }}
-          </option></select
-        ><select v-model="filters.codec">
-          <option value="">全部编码</option>
-          <option v-for="v in options('codec')" :key="v" :value="v">
-            {{ v === 'unknown' ? '未知' : v }}
-          </option></select
-        ><select v-model="filters.source">
-          <option value="">全部质量</option>
-          <option v-for="v in options('source')" :key="v" :value="v">
-            {{ v === 'unknown' ? '未知' : v }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-row">
-        <select v-model="filters.promotion">
-          <option value="">全部促销</option>
-          <option value="free">免费</option>
-          <option value="discount">下载折扣</option>
-          <option value="upload">上传加成</option>
-          <option value="normal">普通</option>
-          <option value="unknown">未知</option></select
-        ><select v-model="filters.seeders">
-          <option value="">全部活跃度</option>
-          <option value="alive">有人做种</option>
-          <option value="zero">无人做种</option>
-          <option value="unknown">做种数未知</option></select
-        ><select v-model="filters.state">
-          <option value="">全部资源</option>
-          <option value="downloaded">本应用已下载 / 下载中</option>
-          <option value="new">本应用尚未下载</option></select
-        ><button class="small" @click="filters = emptyResourceFilters()">清空筛选</button
-        ><span class="hint">{{ filtered.length }} / {{ candidates.length }} 条</span>
-      </div>
-    </section>
-    <div class="toolbar">
-      <label class="check"
-        ><input type="checkbox" :checked="allSelected" @change="selectAll" />选择可下载结果</label
-      ><button v-if="selected.length" class="small primary" @click="openSelected">
-        下载所选 {{ selected.length }} 项</button
-      ><select v-model="sort">
-        <option value="default">默认排序</option>
-        <option value="seeders">做种人数</option>
-        <option value="size">体积</option>
-        <option value="published_at">发布时间</option>
-        <option value="site">站点</option></select
-      ><button class="small" :disabled="sort === 'default'" @click="descending = !descending">
-        {{ descending ? '↓ 降序' : '↑ 升序' }}
-      </button>
-      <div class="segmented push-right">
-        <button :class="{ selected: view === 'card' }" @click="view = 'card'">▦ 卡片</button
-        ><button :class="{ selected: view === 'list' }" @click="view = 'list'">☰ 列表</button>
-      </div>
+  <details
+    v-if="
+      output && (loading || searchOptionsOpen || output.sites.some((s: any) => s.status !== 'ok'))
+    "
+    class="search-progress-details"
+    :open="loading"
+  >
+    <summary>站点搜索进度 · {{ candidates.length }} 个资源</summary>
+    <div class="status-strip">
+      <span
+        v-for="s in output.sites"
+        :key="s.id"
+        :class="[
+          'badge',
+          { bad: ['failed', 'partial', 'timeout', 'interrupted'].includes(s.status) },
+        ]"
+        :title="friendly(s.message || '')"
+      >
+        {{ names[s.id] || s.id }} · {{ siteSearchLabel(s.status)
+        }}{{ searchPending(s.status) ? '' : ' · ' + s.count + ' 条' }}{{ siteElapsed(s) }}</span
+      >
     </div>
+  </details>
+  <template v-if="output"
+    ><ResourceFilterBar
+      :candidates="candidates"
+      :count="filtered.length"
+      :names="names"
+      v-model:filters="filters"
+      v-model:sort="sort"
+      v-model:descending="descending"
+    />
+    <div v-if="selected.length" class="toolbar resource-toolbar">
+      <button class="small primary" @click="openSelected">下载所选 {{ selected.length }} 项</button>
+      <button class="small" @click="selectAll">全选 / 取消全选</button>
+      <button class="small" @click="selected = []">取消选择</button>
+    </div>
+    <button
+      class="resource-view-toggle"
+      :aria-label="view === 'card' ? '列表视图' : '卡片视图'"
+      :title="view === 'card' ? '列表视图' : '卡片视图'"
+      @click="view = view === 'card' ? 'list' : 'card'"
+    >
+      <AppIcon :name="view === 'card' ? 'menu' : 'jobs'" />
+    </button>
     <div v-if="view === 'card'" class="release-grid">
       <ResourceCard
         v-for="g in groups"
@@ -336,80 +326,19 @@ onUnmounted(() => {
         @select="select"
       />
     </div>
-    <div v-else class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>资源</th>
-            <th>站点</th>
-            <th>大小 / 质量</th>
-            <th>活跃度</th>
-            <th>促销 / 时间</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="c in filtered" :key="candidateKey(c)">
-            <td>
-              <input
-                type="checkbox"
-                :checked="selected.includes(candidateKey(c))"
-                :disabled="!c.accepted && !c.needs_confirmation"
-                @change="select(c)"
-              />
-            </td>
-            <td class="resource-title">
-              <a
-                v-if="c.resource.details_url?.startsWith('https://')"
-                :href="c.resource.details_url"
-                target="_blank"
-                rel="noopener noreferrer"
-                ><strong>{{ c.resource.title }}</strong></a
-              ><strong v-else>{{ c.resource.title }}</strong
-              ><small>{{ c.resource.subtitle }}</small
-              ><span v-if="downloaded[candidateKey(c)]" class="badge green">{{
-                label(downloaded[candidateKey(c)]!)
-              }}</span>
-              <details v-if="resourceReviewReasons(c, false).length">
-                <summary class="hint">
-                  {{ c.accepted ? '资源信息' : '不符合搜索规则' }}
-                </summary>
-                {{ resourceReviewReasons(c, false).map(friendly).join('；') }}
-              </details>
-            </td>
-            <td>{{ names[c.resource.site_id] || c.resource.site_id }}</td>
-            <td>
-              {{ c.resource.size > 0 ? bytes(c.resource.size) : '体积未知'
-              }}<small>{{
-                [c.resource.resolution, c.resource.codec, c.resource.source]
-                  .filter(Boolean)
-                  .join(' · ')
-              }}</small>
-            </td>
-            <td>
-              ↑ {{ c.resource.seeders >= 0 ? c.resource.seeders : '未知'
-              }}<small>↓ {{ c.resource.leechers >= 0 ? c.resource.leechers : '未知' }}</small>
-            </td>
-            <td>
-              <span class="badge">{{ promotion(c.resource) }}</span
-              ><small>{{ date(c.resource.published_at) }}</small
-              ><small v-if="c.resource.promotion_end">{{
-                promotionRemaining(c.resource.promotion_end)
-              }}</small>
-            </td>
-            <td>
-              <button
-                class="small primary"
-                :disabled="!c.accepted && !c.needs_confirmation"
-                @click="open(c)"
-              >
-                ↓ 下载
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div v-else class="resource-list">
+      <ResourceCard
+        v-for="c in filtered"
+        :key="candidateKey(c)"
+        layout="list"
+        :candidates="[c]"
+        :names="names"
+        :downloads="downloaded"
+        :selected="selected"
+        :show-identity-review="false"
+        @download="open"
+        @select="select"
+      />
     </div>
     <div v-if="!filtered.length" class="empty-state">
       <h3>{{ candidates.length ? '没有符合条件的资源' : '没有搜索到资源' }}</h3>
@@ -445,6 +374,56 @@ onUnmounted(() => {
   />
 </template>
 <style scoped>
+.resource-list {
+  display: grid;
+  gap: 12px;
+}
+.resource-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 20px;
+}
+.resource-search-term {
+  margin-right: auto;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 500;
+}
+.resource-page-actions .icon-button {
+  border: 0;
+  background: none;
+}
+.search-progress-details {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.search-progress-details summary {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px;
+}
+.resource-view-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  box-shadow: var(--shadow);
+  z-index: 5;
+}
+.resource-view-toggle svg {
+  width: 24px;
+  height: 24px;
+}
+
 .page-actions {
   margin-bottom: 12px;
 }
@@ -499,7 +478,7 @@ onUnmounted(() => {
 }
 .release-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 16px;
 }
 .toolbar {

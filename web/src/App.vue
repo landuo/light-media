@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
 import { VIcon } from 'vuetify/components/VIcon';
 import Catalog from './components/Catalog.vue';
+import Explore from './components/Explore.vue';
+import ExploreDetail from './components/ExploreDetail.vue';
+import Recommend from './components/Recommend.vue';
+import RecommendBrowse from './components/RecommendBrowse.vue';
 import Resources from './components/Resources.vue';
 import DownloaderTasks from './components/DownloaderTasks.vue';
 import KeywordResources from './components/KeywordResources.vue';
@@ -15,6 +20,7 @@ import FileManager from './components/FileManager.vue';
 import TransferHistory from './components/TransferHistory.vue';
 import BrandMark from './components/BrandMark.vue';
 import AppIcon from './components/AppIcon.vue';
+import { searchSession, startSearch, clearSearchSession } from './features/search-session';
 const ShortcutTools = defineAsyncComponent(() => import('./components/ShortcutTools.vue'));
 const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
 const PluginAppPage = defineAsyncComponent(() => import('./components/PluginAppPage.vue'));
@@ -35,9 +41,19 @@ const route = ref(normalizeRoute(location.hash.slice(1))),
   starting = ref(true),
   mobile = ref(false);
 const globalQuery = ref(''),
+  searchMenuOpen = ref(false),
   searchInput = ref<HTMLInputElement>(),
   initialFilePaths = ref<string[]>([]);
 const pageKey = computed(() => route.value.split('?')[0]!.split('/')[0]!);
+const searchComponent = computed(() =>
+  pageKey.value === 'search'
+    ? Catalog
+    : pageKey.value === 'resource-search'
+      ? KeywordResources
+      : pageKey.value === 'resources'
+        ? Resources
+        : null,
+);
 const nav = [
   {
     label: '',
@@ -47,6 +63,7 @@ const nav = [
     label: '发现',
     items: [
       ['discover', 'star', '推荐'],
+      ['explore', 'compass', '探索'],
       ['dashboard', 'chart', '仪表板'],
     ],
   },
@@ -80,12 +97,8 @@ const nav = [
 const activeNav = (target: string) =>
   target.includes('?')
     ? route.value.startsWith(target)
-    : pageKey.value === target || (target === 'search' && pageKey.value === 'resource-search');
-const navHref = (target: string) =>
-  '#' +
-  (target === 'search' && globalQuery.value.trim()
-    ? 'search?query=' + encodeURIComponent(globalQuery.value.trim())
-    : target);
+    : pageKey.value === target || (target === 'search' && !!searchComponent.value);
+const navHref = (target: string) => '#' + (target === 'search' ? searchSession.lastRoute : target);
 const notifications = ref<any>({ items: [], unread: 0 }),
   notificationsOpen = ref(false);
 async function loadNotifications() {
@@ -101,12 +114,23 @@ async function readNotification(n: any, jump = false) {
 }
 function change() {
   route.value = normalizeRoute(location.hash.slice(1));
+  if (searchComponent.value) searchSession.lastRoute = route.value;
   mobile.value = false;
   window.scrollTo(0, 0);
   if (pageKey.value !== 'files') initialFilePaths.value = [];
 }
-function searchMedia() {
-  if (globalQuery.value.trim()) go('search?query=' + encodeURIComponent(globalQuery.value.trim()));
+function searchMedia(resource = false) {
+  if (!globalQuery.value.trim()) return;
+  searchMenuOpen.value = false;
+  startSearch(
+    (resource ? 'resource-search' : 'search') +
+      '?query=' +
+      encodeURIComponent(globalQuery.value.trim()),
+  );
+}
+function searchBlur(event: FocusEvent) {
+  if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null))
+    searchMenuOpen.value = false;
 }
 function searchShortcut(e: KeyboardEvent) {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -121,6 +145,7 @@ function organizePaths(paths: string[]) {
 function expired() {
   auth.value = { authenticated: false, setup_required: false };
   ui.settings = null;
+  clearSearchSession();
   pluginNavigation.reset();
 }
 async function bootstrap() {
@@ -157,6 +182,7 @@ async function logout() {
 }
 let timer: number;
 onMounted(() => {
+  change();
   window.addEventListener('hashchange', change);
   window.addEventListener('session-expired', expired);
   window.addEventListener('keydown', searchShortcut);
@@ -195,16 +221,20 @@ onUnmounted(() => {
             : '登录后继续发现、收藏与整理。'
         }}
       </p>
-      <label
-        >用户名<input v-model="username" autocomplete="username" required maxlength="64" /></label
-      ><label
-        >密码<input
-          v-model="password"
-          type="password"
-          :autocomplete="auth?.setup_required ? 'new-password' : 'current-password'"
-          required
-          :minlength="auth?.setup_required ? 12 : 1"
-      /></label>
+      <VTextField
+        v-model="username"
+        autocomplete="username"
+        required
+        maxlength="64"
+        label="用户名"
+      /><VTextField
+        v-model="password"
+        type="password"
+        :autocomplete="auth?.setup_required ? 'new-password' : 'current-password'"
+        required
+        :minlength="auth?.setup_required ? 12 : 1"
+        label="密码"
+      />
       <p v-if="auth?.setup_required" class="hint">管理员密码至少 12 位。</p>
       <p v-if="authError" class="error-box">{{ authError }}</p>
       <button class="primary full" :disabled="ui.busy > 0">
@@ -256,7 +286,13 @@ onUnmounted(() => {
         >
           <AppIcon name="menu" />
         </button>
-        <form class="global-search" role="search" @submit.prevent="searchMedia">
+        <form
+          class="global-search"
+          role="search"
+          @submit.prevent="searchMedia()"
+          @focusout="searchBlur"
+          @keydown.esc="searchMenuOpen = false"
+        >
           <button type="submit" class="global-search-submit" aria-label="搜索影视">
             <AppIcon name="search" />
           </button>
@@ -265,8 +301,23 @@ onUnmounted(() => {
             v-model="globalQuery"
             aria-label="搜索电影、剧集"
             placeholder="搜索电影、剧集…"
+            @focus="searchMenuOpen = true"
+            @input="searchMenuOpen = true"
           />
           <kbd>⌘K</kbd>
+          <div v-if="searchMenuOpen && globalQuery.trim()" class="global-search-menu">
+            <button type="button" @click="searchMedia()">
+              <AppIcon name="movie" /><span
+                ><strong>电影、电视剧</strong><small>搜索 {{ globalQuery }} 标题</small></span
+              >
+            </button>
+            <button type="button" @click="searchMedia(true)">
+              <AppIcon name="search" /><span
+                ><strong>在站点中搜索种子资源</strong
+                ><small>搜索 {{ globalQuery }} 相关资源</small></span
+              >
+            </button>
+          </div>
         </form>
         <div class="topbar-actions">
           <ShortcutTools />
@@ -288,6 +339,8 @@ onUnmounted(() => {
           </button>
         </div>
       </header>
+      <div id="explore-header" v-show="pageKey === 'explore'" class="explore-tabs-host"></div>
+      <div id="recommend-header" v-show="pageKey === 'discover'" class="explore-tabs-host"></div>
       <div
         v-if="ui.status?.logging?.error || ui.status?.logging?.status === 'failed'"
         class="service-alert"
@@ -332,16 +385,21 @@ onUnmounted(() => {
         </div>
       </section>
       <main>
+        <KeepAlive>
+          <Recommend v-if="pageKey === 'discover'" />
+        </KeepAlive>
+        <KeepAlive :max="15">
+          <RecommendBrowse v-if="pageKey === 'recommend-browse'" :key="route" :route="route" />
+        </KeepAlive>
+        <KeepAlive>
+          <Explore v-if="pageKey === 'explore'" />
+        </KeepAlive>
+        <ExploreDetail v-if="pageKey === 'explore-detail'" :key="route" :route="route" />
+        <KeepAlive :max="24">
+          <component :is="searchComponent" v-if="searchComponent" :key="route" :route="route" />
+        </KeepAlive>
         <Catalog
-          v-if="['discover', 'search', 'detail', 'person'].includes(pageKey)"
-          :key="route"
-          :route="route"
-        /><KeywordResources
-          v-else-if="pageKey === 'resource-search'"
-          :key="route"
-          :route="route"
-        /><Resources
-          v-else-if="route.startsWith('resources/')"
+          v-if="['detail', 'person'].includes(pageKey)"
           :key="route"
           :route="route"
         /><Subscriptions
@@ -372,7 +430,7 @@ onUnmounted(() => {
         <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
           v-else-if="pageKey === 'downloads'"
         /><Operations
-          v-else
+          v-else-if="!searchComponent && !['discover', 'recommend-browse', 'explore', 'explore-detail'].includes(pageKey)"
           :key="route"
           :view="route.split('/')[0]!"
           :initial-job="
@@ -396,3 +454,56 @@ onUnmounted(() => {
     </button>
   </div>
 </template>
+<style scoped>
+.explore-tabs-host {
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 34;
+  min-height: 48px;
+  padding: 0 8px;
+  background: rgba(244, 245, 250, 0.98);
+}
+.global-search {
+  position: relative;
+}
+.global-search-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(420px, 85vw);
+  padding: 8px;
+  background: var(--surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  z-index: 20;
+}
+.global-search-menu button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  height: auto;
+  padding: 12px 16px;
+  text-align: left;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+}
+.global-search-menu button:hover {
+  background: var(--accent-soft);
+}
+.global-search-menu span {
+  display: grid;
+  gap: 4px;
+}
+.global-search-menu small {
+  color: var(--muted);
+}
+.global-search-menu svg {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+</style>

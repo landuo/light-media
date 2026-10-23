@@ -67,6 +67,10 @@ async function mount(t, result) {
   const module = { exports: {} };
   new Function('require', 'exports', 'window', 'location', source)(
     (dependency) => {
+      if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(dependency)) {
+        const component = dependency.split('/').at(-1);
+        return { [component]: { name: component } };
+      }
       if (dependency === 'vue')
         return {
           ...vue,

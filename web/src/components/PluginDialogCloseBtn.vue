@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VBtn } from 'vuetify/components/VBtn';
-import AppIcon from './AppIcon.vue';
+import { VIcon } from 'vuetify/components/VIcon';
 
 defineProps<{ modelValue?: boolean; innerClass?: string }>();
 const emit = defineEmits<{ 'update:modelValue': [value: boolean]; click: [] }>();
@@ -13,12 +13,11 @@ function close() {
   <VBtn
     :class="innerClass || 'plugin-nested-dialog-close'"
     variant="text"
-    color="secondary"
-    size="small"
+    color="default"
     icon
     aria-label="关闭"
     @click.stop="close"
-    ><AppIcon name="close"
+    ><VIcon icon="mdi-close" size="24"
   /></VBtn>
 </template>
 <style scoped>

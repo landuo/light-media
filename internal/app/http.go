@@ -255,14 +255,42 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		} else {
 			e = &APIError{"NOT_FOUND", "接口不存在", 404}
 		}
+	case p == "catalog/recommend/sources" && method == "GET":
+		out = map[string]any{"sources": catalog.RecommendSources()}
+	case p == "catalog/recommend" && method == "GET":
+		out, e = a.catalogRecommendAPI(r)
+	case p == "catalog/recommend/preferences" && method == "GET":
+		out, e = a.catalogRecommendPreferences(ctx)
+	case p == "catalog/recommend/preferences" && method == "PUT":
+		var in RecommendPreferences
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.saveCatalogRecommendPreferences(ctx, in)
+		}
+	case p == "catalog/explore/preferences" && method == "GET":
+		out, e = a.catalogExplorePreferences(ctx)
+	case p == "catalog/explore/preferences" && method == "PUT":
+		var in ExplorePreferences
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.saveCatalogExplorePreferences(ctx, in)
+		}
 	case strings.HasPrefix(p, "catalog/") && method == "GET":
+		if p == "catalog/explore/image" {
+			if err := a.catalogExploreImage(w, r); err != nil {
+				a.writeError(w, r, err)
+			}
+			return
+		}
 		if p == "catalog/image" {
 			if err := a.catalogImage(w, r); err != nil {
 				a.writeError(w, r, err)
 			}
 			return
 		}
-		out, e = a.catalogAPI(r, strings.TrimPrefix(p, "catalog/"))
+		if p == "catalog/explore" || p == "catalog/explore/detail" || p == "catalog/explore/resolve" {
+			out, e = a.catalogExploreAPI(r, strings.TrimPrefix(p, "catalog/"))
+		} else {
+			out, e = a.catalogAPI(r, strings.TrimPrefix(p, "catalog/"))
+		}
 	case p == "search/resources" && method == "POST":
 		if strings.Contains(r.Header.Get("Accept"), "text/event-stream") {
 			a.streamSearch(w, r)

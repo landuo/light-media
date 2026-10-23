@@ -40,6 +40,10 @@ async function manager(t, mode, known) {
         refreshSettings: async () => {},
         toast: () => {},
       };
+    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(name)) {
+      const component = name.split('/').at(-1);
+      return { [component]: { name: component } };
+    }
     if (name === 'vue')
       return { ...vue, onMounted: (fn) => mounts.push(fn), withDirectives: (vnode) => vnode };
     if (name === './AppIcon.vue' || name === './PathPicker.vue') return { default: {} };
@@ -63,7 +67,7 @@ async function manager(t, mode, known) {
   const overwrite = () =>
     nodes().find(
       (node) =>
-        node.type === 'select' && node.children?.some((child) => child.props?.value === 'latest'),
+        node.type?.name === 'VSelect' && node.props?.items?.some((item) => item.value === 'latest'),
     );
   async function save() {
     await nodes()
@@ -77,17 +81,20 @@ async function manager(t, mode, known) {
 test('directory card uses original four labels and saves each selected policy through actual form handler', async (t) => {
   const form = await manager(t, null, false);
   assert.deepEqual(
-    form.overwrite().children.map((node) => node.children),
+    form.overwrite().props.items.map((item) => item.title),
     ['请选择', '从不', '总是', '按文件大小', '仅保留最新'],
   );
   for (const mode of ['never', 'always', 'size', 'latest']) {
-    form.overwrite().props['onUpdate:modelValue'](mode);
-    form.overwrite().props.onChange();
+    for (const handler of [form.overwrite().props['onUpdate:modelValue']].flat()) handler(mode);
     await vue.nextTick();
     const saved = await form.save();
     assert.equal(saved.overwrite_mode, mode);
     assert.equal(saved.overwrite_mode_known, true);
-    assert.equal(form.overwrite().props['onUpdate:modelValue'] instanceof Function, true);
+    assert.ok(
+      [form.overwrite().props['onUpdate:modelValue']]
+        .flat()
+        .every((handler) => typeof handler === 'function'),
+    );
   }
 });
 test('loading and saving an unmigrated directory does not invent always or never', async (t) => {

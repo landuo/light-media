@@ -1,30 +1,84 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { VIcon } from 'vuetify/components/VIcon';
 import { go, image, label } from '../api';
 import AppIcon from './AppIcon.vue';
-defineProps<{ items: any[]; quickActions?: boolean }>();
+import { startSearch } from '../features/search-session';
+import tmdbLogo from '../assets/tmdb.png';
+import doubanLogo from '../assets/douban.png';
+import bangumiLogo from '../assets/bangumi.png';
+import ExploreActions from './ExploreActions.vue';
+import MediaPoster from './MediaPoster.vue';
+import { exploreMediaKey } from '../features/explore-feed';
+import { exploreImage, exploreDetailRoute } from '../features/explore-media';
+const props = defineProps<{ items: any[]; quickActions?: boolean; originalActions?: boolean }>();
+const actions = ref<InstanceType<typeof ExploreActions>>();
+const sourceLogos: Record<string, string> = {
+  themoviedb: tmdbLogo,
+  douban: doubanLogo,
+  bangumi: bangumiLogo,
+};
+const failedImages = ref(new Set<string>());
 function detail(m: any) {
-  go('detail/' + m.media_type + '/' + m.id);
+  go(props.originalActions ? exploreDetailRoute(m) : 'detail/' + m.media_type + '/' + m.id);
+}
+function poster(m: any) {
+  return props.originalActions ? exploreImage(m) : image(m.poster_path);
+}
+function posterKey(m: any) {
+  return exploreMediaKey(m) + ':' + poster(m);
+}
+function search(m: any) {
+  if (props.originalActions) actions.value?.open(m, 'search');
+  else startSearch('resources/' + m.media_type + '/' + m.id);
+}
+function subscribe(m: any) {
+  if (props.originalActions) actions.value?.open(m, 'subscribe');
+  else go(m.subscription_id ? 'subscriptions' : 'subscriptions/new/' + m.media_type + '/' + m.id);
 }
 </script>
 <template>
   <div class="media-grid">
-    <article v-for="m in items" :key="m.media_type + ':' + m.id" class="media-card">
+    <article
+      v-for="m in items"
+      :key="exploreMediaKey(m)"
+      class="media-card"
+      :class="{ 'no-poster': !poster(m) || failedImages.has(posterKey(m)) }"
+    >
       <button class="poster poster-action" @click="detail(m)" :aria-label="'查看' + m.title">
-        <img
-          v-if="image(m.poster_path)"
-          :src="image(m.poster_path)"
+        <MediaPoster
+          :src="poster(m)"
           :alt="m.title"
-          loading="lazy"
-        />
-        <div v-else class="poster-empty">◈<small>暂无海报</small></div>
-        <span v-if="m.vote_average > 0" class="rating">★ {{ m.vote_average.toFixed(1) }}</span>
-        <span class="poster-kind" :class="m.media_type">{{ label(m.media_type) }}</span>
-        <div class="media-state">
-          <span v-if="m.library_state === 'present' || m.library_state === 'managed'">已入库</span>
-          <span v-else-if="m.library_state">{{ label(m.library_state) }}</span>
-          <span v-if="m.subscription_id">已订阅</span>
-          <span v-if="m.download_state">{{ label(m.download_state) }}</span>
-        </div>
+          @error="failedImages.add(posterKey(m))"
+          @load="failedImages.delete(posterKey(m))"
+          v-slot="{ loaded }"
+        >
+          <span v-if="m.vote_average > 0" class="rating">{{
+            originalActions ? Number(m.vote_average.toFixed(1)) : m.vote_average.toFixed(1)
+          }}</span>
+          <span class="poster-kind" :class="m.media_type">{{
+            m.media_type === 'tv' ? '电视剧' : label(m.media_type)
+          }}</span>
+          <span
+            v-if="['present', 'managed', 'external'].includes(m.library_state)"
+            class="media-exists"
+            title="已入库"
+            aria-label="已入库"
+            ><AppIcon name="check-circle"
+          /></span>
+          <img
+            v-if="loaded && sourceLogos[m.source || 'themoviedb']"
+            class="media-source"
+            :src="sourceLogos[m.source || 'themoviedb']"
+            :alt="m.source || 'TheMovieDb'"
+          />
+          <span
+            v-else-if="loaded && m.source === 'anilist'"
+            class="media-source source-anilist"
+            aria-label="AniList"
+            >A</span
+          >
+        </MediaPoster>
       </button>
       <div class="media-overlay" @click="detail(m)">
         <span class="media-year">{{ m.year || '日期待定' }}</span>
@@ -39,34 +93,37 @@ function detail(m: any) {
             class="icon-button"
             :aria-label="'搜索' + m.title + '资源'"
             title="搜索资源"
-            @click.stop="go('resources/' + m.media_type + '/' + m.id)"
+            @click.stop="search(m)"
           >
-            <AppIcon name="search" />
+            <VIcon v-if="originalActions" icon="mdi-magnify" size="20" /><AppIcon
+              v-else
+              name="search"
+            />
           </button>
           <button
             class="icon-button"
             :class="{ subscribed: m.subscription_id }"
-            :aria-label="(m.subscription_id ? '查看' : '添加') + m.title + '订阅'"
-            :title="m.subscription_id ? '查看订阅' : '添加订阅'"
-            @click.stop="
-              go(
-                m.subscription_id
-                  ? 'subscriptions'
-                  : 'subscriptions/new/' + m.media_type + '/' + m.id,
-              )
+            :aria-label="
+              (m.subscription_id ? (originalActions ? '取消' : '查看') : '添加') + m.title + '订阅'
             "
+            :title="m.subscription_id ? (originalActions ? '取消订阅' : '查看订阅') : '添加订阅'"
+            @click.stop="subscribe(m)"
           >
-            <AppIcon name="heart" />
+            <VIcon v-if="originalActions" icon="mdi-heart" size="20" /><AppIcon
+              v-else
+              name="heart"
+            />
           </button>
         </div>
       </div>
     </article>
   </div>
+  <ExploreActions v-if="originalActions" ref="actions" />
 </template>
 <style scoped>
 .media-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(144px, 1fr));
   gap: 16px;
 }
 .media-card {
@@ -90,24 +147,8 @@ function detail(m: any) {
   background: var(--surface-subtle);
   display: block;
 }
-.poster-action img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .poster-action::after {
   content: none;
-}
-.poster-empty {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
-  background: var(--surface-subtle);
-  color: var(--muted);
-  font-size: 32px;
 }
 .rating,
 .poster-kind {
@@ -134,18 +175,50 @@ function detail(m: any) {
 .poster-kind.movie {
   background: #2563ebcc;
 }
-.media-state {
-  top: 40px;
-  left: 8px;
-  right: auto;
-  align-items: flex-start;
-}
-.media-state > span {
-  padding: 2px 6px;
-  border-radius: 12px;
+.media-exists {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 4;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
   background: var(--success);
   color: white;
-  font-size: 11px;
+  display: grid;
+  place-items: center;
+}
+.media-exists svg {
+  width: 20px;
+  height: 20px;
+}
+.media-card:hover .media-exists {
+  display: none;
+}
+.poster-action .media-source {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.media-card:hover .media-source {
+  visibility: hidden;
+}
+.source-anilist {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #53b5ed;
+  color: #143447;
+  font-size: 15px;
+  font-weight: 900;
 }
 .media-overlay {
   position: absolute;
@@ -162,6 +235,7 @@ function detail(m: any) {
   transition: opacity 0.2s;
 }
 .media-card:hover .media-overlay,
+.media-card.no-poster .media-overlay,
 .media-card:focus-within .media-overlay {
   opacity: 1;
   visibility: visible;
@@ -239,7 +313,7 @@ function detail(m: any) {
 @media (max-width: 600px) {
   .media-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 16px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

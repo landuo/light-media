@@ -11,6 +11,7 @@ import { VTextField } from 'vuetify/components/VTextField';
 import { VProgressLinear } from 'vuetify/components/VProgressLinear';
 import { VDivider } from 'vuetify/components/VDivider';
 import { VAlert } from 'vuetify/components/VAlert';
+import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 import { api, apiURL, errorText } from '../api';
 import type { PluginCard } from '../features/plugin-forms';
 import {
@@ -27,6 +28,13 @@ const emit = defineEmits<{ close: [] }>();
 const display = useDisplay();
 const entries = ref<PluginLogEntry[]>([]);
 const level = ref('ALL');
+const levelColors: Record<string, string> = {
+  DEBUG: 'secondary',
+  INFO: 'success',
+  WARNING: 'warning',
+  ERROR: 'error',
+  CRITICAL: 'error',
+};
 const query = ref<string | null>('');
 const paused = ref(false),
   loading = ref(true),
@@ -38,10 +46,21 @@ const following = ref(true),
 const viewport = ref<HTMLElement>();
 const endpoint = '/plugins/' + encodeURIComponent(props.plugin.instance_id) + '/logs';
 const levels = computed(() => [
-  { title: '全部级别', value: 'ALL' },
+  {
+    title: '全部级别',
+    value: 'ALL',
+    props: { class: 'text-primary font-weight-medium', density: 'compact' },
+  },
   ...[...new Set([...pluginLogLevels, ...entries.value.map((item) => item.level)])]
     .filter(Boolean)
-    .map((value) => ({ title: value, value })),
+    .map((value) => ({
+      title: value,
+      value,
+      props: {
+        class: 'text-' + (levelColors[value] || 'secondary') + ' font-weight-medium',
+        density: 'compact',
+      },
+    })),
 ]);
 const groups = computed(() =>
   filterPluginLogGroups(groupPluginLogs(entries.value), level.value, query.value),
@@ -213,6 +232,7 @@ onUnmounted(() => {
     @update:model-value="emit('close')"
   >
     <VCard class="plugin-log-card">
+      <PluginDialogCloseBtn aria-label="关闭插件日志" @click="emit('close')" />
       <VCardItem class="plugin-log-header">
         <VCardTitle class="plugin-log-title">
           <VIcon icon="mdi-file-document" class="me-2" />插件日志
@@ -229,9 +249,6 @@ onUnmounted(() => {
             </a>
           </span>
         </VCardTitle>
-        <VBtn variant="text" color="secondary" icon aria-label="关闭插件日志" @click="emit('close')"
-          ><VIcon icon="mdi-close"
-        /></VBtn>
       </VCardItem>
       <VDivider class="plugin-log-divider" />
       <VCardText class="plugin-log-content">
@@ -251,6 +268,10 @@ onUnmounted(() => {
               hide-details
               class="logging-level-select"
               aria-label="日志级别"
+              :menu-props="{ width: 'auto' }"
+              :style="{
+                '--log-level-color': `rgb(var(--v-theme-${level === 'ALL' ? 'primary' : levelColors[level] || 'secondary'}))`,
+              }"
             />
             <VTextField
               v-model="query"
@@ -342,12 +363,12 @@ onUnmounted(() => {
 
 <style scoped>
 .plugin-log-card {
-  height: min(50rem, calc(100dvh - 3rem));
+  height: calc(100dvh - 3rem);
   min-height: 20rem;
 }
 .plugin-log-header {
-  position: relative;
-  padding: 16px 64px 16px 24px !important;
+  padding: 16px !important;
+  padding-inline-end: 60px !important;
 }
 .plugin-log-title {
   display: inline-flex;
@@ -355,11 +376,6 @@ onUnmounted(() => {
   flex-wrap: wrap;
   padding: 0 !important;
   font-size: 20px;
-}
-.plugin-log-header :deep(.v-card-item__content) > .v-btn {
-  position: absolute;
-  top: 8px;
-  inset-inline-end: 12px;
 }
 .plugin-log-divider {
   flex: 0 0 auto;
@@ -421,6 +437,16 @@ onUnmounted(() => {
   color: inherit;
   padding: var(--v-field-input-padding-top) var(--v-field-padding-end)
     var(--v-field-input-padding-bottom) var(--v-field-padding-start);
+}
+.logging-search :deep(.v-field__input) {
+  padding-inline-start: 0;
+}
+.logging-level-select :deep(.v-select__selection) {
+  color: var(--log-level-color);
+  font-weight: 500;
+}
+.logging-level-select :deep(.v-field__input) {
+  padding-inline: 0;
 }
 .logging-stream-action {
   color: rgba(var(--v-theme-on-surface), 0.56);

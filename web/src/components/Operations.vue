@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
+import { VSelect } from 'vuetify/components/VSelect';
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import {
   api,
@@ -567,13 +569,13 @@ onUnmounted(() => {
               <td>{{ bytes(f.size) }}</td>
               <td>
                 <div class="inline-form">
-                  <label
-                    >季<input
-                      v-model.number="f.manual_season"
-                      type="number"
-                      min="0"
-                      placeholder="待确认" /></label
-                  ><label>集<input v-model="f.manual_episodes" placeholder="1,2,5-8" /></label>
+                  <VTextField
+                    v-model.number="f.manual_season"
+                    type="number"
+                    min="0"
+                    placeholder="待确认"
+                    label="季"
+                  /><VTextField v-model="f.manual_episodes" placeholder="1,2,5-8" label="集" />
                 </div>
               </td>
             </tr>
@@ -584,10 +586,15 @@ onUnmounted(() => {
     <section class="panel">
       <h2><span class="step">2</span>确认身份与目标</h2>
       <form class="inline-form" @submit.prevent="find">
-        <select v-model="lookupKind">
-          <option value="tv">剧集</option>
-          <option value="movie">电影</option></select
-        ><input v-model="lookup" placeholder="搜索正确的影视作品" required /><button>
+        <VSelect
+          v-model="lookupKind"
+          density="compact"
+          aria-label="媒体类型"
+          :items="[
+            { title: '剧集', value: 'tv' },
+            { title: '电影', value: 'movie' },
+          ]"
+        /><input v-model="lookup" placeholder="搜索正确的影视作品" required /><button>
           搜索 TMDB
         </button>
       </form>
@@ -601,19 +608,24 @@ onUnmounted(() => {
         {{ media.id }}
       </div>
       <div class="form-grid">
-        <label
-          >入库目录<select v-model="root">
-            <option v-for="r in ui.settings?.roots || []" :key="r.id" :value="r.id">
-              {{ r.name || r.path }}
-            </option>
-          </select></label
-        ><label
-          >整理方式<select v-model="mode">
-            <option value="hardlink">硬链接</option>
-            <option value="copy">复制</option>
-            <option value="auto">自动（允许复制回退）</option>
-          </select></label
-        >
+        <VSelect
+          v-model="root"
+          label="入库目录"
+          :items="[
+            ...(ui.settings?.roots || []).map((r: any) => ({
+              title: String(r.name || r.path).trim(),
+              value: r.id,
+            })),
+          ]"
+        /><VSelect
+          v-model="mode"
+          label="整理方式"
+          :items="[
+            { title: '硬链接', value: 'hardlink' },
+            { title: '复制', value: 'copy' },
+            { title: '自动（允许复制回退）', value: 'auto' },
+          ]"
+        />
       </div>
       <button
         class="primary"
@@ -691,14 +703,15 @@ onUnmounted(() => {
   >
   <template v-else-if="view === 'library'"
     ><div class="toolbar">
-      <input v-model="assetQuery" placeholder="筛选片名或文件路径" /><select
+      <input v-model="assetQuery" placeholder="筛选片名或文件路径" /><VSelect
         v-model="root"
-        @change="loadCandidates()"
-      >
-        <option v-for="r in ui.settings?.roots || []" :key="r.id" :value="r.id">
-          {{ r.name || r.path }}
-        </option></select
-      ><button @click="libraryScan">核对库内文件</button>
+        @update:model-value="loadCandidates()"
+        density="compact"
+        aria-label="目录"
+        :items="
+          (ui.settings?.roots || []).map((r: any) => ({ title: r.name || r.path, value: r.id }))
+        "
+      /><button @click="libraryScan">核对库内文件</button>
     </div>
     <div class="table-wrap">
       <table>
@@ -881,27 +894,39 @@ onUnmounted(() => {
   <template v-else-if="view === 'logs'"
     ><section class="panel logs-filter">
       <form class="form-grid" @submit.prevent="load()">
-        <label
-          >级别<select v-model="logLevel">
-            <option value="">全部级别</option>
-            <option>DEBUG</option>
-            <option>INFO</option>
-            <option>WARN</option>
-            <option>ERROR</option>
-          </select></label
-        ><label
-          >站点<select v-model="logSite">
-            <option value="">全部站点</option>
-            <option v-for="s in ui.settings?.sites || []" :key="s.id" :value="s.id">
-              {{ s.name || s.id }}
-            </option>
-          </select></label
-        ><label>模块<input v-model="logModule" placeholder="如 import、download、fnos" /></label
-        ><label>任务 ID<input v-model="logJob" placeholder="精确关联任务" /></label
-        ><label
-          >关键词 / 请求 ID<input v-model="logQuery" placeholder="日志内容、请求或流程 ID" /></label
-        ><label>开始时间<input v-model="logFrom" type="datetime-local" /></label
-        ><label>结束时间<input v-model="logTo" type="datetime-local" /></label>
+        <VSelect
+          v-model="logLevel"
+          label="级别"
+          :items="[
+            { title: '全部级别', value: '' },
+            { title: 'DEBUG', value: 'DEBUG' },
+            { title: 'INFO', value: 'INFO' },
+            { title: 'WARN', value: 'WARN' },
+            { title: 'ERROR', value: 'ERROR' },
+          ]"
+        /><VSelect
+          v-model="logSite"
+          label="站点"
+          :items="[
+            { title: '全部站点', value: '' },
+            ...(ui.settings?.sites || []).map((s: any) => ({
+              title: String(s.name || s.id).trim(),
+              value: s.id,
+            })),
+          ]"
+        /><VTextField
+          v-model="logModule"
+          placeholder="如 import、download、fnos"
+          label="模块"
+        /><VTextField v-model="logJob" placeholder="精确关联任务" label="任务 ID" /><VTextField
+          v-model="logQuery"
+          placeholder="日志内容、请求或流程 ID"
+          label="关键词 / 请求 ID"
+        /><VTextField v-model="logFrom" type="datetime-local" label="开始时间" /><VTextField
+          v-model="logTo"
+          type="datetime-local"
+          label="结束时间"
+        />
         <div class="button-row">
           <button class="primary">查询日志</button
           ><a class="button" :href="apiURL('/logs/export?' + logParams())" download>导出当前筛选</a
@@ -991,10 +1016,15 @@ onUnmounted(() => {
       </div>
       <p class="path-cell">{{ registration.path }}</p>
       <form class="inline-form" @submit.prevent="find">
-        <select v-model="lookupKind">
-          <option value="tv">剧集</option>
-          <option value="movie">电影</option></select
-        ><input v-model="lookup" required placeholder="搜索正确的影视作品" /><button>
+        <VSelect
+          v-model="lookupKind"
+          density="compact"
+          aria-label="媒体类型"
+          :items="[
+            { title: '剧集', value: 'tv' },
+            { title: '电影', value: 'movie' },
+          ]"
+        /><input v-model="lookup" required placeholder="搜索正确的影视作品" /><button>
           搜索 TMDB
         </button>
       </form>
@@ -1007,32 +1037,29 @@ onUnmounted(() => {
         已选择 {{ media.title }} · {{ media.year }} · TMDB {{ media.id }}
       </div>
       <div v-if="media?.media_type === 'tv'" class="form-grid">
-        <label
-          >标准季<select v-model.number="registrationSeason" @change="loadRegistrationSeason">
-            <option
-              v-for="s in media.seasons?.filter((s: any) => s.season_number > 0) || []"
-              :key="s.season_number"
-              :value="s.season_number"
-            >
-              {{ s.name || '第 ' + s.season_number + ' 季' }}
-            </option>
-          </select></label
-        >
-        <label
-          >标准集<select
-            v-model="registrationEpisode"
-            :disabled="registrationSeasonLoading || !registrationSeasonData"
-          >
-            <option value="">请明确选择单集</option>
-            <option
-              v-for="ep in registrationSeasonData?.episodes || []"
-              :key="ep.episode_number"
-              :value="ep.episode_number"
-            >
-              E{{ ep.episode_number }} · {{ ep.name }}
-            </option>
-          </select></label
-        >
+        <VSelect
+          v-model.number="registrationSeason"
+          @update:model-value="loadRegistrationSeason"
+          label="标准季"
+          :items="[
+            ...(media.seasons?.filter((s: any) => s.season_number > 0) || []).map((s: any) => ({
+              title: String(s.name || '第 ' + s.season_number + ' 季').trim(),
+              value: s.season_number,
+            })),
+          ]"
+        />
+        <VSelect
+          v-model="registrationEpisode"
+          :disabled="registrationSeasonLoading || !registrationSeasonData"
+          label="标准集"
+          :items="[
+            { title: '请明确选择单集', value: '' },
+            ...(registrationSeasonData?.episodes || []).map((ep: any) => ({
+              title: (' E' + String(ep.episode_number) + ' · ' + String(ep.name)).trim(),
+              value: ep.episode_number,
+            })),
+          ]"
+        />
         <button
           v-if="!registrationSeasonData && !registrationSeasonLoading"
           @click="loadRegistrationSeason"
