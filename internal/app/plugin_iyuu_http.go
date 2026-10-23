@@ -33,5 +33,5 @@ func (a *App) iyuuLifecycleHTTP(ctx context.Context, in PluginInstallation, oper
 	if operation == "reset" {
 		return map[string]bool{"reset": true}, nil
 	}
-	return map[string]bool{"uninstalled": true, "data_retained": true}, nil
+	return map[string]bool{"uninstalled": true, "data_retained": pluginUninstallDataRetained(in)}, nil
 }

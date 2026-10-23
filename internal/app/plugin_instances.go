@@ -104,8 +104,9 @@ func validatePluginCloneRequest(in PluginCloneRequest) error {
 	return nil
 }
 
-// Clone creates a new namespace atomically. An existing ID, including a retained
-// tombstone, can never be overwritten/reinstalled through this operation.
+// Clone creates an isolated namespace atomically. A previously removed clone
+// may reuse its authenticated source-bound ID only after cleanup and quiescence;
+// installation allocates a new generation, never reviving the old attempt.
 func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCloneRequest) (PluginInstallation, error) {
 	if err := p.checkPluginFormWrite(ctx, source, pluginFormWriteLifecycle); err != nil {
 		return PluginInstallation{}, err
@@ -133,9 +134,6 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations WHERE instance_id=?`, target).Scan(&exists); err != nil {
 		return out, err
 	}
-	if exists != 0 {
-		return out, bad("PLUGIN_CLONE_CONFLICT", "分身编号已存在或保留了卸载数据，请使用其他后缀")
-	}
 	var sealed []byte
 	if err = tx.QueryRowContext(ctx, `SELECT instance_id,plugin_id,version,manifest_schema,manifest,desired_enabled,installed,generation FROM plugin_installations WHERE instance_id=?`, source).Scan(&out.InstanceID, &out.PluginID, &out.Version, &out.ManifestSchemaVersion, &sealed, &out.DesiredEnabled, &out.Installed, &out.Generation); err != nil {
 		return out, err
@@ -157,6 +155,11 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	}
 	if _, err = p.pluginUpdateReviewRead(ctx, tx, out); err != nil {
 		return out, err
+	}
+	if exists != 0 {
+		if err = p.requireReusableCloneTx(ctx, tx, target, source, out.PluginID); err != nil {
+			return out, err
+		}
 	}
 	// Never relabel imported/unclaimed references as native through a clone.
 	if err = p.requirePluginExecutionHandoffTx(ctx, tx, source); err != nil {
@@ -266,7 +269,7 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	if err != nil {
 		return out, err
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_instance_metadata(instance_id,sealed) VALUES(?,?)`, target, sealed); err != nil {
+	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_instance_metadata(instance_id,sealed) VALUES(?,?) ON CONFLICT(instance_id) DO UPDATE SET sealed=excluded.sealed`, target, sealed); err != nil {
 		return out, err
 	}
 	if err = p.cloneOrganizationMemberTx(ctx, tx, source, target); err != nil {

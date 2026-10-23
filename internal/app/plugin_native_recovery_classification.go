@@ -34,6 +34,16 @@ func (j *pluginRunAttemptJournal) classifyNativeRecoveryTx(ctx context.Context, 
 	if err != nil {
 		return out, err
 	}
+	if run.State == "canceled" {
+		kind, digest, found, e := j.autoBackupCanceledEvidenceTx(ctx, tx, head, run)
+		if e != nil {
+			return out, e
+		}
+		if found {
+			return pluginNativeRecoveryEvidence{Class: pluginNativeCompleted, Kind: kind, Digest: digest}, nil
+		}
+		return out, nil
+	}
 	if run.State == "succeeded" || run.State == "failed" {
 		kind, digest, found, e := j.nativeRecoveryEvidenceTx(ctx, tx, head, run)
 		if e != nil {
@@ -42,6 +52,26 @@ func (j *pluginRunAttemptJournal) classifyNativeRecoveryTx(ctx context.Context, 
 		if found {
 			return pluginNativeRecoveryEvidence{Class: pluginNativeCompleted, Kind: kind, Digest: digest}, nil
 		}
+	}
+	if head.claim.Admission.PluginID == "AutoBackup" && run.Version == "2.1.4" {
+		// Preserve a native diagnosis only after authenticating this attempt's
+		// exact deferred receipt and rechecking the private root in this TX.
+		// A mutable run error label never grants this classification or retry.
+		record, sealed, e := j.p.readDeferred(ctx, tx, run)
+		if e != nil {
+			return out, e
+		}
+		if record.Plugin != "AutoBackup" || record.Version != "2.1.4" || (record.Phase != "started" && record.Phase != "uncertain") {
+			return out, nil
+		}
+		_, _, e = j.p.autoBackupRead(ctx, tx, run.InstanceID, run.Generation)
+		if autoBackupErrorCode(e) == "AUTO_BACKUP_EVIDENCE_MISSING" {
+			out.Kind = "auto-backup-unknown/v1"
+			out.Diagnostic = "AUTO_BACKUP_EVIDENCE_MISSING"
+			out.Digest = sha256.Sum256(sealed)
+			return out, nil
+		}
+		return out, e
 	}
 	if head.claim.Admission.PluginID == "IYUUAutoSeed" && run.Version == "2.19" {
 		record, sealed, e := j.p.readDeferred(ctx, tx, run)

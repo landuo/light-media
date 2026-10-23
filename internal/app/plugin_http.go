@@ -538,7 +538,7 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 			a.pluginServerStatus.invalidate(installation.InstanceID)
 		}
 		a.pluginMu.Unlock()
-		return map[string]bool{"uninstalled": err == nil, "data_retained": true}, err
+		return map[string]bool{"uninstalled": err == nil, "data_retained": pluginUninstallDataRetained(installation)}, err
 	default:
 		return nil, &APIError{"NOT_FOUND", "插件操作不存在或方法不支持", 404}
 	}

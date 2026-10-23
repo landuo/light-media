@@ -79,7 +79,7 @@ func (a *App) pluginCloudflareLifecycleHTTP(w http.ResponseWriter, r *http.Reque
 		if e == nil {
 			(&pluginCloudflarePrepared{o: o}).resolve(true)
 		}
-		return map[string]bool{"uninstalled": e == nil, "data_retained": true}, e
+		return map[string]bool{"uninstalled": e == nil, "data_retained": pluginUninstallDataRetained(i)}, e
 	}
 	return nil, fmt.Errorf("invalid lifecycle operation")
 }

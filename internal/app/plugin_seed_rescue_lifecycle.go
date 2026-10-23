@@ -82,7 +82,7 @@ func (a *App) pluginSeedRescueLifecycleHTTP(w http.ResponseWriter, r *http.Reque
 		if e == nil {
 			(&pluginSeedRescuePrepared{o: o}).resolve(true)
 		}
-		return map[string]bool{"uninstalled": e == nil, "data_retained": true}, e
+		return map[string]bool{"uninstalled": e == nil, "data_retained": pluginUninstallDataRetained(i)}, e
 	}
 	return nil, fmt.Errorf("invalid lifecycle operation")
 }

@@ -156,7 +156,7 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		return true
 	}
 	manifest, _, exists := builtin.Lookup(installation.PluginID)
-	if err != nil || !installation.Installed || !installation.DesiredEnabled || !exists || manifest.Version != installation.Version {
+	if err != nil || !installation.Installed || !exists || manifest.Version != installation.Version {
 		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
 		return true
 	}
@@ -183,6 +183,11 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 			w.Header().Set("Allow", strings.Join(allowed, ", "))
 		}
 		pluginHTTPError(w, &pluginHTTPFailure{status, detail})
+		return true
+	}
+	readConfiguration := a.pluginConfigurationHTTPReader(manifest, *api, r.Method)
+	if !installation.DesiredEnabled && readConfiguration == nil {
+		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
 		return true
 	}
 	authority, failure := a.pluginHTTPAuthority(r, api.Auth, native)
@@ -257,6 +262,35 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 	}
 	if api.BodyRequired && len(input.Body) == 0 {
 		pluginHTTPError(w, &pluginHTTPFailure{422, []map[string]any{{"type": "missing", "loc": []string{"body"}, "msg": "Field required", "input": nil}}})
+		return true
+	}
+	if readConfiguration != nil {
+		body, err := a.pluginStore.readPluginInstanceView(r.Context(), installation, func(ctx context.Context, view pluginFormView) (json.RawMessage, error) {
+			if err := a.validatePluginReadAuthority(ctx, authority); err != nil {
+				return nil, err
+			}
+			result, err := readConfiguration(ctx, view, input)
+			if err != nil {
+				return nil, err
+			}
+			if err := a.validatePluginReadAuthority(ctx, authority); err != nil {
+				return nil, err
+			}
+			return result, nil
+		})
+		if err != nil {
+			pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin configuration changed or is unavailable"})
+			return true
+		}
+		var response plugins.HTTPResponse
+		if json.Unmarshal(body, &response) != nil || response.Status < 200 || response.Status > 599 {
+			pluginHTTPError(w, &pluginHTTPFailure{502, "Invalid plugin response"})
+			return true
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-store")
+		w.WriteHeader(response.Status)
+		w.Write(response.Body)
 		return true
 	}
 	a.pluginMu.Lock()

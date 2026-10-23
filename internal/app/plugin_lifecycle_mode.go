@@ -147,10 +147,31 @@ func (p *PluginStore) recordPluginGenerationLifecycleTx(ctx context.Context, tx 
 	if _, err = pluginLifecycleState(previous); err != nil {
 		return err
 	}
-	if carried, e := p.carryUninstalledUpdateReviewTx(ctx, tx, previous, in); e != nil {
-		return e
-	} else if carried {
-		return nil
+	// Clone removal has the original plugin-module meaning: its own config
+	// and KV are discarded. Preserve native generation evidence and all files;
+	// never infer clone identity from an ID suffix or a worker-supplied flag.
+	metadata, err := p.instanceMetadata(ctx, tx, instance)
+	if err != nil {
+		return err
+	}
+	removingClone := !in.Installed && metadata.SourceInstanceID != ""
+	if removingClone {
+		if err = p.requireCloneRemovalIdleTx(ctx, tx, instance); err != nil {
+			return err
+		}
+		if _, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state='canceled',error_code='PLUGIN_UNINSTALLED',updated_at=? WHERE instance_id=? AND state='pending'`, now(), instance); err != nil {
+			return err
+		}
+		if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, instance); err != nil {
+			return err
+		}
+	}
+	if !removingClone {
+		if carried, e := p.carryUninstalledUpdateReviewTx(ctx, tx, previous, in); e != nil {
+			return e
+		} else if carried {
+			return nil
+		}
 	}
 	state := pluginLifecycleInactive
 	if in.Installed {

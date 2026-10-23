@@ -186,7 +186,7 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 			to.Generation++
 			result = map[string]bool{"reset": true}
 			if operation == "uninstall" {
-				result = map[string]bool{"uninstalled": true, "data_retained": true}
+				result = map[string]bool{"uninstalled": true, "data_retained": pluginUninstallDataRetained(installation)}
 			}
 		}
 		if err = prepared.publishTx(ctx, tx, to, runID); err != nil {

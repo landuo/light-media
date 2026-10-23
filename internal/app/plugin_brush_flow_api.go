@@ -194,6 +194,11 @@ func (a *App) brushFlowReadAPI(ctx context.Context, in PluginInstallation, run P
 	for id, r := range runtime {
 		core.SetRuntime(id, r)
 	}
+	return brushFlowReadProjectionResponse(ctx, cfg, core, req)
+}
+
+func brushFlowReadProjectionResponse(ctx context.Context, cfg bf.Config, core *bf.Core, req plugins.HTTPRequest) (json.RawMessage, error) {
+	var e error
 	var out any
 	if req.Key == "status" {
 		out, e = core.Status(ctx)
@@ -230,6 +235,7 @@ type brushFlowReadHost struct {
 	bf.Host
 	a           *App
 	run         PluginRun
+	guard       func(context.Context) error
 	data        map[string]json.RawMessage
 	sites       []bf.Site
 	users       []bf.UserData
@@ -237,7 +243,11 @@ type brushFlowReadHost struct {
 }
 
 func (h *brushFlowReadHost) Get(ctx context.Context, key string) (any, error) {
-	if e := h.a.validatePluginHTTPRun(ctx, h.run); e != nil {
+	guard := h.guard
+	if guard == nil {
+		guard = func(ctx context.Context) error { return h.a.validatePluginHTTPRun(ctx, h.run) }
+	}
+	if e := guard(ctx); e != nil {
 		return nil, e
 	}
 	raw := h.data[key]

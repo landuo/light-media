@@ -85,7 +85,7 @@ func (a *App) pluginBrushFlowLifecycleHTTP(w http.ResponseWriter, r *http.Reques
 		if e == nil {
 			(&pluginBrushFlowPrepared{o: o}).resolve(true)
 		}
-		return map[string]bool{"uninstalled": e == nil, "data_retained": true}, e
+		return map[string]bool{"uninstalled": e == nil, "data_retained": pluginUninstallDataRetained(i)}, e
 	}
 	return nil, fmt.Errorf("invalid lifecycle operation")
 }
