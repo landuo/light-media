@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { ref, shallowRef, markRaw, computed, onMounted, onUnmounted, type Component } from 'vue';
+import {
+  ref,
+  useId,
+  shallowRef,
+  markRaw,
+  computed,
+  onMounted,
+  onUnmounted,
+  type Component,
+} from 'vue';
 import { useDisplay } from 'vuetify';
 import { VDialog } from 'vuetify/components/VDialog';
 import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
@@ -15,6 +24,7 @@ import { createPluginRemoteAPI } from '../features/plugin-remote-api';
 const props = defineProps<{ plugin: PluginCard }>();
 const emit = defineEmits<{ close: []; switch: []; changed: [] }>();
 const display = useDisplay();
+const pageScope = 'plugin-page-' + useId().replace(/[^A-Za-z0-9_-]/g, '_');
 const renderMode = ref<'vuetify' | 'vue'>('vuetify');
 const remote = shallowRef<Component>();
 const controller = new AbortController();
@@ -85,7 +95,7 @@ onUnmounted(() => {
           @click="emit('close')"
           ><AppIcon name="close" /></VBtn
       ></VCardTitle>
-      <VCardText class="plugin-data-content">
+      <VCardText class="plugin-data-content" :data-plugin-page-scope="pageScope">
         <p v-if="loading" role="status">正在加载…</p>
         <VAlert v-if="error" type="error" variant="tonal"
           >{{ error }}<VBtn variant="text" @click="load">重试</VBtn></VAlert
@@ -99,6 +109,7 @@ onUnmounted(() => {
             :key="index"
             :node="node"
             :model="{}"
+            :page-scope="pageScope"
           />
           <p v-if="!nodes.length">此插件没有详情页面</p></template
         >

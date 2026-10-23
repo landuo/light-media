@@ -1,3 +1,4 @@
+import { pluginPageStyles } from './plugin-page-styles.ts';
 import type { PluginRuntimeSupport } from './plugin-runtime-support';
 export type PluginFormNode = {
   component: string;
@@ -9,6 +10,7 @@ export type PluginFormNode = {
 const supported = new Set([
   'VForm',
   'VDivider',
+  'VSubheader',
   'VRow',
   'VCol',
   'VSwitch',
@@ -30,6 +32,9 @@ const supported = new Set([
   'u',
 ]);
 const tableElements = new Set([
+  'style',
+  'VSpacer',
+  'VChip',
   'VTable',
   'thead',
   'tbody',
@@ -112,6 +117,22 @@ function validModelKey(value: any): value is string {
   );
 }
 
+function visibilityModelKey(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const match = /^\{\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}\}$/.exec(value);
+  return match && validModelKey(match[1]) ? match[1] : null;
+}
+
+// A single literal model key, not expression evaluation or property traversal.
+// Hiding a field never deletes or rewrites its saved value.
+export function pluginNodeVisible(props: Record<string, any>, model: Record<string, any>): boolean {
+  if (!Object.hasOwn(props, 'show')) return true;
+  const key = visibilityModelKey(props.show);
+  if (!key) return false;
+  const current = model[key]; // Track an initially absent reactive key.
+  return Object.hasOwn(model, key) && !!current;
+}
+
 export function validPluginLink(value: unknown): value is string {
   if (typeof value !== 'string' || !/^https?:\/\//.test(value)) return false;
   try {
@@ -149,11 +170,39 @@ function pluginRenderIssues(
       issues.push('尚未实现的插件组件：' + String(node?.component || 'unknown'));
       continue;
     }
+    if (
+      node.component === 'VSubheader' &&
+      !Object.entries(node.props || {}).every(
+        ([key, value]) => key === 'text' && typeof value === 'string' && value.length <= 2048,
+      )
+    )
+      issues.push('插件小标题属性无效');
+    if (node.component === 'VSpacer' && Object.keys(node.props || {}).length)
+      issues.push('插件间隔组件属性无效');
+    if (
+      node.component === 'VChip' &&
+      !Object.entries(node.props || {}).every(
+        ([key, value]) =>
+          ['color', 'size', 'variant', 'prepend-icon', 'append-icon'].includes(key) &&
+          typeof value === 'string' &&
+          /^[A-Za-z0-9_-]{1,64}$/.test(value),
+      )
+    )
+      issues.push('插件标签组件属性无效');
+    if (
+      node.component === 'style' &&
+      (pluginPageStyles(node.text) === null ||
+        Object.keys(node.props || {}).length ||
+        node.content !== undefined)
+    )
+      issues.push('插件页面样式不在安全展示范围内');
     if (plainTextComponents.has(node.component) && !validPlainTextProps(node.props || {}))
       issues.push('插件文本组件属性无效');
     const passwordAction = originalPasswordAction(node.props || {});
     for (const [key, value] of Object.entries(node.props || {})) {
-      if (passwordAction && Object.hasOwn(larkPasswordAction, key) && key !== 'model') {
+      if (key === 'show' && visibilityModelKey(value)) {
+        continue;
+      } else if (passwordAction && Object.hasOwn(larkPasswordAction, key) && key !== 'model') {
         continue;
       } else if (['model', 'modelvalue', 'v-model'].includes(key)) {
         if (!validModelKey(value)) issues.push('插件表单字段名无效');
@@ -285,7 +334,12 @@ export type PluginCard = {
   update_review_pending?: boolean;
   restore_review?: { version: string; generation: number; revision: number };
   restore_review_blocked_reason?: string;
-  update?: { from_version: string; target_version: string; generation: number; revision: number };
+  update?: {
+    from_version: string;
+    target_version: string;
+    generation: number;
+    revision: number;
+  };
   has_page?: boolean;
   dashboards?: string[];
 };
