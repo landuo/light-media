@@ -314,6 +314,7 @@ async function cardAction(action: string, plugin: PluginCard) {
   else if (action === 'runs') await showRuns(plugin);
   else if (action === 'logs') logPlugin.value = plugin;
   else if (action === 'install') await install(plugin);
+  else if (action === 'restore-reviewed' && plugin.restore_review) await restoreReviewed(plugin);
   else if (action === 'remove-folder' && currentFolder.value) {
     const next = copyOrganization(organization.value),
       name = currentFolder.value;
@@ -324,8 +325,40 @@ async function cardAction(action: string, plugin: PluginCard) {
     if (await persistOrganization(next)) toast('插件已移出文件夹');
   }
 }
+async function restoreReviewed(plugin: PluginCard) {
+  if (
+    busy.value ||
+    plugin.installed ||
+    !plugin.restore_review ||
+    plugin.restore_review_blocked_reason
+  )
+    return;
+  busy.value = true;
+  try {
+    await api(
+      '/plugins/' + encodeURIComponent(plugin.instance_id) + '/restore-reviewed',
+      plugin.restore_review,
+    );
+    toast(plugin.name + '已恢复为待确认，尚未执行；请打开设置核对并保存');
+    installedQuery.value = null;
+    runningFilter.value = false;
+    updateFilter.value = false;
+    tab.value = 'installed';
+    await load();
+  } catch (e) {
+    error.value = errorText(e);
+  } finally {
+    busy.value = false;
+  }
+}
 async function install(plugin: PluginCard) {
-  if (busy.value) return;
+  if (
+    busy.value ||
+    plugin.update_review_pending ||
+    plugin.restore_review ||
+    plugin.restore_review_blocked_reason
+  )
+    return;
   busy.value = true;
   try {
     await api('/plugins/install', { plugin_id: plugin.plugin_id });
@@ -353,9 +386,11 @@ async function confirmAction() {
     );
     toast(
       choice.action === 'update'
-        ? result.initialization
-          ? '内置版本迁移已提交，初始化结果请查看执行记录'
-          : '内置版本已确认，配置和数据保留'
+        ? result.review_pending
+          ? '版本已迁移，尚未执行；请打开当前实例设置核对并保存'
+          : result.initialization
+            ? '内置版本迁移已提交，初始化结果请查看执行记录'
+            : '内置版本已确认，配置和数据保留'
         : choice.action === 'reset'
           ? '插件配置及数据已重置'
           : '插件已卸载，配置及数据保留',
@@ -718,7 +753,7 @@ onUnmounted(() => clearInterval(timer));
           }}</VCardTitle
         ><VCardText class="plugin-dialog-content">{{
           confirmation.action === 'update'
-            ? '更新到当前已编译版本，保留该实例配置、数据和分身信息。迁移提交与初始化执行结果分别记录，是否继续？'
+            ? '更新到当前已编译版本，保留该实例配置、数据和分身信息。旧一次性执行意图不会自动重放，需要时请打开设置重新确认。迁移提交与初始化执行结果分别记录，是否继续？'
             : confirmation.action === 'reset'
               ? '重置将清除该插件的配置及运行数据，是否继续？'
               : '卸载此插件？配置及运行数据会保留。'

@@ -718,3 +718,127 @@ test('update confirmation sends the captured instance snapshot and does not clai
   assert.deepEqual(writes[0].body, offer);
   assert.equal(app.toasts.at(-1), '内置版本迁移已提交，初始化结果请查看执行记录');
 });
+
+test('review-required migration points to current settings without claiming execution', async (t) => {
+  const offer = { from_version: '1.2', target_version: '1.3', generation: 4, revision: 7 };
+  const source = plugin({
+    plugin_id: 'CategoryEditor',
+    instance_id: 'CategoryEditorcopy',
+    version: '1.2',
+    has_update: true,
+    update: offer,
+  });
+  let migrated = false;
+  const api = async (path, body) => {
+    if (path === '/plugins')
+      return [
+        migrated ? { ...source, version: '1.3', has_update: false, update: undefined } : source,
+      ];
+    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
+    if (path === '/plugins/CategoryEditorcopy/update') {
+      migrated = true;
+      return { migration_committed: true, review_pending: true };
+    }
+    throw new Error('Unexpected request ' + path);
+  };
+  const app = await mount(t, 'Plugins', { api });
+  await app.component('PluginManageCard').props.onAction('update', source);
+  await app.flush();
+  const updateDialog = () =>
+    app
+      .nodes()
+      .find(
+        (n) =>
+          n.type?.name === 'VDialog' &&
+          (n.props.modelValue ?? n.props['model-value']) === true &&
+          app.text(n).includes('迁移提交与初始化执行结果分别记录'),
+      );
+  const updateButton = (label) =>
+    app.nodes(updateDialog()).find((n) => n.type?.name === 'VBtn' && app.text(n).trim() === label);
+  assert.ok(updateDialog());
+  await updateButton('取消').props.onClick();
+  await app.flush();
+  assert.equal(app.requests.filter((r) => r.body).length, 0);
+  await app.component('PluginManageCard').props.onAction('update', source);
+  await app.flush();
+  await updateButton('确认').props.onClick();
+  await app.flush();
+  const writes = app.requests.filter((r) => r.body);
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].path, '/plugins/CategoryEditorcopy/update');
+  assert.deepEqual(writes[0].body, offer);
+  assert.equal(app.toasts.at(-1), '版本已迁移，尚未执行；请打开当前实例设置核对并保存');
+});
+
+test('pending update review has an actionable settings entry scoped to the exact clone', async (t) => {
+  const source = plugin({ instance_id: 'CategoryEditorreviewcopy', update_review_pending: true });
+  const card = await mount(t, 'PluginManageCard', { props: { plugin: source } });
+  const item = card
+    .nodes()
+    .find(
+      (n) => n.type?.name === 'VListItem' && n.props.title === '更新已迁移，打开设置确认执行意图',
+    );
+  assert.ok(item);
+  assert.notEqual(item.props.disabled, true);
+  item.props.onClick();
+  assert.equal(card.events[0][1], 'settings');
+  assert.equal(card.events[0][2].instance_id, source.instance_id);
+});
+
+test('retained clone restore action is cold and uses the exact instance snapshot', async (t) => {
+  const snapshot = { version: '1.3', generation: 3, revision: 7 };
+  const retained = plugin({
+    plugin_id: 'CategoryEditor',
+    instance_id: 'CategoryEditorheldcopy',
+    installed: false,
+    restore_review: snapshot,
+    update_review_pending: true,
+  });
+  const card = await mount(t, 'PluginManageCard', { props: { plugin: retained } });
+  const button = card
+    .nodes()
+    .find((n) => n.type?.name === 'VBtn' && card.text(n).trim() === '恢复为待确认');
+  assert.ok(button);
+  button.props.onClick({ stopPropagation() {} });
+  assert.equal(card.events[0][1], 'restore-reviewed');
+  assert.equal(card.events[0][2].instance_id, retained.instance_id);
+  let restored = false;
+  const api = async (path, body) => {
+    if (path === '/plugins')
+      return restored ? [{ ...retained, installed: true, restore_review: undefined }] : [retained];
+    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
+    if (path === '/plugins/CategoryEditorheldcopy/restore-reviewed') {
+      restored = true;
+      return { restored: true, review_pending: true };
+    }
+    throw new Error('Unexpected request ' + path);
+  };
+  const app = await mount(t, 'Plugins', { api });
+  await app.component('PluginManageCard').props.onAction('install', retained);
+  assert.equal(app.requests.filter((r) => r.body).length, 0);
+  await app.component('PluginManageCard').props.onAction('restore-reviewed', retained);
+  await app.flush();
+  const writes = app.requests.filter((r) => r.body);
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].path, '/plugins/CategoryEditorheldcopy/restore-reviewed');
+  assert.deepEqual(writes[0].body, snapshot);
+  assert.match(app.toasts.at(-1), /已恢复为待确认，尚未执行/);
+});
+
+test('unavailable retained version cannot fall through to ordinary install', async (t) => {
+  const card = await mount(t, 'PluginManageCard', {
+    props: {
+      plugin: plugin({
+        installed: false,
+        update_review_pending: true,
+        restore_review_blocked_reason: '当前程序未包含此保留版本',
+      }),
+    },
+  });
+  const button = card
+    .nodes()
+    .find((n) => n.type?.name === 'VBtn' && card.text(n).trim() === '恢复暂不可用');
+  assert.ok(button);
+  assert.equal(button.props.disabled, true);
+  assert.equal(button.props.title, '当前程序未包含此保留版本');
+});

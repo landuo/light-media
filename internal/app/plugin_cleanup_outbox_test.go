@@ -608,7 +608,7 @@ func cleanupOutboxRegisterConsumer(t *testing.T, a *App, types []string) {
 	if err := a.pluginStore.configureEventSubscription(ctx, run, "source-events", types, 0, true); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 }

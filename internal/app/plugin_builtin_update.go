@@ -18,6 +18,7 @@ type pluginUpdateRequest struct {
 	Revision      int64  `json:"revision"`
 }
 type pluginUpdateResult struct {
+	ReviewPending      bool       `json:"review_pending,omitempty"`
 	Changed            bool       `json:"changed"`
 	MigrationCommitted bool       `json:"migration_committed"`
 	Version            string     `json:"version"`
@@ -111,6 +112,7 @@ func (p *PluginStore) updateBuiltin(ctx context.Context, instance string, reques
 	if err = migration.ValidateConfig(append(json.RawMessage(nil), raw...)); err != nil {
 		return out, bad("PLUGIN_UPDATE_CONFIG_INVALID", "原配置不能安全自动迁移，或包含待确认的一次性操作，未更新")
 	}
+	reviewRequired := migration.RequiresExplicitSave != nil && migration.RequiresExplicitSave(append(json.RawMessage(nil), raw...))
 	// Retain only the authenticated host instance marker. Executable metadata is
 	// always the compiled target, never an HTTP body or an old stored manifest.
 	var oldFields, targetFields map[string]json.RawMessage
@@ -140,6 +142,12 @@ func (p *PluginStore) updateBuiltin(ctx context.Context, instance string, reques
 	if err != nil {
 		return out, err
 	}
+	if reviewRequired {
+		next.Manifest, err = pluginUpdateReviewManifest(next, pluginLifecycleCold, revision, deferredInputSHA(raw))
+		if err != nil {
+			return out, err
+		}
+	}
 	manifestSealed, err := p.seal("manifest", instance, "main", next.Manifest)
 	if err != nil {
 		return out, err
@@ -160,8 +168,8 @@ func (p *PluginStore) updateBuiltin(ctx context.Context, instance string, reques
 			return out, err
 		}
 	}
-	out = pluginUpdateResult{Changed: true, MigrationCommitted: true, Version: next.Version, Generation: next.Generation}
-	if next.DesiredEnabled {
+	out = pluginUpdateResult{ReviewPending: reviewRequired, Changed: true, MigrationCommitted: true, Version: next.Version, Generation: next.Generation}
+	if next.DesiredEnabled && !reviewRequired {
 		run, e := p.enqueueRunTx(ctx, tx, instance, "init", nil)
 		if e != nil {
 			return out, e

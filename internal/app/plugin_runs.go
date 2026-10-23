@@ -116,6 +116,9 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	defer tx.Rollback()
+	if err = p.releasePluginUpdateReviewForSaveTx(ctx, tx, instanceID, revision); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	var nativeID string
 	if err = tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&nativeID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -236,6 +239,9 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 	}
 	if !installed || !allowed {
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
+	}
+	if err := p.requirePluginUpdateActivation(ctx, tx, instanceID); err != nil {
+		return PluginRun{}, err
 	}
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
 		return PluginRun{}, err
@@ -612,6 +618,11 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 		return err
 	}
 	defer tx.Rollback()
+	if completed, err := p.completedSupervisedRunTx(ctx, tx, runID); err != nil {
+		return err
+	} else if completed {
+		return bad("PLUGIN_RUN_TERMINAL", "插件执行已结束或不在执行状态")
+	}
 	lease, err := p.requireSupervisedFinishTx(ctx, tx, runID)
 	if err != nil {
 		return err

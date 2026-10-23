@@ -375,7 +375,7 @@ func TestPluginSiteStatisticNotificationRollbackAndEnabledGate(t *testing.T) {
 	if _, err = a.commitSiteStatisticNotice(ctx, run, notice, "all", time.Now().In(shanghai())); err != nil {
 		t.Fatal(err)
 	}
-	if err = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	statisticSave(t, a, cookie, builtin.SiteStatisticConfiguration{Enabled: false, NotifyType: "all"})

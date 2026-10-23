@@ -87,7 +87,7 @@ func pluginFormPropagationPending(t *testing.T, p *PluginStore, instance string,
 		if err = p.configurePluginSchedules(ctx, running, "form_propagation", []pluginScheduleDefinition{definition}, at); err != nil {
 			t.Fatal(err)
 		}
-		if err = p.FinishRun(ctx, running.ID, "succeeded", "", nil); err != nil {
+		if err = finishClaimedFixtureRun(ctx, p, running, "succeeded", "", nil); err != nil {
 			t.Fatal(err)
 		}
 		a := &App{Store: p.store, pluginStore: p}
@@ -304,7 +304,7 @@ func TestPluginFormCommonProjectionWarmAndScopeFreeKeepNineProofEdges(t *testing
 		t.Run(mode, func(t *testing.T) {
 			a, first := originHTTPRun(t, builtin.SystemProcessManifest())
 			p, ctx := a.pluginStore, context.Background()
-			if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+			if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 			pending := pluginFormPropagationPending(t, p, first.InstanceID, true)

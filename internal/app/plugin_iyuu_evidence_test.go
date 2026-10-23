@@ -44,7 +44,7 @@ func TestIYUUActualEvidenceLossNeverCreatesGenesisOrRetires(t *testing.T) {
 				if mode == "root-and-jr-delete" {
 					exec("DELETE FROM plugin_iyuu_roots WHERE instance_id=?", in.InstanceID)
 				}
-			case "run-delete":
+			case "run-delete", "run-and-deferred-delete":
 				// Simulate page/restore loss of the parent row while preserving its child.
 				// Ordinary FK-enforced SQL already rejects this mutation. Only this owned
 				// test connection temporarily disables FK enforcement, then restores it.
@@ -52,8 +52,17 @@ func TestIYUUActualEvidenceLossNeverCreatesGenesisOrRetires(t *testing.T) {
 				if e != nil {
 					t.Fatal(e)
 				}
+				t.Cleanup(func() {
+					_, _ = conn.ExecContext(context.Background(), "PRAGMA foreign_keys=ON")
+					_ = conn.Close()
+				})
 				if _, e = conn.ExecContext(ctx, "PRAGMA foreign_keys=OFF"); e != nil {
 					t.Fatal(e)
+				}
+				if mode == "run-and-deferred-delete" {
+					if _, e = conn.ExecContext(ctx, "DELETE FROM plugin_deferred_operations WHERE run_id=?", run.ID); e != nil {
+						t.Fatal(e)
+					}
 				}
 				if _, e = conn.ExecContext(ctx, "DELETE FROM plugin_runs WHERE id=?", run.ID); e != nil {
 					t.Fatal(e)
@@ -64,9 +73,6 @@ func TestIYUUActualEvidenceLossNeverCreatesGenesisOrRetires(t *testing.T) {
 				conn.Close()
 			case "deferred-delete":
 				exec("DELETE FROM plugin_deferred_operations WHERE run_id=?", run.ID)
-			case "run-and-deferred-delete":
-				exec("DELETE FROM plugin_deferred_operations WHERE run_id=?", run.ID)
-				exec("DELETE FROM plugin_runs WHERE id=?", run.ID)
 			case "deferred-corrupt":
 				exec("UPDATE plugin_deferred_operations SET sealed=X'00' WHERE run_id=?", run.ID)
 			case "run-revision":

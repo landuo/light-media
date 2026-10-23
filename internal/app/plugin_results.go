@@ -37,6 +37,11 @@ func (p *PluginStore) failPluginResult(ctx context.Context, runID, code string) 
 		return err
 	}
 	defer tx.Rollback()
+	if completed, err := p.completedSupervisedRunTx(ctx, tx, runID); err != nil {
+		return err
+	} else if completed {
+		return nil
+	}
 	lease, err := p.requireSupervisedFinishTx(ctx, tx, runID)
 	if err != nil {
 		return err

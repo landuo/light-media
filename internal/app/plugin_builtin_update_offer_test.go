@@ -17,8 +17,8 @@ func TestPluginBuiltinUpdateOffersOnlySafeCompiledTransition(t *testing.T) {
 		t.Fatal(err)
 	}
 	offer, reason, err = p.builtinUpdateOffer(ctx, in)
-	if err != nil || offer != nil || reason == "" {
-		t.Fatal("unsafe one-shot was offered", offer, err)
+	if err != nil || offer == nil || reason != "" {
+		t.Fatal("review-required migration was not offered", offer, err)
 	}
 	in.PluginID = "UnsupportedNative"
 	if offer, reason, err = p.builtinUpdateOffer(ctx, in); err != nil || offer != nil {

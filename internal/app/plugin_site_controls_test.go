@@ -350,6 +350,8 @@ func TestPluginSiteSwitchHostRejectsCrossScopeAndOldConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	runContext := executionLeaseActivate(t, a.pluginStore, run)
+	t.Cleanup(run.executionLease.runCleanup)
 	if _, err := a.pluginHostCall(ctx, installation, &run, identity, "sites.controls.configure", json.RawMessage(`{"instance_id":"another"}`)); pluginErrorCode(err) != "PLUGIN_CAPABILITY_DENIED" {
 		t.Fatal("arbitrary scope accepted", err)
 	}
@@ -360,7 +362,7 @@ func TestPluginSiteSwitchHostRejectsCrossScopeAndOldConfig(t *testing.T) {
 	if _, err := a.pluginHostCall(ctx, installation, &run, identity, "sites.controls.configure", json.RawMessage(`{}`)); pluginErrorCode(err) != "PLUGIN_REVISION_CONFLICT" {
 		t.Fatal("old config still applied", err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "failed", "PLUGIN_REVISION_CONFLICT", nil); err != nil && !errors.Is(err, context.Canceled) {
+	if err := a.pluginStore.FinishRun(runContext, run.ID, "failed", "PLUGIN_REVISION_CONFLICT", nil); err != nil && !errors.Is(err, context.Canceled) {
 		t.Fatal(err)
 	}
 }

@@ -100,7 +100,7 @@ func TestPluginEventAdmissionQueuedBoundaryIgnoresWorkerPayload(t *testing.T) {
 				if !pluginStrictJSON(run.Input, &decoded) || !bytes.Equal(decoded.Input, json.RawMessage(payload)) {
 					t.Fatal("storage marker changed strict worker invocation", string(run.Input))
 				}
-				if err := p.FinishRun(context.Background(), run.ID, "succeeded", "", nil); err != nil {
+				if err := finishClaimedFixtureRun(context.Background(), p, run, "succeeded", "", nil); err != nil {
 					t.Fatal(err)
 				}
 				if err := a.dispatchPluginEvents(context.Background(), time.Now()); err != nil || pluginEventCount(t, a, "plugin_event_deliveries") != 1 {
@@ -119,7 +119,7 @@ func TestPluginEventAdmissionReloadHandlerCursorsAndProgress(t *testing.T) {
 	for _, handler := range []string{"alpha", "beta", "disabled"} {
 		eventAdmissionSubscribe(t, p, first, handler)
 	}
-	if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	for i := 1; i <= 3; i++ {
@@ -490,7 +490,7 @@ func TestPluginEventAdmissionColdReopenRetainsQueuedBoundary(t *testing.T) {
 	if got := eventAdmissionCursor(t, p, run.InstanceID, "synthetic"); got != 1 {
 		t.Fatal("cold queue gap lost", got)
 	}
-	if err = p.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err = finishClaimedFixtureRun(ctx, p, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err = a.dispatchPluginEvents(ctx, time.Now()); err != nil || pluginEventCount(t, a, "plugin_event_deliveries") != 1 {
@@ -675,7 +675,7 @@ func TestPluginEventAdmissionAuthenticLegacyCipherCannotReplaceNewRun(t *testing
 	if _, err = a.Store.DB.Exec(`UPDATE plugin_runs SET input=? WHERE id=?; DELETE FROM plugin_event_admissions WHERE run_id=?`, legacy, old.ID, old.ID); err != nil {
 		t.Fatal(err)
 	}
-	if err = p.FinishRun(ctx, old.ID, "succeeded", "", nil); err != nil {
+	if err = finishClaimedFixtureRun(ctx, p, old, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	current := eventAdmissionQueue(t, a, old.InstanceID, "init", nil)
@@ -702,7 +702,7 @@ func TestPluginEventAdmissionActiveFloorRejectsCapturedRewind(t *testing.T) {
 				ctx := context.Background()
 				first := eventAdmissionQueue(t, a, "admission", "init", nil)
 				eventAdmissionSubscribe(t, p, first, "captured")
-				if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+				if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 					t.Fatal(err)
 				}
 				for i := 1; i <= 3; i++ {
@@ -746,7 +746,7 @@ func TestPluginEventAdmissionInitFloorDoesNotChangeInactiveFallback(t *testing.T
 			ctx := context.Background()
 			first := eventAdmissionQueue(t, a, "admission", "init", nil)
 			eventAdmissionSubscribe(t, p, first, "captured")
-			if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+			if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 			for i := 1; i <= 3; i++ {
@@ -802,7 +802,7 @@ func TestPluginEventAdmissionAbsentHandlerPreservesLateInitRegistration(t *testi
 			// The new admission saw no handler. An older, still-live init now
 			// legitimately installs its earlier boundary before the new run starts.
 			eventAdmissionSubscribe(t, p, older, "late")
-			if err = p.FinishRun(ctx, older.ID, "succeeded", "", nil); err != nil {
+			if err = finishClaimedFixtureRun(ctx, p, older, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 			run, err := p.ClaimRun(ctx)
@@ -846,7 +846,7 @@ func TestPluginEventAdmissionSchemaOneWithoutActiveFloor(t *testing.T) {
 			ctx := context.Background()
 			first := eventAdmissionQueue(t, a, "admission", "init", nil)
 			eventAdmissionSubscribe(t, p, first, "captured")
-			if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+			if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 			for i := 1; i <= 3; i++ {

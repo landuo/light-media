@@ -85,7 +85,7 @@ func TestPluginNormalizeDefaultsRejectsBusyStaleAndConcurrentWrites(t *testing.T
 	if e != nil || v.Revision != 1 {
 		t.Fatal(v, e)
 	}
-	if e = p.FinishRun(ctx, run.ID, "succeeded", "", nil); e != nil {
+	if e = finishClaimedFixtureRun(ctx, p, run, "succeeded", "", nil); e != nil {
 		t.Fatal(e)
 	}
 	var success atomic.Int32
@@ -144,7 +144,7 @@ func TestPluginNormalizeDefaultsPropagatesPendingSnapshotsAndSyntheticEventCurso
 	if err := p.configureEventSubscription(ctx, first, "synthetic_defaults", []string{"import.completed"}, time.Second, true); err != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	commitDomainFixture(t, a, domainFixture("import.completed", "form-defaults"))
@@ -294,7 +294,7 @@ func TestPluginNormalizeDefaultsKeepsSyntheticScheduleAnchorAndOccurrence(t *tes
 	if err := p.configurePluginSchedules(ctx, first, "synthetic_defaults", []pluginScheduleDefinition{definition}, at); err != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(ctx, first.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if n, e := p.enqueueDuePluginSchedules(ctx, at.Add(time.Second)); e != nil || n != 1 {

@@ -62,6 +62,13 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		if !installation.DesiredEnabled {
 			continue
 		}
+		if err := a.pluginStore.requirePluginUpdateActivation(ctx, a.Store.DB, installation.InstanceID); err != nil {
+			if pluginErrorCodeInternal(err) == "PLUGIN_UPDATE_REVIEW_REQUIRED" {
+				a.log("WARN", "plugins", "update_activation_review_pending", "插件版本已迁移，等待核对并显式保存该实例设置；未重放旧执行意图", "", "")
+				continue
+			}
+			return err
+		}
 		if siteReferencePlugin(installation.PluginID) {
 			if _, e := a.pluginStore.readSiteReferenceProtocol(ctx, a.Store.DB, installation); e != nil {
 				if code := pluginErrorCodeInternal(e); code != "PLUGIN_SITE_PROTOCOL_UNCLAIMED" && code != "PLUGIN_SITE_PROTOCOL_INVALID" {
@@ -264,8 +271,12 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 	}
 	// This is the outermost admitted-execution cleanup. A lease cannot finish
 	// before the SDK, deferred business owner and process slot have all exited.
+	// Business host calls can replace run with a freshly authenticated durable
+	// snapshot. That revision projection must not replace the private admission
+	// capability owned by this outer execution frame.
+	claimedRun := run
 	defer func() {
-		if releaseErr := a.pluginStore.releaseSupervisedRun(run); runtimeErr == nil {
+		if releaseErr := a.pluginStore.releaseSupervisedRun(claimedRun); runtimeErr == nil {
 			runtimeErr = releaseErr
 		}
 	}()

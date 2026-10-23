@@ -239,7 +239,7 @@ func TestPluginConfigSaveOriginCloneIsolation(t *testing.T) {
 	a, source := originHTTPRun(t, builtin.SystemProcessManifest())
 	p := a.pluginStore
 	ctx := context.Background()
-	if err := p.FinishRun(ctx, source.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, source, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	clone, err := p.Clone(ctx, source.InstanceID, PluginCloneRequest{Suffix: "copy"})

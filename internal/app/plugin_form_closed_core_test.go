@@ -79,14 +79,24 @@ func pluginClosedCoreFixture(t *testing.T, name string) pluginCommonFormMutation
 		p := a.pluginStore
 		f.store = p
 		run := eventAdmissionQueue(t, a, "admission", "reload", nil)
+		var resultContext context.Context
+		if strings.HasPrefix(name, "result-") {
+			resultContext = executionLeaseActivate(t, p, run)
+			t.Cleanup(run.executionLease.runCleanup)
+		}
 		if name == "result-terminal" {
-			if e := p.FinishRun(ctx, run.ID, "succeeded", "", nil); e != nil {
+			if e := p.FinishRun(resultContext, run.ID, "succeeded", "", nil); e != nil {
 				t.Fatal(e)
 			}
 			f.changesRows = false
 		}
 		if strings.HasPrefix(name, "result-") {
-			f.call = func(c context.Context) error { return p.failPluginResult(c, run.ID, "INVALID_PLUGIN_RESULT") }
+			f.call = func(c context.Context) error {
+				// Retain the actual callback scope/cancellation while adding only
+				// the capability returned by this fixture's real claim activation.
+				call := context.WithValue(c, pluginExecutionLeaseContextKey{}, resultContext.Value(pluginExecutionLeaseContextKey{}))
+				return p.failPluginResult(call, run.ID, "INVALID_PLUGIN_RESULT")
+			}
 			break
 		}
 		before := run

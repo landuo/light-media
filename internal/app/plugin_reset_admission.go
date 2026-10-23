@@ -70,7 +70,7 @@ func (p *PluginStore) beginResetAdmission(ctx context.Context, in PluginInstalla
 	if err := ctx.Err(); err != nil {
 		return ctx, nil, err
 	}
-	if !pluginStorageID.MatchString(in.InstanceID) || !in.Installed || in.Generation < 1 || in.PluginID == "" || in.Version == "" {
+	if !pluginStorageID.MatchString(in.InstanceID) || in.Generation < 1 || in.PluginID == "" || in.Version == "" {
 		return ctx, nil, bad("PLUGIN_SNAPSHOT_STALE", "插件安装状态已变化")
 	}
 	// A running plugin may not synchronously reset and join its own ticket.
@@ -121,6 +121,15 @@ func (p *PluginStore) prepareResetAdmission(ctx context.Context, instance string
 // transaction and checks exact installation identity before any Reset deletion.
 // An empty live registry is not proof that cold durable attempts are resolved.
 func (p *PluginStore) requireResetAdmissionTx(ctx context.Context, tx *sql.Tx, instance string) error {
+	if err := p.requireResetAdmissionIdentityTx(ctx, tx, instance); err != nil {
+		return err
+	}
+	return p.requireResetJournalQuiescenceTx(ctx, tx, instance)
+}
+
+// Bind the original fence and exact installation snapshot before native read-only
+// integrity checks. No lifecycle deletion or schema mutation is authorized yet.
+func (p *PluginStore) requireResetAdmissionIdentityTx(ctx context.Context, tx *sql.Tx, instance string) error {
 	proof, err := p.resetAdmission(ctx, instance)
 	if err != nil || tx == nil {
 		return errors.Join(err, errPluginRunTransitionState)
@@ -139,10 +148,10 @@ func (p *PluginStore) requireResetAdmissionTx(ctx context.Context, tx *sql.Tx, i
 		return err
 	}
 	in := proof.installation
-	if !installed || plugin != in.PluginID || version != in.Version || generation != in.Generation {
+	if installed != in.Installed || plugin != in.PluginID || version != in.Version || generation != in.Generation {
 		return bad("PLUGIN_SNAPSHOT_STALE", "插件安装状态已变化")
 	}
-	return p.requireResetJournalQuiescenceTx(ctx, tx, instance)
+	return nil
 }
 
 // rollback/commit outcomes are recorded at the real transaction, never inferred

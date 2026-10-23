@@ -315,11 +315,16 @@ type pluginEventPage struct {
 // supply file paths; the business host adapter resolves these committed asset
 // references and rechecks ownership/current configuration before any action.
 func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batchID string, after int64, limit int) (pluginEventPage, error) {
+	return p.pluginBatchEventsFrom(ctx, p.store.DB, run, batchID, after, limit, "running")
+}
+
+// Internal historical readers specify the already authenticated persisted state.
+func (p *PluginStore) pluginBatchEventsFrom(ctx context.Context, q pluginRemoveLinkJournalReader, run PluginRun, batchID string, after int64, limit int, state string) (pluginEventPage, error) {
 	out := pluginEventPage{Events: []DomainEvent{}, NextCursor: after}
 	if after < 0 || limit < 1 || limit > 200 {
 		return out, bad("INVALID_EVENT_CURSOR", "插件批次游标或每页数量无效")
 	}
-	err := p.store.DB.QueryRowContext(ctx, `SELECT b.item_count FROM plugin_event_batches b JOIN plugin_runs r ON r.id=b.run_id WHERE b.id=? AND b.run_id=? AND b.instance_id=? AND b.generation=? AND b.config_revision=? AND b.state='queued' AND r.state='running' AND r.instance_id=b.instance_id AND r.generation=b.generation AND r.config_revision=b.config_revision`, batchID, run.ID, run.InstanceID, run.Generation, run.ConfigRevision).Scan(&out.Total)
+	err := q.QueryRowContext(ctx, `SELECT b.item_count FROM plugin_event_batches b JOIN plugin_runs r ON r.id=b.run_id WHERE b.id=? AND b.run_id=? AND b.instance_id=? AND b.generation=? AND b.config_revision=? AND b.state='queued' AND r.state=? AND r.instance_id=b.instance_id AND r.generation=b.generation AND r.config_revision=b.config_revision`, batchID, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, state).Scan(&out.Total)
 	if errors.Is(err, sql.ErrNoRows) {
 		return out, bad("PLUGIN_BATCH_SCOPE_DENIED", "插件不能读取其他执行或已停止批次的事件")
 	}
@@ -329,7 +334,7 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 	if out.Total <= 0 {
 		return out, bad("PLUGIN_BATCH_CORRUPT", "插件事件批次数量无效")
 	}
-	rows, err := p.store.DB.QueryContext(ctx, `SELECT d.event_seq,d.event_id,e.payload FROM plugin_event_deliveries d LEFT JOIN domain_events e ON e.seq=d.event_seq AND e.event_id=d.event_id WHERE d.batch_id=? AND d.instance_id=? AND d.event_seq>? ORDER BY d.event_seq LIMIT ?`, batchID, run.InstanceID, after, limit+1)
+	rows, err := q.QueryContext(ctx, `SELECT d.event_seq,d.event_id,e.payload FROM plugin_event_deliveries d LEFT JOIN domain_events e ON e.seq=d.event_seq AND e.event_id=d.event_id WHERE d.batch_id=? AND d.instance_id=? AND d.event_seq>? ORDER BY d.event_seq LIMIT ?`, batchID, run.InstanceID, after, limit+1)
 	if err != nil {
 		return out, err
 	}
@@ -360,12 +365,12 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 	rows.Close()
 	for _, event := range out.Events {
 		if event.Type == "system.error" {
-			if _, err := p.systemErrorEvent(ctx, p.store.DB, event.SystemErrorID); err != nil {
+			if _, err := p.systemErrorEvent(ctx, q, event.SystemErrorID); err != nil {
 				return out, err
 			}
 		}
 		if event.Type == "plugin.triggered" {
-			if err := p.validateBrushFlowTriggered(ctx, p.store.DB, event); err != nil {
+			if err := p.validateBrushFlowTriggered(ctx, q, event); err != nil {
 				return out, err
 			}
 		}

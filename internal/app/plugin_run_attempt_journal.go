@@ -24,6 +24,12 @@ CREATE TABLE IF NOT EXISTS plugin_run_attempts(
 CREATE INDEX IF NOT EXISTS plugin_run_attempts_instance ON plugin_run_attempts(instance_id,run_id);
 CREATE TABLE IF NOT EXISTS plugin_run_attempt_heads(
  run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,nonce TEXT NOT NULL UNIQUE,sealed BLOB NOT NULL,
+ FOREIGN KEY(nonce) REFERENCES plugin_run_attempts(nonce));
+CREATE TABLE IF NOT EXISTS plugin_run_attempt_retries(
+ nonce TEXT PRIMARY KEY,sealed BLOB NOT NULL,
+ FOREIGN KEY(nonce) REFERENCES plugin_run_attempts(nonce));
+CREATE TABLE IF NOT EXISTS plugin_run_attempt_recoveries(
+ nonce TEXT PRIMARY KEY,sealed BLOB NOT NULL,
  FOREIGN KEY(nonce) REFERENCES plugin_run_attempts(nonce));`
 
 var (
@@ -292,6 +298,9 @@ func (j *pluginRunAttemptJournal) runForAdmission(ctx context.Context, q PluginP
 		return run, errPluginRunAttemptEvidence
 	}
 	_, err = j.p.verifyRunConfigChainTx(ctx, q, admission.PluginID, run, admission.AdmissionRevision, hex.EncodeToString(admission.InputSHA[:]), "")
+	if pluginErrorCodeInternal(err) == "PLUGIN_RUN_PROOF_INVALID" {
+		err = j.p.verifyAttemptUninstallRevision(ctx, q, admission, run, err)
+	}
 	return run, err
 }
 
@@ -336,19 +345,23 @@ func (j *pluginRunAttemptJournal) recordClaimTx(ctx context.Context, tx *sql.Tx,
 	} else if err != nil {
 		return err
 	} else {
-		completion, e := j.loadCompletion(old)
+		retry, e := j.nativeRetryProofTx(ctx, tx, old, false)
 		if e != nil {
 			return e
 		}
-		// Quiescence is not proof that an uncertain external effect is safe to
-		// repeat. A reconcile_pending receipt may release a joined lease, but
-		// may not authorize a new claim of the same business invocation.
-		if completion.Result.State == "reconcile_pending" {
-			return errPluginRunAttemptUnknown
+		if !retry {
+			completion, e := j.loadCompletion(old)
+			if e != nil {
+				return e
+			}
+			if completion.Result.State == "reconcile_pending" {
+				return errPluginRunAttemptUnknown
+			}
 		}
 		if _, err = j.runForAdmission(ctx, tx, old.claim.Admission); err != nil {
 			return err
 		}
+
 		previous = old.claim.Nonce
 	}
 	claim := pluginRunAttemptClaimRecord{1, a.boot, a.nonce, previous, a.admission}
@@ -510,6 +523,39 @@ func (j *pluginRunAttemptJournal) recordCompletionTx(ctx context.Context, tx *sq
 	return nil
 }
 
+// readCurrentCompletionTx verifies an existing completion using only the caller's
+// transaction reader. A nil proof means this exact head has no completion yet;
+// it is not permission to mutate, activate, or release the attempt. Callers must
+// still requireCurrentTx before any unfinished finalization-side mutation.
+func (j *pluginRunAttemptJournal) readCurrentCompletionTx(ctx context.Context, q PluginProofReader, a *pluginRunClaimAttempt) (*pluginRunCompletionProof, error) {
+	stored, err := j.exactHead(ctx, q, a)
+	if err != nil {
+		return nil, err
+	}
+	if len(stored.completion) == 0 {
+		return nil, nil
+	}
+	completion, err := j.loadCompletion(stored)
+	if err != nil {
+		return nil, err
+	}
+	run, err := j.runForAdmission(ctx, q, a.admission)
+	if err != nil {
+		return nil, err
+	}
+	if len(run.Result) == 0 {
+		return nil, errPluginRunAttemptEvidence
+	}
+	actual, err := newPluginRunAttemptResult(run.State, run.ErrorCode, run.Result)
+	if err != nil {
+		return nil, err
+	}
+	if actual != completion.Result || run.ConfigRevision != completion.FinalRevision {
+		return nil, errPluginRunAttemptEvidence
+	}
+	return &pluginRunCompletionProof{a, stored.claimSHA, actual}, nil
+}
+
 // A terminal receipt alone is historical evidence, not authority over the
 // current run. Exact head plus current terminal row plus expected full digest
 // are required. Thus a late completion cannot finalize or release a retry.
@@ -525,30 +571,18 @@ func (j *pluginRunAttemptJournal) resolveCompletion(ctx context.Context, a *plug
 		return nil, err
 	}
 	defer tx.Rollback()
-	stored, err := j.exactHead(ctx, tx, a)
+	proof, err := j.readCurrentCompletionTx(ctx, tx, a)
 	if err != nil {
 		return nil, err
 	}
-	completion, err := j.loadCompletion(stored)
-	if err != nil {
-		return nil, err
+	if proof == nil {
+		return nil, errPluginRunAttemptUnknown
 	}
-	run, err := j.runForAdmission(ctx, tx, a.admission)
-	if err != nil {
-		return nil, err
-	}
-	if len(run.Result) == 0 {
-		return nil, errPluginRunAttemptEvidence
-	}
-	actual, err := newPluginRunAttemptResult(run.State, run.ErrorCode, run.Result)
-	if err != nil {
-		return nil, err
-	}
-	if completion.Result != expected || actual != expected || run.ConfigRevision != completion.FinalRevision {
+	if proof.result != expected {
 		return nil, errPluginRunAttemptEvidence
 	}
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
-	return &pluginRunCompletionProof{a, stored.claimSHA, expected}, nil
+	return proof, nil
 }

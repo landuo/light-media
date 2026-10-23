@@ -279,6 +279,9 @@ export type PluginCard = {
   state: boolean;
   has_update?: boolean;
   update_blocked_reason?: string;
+  update_review_pending?: boolean;
+  restore_review?: { version: string; generation: number; revision: number };
+  restore_review_blocked_reason?: string;
   update?: { from_version: string; target_version: string; generation: number; revision: number };
   has_page?: boolean;
   dashboards?: string[];

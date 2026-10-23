@@ -28,12 +28,13 @@ const (
 // of a consistent old database snapshot, can roll the observation back. Missing
 // evidence is unknown, never evidence that an owner has not started.
 type pluginLifecycleMarker struct {
-	Purpose    string `json:"purpose"`
-	InstanceID string `json:"instance_id"`
-	PluginID   string `json:"plugin_id"`
-	Version    string `json:"version"`
-	Generation int64  `json:"generation"`
-	State      string `json:"state"`
+	UpdateReviewRequired bool   `json:"update_review_required,omitempty"`
+	Purpose              string `json:"purpose"`
+	InstanceID           string `json:"instance_id"`
+	PluginID             string `json:"plugin_id"`
+	Version              string `json:"version"`
+	Generation           int64  `json:"generation"`
+	State                string `json:"state"`
 }
 
 func pluginLifecycleInvalid() error {
@@ -45,13 +46,14 @@ func pluginLifecycleManifest(in PluginInstallation, state string) (json.RawMessa
 	if json.Unmarshal(in.Manifest, &fields) != nil || fields == nil || in.Generation < 1 {
 		return nil, pluginLifecycleInvalid()
 	}
-	raw, err := json.Marshal(pluginLifecycleMarker{pluginLifecyclePurpose, in.InstanceID, in.PluginID, in.Version, in.Generation, state})
+	raw, err := json.Marshal(pluginLifecycleMarker{false, pluginLifecyclePurpose, in.InstanceID, in.PluginID, in.Version, in.Generation, state})
 	if err != nil {
 		return nil, err
 	}
 	// In particular, never carry source lifecycle authority into a new clone.
 	// Keep every other manifest field, including the signed host_instance.
 	fields[pluginLifecycleField] = raw
+	delete(fields, pluginUpdateReviewField)
 	raw, err = json.Marshal(fields)
 	if err != nil {
 		return nil, err
@@ -69,6 +71,9 @@ func pluginLifecycleState(in PluginInstallation) (string, error) {
 	}
 	raw, present := fields[pluginLifecycleField]
 	if !present {
+		if _, reviewPresent := fields[pluginUpdateReviewField]; reviewPresent {
+			return "", pluginLifecycleInvalid()
+		}
 		return pluginLifecycleUnknown, nil
 	}
 	var marker pluginLifecycleMarker
@@ -79,6 +84,9 @@ func pluginLifecycleState(in PluginInstallation) (string, error) {
 	}
 	if marker.State != pluginLifecycleCold && marker.State != pluginLifecycleStarted && marker.State != pluginLifecycleInactive {
 		return "", pluginLifecycleInvalid()
+	}
+	if _, err := pluginUpdateReviewFromFields(in, marker, fields); err != nil {
+		return "", err
 	}
 	return marker.State, nil
 }
@@ -139,6 +147,11 @@ func (p *PluginStore) recordPluginGenerationLifecycleTx(ctx context.Context, tx 
 	if _, err = pluginLifecycleState(previous); err != nil {
 		return err
 	}
+	if carried, e := p.carryUninstalledUpdateReviewTx(ctx, tx, previous, in); e != nil {
+		return e
+	} else if carried {
+		return nil
+	}
 	state := pluginLifecycleInactive
 	if in.Installed {
 		state = pluginLifecycleCold
@@ -169,6 +182,9 @@ func (p *PluginStore) markPluginExecutionStartedTx(ctx context.Context, tx *sql.
 	}
 	state, err := pluginLifecycleState(in)
 	if err != nil {
+		return err
+	}
+	if err := p.requirePluginUpdateActivation(ctx, tx, run.InstanceID); err != nil {
 		return err
 	}
 	if state == pluginLifecycleInactive {
@@ -241,6 +257,9 @@ func (p *PluginStore) resolvePluginFormModeRead(ctx context.Context, q PluginPro
 		var stored plugins.Manifest
 		if json.Unmarshal(current.Manifest, &stored) != nil || stored.Validate() != nil || stored.PluginID != current.PluginID || stored.Version != current.Version || stored.SchemaVersion != current.ManifestSchemaVersion || current.PluginID != requested.PluginID || current.Generation < 1 {
 			return out, pluginLifecycleInvalid()
+		}
+		if _, err := p.pluginUpdateReviewRead(ctx, q, current); err != nil {
+			return out, err
 		}
 		state, err := pluginLifecycleState(current)
 		if err != nil {

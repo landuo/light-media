@@ -155,6 +155,9 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	if json.Unmarshal(out.Manifest, &storedManifest) != nil || storedManifest.Validate() != nil || storedManifest.PluginID != out.PluginID || storedManifest.Version != out.Version {
 		return out, bad("PLUGIN_INSTANCE_METADATA_INVALID", "来源实例与已认证实现元数据不一致")
 	}
+	if _, err = p.pluginUpdateReviewRead(ctx, tx, out); err != nil {
+		return out, err
+	}
 	// Never relabel imported/unclaimed references as native through a clone.
 	if err = p.requirePluginExecutionHandoffTx(ctx, tx, source); err != nil {
 		return out, err

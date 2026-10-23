@@ -311,7 +311,7 @@ func TestPluginAutoSignInTypedReplacementOwnerRetainsUnknownAndUncertainOutbox(t
 
 func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisit(t *testing.T) {
 	ctx := context.Background()
-	f := signinSQLSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
+	f := signinSQLClaimedSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requests.Add(1)
@@ -343,7 +343,7 @@ func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisi
 	if _, err = c.Execute(ctx, f.run.ID, signinjournal.Command{Action: "cold_init"}); err != nil {
 		t.Fatal(err)
 	}
-	if err = f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err = finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	run, err := f.a.pluginStore.EnqueueRun(ctx, "AutoSignIn", "service", json.RawMessage(`{}`))

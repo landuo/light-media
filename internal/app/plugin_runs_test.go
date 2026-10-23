@@ -13,6 +13,21 @@ import (
 	"testing"
 )
 
+// finishClaimedFixtureRun completes synthetic Store setup using the actual claim
+// capability. Negative/late/SQL-fault tests deliberately retain one explicit live
+// execution context instead of using this positive-only setup adapter.
+func finishClaimedFixtureRun(ctx context.Context, p *PluginStore, run PluginRun, state, code string, result json.RawMessage) error {
+	execution, err := p.activateSupervisedRun(ctx, run)
+	if err != nil {
+		return err
+	}
+	defer run.executionLease.runCleanup()
+	if err = p.FinishRun(execution, run.ID, state, code, result); err != nil {
+		return err
+	}
+	return p.releaseSupervisedRun(run)
+}
+
 func TestPluginRunsAtomicSaveAndEncryptedSnapshot(t *testing.T) {
 	s, p := pluginStoreFixture(t)
 	ctx := context.Background()
@@ -57,6 +72,7 @@ func TestPluginRunsClaimOnceAndCancelStaleSnapshots(t *testing.T) {
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 	claimed := []string{}
+	var winningClaim PluginRun
 	for i := 0; i < 5; i++ {
 		wg.Add(1)
 		go func() {
@@ -68,6 +84,7 @@ func TestPluginRunsClaimOnceAndCancelStaleSnapshots(t *testing.T) {
 			if err == nil {
 				mu.Lock()
 				claimed = append(claimed, run.ID)
+				winningClaim = run
 				mu.Unlock()
 			}
 		}()
@@ -77,11 +94,15 @@ func TestPluginRunsClaimOnceAndCancelStaleSnapshots(t *testing.T) {
 	if len(claimed) != 1 || claimed[0] != current.ID || old.State != "canceled" || old.ErrorCode != "PLUGIN_SNAPSHOT_STALE" {
 		t.Fatal("stale or duplicate invocation was claimed", claimed, old.State, old.ErrorCode)
 	}
-	if err := p.FinishRun(ctx, current.ID, "succeeded", "", json.RawMessage(`{"private":"synthetic-worker-result"}`)); err != nil {
+	runContext := executionLeaseActivate(t, p, winningClaim)
+	if err := p.FinishRun(runContext, current.ID, "succeeded", "", json.RawMessage(`{"private":"synthetic-worker-result"}`)); err != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(ctx, current.ID, "failed", "LATE", nil); pluginErrorCode(err) != "PLUGIN_RUN_TERMINAL" {
+	if err := p.FinishRun(runContext, current.ID, "failed", "LATE", nil); pluginErrorCode(err) != "PLUGIN_RUN_TERMINAL" {
 		t.Fatal("terminal run was overwritten", err)
+	}
+	if err := p.releaseSupervisedRun(winningClaim); err != nil {
+		t.Fatal(err)
 	}
 	items, err := p.Runs(ctx, "one", 50)
 	public, _ := json.Marshal(items)
@@ -142,7 +163,7 @@ func TestPluginRunsInternalPatchPreservesQueuedEventAndClearsOneShot(t *testing.
 	if err := p.patchRunConfig(ctx, &active, map[string]json.RawMessage{"onlyonce": json.RawMessage(`false`)}); err != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(ctx, active.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, active, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	claimed, err := p.ClaimRun(ctx)
@@ -158,7 +179,7 @@ func TestPluginRunsInternalPatchPreservesQueuedEventAndClearsOneShot(t *testing.
 	if err != nil || claimed.ID != event.ID || claimed.ConfigRevision != active.ConfigRevision || json.Unmarshal(claimed.Input, &invocation) != nil || invocation.Config.OnlyOnce || invocation.Config.Value != "synthetic-private-config" || invocation.Input.EventID != "fixture-event" {
 		t.Fatal("internal patch canceled event, replayed one-shot or lost payload", claimed.ID, err)
 	}
-	if err := p.FinishRun(ctx, claimed.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, claimed, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	stale, err := p.EnqueueRun(ctx, "one", "event", nil)

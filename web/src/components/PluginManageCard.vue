@@ -58,9 +58,18 @@ watch(icon, () => {
           v-if="!plugin.installed"
           size="small"
           variant="text"
-          :disabled="busy"
-          @click.stop="emit('action', 'install', plugin)"
-          >安装</VBtn
+          :disabled="busy || !!plugin.restore_review_blocked_reason"
+          :title="plugin.restore_review_blocked_reason || undefined"
+          @click.stop="
+            emit('action', plugin.restore_review ? 'restore-reviewed' : 'install', plugin)
+          "
+          >{{
+            plugin.restore_review
+              ? '恢复为待确认'
+              : plugin.restore_review_blocked_reason
+                ? '恢复暂不可用'
+                : '安装'
+          }}</VBtn
         >
         <VMenu v-else-if="!sortable" location="bottom end" :transition="false">
           <template #activator="{ props: menuProps }"
@@ -87,6 +96,9 @@ watch(icon, () => {
               v-if="plugin.has_update && plugin.update"
               :title="'更新至 v' + plugin.update.target_version"
               @click="emit('action', 'update', plugin)" /><VListItem
+              v-if="plugin.update_review_pending"
+              title="更新已迁移，打开设置确认执行意图"
+              @click="emit('action', 'settings', plugin)" /><VListItem
               v-if="plugin.update_blocked_reason"
               disabled
               :title="'更新暂不可用：' + plugin.update_blocked_reason" /><VListItem

@@ -37,6 +37,10 @@ func (a *App) recordSubscriptionAddedTx(ctx context.Context, tx *sql.Tx, subscri
 	return recordDomainEventTx(ctx, tx, event)
 }
 func (a *App) subscriptionAddedSnapshot(ctx context.Context, event DomainEvent) (subscriptionAddedSnapshot, error) {
+	return a.pluginStore.subscriptionAddedSnapshotFrom(ctx, a.Store.DB, event)
+}
+
+func (p *PluginStore) subscriptionAddedSnapshotFrom(ctx context.Context, q PluginProofReader, event DomainEvent) (subscriptionAddedSnapshot, error) {
 	var snapshot subscriptionAddedSnapshot
 	input := event
 	input.Sequence = 0 // Persisted pages carry the host-assigned outbox cursor.
@@ -45,10 +49,10 @@ func (a *App) subscriptionAddedSnapshot(ctx context.Context, event DomainEvent) 
 		return snapshot, bad("INVALID_SUBSCRIPTION_EVENT", "订阅事件引用无法核对")
 	}
 	var sealed []byte
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, event.EventID).Scan(&sealed); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='subscription_added' AND id=?`, event.EventID).Scan(&sealed); err != nil {
 		return snapshot, err
 	}
-	raw, err := a.pluginStore.unseal("subscription_added", "system", event.EventID, sealed)
+	raw, err := p.unseal("subscription_added", "system", event.EventID, sealed)
 	if err != nil {
 		return snapshot, err
 	}

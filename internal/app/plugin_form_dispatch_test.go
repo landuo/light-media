@@ -54,7 +54,7 @@ func pluginFormDispatchFixture(t *testing.T, manifest plugins.Manifest, mode plu
 		if err != nil || claimed.ID != queued.ID {
 			t.Fatal("could not establish a real started generation", err)
 		}
-		if err = p.FinishRun(ctx, claimed.ID, "succeeded", "", nil); err != nil {
+		if err = finishClaimedFixtureRun(ctx, p, claimed, "succeeded", "", nil); err != nil {
 			t.Fatal(err)
 		}
 	case pluginFormInstalledUnknown:
@@ -352,8 +352,19 @@ func TestPluginFormDispatchRejectsCrossScopeAndNestedSessions(t *testing.T) {
 	for _, operation := range []string{"other-instance-data", "other-store-data", "other-store-dispatch", "other-instance-dispatch", "nested-same", "nested-instance", "nested-store", "rebound-session"} {
 		t.Run(operation, func(t *testing.T) {
 			p, ctx, in, _ := pluginFormDispatchFixture(t, builtin.SystemProcessManifest(), pluginFormInstalledStarted, false)
+			deadline, hasDeadline := ctx.Deadline()
+			phaseStart := deadline.Add(-5 * time.Second)
+			statsStart := p.store.DB.Stats()
+			callbackEntered := false
+			phase := func(name string) {
+				stats := p.store.DB.Stats()
+				t.Logf("owned phase=%s request_deadline_present=%t elapsed_from_original_ctx=%s remaining=%s callback_entered=%t primary_wait_count_delta=%d primary_wait_duration_delta=%s", name, hasDeadline, time.Since(phaseStart), time.Until(deadline), callbackEntered, stats.WaitCount-statsStart.WaitCount, stats.WaitDuration-statsStart.WaitDuration)
+			}
+			phase("fixture-complete")
 			_, other := pluginStoreFixture(t)
+			phase("other-store-created")
 			installCloneSource(t, other, builtin.SystemProcessManifest())
+			phase("other-install-complete")
 			otherIn, err := other.Installation(context.Background(), in.InstanceID)
 			if err != nil {
 				t.Fatal(err)
@@ -362,16 +373,34 @@ func TestPluginFormDispatchRejectsCrossScopeAndNestedSessions(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
+			phase("other-session-complete")
 			clone, err := p.Clone(context.Background(), in.InstanceID, PluginCloneRequest{Suffix: "other"})
 			if err != nil {
 				t.Fatal(err)
 			}
+			phase("clone-complete")
+			// The second database, its installation/session and the source clone
+			// are fixture preparation, not part of a new Form request.
+			requestCtx, requestCancel := context.WithTimeout(context.Background(), 5*time.Second)
+			t.Cleanup(requestCancel)
+			requestSession, requestErr := p.beginPluginFormSession(requestCtx, in, pluginFormOriginInstalled)
+			if requestErr != nil || requestSession.resolution.mode != pluginFormInstalledStarted {
+				t.Fatal("fresh request did not authenticate started fixture", requestErr)
+			}
+			ctx = withPluginFormSession(requestCtx, requestSession)
+			deadline, hasDeadline = requestCtx.Deadline()
+			phaseStart = deadline.Add(-5 * time.Second)
+			statsStart = p.store.DB.Stats()
+			phase("fresh-request-ready")
 			nestedCalls := 0
 			nested := pluginFormDispatchCallbacks(func(context.Context, pluginFormView) (json.RawMessage, error) {
 				nestedCalls++
 				return json.RawMessage(`{}`), nil
 			})
+			phase("before-dispatch")
 			_, err = p.dispatchPluginForm(ctx, in, pluginFormCallbacks{Started: func(callCtx context.Context, _ pluginFormView) (json.RawMessage, error) {
+				callbackEntered = true
+				phase("callback-entered")
 				var denied error
 				switch operation {
 				case "other-instance-data":
@@ -396,7 +425,8 @@ func TestPluginFormDispatchRejectsCrossScopeAndNestedSessions(t *testing.T) {
 				}
 				return json.RawMessage(`{}`), nil
 			}})
-			if pluginErrorCode(err) != "PLUGIN_CAPABILITY_DENIED" || nestedCalls != 0 {
+			phase("dispatch-return")
+			if pluginErrorCode(err) != "PLUGIN_CAPABILITY_DENIED" || nestedCalls != 0 || !callbackEntered {
 				t.Fatal("cross-scope attempt was hidden", err)
 			}
 			for _, target := range []struct {

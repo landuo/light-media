@@ -86,8 +86,8 @@ type PluginImport struct {
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
- runSupervisor *pluginRunSupervisor
- runJournal *pluginRunAttemptJournal
+	runSupervisor    *pluginRunSupervisor
+	runJournal       *pluginRunAttemptJournal
 	store            *Store
 	uninstallConfig  pluginUninstallConfigCache
 	installedSource  pluginSourceInstalledCache
@@ -262,13 +262,18 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err = (&PluginStore{store: store}).initNotificationChannelsTx(ctx, tx); err != nil {
 		return nil, err
 	}
-	if _,err=tx.ExecContext(ctx,pluginRunAttemptJournalSchema);err!=nil{return nil,err}
+	if _, err = tx.ExecContext(ctx, pluginRunAttemptJournalSchema); err != nil {
+		return nil, err
+	}
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
-	p := &PluginStore{store: store, runSupervisor:newPluginRunSupervisor()}
- p.runJournal, err = newPluginRunAttemptJournal(p)
- if err != nil { return nil, err }; return p,nil
+	p := &PluginStore{store: store, runSupervisor: newPluginRunSupervisor()}
+	p.runJournal, err = newPluginRunAttemptJournal(p)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
 }
 
 func pluginJSON(value any, object bool) (json.RawMessage, error) {
@@ -371,8 +376,24 @@ func validatePluginInstallation(in PluginInstallation) (PluginInstallation, erro
 }
 
 func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstallation) error {
+	return p.installTxWithReviewRestore(ctx, tx, in, nil)
+}
+
+func (p *PluginStore) installTxWithReviewRestore(ctx context.Context, tx *sql.Tx, in PluginInstallation, restore *pluginReviewRestorePermit) error {
 	if err := p.checkPluginFormWrite(ctx, in.InstanceID, pluginFormWriteLifecycle); err != nil {
 		return err
+	}
+	var restoreReview *pluginUpdateReview
+	if restore == nil {
+		if err := p.requirePluginUpdateActivation(ctx, tx, in.InstanceID); err != nil {
+			return err
+		}
+	} else {
+		var err error
+		restoreReview, err = p.consumeReviewRestorePermit(ctx, tx, in, restore)
+		if err != nil {
+			return err
+		}
 	}
 	if _, e := p.larkTransitionTx(ctx, tx, in.InstanceID); e != nil {
 		return e
@@ -439,7 +460,11 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 	// Fresh host evidence is bound to the target, never copied from a source
 	// manifest. Clone metadata is inserted later in this same transaction.
 	in.Generation = previousGeneration + 1
-	in.Manifest, err = pluginLifecycleManifest(in, pluginLifecycleCold)
+	if restoreReview == nil {
+		in.Manifest, err = pluginLifecycleManifest(in, pluginLifecycleCold)
+	} else {
+		in.Manifest, err = pluginUpdateReviewManifest(in, pluginLifecycleCold, restoreReview.Revision, restoreReview.ConfigSHA)
+	}
 	if err != nil {
 		return err
 	}
@@ -579,6 +604,9 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 		return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", "插件数据不是有效JSON或超过大小上限")
 	}
 	if kind == "config" && key == "main" {
+		if err := p.requirePluginUpdateActivation(ctx, tx, instanceID); err != nil {
+			return PluginStoredValue{}, err
+		}
 		if err := p.pluginNativeConfigWriteTx(ctx, tx, instanceID, expectedRevision, raw); err != nil {
 			return PluginStoredValue{}, err
 		}
@@ -780,7 +808,17 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 		return err
 	}
 	defer proof.rollback(tx)
-	if err = p.requireResetAdmissionTx(ctx, tx, instanceID); err != nil {
+	if err = p.requireResetAdmissionIdentityTx(ctx, tx, instanceID); err != nil {
+		return err
+	}
+	// Preserve the native integrity classification before the generic attempt
+	// proof, without moving the old schema-writing parent hooks ahead of it.
+	if proof.installation.PluginID == "IYUUAutoSeed" {
+		if _, err = p.iyuuTransitionParentReadTx(ctx, tx, instanceID); err != nil {
+			return err
+		}
+	}
+	if err = p.requireResetJournalQuiescenceTx(ctx, tx, instanceID); err != nil {
 		return err
 	}
 	isLark, larkErr := p.larkTransitionTx(ctx, tx, instanceID)
@@ -818,10 +856,12 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 	if changed, _ := result.RowsAffected(); changed == 0 {
 		return sql.ErrNoRows
 	}
-	if err = p.recordPluginGenerationLifecycleTx(ctx, tx, instanceID); err != nil {
+	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, instanceID); err != nil {
 		return err
 	}
-	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, instanceID); err != nil {
+	// A real Reset clears retained intent before stamping either installed or
+	// inactive lifecycle state in this same transaction. Uninstall retains it.
+	if err = p.recordPluginGenerationLifecycleTx(ctx, tx, instanceID); err != nil {
 		return err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {

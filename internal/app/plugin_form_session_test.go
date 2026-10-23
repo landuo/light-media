@@ -237,7 +237,7 @@ func TestPluginFormSessionClaimBeforeNormalizationIsStale(t *testing.T) {
 				t.Fatal(claimed, err)
 			}
 			if finish {
-				if err = p.FinishRun(ctx, claimed.ID, "succeeded", "", nil); err != nil {
+				if err = finishClaimedFixtureRun(ctx, p, claimed, "succeeded", "", nil); err != nil {
 					t.Fatal(err)
 				}
 			}

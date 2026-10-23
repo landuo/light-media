@@ -93,7 +93,11 @@ func TestPluginLifecycleFreshInstallAndCloneChain(t *testing.T) {
 			if err != nil || claimed.ID != queued.ID {
 				t.Fatal(claimed, err)
 			}
-			if err = p.FinishRun(ctx, claimed.ID, "failed", "SYNTHETIC_FAILURE", nil); err != nil {
+			runContext := executionLeaseActivate(t, p, claimed)
+			if err = p.FinishRun(runContext, claimed.ID, "failed", "SYNTHETIC_FAILURE", nil); err != nil {
+				t.Fatal(err)
+			}
+			if err = p.releaseSupervisedRun(claimed); err != nil {
 				t.Fatal(err)
 			}
 			lifecycleWantMode(t, p, in, pluginFormInstalledStarted)
@@ -207,10 +211,12 @@ func TestPluginLifecycleResetReinstallAndInactiveGenerations(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = p.ClaimRun(ctx); err != nil {
+	claimed := executionLeaseClaim(t, p, queued)
+	runContext := executionLeaseActivate(t, p, claimed)
+	if err = p.FinishRun(runContext, queued.ID, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
-	if err = p.FinishRun(ctx, queued.ID, "succeeded", "", nil); err != nil {
+	if err = p.releaseSupervisedRun(claimed); err != nil {
 		t.Fatal(err)
 	}
 	before := lifecycleInstallation(t, p, m.PluginID)
@@ -592,10 +598,12 @@ func TestPluginFormModeReaderRevalidatesInsideDefaultsTransaction(t *testing.T) 
 				if err != nil {
 					t.Fatal(err)
 				}
-				if _, err = p.ClaimRun(ctx); err != nil {
+				claimed := executionLeaseClaim(t, p, queued)
+				runContext := executionLeaseActivate(t, p, claimed)
+				if err = p.FinishRun(runContext, queued.ID, "succeeded", "", nil); err != nil {
 					t.Fatal(err)
 				}
-				if err = p.FinishRun(ctx, queued.ID, "succeeded", "", nil); err != nil {
+				if err = p.releaseSupervisedRun(claimed); err != nil {
 					t.Fatal(err)
 				}
 				want = pluginFormInstalledStarted

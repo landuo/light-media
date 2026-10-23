@@ -167,7 +167,7 @@ func pluginCommonFormAttach(t *testing.T, p *PluginStore, mode pluginFormMode) (
 			if err != nil || claimed.ID != queued.ID {
 				t.Fatal("could not establish a real started form source", err)
 			}
-			if err := p.FinishRun(ctx, claimed.ID, "succeeded", "", nil); err != nil {
+			if err := finishClaimedFixtureRun(ctx, p, claimed, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 		case pluginFormInstalledUnknown:
@@ -522,7 +522,11 @@ func pluginCommonFormMutationFixture(t *testing.T, operation string) pluginCommo
 			}
 		}
 		if operation == "deferred-retry" {
-			if err := p.finishRun(ctx, run.ID, "failed", "PLUGIN_EXECUTION_FAILED", nil, true); err != nil {
+			execution := executionLeaseActivate(t, p, run)
+			if err := p.finishRun(execution, run.ID, "failed", "PLUGIN_EXECUTION_FAILED", nil, true); err != nil {
+				t.Fatal(err)
+			}
+			if err := p.releaseSupervisedRun(run); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -756,7 +760,7 @@ func pluginCommonFormPreparedAttach(t *testing.T, p *PluginStore, mode pluginFor
 			if err != nil || claimed.ID != queued.ID {
 				t.Fatal("could not establish a real started form source", err)
 			}
-			if err := p.FinishRun(ctx, claimed.ID, "succeeded", "", nil); err != nil {
+			if err := finishClaimedFixtureRun(ctx, p, claimed, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 		case pluginFormInstalledUnknown:

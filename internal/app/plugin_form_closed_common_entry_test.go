@@ -240,7 +240,7 @@ func pluginClosedCommonPreparedFixture(t *testing.T, mode pluginFormMode) (*Plug
 			t.Fatal("setup claim", err)
 		}
 		stage("claimed")
-		if err := p.FinishRun(setupCtx, claimed.ID, "succeeded", "", nil); err != nil {
+		if err := finishClaimedFixtureRun(setupCtx, p, claimed, "succeeded", "", nil); err != nil {
 			t.Fatal("setup finish", err)
 		}
 		stage("finished")

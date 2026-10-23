@@ -414,7 +414,7 @@ func TestPluginLifecyclePrivateLarkClaimCommitsColdToStarted(t *testing.T) {
 	// Existing native-core fixtures create authenticated source admissions with
 	// fixture SQL, without using a production plugin claim. Do not forge/reset
 	// the lifecycle marker: this real private child is the first such claim.
-	core, trusted := larkStartedCoreFixture(t, a)
+	core, trusted := lifecycleColdLarkSourceFixture(t, a)
 	child, err := a.larkPrepareCoreModule(trusted, core, pluginLarkModuleInput{Name: "message_parser", Source: "Lark", Metadata: core.inbox.Payload})
 	if err != nil {
 		t.Fatal(err)
@@ -459,4 +459,78 @@ func TestPluginLifecycleManifestCiphertextRejectsOtherInstanceOnly(t *testing.T)
 		t.Fatal(err)
 	}
 	lifecycleWantMode(t, p, clone, pluginFormInstalledCold)
+}
+
+func lifecycleColdLarkInboxFixture(t *testing.T, a *App, source string) (Job, string) {
+	t.Helper()
+	ctx := context.Background()
+	installation, e := a.pluginStore.Installation(ctx, "LarkMessager")
+	if e != nil {
+		t.Fatal(e)
+	}
+	request := plugins.HTTPRequest{RequestID: id("ph_"), Key: "webhook", Method: "POST", Path: "/webhook"}
+	run, e := a.enqueuePluginHTTP(ctx, installation, request, pluginAPIScope{Key: request.Key, Method: request.Method, RequestID: request.RequestID, Authority: pluginAPIAuthority{Kind: "anonymous"}})
+	if e != nil {
+		t.Fatal(e)
+	}
+	// Seed a legacy authenticated source outcome, not an executor completion.
+	// This isolated boundary fixture has never claimed a plugin run, so its
+	// genuine installed generation remains cold. All regular Lark workflow
+	// fixtures use the real webhook claim/finish path instead.
+	sealed, e := a.pluginStore.seal("run_result", run.InstanceID, run.ID, json.RawMessage(`null`))
+	if e != nil {
+		t.Fatal(e)
+	}
+	changed, e := a.Store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='succeeded',result=?,updated_at=? WHERE id=? AND state='pending'`, sealed, now(), run.ID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if n, e := changed.RowsAffected(); e != nil || n != 1 {
+		t.Fatal("legacy source fixture", n, e)
+	}
+	var attempts int
+	if e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_run_attempts WHERE instance_id=?`, run.InstanceID).Scan(&attempts); e != nil || attempts != 0 {
+		t.Fatal("cold fixture accidentally claimed", attempts, e)
+	}
+	var inv plugins.Invocation
+	if e = json.Unmarshal(run.Input, &inv); e != nil {
+		t.Fatal(e)
+	}
+	tx, e := a.Store.DB.BeginTx(ctx, nil)
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer tx.Rollback()
+	inboxID := id("li_")
+	j, e := enqueueTx(ctx, tx, "lark_message", map[string]string{"id": inboxID}, inboxID)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='running',generation=1 WHERE id=?`, j.ID); e != nil {
+		t.Fatal(e)
+	}
+	j.State, j.Generation = "running", 1
+	root, e := a.pluginStore.larkRootRead(ctx, tx, run.InstanceID, run.Generation)
+	if e != nil {
+		t.Fatal(e)
+	}
+	f := pluginLarkInbox{Version: 1, ID: inboxID, Instance: run.InstanceID, Generation: run.Generation, Revision: run.ConfigRevision, OriginRun: run.ID, InputSHA: deferredInputSHA(run.Input), ConfigSHA: tokenHash(string(inv.Config)), Job: j.ID, JobInputSHA: tokenHash(string(j.Payload)), SourceID: source, State: "queued"}
+	if e = a.pluginStore.larkSaveInboxTx(ctx, tx, root, f); e != nil {
+		t.Fatal(e)
+	}
+	if e = tx.Commit(); e != nil {
+		t.Fatal(e)
+	}
+	return j, inboxID
+}
+func lifecycleColdLarkSourceFixture(t *testing.T, a *App) (*pluginLarkCoreExecution, context.Context) {
+	t.Helper()
+	job, inbox := lifecycleColdLarkInboxFixture(t, a, "owned/cold-private-claim")
+	core := &pluginLarkCoreExecution{a: a, job: job}
+	ctx := context.Background()
+	if _, err := a.larkInboxForJob(ctx, job, inbox, core); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(core.release)
+	return core, context.WithValue(ctx, pluginLarkCoreKey{}, core)
 }

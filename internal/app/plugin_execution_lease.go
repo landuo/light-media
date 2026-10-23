@@ -136,6 +136,20 @@ func (p *PluginStore) supervisedLease(ctx context.Context, runID string) (*plugi
 	}
 	return l, nil
 }
+
+// completedSupervisedRunTx is a read-only compatibility preflight. A completed
+// exact attempt may retain FinishRun's terminal error or failPluginResult's
+// no-op result, but cannot acquire fresh write authority. Never compare a late
+// caller's proposed result with the original receipt or change lease.expected.
+func (p *PluginStore) completedSupervisedRunTx(ctx context.Context, tx *sql.Tx, runID string) (bool, error) {
+	l, err := p.supervisedLease(ctx, runID)
+	if err != nil || l == nil {
+		return false, err
+	}
+	proof, err := p.runJournal.readCurrentCompletionTx(ctx, tx, l.claim)
+	return proof != nil, err
+}
+
 func (p *PluginStore) requireSupervisedFinishTx(ctx context.Context, tx *sql.Tx, runID string) (*pluginExecutionLease, error) {
 	l, err := p.supervisedLease(ctx, runID)
 	if err != nil {
@@ -260,6 +274,16 @@ func (p *PluginStore) requireResetJournalQuiescenceTx(ctx context.Context, tx *s
 		if e != nil {
 			return e
 		}
+		// Reset can consume an already durable native-result repair, but never
+		// manufacture recovery authority from a mutable terminal row.
+		recovered, recoveryErr := p.runJournal.nativeCompletionRecoveryTx(ctx, tx, head, false)
+		if recoveryErr != nil {
+			return recoveryErr
+		}
+		if recovered {
+			continue
+		}
+
 		completion, e := p.runJournal.loadCompletion(head)
 		if e != nil {
 			return e
@@ -323,6 +347,37 @@ func (p *PluginStore) quarantineRecoveredAttempts(ctx context.Context) error {
 					actual, ae := newPluginRunAttemptResult(run.State, run.ErrorCode, run.Result)
 					proven = ae == nil && actual == completion.Result && run.ConfigRevision == completion.FinalRevision
 				}
+			}
+		}
+		if !proven && e == nil {
+			var recoveryErr error
+			proven, recoveryErr = p.runJournal.reconcileNativeCompletionTx(ctx, tx, head)
+			if recoveryErr != nil {
+				return recoveryErr
+			}
+		}
+
+		if !proven && e == nil {
+			evidence, classifyErr := p.runJournal.classifyNativeRecoveryTx(ctx, tx, head)
+			if classifyErr == nil && evidence.Class == pluginNativeNoEffectsRetry {
+				retry, proofErr := p.runJournal.nativeRetryProofTx(ctx, tx, head, true)
+				if proofErr != nil {
+					return proofErr
+				}
+				if retry {
+					if _, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state='pending',error_code='',updated_at=? WHERE id=?`, now(), v.id); err != nil {
+						return err
+					}
+					continue
+				}
+			}
+			// Classification errors retain quarantine; no row label authorizes
+			// bypass. A native unknown diagnostic carries no completion/right.
+			if classifyErr == nil && evidence.Class == pluginNativeUnknownBlocked && evidence.Diagnostic != "" {
+				if _, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code=?,updated_at=? WHERE id=?`, evidence.Diagnostic, now(), v.id); err != nil {
+					return err
+				}
+				continue
 			}
 		}
 		if !proven {

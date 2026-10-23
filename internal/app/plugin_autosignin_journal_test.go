@@ -32,6 +32,16 @@ type signinSQLFixture struct {
 }
 
 func signinSQLSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
+	return signinSQLSetupMode(t, false, configs...)
+}
+
+// Only completion/continuation tests request a genuine host claim. Pure SQL
+// journal fixtures retain their original controlled setup and negative inputs.
+func signinSQLClaimedSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
+	return signinSQLSetupMode(t, true, configs...)
+}
+
+func signinSQLSetupMode(t *testing.T, claim bool, configs ...map[string]any) *signinSQLFixture {
 	t.Helper()
 	s, p := pluginStoreFixture(t)
 	a := &App{Store: s, pluginStore: p, Dir: filepath.Dir(s.lock.Name()), autoSignInEnvironment: func() []string { return nil }}
@@ -44,12 +54,20 @@ func signinSQLSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = s.DB.Exec(`UPDATE plugin_runs SET state='running' WHERE id=?`, run.ID); err != nil {
-		t.Fatal(err)
-	}
-	run, err = p.Run(context.Background(), run.ID)
-	if err != nil {
-		t.Fatal(err)
+	if claim {
+		queued := run
+		run, err = p.claimRunForInstance(context.Background(), queued.InstanceID)
+		if err != nil || run.ID != queued.ID {
+			t.Fatal("exact initial claim", err)
+		}
+	} else {
+		if _, err = s.DB.Exec(`UPDATE plugin_runs SET state='running' WHERE id=?`, run.ID); err != nil {
+			t.Fatal(err)
+		}
+		run, err = p.Run(context.Background(), run.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 	o, err := claimPluginAutoSignInOwner(context.Background(), a, run.InstanceID, signinSQLImplementation, "UTC")
 	if err != nil {
@@ -483,7 +501,7 @@ func TestPluginAutoSignInSQLBlockedExecutionLeavesViewsAndOtherInstanceAvailable
 
 func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplicateResume(t *testing.T) {
 	ctx := context.Background()
-	f := signinSQLSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
+	f := signinSQLClaimedSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requests.Add(1)
@@ -516,7 +534,7 @@ func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplica
 	if err != nil || cfg.Revision != 2 {
 		t.Fatal("real cold init did not publish its config save", cfg.Revision, err)
 	}
-	if err = f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err = finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	run, err := f.a.pluginStore.EnqueueRun(ctx, "AutoSignIn", "service", json.RawMessage(`{}`))

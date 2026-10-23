@@ -20,11 +20,14 @@ import (
 )
 
 type pluginCard struct {
-	UpdateBlockedReason string               `json:"update_blocked_reason,omitempty"`
-	Update              *pluginUpdateRequest `json:"update,omitempty"`
-	HasUpdate           bool                 `json:"has_update,omitempty"`
-	DisplayVersion      string               `json:"display_version,omitempty"`
-	SourceInstanceID    string               `json:"source_instance_id,omitempty"`
+	RestoreReview              *pluginReviewRestoreRequest `json:"restore_review,omitempty"`
+	RestoreReviewBlockedReason string                      `json:"restore_review_blocked_reason,omitempty"`
+	UpdateReviewPending        bool                        `json:"update_review_pending,omitempty"`
+	UpdateBlockedReason        string                      `json:"update_blocked_reason,omitempty"`
+	Update                     *pluginUpdateRequest        `json:"update,omitempty"`
+	HasUpdate                  bool                        `json:"has_update,omitempty"`
+	DisplayVersion             string                      `json:"display_version,omitempty"`
+	SourceInstanceID           string                      `json:"source_instance_id,omitempty"`
 	plugins.Manifest
 	InstanceID string `json:"instance_id"`
 	Installed  bool   `json:"installed"`
@@ -137,11 +140,26 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 				return nil, err
 			}
 			card.HasUpdate = card.Update != nil
-			card.State = state
+			review, e := a.pluginStore.pluginUpdateReviewRead(ctx, a.Store.DB, installation)
+			if e != nil {
+				return nil, e
+			}
+			card.UpdateReviewPending = review != nil
+			card.State = state && !card.UpdateReviewPending
 			items = append(items, card)
 		}
 	}
 	if market {
+		recoverable, err := a.pluginReviewRestoreCards(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, card := range recoverable {
+			items = append(items, card)
+			if card.InstanceID == card.PluginID {
+				seen[card.PluginID] = true
+			}
+		}
 		for _, manifest := range builtin.Catalog() {
 			if !seen[manifest.PluginID] {
 				items = append(items, pluginCard{Manifest: manifest, InstanceID: manifest.PluginID})

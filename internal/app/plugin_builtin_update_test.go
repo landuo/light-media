@@ -133,7 +133,7 @@ func TestPluginBuiltinUpdateRollbackPreservesAllOldBytes(t *testing.T) {
 	}
 }
 func TestPluginBuiltinUpdateRejectsStaleAndUnsupported(t *testing.T) {
-	for _, kind := range []string{"generation", "revision", "target", "from", "config", "active-one-shot"} {
+	for _, kind := range []string{"generation", "revision", "target", "from", "config"} {
 		t.Run(kind, func(t *testing.T) {
 			p, r := updateCategoryFixture(t)
 			before := lifecycleInstallation(t, p, "CategoryEditor")
@@ -146,11 +146,6 @@ func TestPluginBuiltinUpdateRejectsStaleAndUnsupported(t *testing.T) {
 				r.TargetVersion = "9.9"
 			case "from":
 				r.FromVersion = "1.0"
-			case "active-one-shot":
-				if _, e := p.SaveConfig(context.Background(), "CategoryEditor", r.Revision, map[string]any{"enabled": true, "content": "owned"}); e != nil {
-					t.Fatal(e)
-				}
-				r.Revision++
 			case "config":
 				if _, e := p.SaveConfig(context.Background(), "CategoryEditor", r.Revision, map[string]any{"enabled": "not-bool"}); e != nil {
 					t.Fatal(e)
