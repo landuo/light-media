@@ -12,6 +12,8 @@ import (
 // getState calls the already-applied object's original state method. Adapters
 // not yet ported fail explicitly rather than guessing enabled from the DB.
 func (p *originalPluginInstance) getState(ctx context.Context) (bool, error) {
+	p.methodMu.Lock()
+	defer p.methodMu.Unlock()
 	p.configMu.RLock()
 	raw := append(json.RawMessage(nil), p.appliedConfig...)
 	nativeState := p.nativeState
@@ -92,4 +94,19 @@ func (a *App) updateOriginalPluginEventState(ctx context.Context, p *originalPlu
 	p.eventsEnabled = enabled
 	p.configMu.Unlock()
 	return nil
+}
+
+// A direct init_plugin call mutates the existing object's members. In
+// particular, empty configuration is not permission to construct a new object.
+func originalTransferConfigurationForInit(ctx context.Context) transfer.Config {
+	if cfg, ok := originalNativeStateBeforeInit(ctx).(transfer.Config); ok {
+		return cfg
+	}
+	return transfer.NewConfig()
+}
+func originalIYUUConfigurationForInit(ctx context.Context) iyuu.Config {
+	if cfg, ok := originalNativeStateBeforeInit(ctx).(iyuu.Config); ok {
+		return cfg
+	}
+	return iyuu.NewConfig()
 }

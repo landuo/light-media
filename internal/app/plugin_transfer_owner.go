@@ -268,7 +268,7 @@ func (a *App) configureTransfer(ctx context.Context, owner *pluginTransferOwner,
 		return nil, e
 	}
 	defer host.Close()
-	cfg = transfer.NewConfig()
+	cfg = originalTransferConfigurationForInit(ctx)
 	init, e := cfg.Init(ctx, input, host)
 	captureOriginalNativeState(ctx, cfg)
 	if applied, snapshotErr := cfg.Snapshot(); snapshotErr == nil {

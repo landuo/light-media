@@ -14,6 +14,8 @@ import (
 // calling init again. More compiled implementations are connected in subsequent
 // slices; unsupported implementations are reported, never counted as ported.
 func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginScheduleDefinition, error) {
+	p.methodMu.Lock()
+	defer p.methodMu.Unlock()
 	switch p.installation.PluginID {
 	case "SystemProcess", "MPServerStatus", "PluginUnInstall":
 		return nil, nil

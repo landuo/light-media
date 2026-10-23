@@ -29,6 +29,7 @@ import (
 type App struct {
 	pluginOriginalInitializingRuns sync.Map
 	pluginOriginalEventsMu         sync.Mutex
+	pluginOriginalResetHandlers    []originalPluginDataResetHandler
 	pluginOriginalReloadQueue      []string
 	pluginOriginalEventDispatching bool
 	pluginOriginalRunningMu        sync.Mutex
@@ -207,7 +208,7 @@ func (a *App) Start(parent context.Context) {
 	if err := a.restoreRemoveLinkOwners(ctx); err != nil {
 		a.log("ERROR", "plugins", "cleanup_restore_pending", "文件清理监听尚未恢复，已保留执行状态，请核对插件记录", "", "")
 	}
-	if err := a.initializeNativePlugins(ctx); err != nil {
+	if err := a.initializeOriginalPlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
 	}
 	for i := 0; i < 2; i++ {

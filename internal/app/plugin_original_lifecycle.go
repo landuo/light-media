@@ -61,6 +61,7 @@ type originalPluginInstance struct {
 	installation  PluginInstallation
 	handler       plugins.Handler
 	manifest      plugins.Manifest
+	methodMu      sync.Mutex
 	configMu      sync.RWMutex
 	appliedConfig json.RawMessage
 	eventsEnabled bool
@@ -69,15 +70,24 @@ type originalPluginInstance struct {
 
 type originalInitializingObjectKey struct{}
 type originalInitializationCall struct {
-	object      *originalPluginInstance
-	mu          sync.Mutex
-	applied     json.RawMessage
-	captured    bool
-	nativeState any
+	object       *originalPluginInstance
+	mu           sync.Mutex
+	applied      json.RawMessage
+	captured     bool
+	nativeState  any
+	nativeBefore any
 }
 
 // Keep the actual Config object even when initialization throws after member
 // mutation. A checkpoint decoder is not the original running object's getter.
+func originalNativeStateBeforeInit(ctx context.Context) any {
+	call, ok := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall)
+	if !ok {
+		return nil
+	}
+	return call.nativeBefore
+}
+
 func captureOriginalNativeState(ctx context.Context, value any) {
 	call, ok := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall)
 	if !ok {
@@ -104,7 +114,12 @@ func captureOriginalAppliedConfiguration(ctx context.Context, value any) {
 }
 
 func (p *originalPluginInstance) init(ctx context.Context) error {
-	call := &originalInitializationCall{object: p}
+	p.methodMu.Lock()
+	defer p.methodMu.Unlock()
+	p.configMu.RLock()
+	previous := p.nativeState
+	p.configMu.RUnlock()
+	call := &originalInitializationCall{object: p, nativeBefore: previous}
 	run, err := p.app.initializeOriginalPlugin(context.WithValue(ctx, originalInitializingObjectKey{}, call), p.installation.InstanceID)
 	if run.ID != "" {
 		p.app.pluginOriginalInitializingRuns.Delete(run.ID)
@@ -133,6 +148,16 @@ func (p *originalPluginInstance) init(ctx context.Context) error {
 
 func (a *App) startOriginalPlugin(ctx context.Context, instance string) *originalPluginInstance {
 	in, err := a.pluginStore.Installation(ctx, instance)
+	if err == nil && !in.Installed {
+		return nil
+	}
+	if err == nil && !in.DesiredEnabled {
+		// The retired staging flag is an internal Go worker eligibility bit,
+		// not the original plugin object's get_state. Installed disabled plugins
+		// are initialized by original start too. Their configuration is untouched.
+		_, err = a.Store.DB.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=1 WHERE instance_id=? AND installed=1`, instance)
+		in.DesiredEnabled = err == nil
+	}
 	if err == nil {
 		manifest, handler, exists := builtin.Lookup(in.PluginID)
 		if !exists || manifest.Version != in.Version {

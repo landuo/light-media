@@ -27,3 +27,19 @@ Old trigger-neutralization/lazy-write/cold-draft proposals and their evidence re
 ## Checkpoint test result
 
 The frozen v9 slice passed the same 11 roots / 31 leaf scenarios in ordinary and race modes on Linux, with zero input hash drift and both sessions reaped. The earlier v8 IYUU fixture failure used a Go integer instead of the real JSON-number input type; only that test input changed, and the failed output remains preserved. Full-module race, normal executable and browser acceptance remain outstanding.
+
+## Subsequent lifecycle endpoint slice (not full-module acceptance)
+
+The actual configuration HTTP entry now saves the original dictionary, initializes the same loaded calling object, and registers services/commands/APIs. A missing running object has the original init_plugin no-op behavior. A stale transport revision is not an original save prerequisite. Save commits before init: an init exception preserves the saved configuration and the original object rather than inventing a transaction rollback. Repeated initialization keeps the actual Transfer/IYUU object, including the original empty-config member retention.
+
+App.Start now invokes the installed-list manager startup, including business-disabled and absent-configuration instances. Original plugin_order metadata is separate from sealed installed manifests. All 21 values were read from original sources; Cloudflare 1.5.1 uses the exact same-version official original source, but a local whole-file installed hash was unavailable for comparison. The retired internal desired_enabled staging bit is normalized for installed initialization; no business enabled configuration value is changed. A running object is still distinct from HTTP success and from business get_state.
+
+Reset sends its synchronous PluginDataReset chain before stop. The chain follows original priority/enabled checks and catches individual handler errors; the Reset endpoint ignores its boolean result. The 21 compiled original classes have no such registered callback. This does not assert a search of every possible third-party original platform subscriber. Config deletion precedes logical-data deletion; a second-operation SQL failure keeps the already-completed config deletion and stopped object, without reloading. Successful Reset then executes the ordinary stop/start/reload-event/register sequence.
+
+Native logical data is isolated into a new internal generation with empty active records. Existing authenticated roots are storage-format bindings, not the old NoUnknown lifecycle permission gate. Old sealed audit records are retained outside the new active namespace. Owned backup ZIP bytes and filesystem directories are not deleted. A real owned archive write with a lost acknowledgment is covered separately: explicit logical-data clearing does not replay it or relabel the old uncertain run. This is not evidence of all native plugins' complete reset/init(None) resource behavior.
+
+Remaining work is unchanged in scope: all catalog standard-method adapters and native resource lifetimes, full ordinary install/update/uninstall endpoints, complete scheduler/command semantics, native initialization with absent configuration for every adapter, full-module tests and real browser verification. Independent plugin business tasks remain paused.
+
+The frozen v16 slice passed 20 roots / 42 leaf scenarios in both ordinary and race modes, with zero source hash drift and both processes reaped. Earlier slice outputs and source manifests remain preserved. No main/dev ref changes are part of this task-branch checkpoint.
+
+The remaining original class-registry versus running-object distinction, including saves or forced resets of unloaded/uninstalled identifiers, is not claimed complete by these installed-instance endpoint tests.
