@@ -149,7 +149,8 @@ func (e *Explorer) request(ctx context.Context, source, method, path string, par
 		Code  int             `json:"code"`
 		Error json.RawMessage `json:"error"`
 	}
-	if source != "anilist_translations" && (decode(data, &envelope) != nil || envelope.Code != 0 || len(envelope.Error) > 0 && string(envelope.Error) != "null" && string(envelope.Error) != "\"\"") {
+	arrayResponse := source == "anilist_translations" || source == "bangumi" && path == "/calendar"
+	if !arrayResponse && (decode(data, &envelope) != nil || envelope.Code != 0 || len(envelope.Error) > 0 && string(envelope.Error) != "null" && string(envelope.Error) != "\"\"") {
 		return failure("invalid_response", 0)
 	}
 	if decode(data, out) != nil {

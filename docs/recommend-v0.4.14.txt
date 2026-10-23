@@ -1,0 +1,54 @@
+光影 v0.4.14 推荐页交付与验证（2026-10-23）
+
+入口：http://192.168.8.129:3120/#discover
+本次按实际运行的 MoviePilot 推荐页和只读原版源码实现；旧 MoviePilot、下载器服务和配置未修改。
+
+页面与操作
+- 顶部：全部、电影、电视剧、动漫、榜单，使用原版分类图标。
+- 首页：144×216 海报、16px 间隔、分区标题和更多入口；横向滚动、两侧翻动按钮、邻近视口懒加载及虚拟渲染。
+- 自定义推荐：560px 弹窗、三列内容选择、全选/全不选/保存；取消丢弃草稿、保存成功才更新，独立持久化。移动端全屏。
+- 更多页：原版标题与海报网格，滚动追加；去重、失败重试，离开返回保留结果与滚动位置。搜索页仅显式搜索规则不变。
+- 卡片沿用探索页真实来源详情、选站搜索、电影订阅和电视剧季选择，不将原生来源编号作为 TMDB 编号。
+
+15 组来源（按实际原版页面顺序）
+1 流行趋势：TMDB all/week
+2 正在热映：豆瓣 movie_showing
+3 Bangumi每日放送：Bangumi calendar，按原版合并全部 weekday 后分页
+4 AniList 当前趋势：TRENDING_DESC
+5 AniList 本季热门：当前上海日期季度/年份，POPULARITY_DESC
+6 TMDB热门电影：discover/movie
+7 TMDB热门电视剧：discover/tv，zh|en|ja|ko（原版前端实际参数）
+8 豆瓣热门电影：movie_hot_gaia
+9 豆瓣热门电视剧：tv_hot
+10 豆瓣热门动漫：tv_animation
+11 豆瓣最新电影：movie/recommend，sort=R
+12 豆瓣最新电视剧：tv/recommend，sort=R
+13 豆瓣电影TOP250：movie_top250
+14 豆瓣国产剧集榜：tv_chinese_best_weekly
+15 豆瓣全球剧集榜：tv_global_best_weekly
+
+参考源码
+MoviePilot-Frontend/src/pages/recommend.vue、pages/browse.vue、router/i18n-menu.ts
+components/slide/VirtualSlideView.vue、SlideViewTitle.vue
+views/discover/MediaCardSlideView.vue、components/dialog/ContentToggleSettingsDialog.vue
+MoviePilot/app/api/endpoints/recommend.py、app/chain/recommend.py 与对应来源模块。
+实际安装的 AniList 两行位置和设置文案以浏览器只读核对为准。
+
+验证证据
+- 隔离发布源：work/_explore_20261023/release（v0.4.13）加本次补丁；未带入主分支尚未发布的插件业务改动。
+- 发布源前端 build/typecheck 通过；25 项推荐/探索动作/搜索状态测试通过。
+- Go 推荐供应商 9 项、应用层 5 项专项测试通过，包含分页、原生身份、上海跨日/季度与设置关闭数据库重开后的持久化；探索回归通过。
+- 独立 NAS 临时容器在无网络、256MiB 内存限制下启动通过，随后删除自建临时容器。
+- 浏览器合成样本：15 项设置取消/保存；分类切换；横向位置1120保留；更多页24条→模拟第二页失败→显式重试47条→70条（含去重）；离开返回保留47条和scrollY=523.5。合成样本未访问真实站点/下载器。
+- 生产实机：15 个来源行全部成功显示原生结果；周榜各10条，其他已验证行显示虚拟化的首屏12张。该数字是渲染窗口数量，不冒充接口总数。
+- 生产更多页：TMDB流行趋势20条→滚动40条；切去站点管理再返回仍40条、scrollY=248.5。
+- 生产设置弹窗15项、内容宽520px、分隔线正常；只读打开/关闭，未替用户改变显示偏好。
+- 浏览器未记录本次页面的 console warning/error。
+- 部署前后设置、插件配置/安装清单、7条迁移收据、密钥/hosts摘要一致；原MoviePilot和qB容器身份未改变。见 recommend-v0.4.14-deployment.json。
+
+验证范围
+未用真实账户新增/取消订阅或发起下载。本次复用已有来源详情和卡片操作；既有剧集组选项、逐季入库/洗版状态、跨来源订阅角标的差异仍以 explore-v0.4.13.txt 记录为准。本报告不声称整个 MoviePilot 或插件平台已全量一致。
+
+截图
+/Users/accidia/Documents/Codex/2026-10-14/s/outputs/light-media-recommend-v0.4.14.png
+/Users/accidia/Documents/Codex/2026-10-14/s/outputs/light-media-recommend-settings-v0.4.14.png

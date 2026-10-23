@@ -50,7 +50,9 @@ function subscribe(m: any) {
           @error="failedImages.add(exploreMediaKey(m))"
         />
         <div v-else class="poster-empty">◈<small>暂无海报</small></div>
-        <span v-if="m.vote_average > 0" class="rating">{{ m.vote_average.toFixed(1) }}</span>
+        <span v-if="m.vote_average > 0" class="rating">{{
+          originalActions ? Number(m.vote_average.toFixed(1)) : m.vote_average.toFixed(1)
+        }}</span>
         <span class="poster-kind" :class="m.media_type">{{
           m.media_type === 'tv' ? '电视剧' : label(m.media_type)
         }}</span>

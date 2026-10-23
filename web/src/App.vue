@@ -7,6 +7,8 @@ import { VIcon } from 'vuetify/components/VIcon';
 import Catalog from './components/Catalog.vue';
 import Explore from './components/Explore.vue';
 import ExploreDetail from './components/ExploreDetail.vue';
+import Recommend from './components/Recommend.vue';
+import RecommendBrowse from './components/RecommendBrowse.vue';
 import Resources from './components/Resources.vue';
 import DownloaderTasks from './components/DownloaderTasks.vue';
 import KeywordResources from './components/KeywordResources.vue';
@@ -338,6 +340,7 @@ onUnmounted(() => {
         </div>
       </header>
       <div id="explore-header" v-show="pageKey === 'explore'" class="explore-tabs-host"></div>
+      <div id="recommend-header" v-show="pageKey === 'discover'" class="explore-tabs-host"></div>
       <div
         v-if="ui.status?.logging?.error || ui.status?.logging?.status === 'failed'"
         class="service-alert"
@@ -383,6 +386,12 @@ onUnmounted(() => {
       </section>
       <main>
         <KeepAlive>
+          <Recommend v-if="pageKey === 'discover'" />
+        </KeepAlive>
+        <KeepAlive :max="15">
+          <RecommendBrowse v-if="pageKey === 'recommend-browse'" :key="route" :route="route" />
+        </KeepAlive>
+        <KeepAlive>
           <Explore v-if="pageKey === 'explore'" />
         </KeepAlive>
         <ExploreDetail v-if="pageKey === 'explore-detail'" :key="route" :route="route" />
@@ -390,7 +399,7 @@ onUnmounted(() => {
           <component :is="searchComponent" v-if="searchComponent" :key="route" :route="route" />
         </KeepAlive>
         <Catalog
-          v-if="['discover', 'detail', 'person'].includes(pageKey)"
+          v-if="['detail', 'person'].includes(pageKey)"
           :key="route"
           :route="route"
         /><Subscriptions
@@ -421,7 +430,7 @@ onUnmounted(() => {
         <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
           v-else-if="pageKey === 'downloads'"
         /><Operations
-          v-else-if="!searchComponent && !['explore', 'explore-detail'].includes(pageKey)"
+          v-else-if="!searchComponent && !['discover', 'recommend-browse', 'explore', 'explore-detail'].includes(pageKey)"
           :key="route"
           :view="route.split('/')[0]!"
           :initial-job="

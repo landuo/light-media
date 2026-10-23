@@ -255,6 +255,17 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		} else {
 			e = &APIError{"NOT_FOUND", "接口不存在", 404}
 		}
+	case p == "catalog/recommend/sources" && method == "GET":
+		out = map[string]any{"sources": catalog.RecommendSources()}
+	case p == "catalog/recommend" && method == "GET":
+		out, e = a.catalogRecommendAPI(r)
+	case p == "catalog/recommend/preferences" && method == "GET":
+		out, e = a.catalogRecommendPreferences(ctx)
+	case p == "catalog/recommend/preferences" && method == "PUT":
+		var in RecommendPreferences
+		if e = decodeBody(w, r, &in); e == nil {
+			out, e = a.saveCatalogRecommendPreferences(ctx, in)
+		}
 	case p == "catalog/explore/preferences" && method == "GET":
 		out, e = a.catalogExplorePreferences(ctx)
 	case p == "catalog/explore/preferences" && method == "PUT":
