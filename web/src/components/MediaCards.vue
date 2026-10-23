@@ -8,6 +8,7 @@ import tmdbLogo from '../assets/tmdb.png';
 import doubanLogo from '../assets/douban.png';
 import bangumiLogo from '../assets/bangumi.png';
 import ExploreActions from './ExploreActions.vue';
+import MediaPoster from './MediaPoster.vue';
 import { exploreMediaKey } from '../features/explore-feed';
 import { exploreImage, exploreDetailRoute } from '../features/explore-media';
 const props = defineProps<{ items: any[]; quickActions?: boolean; originalActions?: boolean }>();
@@ -24,6 +25,9 @@ function detail(m: any) {
 function poster(m: any) {
   return props.originalActions ? exploreImage(m) : image(m.poster_path);
 }
+function posterKey(m: any) {
+  return exploreMediaKey(m) + ':' + poster(m);
+}
 function search(m: any) {
   if (props.originalActions) actions.value?.open(m, 'search');
   else startSearch('resources/' + m.media_type + '/' + m.id);
@@ -39,42 +43,42 @@ function subscribe(m: any) {
       v-for="m in items"
       :key="exploreMediaKey(m)"
       class="media-card"
-      :class="{ 'no-poster': !poster(m) || failedImages.has(exploreMediaKey(m)) }"
+      :class="{ 'no-poster': !poster(m) || failedImages.has(posterKey(m)) }"
     >
       <button class="poster poster-action" @click="detail(m)" :aria-label="'查看' + m.title">
-        <img
-          v-if="poster(m) && !failedImages.has(exploreMediaKey(m))"
+        <MediaPoster
           :src="poster(m)"
           :alt="m.title"
-          loading="lazy"
-          @error="failedImages.add(exploreMediaKey(m))"
-        />
-        <div v-else class="poster-empty">◈<small>暂无海报</small></div>
-        <span v-if="m.vote_average > 0" class="rating">{{
-          originalActions ? Number(m.vote_average.toFixed(1)) : m.vote_average.toFixed(1)
-        }}</span>
-        <span class="poster-kind" :class="m.media_type">{{
-          m.media_type === 'tv' ? '电视剧' : label(m.media_type)
-        }}</span>
-        <span
-          v-if="['present', 'managed', 'external'].includes(m.library_state)"
-          class="media-exists"
-          title="已入库"
-          aria-label="已入库"
-          ><AppIcon name="check-circle"
-        /></span>
-        <img
-          v-if="sourceLogos[m.source || 'themoviedb']"
-          class="media-source"
-          :src="sourceLogos[m.source || 'themoviedb']"
-          :alt="m.source || 'TheMovieDb'"
-        />
-        <span
-          v-else-if="m.source === 'anilist'"
-          class="media-source source-anilist"
-          aria-label="AniList"
-          >A</span
+          @error="failedImages.add(posterKey(m))"
+          @load="failedImages.delete(posterKey(m))"
+          v-slot="{ loaded }"
         >
+          <span v-if="m.vote_average > 0" class="rating">{{
+            originalActions ? Number(m.vote_average.toFixed(1)) : m.vote_average.toFixed(1)
+          }}</span>
+          <span class="poster-kind" :class="m.media_type">{{
+            m.media_type === 'tv' ? '电视剧' : label(m.media_type)
+          }}</span>
+          <span
+            v-if="['present', 'managed', 'external'].includes(m.library_state)"
+            class="media-exists"
+            title="已入库"
+            aria-label="已入库"
+            ><AppIcon name="check-circle"
+          /></span>
+          <img
+            v-if="loaded && sourceLogos[m.source || 'themoviedb']"
+            class="media-source"
+            :src="sourceLogos[m.source || 'themoviedb']"
+            :alt="m.source || 'TheMovieDb'"
+          />
+          <span
+            v-else-if="loaded && m.source === 'anilist'"
+            class="media-source source-anilist"
+            aria-label="AniList"
+            >A</span
+          >
+        </MediaPoster>
       </button>
       <div class="media-overlay" @click="detail(m)">
         <span class="media-year">{{ m.year || '日期待定' }}</span>
@@ -143,24 +147,8 @@ function subscribe(m: any) {
   background: var(--surface-subtle);
   display: block;
 }
-.poster-action img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .poster-action::after {
   content: none;
-}
-.poster-empty {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
-  background: var(--surface-subtle);
-  color: var(--muted);
-  font-size: 32px;
 }
 .rating,
 .poster-kind {
