@@ -1,0 +1,421 @@
+{
+  "scope": "Linux and local storage only; descriptive metadata is not an RPC grant or a substitute for runtime enforcement",
+  "based_on_branch_head": "294d91fc06192b334ae2bc61e3062c7260206d50",
+  "sources": [
+    {
+      "path": "internal/app/plugin_remove_link_capability_test.go",
+      "sha256": "e3df4264606cedb887c66935fb9cba5c22fff119f1ba21e84191194df6546659",
+      "git_blob": "3b84e3979ac2c24c31e9b1b629af9c65135fb7ce"
+    },
+    {
+      "path": "internal/app/plugin_runtime_support_test.go",
+      "sha256": "2911efc1db82a28de3c48f23b7aaeee611fb337945479b0db5f3f8ebbc64980a",
+      "git_blob": "6f18fc0b57c7b9bfce7c05551360b099f0748837"
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "sha256": "e5a8bd39dff72244fd67dc6b3e1ad3c4d5eb48557b7a46f2e230db7825abb3ed",
+      "git_blob": "206b0ccb25b4317f8be6f73721d325fba3b3ce86"
+    },
+    {
+      "path": "internal/plugins/removelink/runtime_support_test.go",
+      "sha256": "bb692ac4b0202119cae2e48cbf7a8eaedeb4bef30705000ebf1b5840a4675753",
+      "git_blob": "e241fcb8b5b31c493820ad924bf384f6aa72ddf2"
+    },
+    {
+      "path": "internal/plugins/removelink/sdk.go",
+      "sha256": "21b92330c9cb92bf183d54357c610265522973dd0a783b9bc1cd8ef78195e96c",
+      "git_blob": "4cd0e9478351f3bf2b999d8230cdcaf4764a3f78"
+    },
+    {
+      "path": "internal/plugins/runtime_support.go",
+      "sha256": "333e6d28a60e5e9d0fb98fc8266e27136b73b8bcd0311e914b2400a67e511c45",
+      "git_blob": "beedf2dc017928e4fbe6510a5eb12b0b51cbe3c5"
+    },
+    {
+      "path": "internal/plugins/runtime_support_test.go",
+      "sha256": "24ecd26a1c3ada774b07a7e414a85fea2fc3975062d6f00ae14c4bb4730d3b88",
+      "git_blob": "500a55188df1591d71a06582bbdc12b27b3eb634"
+    },
+    {
+      "path": "web/src/components/PluginConfigDialog.vue",
+      "sha256": "fb64c2e25e695045c0769e839df36099d74e61184638978b302d9d18ff04eb99",
+      "git_blob": "05e43d509c9708806fb52f0d61fb36f64f632dca"
+    },
+    {
+      "path": "web/src/components/PluginFormRenderer.vue",
+      "sha256": "5401add833b96fe764f6f22189ffdc1e0c0000a4835d083e65c75baa0ab664e5",
+      "git_blob": "7ef8ae7298530969575b19c61aa178a123a84245"
+    },
+    {
+      "path": "web/src/features/plugin-forms.ts",
+      "sha256": "f7a9dbc49053511a3d04ca82bf18a81731132730844e1d180503e7507813edf0",
+      "git_blob": "a90109d289cc827091b69d878db84d77cb0117ab"
+    },
+    {
+      "path": "web/src/features/plugin-runtime-support.ts",
+      "sha256": "930c8673d12086394da142bf4dd5a8242e513be879a3dd4ec25daaddd7cd8ac0",
+      "git_blob": "3e81752dbf727bccaf150e631d6273557a52f4ca"
+    },
+    {
+      "path": "web/tests/plugin-removelink-form.test.mjs",
+      "sha256": "908683b3b1ea42e4a5ab73a661f32678a6d1c16aab3abc5935755fb2f3897d96",
+      "git_blob": "52fc4abd9679087f3362f71442ac5acb2ab14d7e"
+    },
+    {
+      "path": "web/tests/plugin-runtime-support.test.mjs",
+      "sha256": "5bef4f2469d1c5a1cd1f89f0e871acf7fde7fb9c475410eb266bfc19d0030a41",
+      "git_blob": "ab996cee646b9bc57cafb818a058643ef72628e9"
+    }
+  ],
+  "original_form_sha256": "0a7b771fca9e7a460014d84be9b226b60a5aa0a6144d2713486f9cb9b35a36ab",
+  "runtime_support_gates_before_ui_fix": {
+    "support-protocol-normal": {
+      "exit": 0,
+      "roots": 3,
+      "inclusive": 21,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 0.005,
+      "log_sha256": "527b102392023326468428c252670931f2ef1f039a075bc6a4e83901067d7332"
+    },
+    "support-core-normal": {
+      "exit": 0,
+      "roots": 2,
+      "inclusive": 2,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 0.014,
+      "log_sha256": "a719211d8594ec5a9904254b66470d5e7d71a9986e524010766a6b109420dd3d"
+    },
+    "support-app-normal": {
+      "exit": 0,
+      "roots": 2,
+      "inclusive": 8,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 2.03,
+      "log_sha256": "18c979d22878a2ac8777baf7d4e34cfc0a51956c5518e20f7fdc98fe4c68e97c"
+    },
+    "support-app-v2-normal": {
+      "exit": 0,
+      "roots": 1,
+      "inclusive": 1,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 0.291,
+      "log_sha256": "55b14aa5cb3b07488aa0cda37f53835a76397fd78a584768bf3af273fb8f33ee"
+    },
+    "support-protocol-race": {
+      "exit": 0,
+      "roots": 3,
+      "inclusive": 21,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 1.028,
+      "log_sha256": "a34e947daf07a7db79d919e57d242639877299c48ebc03122df5fd70b72a35e5"
+    },
+    "support-core-race": {
+      "exit": 0,
+      "roots": 2,
+      "inclusive": 2,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 1.048,
+      "log_sha256": "e6de9b4f283a931dde02032a0171ecf3408b6d1c9f31f8d543a804feae990249"
+    },
+    "support-app-race": {
+      "exit": 0,
+      "roots": 2,
+      "inclusive": 8,
+      "fail": 0,
+      "skip": 0,
+      "elapsed": 18.253,
+      "log_sha256": "486457adb309fba6ec6439b2451c7ad59ae5aa3edc664dfbf680eceb09d161b4"
+    },
+    "web_check_exit": 0,
+    "web_build_exit": 0,
+    "browser_compile_exit": 0,
+    "browser_binary_sha256": "c047bff53eb5e1b10b97798a9a4ee5d11b13726ef358a44d7265d2d8f93cc3ae",
+    "browser_acceptance": "historical pending at first compile; superseded by browser result below"
+  },
+  "full_go_normal": {
+    "light-media/internal/plugins": {
+      "roots": 43,
+      "inclusive": 256,
+      "failed": 0,
+      "skipped": 0
+    },
+    "light-media/internal/plugins/removelink": {
+      "roots": 16,
+      "inclusive": 158,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "final_frontend": {
+    "tests": 206,
+    "passed": 206,
+    "failed": 0,
+    "skipped": 0,
+    "check_and_build_exit": 0,
+    "test_exit": 0,
+    "test_log_sha256": "c70145217ed2f743eabb570fe5bf2af34ae4bd8e737a48d0912912fa8f21cfc3"
+  },
+  "retained_failures": {
+    "original_form_browser_rejected": "VDivider unsupported, Save disabled; not accepted",
+    "regression_red_exit": 1,
+    "red_stdout_sha256": "9858c3c5bb42df79f6ddb9ee0e7e9d960a82a515c825912666f1da48810bf81f",
+    "browser_red_result_sha256": "d4d87dd40f2f59905ba7afad53259a0344dce82f3cca2e3f9c89e7eb86c2bb83"
+  },
+  "browser": {
+    "result": "passed",
+    "environment": "assistant cloud Chrome; native-terminal-started loopback 3135; actual App.Handler/web.Handler and SDK on owned fixtures, not deployment main",
+    "fixture_source_sha256": "d935eae32943da15f9ee2b3bbe0ee9faa496b5f29d305c3abc97530dc65aac42",
+    "fixture_binary_sha256": "e13911c97c27171e3a3f24334741ca3a983f20f66517a9ff36a2506476e023e6",
+    "compiled_exit": 0,
+    "controls_per_instance": {
+      "checkboxes": 7,
+      "textareas": 5,
+      "numbers": 1,
+      "separators": 4
+    },
+    "both_instances_saved_revision": 2,
+    "both_real_sdk_init_runs": "succeeded",
+    "full_page_reload_and_all_13_fields_read_back": true,
+    "independent_markers": [
+      "owned-main-marker",
+      "owned-clone-marker"
+    ],
+    "independent_delay_values": [
+      37,
+      41
+    ],
+    "independent_notification_and_delay_switches": true,
+    "second_instance_local_mapping_persisted": true,
+    "both_instances_disabled": true,
+    "exit": 0,
+    "owned_child_reaped": true,
+    "tab_closed": true,
+    "evidence": {
+      "completed.json": "63043332790dd22b3b6f55ba2f8c52027b471c6fc4592be6cb2594b1d5561096",
+      "owned-support-instance-saved.json": "ab43031859438eeb4b62953939fdec438d224d137863026a18d6fce7af5d72cc",
+      "form-top.png": "2089f12db08bbe12f85b57c90e65da240c021a7497b1189bd9d399746bc6fbfb",
+      "native-fixture-exit.json": "c5a262687c296b201a8eeff02f87e20d1a21c71a0937435e2bbe905d593cd0cd",
+      "native-fixture.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "native-fixture.stdout": "bf15a302e799ebc891817abfac5f9016648ff2dd3bb9d52c06c26ec1abbe81ff",
+      "form-lower.png": "3022e0cb477a14c3ee123416c3f4e7677c100de6b0d9efdbe92315c08297440f",
+      "readbacks.txt": "64853aacf78240836c48c173b45c9305c5fc22038316a3d14f7ce31bba499c29",
+      "main-readback.txt": "6be6f28a90595beb0a1a015cbf58e9d04ddea99e94c55ba1c5bd63a37135ff05",
+      "second-initial.txt": "c0ccf1476263c6b90713c1bb681cf2eb0039a782f67164d4a51bd6539f3cfcc2",
+      "loaded.txt": "ab910faf5997c24f4abc58c8c6d197f6cb289dee2c683a6b543f1fd8365f55c1",
+      "RemoveLink-saved.json": "b56e95792fae7b4384314cf6398292086a5a1aab77fe18eb1ff4d2dbfb9c1439",
+      "ready.json": "4005263e3d18c3a772d8446b73bd728107ee50c0161364eb2bdb1ed24dc11737",
+      "final.txt": "3efaa94d109daa0a5b083a3ede325619815b659b166b804468de8adc56ef0238"
+    }
+  },
+  "dist": {
+    "old_file_count": 90,
+    "current_file_count": 124,
+    "old_files_removed": 0,
+    "changed_or_added": 35,
+    "files": [
+      {
+        "path": "web/dist/index.html",
+        "sha256": "bd9012596ef88c23ea4dcac380b7f39650c293da22684c647c495c9efc47c61f",
+        "git_blob": "ab038ab8884412fdfac4ecfe99547363213893b2"
+      },
+      {
+        "path": "web/dist/assets/ShortcutTools-CWjFEBWg.js",
+        "sha256": "359dc69fe9fe28dd36a24f67c3fb396fa0b5ccb18349cbc7b771c809ce111168",
+        "git_blob": "e729cd8fdc208f38096c2bd812530a2f5d41a8d3"
+      },
+      {
+        "path": "web/dist/assets/RuleManager-D2XiSkPF.js",
+        "sha256": "356ee6c28bc721561a1b868c2c630bf772248fa674c6bbd0d410319e675433dd",
+        "git_blob": "99ea8f857a66e50534c1d16b0ccc043a0977c668"
+      },
+      {
+        "path": "web/dist/assets/PluginConfigDialog-2WQuAgVL.js",
+        "sha256": "b2d46a329a7ab17eb1a7a02894a268f9af9eb5891782a5587a513466cf32422b",
+        "git_blob": "a2e7f999b28b66b39e4f7d3bd6ecd9f1d0c840d3"
+      },
+      {
+        "path": "web/dist/assets/Plugins-Cv4uXoH8.js",
+        "sha256": "512efa7d25aeedb54fc9c4e3c6821390e0c674a5b7f181f4b866cf5286bdb524",
+        "git_blob": "b9e4c8cef12ef9f7ba070bbbad303c7ef0e1508f"
+      },
+      {
+        "path": "web/dist/assets/PluginFolderDialog-CuKdtg4_.js",
+        "sha256": "e6fb4a80c59943c498cfea78288fc3875cdc0ba1dc46be25bbfa41bdd583e190",
+        "git_blob": "6d218280db9a4d42dca04bef9e7fac642e492d98"
+      },
+      {
+        "path": "web/dist/assets/Plugins-BQxEHfqq.js",
+        "sha256": "f450eac833b92c920f86a9f96f5f9281ced118c7c0eec03be670ea6e014cf7a1",
+        "git_blob": "eb9db3845df71162c7dcc899c2c443a9a40242fb"
+      },
+      {
+        "path": "web/dist/assets/PluginConfigDialog-BDOfWX3S.js",
+        "sha256": "b36dc1b8feabf066f97cc80f72e06714b23a020d474ed644d5ade9a3fdfc4093",
+        "git_blob": "2a2a7305c5350eb145e6098601e6c4bc236021a5"
+      },
+      {
+        "path": "web/dist/assets/ResourceMetadataSettings-yoUzzN3K.js",
+        "sha256": "5430ebd48f8347feee3555d40f78638d525f78dd93dedcaa7416fe52ce8ed55f",
+        "git_blob": "bf126c8e7ddc98734c409fd694bed548fc3e99e7"
+      },
+      {
+        "path": "web/dist/assets/PluginCronField-D65QtBkB.js",
+        "sha256": "e055f704f4046cb9afbfa7712de27c67e48d35e26fc23c9689ba040210b32363",
+        "git_blob": "e9dfbf09ed8227615cc6c5dd37bc0609a92eddc8"
+      },
+      {
+        "path": "web/dist/assets/PluginDashboard-CCJ6uUx5.js",
+        "sha256": "422e76e502abf12b6f4daef7c5fa3f6c28af4e6b89efdea475c3e62dea462035",
+        "git_blob": "a900a0ca59440baac3cc57a74c9db89096c0bc83"
+      },
+      {
+        "path": "web/dist/assets/index-Bzk8h1Pz.js",
+        "sha256": "ba687efeeef44b08709d8ee8174e9386e8067d0cdf529599dc1d121f895b62a3",
+        "git_blob": "70de4f7cd47396f37d3c41711aaf38f10dd97430"
+      },
+      {
+        "path": "web/dist/assets/PluginPieChart-CgRv8CTJ.js",
+        "sha256": "eac6cd04a04d897642262b2785fb5c696612551782303b3cc62d78c4886bed1f",
+        "git_blob": "e7bc85bc4e276b61f920bf5c8110ab75b57b8a15"
+      },
+      {
+        "path": "web/dist/assets/DownloaderConfigDialog-Yjo5tC9E.js",
+        "sha256": "541c1b1be3676dbc43d78fb2139973026679ebf624f0431a8f97318186f0e6f7",
+        "git_blob": "4625eca468e69d51483c4ee47fec3ac2904001b7"
+      },
+      {
+        "path": "web/dist/assets/PluginAppPage-CvD_hVxU.js",
+        "sha256": "170fbed8c31d5faeb4f29de5f759c61f794419f6ca0282240307a04d86329880",
+        "git_blob": "f20b4b7a9bdb30d61a26b62ae381eb469678eafd"
+      },
+      {
+        "path": "web/dist/assets/PluginServices-COiHP9wL.js",
+        "sha256": "18ed86acaa4b732a0a135410485aef95044770e7fae0d29732b2b2f7c5a6eb5e",
+        "git_blob": "38cd2b76046806d8ef5fde4f077cb4250bcda3cc"
+      },
+      {
+        "path": "web/dist/assets/PluginLogDialog-tgC7SRrd.js",
+        "sha256": "47ecdabe6d684d4edbc9fe30527a9e8c8bcd586e2de10a5fde9ef56f9258f92d",
+        "git_blob": "a22043caed888206f4e241b1829439cfb78a3eb7"
+      },
+      {
+        "path": "web/dist/assets/plugin-remote-api-BnKvqtmi.js",
+        "sha256": "0d36290fbf5d3083430dc07edf8d2aeba6843b14c2df3de34ad9a9d9c11b2adf",
+        "git_blob": "5f3302bb5ef13312c170bd17a8a6cc4331bebbbe"
+      },
+      {
+        "path": "web/dist/assets/PluginDataDialog-joZuW77j.js",
+        "sha256": "06393d1b5fc65b2065db80234b14704d2a5abe402d45ad3b3a4ae659a8f23444",
+        "git_blob": "0ce0888db7f905ca29ecf01157b44d00533490b9"
+      },
+      {
+        "path": "web/dist/assets/PluginDataDialog-CZYvvqId.js",
+        "sha256": "2f88bf01d4a96577d41c097a879b3889fb67fe4afe94d522c078e66923ceb558",
+        "git_blob": "325c43989bfbb94e71c3e7c001788d84b9b9bf09"
+      },
+      {
+        "path": "web/dist/assets/RuleManager-CsMg9A44.js",
+        "sha256": "c097485928bed8c9f71294223869e4c71acd2d5277160885e93f89c19a1b6095",
+        "git_blob": "6708f67f2fa4899c36e66964cec88bf626fa7579"
+      },
+      {
+        "path": "web/dist/assets/PluginLogDialog-GRPYJTvl.js",
+        "sha256": "9fc99d18684578843dfc6f0b54a3d02193edc94d5c059e133308ae3a25f9a2e7",
+        "git_blob": "355635a620b1ffa30e58283b6c59edf6a0c0cac3"
+      },
+      {
+        "path": "web/dist/assets/ShortcutTools-mjTAsJ7q.js",
+        "sha256": "de115cb8e3f3d15ee27d394eb6cbd00226d26ec9029d6c2c21ed272d214cf70c",
+        "git_blob": "9ae7647ffc090a6923504b19ca4292b8b761fab8"
+      },
+      {
+        "path": "web/dist/assets/index-CoqgF--f.js",
+        "sha256": "30176bc42ce0d1f87e6079cd2cdb85a877833e6465818da2752a2651ea92a47c",
+        "git_blob": "c500c4b2a436e7e84ebea26dee0ce3a174a20e87"
+      },
+      {
+        "path": "web/dist/assets/PluginAppPage-DvGs_uaB.js",
+        "sha256": "263831948ecc001d795f3f3fe986797e34054fdb8311b92fb7ad72faca7443b2",
+        "git_blob": "6997156d56198234a7a4160db01ae19721dab226"
+      },
+      {
+        "path": "web/dist/assets/PluginServices-BfuxX4dB.js",
+        "sha256": "be3c91c96bbd4a6949282b831475f8c41f99e2810de727d65fcb5a725a9bc4ac",
+        "git_blob": "3f346271126319f89a4419d9e3f753616cc65ed2"
+      },
+      {
+        "path": "web/dist/assets/ResourceMetadataSettings-qCR3AkzO.js",
+        "sha256": "ce1d3b665fde811d470e0f4b963319cc7a5cc0f1cf19427da15d334a9a9c4f61",
+        "git_blob": "ef10e2f27637755b7ae70482a2062b79f0574bce"
+      },
+      {
+        "path": "web/dist/assets/plugin-remote-api-B2K6Z9J5.js",
+        "sha256": "9b14e54eb02e8d9172970e47e708796b4050cbf2a2f8a85de4f977e4e015b1c0",
+        "git_blob": "ab8a54c57a8f85a3e3ef2948a9071a3f49e9f0b0"
+      },
+      {
+        "path": "web/dist/assets/PluginCronField-Cr1CLuPf.js",
+        "sha256": "6f6c62e680e292a5ea9da3c97289868c22264157fba0536d5f6d90c8c38ef520",
+        "git_blob": "dd3ffc91544c553e26ba29a9cfe79a19fdfe95ff"
+      },
+      {
+        "path": "web/dist/assets/PluginFolderDialog-ClCSGWB_.js",
+        "sha256": "de074c15385616f198c099dff714782568191ff5cbc80ce6c7fc41ed85d7cebe",
+        "git_blob": "4db1453d559bc8e60cd9619ec508b5f23d902334"
+      },
+      {
+        "path": "web/dist/assets/PluginFormRenderer-BWKOOm_M.js",
+        "sha256": "b9c2323c952091adb1076e3437508f16956bf0a5d90d215b0efc1ac186b59b66",
+        "git_blob": "b3ab0bfe74c64e3565d725b8777d9e7808bf40fc"
+      },
+      {
+        "path": "web/dist/assets/PluginPieChart-C2tewW_o.js",
+        "sha256": "571ef099d33373f49bb6f7013b4f3f26518d3f45790b5ed2b0ee59e1534ff18f",
+        "git_blob": "c973980b6d243e64d99eca14b50def3de3099f92"
+      },
+      {
+        "path": "web/dist/assets/PluginFormRenderer-Do8VU-nP.js",
+        "sha256": "e3a215e4176cdff239d2bcbeb39b33d352ace602d4d7271732703cfbfba3c719",
+        "git_blob": "fa7fd7635969decad82dd1487fbf9addf443de68"
+      },
+      {
+        "path": "web/dist/assets/DownloaderConfigDialog-DOX0sVjj.js",
+        "sha256": "b93341bb1425e88e42fc9892b470547ec625f1f23bd893cd3b487431e0ce4c95",
+        "git_blob": "44c1b55f3519b7f80adc74eb2f1fd497b6e7f2eb"
+      },
+      {
+        "path": "web/dist/assets/PluginDashboard-DW6_Kkzs.js",
+        "sha256": "5c58dc1e722ea6bd422a99219db15596d3337754e597e9c289bfb476f933fe87",
+        "git_blob": "f9b9e398a94973bfdadeae47dcf922040d02cc96"
+      }
+    ]
+  },
+  "interpretation": [
+    "The former 150-root producer gates describe the separately frozen producer layer, not an invented full run of all tests on this metadata/UI candidate.",
+    "RuntimeSupport Go source is unchanged after the targeted race and full ordinary gates; the VDivider change is a generic frontend renderer/allowlist addition.",
+    "Save-revision fixture output intentionally omits configuration payloads; persistence evidence is the real UI readback after whole-page reload, plus actual SDK succeeded runs.",
+    "Unsupported nonlocal execution rejection is covered separately by the already published six-case normal/race host test, not by notice text alone."
+  ],
+  "final-vet": {
+    "exit": 0,
+    "CGO_ENABLED": "0",
+    "tags": "modernconly",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "final-cmd-build": {
+    "exit": 0,
+    "CGO_ENABLED": "0",
+    "tags": "modernconly",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "command_packages": 23
+  }
+}
