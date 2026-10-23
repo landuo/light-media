@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { api, apiURL, bytes, date, errorText, image, label, toast, ui } from '../api';
 import {
@@ -561,10 +562,14 @@ onUnmounted(() => {
           </header>
           <form @submit.prevent="executeOperation">
             <p v-if="operationError" class="error-box" role="alert">{{ operationError }}</p>
-            <label v-if="operation !== 'delete'"
-              >{{ operation === 'mkdir' ? '目录名称' : '新名称'
-              }}<input v-model="operationName" autofocus :disabled="operationBusy" required
-            /></label>
+            <VTextField
+              v-if="operation !== 'delete'"
+              v-model="operationName"
+              autofocus
+              :disabled="operationBusy"
+              required
+              :label="String(operation === 'mkdir' ? '目录名称' : '新名称').trim()"
+            />
             <p v-else>
               确认删除{{
                 operationPaths.length === 1

@@ -137,8 +137,10 @@ async function mount(t, { view = 'subscriptions', items = [subscription()] } = {
       if (dependency === '../features/subscription-filters') return subscriptionFilters;
       if (dependency === '../features/subscription-calendar') return calendar;
       if (dependency === '../features/download-directories') return directories;
-      if (dependency === 'vuetify/components/VTextarea')
-        return { VTextarea: { name: 'VTextarea' } };
+      if (/^vuetify\/components\/(VTextarea|VTextField|VSelect)$/.test(dependency)) {
+        const name = dependency.split('/').at(-1);
+        return { [name]: { name } };
+      }
       if (dependency.endsWith('.vue'))
         return { name: dependency.split('/').at(-1).replace('.vue', '') };
       throw new Error('Unexpected dependency ' + dependency);

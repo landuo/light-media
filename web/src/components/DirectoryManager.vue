@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
+import { VSelect } from 'vuetify/components/VSelect';
 import AppIcon from './AppIcon.vue';
 import { onMounted, ref } from 'vue';
 import { api, action, clone, errorText, refreshSettings, toast } from '../api';
@@ -137,10 +139,7 @@ onMounted(load);
           @drop.prevent="drop(directory._key)"
         >
           <header>
-            <label>
-              <span class="hint">目录别名</span>
-              <input v-model.trim="directory.name" required maxlength="80" />
-            </label>
+            <VTextField v-model.trim="directory.name" required maxlength="80" label="目录别名" />
             <button
               type="button"
               class="icon-button directory-drag"
@@ -162,14 +161,16 @@ onMounted(load);
             </button>
           </header>
           <div v-show="expanded.includes(directory._key)" class="directory-fields form-grid">
-            <label
-              >媒体类型<select v-model="directory.media_type">
-                <option value="mixed">全部</option>
-                <option value="movie">电影</option>
-                <option value="tv">电视剧</option>
-              </select></label
-            >
-            <label>资源存储<input value="本地" readonly /></label>
+            <VSelect
+              v-model="directory.media_type"
+              label="媒体类型"
+              :items="[
+                { title: '全部', value: 'mixed' },
+                { title: '电影', value: 'movie' },
+                { title: '电视剧', value: 'tv' },
+              ]"
+            />
+            <VTextField model-value="本地" readonly label="资源存储" />
             <PathPicker
               v-model="directory.source_path"
               label="资源目录"
@@ -177,34 +178,39 @@ onMounted(load);
               required
               placeholder="/media/download"
             />
-            <label class="span-two"
-              >自动整理<select v-model="directory.monitor_type">
-                <option value="none">不整理</option>
-                <option value="downloader">下载器监控</option>
-                <option value="monitor">目录监控</option>
-              </select></label
-            >
+            <VSelect
+              class="span-two"
+              v-model="directory.monitor_type"
+              label="自动整理"
+              :items="[
+                { title: '不整理', value: 'none' },
+                { title: '下载器监控', value: 'downloader' },
+                { title: '目录监控', value: 'monitor' },
+              ]"
+            />
             <template v-if="directory.monitor_type !== 'none'">
-              <label>媒体库存储<input value="本地" readonly /></label>
-              <label
-                >整理方式<select v-model="directory.mode">
-                  <option value="hardlink">硬链接</option>
-                  <option value="copy">复制</option>
-                  <option value="auto">自动</option>
-                </select></label
-              >
-              <label
-                >覆盖模式<select
-                  v-model="directory.overwrite_mode"
-                  @change="directory.overwrite_mode_known = true"
-                >
-                  <option :value="null" disabled>请选择</option>
-                  <option value="never">从不</option>
-                  <option value="always">总是</option>
-                  <option value="size">按文件大小</option>
-                  <option value="latest">仅保留最新</option>
-                </select></label
-              >
+              <VTextField model-value="本地" readonly label="媒体库存储" />
+              <VSelect
+                v-model="directory.mode"
+                label="整理方式"
+                :items="[
+                  { title: '硬链接', value: 'hardlink' },
+                  { title: '复制', value: 'copy' },
+                  { title: '自动', value: 'auto' },
+                ]"
+              />
+              <VSelect
+                v-model="directory.overwrite_mode"
+                @update:model-value="directory.overwrite_mode_known = true"
+                label="覆盖模式"
+                :items="[
+                  { title: '请选择', value: null, props: { disabled: true } },
+                  { title: '从不', value: 'never' },
+                  { title: '总是', value: 'always' },
+                  { title: '按文件大小', value: 'size' },
+                  { title: '仅保留最新', value: 'latest' },
+                ]"
+              />
               <PathPicker
                 v-model="directory.library_path"
                 label="媒体库目录"

@@ -66,7 +66,19 @@ export const pluginUI = createVuetify({
     VDialog: { elevation: 0, rounded: 'lg', transition: false },
     VTextField: { variant: 'outlined', color: 'primary', hideDetails: 'auto' },
     VTextarea: { variant: 'outlined', color: 'primary', hideDetails: 'auto' },
-    VSelect: { variant: 'outlined', color: 'primary', hideDetails: 'auto' },
+    VSelect: {
+      variant: 'outlined',
+      color: 'primary',
+      hideDetails: 'auto',
+      menuProps: { elevation: 0 },
+    },
+    VAutocomplete: { variant: 'outlined', color: 'primary', hideDetails: 'auto' },
+    VCombobox: {
+      variant: 'outlined',
+      color: 'primary',
+      hideDetails: 'auto',
+      menuProps: { elevation: 0 },
+    },
     VSwitch: { color: 'primary', hideDetails: 'auto' },
   },
 });

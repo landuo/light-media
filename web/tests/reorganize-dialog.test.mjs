@@ -41,6 +41,10 @@ function openDialog(t, initial = {}, options = {}) {
     if (name === '../api') return apiModule;
     if (name === './FileManagerIcon.vue') return { default: {} };
     if (name === './DirectoryPathPicker.vue') return { name: 'DirectoryPathPicker' };
+    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(name)) {
+      const component = name.split('/').at(-1);
+      return { [component]: { name: component } };
+    }
     if (name === 'vue')
       return {
         ...vue,
@@ -65,13 +69,16 @@ function openDialog(t, initial = {}, options = {}) {
       if (!node || typeof node !== 'object') return;
       if (Array.isArray(node)) return node.forEach(visit);
       result.push(node);
-      visit(node.children);
+      if (node.children && !Array.isArray(node.children) && typeof node.children === 'object') {
+        for (const slot of Object.values(node.children))
+          if (typeof slot === 'function') visit(slot());
+      } else visit(node.children);
     }
     visit(render({}, []));
     return result;
   }
   const pathInput = () => nodes().find((node) => node.props?.['aria-label'] === '目的路径');
-  const selects = () => nodes().filter((node) => node.type === 'select');
+  const selects = () => nodes().filter((node) => node.type?.name === 'VSelect');
   const switches = () => nodes().filter((node) => node.props?.type === 'checkbox');
   const previewButton = () => nodes().find((node) => node.props?.class === 'preview-action');
   return {
@@ -87,7 +94,7 @@ function openDialog(t, initial = {}, options = {}) {
       await vue.nextTick();
     },
     async path(value) {
-      pathInput().props.onInput({ target: { value } });
+      pathInput().props['onUpdate:modelValue'](value);
       await vue.nextTick();
     },
     async select(index, value) {
@@ -114,12 +121,12 @@ test('manual target can be edited and cleared without changing storage, mode, or
   await dialog.toggle(1, true);
   await dialog.path('/library');
   await dialog.path('/library/custom');
-  assert.equal(dialog.pathInput().props.value, '/library/custom');
+  assert.equal(dialog.pathInput().props['model-value'], '/library/custom');
   assert.equal(dialog.pathInput().props.disabled, false);
   assert.equal(dialog.pathInput().props.readonly, undefined);
   assert.ok(dialog.switches().every((node) => node.props.checked));
   await dialog.path('');
-  assert.equal(dialog.pathInput().props.value, '');
+  assert.equal(dialog.pathInput().props['model-value'], '');
   const body = await dialog.preview();
   assert.equal(body.target_path, '');
   assert.equal(body.target_storage, 'local');
@@ -135,7 +142,7 @@ test('storage and method changes preserve the custom target and explicit classif
   await dialog.select(0, '');
   await dialog.select(1, 'copy');
   await dialog.select(1, 'hardlink');
-  assert.equal(dialog.pathInput().props.value, '/library/custom');
+  assert.equal(dialog.pathInput().props['model-value'], '/library/custom');
   const body = await dialog.preview();
   assert.equal(body.target_path, '/library/custom');
   assert.equal(body.target_storage, '');
@@ -149,7 +156,7 @@ test('choosing automatic target retains other automatic values and preserves exp
   await dialog.toggle(0, false);
   await dialog.toggle(1, false);
   await dialog.path('自动');
-  assert.equal(dialog.pathInput().props.value, '');
+  assert.equal(dialog.pathInput().props['model-value'], '');
   const body = await dialog.preview();
   assert.equal(body.target_path, '');
   assert.equal(body.target_storage, '');
@@ -165,7 +172,7 @@ test('directory tree selection only changes the target path', async (t) => {
   await dialog.toggle(0, true);
   await dialog.toggle(1, true);
   await dialog.browsePath('/library/from-tree');
-  assert.equal(dialog.pathInput().props.value, '/library/from-tree');
+  assert.equal(dialog.pathInput().props['model-value'], '/library/from-tree');
   const body = await dialog.preview();
   assert.equal(body.target_path, '/library/from-tree');
   assert.equal(body.target_storage, 'local');
@@ -235,7 +242,7 @@ test('preview remains an action and every later click requests current form valu
   assert.ok(
     dialog.nodes().some((node) => renderedText(node).includes('/library/changed/preview-3.mkv')),
   );
-  assert.equal(dialog.pathInput().props.value, '/library/changed');
+  assert.equal(dialog.pathInput().props['model-value'], '/library/changed');
 });
 
 test('a pending preview keeps its label and blocks duplicate requests', async (t) => {
@@ -294,7 +301,7 @@ test('failed refresh clears old preview results, retains the form, and allows an
     dialog.nodes().some((node) => renderedText(node).includes('result-1.mkv')),
     false,
   );
-  assert.equal(dialog.pathInput().props.value, '/library/retained');
+  assert.equal(dialog.pathInput().props['model-value'], '/library/retained');
   assert.equal(renderedText(dialog.previewButton()).trim(), '预览');
   assert.equal(dialog.previewButton().props.disabled, false);
   await dialog.preview();

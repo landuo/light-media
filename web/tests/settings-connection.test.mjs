@@ -68,6 +68,10 @@ async function mount(t, result, initial = {}) {
   const module = { exports: {} };
   new Function('require', 'exports', 'window', 'location', source)(
     (dependency) => {
+      if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(dependency)) {
+        const component = dependency.split('/').at(-1);
+        return { [component]: { name: component } };
+      }
       if (dependency === 'vue')
         return {
           ...vue,
@@ -159,30 +163,45 @@ async function mount(t, result, initial = {}) {
 }
 
 test('inherited source false is displayed without changing the nullable preference on an unrelated save', async (t) => {
-  const app = await mount(t, { status: 'passed' }, {
-    read_site_messages: null,
-    effective_read_site_messages: false,
-  });
+  const app = await mount(
+    t,
+    { status: 'passed' },
+    {
+      read_site_messages: null,
+      effective_read_site_messages: false,
+    },
+  );
   assert.equal(app.readMessages().props.modelValue, false);
   await app.testConnection();
   const request = app.fixture.requests.find((r) => r.path === '/settings' && r.method === 'PUT');
   assert.equal(request.body.read_site_messages, null);
   await app.saveReadMessages(true);
-  assert.equal(app.fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT').at(-1).body.read_site_messages, true);
+  assert.equal(
+    app.fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT').at(-1).body
+      .read_site_messages,
+    true,
+  );
 });
 
 test('an unconfirmed source setting stays unknown, disables its switch and cannot be silently saved as true', async (t) => {
   const message = '站点消息设置无法确认，请检查迁移数据；站点刷新已停止读取消息';
-  const app = await mount(t, {}, {
-    read_site_messages: null,
-    effective_read_site_messages: null,
-    read_site_messages_error: message,
-  });
+  const app = await mount(
+    t,
+    {},
+    {
+      read_site_messages: null,
+      effective_read_site_messages: null,
+      read_site_messages_error: message,
+    },
+  );
   assert.equal(app.readMessages().props.modelValue, null);
   assert.equal(app.readMessages().props.disabled, true);
   assert.ok(app.nodes().some((node) => node.props?.role === 'alert' && nodeText(node) === message));
   await app.saveReadMessages(true);
-  assert.equal(app.fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT').length, 0);
+  assert.equal(
+    app.fixture.requests.filter((r) => r.path === '/settings' && r.method === 'PUT').length,
+    0,
+  );
   assert.deepEqual(app.fixture.toasts.at(-1), { message, error: true });
 });
 

@@ -35,6 +35,8 @@
   --shadow: none;
   --shadow-raised: 0 4px 14px -4px rgba(58, 53, 65, 0.08), 0 4px 8px -4px rgba(58, 53, 65, 0.12);
   --radius: 8px;
+  --app-field-radius: 8px;
+  --v-theme-overlay-multiplier: 1;
   --topbar-height: 64px;
   --content-top: 8px;
   --content-bottom: 24px;
@@ -54,9 +56,9 @@ a {
   text-decoration: none;
 }
 button,
-input,
-select,
-textarea {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
   font: inherit;
 }
 button,
@@ -145,9 +147,9 @@ button.danger {
   text-decoration: underline;
   background: transparent;
 }
-input,
-select,
-textarea {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
   width: 100%;
   min-width: 0;
   border: 1px solid rgba(58, 53, 65, 0.22);
@@ -162,34 +164,34 @@ textarea {
     border-color 0.15s,
     box-shadow 0.15s;
 }
-input:focus,
-select:focus,
-textarea:focus {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)):focus,
+select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)):focus,
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)):focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
 }
-input::placeholder,
-textarea::placeholder {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))::placeholder,
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))::placeholder {
   color: rgba(58, 53, 65, 0.38);
 }
-input[readonly] {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))[readonly] {
   background: #f4f6f7;
   color: #6b778a;
 }
-input[type='checkbox'] {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))[type='checkbox'] {
   width: 16px;
   height: 16px;
   accent-color: var(--accent);
   flex-shrink: 0;
   margin: 0;
 }
-input[type='number'] {
+input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *))[type='number'] {
   min-width: 70px;
 }
-textarea {
+textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
   resize: vertical;
 }
-label {
+label:not(.v-label) {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -365,7 +367,8 @@ td small {
   width: auto;
   max-width: 210px;
 }
-.inline-form > label {
+.inline-form > label:not(.v-label),
+.inline-form > .v-input {
   flex: 1;
 }
 .inline-form > label.check {
@@ -1551,7 +1554,7 @@ details .panel {
   font-size: 27px;
   color: var(--text);
 }
-.auth-card label {
+.auth-card label:not(.v-label) {
   margin-top: 19px;
 }
 .auth-card button.full {
@@ -1846,12 +1849,12 @@ details .panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 15px;
   }
-  label {
+  label:not(.v-label) {
     font-size: 11px;
   }
-  input,
-  select,
-  textarea {
+  input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+  select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+  textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)) {
     font-size: 12px;
     padding: 10px;
   }
@@ -2402,10 +2405,10 @@ small,
   .panel {
     padding: 20px;
   }
-  input,
-  select,
-  textarea,
-  label {
+  input:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+  select:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+  textarea:not(:where(.v-input *, .v-field *, .v-selection-control *, .ace_editor *)),
+  label:not(.v-label) {
     font-size: 14px;
   }
 }

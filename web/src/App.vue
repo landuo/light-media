@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
@@ -215,16 +216,20 @@ onUnmounted(() => {
             : '登录后继续发现、收藏与整理。'
         }}
       </p>
-      <label
-        >用户名<input v-model="username" autocomplete="username" required maxlength="64" /></label
-      ><label
-        >密码<input
-          v-model="password"
-          type="password"
-          :autocomplete="auth?.setup_required ? 'new-password' : 'current-password'"
-          required
-          :minlength="auth?.setup_required ? 12 : 1"
-      /></label>
+      <VTextField
+        v-model="username"
+        autocomplete="username"
+        required
+        maxlength="64"
+        label="用户名"
+      /><VTextField
+        v-model="password"
+        type="password"
+        :autocomplete="auth?.setup_required ? 'new-password' : 'current-password'"
+        required
+        :minlength="auth?.setup_required ? 12 : 1"
+        label="密码"
+      />
       <p v-if="auth?.setup_required" class="hint">管理员密码至少 12 位。</p>
       <p v-if="authError" class="error-box">{{ authError }}</p>
       <button class="primary full" :disabled="ui.busy > 0">

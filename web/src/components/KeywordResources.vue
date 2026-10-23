@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {
   api,
@@ -232,7 +233,9 @@ onUnmounted(() => {
   </div>
   <section v-if="searchOptionsOpen" class="panel">
     <form class="search-field" @submit.prevent="submitSearch">
-      <input v-model="query" placeholder="搜索资源关键词" required /><button class="primary">
+      <VTextField v-model="query" label="搜索资源关键词" density="compact" required /><button
+        class="primary"
+      >
         搜索
       </button>
     </form>

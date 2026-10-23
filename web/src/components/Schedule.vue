@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextField } from 'vuetify/components/VTextField';
 import { action, api, date } from '../api';
 import { ref } from 'vue';
 const props = defineProps<{ model: any }>();
@@ -15,29 +17,40 @@ async function check() {
 </script>
 <template>
   <div class="form-grid">
-    <label
-      >更新时间来源<select v-model="model.source">
-        <option value="metadata">元数据日期</option>
-        <option value="custom">自定义周期</option>
-      </select></label
-    ><label
-      >调度模式<select v-model="model.mode">
-        <option value="follow">跟随更新窗口</option>
-        <option value="fixed">固定间隔</option>
-        <option value="manual">仅手动检查</option>
-      </select></label
-    ><label
-      >周期规则<select v-model="model.rule">
-        <option value="weekly">每周</option>
-        <option value="daily">每天</option>
-        <option value="every_n_days">每隔 N 天</option>
-      </select></label
-    ><label>更新时间<input v-model="model.time" type="time" /></label
-    ><label>起始日期<input v-model="model.start_date" type="date" /></label
-    ><label>时区<input v-model="model.timezone" placeholder="Asia/Shanghai" /></label
-    ><label v-if="model.rule === 'every_n_days'"
-      >间隔天数<input v-model.number="model.every_days" type="number" min="1"
-    /></label>
+    <VSelect
+      v-model="model.source"
+      label="更新时间来源"
+      :items="[
+        { title: '元数据日期', value: 'metadata' },
+        { title: '自定义周期', value: 'custom' },
+      ]"
+    /><VSelect
+      v-model="model.mode"
+      label="调度模式"
+      :items="[
+        { title: '跟随更新窗口', value: 'follow' },
+        { title: '固定间隔', value: 'fixed' },
+        { title: '仅手动检查', value: 'manual' },
+      ]"
+    /><VSelect
+      v-model="model.rule"
+      label="周期规则"
+      :items="[
+        { title: '每周', value: 'weekly' },
+        { title: '每天', value: 'daily' },
+        { title: '每隔 N 天', value: 'every_n_days' },
+      ]"
+    /><VTextField v-model="model.time" type="time" label="更新时间" /><VTextField
+      v-model="model.start_date"
+      type="date"
+      label="起始日期"
+    /><VTextField v-model="model.timezone" placeholder="Asia/Shanghai" label="时区" /><VTextField
+      v-if="model.rule === 'every_n_days'"
+      v-model.number="model.every_days"
+      type="number"
+      min="1"
+      label="间隔天数"
+    />
   </div>
   <div v-if="model.rule === 'weekly'" class="weekdays">
     <button
@@ -50,23 +63,32 @@ async function check() {
     </button>
   </div>
   <div class="form-grid">
-    <label
-      >固定检查间隔（分钟）<input
-        v-model.number="model.interval_minutes"
-        type="number"
-        min="5" /></label
-    ><label
-      >更新后等待（分钟）<input v-model.number="model.wait_minutes" type="number" min="0" /></label
-    ><label
-      >活跃窗口（小时）<input v-model.number="model.window_hours" type="number" min="1" /></label
-    ><label
-      >窗口内检查（分钟）<input
-        v-model.number="model.active_minutes"
-        type="number"
-        min="5" /></label
-    ><label
-      >窗口外兜底（分钟）<input v-model.number="model.fallback_minutes" type="number" min="30"
-    /></label>
+    <VTextField
+      v-model.number="model.interval_minutes"
+      type="number"
+      min="5"
+      label="固定检查间隔（分钟）"
+    /><VTextField
+      v-model.number="model.wait_minutes"
+      type="number"
+      min="0"
+      label="更新后等待（分钟）"
+    /><VTextField
+      v-model.number="model.window_hours"
+      type="number"
+      min="1"
+      label="活跃窗口（小时）"
+    /><VTextField
+      v-model.number="model.active_minutes"
+      type="number"
+      min="5"
+      label="窗口内检查（分钟）"
+    /><VTextField
+      v-model.number="model.fallback_minutes"
+      type="number"
+      min="30"
+      label="窗口外兜底（分钟）"
+    />
   </div>
   <p class="hint">
     跟随模式保留窗口外的低频兜底检查；到更新窗口后提高检查频率。日期预览来自服务端调度器。
@@ -81,11 +103,24 @@ async function check() {
     </button>
   </div>
   <div v-for="(ex, i) in model.exceptions" :key="i" class="inline-form">
-    <input v-model="ex.date" type="date" /><select v-model="ex.action">
-      <option value="skip">跳过更新</option>
-      <option value="postpone">改期</option>
-      <option value="extra">额外更新</option></select
-    ><input v-if="ex.action === 'postpone'" v-model="ex.target_date" type="date" /><input
+    <VTextField v-model="ex.date" type="date" label="例外日期" density="compact" /><VSelect
+      v-model="ex.action"
+      density="compact"
+      aria-label="例外安排"
+      :items="[
+        { title: '跳过更新', value: 'skip' },
+        { title: '改期', value: 'postpone' },
+        { title: '额外更新', value: 'extra' },
+      ]"
+    /><VTextField
+      v-if="ex.action === 'postpone'"
+      v-model="ex.target_date"
+      type="date"
+      label="改期至"
+      density="compact"
+    /><VTextField
+      label="集数，0 表示全部"
+      density="compact"
       v-model.number="ex.episode"
       type="number"
       min="0"

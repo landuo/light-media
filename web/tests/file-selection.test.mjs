@@ -50,6 +50,10 @@ async function openFiles(t, { initialPath = '/media/download' } = {}) {
     if (name === '../api') return apiModule;
     if (name === '../features/file-browser') return browser;
     if (name.endsWith('.vue')) return { default: { name } };
+    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(name)) {
+      const component = name.split('/').at(-1);
+      return { [component]: { name: component } };
+    }
     if (name === 'vue')
       return {
         ...vue,

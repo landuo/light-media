@@ -3,6 +3,7 @@ import App from './App.vue';
 import './style.css';
 import { reportFrontendError } from './frontend-errors';
 import { pluginUI } from './plugin-ui';
+import './forms.css';
 const app = createApp(App);
 app.use(pluginUI);
 app.config.errorHandler = () => reportFrontendError('VUE_RENDER_ERROR');

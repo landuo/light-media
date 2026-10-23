@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
+import { VSelect } from 'vuetify/components/VSelect';
 import { ref, onMounted } from 'vue';
 import { api, action, ui, bytes, date, label, errorText, go } from '../api';
 import AppIcon from './AppIcon.vue';
@@ -187,18 +189,17 @@ onMounted(load);
               </td>
               <td>
                 <template v-if="file.is_video && media?.media_type === 'tv'"
-                  ><label
-                    >标准季<input
-                      v-model.number="file.standard_season"
-                      type="number"
-                      min="1"
-                      @input="preview = null" /></label
-                  ><label
-                    >标准单集<input
-                      v-model.number="file.standard_episode"
-                      type="number"
-                      min="1"
-                      @input="preview = null" /></label></template
+                  ><VTextField
+                    v-model.number="file.standard_season"
+                    type="number"
+                    min="1"
+                    @input="preview = null"
+                    label="标准季" /><VTextField
+                    v-model.number="file.standard_episode"
+                    type="number"
+                    min="1"
+                    @input="preview = null"
+                    label="标准单集" /></template
                 ><span v-else>{{ file.is_video ? '电影' : '旁车 / 其他文件' }}</span>
               </td>
             </tr>
@@ -213,10 +214,15 @@ onMounted(load);
       <details>
         <summary>作品识别有误，重新选择 TMDB 身份</summary>
         <form class="inline-form" @submit.prevent="find">
-          <select v-model="lookupKind">
-            <option value="movie">电影</option>
-            <option value="tv">剧集</option></select
-          ><input v-model="lookup" required placeholder="搜索正确作品" /><button>搜索 TMDB</button>
+          <VSelect
+            v-model="lookupKind"
+            density="compact"
+            aria-label="媒体类型"
+            :items="[
+              { title: '电影', value: 'movie' },
+              { title: '剧集', value: 'tv' },
+            ]"
+          /><input v-model="lookup" required placeholder="搜索正确作品" /><button>搜索 TMDB</button>
         </form>
         <div class="lookup-list">
           <button
@@ -229,20 +235,27 @@ onMounted(load);
         </div>
       </details>
       <div class="form-grid">
-        <label
-          >入库目录<select v-model="root" @change="preview = null">
-            <option value="">请选择</option>
-            <option v-for="r in ui.settings?.roots || []" :key="r.id" :value="r.id">
-              {{ r.name || r.path }}
-            </option>
-          </select></label
-        ><label
-          >整理方式<select v-model="mode" @change="preview = null">
-            <option value="hardlink">硬链接</option>
-            <option value="copy">复制</option>
-            <option value="auto">自动（允许复制回退）</option>
-          </select></label
-        >
+        <VSelect
+          v-model="root"
+          @update:model-value="preview = null"
+          label="入库目录"
+          :items="[
+            { title: '请选择', value: '' },
+            ...(ui.settings?.roots || []).map((r: any) => ({
+              title: String(r.name || r.path).trim(),
+              value: r.id,
+            })),
+          ]"
+        /><VSelect
+          v-model="mode"
+          @update:model-value="preview = null"
+          label="整理方式"
+          :items="[
+            { title: '硬链接', value: 'hardlink' },
+            { title: '复制', value: 'copy' },
+            { title: '自动（允许复制回退）', value: 'auto' },
+          ]"
+        />
       </div>
       <button
         class="primary"

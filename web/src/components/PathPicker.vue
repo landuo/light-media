@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from 'vue';
+import { VTextField } from 'vuetify/components/VTextField';
 import { api, errorText } from '../api';
 import FileManagerIcon from './FileManagerIcon.vue';
 const props = defineProps<{
@@ -89,27 +90,28 @@ function choose() {
 </script>
 <template>
   <div class="path-picker">
-    <label :for="inputID">{{ label }}</label>
-    <div class="path-input">
-      <input
-        :id="inputID"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :required="required"
-        :disabled="disabled"
-        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-      />
-      <button
-        type="button"
-        class="icon-button"
-        :disabled="disabled"
-        :aria-label="'浏览 ' + label"
-        title="浏览目录"
-        @click="open"
-      >
-        <FileManagerIcon name="folder" />
-      </button>
-    </div>
+    <VTextField
+      :id="inputID"
+      :model-value="modelValue"
+      :label="label"
+      :placeholder="placeholder"
+      :required="required"
+      :disabled="disabled"
+      @update:model-value="emit('update:modelValue', $event ?? '')"
+    >
+      <template #append-inner>
+        <button
+          type="button"
+          class="icon-button"
+          :disabled="disabled"
+          :aria-label="'浏览 ' + label"
+          title="浏览目录"
+          @click.stop="open"
+        >
+          <FileManagerIcon name="folder" />
+        </button>
+      </template>
+    </VTextField>
     <Teleport to="body"
       ><div v-if="opened" class="modal-backdrop" @click.self="close">
         <section class="modal wide" role="dialog" aria-modal="true" :aria-label="'选择 ' + label">
@@ -171,33 +173,6 @@ function choose() {
   </div>
 </template>
 <style scoped>
-.path-input {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.path-input:focus-within {
-  border-color: var(--accent);
-}
-.path-input input {
-  min-width: 0;
-  flex: 1;
-  border: 0;
-  box-shadow: none;
-}
-.path-input button {
-  flex: none;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-}
-.path-picker > label {
-  display: block;
-  margin-bottom: 7px;
-  font-size: 14px;
-}
 .path-crumbs {
   display: flex;
   align-items: center;

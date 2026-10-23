@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {
   api,
@@ -293,14 +295,20 @@ onUnmounted(() => {
   </div>
   <section v-if="searchOptionsOpen" class="panel search-options">
     <div class="search-controls">
-      <label v-if="kind === 'tv'"
-        >季度<select v-model.number="season">
-          <option v-for="s in media?.seasons || []" :key="s.season_number" :value="s.season_number">
-            {{ s.name }} · {{ s.episode_count }} 集
-          </option>
-          <option v-if="!media?.seasons?.length" :value="season">第 {{ season }} 季</option>
-        </select></label
-      >
+      <VSelect
+        v-if="kind === 'tv'"
+        v-model.number="season"
+        label="季度"
+        :items="[
+          ...(media?.seasons || []).map((s: any) => ({
+            title: (String(s.name) + ' · ' + String(s.episode_count) + ' 集 ').trim(),
+            value: s.season_number,
+          })),
+          ...(!media?.seasons?.length
+            ? [{ title: ('第 ' + String(season) + ' 季').trim(), value: season }]
+            : []),
+        ]"
+      />
       <div class="site-selector">
         <label
           v-for="s in (ui.settings?.sites || []).filter((s: any) => s.enabled)"
@@ -324,9 +332,12 @@ onUnmounted(() => {
     </div>
     <details>
       <summary>高级搜索设置</summary>
-      <label v-if="kind === 'tv'"
-        >指定集数（可选）<input v-model="eps" placeholder="不填写搜索整季；例如 1,2,5-8" /></label
-      ><Policy :model="policy" />
+      <VTextField
+        v-if="kind === 'tv'"
+        v-model="eps"
+        placeholder="不填写搜索整季；例如 1,2,5-8"
+        label="指定集数（可选）"
+      /><Policy :model="policy" />
       <details v-if="kind === 'tv'">
         <summary>已确认的季集映射 · {{ mappings.filter((r) => r.confirmed).length }}</summary>
         <MappingRules :model="mappings" :media-id="kind + ':' + id" :season="season" />

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
 import { ref, onMounted, computed } from 'vue';
 import { api, action, go, image, date, ui, label, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
@@ -155,18 +156,22 @@ onMounted(() => {
           剧集
         </button>
       </div>
-      <select
+      <VSelect
         v-if="!query"
         v-model="list"
-        @change="
+        @update:model-value="
           query = '';
           change();
         "
-      >
-        <option value="popular">热门推荐</option>
-        <option value="top_rated">高分榜单</option>
-        <option value="trending_day">今日趋势</option></select
-      ><span v-if="cached" class="hint push-right">更新于 {{ date(cached) }}</span>
+        density="compact"
+        aria-label="推荐榜单"
+        :items="
+          ['热门推荐', '高分榜单', '今日趋势'].map((title, i) => ({
+            title,
+            value: ['popular', 'top_rated', 'trending_day'][i],
+          }))
+        "
+      /><span v-if="cached" class="hint push-right">更新于 {{ date(cached) }}</span>
     </div>
     <div v-if="loading" class="skeleton-grid">
       <div v-for="i in 12" :key="i" class="skeleton"></div>
@@ -257,11 +262,18 @@ onMounted(() => {
     <section class="panel" v-if="kind === 'tv'">
       <div class="section-heading">
         <h2>季度</h2>
-        <select v-model.number="season" @change="loadSeason">
-          <option v-for="s in detail.seasons" :key="s.season_number" :value="s.season_number">
-            {{ s.name }} · {{ s.episode_count }} 集
-          </option>
-        </select>
+        <VSelect
+          v-model.number="season"
+          @update:model-value="loadSeason"
+          density="compact"
+          aria-label="季度"
+          :items="
+            detail.seasons.map((s: any) => ({
+              title: `${s.name} · ${s.episode_count} 集`,
+              value: s.season_number,
+            }))
+          "
+        />
       </div>
       <p class="hint">订阅以季为单位，添加订阅时可设置从哪一集开始，后续更新自动追踪。</p>
       <p v-if="seasonLoading" class="hint">正在加载所选季度的标准单集信息…</p>
@@ -327,14 +339,26 @@ onMounted(() => {
     <section class="section">
       <div class="section-heading">
         <h2>参演与创作作品</h2>
-        <select v-model="creditsSort" @change="creditsLimit = 24">
-          <option value="popularity">按热度排序</option>
-          <option value="year">按年份排序（新 → 旧）</option></select
-        ><select v-model="creditsKind" @change="creditsLimit = 24">
-          <option value="all">全部作品</option>
-          <option value="movie">电影</option>
-          <option value="tv">剧集</option>
-        </select>
+        <VSelect
+          v-model="creditsSort"
+          @update:model-value="creditsLimit = 24"
+          density="compact"
+          aria-label="作品排序"
+          :items="[
+            { title: '按热度排序', value: 'popularity' },
+            { title: '按年份排序（新 → 旧）', value: 'year' },
+          ]"
+        /><VSelect
+          v-model="creditsKind"
+          @update:model-value="creditsLimit = 24"
+          density="compact"
+          aria-label="作品类型"
+          :items="[
+            { title: '全部作品', value: 'all' },
+            { title: '电影', value: 'movie' },
+            { title: '剧集', value: 'tv' },
+          ]"
+        />
       </div>
       <MediaCards :items="filteredCredits.slice(0, creditsLimit)" />
       <div class="pagination" v-if="filteredCredits.length > creditsLimit">

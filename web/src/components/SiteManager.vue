@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextarea } from 'vuetify/components/VTextarea';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { api, bytes, clone, date, errorText, friendly, refreshSettings, toast, ui } from '../api';
 import { downloadSiteExport, type SiteImportResult } from '../features/site-transfer';
@@ -441,9 +444,12 @@ onUnmounted(() => {
         <AppIcon name="search" />
         <input v-model="query" aria-label="查找站点" placeholder="搜索站点名称或地址" />
       </div>
-      <select v-model="filter" aria-label="站点状态">
-        <option v-for="(title, key) in statuses" :key="key" :value="key">{{ title }}</option>
-      </select>
+      <VSelect
+        v-model="filter"
+        aria-label="站点状态"
+        density="compact"
+        :items="Object.entries(statuses).map(([value, title]) => ({ title, value }))"
+      />
       <button
         :disabled="testBlocked || batch.running || !filtered.length"
         aria-label="测试连接"
@@ -715,62 +721,70 @@ onUnmounted(() => {
         </header>
         <div class="site-editor-body">
           <div class="manager-form-grid">
-            <label class="half"
-              ><span class="field-label">站点网址</span
-              ><input
-                v-model.trim="editing.base_url"
-                type="url"
-                required
-                aria-label="站点网址"
-                placeholder="https://example.org"
-              /><small>输入站点完整地址，自动识别站点类型</small></label
-            >
-            <label
-              ><span class="field-label">优先级</span
-              ><input
-                v-model.number="editing.pri"
-                type="number"
-                min="0"
-                max="10000"
-                required
-                aria-label="优先级"
-              /><small>数字越小越优先</small></label
-            >
-            <label
-              ><span class="field-label">状态</span
-              ><select v-model="editing.enabled" aria-label="状态">
-                <option :value="true">启用</option>
-                <option :value="false">停用</option>
-              </select></label
-            >
-            <label class="half"
-              ><span class="field-label">RSS 地址</span
-              ><input
-                v-model="editing.rss"
-                type="password"
-                disabled
-                :placeholder="original?.credential_state?.rss ? '已保存，保留原配置' : '未配置'"
-              /><small>暂不支持 RSS 调度</small></label
-            >
-            <label
-              ><span class="field-label">超时时间</span
-              ><input
-                v-model.number="editing.timeout"
-                type="number"
-                min="0"
-                max="120"
-                aria-label="超时时间"
-              /><small>秒；0 使用默认值</small></label
-            >
-            <label
-              ><span class="field-label">下载器</span
-              ><select v-model="editing.downloader" disabled>
-                <option value="">默认</option>
-                <option v-if="editing.downloader" :value="editing.downloader">
-                  {{ editing.downloader }}
-                </option></select
-              ><small>暂不支持站点绑定</small></label
-            >
+            <VTextField
+              class="half"
+              v-model.trim="editing.base_url"
+              type="url"
+              required
+              aria-label="站点网址"
+              placeholder="https://example.org"
+              label="站点网址"
+              hint="输入站点完整地址，自动识别站点类型"
+              persistent-hint
+            />
+            <VTextField
+              v-model.number="editing.pri"
+              type="number"
+              min="0"
+              max="10000"
+              required
+              aria-label="优先级"
+              label="优先级"
+              hint="数字越小越优先"
+              persistent-hint
+            />
+            <VSelect
+              v-model="editing.enabled"
+              aria-label="状态"
+              label="状态"
+              :items="[
+                { title: '启用', value: true },
+                { title: '停用', value: false },
+              ]"
+            />
+            <VTextField
+              class="half"
+              v-model="editing.rss"
+              type="password"
+              disabled
+              :placeholder="original?.credential_state?.rss ? '已保存，保留原配置' : '未配置'"
+              label="RSS 地址"
+              hint="暂不支持 RSS 调度"
+              persistent-hint
+            />
+            <VTextField
+              v-model.number="editing.timeout"
+              type="number"
+              min="0"
+              max="120"
+              aria-label="超时时间"
+              label="超时时间"
+              hint="秒；0 使用默认值"
+              persistent-hint
+            />
+            <VSelect
+              v-model="editing.downloader"
+              disabled
+              label="下载器"
+              hint="暂不支持站点绑定"
+              persistent-hint
+              :items="[
+                { title: '默认', value: '' },
+                ...(editing.downloader
+                  ? [{ title: String(editing.downloader).trim(), value: editing.downloader }]
+                  : []),
+              ]"
+            />
             <div class="credential-tabs span-all" role="tablist">
               <button
                 type="button"
@@ -789,53 +803,51 @@ onUnmounted(() => {
               </button>
             </div>
             <template v-if="credentialTab === 'cookie'"
-              ><label class="span-all"
-                ><span class="field-label">Cookie</span
-                ><textarea
-                  v-model="editing.cookie"
-                  rows="3"
-                  autocomplete="off"
-                  aria-label="Cookie"
-                  :placeholder="
-                    original?.credential_state?.cookie || original?.credential_configured
-                      ? '已保存，留空保留原凭据'
-                      : '填写浏览器登录后的 Cookie'
-                  "
-                /></label
-              ><label class="span-all"
-                ><span class="field-label">User-Agent</span
-                ><input
-                  v-model="editing.ua"
-                  aria-label="User-Agent"
-                  placeholder="使用浏览器对应的 User-Agent" /></label
-            ></template>
+              ><VTextarea
+                class="span-all"
+                v-model="editing.cookie"
+                rows="3"
+                autocomplete="off"
+                aria-label="Cookie"
+                :placeholder="
+                  original?.credential_state?.cookie || original?.credential_configured
+                    ? '已保存，留空保留原凭据'
+                    : '填写浏览器登录后的 Cookie'
+                "
+                label="Cookie" /><VTextField
+                class="span-all"
+                v-model="editing.ua"
+                aria-label="User-Agent"
+                placeholder="使用浏览器对应的 User-Agent"
+                label="User-Agent"
+            /></template>
             <template v-else
-              ><label class="half"
-                ><span class="field-label">Authorization</span
-                ><input
-                  v-model="editing.token"
-                  aria-label="Authorization"
-                  type="password"
-                  autocomplete="new-password"
-                  :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
-                /><small>肉丝站点消息使用的 Authorization，支持 Bearer Token</small></label
-              ><label class="half"
-                ><span class="field-label">API Key</span
-                ><input
-                  v-model="editing.api_key"
-                  type="password"
-                  autocomplete="new-password"
-                  aria-label="API Key"
-                  :placeholder="
-                    (
-                      original?.credential_state
-                        ? original.credential_state.api_key
-                        : original?.credential_configured
-                    )
-                      ? '已保存，留空保留原凭据'
-                      : '填写站点 API Key'
-                  " /></label
-            ></template>
+              ><VTextField
+                class="half"
+                v-model="editing.token"
+                aria-label="Authorization"
+                type="password"
+                autocomplete="new-password"
+                :placeholder="original?.credential_state?.token ? '已保存，保留原配置' : '未配置'"
+                label="Authorization"
+                hint="肉丝站点消息使用的 Authorization，支持 Bearer Token"
+                persistent-hint /><VTextField
+                class="half"
+                v-model="editing.api_key"
+                type="password"
+                autocomplete="new-password"
+                aria-label="API Key"
+                :placeholder="
+                  (
+                    original?.credential_state
+                      ? original.credential_state.api_key
+                      : original?.credential_configured
+                  )
+                    ? '已保存，留空保留原凭据'
+                    : '填写站点 API Key'
+                "
+                label="API Key"
+            /></template>
             <div class="span-all site-option-list">
               <label class="site-option-row">
                 <span class="site-option-copy">
@@ -851,25 +863,25 @@ onUnmounted(() => {
                 />
               </label>
               <div v-if="limitEnabled" class="limit-fields">
-                <label
-                  >单位周期（秒）<input
-                    v-model.number="editing.limit_interval"
-                    type="number"
-                    min="0"
-                    aria-label="单位周期（秒）" /></label
-                ><label
-                  >周期内访问次数<input
-                    v-model.number="editing.limit_count"
-                    type="number"
-                    min="0"
-                    aria-label="周期内访问次数" /></label
-                ><label
-                  >访问间隔（秒）<input
-                    v-model.number="editing.limit_seconds"
-                    type="number"
-                    min="0"
-                    aria-label="访问间隔（秒）"
-                /></label>
+                <VTextField
+                  v-model.number="editing.limit_interval"
+                  type="number"
+                  min="0"
+                  aria-label="单位周期（秒）"
+                  label="单位周期（秒）"
+                /><VTextField
+                  v-model.number="editing.limit_count"
+                  type="number"
+                  min="0"
+                  aria-label="周期内访问次数"
+                  label="周期内访问次数"
+                /><VTextField
+                  v-model.number="editing.limit_seconds"
+                  type="number"
+                  min="0"
+                  aria-label="访问间隔（秒）"
+                  label="访问间隔（秒）"
+                />
               </div>
               <label class="site-option-row site-option-unavailable">
                 <span class="site-option-copy">
@@ -1610,40 +1622,6 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
-}
-.manager-form-grid > label {
-  position: relative;
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  font-size: 14px;
-  min-width: 0;
-}
-.field-label {
-  position: absolute;
-  top: -9px;
-  left: 12px;
-  padding: 0 4px;
-  background: var(--surface);
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 18px;
-  z-index: 1;
-}
-.manager-form-grid > label:focus-within > .field-label {
-  color: var(--accent);
-}
-.manager-form-grid > label > input,
-.manager-form-grid > label > select {
-  height: 56px;
-  padding: 12px 16px;
-  font-size: 16px;
-  border-radius: 8px;
-}
-.manager-form-grid > label > textarea {
-  min-height: 122px;
-  padding: 16px;
-  border-radius: 8px;
 }
 .half {
   grid-column: span 2;

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, computed } from 'vue';
 import { api, clone, errorText, image, toast } from '../api';
 import { submitSeasonBatch, type SeasonSubscriptionRow } from '../features/subscriptions';
@@ -134,22 +135,24 @@ async function submit() {
               }}{{ s.message ? ' · ' + s.message : '' }}</small
             >
           </div>
-          <label class="start"
-            >总集数<input
-              v-model.number="s.total_episodes"
-              type="number"
-              min="0"
-              max="9999"
-              :disabled="running || s.state === 'success' || s.state === 'conflict'"
-          /></label>
-          <label class="start"
-            >开始集数<input
-              v-model.number="s.start_episode"
-              type="number"
-              min="1"
-              max="9999"
-              :disabled="running || s.state === 'success' || s.state === 'conflict'"
-          /></label>
+          <VTextField
+            class="start"
+            v-model.number="s.total_episodes"
+            type="number"
+            min="0"
+            max="9999"
+            :disabled="running || s.state === 'success' || s.state === 'conflict'"
+            label="总集数"
+          />
+          <VTextField
+            class="start"
+            v-model.number="s.start_episode"
+            type="number"
+            min="1"
+            max="9999"
+            :disabled="running || s.state === 'success' || s.state === 'conflict'"
+            label="开始集数"
+          />
         </div>
       </div>
       <div v-if="!rows.length" class="notice">没有可用的季度元数据，请返回刷新影视资料后重试。</div>

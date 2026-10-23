@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { api, bytes, date, errorText, label, toast } from '../api';
 import ReorganizeDialog from './ReorganizeDialog.vue';
@@ -551,9 +552,13 @@ onUnmounted(() => {
         </table>
       </div>
       <div class="th-pagination">
-        <select v-model="pageSize" aria-label="每页条数" @change="changePageSize">
-          <option v-for="size in historyPageSizes" :key="size" :value="size">{{ size }}</option>
-        </select>
+        <VSelect
+          v-model="pageSize"
+          aria-label="每页条数"
+          @update:model-value="changePageSize"
+          density="compact"
+          :items="historyPageSizes"
+        />
         <span>{{ first }} - {{ last }} / {{ total }}</span>
         <nav aria-label="整理历史分页">
           <button aria-label="首页" :disabled="page <= 1 || loading" @click="changePage(1)">
@@ -1010,10 +1015,9 @@ input[type='checkbox'] {
   padding: 12px 24px;
   border-top: 1px solid var(--line);
 }
-.th-pagination select {
-  width: 83px;
-  flex: 0 0 83px;
-  padding: 7px 9px;
+.th-pagination > .v-input {
+  width: 90px;
+  flex: 0 0 90px;
 }
 .th-pagination > span {
   margin-right: auto;

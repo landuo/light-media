@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VTextField } from 'vuetify/components/VTextField';
 import { computed, ref } from 'vue';
 import { VMenu } from 'vuetify/components/VMenu';
 import { VBtn } from 'vuetify/components/VBtn';
@@ -191,7 +192,7 @@ function selectAll(key: (typeof fields)[number]['key']) {
           @click="advanced = false"
       /></VCardTitle>
       <VCardText class="filter-dialog-body">
-        <label>标题<input v-model="filters.text" placeholder="在结果中搜索标题或副标题" /></label>
+        <VTextField v-model="filters.text" placeholder="在结果中搜索标题或副标题" label="标题" />
         <div class="all-filters-grid">
           <VCard
             v-for="field in fields"

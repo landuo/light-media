@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VSelect } from 'vuetify/components/VSelect';
+import { VTextField } from 'vuetify/components/VTextField';
 import { ref, onMounted, computed, watch, useId } from 'vue';
 import { VTextarea } from 'vuetify/components/VTextarea';
 import {
@@ -31,7 +33,6 @@ import AppIcon from './AppIcon.vue';
 import Schedule from './Schedule.vue';
 import MappingRules from './MappingRules.vue';
 import MultiSeasonSubscribe from './MultiSeasonSubscribe.vue';
-import SubscriptionField from './SubscriptionField.vue';
 import SubscriptionFilters from './SubscriptionFilters.vue';
 import { subscriptionFilterValue, setSubscriptionFilter } from '../features/subscription-filters';
 import { downloadDestination, downloadDirectoryPaths } from '../features/download-directories';
@@ -513,22 +514,37 @@ watch(() => props.view, applyView);
   <template v-else>
     <div v-if="!typedView" class="toolbar">
       <input v-model="filterText" placeholder="搜索订阅" aria-label="搜索订阅" />
-      <select v-model="filterKind">
-        <option value="all">全部类型</option>
-        <option value="movie">电影</option>
-        <option value="tv">剧集</option>
-      </select>
-      <select v-model="filterState">
-        <option value="all">全部状态</option>
-        <option value="active">订阅中</option>
-        <option value="paused">已暂停</option>
-        <option value="completed">已完成</option>
-      </select>
-      <select v-model="sortBy">
-        <option value="created">最近添加</option>
-        <option value="name">按名称</option>
-        <option value="missing">缺集最多</option>
-      </select>
+      <VSelect
+        v-model="filterKind"
+        density="compact"
+        aria-label="订阅类型"
+        :items="[
+          { title: '全部类型', value: 'all' },
+          { title: '电影', value: 'movie' },
+          { title: '剧集', value: 'tv' },
+        ]"
+      />
+      <VSelect
+        v-model="filterState"
+        density="compact"
+        aria-label="订阅状态"
+        :items="[
+          { title: '全部状态', value: 'all' },
+          { title: '订阅中', value: 'active' },
+          { title: '已暂停', value: 'paused' },
+          { title: '已完成', value: 'completed' },
+        ]"
+      />
+      <VSelect
+        v-model="sortBy"
+        density="compact"
+        aria-label="订阅排序"
+        :items="[
+          { title: '最近添加', value: 'created' },
+          { title: '按名称', value: 'name' },
+          { title: '缺集最多', value: 'missing' },
+        ]"
+      />
       <button @click="load">刷新</button
       ><span class="hint push-right">{{ filteredSubs.length }} 个订阅</span>
     </div>
@@ -692,11 +708,12 @@ watch(() => props.view, applyView);
       <div class="subscription-dialog-body">
         <div v-if="!editing.media">
           <form class="inline-form" @submit.prevent="find">
-            <input v-model="lookup" placeholder="搜索要订阅的作品" required /><button
-              class="primary"
-            >
-              搜索
-            </button>
+            <VTextField
+              v-model="lookup"
+              label="搜索要订阅的作品"
+              density="compact"
+              required
+            /><button class="primary">搜索</button>
           </form>
           <div class="lookup-list">
             <button v-for="m in lookupResults" :key="m.media_type + m.id" @click="pick(m)">
@@ -740,38 +757,39 @@ watch(() => props.view, applyView);
             class="subscription-basic"
           >
             <div class="subscription-edit-grid three-columns">
-              <SubscriptionField label="搜索关键词" icon="search" hint="指定搜索站点时使用的关键词">
-                <input v-model.trim="editing.keyword" aria-label="搜索关键词" />
-              </SubscriptionField>
-              <SubscriptionField
+              <VTextField
+                label="搜索关键词"
+                hint="指定搜索站点时使用的关键词"
+                v-model.trim="editing.keyword"
+                aria-label="搜索关键词"
+                persistent-hint
+                prepend-inner-icon="mdi-magnify"
+              />
+              <VTextField
                 v-if="editing.media.media_type === 'tv'"
                 label="总集数"
-                icon="playlist"
                 hint="剧集总集数"
-              >
-                <input
-                  v-model.number="editing.total_episodes"
-                  aria-label="总集数"
-                  type="number"
-                  min="0"
-                  step="1"
-                  placeholder="自动"
-                />
-              </SubscriptionField>
-              <SubscriptionField
+                v-model.number="editing.total_episodes"
+                aria-label="总集数"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="自动"
+                persistent-hint
+                prepend-inner-icon="mdi-playlist-play"
+              />
+              <VTextField
                 v-if="editing.media.media_type === 'tv'"
                 label="开始集数"
-                icon="play"
                 hint="开始订阅集数"
-              >
-                <input
-                  v-model.number="editing.start_episode"
-                  aria-label="开始集数"
-                  type="number"
-                  min="1"
-                  step="1"
-                />
-              </SubscriptionField>
+                v-model.number="editing.start_episode"
+                aria-label="开始集数"
+                type="number"
+                min="1"
+                step="1"
+                persistent-hint
+                prepend-inner-icon="mdi-play"
+              />
             </div>
             <SubscriptionFilters v-model="editing.policy" />
             <div
@@ -861,30 +879,31 @@ watch(() => props.view, applyView);
               </div>
             </div>
             <div class="subscription-edit-grid">
-              <SubscriptionField label="下载器" icon="download" hint="指定该订阅使用的下载器">
-                <select v-model="editing.downloader_id" aria-label="下载器">
-                  <option value="">默认</option>
-                  <option
-                    v-for="downloader in downloaderOptions"
-                    :key="downloader.id"
-                    :value="downloader.id"
-                  >
-                    {{ downloader.name || downloader.id }}
-                  </option>
-                </select>
-              </SubscriptionField>
-              <SubscriptionField
+              <VSelect
+                label="下载器"
+                hint="指定该订阅使用的下载器"
+                v-model="editing.downloader_id"
+                aria-label="下载器"
+                persistent-hint
+                :items="[
+                  { title: '默认', value: '' },
+                  ...downloaderOptions.map((downloader: any) => ({
+                    title: String(downloader.name || downloader.id).trim(),
+                    value: downloader.id,
+                  })),
+                ]"
+                prepend-inner-icon="mdi-download"
+              />
+              <VTextField
                 label="保存路径"
-                icon="folder"
                 hint="指定该订阅的下载保存路径，留空自动使用设定的下载目录"
-              >
-                <input
-                  v-model="editing.download_path"
-                  aria-label="保存目录"
-                  :list="editorID + '-directories'"
-                  placeholder="自动"
-                />
-              </SubscriptionField>
+                v-model="editing.download_path"
+                aria-label="保存目录"
+                :list="editorID + '-directories'"
+                placeholder="自动"
+                persistent-hint
+                prepend-inner-icon="mdi-folder-outline"
+              />
               <datalist :id="editorID + '-directories'">
                 <option v-for="path in downloadPaths" :key="path" :value="path" />
               </datalist>
@@ -898,141 +917,147 @@ watch(() => props.view, applyView);
             class="subscription-advanced"
           >
             <div class="subscription-edit-grid">
-              <SubscriptionField
+              <VTextField
                 label="包含（关键字、正则式）"
-                icon="plus"
                 hint="包含规则，支持正则表达式"
-              >
-                <input
-                  :value="subscriptionFilterValue(editing.policy, 'include')"
-                  aria-label="包含"
-                  @input="
-                    editing.policy = setSubscriptionFilter(
-                      editing.policy,
-                      'include',
-                      ($event.target as HTMLInputElement).value,
-                    )
-                  "
-                />
-              </SubscriptionField>
-              <SubscriptionField
+                :model-value="subscriptionFilterValue(editing.policy, 'include')"
+                aria-label="包含"
+                @input="
+                  editing.policy = setSubscriptionFilter(
+                    editing.policy,
+                    'include',
+                    ($event.target as HTMLInputElement).value,
+                  )
+                "
+                persistent-hint
+                prepend-inner-icon="mdi-plus"
+              />
+              <VTextField
                 label="排除（关键字、正则式）"
-                icon="close"
                 hint="排除规则，支持正则表达式"
-              >
-                <input
-                  :value="subscriptionFilterValue(editing.policy, 'exclude')"
-                  aria-label="排除"
-                  @input="
-                    editing.policy = setSubscriptionFilter(
-                      editing.policy,
-                      'exclude',
-                      ($event.target as HTMLInputElement).value,
-                    )
-                  "
-                />
-              </SubscriptionField>
+                :model-value="subscriptionFilterValue(editing.policy, 'exclude')"
+                aria-label="排除"
+                @input="
+                  editing.policy = setSubscriptionFilter(
+                    editing.policy,
+                    'exclude',
+                    ($event.target as HTMLInputElement).value,
+                  )
+                "
+                persistent-hint
+                prepend-inner-icon="mdi-close"
+              />
             </div>
             <div class="subscription-edit-grid">
-              <SubscriptionField
+              <VSelect
                 v-if="editing.media.media_type === 'tv'"
                 label="指定季"
-                icon="calendar"
                 hint="指定订阅的季度"
-              >
-                <select
-                  :value="editing.season"
-                  aria-label="季"
-                  @change="setSeason(Number(($event.target as HTMLSelectElement).value))"
-                >
-                  <option v-for="season in 99" :key="season" :value="season">
-                    第 {{ season }} 季
-                  </option>
-                </select>
-              </SubscriptionField>
-              <SubscriptionField label="状态" icon="play" hint="暂停后停止自动检查，已下载文件保留">
-                <select v-model="editing.state" aria-label="订阅状态">
-                  <option value="active">启用</option>
-                  <option value="paused">暂停</option>
-                </select>
-              </SubscriptionField>
+                :model-value="editing.season"
+                aria-label="季"
+                @update:model-value="setSeason(Number($event))"
+                persistent-hint
+                :items="[
+                  ...Array.from({ length: 99 }, (_, index) => index + 1).map((season) => ({
+                    title: (' 第 ' + String(season) + ' 季 ').trim(),
+                    value: season,
+                  })),
+                ]"
+                prepend-inner-icon="mdi-calendar"
+              />
+              <VSelect
+                label="状态"
+                hint="暂停后停止自动检查，已下载文件保留"
+                v-model="editing.state"
+                aria-label="订阅状态"
+                persistent-hint
+                :items="[
+                  { title: '启用', value: 'active' },
+                  { title: '暂停', value: 'paused' },
+                ]"
+                prepend-inner-icon="mdi-play"
+              />
             </div>
             <h3>资源筛选</h3>
             <div class="subscription-edit-grid">
-              <SubscriptionField label="最低做种数" icon="upload">
-                <input
-                  v-model.number="editing.policy.min_seeders"
-                  aria-label="最低做种数"
-                  type="number"
-                  min="0"
-                />
-              </SubscriptionField>
-              <SubscriptionField label="编码" icon="film">
-                <select v-model="editing.policy.codec" aria-label="编码">
-                  <option value="">不限</option>
-                  <option>HEVC</option>
-                  <option>AVC</option>
-                  <option>AV1</option>
-                </select>
-              </SubscriptionField>
-              <SubscriptionField label="音轨语言" icon="globe" hint="多个语言用逗号分隔，如 zh, en">
-                <input
-                  :value="(editing.policy.languages || []).join(', ')"
-                  aria-label="音轨语言"
-                  @input="policyCSV('languages', $event)"
-                />
-              </SubscriptionField>
-              <SubscriptionField label="字幕" icon="logs" hint="多个字幕用逗号分隔，如 zh-Hans, en">
-                <input
-                  :value="(editing.policy.subtitles || []).join(', ')"
-                  aria-label="字幕"
-                  @input="policyCSV('subtitles', $event)"
-                />
-              </SubscriptionField>
-              <SubscriptionField label="最小体积（GiB）" icon="filter">
-                <input
-                  :value="editing.policy.min_bytes ? editing.policy.min_bytes / 1073741824 : ''"
-                  aria-label="最小体积（GiB）"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  placeholder="不限制"
-                  @input="policySize('min_bytes', $event)"
-                />
-              </SubscriptionField>
-              <SubscriptionField label="最大体积（GiB）" icon="filter">
-                <input
-                  :value="editing.policy.max_bytes ? editing.policy.max_bytes / 1073741824 : ''"
-                  aria-label="最大体积（GiB）"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  placeholder="不限制"
-                  @input="policySize('max_bytes', $event)"
-                />
-              </SubscriptionField>
-              <SubscriptionField
+              <VTextField
+                label="最低做种数"
+                v-model.number="editing.policy.min_seeders"
+                aria-label="最低做种数"
+                type="number"
+                min="0"
+                prepend-inner-icon="mdi-upload"
+              />
+              <VSelect
+                label="编码"
+                v-model="editing.policy.codec"
+                aria-label="编码"
+                :items="[
+                  { title: '不限', value: '' },
+                  { title: 'HEVC', value: 'HEVC' },
+                  { title: 'AVC', value: 'AVC' },
+                  { title: 'AV1', value: 'AV1' },
+                ]"
+                prepend-inner-icon="mdi-filmstrip"
+              />
+              <VTextField
+                label="音轨语言"
+                hint="多个语言用逗号分隔，如 zh, en"
+                :model-value="(editing.policy.languages || []).join(', ')"
+                aria-label="音轨语言"
+                @input="policyCSV('languages', $event)"
+                persistent-hint
+                prepend-inner-icon="mdi-earth"
+              />
+              <VTextField
+                label="字幕"
+                hint="多个字幕用逗号分隔，如 zh-Hans, en"
+                :model-value="(editing.policy.subtitles || []).join(', ')"
+                aria-label="字幕"
+                @input="policyCSV('subtitles', $event)"
+                persistent-hint
+                prepend-inner-icon="mdi-text"
+              />
+              <VTextField
+                label="最小体积（GiB）"
+                :model-value="editing.policy.min_bytes ? editing.policy.min_bytes / 1073741824 : ''"
+                aria-label="最小体积（GiB）"
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="不限制"
+                @input="policySize('min_bytes', $event)"
+                prepend-inner-icon="mdi-filter"
+              />
+              <VTextField
+                label="最大体积（GiB）"
+                :model-value="editing.policy.max_bytes ? editing.policy.max_bytes / 1073741824 : ''"
+                aria-label="最大体积（GiB）"
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="不限制"
+                @input="policySize('max_bytes', $event)"
+                prepend-inner-icon="mdi-filter"
+              />
+              <VTextField
                 label="优先发布组"
-                icon="sort"
                 hint="按优先顺序填写，多个发布组用逗号分隔"
-              >
-                <input
-                  :value="(editing.policy.preferred_groups || []).join(', ')"
-                  aria-label="优先发布组"
-                  @input="policyCSV('preferred_groups', $event)"
-                />
-              </SubscriptionField>
-              <SubscriptionField
+                :model-value="(editing.policy.preferred_groups || []).join(', ')"
+                aria-label="优先发布组"
+                @input="policyCSV('preferred_groups', $event)"
+                persistent-hint
+                prepend-inner-icon="mdi-sort"
+              />
+              <VTextField
                 label="优先分辨率"
-                icon="tv"
                 hint="按优先顺序填写，如 2160p, 1080p"
-              >
-                <input
-                  :value="(editing.policy.preferred_resolutions || []).join(', ')"
-                  aria-label="优先分辨率"
-                  @input="policyCSV('preferred_resolutions', $event)"
-                />
-              </SubscriptionField>
+                :model-value="(editing.policy.preferred_resolutions || []).join(', ')"
+                aria-label="优先分辨率"
+                @input="policyCSV('preferred_resolutions', $event)"
+                persistent-hint
+                prepend-inner-icon="mdi-television"
+              />
             </div>
             <label class="subscription-toggle">
               <input v-model="editing.policy.free_only" type="checkbox" />
@@ -1054,16 +1079,17 @@ watch(() => props.view, applyView);
             <template v-if="editing.media.media_type === 'tv'">
               <h3>单集设置</h3>
               <div class="form-grid">
-                <label>排除集数<input v-model="excluded" /></label
-                ><label>允许提前下载的集数<input v-model="allowEarly" /></label>
+                <VTextField v-model="excluded" label="排除集数" /><VTextField
+                  v-model="allowEarly"
+                  label="允许提前下载的集数"
+                />
               </div>
-              <label
-                >单集日期覆盖<textarea
-                  v-model="dates"
-                  rows="3"
-                  placeholder="17=2026-10-16"
-                ></textarea>
-              </label>
+              <VTextarea
+                v-model="dates"
+                rows="3"
+                placeholder="17=2026-10-16"
+                label="单集日期覆盖"
+              />
               <MappingRules
                 :model="editing.mappings"
                 :media-id="editing.media.media_type + ':' + editing.media.id"
