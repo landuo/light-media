@@ -246,7 +246,7 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 	if err := tx.QueryRowContext(ctx, `SELECT version,generation,installed,desired_enabled,plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&run.Version, &run.Generation, &installed, &allowed, &pluginID); err != nil {
 		return PluginRun{}, err
 	}
-	if !installed || !allowed {
+	if (!installed || !allowed) && !originalInitializationMatches(ctx, instanceID, pluginID, run.Version, run.Generation, action) {
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
 	}
 	if err := p.requirePluginUpdateActivation(ctx, tx, instanceID); err != nil {
@@ -345,10 +345,12 @@ func (p *PluginStore) EnqueueRun(ctx context.Context, instanceID, action string,
 	call, bound := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall)
 	if bound {
 		call.object.app.pluginOriginalInitializingRuns.Store(run.ID, call)
+		p.originalInitializingRuns.Store(run.ID, call)
 	}
 	err = tx.Commit()
 	if err != nil && bound {
 		call.object.app.pluginOriginalInitializingRuns.Delete(run.ID)
+		p.originalInitializingRuns.Delete(run.ID)
 	}
 	return run, err
 }
@@ -472,7 +474,7 @@ func (p *PluginStore) claimSelectedRun(ctx context.Context, instanceID, runID st
 		}
 		var current int
 		var pluginID string
-		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND (v.revision=? OR (v.instance_id IS NULL AND ?=0 AND ? IN ('init','reload')))`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision, run.ConfigRevision, run.Action).Scan(&current, &pluginID)
+		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND ((i.installed=1 AND i.desired_enabled=1) OR ?) AND i.version=? AND i.generation=? AND (v.revision=? OR (v.instance_id IS NULL AND ?=0 AND ? IN ('init','reload')))`, run.InstanceID, p.originalInitializationRunBound(run), run.Version, run.Generation, run.ConfigRevision, run.ConfigRevision, run.Action).Scan(&current, &pluginID)
 		if err != nil {
 			_ = rollback()
 			return PluginRun{}, err

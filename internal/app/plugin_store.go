@@ -86,15 +86,16 @@ type PluginImport struct {
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
-	runSupervisor    *pluginRunSupervisor
-	runJournal       *pluginRunAttemptJournal
-	store            *Store
-	uninstallConfig  pluginUninstallConfigCache
-	installedSource  pluginSourceInstalledCache
-	notices          pluginNoticeRuntime
-	brushFlowLiveMu  sync.Mutex
-	brushFlowRuntime *pluginBrushFlowRuntime
-	larkLive         pluginLarkLive
+	originalInitializingRuns sync.Map // Exact transient original init calls, not installed-list membership.
+	runSupervisor            *pluginRunSupervisor
+	runJournal               *pluginRunAttemptJournal
+	store                    *Store
+	uninstallConfig          pluginUninstallConfigCache
+	installedSource          pluginSourceInstalledCache
+	notices                  pluginNoticeRuntime
+	brushFlowLiveMu          sync.Mutex
+	brushFlowRuntime         *pluginBrushFlowRuntime
+	larkLive                 pluginLarkLive
 }
 
 const pluginValueLimit = 1 << 20

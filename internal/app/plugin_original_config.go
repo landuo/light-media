@@ -88,20 +88,18 @@ func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Req
 	ctx := context.WithoutCancel(r.Context())
 	a.pluginLifecycleMu.Lock()
 	defer a.pluginLifecycleMu.Unlock()
-	in, err := a.pluginStore.Installation(ctx, instance)
-	if err != nil {
-		return nil, err
-	}
-	if !in.Installed {
-		return nil, &APIError{"NOT_FOUND", "插件已卸载", 404}
-	}
+	var err error
 	if r.Method == http.MethodPut {
 		raw, err := json.Marshal(config)
 		if err != nil {
 			return nil, err
 		}
-		if _, err = a.pluginStore.saveOriginalPluginConfiguration(ctx, in, raw); err != nil {
-			return nil, err
+		// Original save_plugin_config returns false when its class is absent;
+		// the endpoint deliberately ignores that boolean and still init/registers.
+		if class, exists := a.pluginOriginalClasses.Load(instance); exists {
+			if _, err = a.pluginStore.saveOriginalPluginConfiguration(ctx, class.(originalPluginClass).installation, raw); err != nil {
+				return nil, err
+			}
 		}
 		if err = a.initOriginalLoadedPlugin(ctx, instance); err != nil {
 			return nil, err

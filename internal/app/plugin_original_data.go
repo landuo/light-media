@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 )
 
 // deleteOriginalPluginData maps PluginDataOper.del_data to the Go data namespace.
@@ -18,6 +20,13 @@ func (p *PluginStore) deleteOriginalPluginData(ctx context.Context, instance str
 	var plugin string
 	var generation int64
 	if err = tx.QueryRowContext(ctx, `SELECT plugin_id,generation FROM plugin_installations WHERE instance_id=?`, instance).Scan(&plugin, &generation); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			_, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=? AND kind='data'`, instance)
+			if err != nil {
+				return err
+			}
+			return tx.Commit()
+		}
 		return err
 	}
 	var create func() error

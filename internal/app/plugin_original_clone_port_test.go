@@ -49,6 +49,9 @@ func TestPluginOriginalCloneInitializerCalls(t *testing.T) {
 					t.Fatal(e)
 				}
 			}
+			if a.startOriginalPlugin(ctx, "SystemProcess") == nil {
+				t.Fatal("original source class must first be loaded")
+			}
 			// Original initialization is synchronous and does not require a server worker.
 			response := callTest(t, a.Handler(), "POST", "/api/plugins/SystemProcess/clone", `{"suffix":"Original"}`, cookie, "")
 			if response.Code != 200 {
@@ -103,6 +106,10 @@ func TestPluginOriginalCloneInitExceptionSemantics(t *testing.T) {
 			installCloneSource(t, a.pluginStore, builtin.SystemProcessManifest())
 			if _, e := a.pluginStore.SaveConfig(ctx, "SystemProcess", 0, map[string]any{"future": 1}); e != nil {
 				t.Fatal(e)
+			}
+			useBuiltInPluginProcess(t, a)
+			if a.startOriginalPlugin(ctx, "SystemProcess") == nil {
+				t.Fatal("source class load")
 			}
 			executable, e := os.Executable()
 			if e != nil {

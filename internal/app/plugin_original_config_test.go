@@ -50,8 +50,11 @@ func TestPluginOriginalConfigurationHTTPSequence(t *testing.T) {
 			}
 			var config map[string]any
 			json.Unmarshal(stored.Value, &config)
-			if config["enable"] != true || config["onlyonce"] != true || config["unknown"] != float64(0) || config["empty"] != "" {
+			if loaded && (config["enable"] != true || config["onlyonce"] != true || config["unknown"] != float64(0) || config["empty"] != "") {
 				t.Fatal("original dict altered")
+			}
+			if !loaded && (len(config) != 1 || config["enable"] != false) {
+				t.Fatal("save without imported class must be ignored")
 			}
 			current, exists := a.pluginRunningInstances.Load("SystemProcess")
 			var after int

@@ -191,7 +191,7 @@ func (p *PluginStore) markPluginExecutionStartedTx(ctx context.Context, tx *sql.
 	if err != nil {
 		return err
 	}
-	if !in.Installed || in.Version != run.Version || in.Generation != run.Generation {
+	if (!in.Installed && !p.originalInitializationRunBound(run)) || in.Version != run.Version || in.Generation != run.Generation {
 		return pluginLifecycleInvalid()
 	}
 	var claimed int
@@ -200,6 +200,12 @@ func (p *PluginStore) markPluginExecutionStartedTx(ctx context.Context, tx *sql.
 	}
 	if claimed != 1 {
 		return pluginLifecycleInvalid()
+	}
+	// An explicit original reload can load retained code without installing it.
+	// Its exact in-memory call is already bound above; do not change the
+	// installed-list lifecycle marker merely to execute that initializer.
+	if !in.Installed && p.originalInitializationRunBound(run) {
+		return nil
 	}
 	state, err := pluginLifecycleState(in)
 	if err != nil {

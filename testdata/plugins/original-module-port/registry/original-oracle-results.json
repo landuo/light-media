@@ -1,0 +1,483 @@
+[
+  {
+    "case": "save_no_class",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "installed": [
+        "Source"
+      ],
+      "classes": [],
+      "running": [],
+      "config": {
+        "Source": {
+          "enabled": false,
+          "old": 1
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ]
+      ]
+    }
+  },
+  {
+    "case": "save_class_only",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "config.set",
+          "plugin.Source",
+          {
+            "enabled": false,
+            "new": 2
+          }
+        ],
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "installed": [
+        "Source"
+      ],
+      "classes": [
+        "Source"
+      ],
+      "running": [],
+      "config": {
+        "Source": {
+          "enabled": false,
+          "new": 2
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ]
+      ]
+    }
+  },
+  {
+    "case": "save_not_installed_loaded",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "config.set",
+          "plugin.Source",
+          {
+            "enabled": false,
+            "new": 2
+          }
+        ],
+        [
+          "init",
+          "Source",
+          {
+            "enabled": false,
+            "new": 2
+          }
+        ],
+        [
+          "event.disable",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "installed": [],
+      "classes": [
+        "Source"
+      ],
+      "running": [
+        "Source"
+      ],
+      "config": {
+        "Source": {
+          "enabled": false,
+          "new": 2
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ]
+      ]
+    }
+  },
+  {
+    "case": "reload_uninstalled_files_present",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "modules.clear",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "import",
+          "app.plugins.source"
+        ],
+        [
+          "init",
+          "Source",
+          {
+            "retained": true
+          }
+        ],
+        [
+          "event.disable",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Source"
+          }
+        ],
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "installed": [],
+      "classes": [
+        "Source"
+      ],
+      "running": [
+        "Source"
+      ],
+      "config": {
+        "Source": {
+          "retained": true
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ]
+      ]
+    }
+  },
+  {
+    "case": "reload_absent",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "modules.clear",
+          "Absent"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Absent"
+          }
+        ],
+        [
+          "jobs.register",
+          "Absent"
+        ],
+        [
+          "commands.register",
+          "Absent"
+        ],
+        [
+          "api.register",
+          "Absent"
+        ]
+      ],
+      "installed": [],
+      "classes": [],
+      "running": [],
+      "config": {
+        "Source": {
+          "enabled": false,
+          "old": 1
+        },
+        "Absent": {
+          "retained": true
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ],
+        [
+          "Absent",
+          "history"
+        ]
+      ]
+    }
+  },
+  {
+    "case": "reset_uninstalled_files_present",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "event.send",
+          "reset",
+          {
+            "plugin_id": "Source",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "modules.clear",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "config.delete",
+          "plugin.Source"
+        ],
+        [
+          "data.delete",
+          "Source"
+        ],
+        [
+          "modules.clear",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "import",
+          "app.plugins.source"
+        ],
+        [
+          "init",
+          "Source",
+          {}
+        ],
+        [
+          "event.disable",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Source"
+          }
+        ],
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "installed": [],
+      "classes": [
+        "Source"
+      ],
+      "running": [
+        "Source"
+      ],
+      "config": {},
+      "kv_keys": []
+    }
+  },
+  {
+    "case": "reset_absent",
+    "status": "pass",
+    "result": {
+      "response": {
+        "success": true
+      },
+      "events": [
+        [
+          "event.send",
+          "reset",
+          {
+            "plugin_id": "Absent",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "modules.clear",
+          "Absent"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "config.delete",
+          "plugin.Absent"
+        ],
+        [
+          "data.delete",
+          "Absent"
+        ],
+        [
+          "modules.clear",
+          "Absent"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Absent"
+          }
+        ],
+        [
+          "jobs.register",
+          "Absent"
+        ],
+        [
+          "commands.register",
+          "Absent"
+        ],
+        [
+          "api.register",
+          "Absent"
+        ]
+      ],
+      "installed": [],
+      "classes": [],
+      "running": [],
+      "config": {
+        "Source": {
+          "enabled": false,
+          "old": 1
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ]
+      ]
+    }
+  },
+  {
+    "case": "start_all_not_installed",
+    "status": "pass",
+    "result": {
+      "response": null,
+      "events": [
+        [
+          "cache.clear"
+        ]
+      ],
+      "installed": [],
+      "classes": [],
+      "running": [],
+      "config": {
+        "Source": {
+          "retained": true
+        }
+      },
+      "kv_keys": [
+        [
+          "Source",
+          "history"
+        ]
+      ]
+    }
+  }
+]

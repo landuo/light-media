@@ -38,6 +38,7 @@ type App struct {
 	pluginOriginalCommands         map[string]map[string]any
 	pluginOriginalServicesMu       sync.Mutex
 	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginOriginalClasses          sync.Map // Original _plugins: imported compiled class, independent of running and installed.
 	pluginRunningInstances         sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
 	systemMessages                 systemMessageRuntime
 	bigMemoryMode                  bool // Trusted startup option; not worker or plugin configuration.

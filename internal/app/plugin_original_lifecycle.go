@@ -123,6 +123,7 @@ func (p *originalPluginInstance) init(ctx context.Context) error {
 	run, err := p.app.initializeOriginalPlugin(context.WithValue(ctx, originalInitializingObjectKey{}, call), p.installation.InstanceID)
 	if run.ID != "" {
 		p.app.pluginOriginalInitializingRuns.Delete(run.ID)
+		p.app.pluginStore.originalInitializingRuns.Delete(run.ID)
 	}
 	call.mu.Lock()
 	captured, raw := call.captured, append(json.RawMessage(nil), call.applied...)
@@ -147,15 +148,12 @@ func (p *originalPluginInstance) init(ctx context.Context) error {
 }
 
 func (a *App) startOriginalPlugin(ctx context.Context, instance string) *originalPluginInstance {
-	in, err := a.pluginStore.Installation(ctx, instance)
-	if err == nil && !in.Installed {
-		return nil
-	}
+	in, err := a.originalDirectoryInstallation(ctx, instance)
 	if err == nil && !in.DesiredEnabled {
 		// The retired staging flag is an internal Go worker eligibility bit,
 		// not the original plugin object's get_state. Installed disabled plugins
 		// are initialized by original start too. Their configuration is untouched.
-		_, err = a.Store.DB.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=1 WHERE instance_id=? AND installed=1`, instance)
+		_, err = a.Store.DB.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=1 WHERE instance_id=?`, instance)
 		in.DesiredEnabled = err == nil
 	}
 	if err == nil {
@@ -163,6 +161,11 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 		if !exists || manifest.Version != in.Version {
 			return nil
 		}
+		meta, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.DB, instance)
+		if metadataErr != nil {
+			return nil
+		}
+		a.pluginOriginalClasses.Store(instance, originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""})
 		object := &originalPluginInstance{app: a, installation: in, handler: handler, manifest: manifest}
 		err = object.init(ctx)
 		if err == nil {
@@ -226,6 +229,7 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 	loaded, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
+		a.pluginOriginalClasses.Delete(instance)
 		return nil
 	}
 	object := loaded.(*originalPluginInstance)
@@ -262,6 +266,7 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 	}
 	func() {
 		a.pluginOriginalRunningMu.Lock()
+		a.pluginOriginalClasses.Delete(instance)
 		a.pluginRunningInstances.Delete(instance)
 		for n, id := range a.pluginOriginalRunningOrder {
 			if id == instance {
