@@ -143,7 +143,7 @@ func (p *PluginStore) autoBackupRead(ctx context.Context, q pluginRemoveLinkJour
 		if r.Phase == "snapshot_cut" && !validAutoBackupCut(r, s.Instance, s.Generation) {
 			return s, nil, bad("AUTO_BACKUP_JOURNAL_INVALID", "备份快照断点无效")
 		}
-		if key != r.RunID || !pluginStorageID.MatchString(key) || r.Revision < 1 || !pluginStorageDigest.MatchString(r.InputSHA) {
+		if key != r.RunID || !pluginStorageID.MatchString(key) || (r.Revision < 0 || (r.Revision == 0 && r.Action != "init")) || !pluginStorageDigest.MatchString(r.InputSHA) {
 			return s, nil, bad("AUTO_BACKUP_JOURNAL_INVALID", "备份执行身份无效")
 		}
 		switch r.Phase {
@@ -388,12 +388,18 @@ func (a *App) pluginAutoBackupHost(ctx context.Context, i PluginInstallation, ru
 		return nil, err
 	}
 	c, err := a.pluginStore.Config(ctx, i.InstanceID)
-	if err != nil {
-		return nil, err
-	}
-	config, err := autoBackupConfig(c.Value)
-	if err != nil {
-		return nil, err
+	var config ab.Object
+	if errors.Is(err, sql.ErrNoRows) && originalInitializationMatches(ctx, i.InstanceID, i.PluginID, i.Version, i.Generation, run.Action) {
+		// Original init_plugin(None), not a synthetic saved default dictionary.
+		config = nil
+	} else {
+		if err != nil {
+			return nil, err
+		}
+		config, err = autoBackupConfig(c.Value)
+		if err != nil {
+			return nil, err
+		}
 	}
 	call := &autoBackupCall{o: o, run: *run, method: method, pins: map[string]autoBackupPin{}, config: config}
 	call.run.Input = append(json.RawMessage(nil), run.Input...)
@@ -578,9 +584,14 @@ func (c *autoBackupCall) execute(ctx context.Context) (json.RawMessage, error) {
 	defs := []pluginScheduleDefinition{}
 	o := c.o
 	c.scheduler = &autoBackupScheduler{defs: &defs, timezone: c.o.timezone}
+	if originalInitializationMatches(ctx, c.run.InstanceID, "AutoBackup", c.run.Version, c.run.Generation, c.run.Action) {
+		c.scheduler.originalOwner = o
+	}
 	deps := ab.Dependencies{Now: func() time.Time { return o.active.now() }, Timezone: c.o.timezone, DataPath: func() string { return o.active.defaultPath() },
 		Log: func(ctx context.Context, level, msg string) {
-			o.a.pluginExecutionLog(PluginInstallation{PluginID: "AutoBackup", InstanceID: o.active.run.InstanceID}, o.active.run, strings.ToUpper(level), "backup_source", cleanWithSettings(msg, o.a.Settings()), "")
+			// stop_service may log after the invocation has ended. Its object
+			// identity remains valid; the previous run callback authority does not.
+			o.a.writeLog(map[string]any{"id": id("log_"), "time": now(), "level": strings.ToUpper(level), "module": "plugins", "event": "backup_source", "message": cleanWithSettings(msg, o.a.Settings()), "plugin_id": "AutoBackup", "plugin_instance_id": o.instance})
 		},
 		BackupFile: func(ctx context.Context, d string) (*string, error) { return o.active.archive(ctx, d) }, ListBackups: func(ctx context.Context, d string) ([]ab.Entry, error) {
 			list, err := (ab.Filesystem{Roots: o.active.writeRoots()}).ListBackups(ctx, d)
@@ -605,13 +616,19 @@ func (c *autoBackupCall) execute(ctx context.Context) (json.RawMessage, error) {
 		},
 		NewScheduler: func(context.Context, string) (ab.Scheduler, error) { return o.active.scheduler, nil }, SaveConfig: func(_ context.Context, v ab.Object) error { o.active.cleared = v; return nil }, PostMessage: func(ctx context.Context, v ab.Object) error { return o.active.notice(ctx, v) }}
 	machine := o.machine
+	originalInit := originalInitializationMatches(ctx, c.run.InstanceID, "AutoBackup", c.run.Version, c.run.Generation, c.run.Action)
+	if originalInit {
+		// A manager start creates a new original object; a direct init reuses
+		// that same object's actual machine, not a DB reconstruction.
+		machine, _ = originalNativeStateBeforeInit(ctx).(*ab.Plugin)
+	}
 	if machine == nil {
 		machine = ab.New(deps)
 		state, _, e := o.a.pluginStore.autoBackupRead(ctx, o.a.Store.DB, o.instance, o.generation)
 		if e != nil {
 			return nil, e
 		}
-		if len(state.Config) != 0 && string(state.Config) != "null" {
+		if !originalInit && len(state.Config) != 0 && string(state.Config) != "null" {
 			warm, e := autoBackupConfig(state.Config)
 			if e != nil {
 				return nil, e
@@ -623,6 +640,10 @@ func (c *autoBackupCall) execute(ctx context.Context) (json.RawMessage, error) {
 		}
 		o.machine = machine
 	}
+	if originalInit {
+		captureOriginalNativeState(ctx, machine)
+		defer func() { captureOriginalAppliedConfiguration(ctx, machine.Config()) }()
+	}
 	if c.run.Action == "init" || c.run.Action == "reload" {
 		if err := machine.Init(ctx, c.config); err != nil {
 			return nil, err
@@ -633,7 +654,7 @@ func (c *autoBackupCall) execute(ctx context.Context) (json.RawMessage, error) {
 		if err != nil {
 			return nil, err
 		}
-		if trigger != nil {
+		if trigger != nil && !originalInit {
 			defs = append(defs, pluginScheduleDefinition{ID: "AutoBackup", Name: "自动备份定时服务", Handler: "auto_backup", Trigger: *trigger, MisfireGraceMS: 1000})
 		}
 		runtimeConfig, err := json.Marshal(machine.Config())
@@ -718,9 +739,10 @@ func (c *autoBackupCall) writeRoots() []string {
 }
 
 type autoBackupScheduler struct {
-	defs     *[]pluginScheduleDefinition
-	running  bool
-	timezone string
+	originalOwner *pluginAutoBackupOwner
+	defs          *[]pluginScheduleDefinition
+	running       bool
+	timezone      string
 }
 
 func (s *autoBackupScheduler) AddDate(_ context.Context, t time.Time, _ string) error {
@@ -730,9 +752,20 @@ func (s *autoBackupScheduler) AddDate(_ context.Context, t time.Time, _ string) 
 func (s *autoBackupScheduler) Jobs(context.Context) (int, error) { return len(*s.defs), nil }
 func (s *autoBackupScheduler) Print(context.Context) error       { return nil }
 func (s *autoBackupScheduler) Start(context.Context) error       { s.running = true; return nil }
-func (s *autoBackupScheduler) Clear(context.Context) error       { *s.defs = nil; return nil }
-func (s *autoBackupScheduler) Running() bool                     { return s.running }
-func (s *autoBackupScheduler) Shutdown(context.Context) error    { s.running = false; return nil }
+func (s *autoBackupScheduler) Clear(ctx context.Context) error {
+	if o := s.originalOwner; o != nil {
+		// Original private remove_all_jobs only removes this object's date job.
+		// Central get_service jobs and other instances are not private scheduler
+		// state. Preserve the scheduler if SQL fails, matching Plugin.Stop.
+		if _, err := o.a.Store.DB.ExecContext(ctx, `UPDATE plugin_schedules SET active=0,updated_at=? WHERE instance_id=? AND generation=? AND group_key='auto_backup' AND service_id='AutoBackup.once'`, now(), o.instance, o.generation); err != nil {
+			return err
+		}
+	}
+	*s.defs = nil
+	return nil
+}
+func (s *autoBackupScheduler) Running() bool                  { return s.running }
+func (s *autoBackupScheduler) Shutdown(context.Context) error { s.running = false; return nil }
 
 func (a *App) autoBackupLifecycleRequest(ctx context.Context, path, method string) bool {
 	parts := strings.Split(path, "/")

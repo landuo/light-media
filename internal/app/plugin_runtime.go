@@ -571,10 +571,16 @@ func (a *App) pluginExecutionLog(installation PluginInstallation, run PluginRun,
 func (a *App) validatePluginHostRun(ctx context.Context, installation PluginInstallation, run *PluginRun, method string) error {
 	if run != nil {
 		current, err := a.pluginStore.Installation(ctx, installation.InstanceID)
-		if err != nil || !current.Installed || !current.DesiredEnabled || current.Version != run.Version || current.Generation != run.Generation {
+		originalInit := originalInitializationMatches(ctx, installation.InstanceID, installation.PluginID, run.Version, run.Generation, run.Action) && a.pluginStore.originalInitializationRunBound(*run)
+		if err != nil || ((!current.Installed || !current.DesiredEnabled) && !originalInit) || current.PluginID != installation.PluginID || current.Version != run.Version || current.Generation != run.Generation {
 			return bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
 		}
 		config, err := a.pluginStore.Config(ctx, run.InstanceID)
+		if errors.Is(err, sql.ErrNoRows) && originalInit && run.ConfigRevision == 0 {
+			// Original init_plugin(None) is a real loaded-object call. Absence
+			// is not a default configuration and does not authorize other runs.
+			err = nil
+		}
 		if err != nil {
 			return err
 		}

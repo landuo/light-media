@@ -12,7 +12,7 @@ import (
 
 func TestPluginOriginalNativeDataClearStartsEmptyNamespaceKeepsFiles(t *testing.T) {
 	a := newTestApp(t)
-	autoTestInstall(t, a)
+	originalNativeDataInstallFixture(t, a)
 	ctx := context.Background()
 	in, err := a.pluginStore.Installation(ctx, "AutoBackup")
 	if err != nil {
@@ -60,5 +60,26 @@ func TestPluginOriginalNativeDataClearStartsEmptyNamespaceKeepsFiles(t *testing.
 	old, _, err := a.pluginStore.autoBackupRead(ctx, a.Store.DB, in.InstanceID, in.Generation)
 	if err != nil || len(old.Runs) != len(before.Runs) {
 		t.Fatalf("old audit unexpectedly rewritten: %v", err)
+	}
+}
+
+// This fixture follows the newly synchronous original lifecycle. The legacy
+// autoTestInstall helper expects a pending init and is intentionally unchanged.
+func originalNativeDataInstallFixture(t *testing.T, a *App) {
+	t.Helper()
+	useBuiltInPluginProcess(t, a)
+	cookie := setupTestAdmin(t, a)
+	response := callTest(t, a.Handler(), "POST", "/api/plugins/install", `{"plugin_id":"AutoBackup"}`, cookie, "")
+	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
+	// Explicit owned configuration is a separate user operation, not an injected
+	// Form-default write during install. No once job or remote storage is enabled.
+	response = callTest(t, a.Handler(), "PUT", "/api/plugins/AutoBackup", `{"enabled":false,"onlyonce":false,"webdav_enabled":false,"back_path":""}`, cookie, "")
+	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
+	var pending, succeeded int
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_runs WHERE instance_id='AutoBackup' AND state IN ('pending','running')`).Scan(&pending); err != nil || pending != 0 {
+		t.Fatalf("synchronous initialization pending=%d: %v", pending, err)
+	}
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_runs WHERE instance_id='AutoBackup' AND action='init' AND state='succeeded'`).Scan(&succeeded); err != nil || succeeded != 2 {
+		t.Fatalf("install and explicit save init=%d: %v", succeeded, err)
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	ab "light-media/internal/plugins/autobackup"
 	"light-media/internal/plugins/builtin"
 	iyuu "light-media/internal/plugins/iyuuautoseed"
 	transfer "light-media/internal/plugins/torrenttransfer"
@@ -19,6 +20,12 @@ func (p *originalPluginInstance) getState(ctx context.Context) (bool, error) {
 	nativeState := p.nativeState
 	p.configMu.RUnlock()
 	switch p.installation.PluginID {
+	case "AutoBackup":
+		machine, ok := nativeState.(*ab.Plugin)
+		if !ok || machine == nil {
+			return false, fmt.Errorf("loaded backup object missing")
+		}
+		return sourceSubscriptionTruth(machine.GetState()), nil
 	case "SystemProcess":
 		var cfg builtin.SystemProcessConfiguration
 		if err := json.Unmarshal(raw, &cfg); err != nil {

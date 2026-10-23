@@ -97,7 +97,7 @@ func (p *PluginStore) configurePluginSchedulesWithReplacement(ctx context.Contex
 	}
 	defer tx.Rollback()
 	var current int
-	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' JOIN plugin_runs r ON r.instance_id=i.instance_id WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=? AND i.version=? AND v.revision=? AND r.id=? AND r.state='running' AND r.generation=i.generation AND r.config_revision=v.revision`, run.InstanceID, run.Generation, run.Version, run.ConfigRevision, run.ID).Scan(&current); err != nil {
+	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' JOIN plugin_runs r ON r.instance_id=i.instance_id WHERE i.instance_id=? AND ((i.installed=1 AND i.desired_enabled=1) OR ?) AND i.generation=? AND i.version=? AND (v.revision=? OR (v.instance_id IS NULL AND ? AND ?=0)) AND r.id=? AND r.state='running' AND r.generation=i.generation AND r.config_revision=?`, run.InstanceID, p.originalInitializationRunBound(*run), run.Generation, run.Version, run.ConfigRevision, p.originalInitializationRunBound(*run), run.ConfigRevision, run.ID, run.ConfigRevision).Scan(&current); err != nil {
 		return err
 	}
 	if current != 1 || (run.Action != "init" && run.Action != "reload") {

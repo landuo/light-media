@@ -11,7 +11,7 @@ import (
 // and does not retry the uncertain effect. All effects are owned TempDir data.
 func TestPluginOriginalForceDataClearDoesNotReapplyUnknownEffect(t *testing.T) {
 	a := newTestApp(t)
-	autoTestInstall(t, a)
+	originalNativeDataInstallFixture(t, a)
 	ctx := context.Background()
 	writes := 0
 	a.pluginAutoBackup.afterEffect = func(kind string) error {

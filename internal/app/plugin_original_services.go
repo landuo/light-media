@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	ab "light-media/internal/plugins/autobackup"
 	iyuu "light-media/internal/plugins/iyuuautoseed"
 	"light-media/internal/plugins/schedule"
 	transfer "light-media/internal/plugins/torrenttransfer"
@@ -17,6 +18,18 @@ func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginSched
 	p.methodMu.Lock()
 	defer p.methodMu.Unlock()
 	switch p.installation.PluginID {
+	case "AutoBackup":
+		p.configMu.RLock()
+		machine, ok := p.nativeState.(*ab.Plugin)
+		p.configMu.RUnlock()
+		if !ok || machine == nil {
+			return nil, fmt.Errorf("loaded backup object missing")
+		}
+		trigger, err := machine.ServiceTrigger()
+		if err != nil || trigger == nil {
+			return nil, err
+		}
+		return []pluginScheduleDefinition{{ID: "AutoBackup", Name: "自动备份定时服务", Handler: "auto_backup", Trigger: *trigger, MisfireGraceMS: 1000}}, nil
 	case "SystemProcess", "MPServerStatus", "PluginUnInstall":
 		return nil, nil
 	case "TorrentTransfer", "TorrentTransfermusic", "IYUUAutoSeed":

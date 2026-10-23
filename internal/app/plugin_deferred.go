@@ -487,7 +487,7 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 		return err
 	}
 	var current int
-	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=? AND i.generation=? AND i.installed=1 AND i.desired_enabled=1 AND v.revision=?`, r.Instance, r.Plugin, r.Version, r.Generation, actual.ConfigRevision).Scan(&current)
+	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=? AND i.generation=? AND ((i.installed=1 AND i.desired_enabled=1) OR ?) AND (v.revision=? OR (v.instance_id IS NULL AND ? AND ?=0))`, r.Instance, r.Plugin, r.Version, r.Generation, p.originalInitializationRunBound(actual), actual.ConfigRevision, p.originalInitializationRunBound(actual), actual.ConfigRevision).Scan(&current)
 	if err != nil {
 		return err
 	}
