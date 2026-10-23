@@ -26,16 +26,17 @@ type pluginScrapeCleanRuntime struct {
 	watch   scrapehost.WatchFactory // trusted native factory; nil uses platform observer.
 }
 type pluginScrapeCleanOwner struct {
-	a          *App
-	instance   string
-	generation int64
-	j          *pluginScrapeCleanJournal
-	e          *pluginScrapeCleanEffects
-	h          *scrapehost.Host
-	roots      []scrapehost.RootStamp
-	gate       chan struct{}
-	ready      chan struct{}
-	err        error
+	originalMachine *scrapefileclean.Machine
+	a               *App
+	instance        string
+	generation      int64
+	j               *pluginScrapeCleanJournal
+	e               *pluginScrapeCleanEffects
+	h               *scrapehost.Host
+	roots           []scrapehost.RootStamp
+	gate            chan struct{}
+	ready           chan struct{}
+	err             error
 }
 type pluginScrapeCleanPrepared struct {
 	a      *App
@@ -358,6 +359,9 @@ func (o *pluginScrapeCleanOwner) openHost(i PluginInstallation, c PluginStoredVa
 	}
 	var err error
 	o.h, err = scrapehost.Open(opts)
+	if err == nil && o.originalMachine != nil {
+		err = o.h.AdoptOriginalIdleMachine(context.Background(), o.originalMachine)
+	}
 	return err
 }
 
@@ -698,6 +702,15 @@ func (a *App) pluginScrapeCleanHost(ctx context.Context, installation PluginInst
 		}
 		effective, err = scrapeCleanEffectiveConfig(base, c.Value)
 		if err != nil {
+			// If the source's raw config parser itself throws, execute that actual
+			// idle Init once to retain its ordered member mutations. No file operation
+			// can precede this parse failure, and the no-authority Ops also fail closed.
+			if o.h == nil && originalInitializationMatches(ctx, o.instance, current.PluginID, current.Version, o.generation, actual.Action) {
+				probe := scrapefileclean.NewConfig()
+				if parseErr := probe.Apply(c.Value); parseErr != nil {
+					return nil, o.initOriginalIdleMachine(ctx, c.Value)
+				}
+			}
 			return nil, err
 		}
 		roots, err = a.scrapeCleanRoots(effective, s.Roots)
@@ -791,6 +804,15 @@ func (a *App) pluginScrapeCleanHost(ctx context.Context, installation PluginInst
 				return nil, err
 			}
 		}
+		if originalInitializationMatches(ctx, o.instance, current.PluginID, current.Version, o.generation, actual.Action) {
+			machine, captureErr := o.h.OriginalMachine(ctx)
+			if captureErr != nil {
+				return nil, captureErr
+			}
+			o.originalMachine = machine
+			captureOriginalNativeState(ctx, machine)
+			captureOriginalAppliedConfiguration(ctx, c.Value)
+		}
 		err = o.h.ApplyTransition(ctx, ticket, actual.ID, c.Value)
 	} else if method == scrapefileclean.ApplyCapability {
 		var input struct {
@@ -837,9 +859,16 @@ func (o *pluginScrapeCleanOwner) configureIdle(ctx context.Context, run PluginRu
 		if !scrapeCleanIdle(*s) {
 			return scrapehost.ErrUncertain
 		}
-		cfg := scrapefileclean.NewConfig()
-		if err := cfg.Apply(raw); err != nil {
-			return err
+		if originalInitializationMatches(ctx, o.instance, "ScrapeFileClean", run.Version, o.generation, run.Action) {
+			if err := o.initOriginalIdleMachine(ctx, raw); err != nil {
+				return err
+			}
+		} else {
+			cfg := scrapefileclean.NewConfig()
+			if err := cfg.Apply(raw); err != nil {
+				return err
+			}
+
 		}
 		s.Config = append(json.RawMessage(nil), raw...)
 		if s.Transition != nil && s.Transition.Phase != "applied" {

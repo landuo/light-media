@@ -61,11 +61,7 @@ func (f Frame) MarshalJSON() ([]byte, error) {
 			prefix = "host."
 		}
 		message.Method, value.Payload = prefix+f.Method, f.Payload
-		var err error
-		message.Params, err = json.Marshal(value)
-		if err != nil {
-			return nil, failure("invalid_frame")
-		}
+		return marshalRPCValueEnvelope(message.ID, message.Method, value)
 	case "result", "host_result":
 		if f.Method != "" || f.Payload != nil || (f.Error != nil && f.Result != nil) {
 			return nil, failure("invalid_frame")
@@ -83,16 +79,55 @@ func (f Frame) MarshalJSON() ([]byte, error) {
 				return nil, failure("invalid_frame")
 			}
 			value.Payload = f.Result
-			raw, err := json.Marshal(value)
-			if err != nil {
-				return nil, failure("invalid_frame")
-			}
-			message.Result = raw
+			return marshalRPCValueEnvelope(message.ID, "", value)
 		}
 	default:
 		return nil, failure("invalid_frame")
 	}
 	return json.Marshal(message)
+}
+
+// marshalRPCValueEnvelope accepts a typed value, never prevalidated raw bytes.
+// The standard encoder owns validation, compaction and escaping of all payloads.
+func marshalRPCValueEnvelope(id, method string, value rpcValue) ([]byte, error) {
+	raw, err := json.Marshal(value)
+	if err != nil {
+		return nil, failure("invalid_frame")
+	}
+	// Adding the envelope can cross encoding/json's nesting limit even when
+	// encoding the value alone succeeded. Count a conservative upper bound,
+	// including braces in strings, and retain the original encoder near that
+	// boundary. This is not a JSON parser; false positives only use the fallback.
+	// The 10000 bound is encoding/json/scanner.go maxNestingDepth in our Go
+	// toolchain; TestJSONRPCEnvelopeStandardDepthBoundary locks that assumption.
+	if bytes.Count(raw, []byte("{"))+bytes.Count(raw, []byte("[")) >= 10000 {
+		message := rpcMessage{Version: "2.0", ID: id, Method: method}
+		if method != "" {
+			message.Params = raw
+		} else {
+			message.Result = raw
+		}
+		return json.Marshal(message)
+	}
+	metadata := struct {
+		Version string `json:"jsonrpc"`
+		ID      string `json:"id"`
+		Method  string `json:"method,omitempty"`
+	}{"2.0", id, method}
+	header, err := json.Marshal(metadata)
+	if err != nil {
+		return nil, err
+	}
+	field := `,"result":`
+	if method != "" {
+		field = `,"params":`
+	}
+	out := make([]byte, 0, len(header)+len(field)+len(raw))
+	out = append(out, header[:len(header)-1]...)
+	out = append(out, field...)
+	out = append(out, raw...)
+	out = append(out, '}')
+	return out, nil
 }
 
 func (f *Frame) UnmarshalJSON(raw []byte) error {

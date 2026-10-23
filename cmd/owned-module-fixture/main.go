@@ -21,6 +21,10 @@ type object struct {
 	stopCount    int
 	failureCount int
 	config       json.RawMessage
+	stateCount   int
+	serviceCount int
+	commandCount int
+	calls        []string
 }
 
 func manifest() plugins.Manifest {
@@ -33,7 +37,7 @@ func (o *object) snapshot() map[string]any {
 	if len(cfg) == 0 {
 		cfg = json.RawMessage("null")
 	}
-	return map[string]any{"version": fixtureVersion, "init_count": o.initCount, "stop_count": o.stopCount, "failure_count": o.failureCount, "config": cfg}
+	return map[string]any{"version": fixtureVersion, "init_count": o.initCount, "stop_count": o.stopCount, "failure_count": o.failureCount, "config": cfg, "state_count": o.stateCount, "service_count": o.serviceCount, "command_count": o.commandCount, "calls": append([]string(nil), o.calls...)}
 }
 func (o *object) handle(_ context.Context, method string, raw json.RawMessage, _ plugins.HostCaller) (json.RawMessage, error) {
 	o.mu.Lock()
@@ -72,27 +76,27 @@ func (o *object) handle(_ context.Context, method string, raw json.RawMessage, _
 		}
 		return json.Marshal(o.snapshot())
 	case "get_state":
+		o.stateCount++
 		var cfg map[string]any
 		_ = json.Unmarshal(o.config, &cfg)
+		o.calls = append(o.calls, fmt.Sprintf("get_state:%v", cfg["enabled"]))
 		return json.Marshal(cfg["enabled"])
 	case "get_service":
+		o.serviceCount++
+		o.calls = append(o.calls, "get_service")
 		var cfg map[string]any
 		_ = json.Unmarshal(o.config, &cfg)
-		if cfg["enabled"] != true {
-			return json.RawMessage(`[]`), nil
-		}
 		cron, _ := cfg["cron"].(string)
 		if cron == "" {
 			return json.RawMessage(`[]`), nil
 		}
-		return json.Marshal([]map[string]any{{"id": "owned_module_tick", "name": "Owned no-effect service", "trigger": "cron", "kwargs": map[string]any{"cron": cron}, "func": "owned_tick", "init_count": o.initCount}})
+		return json.Marshal([]map[string]any{{"id": "owned_module_tick", "name": "Owned no-effect service", "handler": "owned_tick", "trigger": map[string]any{"kind": "cron", "cron": cron, "timezone": "UTC"}, "misfire_grace_ms": 1000}})
 	case "get_command":
+		o.commandCount++
+		o.calls = append(o.calls, "get_command")
 		var cfg map[string]any
 		_ = json.Unmarshal(o.config, &cfg)
-		if cfg["enabled"] != true {
-			return json.RawMessage(`[]`), nil
-		}
-		return json.Marshal([]map[string]any{{"cmd": "/owned_module", "event": "owned_tick", "desc": "Owned no-effect command", "data": map[string]any{"init_count": o.initCount}}})
+		return json.Marshal([]map[string]any{{"cmd": "/owned_module", "event": "owned_tick", "desc": "Owned no-effect command", "data": map[string]any{"init_count": o.initCount, "action": "owned_tick"}}})
 	case "get_api":
 		return json.Marshal(manifest().APIs)
 	case "snapshot", "owned_tick":

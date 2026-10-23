@@ -27,11 +27,25 @@ func (c *brushFlowCall) execute(ctx context.Context) (json.RawMessage, error) {
 		c.o.subscriptionMu.Lock()
 		c.o.subscriptionNames = map[string][]string{}
 		c.o.subscriptionMu.Unlock()
-		core, e = bf.New(ctx, c.o, c.config)
+		originalInit := originalInitializationMatches(ctx, c.o.instance, bf.PluginID, bf.Version, c.o.generation, "init")
+		if originalInit {
+			core, _ = originalNativeStateBeforeInit(ctx).(*bf.Core)
+			if core == nil {
+				core = bf.NewUninitialized(c.o)
+			}
+			captureOriginalNativeState(ctx, core)
+			defer func() { captureOriginalAppliedConfiguration(ctx, core.Config().Map()) }()
+			c.o.setMachine(core)
+			e = core.Init(ctx, c.config)
+		} else {
+			core, e = bf.New(ctx, c.o, c.config)
+		}
 		if e != nil {
 			return nil, e
 		}
-		c.services = core.Services(ctx)
+		if !originalInit {
+			c.services = core.Services(ctx)
+		}
 		c.o.setMachine(core)
 		return json.RawMessage(`{"configured":true}`), nil
 	}

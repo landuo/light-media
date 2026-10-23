@@ -619,6 +619,7 @@ func validateFNOSCredentialChange(incoming, previous FNConfig) error {
 }
 
 func (a *App) preserveSecrets(c *Settings) {
+	c.PluginMarkets = a.Settings().PluginMarkets
 	// The system settings form does not edit these controls. Its cached full
 	// snapshot must not overwrite newer changes made in the plugin/site flow.
 	c.IndexerSites = a.Settings().IndexerSites

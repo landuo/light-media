@@ -256,6 +256,9 @@ func (a *App) dispatchLarkPluginCommandInstance(ctx context.Context, command com
 	if command.Name == "" || command.PluginID == "" || strings.TrimSpace(user) == "" {
 		return bad("LARK_PLUGIN_COMMAND_DENIED", "插件命令来源无效")
 	}
+	if loaded, ok := a.pluginRunningInstances.Load(instance); ok && loaded.(*originalPluginInstance).external {
+		return a.enqueueOriginalExternalCommand(ctx, loaded.(*originalPluginInstance), command, user)
+	}
 	switch command.PluginID {
 	case "CleanInvalidSeed":
 		if !command.Target("detect_invalid_torrents") {

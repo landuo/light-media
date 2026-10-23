@@ -86,6 +86,8 @@ type PluginImport struct {
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
+	originalScheduledObjects sync.Map // Actual objects to which central scheduler callbacks are bound.
+	originalCommandRuns      sync.Map // Original command callbacks awaiting their owned run.
 	originalInitializingRuns sync.Map // Exact transient original init calls, not installed-list membership.
 	runSupervisor            *pluginRunSupervisor
 	runJournal               *pluginRunAttemptJournal

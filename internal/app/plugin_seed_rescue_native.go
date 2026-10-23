@@ -19,11 +19,23 @@ import (
 )
 
 func (o *pluginSeedRescueOwner) IYUUAvailable(ctx context.Context) bool {
+	if read, ok := o.originalServiceRead(ctx); ok {
+		_, found := read.iyuu(ctx)
+		return found
+	}
 	var n int
 	e := o.a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations WHERE plugin_id='IYUUAutoSeed' AND installed=1`).Scan(&n)
 	return e == nil && n == 1
 }
 func (o *pluginSeedRescueOwner) IYUUEnabled(ctx context.Context) bool {
+	if read, ok := o.originalServiceRead(ctx); ok {
+		object, found := read.iyuu(ctx)
+		if !found {
+			return false
+		}
+		state, err := object.getState(ctx)
+		return err == nil && state
+	}
 	tx, e := o.a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if e != nil {
 		return false
@@ -112,6 +124,9 @@ func (o *pluginSeedRescueOwner) downloader(ctx context.Context, name string) (*n
 	return client, d, e
 }
 func (o *pluginSeedRescueOwner) Service(ctx context.Context, name string) (*sr.Service, error) {
+	if read, ok := o.originalServiceRead(ctx); ok {
+		return read.service(ctx, name)
+	}
 	client, d, e := o.downloader(ctx, name)
 	if e != nil {
 		if seedRescueErrorCode(e) == "SEED_RESCUE_DOWNLOADER_UNBOUND" {

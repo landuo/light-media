@@ -79,6 +79,7 @@ type TMDBConfig struct {
 	AccessToken string `json:"access_token"`
 }
 type Settings struct {
+	PluginMarkets               []string                     `json:"plugin_markets"`
 	RMTMediaExt                 json.RawMessage              `json:"rmt_mediaext,omitempty"`
 	RMTSubExt                   json.RawMessage              `json:"rmt_subext,omitempty"`
 	RMTAudioExt                 json.RawMessage              `json:"rmt_audioext,omitempty"`

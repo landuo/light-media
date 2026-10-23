@@ -169,7 +169,36 @@ func (a *App) configureSubscribeGroup(ctx context.Context, run *PluginRun) (json
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
-	m, err := a.subscribeGroupMachine(actual, config, true)
+	var m *subscribegroup.Machine
+	if originalInitializationMatches(ctx, run.InstanceID, "SubscribeGroup", run.Version, run.Generation, "init") {
+		m, _ = originalNativeStateBeforeInit(ctx).(*subscribegroup.Machine)
+		if m == nil {
+			m = subscribegroup.New()
+		}
+		captureOriginalNativeState(ctx, m)
+		defer func() { captureOriginalAppliedConfiguration(ctx, m.Config) }()
+		var invocation plugins.Invocation
+		if err = json.Unmarshal(actual.Input, &invocation); err != nil {
+			return nil, err
+		}
+		var fields map[string]json.RawMessage
+		if err = json.Unmarshal(invocation.Config, &fields); err != nil {
+			return nil, err
+		}
+		if len(fields) != 0 {
+			settings := a.Settings()
+			sites := make([]subscribegroup.Site, 0, len(settings.Sites))
+			for _, site := range settings.Sites {
+				sites = append(sites, subscribegroup.Site{ID: site.ID, Name: site.Name, Active: site.Enabled})
+			}
+			m.Init(&config, sites)
+		} else {
+			// Original falsey dict leaves all prior members and category rules.
+			config = m.Config
+		}
+	} else {
+		m, err = a.subscribeGroupMachine(actual, config, true)
+	}
 	if err != nil {
 		return nil, err
 	}

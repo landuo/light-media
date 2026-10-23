@@ -300,6 +300,9 @@ func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (an
 	if originalPluginUninstallRoute(path, r.Method) {
 		return a.originalPluginUninstallHTTP(r, path)
 	}
+	if path == "markets" {
+		return a.pluginMarketsHTTP(w, r)
+	}
 	if originalPluginConfigurationRoute(path, r.Method) {
 		return a.originalPluginConfigurationHTTP(w, r, path)
 	}

@@ -179,11 +179,13 @@ func (p *PluginStore) readEventAdmissionTx(ctx context.Context, q PluginProofRea
 	var generation, revision int64
 	var installed, enabled bool
 	var configSealed []byte
-	err = q.QueryRowContext(ctx, `SELECT i.plugin_id,i.version,i.generation,i.installed,i.desired_enabled,v.revision,v.sealed FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=?`, run.InstanceID).Scan(&plugin, &version, &generation, &installed, &enabled, &revision, &configSealed)
+	err = q.QueryRowContext(ctx, `SELECT i.plugin_id,i.version,i.generation,i.installed,i.desired_enabled,COALESCE(v.revision,0),v.sealed FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=?`, run.InstanceID).Scan(&plugin, &version, &generation, &installed, &enabled, &revision, &configSealed)
 	if err != nil {
 		return nil, err
 	}
-	if !installed || !enabled || version != run.Version || generation != run.Generation || revision != run.ConfigRevision {
+	originalInit := p.originalInitializationRunBound(run) && originalInitializationMatches(ctx, run.InstanceID, plugin, run.Version, run.Generation, run.Action)
+	configAbsent := configSealed == nil
+	if ((!installed || !enabled) && !originalInit) || (configAbsent && (!originalInit || run.ConfigRevision != 0)) || version != run.Version || generation != run.Generation || revision != run.ConfigRevision {
 		return nil, bad("PLUGIN_SNAPSHOT_STALE", "插件配置已变化，未注册旧事件订阅")
 	}
 	if _, err = p.instanceMetadata(ctx, q, run.InstanceID); err != nil {
@@ -228,9 +230,12 @@ func (p *PluginStore) readEventAdmissionTx(ctx context.Context, q PluginProofRea
 	if err != nil {
 		return nil, err
 	}
-	config, err := p.unseal("config", run.InstanceID, "main", configSealed)
-	if err != nil {
-		return nil, err
+	config := []byte("null")
+	if !configAbsent {
+		config, err = p.unseal("config", run.InstanceID, "main", configSealed)
+		if err != nil {
+			return nil, err
+		}
 	}
 	if configSHA != deferredInputSHA(config) {
 		return nil, bad("PLUGIN_RUN_PROOF_INVALID", "插件事件准入配置内容不匹配")

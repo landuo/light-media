@@ -86,7 +86,19 @@ func (a *App) closeOriginalSessions() {
 }
 func (a *App) runPluginImplementation(ctx context.Context, runner plugins.Runner, command plugins.Command, manifest plugins.Manifest, in PluginInstallation, method string, raw json.RawMessage, host plugins.HostHandler) (plugins.RunResult, error) {
 	var object *originalPluginInstance
-	if call, ok := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall); ok && call != nil {
+	if bound, ok := ctx.Value(originalBoundExecutionKey{}).(*originalPluginInstance); ok {
+		if !originalObjectStillLoaded(bound) {
+			return plugins.RunResult{}, bad("PLUGIN_NOT_LOADED", "插件调用绑定已停止")
+		}
+		if bound.installation.InstanceID != in.InstanceID || bound.installation.PluginID != in.PluginID || bound.installation.Generation != in.Generation || bound.installation.Version != in.Version {
+			return plugins.RunResult{}, bad("PLUGIN_SNAPSHOT_STALE", "插件调用绑定已变化")
+		}
+		if bound.external {
+			return bound.callSession(ctx, runner, method, raw, host)
+		}
+		object = bound
+	}
+	if call, ok := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall); ok && call != nil && object == nil {
 		object = call.object
 	}
 	if object == nil {
@@ -96,6 +108,11 @@ func (a *App) runPluginImplementation(ctx context.Context, runner plugins.Runner
 	}
 	if object != nil && object.external {
 		return object.callSession(ctx, runner, method, raw, host)
+	}
+	if object != nil && !object.external {
+		if result, handled, err := object.callOriginalBuiltin(ctx, method, raw, host); handled {
+			return result, err
+		}
 	}
 	implementation, err := a.resolvePluginImplementation(ctx, in)
 	if err != nil {

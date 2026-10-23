@@ -140,7 +140,21 @@ func MergeSiteSwitchManifest() plugins.Manifest {
 	return plugins.Manifest{SchemaVersion: 1, PluginID: "MergeSiteSwitch", Name: "聚合站点开关", Description: "统一管理所有与站点相关的开关。", Icon: "world.png", Version: "1.2", Author: "hotlcc", AuthorURL: "https://github.com/hotlcc", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{"sites.controls.read", "sites.controls.configure"}, FormModelPolicy: &plugins.FormModelPolicy{Installed: plugins.FormModelSource, Preview: plugins.FormModelSource}}
 }
 
+// OriginalMergeSiteSwitch retains the actual initialized members. Its caller serializes
+// Handle and State; legacy SDK calls keep their historical per-call lifetime.
+type OriginalMergeSiteSwitch struct{ config SiteControls }
+
+func NewOriginalMergeSiteSwitch() *OriginalMergeSiteSwitch { return &OriginalMergeSiteSwitch{} }
+func (p *OriginalMergeSiteSwitch) State(installed []string) bool {
+	return p.config.AnyFollow(installed)
+}
+func (p *OriginalMergeSiteSwitch) Configuration() SiteControls { return p.config.Clone() }
+
 func HandleMergeSiteSwitch(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	return NewOriginalMergeSiteSwitch().Handle(ctx, method, raw, host)
+}
+
+func (p *OriginalMergeSiteSwitch) Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	if method == "stop" {
 		return json.RawMessage(`null`), nil
 	}
@@ -204,6 +218,12 @@ func HandleMergeSiteSwitch(ctx context.Context, method string, raw json.RawMessa
 	if invocation.Action != "init" && invocation.Action != "reload" {
 		return nil, errors.New("unsupported site switch action")
 	}
+	var config SiteControls
+	if len(invocation.Config) > 0 && json.Unmarshal(invocation.Config, &config) != nil {
+		return nil, errors.New("invalid site switch configuration")
+	}
+	// Unlike the other three originals, init assigns config even for None.
+	p.config = config
 	var activation struct {
 		ConfigSaved bool `json:"config_saved"`
 	}

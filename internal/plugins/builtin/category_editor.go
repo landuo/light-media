@@ -24,7 +24,18 @@ const categoryForm = `[{"component":"VForm","content":[
 // HandleCategoryEditor follows installed CategoryEditor 1.3: saving enabled
 // applies the YAML immediately, resets the switch and posts a system message.
 // It has no scheduler, page or generic manual-run button in the original.
+// OriginalCategoryEditor retains the actual initialized members. Its caller serializes
+// Handle and State; legacy SDK calls keep their historical per-call lifetime.
+type OriginalCategoryEditor struct{ config categoryConfig }
+
+func NewOriginalCategoryEditor() *OriginalCategoryEditor { return &OriginalCategoryEditor{} }
+func (p *OriginalCategoryEditor) State() bool            { return p.config.Enabled }
+
 func HandleCategoryEditor(ctx context.Context, method string, payload json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	return NewOriginalCategoryEditor().Handle(ctx, method, payload, host)
+}
+
+func (p *OriginalCategoryEditor) Handle(ctx context.Context, method string, payload json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	switch method {
 	case "stop":
 		return json.RawMessage(`null`), nil
@@ -46,10 +57,19 @@ func HandleCategoryEditor(ctx context.Context, method string, payload json.RawMe
 		if json.Unmarshal(payload, &input) != nil || (input.Action != "init" && input.Action != "reload") {
 			return nil, errors.New("unsupported category action")
 		}
+		fields, err := originalStatelessConfigFields(input.Config)
+		if err != nil {
+			return nil, errors.New("invalid category configuration")
+		}
+		// Original if config encloses all writes, not only member assignments.
+		if len(fields) == 0 {
+			return json.Marshal(map[string]any{"enabled": p.config.Enabled, "applied": false})
+		}
 		var config categoryConfig
 		if json.Unmarshal(input.Config, &config) != nil {
 			return nil, errors.New("invalid category configuration")
 		}
+		p.config = config
 		if !config.Enabled {
 			return json.RawMessage(`{"enabled":false,"applied":false}`), nil
 		}
@@ -63,6 +83,7 @@ func HandleCategoryEditor(ctx context.Context, method string, payload json.RawMe
 		}
 		// Source order is write/reload, system message, then close the one-shot
 		// switch and persist config. A failed message must not clear the switch.
+		p.config.Enabled = false
 		if _, err := host(ctx, "config.patch", json.RawMessage(`{"enabled":false}`)); err != nil {
 			return nil, err
 		}

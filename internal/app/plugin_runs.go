@@ -246,7 +246,7 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 	if err := tx.QueryRowContext(ctx, `SELECT version,generation,installed,desired_enabled,plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&run.Version, &run.Generation, &installed, &allowed, &pluginID); err != nil {
 		return PluginRun{}, err
 	}
-	if (!installed || !allowed) && !originalInitializationMatches(ctx, instanceID, pluginID, run.Version, run.Generation, action) {
+	if (!installed || !allowed) && !originalInitializationMatches(ctx, instanceID, pluginID, run.Version, run.Generation, action) && !originalServiceEnqueueMatches(ctx, instanceID, pluginID, run.Version, run.Generation, action) {
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
 	}
 	if err := p.requirePluginUpdateActivation(ctx, tx, instanceID); err != nil {
@@ -263,7 +263,7 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 	}
 	var config []byte
 	configErr := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config)
-	configAbsent := errors.Is(configErr, sql.ErrNoRows) && (action == "init" || action == "reload")
+	configAbsent := errors.Is(configErr, sql.ErrNoRows) && (action == "init" || action == "reload" || originalServiceEnqueueMatches(ctx, instanceID, pluginID, run.Version, run.Generation, action))
 	if configErr != nil && !configAbsent {
 		return PluginRun{}, configErr
 	}
@@ -474,10 +474,18 @@ func (p *PluginStore) claimSelectedRun(ctx context.Context, instanceID, runID st
 		}
 		var current int
 		var pluginID string
+		originalObject, _, _, originalService, originalErr := p.originalServiceInvocationQuery(ctx, tx, run, "queued", "pending")
+		if originalErr != nil {
+			_ = rollback()
+			return PluginRun{}, originalErr
+		}
 		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND ((i.installed=1 AND i.desired_enabled=1) OR ?) AND i.version=? AND i.generation=? AND (v.revision=? OR (v.instance_id IS NULL AND ?=0 AND ? IN ('init','reload')))`, run.InstanceID, p.originalInitializationRunBound(run), run.Version, run.Generation, run.ConfigRevision, run.ConfigRevision, run.Action).Scan(&current, &pluginID)
 		if err != nil {
 			_ = rollback()
 			return PluginRun{}, err
+		}
+		if originalService {
+			current, pluginID = 1, originalObject.installation.PluginID
 		}
 		if current == 0 {
 			if handled, proofErr := p.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision); handled && proofErr == nil {
@@ -508,6 +516,15 @@ func (p *PluginStore) claimSelectedRun(ctx context.Context, instanceID, runID st
 		state, errorCode := "running", ""
 		if current != 1 {
 			state, errorCode = "canceled", "PLUGIN_SNAPSHOT_STALE"
+		} else if originalService {
+			errorCode, err = p.claimOriginalServiceTx(ctx, tx, run, time.Now())
+			if err != nil {
+				_ = rollback()
+				return PluginRun{}, err
+			}
+			if errorCode != "" {
+				state = "canceled"
+			}
 		} else if p.isCloudflareRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimCloudflareScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {

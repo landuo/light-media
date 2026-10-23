@@ -301,6 +301,28 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		w.Write(response.Body)
 		return true
 	}
+	if implementation.External {
+		response, err := a.callOriginalExternalHTTP(r.Context(), installation, *api, input, authority)
+		if err != nil {
+			status := 502
+			var failure *APIError
+			if errors.As(err, &failure) && failure.Code == "PLUGIN_API_AUTH_REVOKED" {
+				status = 401
+			}
+			pluginHTTPError(w, &pluginHTTPFailure{status, "Plugin execution failed"})
+			return true
+		}
+		for key, value := range response.Headers {
+			w.Header().Set(key, value)
+		}
+		if w.Header().Get("Content-Type") == "" {
+			w.Header().Set("Content-Type", "application/json")
+		}
+		w.Header().Set("Cache-Control", "no-store")
+		w.WriteHeader(response.Status)
+		w.Write(response.Body)
+		return true
+	}
 	a.pluginMu.Lock()
 	run, err := a.enqueuePluginHTTP(r.Context(), installation, input, pluginAPIScope{Key: api.Key, Method: r.Method, RequestID: w.Header().Get("X-Request-ID"), Authority: authority, CredentialProofs: credentialProofs})
 	a.pluginMu.Unlock()
@@ -547,6 +569,13 @@ func (a *App) validatePluginHTTPScopeTx(ctx context.Context, tx *sql.Tx, run Plu
 	}
 	implementation, resolveErr := a.resolvePluginInvocation(ctx, PluginInstallation{InstanceID: run.InstanceID, PluginID: pluginID, Version: run.Version, Generation: run.Generation})
 	manifest, available := implementation.Manifest, resolveErr == nil
+	// Recheck the actual registered routes of the same loaded instance. The
+	// install manifest may differ from its runtime get_api result.
+	registered, registeredOK := a.pluginRegisteredAPIs.Load(run.InstanceID)
+	if registeredOK {
+		manifest.APIs = registered.([]plugins.HTTPAPI)
+	}
+	available = available && registeredOK
 	authorized := false
 	var queryAPI *plugins.HTTPAPI
 	if available && manifest.Version == run.Version {

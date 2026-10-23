@@ -22,6 +22,21 @@ func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginSched
 		err := p.readSession(ctx, "get_service", &definitions)
 		return definitions, err
 	}
+	if services, handled, err := originalRemainingServices(ctx, p); handled {
+		return services, err
+	}
+	if services, handled, err := originalEngineServices(ctx, p); handled {
+		return services, err
+	}
+	if services, handled, err := originalWatcherServices(ctx, p); handled {
+		return services, err
+	}
+	if services, handled, err := originalMachineServices(ctx, p); handled {
+		return services, err
+	}
+	if services, handled, err := originalStatelessServices(ctx, p); handled {
+		return services, err
+	}
 	switch p.installation.PluginID {
 	case "AutoBackup":
 		p.configMu.RLock()
@@ -35,7 +50,7 @@ func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginSched
 			return nil, err
 		}
 		return []pluginScheduleDefinition{{ID: "AutoBackup", Name: "自动备份定时服务", Handler: "auto_backup", Trigger: *trigger, MisfireGraceMS: 1000}}, nil
-	case "SystemProcess", "MPServerStatus", "PluginUnInstall":
+	case "SystemProcess", "MPServerStatus", "PluginUnInstall", "CustomHosts":
 		return nil, nil
 	case "TorrentTransfer", "TorrentTransfermusic", "IYUUAutoSeed":
 	default:
@@ -118,6 +133,14 @@ func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
 		return
 	}
 	object := loaded.(*originalPluginInstance)
+	enabled, err := object.getState(ctx)
+	if err != nil {
+		a.log("ERROR", "plugins", "register_services_failed", "读取插件状态失败", "", "")
+		return
+	}
+	if !enabled {
+		return
+	}
 	definitions, err := object.getServices(ctx)
 	if err != nil {
 		a.log("ERROR", "plugins", "register_services_failed", "读取插件定时服务失败", "", "")
@@ -157,5 +180,10 @@ func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, d
 		due = schedule.FormatTime(first)
 	}
 	_, err = a.Store.DB.ExecContext(ctx, `INSERT INTO plugin_schedules VALUES(?,?,?,?,?,?,?,1,?,?) ON CONFLICT(instance_id,service_id) DO UPDATE SET group_key=excluded.group_key,generation=excluded.generation,config_revision=excluded.config_revision,definition=excluded.definition,definition_digest=excluded.definition_digest,active=1,next_due=excluded.next_due,updated_at=excluded.updated_at`, in.InstanceID, definition.ID, "original_services", in.Generation, config.Revision, sealed, tokenHash(string(raw)), due, now())
+	if err == nil {
+		if loaded, ok := a.pluginRunningInstances.Load(in.InstanceID); ok {
+			a.pluginStore.originalScheduledObjects.Store(originalServiceKey{in.InstanceID, definition.ID}, originalServiceBinding{object: loaded.(*originalPluginInstance), digest: tokenHash(string(raw))})
+		}
+	}
 	return err
 }

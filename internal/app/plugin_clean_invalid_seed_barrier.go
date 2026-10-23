@@ -173,6 +173,16 @@ func (o *pluginCleanInvalidSeedOwner) beforeRun(ctx context.Context, inv seedhos
 		err = o.j.updateTx(ctx, tx, func(current *seedhost.State, meta *pluginCleanInvalidSeedMeta) error {
 			meta.Snapshot = &snapshot
 			meta.Closed = false
+			if call.originalService {
+				object, definition, occurrence, handled, proofErr := o.a.pluginStore.originalServiceInvocationQuery(ctx, tx, call.run, "running", "running")
+				if proofErr != nil {
+					return proofErr
+				}
+				if !handled || occurrence != inv.EventID || !originalNativeServiceMatches(object, definition, "CleanInvalidSeed", "clean_invalid_seed", o.originalMachine) {
+					return seedhost.ErrUnsafe
+				}
+				return nil
+			}
 			return cleanSeedClaimOccurrenceTx(ctx, tx, *current, inv)
 		})
 		if err == nil {

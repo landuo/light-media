@@ -616,7 +616,12 @@ func (c *cloudflareCall) execute(ctx context.Context) (json.RawMessage, error) {
 	if c.o.timezoneError {
 		return nil, &cf.SourceError{Class: "UnknownTimeZoneError", Operation: "host TZ"}
 	}
+	originalInit := originalInitializationMatches(ctx, c.run.InstanceID, "CloudflareSpeedTest", c.run.Version, c.run.Generation, c.run.Action)
 	m := c.o.machine
+	if originalInit {
+		// Start creates a new object; direct init retains that object's members.
+		m, _ = originalNativeStateBeforeInit(ctx).(*cf.Machine)
+	}
 	if m == nil {
 		var e error
 		m, e = cf.New(c.o, c.o)
@@ -627,7 +632,7 @@ func (c *cloudflareCall) execute(ctx context.Context) (json.RawMessage, error) {
 		if e != nil {
 			return nil, e
 		}
-		if len(s.Config) > 0 && !bytes.Equal(bytes.TrimSpace(s.Config), []byte("null")) {
+		if !originalInit && len(s.Config) > 0 && !bytes.Equal(bytes.TrimSpace(s.Config), []byte("null")) {
 			warm, e := cloudflareConfig(s.Config)
 			if e != nil {
 				return nil, e
@@ -642,19 +647,27 @@ func (c *cloudflareCall) execute(ctx context.Context) (json.RawMessage, error) {
 		}
 		c.o.machine = m
 	}
+	if originalInit {
+		c.o.machine = m
+		captureOriginalNativeState(ctx, m)
+		defer func() { captureOriginalAppliedConfiguration(ctx, m.Config()) }()
+	}
 	if c.run.Action == "init" || c.run.Action == "reload" {
 		if e := m.Init(ctx, c.config); e != nil {
 			return nil, e
 		}
-		services, e := m.Services(func(s string) error { _, e := schedule.ParseCrontab(s, c.o.timezone); return e })
-		if e != nil {
-			return nil, e
+		if !originalInit {
+			services, e := m.Services(func(s string) error { _, e := schedule.ParseCrontab(s, c.o.timezone); return e })
+			if e != nil {
+				return nil, e
+			}
+			for _, service := range services {
+				c.defs = append(c.defs, pluginScheduleDefinition{ID: service.ID, Name: service.Name, Handler: "cloudflare", Trigger: schedule.Spec{Kind: "cron", Cron: service.Cron, Timezone: c.o.timezone}, MisfireGraceMS: 1000})
+			}
 		}
-		for _, service := range services {
-			c.defs = append(c.defs, pluginScheduleDefinition{ID: service.ID, Name: service.Name, Handler: "cloudflare", Trigger: schedule.Spec{Kind: "cron", Cron: service.Cron, Timezone: c.o.timezone}, MisfireGraceMS: 1000})
-		}
+
 		updated := c.run
-		e = c.o.a.pluginStore.configurePluginSchedulesWithEffect(ctx, &updated, "cloudflare", c.defs, c.Now(), nil, func(ctx context.Context, tx *sql.Tx, _ PluginRun) error {
+		e := c.o.a.pluginStore.configurePluginSchedulesWithEffect(ctx, &updated, "cloudflare", c.defs, c.Now(), nil, func(ctx context.Context, tx *sql.Tx, _ PluginRun) error {
 			s, b, e := c.o.a.pluginStore.cloudflareRead(ctx, tx, c.o.instance, c.o.generation)
 			if e != nil {
 				return e

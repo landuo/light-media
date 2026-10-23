@@ -19,6 +19,18 @@ func (p *originalPluginInstance) getCommands(ctx context.Context) ([]map[string]
 		err := p.readSession(ctx, "get_command", &commands)
 		return commands, err
 	}
+	if commands, handled, err := originalRemainingCommands(ctx, p); handled {
+		return commands, err
+	}
+	if commands, handled, err := originalEngineCommands(ctx, p); handled {
+		return commands, err
+	}
+	if commands, handled, err := originalWatcherCommands(ctx, p); handled {
+		return commands, err
+	}
+	if commands, handled, err := originalStatelessCommands(ctx, p); handled {
+		return commands, err
+	}
 	var declaration any
 	switch p.installation.PluginID {
 	case "AutoSignIn":
@@ -84,22 +96,11 @@ func (p *originalPluginInstance) getCommands(ctx context.Context) ([]map[string]
 		}
 		declaration = clean.Commands()
 	case "CloudflareSpeedTest":
-		r := &p.app.pluginCloudflare
-		r.mu.Lock()
-		owner := r.owners[p.installation.InstanceID]
-		r.mu.Unlock()
-		if owner == nil {
-			return nil, fmt.Errorf("loaded cloudflare owner missing")
+		owner, release, err := originalCloudflareMachineOwner(ctx, p)
+		if err != nil {
+			return nil, err
 		}
-		select {
-		case owner.gate <- struct{}{}:
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
-		defer func() { <-owner.gate }()
-		if owner.machine == nil {
-			return nil, fmt.Errorf("loaded cloudflare machine missing")
-		}
+		defer release()
 		if !owner.machine.State() {
 			return nil, nil
 		}
@@ -134,7 +135,16 @@ func (a *App) initOriginalPluginCommands() {
 			if !ok {
 				continue
 			}
-			rows, err := loaded.(*originalPluginInstance).getCommands(context.Background())
+			object := loaded.(*originalPluginInstance)
+			enabled, err := object.getState(context.Background())
+			if err != nil {
+				a.log("ERROR", "plugins", "commands_failed", "读取插件状态失败", "", "")
+				continue
+			}
+			if !enabled {
+				continue
+			}
+			rows, err := object.getCommands(context.Background())
 			if err != nil {
 				a.log("ERROR", "plugins", "commands_failed", "读取插件命令失败", "", "")
 				continue

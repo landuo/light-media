@@ -25,24 +25,26 @@ type pluginCleanInvalidSeedRuntime struct {
 	now     func() time.Time // trusted native clock seam; never SDK/config input
 }
 type pluginCleanInvalidSeedOwner struct {
-	a          *App
-	instance   string
-	generation int64
-	gate       chan struct{}
-	j          *pluginCleanInvalidSeedJournal
-	journal    *pluginCleanInvalidSeedActionJournal
-	core       *pluginCleanInvalidSeedCore
-	h          *seedhost.Owner
+	originalMachine *seed.Machine
+	a               *App
+	instance        string
+	generation      int64
+	gate            chan struct{}
+	j               *pluginCleanInvalidSeedJournal
+	journal         *pluginCleanInvalidSeedActionJournal
+	core            *pluginCleanInvalidSeedCore
+	h               *seedhost.Owner
 }
 type pluginCleanInvalidSeedCall struct {
-	owner     *pluginCleanInvalidSeedOwner
-	run       PluginRun // immutable original admission and input
-	inv       seedhost.Invocation
-	config    json.RawMessage
-	effective json.RawMessage
-	nonce     string
-	mu        sync.Mutex
-	lease     *pluginCleanInvalidSeedLease
+	owner           *pluginCleanInvalidSeedOwner
+	run             PluginRun // immutable original admission and input
+	inv             seedhost.Invocation
+	config          json.RawMessage
+	effective       json.RawMessage
+	originalService bool
+	nonce           string
+	mu              sync.Mutex
+	lease           *pluginCleanInvalidSeedLease
 }
 type pluginCleanInvalidSeedCallKey struct{}
 type pluginCleanInvalidSeedStopKey struct{}
@@ -260,6 +262,21 @@ func (a *App) pluginCleanInvalidSeedHost(ctx context.Context, installation Plugi
 	copied.Input = append(json.RawMessage(nil), run.Input...)
 	call := &pluginCleanInvalidSeedCall{owner: o, run: copied, inv: inv, config: append(json.RawMessage(nil), c.Value...), effective: effective, nonce: id("clean_")}
 	ctx = context.WithValue(ctx, pluginCleanInvalidSeedCallKey{}, call)
+	machine := originalCleanSeedMachineForCall(ctx, o, installation, run.Action)
+	if machine != nil {
+		ctx = seedhost.WithMachine(ctx, machine)
+		defer func() { captureOriginalAppliedConfiguration(ctx, machine.Config) }()
+	}
+	if object, definition, occurrence, handled, proofErr := a.originalServiceInvocation(ctx, *run); handled {
+		if proofErr != nil {
+			return nil, proofErr
+		}
+		if !originalNativeServiceMatches(object, definition, "CleanInvalidSeed", "clean_invalid_seed", machine) || occurrence != inv.EventID || inv.Action != "service" {
+			return nil, seedhost.ErrUnsafe
+		}
+		call.originalService = true
+		ctx = seedhost.WithOriginalService(ctx, inv)
+	}
 	if method == seed.ConfigureCapability {
 		err = o.h.Configure(ctx, inv, call.config)
 	} else {

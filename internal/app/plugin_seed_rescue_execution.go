@@ -243,7 +243,12 @@ func (c *seedRescueCall) execute(ctx context.Context) (json.RawMessage, error) {
 			}
 		}
 	}
+	originalInit := originalInitializationMatches(ctx, c.run.InstanceID, "SeedRescue", c.run.Version, c.run.Generation, c.run.Action)
 	m := c.o.machine
+	if originalInit {
+		// Start creates a new object; direct init retains that object's members.
+		m, _ = originalNativeStateBeforeInit(ctx).(*sr.Machine)
+	}
 	if m == nil {
 		var e error
 		m, e = sr.New(ctx, c.o)
@@ -254,7 +259,7 @@ func (c *seedRescueCall) execute(ctx context.Context) (json.RawMessage, error) {
 		if e != nil {
 			return nil, e
 		}
-		if len(s.Config) > 0 && string(s.Config) != "null" {
+		if !originalInit && len(s.Config) > 0 && string(s.Config) != "null" {
 			value, e := seedRescueConfig(s.Config)
 			if e != nil {
 				return nil, e
@@ -269,29 +274,37 @@ func (c *seedRescueCall) execute(ctx context.Context) (json.RawMessage, error) {
 		}
 		c.o.machine = m
 	}
+	if originalInit {
+		c.o.machine = m
+		captureOriginalNativeState(ctx, m)
+		defer func() { captureOriginalAppliedConfiguration(ctx, m.Config()) }()
+	}
 	if c.run.Action == "init" || c.run.Action == "reload" {
 		if e := m.Init(ctx, c.config); e != nil {
 			return nil, e
 		}
-		services, e := m.Services(ctx)
-		if e != nil {
-			return nil, e
-		}
 		defs := []pluginScheduleDefinition{}
-		zone, e := autoBackupHostTimezone()
-		if e != nil {
-			return nil, e
-		}
-		for _, s := range services {
-			spec := schedule.Spec{Kind: s.Trigger, Cron: s.Cron, Timezone: zone}
-			if s.Trigger == "date" {
-				spec.RunAt = schedule.FormatTime(s.RunAt)
+		if !originalInit {
+			services, e := m.Services(ctx)
+			if e != nil {
+				return nil, e
 			}
-			defs = append(defs, pluginScheduleDefinition{ID: s.ID, Name: s.Name, Handler: "seedrescue", Trigger: spec, MisfireGraceMS: 1000})
+			zone, e := autoBackupHostTimezone()
+			if e != nil {
+				return nil, e
+			}
+			for _, s := range services {
+				spec := schedule.Spec{Kind: s.Trigger, Cron: s.Cron, Timezone: zone}
+				if s.Trigger == "date" {
+					spec.RunAt = schedule.FormatTime(s.RunAt)
+				}
+				defs = append(defs, pluginScheduleDefinition{ID: s.ID, Name: s.Name, Handler: "seedrescue", Trigger: spec, MisfireGraceMS: 1000})
+			}
 		}
+
 		updated := c.run
 		var committedRevision int64
-		e = c.o.a.pluginStore.configurePluginSchedulesWithEffect(ctx, &updated, "seedrescue", defs, c.o.Now(), nil, func(ctx context.Context, tx *sql.Tx, _ PluginRun) error {
+		e := c.o.a.pluginStore.configurePluginSchedulesWithEffect(ctx, &updated, "seedrescue", defs, c.o.Now(), nil, func(ctx context.Context, tx *sql.Tx, _ PluginRun) error {
 			if e := c.guardTx(ctx, tx); e != nil {
 				return e
 			}

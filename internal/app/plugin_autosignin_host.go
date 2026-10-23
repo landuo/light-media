@@ -302,7 +302,14 @@ func (a *App) pluginAutoSignInHost(ctx context.Context, i PluginInstallation, ru
 	}
 	deps.Timezone = zone
 	deps.Source = newAutoSignInSourcePort(b)
-	controller := durable.Controller{Journal: j, Binding: o.binding, Dependencies: deps}
+	engine, err := originalAutoSignInEngineForCall(ctx, o, i, run.Action, zone)
+	if err != nil {
+		return nil, err
+	}
+	if engine != nil {
+		defer func() { captureOriginalAppliedConfiguration(ctx, engine.Config) }()
+	}
+	controller := durable.Controller{Journal: j, Binding: o.binding, Dependencies: deps, Engine: engine}
 	copy(controller.DigestKey[:], o.mac("controller-digest", []byte(autoSignInImplementation)))
 	result, err := controller.Execute(ctx, run.ID, command)
 	if err != nil {

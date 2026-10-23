@@ -30,40 +30,63 @@ func newCore(h Host, c Config) *Core {
 	}
 	return p
 }
+
+// NewUninitialized allocates the retained object without running initialization.
+// Init remains the single implementation used by the legacy New wrapper.
+func NewUninitialized(h Host) *Core { return newCore(h, Config{}) }
 func New(ctx context.Context, h Host, raw Row) (*Core, error) {
-	c, e := NormalizeConfig(ctx, raw, h)
-	if e != nil {
-		return nil, e
+	p := NewUninitialized(h)
+	if err := p.Init(ctx, raw); err != nil {
+		return nil, err
 	}
-	p := newCore(h, c)
+	return p, nil
+}
+func (p *Core) Init(ctx context.Context, raw Row) error {
+	c, e := NormalizeConfig(ctx, raw, p.h)
+	if e != nil {
+		return e
+	}
+	p.mu.Lock()
+	p.cfg = c
+	p.locks = map[string]*sync.Mutex{}
+	p.runtime = map[string]Row{}
+	p.warned = map[string]float64{}
+	// The owner serializes initialization against active task calls.
+	p.brush = sync.Mutex{}
+	p.global = sync.Mutex{}
+	for _, t := range c.Tasks {
+		p.locks[t.ID()] = &sync.Mutex{}
+		p.runtime[t.ID()] = Row{"state": "idle", "operation": nil, "last_error": nil}
+	}
+	p.mu.Unlock()
 	a, _ := json.Marshal(raw)
 	b, _ := json.Marshal(c.Map())
 	if !reflect.DeepEqual(a, b) {
-		if e = h.SaveConfig(ctx, c.Map()); e != nil {
-			return nil, e
+		if e = p.h.SaveConfig(ctx, c.Map()); e != nil {
+			return e
 		}
 	}
 	if e = p.migrateData(ctx); e != nil {
-		return nil, e
+		return e
 	}
 	if c.Enabled() {
-		if e = h.Queue(ctx, "", "cleanup_tags"); e != nil {
-			h.Log(ctx, "warning", "提交刷流标签清理任务失败："+e.Error())
+		if e = p.h.Queue(ctx, "", "cleanup_tags"); e != nil {
+			p.h.Log(ctx, "warning", "提交刷流标签清理任务失败："+e.Error())
 		}
 	}
 	if c.LegacyOnce {
 		for _, t := range c.Tasks {
 			if t.B("enabled") {
-				if e = h.Queue(ctx, t.ID(), "brush"); e != nil {
-					return nil, e
+				if e = p.h.Queue(ctx, t.ID(), "brush"); e != nil {
+					return e
 				}
-				if e = h.Queue(ctx, t.ID(), "check"); e != nil {
-					return nil, e
+				if e = p.h.Queue(ctx, t.ID(), "check"); e != nil {
+					return e
 				}
 			}
 		}
 	}
-	return p, nil
+	return nil
 }
 func NewReadProjection(h Host, c Config) *Core { return newCore(h, c) }
 func (p *Core) Config() Config {

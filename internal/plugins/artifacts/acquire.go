@@ -44,6 +44,7 @@ type Request struct {
 type Acquired struct {
 	Manifest                             plugins.Manifest
 	ExecutablePath, SHA256, HostContract string
+	RepositoryURL                        string // inert source provenance, never host authority
 	Command                              plugins.Command
 	BackupWarning                        string // post-success backup refresh failure is nonfatal
 }
@@ -175,10 +176,11 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 		return fail("prepare", errors.New("executable SHA256 mismatch"))
 	}
 	receipt, err := json.Marshal(struct {
-		Manifest     plugins.Manifest `json:"manifest"`
-		SHA256       string           `json:"sha256"`
-		HostContract string           `json:"host_contract"`
-	}{release.Manifest, digest(data), artifact.HostContract})
+		Manifest      plugins.Manifest `json:"manifest"`
+		SHA256        string           `json:"sha256"`
+		HostContract  string           `json:"host_contract"`
+		RepositoryURL string           `json:"repository_url,omitempty"`
+	}{release.Manifest, digest(data), artifact.HostContract, req.RepositoryURL})
 	if err != nil {
 		return fail("prepare", err)
 	}
@@ -212,7 +214,7 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 		}
 	}
 	executable = filepath.Join(target, filepath.FromSlash(release.Manifest.Entry))
-	return Acquired{BackupWarning: warning, Manifest: release.Manifest, ExecutablePath: executable, SHA256: digest(data), HostContract: artifact.HostContract, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return Acquired{BackupWarning: warning, Manifest: release.Manifest, ExecutablePath: executable, SHA256: digest(data), HostContract: artifact.HostContract, RepositoryURL: req.RepositoryURL, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }
 
 func selectArtifact(index Index, req Request) (Release, Artifact, error) {

@@ -225,10 +225,10 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		if err != nil {
 			return queued, err
 		}
-		var instanceID, serviceID, dueText, pluginID string
+		var instanceID, serviceID, dueText, pluginID, group string
 		var generation, revision int64
 		var sealed []byte
-		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND (v.revision=s.config_revision OR i.plugin_id='AutoSignIn')`
+		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id,s.group_key FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id LEFT JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND ((i.installed=1 AND i.desired_enabled=1) OR s.group_key='original_services') AND i.generation=s.generation AND (COALESCE(v.revision,0)=s.config_revision OR i.plugin_id='AutoSignIn')`
 		args := []any{schedule.FormatTime(at)}
 		if len(blocked) > 0 {
 			// At most 200 instances are considered in one bounded dispatch. IDs
@@ -237,7 +237,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 			args = append(args, blocked...)
 		}
 		query += ` ORDER BY s.next_due,s.instance_id,s.service_id LIMIT 1`
-		err = tx.QueryRowContext(ctx, query, args...).Scan(&instanceID, &serviceID, &generation, &revision, &sealed, &dueText, &pluginID)
+		err = tx.QueryRowContext(ctx, query, args...).Scan(&instanceID, &serviceID, &generation, &revision, &sealed, &dueText, &pluginID, &group)
 		if errors.Is(err, sql.ErrNoRows) {
 			_ = tx.Rollback()
 			return queued, nil
@@ -248,7 +248,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		}
 		enqueued := false
 		applyErr := func() error {
-			if pluginID == "AutoSignIn" {
+			if pluginID == "AutoSignIn" && group != "original_services" {
 				handled, e := p.autoSignInScheduleAdmissionTx(ctx, tx, instanceID, generation, revision)
 				if e != nil {
 					return e
@@ -293,7 +293,10 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 				state = "skipped_busy"
 			}
 			if state == "queued" {
-				run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+				run, handled, err := p.enqueueOriginalServiceTx(ctx, tx, instanceID, definition, occurrenceID)
+				if !handled && err == nil {
+					run, handled, err = p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
+				}
 				if !handled && err == nil {
 					run, handled, err = p.enqueueCloudflareScheduleTx(ctx, tx, instanceID, definition, latest, occurrenceID, false)
 					if !handled && err == nil {
@@ -332,7 +335,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		}()
 		if applyErr != nil {
 			_ = tx.Rollback()
-			if pluginNativeUnconfirmedQueueAdmission(applyErr) {
+			if pluginNativeUnconfirmedQueueAdmission(applyErr) || errors.Is(applyErr, errOriginalServiceStopped) {
 				blocked = append(blocked, instanceID)
 				continue
 			}
@@ -386,6 +389,12 @@ func (p *PluginStore) claimPluginScheduleTx(ctx context.Context, tx *sql.Tx, run
 }
 
 func (p *PluginStore) pluginScheduledInvocation(ctx context.Context, run PluginRun, occurrenceID string) (pluginScheduleDefinition, error) {
+	if _, definition, actual, handled, err := p.originalServiceInvocationQuery(ctx, p.store.DB, run, "running", "running"); handled || err != nil {
+		if err == nil && actual != occurrenceID {
+			err = bad("PLUGIN_SCHEDULE_SCOPE_DENIED", "定时调用标识不匹配")
+		}
+		return definition, err
+	}
 	var out pluginScheduleDefinition
 	if run.Action != "service" || !pluginStorageID.MatchString(occurrenceID) {
 		return out, bad("PLUGIN_SCHEDULE_SCOPE_DENIED", "只能读取当前运行的定时服务参数")
@@ -428,7 +437,7 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 	defer tx.Rollback()
 	var generation, revision int64
 	var sealed []byte
-	err = tx.QueryRowContext(ctx, `SELECT s.generation,s.config_revision,s.definition FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.instance_id=? AND s.service_id=? AND s.active=1 AND s.next_due IS NOT NULL AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND v.revision=s.config_revision`, instanceID, serviceID).Scan(&generation, &revision, &sealed)
+	err = tx.QueryRowContext(ctx, `SELECT s.generation,s.config_revision,s.definition FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id LEFT JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.instance_id=? AND s.service_id=? AND s.active=1 AND s.next_due IS NOT NULL AND ((i.installed=1 AND i.desired_enabled=1) OR s.group_key='original_services') AND i.generation=s.generation AND COALESCE(v.revision,0)=s.config_revision`, instanceID, serviceID).Scan(&generation, &revision, &sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		return PluginRun{}, bad("PLUGIN_SERVICE_NOT_FOUND", "定时服务不存在或已停用")
 	}
@@ -448,7 +457,10 @@ func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID
 		return PluginRun{}, bad("PLUGIN_SCHEDULE_CORRUPT", "定时服务参数无法读取")
 	}
 	occurrenceID := id("ps_")
-	run, handled, err := p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+	run, handled, err := p.enqueueOriginalServiceTx(ctx, tx, instanceID, definition, occurrenceID)
+	if !handled && err == nil {
+		run, handled, err = p.enqueueCleanInvalidSeedScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
+	}
 	if !handled && err == nil {
 		run, handled, err = p.enqueueCloudflareScheduleTx(ctx, tx, instanceID, definition, at, occurrenceID, true)
 		if !handled && err == nil {

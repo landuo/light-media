@@ -40,9 +40,17 @@ func mediaRefreshAssetDigest(asset Asset) []byte {
 
 func (a *App) mediaRefreshConfig(ctx context.Context, instanceID string) (builtin.MediaServerRefreshConfiguration, error) {
 	var config builtin.MediaServerRefreshConfiguration
-	stored, err := a.pluginStore.Config(ctx, instanceID)
-	if err != nil || !pluginStrictJSON(stored.Value, &config) {
-		return config, bad("INVALID_PLUGIN_CONFIG", "媒体库刷新配置无法读取")
+	if value, bound := originalBuiltinHostConfiguration(ctx, a, instanceID, "MediaServerRefresh"); bound {
+		var ok bool
+		config, ok = value.(builtin.MediaServerRefreshConfiguration)
+		if !ok {
+			return config, bad("INVALID_PLUGIN_CONFIG", "媒体库刷新实例成员无法读取")
+		}
+	} else {
+		stored, err := a.pluginStore.Config(ctx, instanceID)
+		if err != nil || !pluginStrictJSON(stored.Value, &config) {
+			return config, bad("INVALID_PLUGIN_CONFIG", "媒体库刷新配置无法读取")
+		}
 	}
 	if _, err := config.Duration(); err != nil {
 		return config, bad("INVALID_PLUGIN_CONFIG", "媒体库刷新延迟或媒体服务器引用无效")

@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
@@ -48,8 +49,9 @@ func (a *App) siteControlAdmissionTx(ctx context.Context, tx *sql.Tx, run Plugin
 	if actual.State != "running" || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || !bytes.Equal(actual.Input, run.Input) {
 		return bad("PLUGIN_SNAPSHOT_STALE", "聚合站点开关原执行身份已变化")
 	}
+	originalInit := a.pluginStore.originalInitializationRunBound(run) && originalInitializationMatches(ctx, run.InstanceID, "MergeSiteSwitch", run.Version, run.Generation, run.Action)
 	var count int
-	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id='MergeSiteSwitch' AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, resultRevision).Scan(&count)
+	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id='MergeSiteSwitch' AND ((i.installed=1 AND i.desired_enabled=1) OR ?) AND i.version=? AND i.generation=? AND (v.revision=? OR (v.instance_id IS NULL AND ? AND ?=0))`, run.InstanceID, originalInit, run.Version, run.Generation, resultRevision, originalInit, resultRevision).Scan(&count)
 	if err != nil {
 		return err
 	}
@@ -68,11 +70,18 @@ func (a *App) registerSiteControlsRevisionTx(ctx context.Context, tx *sql.Tx, ru
 		return err
 	}
 	var current []byte
-	if err = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main' AND revision=?`, run.InstanceID, resultRevision).Scan(&current); err != nil {
+	err = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main' AND revision=?`, run.InstanceID, resultRevision).Scan(&current)
+	absent := errors.Is(err, sql.ErrNoRows) && resultRevision == 0 && run.ConfigRevision == 0 && len(config) == 0 && a.pluginStore.originalInitializationRunBound(run) && originalInitializationMatches(ctx, run.InstanceID, "MergeSiteSwitch", run.Version, run.Generation, run.Action)
+	if err != nil && !absent {
 		return err
 	}
-	clear, err := a.pluginStore.unseal("config", run.InstanceID, "main", current)
-	if err != nil || !siteControlConfigEqual(clear, raw) {
+	clear := raw
+	if !absent {
+		clear, err = a.pluginStore.unseal("config", run.InstanceID, "main", current)
+	} else {
+		err = nil
+	}
+	if err != nil || (!absent && !siteControlConfigEqual(clear, raw)) {
 		return bad("PLUGIN_SNAPSHOT_STALE", "聚合站点开关监听配置与已提交结果不符")
 	}
 	sealed, err := a.pluginStore.seal("site_controls_watch", run.InstanceID, "main", raw)

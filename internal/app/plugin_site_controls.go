@@ -336,12 +336,23 @@ func (a *App) pluginSiteControlsHost(ctx context.Context, installation PluginIns
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
-	stored, err := a.pluginStore.Config(ctx, run.InstanceID)
-	if err != nil {
-		return nil, err
-	}
 	var config builtin.SiteControls
-	if json.Unmarshal(stored.Value, &config) != nil || config.Validate() != nil {
+	if bound, ok := originalBuiltinHostConfiguration(ctx, a, run.InstanceID, installation.PluginID); ok {
+		var valid bool
+		config, valid = bound.(builtin.SiteControls)
+		if !valid {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "聚合站点开关对象无效")
+		}
+	} else {
+		stored, err := a.pluginStore.Config(ctx, run.InstanceID)
+		if err != nil {
+			return nil, err
+		}
+		if json.Unmarshal(stored.Value, &config) != nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "聚合站点开关配置无效")
+		}
+	}
+	if config.Validate() != nil {
 		return nil, bad("INVALID_PLUGIN_CONFIG", "聚合站点开关配置无效")
 	}
 	if !activation.ConfigSaved {
@@ -356,7 +367,7 @@ func (a *App) pluginSiteControlsHost(ctx context.Context, installation PluginIns
 		return json.RawMessage(`{"configured":true,"applied":false}`), tx.Commit()
 	}
 	result := json.RawMessage(`{"configured":true,"applied":true}`)
-	err = a.saveSettingsWithEffect(ctx, a.Settings(), func(ctx context.Context, tx *sql.Tx, next *Settings) error {
+	err := a.saveSettingsWithEffect(ctx, a.Settings(), func(ctx context.Context, tx *sql.Tx, next *Settings) error {
 		if err := a.pluginStore.requireSiteReferenceProtocolTx(ctx, tx, installation.InstanceID); err != nil {
 			return err
 		}

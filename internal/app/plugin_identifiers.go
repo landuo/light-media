@@ -77,7 +77,25 @@ func (a *App) pluginIdentifiersHost(ctx context.Context, installation PluginInst
 			return nil, err
 		}
 	}
-	state, err := a.identifiersClassState(installation, stored.Revision, stored.Value, method == "identifiers.configure")
+	originalInit := method == "identifiers.configure" && originalInitializationMatches(ctx, installation.InstanceID, installation.PluginID, installation.Version, installation.Generation, "init")
+	var state remoteidentifiers.State
+	if originalInit {
+		member, _ := originalNativeStateBeforeInit(ctx).(*remoteidentifiers.State)
+		if member == nil {
+			cold := remoteidentifiers.Cold()
+			member = &cold
+		}
+		captureOriginalNativeState(ctx, member)
+		err = member.Init(stored.Value)
+		state = *member
+		defer func() {
+			*member = state
+			captureOriginalAppliedConfiguration(ctx, member)
+		}()
+		a.identifiersRemember(installation, stored.Revision, state)
+	} else {
+		state, err = a.identifiersClassState(installation, stored.Revision, stored.Value, method == "identifiers.configure")
+	}
 	if err != nil {
 		a.pluginMu.Unlock()
 		return nil, err
@@ -116,6 +134,11 @@ func (a *App) pluginIdentifiersHost(ctx context.Context, installation PluginInst
 				return nil, err
 			}
 			a.identifiersRemember(installation, run.ConfigRevision, state)
+		}
+		// Literal initialization owns only its private date scheduler. Public
+		// declarations are evaluated later by the manager on this same object.
+		if originalInit {
+			return json.RawMessage(`{"configured":true}`), nil
 		}
 		definitions := []pluginScheduleDefinition{}
 		if remoteidentifiers.Truth(state.Enable) && remoteidentifiers.Truth(state.Cron) {

@@ -295,6 +295,9 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 		return err
 	}
 	ctx = supervisedCtx
+	if handled, err := a.runOriginalAbsentEngineInit(ctx, run); handled {
+		return err
+	}
 	if run.RequestID != "" {
 		ctx = a.traceContext(ctx, "", "", run.RequestID)
 	}
@@ -348,6 +351,15 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 	} else if err == nil {
 		err = bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "当前版本没有该插件的可执行实现")
 	}
+	if err == nil && run.Action == "service" {
+		object, _, _, handled, proofErr := a.originalServiceInvocation(ctx, run)
+		if proofErr != nil {
+			err = proofErr
+		} else if handled {
+			ctx = context.WithValue(ctx, originalBoundExecutionKey{}, object)
+			lifecycleCtx = context.WithValue(lifecycleCtx, originalBoundExecutionKey{}, object)
+		}
+	}
 	var deferred *pluginDeferredCall
 	if err == nil {
 		deferred, err = a.preparePluginDeferred(ctx, installation, run)
@@ -378,6 +390,13 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 	}
 	if err == nil && installation.PluginID == sr.PluginID {
 		workerInput, err = seedRescueWorkerInput(run)
+	}
+	if err == nil && implementation.External {
+		var boundObject *originalPluginInstance
+		workerMethod, workerInput, err = a.originalExternalRunCall(ctx, run, workerMethod, workerInput, &boundObject)
+		if boundObject != nil {
+			ctx = context.WithValue(ctx, originalBoundExecutionKey{}, boundObject)
+		}
 	}
 	result := plugins.RunResult{}
 	hostErrorCode := ""
@@ -572,11 +591,15 @@ func (a *App) validatePluginHostRun(ctx context.Context, installation PluginInst
 	if run != nil {
 		current, err := a.pluginStore.Installation(ctx, installation.InstanceID)
 		originalInit := originalInitializationMatches(ctx, installation.InstanceID, installation.PluginID, run.Version, run.Generation, run.Action) && a.pluginStore.originalInitializationRunBound(*run)
-		if err != nil || ((!current.Installed || !current.DesiredEnabled) && !originalInit) || current.PluginID != installation.PluginID || current.Version != run.Version || current.Generation != run.Generation {
+		_, _, _, originalService, serviceErr := a.originalServiceInvocation(ctx, *run)
+		if serviceErr != nil {
+			return serviceErr
+		}
+		if err != nil || ((!current.Installed || !current.DesiredEnabled) && !originalInit && !originalService) || current.PluginID != installation.PluginID || current.Version != run.Version || current.Generation != run.Generation {
 			return bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
 		}
 		config, err := a.pluginStore.Config(ctx, run.InstanceID)
-		if errors.Is(err, sql.ErrNoRows) && originalInit && run.ConfigRevision == 0 {
+		if errors.Is(err, sql.ErrNoRows) && (originalInit || originalService) && run.ConfigRevision == 0 {
 			// Original init_plugin(None) is a real loaded-object call. Absence
 			// is not a default configuration and does not authorize other runs.
 			err = nil

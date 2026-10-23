@@ -17,7 +17,13 @@ import (
 // a completed original init_plugin call. It adds no request timeout or retry.
 // The existing worker owns its IPC and execution limits.
 func (a *App) initializeOriginalPlugin(ctx context.Context, instance string) (PluginRun, error) {
-	run, err := a.pluginStore.EnqueueRun(ctx, instance, "init", nil)
+	run, handled, err := a.enqueueOriginalCleanSeedInit(ctx, instance)
+	if !handled {
+		run, handled, err = a.enqueueOriginalWatcherInit(ctx, instance)
+	}
+	if !handled {
+		run, err = a.pluginStore.EnqueueRun(ctx, instance, "init", nil)
+	}
 	if err != nil {
 		return run, err
 	}
@@ -57,19 +63,20 @@ func (a *App) initializeOriginalPlugin(ctx context.Context, instance string) (Pl
 // initializer, including writes performed by the preceding initializer.
 // It is ephemeral and never inferred from installed/desired_enabled flags.
 type originalPluginInstance struct {
-	app            *App
-	installation   PluginInstallation
-	handler        plugins.Handler
-	manifest       plugins.Manifest
-	methodMu       sync.Mutex
-	configMu       sync.RWMutex
-	appliedConfig  json.RawMessage
-	eventsEnabled  bool
-	nativeState    any
-	external       bool
-	sessionMu      sync.Mutex
-	session        *plugins.Client
-	sessionStarted bool
+	app                  *App
+	installation         PluginInstallation
+	handler              plugins.Handler
+	manifest             plugins.Manifest
+	methodMu             sync.Mutex
+	configMu             sync.RWMutex
+	appliedConfig        json.RawMessage
+	eventsEnabled        bool
+	nativeState          any
+	originalAbsentEngine any
+	external             bool
+	sessionMu            sync.Mutex
+	session              *plugins.Client
+	sessionStarted       bool
 }
 
 type originalInitializingObjectKey struct{}
@@ -294,7 +301,25 @@ func (a *App) registerOriginalPluginAPIs(instance string) {
 	a.pluginRegisteredAPIs.Delete(instance)
 	if loaded, ok := a.pluginRunningInstances.Load(instance); ok {
 		object := loaded.(*originalPluginInstance)
-		a.pluginRegisteredAPIs.Store(instance, append([]plugins.HTTPAPI(nil), object.manifest.APIs...))
+		apis, err := object.getAPIs(context.Background())
+		if err != nil {
+			a.log("ERROR", "plugins", "register_apis_failed", "读取插件API失败", "", "")
+			return
+		}
+		for i := range apis {
+			if apis[i].Auth == "" {
+				apis[i].Auth = "apikey"
+			}
+		}
+		// Route declarations are data, not a grant of native host capabilities.
+		// The existing instance URL dispatcher supplies the instance prefix.
+		declaration := object.manifest
+		declaration.APIs = apis
+		if err := declaration.Validate(); err != nil {
+			a.log("ERROR", "plugins", "register_apis_failed", "插件API声明无效", "", "")
+			return
+		}
+		a.pluginRegisteredAPIs.Store(instance, apis)
 	}
 }
 

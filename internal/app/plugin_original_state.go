@@ -24,6 +24,21 @@ func (p *originalPluginInstance) getState(ctx context.Context) (bool, error) {
 		err := p.readSession(ctx, "get_state", &state)
 		return sourceSubscriptionTruth(state), err
 	}
+	if state, handled, err := originalRemainingState(ctx, p); handled {
+		return state, err
+	}
+	if state, handled, err := originalEngineState(ctx, p); handled {
+		return state, err
+	}
+	if state, handled, err := originalWatcherState(ctx, p); handled {
+		return state, err
+	}
+	if state, handled, err := originalMachineState(ctx, p); handled {
+		return state, err
+	}
+	if state, handled, err := originalStatelessState(ctx, p); handled {
+		return state, err
+	}
 	switch p.installation.PluginID {
 	case "AutoBackup":
 		machine, ok := nativeState.(*ab.Plugin)

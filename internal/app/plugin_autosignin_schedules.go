@@ -188,14 +188,17 @@ func (b *pluginAutoSignInBackend) projectSchedulesTx(ctx context.Context, tx *sq
 	if cell, ok := before[signinKey("run.head", signinKey(run.ID))]; ok && cleanupJournalStrict(cell.Data, &old) == nil && old.Phase == "completed" {
 		return nil
 	}
-	if !signinAppliedKind(run, "service.definitions") || state.RuntimeEpoch != state.Epoch {
+	// Only the actual original initialization may delegate public service
+	// discovery to the common manager. Private once projection stays here.
+	literal := originalInitializationMatches(ctx, b.run.InstanceID, "AutoSignIn", b.run.Version, b.run.Generation, b.run.Action) && p.originalInitializationRunBound(*b.run) && b.owner.originalEngine != nil
+	if (!literal && !signinAppliedKind(run, "service.definitions")) || state.RuntimeEpoch != state.Epoch {
 		return durable.ErrStale
 	}
 	zone := run.Baseline.Timezone
 	at := time.Now().UTC()
 	defs := []pluginScheduleDefinition{}
 	var services []json.RawMessage
-	if json.Unmarshal(state.Services, &services) != nil {
+	if !literal && json.Unmarshal(state.Services, &services) != nil {
 		return durable.ErrStore
 	}
 	for _, raw := range services {
@@ -275,7 +278,7 @@ func (b *pluginAutoSignInBackend) projectSchedulesTx(ctx context.Context, tx *sq
 			return err
 		}
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT service_id FROM plugin_schedules WHERE instance_id=? AND group_key=? AND active=1`, b.run.InstanceID, autoSignInScheduleGroup)
+	rows, err := tx.QueryContext(ctx, `SELECT service_id FROM plugin_schedules WHERE instance_id=? AND group_key=? AND active=1 AND (?=0 OR service_id LIKE 'AutoSignIn.once.%')`, b.run.InstanceID, autoSignInScheduleGroup, literal)
 	if err != nil {
 		return err
 	}
@@ -330,6 +333,19 @@ func (a *App) autoSignInTrustedService(ctx context.Context, run PluginRun, inv p
 	}
 	if cleanupJournalStrict(inv.Input, &input) != nil || !pluginStorageID.MatchString(input.OccurrenceID) {
 		return durable.Command{}, denied
+	}
+	if object, definition, occurrence, handled, proofErr := a.originalServiceInvocation(ctx, run); handled {
+		if proofErr != nil {
+			return durable.Command{}, proofErr
+		}
+		a.pluginAutoSignIn.mu.Lock()
+		slot := a.pluginAutoSignIn.owners[run.InstanceID]
+		a.pluginAutoSignIn.mu.Unlock()
+		// Caller holds this real owner's gate for the whole native invocation.
+		if slot == nil || slot.owner == nil || occurrence != input.OccurrenceID || !originalNativeServiceMatches(object, definition, "AutoSignIn", autoSignInScheduleHandler, slot.owner.originalEngine) {
+			return durable.Command{}, denied
+		}
+		return durable.Command{Action: "service"}, nil
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {

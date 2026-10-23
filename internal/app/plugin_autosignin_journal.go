@@ -48,6 +48,7 @@ const (
 )
 
 type pluginAutoSignInOwner struct {
+	originalEngine            *autosignin.Engine
 	a                         *App
 	binding                   signinjournal.Binding
 	mu                        sync.Mutex

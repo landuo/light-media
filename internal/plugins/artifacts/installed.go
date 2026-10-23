@@ -67,9 +67,10 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 		return bad(errors.New("oversized receipt"))
 	}
 	var receipt struct {
-		Manifest     plugins.Manifest `json:"manifest"`
-		SHA256       string           `json:"sha256"`
-		HostContract string           `json:"host_contract"`
+		Manifest      plugins.Manifest `json:"manifest"`
+		SHA256        string           `json:"sha256"`
+		HostContract  string           `json:"host_contract"`
+		RepositoryURL string           `json:"repository_url,omitempty"`
 	}
 	dec := json.NewDecoder(strings.NewReader(string(receiptBytes)))
 	dec.DisallowUnknownFields()
@@ -81,6 +82,13 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	}
 	if !safeName(receipt.Manifest.Entry) || !validDigest(receipt.SHA256) || len(receipt.HostContract) > 256 {
 		return bad(errors.New("invalid receipt identity, path or hash"))
+	}
+	// Missing provenance remains compatible with old receipts. A present value
+	// is syntax-checked only, never fetched or used to grant host capabilities.
+	if receipt.RepositoryURL != "" {
+		if _, err = httpURL(receipt.RepositoryURL); err != nil {
+			return bad(err)
+		}
 	}
 	if err = receipt.Manifest.Validate(); err != nil {
 		return bad(err)
@@ -108,5 +116,5 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if int64(len(b)) > MaxExpandedBytes || digest(b) != strings.ToLower(receipt.SHA256) {
 		return bad(errors.New("installed executable digest mismatch"))
 	}
-	return Acquired{Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return Acquired{Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }

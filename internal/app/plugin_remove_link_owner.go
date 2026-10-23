@@ -26,16 +26,17 @@ type pluginRemoveLinkRuntime struct {
 	watch   cleanuphost.WatchFactory // trusted native factory; nil uses platform observer.
 }
 type pluginRemoveLinkOwner struct {
-	a          *App
-	instance   string
-	generation int64
-	j          *pluginRemoveLinkJournal
-	e          *pluginRemoveLinkEffects
-	h          *cleanuphost.Host
-	roots      []cleanuphost.RootStamp
-	gate       chan struct{}
-	ready      chan struct{}
-	err        error
+	originalMachine *removelink.Machine
+	a               *App
+	instance        string
+	generation      int64
+	j               *pluginRemoveLinkJournal
+	e               *pluginRemoveLinkEffects
+	h               *cleanuphost.Host
+	roots           []cleanuphost.RootStamp
+	gate            chan struct{}
+	ready           chan struct{}
+	err             error
 	// Private isolated-fixture fault seam; never set from worker or API input.
 	initDiagnosticCommit func(*sql.Tx) error
 }
@@ -386,6 +387,9 @@ func (o *pluginRemoveLinkOwner) openHost(i PluginInstallation, c PluginStoredVal
 	}
 	var err error
 	o.h, err = cleanuphost.Open(opts)
+	if err == nil && o.originalMachine != nil {
+		err = o.h.AdoptOriginalIdleMachine(context.Background(), o.originalMachine)
+	}
 	return err
 }
 
@@ -725,6 +729,15 @@ func (a *App) pluginRemoveLinkHost(ctx context.Context, installation PluginInsta
 		var effective json.RawMessage
 		effective, err = removeLinkEffectiveConfig(base, c.Value)
 		if err != nil {
+			// If the source's raw config parser itself throws, execute that actual
+			// idle Init once to retain its ordered member mutations. No file operation
+			// can precede this parse failure, and the no-authority Ops also fail closed.
+			if o.h == nil && originalInitializationMatches(ctx, o.instance, current.PluginID, current.Version, o.generation, actual.Action) {
+				probe := removelink.NewConfig()
+				if parseErr := probe.Apply(c.Value); parseErr != nil {
+					return nil, o.initOriginalIdleMachine(ctx, c.Value)
+				}
+			}
 			return nil, err
 		}
 		var roots []cleanuphost.RootStamp
@@ -819,6 +832,15 @@ func (a *App) pluginRemoveLinkHost(ctx context.Context, installation PluginInsta
 				return nil, err
 			}
 		}
+		if originalInitializationMatches(ctx, o.instance, current.PluginID, current.Version, o.generation, actual.Action) {
+			machine, captureErr := o.h.OriginalMachine(ctx)
+			if captureErr != nil {
+				return nil, captureErr
+			}
+			o.originalMachine = machine
+			captureOriginalNativeState(ctx, machine)
+			captureOriginalAppliedConfiguration(ctx, c.Value)
+		}
 		err = o.h.ApplyTransition(ctx, ticket, actual.ID, c.Value)
 	} else if method == removelink.ApplyCapability {
 		var input struct {
@@ -865,17 +887,24 @@ func (o *pluginRemoveLinkOwner) configureIdle(ctx context.Context, run PluginRun
 		if !removeLinkIdle(*s) {
 			return cleanuphost.ErrUncertain
 		}
-		if run.Action == "reload" {
-			s.Config = json.RawMessage(`{}`)
-		}
-		cfg := removelink.NewConfig()
-		if len(s.Config) > 0 {
-			if err := cfg.Apply(s.Config); err != nil {
+		if originalInitializationMatches(ctx, o.instance, "RemoveLink", run.Version, o.generation, run.Action) {
+			if err := o.initOriginalIdleMachine(ctx, raw); err != nil {
 				return err
 			}
-		}
-		if err := cfg.Apply(raw); err != nil {
-			return err
+		} else {
+			if run.Action == "reload" {
+				s.Config = json.RawMessage(`{}`)
+			}
+			cfg := removelink.NewConfig()
+			if len(s.Config) > 0 {
+				if err := cfg.Apply(s.Config); err != nil {
+					return err
+				}
+			}
+			if err := cfg.Apply(raw); err != nil {
+				return err
+			}
+
 		}
 		value, err := removelink.Decode(raw)
 		if err != nil {

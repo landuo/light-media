@@ -14,6 +14,9 @@ func (a *App) stopOriginalInstanceResources(ctx context.Context, instance, plugi
 			return object.stopSession(ctx)
 		}
 	}
+	if handled, err := originalWatcherStop(ctx, a, instance, pluginID); handled {
+		return err
+	}
 	switch pluginID {
 	case "AutoBackup":
 		loaded, ok := a.pluginRunningInstances.Load(instance)

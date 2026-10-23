@@ -20,6 +20,8 @@ import (
 )
 
 type pluginCard struct {
+	RepositoryURL              string                      `json:"repo_url,omitempty"`
+	RepositoryVersion          string                      `json:"repository_version,omitempty"`
 	RestoreReview              *pluginReviewRestoreRequest `json:"restore_review,omitempty"`
 	RestoreReviewBlockedReason string                      `json:"restore_review_blocked_reason,omitempty"`
 	UpdateReviewPending        bool                        `json:"update_review_pending,omitempty"`
@@ -32,141 +34,6 @@ type pluginCard struct {
 	InstanceID string `json:"instance_id"`
 	Installed  bool   `json:"installed"`
 	State      bool   `json:"state"`
-}
-
-func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error) {
-	installed, err := a.pluginStore.Installations(ctx)
-	if err != nil {
-		return nil, err
-	}
-	items := []pluginCard{}
-	seen := map[string]bool{}
-	for _, installation := range installed {
-		manifest, _, exists := builtin.Lookup(installation.PluginID)
-		if !exists || manifest.Version != installation.Version {
-			// Keep unavailable installed records visible; never claim runnable.
-			manifest = plugins.Manifest{PluginID: installation.PluginID, Name: installation.PluginID, Version: installation.Version}
-			exists = false
-		}
-		seen[installation.PluginID] = true
-		if !market {
-			state := false
-			config, err := a.pluginStore.Config(ctx, installation.InstanceID)
-			if err != nil && !missingPluginValue(err) {
-				return nil, err
-			}
-			if err == nil && exists && installation.DesiredEnabled {
-				var flags struct {
-					Enabled bool `json:"enabled"`
-					Enable  bool `json:"enable"`
-				}
-				_ = json.Unmarshal(config.Value, &flags)
-				state = flags.Enabled
-				if installation.PluginID == "CustomHosts" {
-					var value builtin.CustomHostsConfiguration
-					if json.Unmarshal(config.Value, &value) == nil {
-						state = value.Enabled
-					}
-				}
-				if installation.PluginID == "CloudflareSpeedTest" {
-					effective := config.Value
-					if owned, _, e := a.pluginStore.cloudflareRead(ctx, a.Store.DB, installation.InstanceID, installation.Generation); e == nil && len(owned.Config) > 0 {
-						effective = owned.Config
-					}
-					if value, e := cloudflareConfig(effective); e == nil {
-						state = removelink.Truth(value["cf_ip"]) && removelink.Truth(value["cron"]) && (removelink.Truth(value["ipv4"]) || removelink.Truth(value["ipv6"]))
-					}
-				}
-				if installation.PluginID == "AutoBackup" {
-					effective := config.Value
-					var exists int
-					if a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM sqlite_master WHERE name='plugin_auto_backup_state' AND type='table'`).Scan(&exists) == nil && exists == 1 {
-						s, _, e := a.pluginStore.autoBackupRead(ctx, a.Store.DB, installation.InstanceID, installation.Generation)
-						if e == nil && len(s.Config) != 0 && string(s.Config) != "null" {
-							effective = s.Config
-						}
-					}
-					if values, e := autoBackupConfig(effective); e == nil {
-						state = removelink.Truth(values["enabled"])
-					}
-				}
-				if installation.PluginID == "RemoveLink" {
-					cleanup := removelink.NewConfig()
-					if cleanup.Apply(config.Value) == nil {
-						state = removelink.Truth(cleanup.Enabled)
-					}
-				}
-				if installation.PluginID == "SubscribeGroup" {
-					var rulesConfig subscribegroup.Configuration
-					if json.Unmarshal(config.Value, &rulesConfig) == nil {
-						state = rulesConfig.Enabled || rulesConfig.Category
-					}
-				}
-				if installation.PluginID == "MergeSiteSwitch" {
-					var controls builtin.SiteControls
-					ids := []string{}
-					for _, entry := range installed {
-						ids = append(ids, entry.PluginID)
-					}
-					if json.Unmarshal(config.Value, &controls) == nil {
-						state = controls.AnyFollow(ids)
-					}
-				}
-				if installation.PluginID == "RemoteIdentifiers" {
-					state = a.identifiersGetState(ctx, installation, config.Revision, config.Value)
-				}
-				if installation.PluginID == "SystemProcess" {
-					var value builtin.SystemProcessConfiguration
-					if json.Unmarshal(config.Value, &value) == nil {
-						state = value.State()
-					}
-				}
-				if installation.PluginID == "PluginUnInstall" {
-					state = uninstall.State()
-				}
-				if installation.PluginID == "MPServerStatus" {
-					machine := serverstatus.New(nil, nil)
-					if machine.Init(config.Value) == nil {
-						state = machine.State()
-					}
-				}
-			}
-			card, err := a.pluginStore.presentInstance(ctx, installation, manifest)
-			if err != nil {
-				return nil, err
-			}
-			card.Update, card.UpdateBlockedReason, err = a.pluginStore.builtinUpdateOffer(ctx, installation)
-			if err != nil {
-				return nil, err
-			}
-			card.HasUpdate = card.Update != nil
-			review, e := a.pluginStore.pluginUpdateReviewRead(ctx, a.Store.DB, installation)
-			if e != nil {
-				return nil, e
-			}
-			card.UpdateReviewPending = review != nil
-			card.State = state && !card.UpdateReviewPending
-			items = append(items, card)
-		}
-	}
-	if market {
-		recoverable, err := a.pluginReviewRestoreCards(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, card := range recoverable {
-			items = append(items, card)
-			if card.InstanceID == card.PluginID {
-				seen[card.PluginID] = true
-			}
-		}
-		for _, manifest := range builtin.Catalog() {
-			if !seen[manifest.PluginID] {
-				items = append(items, pluginCard{Manifest: manifest, InstanceID: manifest.PluginID})
-			}
-		}
-	}
-	return items, nil
 }
 
 func decodePluginBody(w http.ResponseWriter, r *http.Request, value any) error {
@@ -303,6 +170,9 @@ func (a *App) pluginFormWithOrigin(ctx context.Context, installation PluginInsta
 }
 
 func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	if path == "markets" {
+		return a.pluginMarketsHTTP(w, r)
+	}
 	if parts := strings.Split(path, "/"); len(parts) == 2 && parts[1] == "abandon-unknown" {
 		i, e := a.pluginStore.Installation(r.Context(), parts[0])
 		if e == nil && i.PluginID == "CloudflareSpeedTest" {

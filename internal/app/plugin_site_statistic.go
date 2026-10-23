@@ -140,12 +140,23 @@ func (a *App) pluginSiteStatisticHost(ctx context.Context, installation PluginIn
 	if installation.PluginID != "SiteStatistic" || run == nil {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "站点统计仅允许当前插件执行调用")
 	}
-	stored, err := a.pluginStore.Config(ctx, run.InstanceID)
-	if err != nil {
-		return nil, err
-	}
 	var config builtin.SiteStatisticConfiguration
-	if !pluginStrictJSON(stored.Value, &config) || config.Validate() != nil {
+	if value, bound := originalBuiltinHostConfiguration(ctx, a, run.InstanceID, "SiteStatistic"); bound {
+		var ok bool
+		config, ok = value.(builtin.SiteStatisticConfiguration)
+		if !ok {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "站点统计实例成员无法读取")
+		}
+	} else {
+		stored, err := a.pluginStore.Config(ctx, run.InstanceID)
+		if err != nil {
+			return nil, err
+		}
+		if !pluginStrictJSON(stored.Value, &config) {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "站点统计配置无法读取")
+		}
+	}
+	if config.Validate() != nil {
 		return nil, bad("INVALID_PLUGIN_CONFIG", "站点统计配置无法读取")
 	}
 	if method == "site.statistics.configure" {

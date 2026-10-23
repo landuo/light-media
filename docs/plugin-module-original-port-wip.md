@@ -1,31 +1,34 @@
-# Plugin module original-method port: executable artifact / instance stage
+# Plugin module original-method port: standard methods and services (WIP)
 
-This is an **incomplete development checkpoint**, not full plugin-module acceptance. Main and dev are not changed by this task-branch commit. Original MoviePilot reference remains 8a83efeacd3e26b82be495e17d50146e31c96a60.
+This remains a partial development checkpoint against MoviePilot 8a83efeacd3e26b82be495e17d50146e31c96a60. It is not complete module acceptance. Main and dev are unchanged.
 
-## Implemented in this stage
+## Included
 
-- The existing JSON-RPC SDK now supports negotiated Start / repeated Call / Stop sessions while preserving the old one-shot Run interface. A loaded instance owns its actual process and member state. Each call has fresh authorization and a separate budget; canceled or failed transports are not silently restarted. Business errors may leave mutated object members intact, matching the original object semantics. StopWithHost accepts explicit fresh cleanup authority rather than reusing an earlier invocation.
-- The shared App binds sessions by instance, plugin, version and generation. Source and clone use different objects and copied code. Active-call limits do not remain occupied while a process is idle.
-- The artifact package acquires an explicitly declared Go executable, ZIP or tar.gz from a Go repository index. It checks manifest, selected version/platform, file paths and digests. Non-force installation backs up/restores on failure; force prepare failure removes code without a restore. Optional backup refresh failures are reported separately. Clone copies have independent file bytes, not hardlinks.
-- ReadInstalled validates stored metadata and actual executable bytes. Invalid present code does not fall back to another implementation. The currently supported external host contract is `light-media.sdk-pure/v1`, with no host capabilities. Artifacts cannot relabel or replace exact-version compiled native business implementations. This is not Python package support or an independent publisher-signature system.
-- Existing loaded objects remain callable after a failed force download, as in the original manager. This does not permit a new process to start from missing or invalid code. Explicit reload stops the old object and then attempts the real code lookup.
+- The shared manager reads real loaded objects for state, service and command declarations. Additional native adapters retain actual objects across direct init, preserve partial failures, distinguish new/reloaded objects and clones, and keep public service registration separate from private init-created once jobs. Existing typed business parsers retain their own behavior; this is not a claim that every migrated plugin business input matches Python's full value domain.
+- External get_api declarations are obtained from the actual loaded worker, with original default authentication and bounded real HTTP dispatch. Real tests cover anonymous denial, method checks, authorized responses, removed/replaced declarations and clone identity.
+- Registered public services bind a sealed descriptor, real occurrence/run and actual loaded object. External service and command dispatch execute the declared method on the existing process. AutoSignIn and CleanInvalidSeed public service adapters retain their native execution guards rather than fabricate old private schedule receipts. Owned actual-due tests reach SignIn with no sites and Clean with its expected no-downloader source error.
+- New AutoSignIn/Clean objects with absent configuration receive real Init(None) without fabricated configuration rows or I/O authority. Subsequent configured init uses the same actual object through the existing host boundary. This does not claim every repeated absent-config branch is complete.
+- Go artifact discovery shares the strict metadata reader with acquisition. Repository origins survive reopen and clone. Ordered market sources use the existing encrypted Settings record. Backend tests verify real discovery, unsupported contracts, metadata-only reads, install, loaded state and reopen. The separate market frontend patch is not included here.
+- SDK envelope encoding avoids a redundant outer scan of already standard-library-encoded JSON while preserving validation, escaping, field order and depth limits. Direct immutable legacy-codec equivalence tests cover valid and malformed inputs.
 
-## Actual validation
+## Exact validation scope
 
-The final v31 App input passed the same 38 selected roots in ordinary and race mode. These include the prior 34 original-lifecycle roots and four real executable-artifact roots. Source hashes were unchanged after both runs.
+The v47 frozen selected batch passed 57 root tests in ordinary mode and the same 57 in race mode, with exit zero and unchanged input hashes. App package elapsed times were 81.907 and 239.282 seconds. This is a selected standard-method/native-service/market batch, not a fresh full-project regression or a rerun of all earlier lifecycle roots.
 
-The four new roots use actual Go worker executables and owned loopback index/payload servers, not a mocked process: install/save/repeated calls and retained members after an init error; independent clone objects/code/configuration and clean same-ID recreation; a real source-only 1.0-to-2.0 executable upgrade while the clone remains 1.0; force download failure followed by continued use of the original object and explicit reload without valid code.
+The exact SDK codec candidate separately passed all 72 SDK roots in ordinary and race modes. The original 90-second, four-way 16 MiB test passed with both parent and worker race-instrumented; no timeout, payload or assertion was relaxed. Historical full-race failures remain preserved. The two earlier pre-host budget failures were not causally explained by later passes. Artifact v6 separately passed all 23 roots in ordinary and race modes.
 
-The complete SDK and artifact packages passed ordinary mode (67 SDK roots and 18 artifact roots). Complete race mode passed all 18 artifact roots and 64 SDK roots but failed three SDK roots: maximum four-way payload, cumulative host-call budget, and parent cancellation during host entry. These failures remain recorded and under finite diagnostic investigation. Earlier focused race passes do not supersede them. No product timeout was increased and no failing root was excluded from the recorded full run.
+The v44 overlay build failure, v45 markets routing failure and v46 native objects incorrectly sent to the external session path are retained as historical failures. The final batch fixes the reserved markets route and dispatches native/external bindings by actual object type without replacing the object or reinitializing it.
 
-The original force-failure App red (PUT returned 500 after code removal) and the initial overlay vet directory failure remain retained as historical evidence. Temporary diagnostic instrumentation and untested standard-method adapters are not included in this commit.
+## Reproducing owned fixtures
 
-## Still unfinished
+Build cmd/owned-module-fixture for declaration tests and cmd/owned-service-fixture for actual service/command tests. Build version 2.0 with -ldflags '-X main.fixtureVersion=2.0'. The API workers are cmd/original-api-fixture and cmd/original-api-registration-fixture. Tests require their documented OWNED_MODULE_FIXTURE_BINARY, OWNED_MODULE_FIXTURE_BINARY_V2, OWNED_MODULE_FIXTURE_BINARY_V3, OWNED_MODULE_FIXTURE_BINARY_V4, ORIGINAL_API_FIXTURE_BINARY and ORIGINAL_API_REGISTRATION_FIXTURE_BINARY paths. All acquisition servers and business inputs are owned synthetic fixtures.
 
-- Resolve the three complete SDK race failures with causal evidence and the necessary final verification.
-- Complete all 21 builtin standard methods against real loaded state: get_state, service and command declarations, API declarations and dispatch. Existing explicit adapters cover only part of the catalog. Copying manifest routes is not yet a complete replacement for the original get_api call.
-- Complete shared Form/Page/dashboard/navigation and loaded-but-uninstalled API behavior, preserving original class/running/installed distinctions and authentication.
-- Verify the existing market/repository configuration, discovery and version-selection UI. A loopback API installation test does not establish a complete user-facing repository workflow.
-- Run the continuous normal-main-program and Chrome lifecycle workflow, followed by the final common ordinary/race regression, web/check/build, vet, Linux build and exact embedded asset verification.
+## Remaining acceptance
 
-No additional cross-platform, remote-storage or historical-data-import scope is introduced. Paused business-plugin development resumes only after complete module acceptance and the authorized main integration/readback.
+- Integrate and verify shared PluginBase configuration/data/path methods and fresh per-call/stop authority. That independent untested layer is intentionally excluded.
+- Complete all native public-service execution bindings and continuous normal lifecycle behavior. A stopped Go process cannot execute a retained central callback; this bounded process adaptation is not a claim that Python Scheduler checks the running map before every callback.
+- Finish common Form/Page/dashboard/navigation and loaded-but-uninstalled route behavior against the original interfaces.
+- Integrate the market frontend with current main UI, then run real normal-server Chrome flows through sources, installation, cancel/save, clone, enable/disable, service/command/event, reload/reset, true version upgrade, ordinary/clone uninstall and recreation.
+- Run final full common ordinary/race regressions, web checks/build, vet, Linux build and embedded-asset verification on final integrated bytes. Preserve main's independent search, poster, catalog and UI changes through a normal three-way merge.
+
+No full-module or full-plugin-business acceptance is claimed. Other plugin development resumes only after complete module acceptance, authorized main integration and official readback.

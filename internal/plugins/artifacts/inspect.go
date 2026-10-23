@@ -50,23 +50,9 @@ func inspectMetadata(ctx context.Context, req Request, client *http.Client) (Rel
 	if !platformPattern.MatchString(req.Platform) {
 		return bad(errors.New("invalid platform"))
 	}
-	ctx, cancel := context.WithTimeout(ctx, 2*time.Minute)
-	defer cancel()
-	if client == nil {
-		client = &http.Client{Timeout: 30 * time.Second}
-	}
-	body, err := download(ctx, client, req.RepositoryURL, MaxIndexBytes)
+	index, err := fetchIndex(ctx, req.RepositoryURL, client)
 	if err != nil {
 		return bad(err)
-	}
-	var index Index
-	dec := json.NewDecoder(strings.NewReader(string(body)))
-	dec.DisallowUnknownFields()
-	if err = dec.Decode(&index); err != nil {
-		return bad(fmt.Errorf("invalid Go artifact index: %w", err))
-	}
-	if dec.Decode(new(any)) != io.EOF {
-		return bad(errors.New("trailing index data"))
 	}
 	release, artifact, err := selectArtifact(index, req)
 	if err != nil {
@@ -79,4 +65,28 @@ func inspectMetadata(ctx context.Context, req Request, client *http.Client) (Rel
 		return bad(err)
 	}
 	return release, artifact, nil
+}
+
+// fetchIndex is the single bounded strict JSON parser for every metadata path.
+func fetchIndex(ctx context.Context, repositoryURL string, client *http.Client) (Index, error) {
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Minute)
+	defer cancel()
+	if client == nil {
+		client = &http.Client{Timeout: 30 * time.Second}
+	}
+	body, err := download(ctx, client, repositoryURL, MaxIndexBytes)
+	if err != nil {
+		return Index{}, err
+	}
+	var index Index
+	dec := json.NewDecoder(strings.NewReader(string(body)))
+	dec.DisallowUnknownFields()
+	if err = dec.Decode(&index); err != nil {
+		return Index{}, fmt.Errorf("invalid Go artifact index: %w", err)
+	}
+	if dec.Decode(new(any)) != io.EOF {
+		return Index{}, errors.New("trailing index data")
+	}
+
+	return index, nil
 }
