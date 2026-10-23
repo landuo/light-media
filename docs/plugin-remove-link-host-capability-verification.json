@@ -1,0 +1,54 @@
+{
+  "status": "nonlocal rejection verified; shared capability display still pending",
+  "base_commit": "afcc4a068a717664a74b0d15cab55e93ae1ca1ff",
+  "production_code_changed": false,
+  "frozen_form_or_oracle_changed": false,
+  "test_sha256": "e3df4264606cedb887c66935fb9cba5c22fff119f1ba21e84191194df6546659",
+  "scope": "Linux and local storage only",
+  "cases": [
+    "alipan",
+    "u115",
+    "rclone",
+    "alist",
+    "openlist",
+    "unknown"
+  ],
+  "assertions": [
+    "App preflight returns ErrUnsupported",
+    "actual SDK run reconciles pending after native rejection",
+    "watch factory is never called",
+    "owned source and target bytes unchanged",
+    "owned transfer history unchanged",
+    "unsupported storage is not relabeled as native monitor-init failure"
+  ],
+  "normal": {
+    "exit": 0,
+    "root": 1,
+    "inclusive": 7,
+    "fail": 0,
+    "skip": 0,
+    "elapsed": 2.135,
+    "initial_launcher_exit": 126,
+    "initial_launcher_fix": "new runner is readable but not executable; invoked with bash, no permission or security setting changed"
+  },
+  "log_sha256": "06118b43976b84376cfb4887a9d08a0777882482cbc748d9242b04c3f0d68007",
+  "pending": [
+    "shared Linux/local-only form capability display",
+    "real browser capability display acceptance"
+  ],
+  "not_claimed": [
+    "cloud adapters",
+    "real user account/media tests",
+    "final plugin-wide acceptance"
+  ],
+  "race": {
+    "exit": 0,
+    "roots": 1,
+    "inclusive": 7,
+    "fail": 0,
+    "skip": 0,
+    "elapsed": 20.128,
+    "log_sha256": "a802dbca063274d601391dec1f572f94de154fa018632faf9140537cbfb94fb1",
+    "input_manifest_sha256": "186e6450585b5ae6aff2bde0a564b1d2d3cd66656209b78cdb7376692571837c"
+  }
+}

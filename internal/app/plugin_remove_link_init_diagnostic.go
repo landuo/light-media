@@ -100,6 +100,7 @@ func (o *pluginRemoveLinkOwner) watchInitDiagnostic(ctx context.Context, b clean
 		commit = func() error { return o.initDiagnosticCommit(tx) }
 	}
 	if err = commit(); err == nil {
+		o.publishInitSystemMessage(ctx, proof.Notice)
 		return nil
 	}
 	_ = tx.Rollback()
@@ -129,6 +130,7 @@ func (o *pluginRemoveLinkOwner) watchInitDiagnostic(ctx context.Context, b clean
 		}
 	}
 	if readErr == nil {
+		o.publishInitSystemMessage(ctx, proof.Notice)
 		return nil
 	}
 	return errors.Join(err, cleanuphost.ErrUncertain, readErr)

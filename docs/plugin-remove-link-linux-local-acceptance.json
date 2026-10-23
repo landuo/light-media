@@ -1,0 +1,141 @@
+{
+  "date_utc": "2026-10-22T18:28:37.636382+00:00",
+  "base_commit": "6c6759e83a90b7c98eaafb3ac45a9a8235022dd8",
+  "task_branch_last_verified": "294d91fc06192b334ae2bc61e3062c7260206d50",
+  "final_task_publication": "published; exact 49 blobs and task tree verified",
+  "input_manifest_sha256": "3dac03e77baa31a3a1460625b0b98b39d8f050b5692429499c6b4d200b22a5dc",
+  "input_check": {
+    "files": 5462,
+    "changed": []
+  },
+  "gates": {
+    "core-normal": {
+      "exit": 1,
+      "packages": {
+        "light-media/internal/plugins": {
+          "passed_roots": 42,
+          "passed_inclusive": 255,
+          "failed_tests": [
+            "TestRunnerBudgetDoesNotResetAtHostCalls"
+          ],
+          "skipped_tests": []
+        },
+        "light-media/internal/plugins/removelink": {
+          "passed_roots": 16,
+          "passed_inclusive": 158,
+          "failed_tests": [],
+          "skipped_tests": []
+        }
+      }
+    },
+    "app-normal-v2": {
+      "exit": 0,
+      "packages": {
+        "light-media/internal/app": {
+          "passed_roots": 153,
+          "passed_inclusive": 529,
+          "failed_tests": [],
+          "skipped_tests": []
+        }
+      }
+    },
+    "app-race-target": {
+      "exit": 0,
+      "packages": {
+        "light-media/internal/app": {
+          "passed_roots": 18,
+          "passed_inclusive": 48,
+          "failed_tests": [],
+          "skipped_tests": []
+        }
+      }
+    },
+    "core-race": {
+      "exit": 1,
+      "packages": {
+        "light-media/internal/plugins": {
+          "passed_roots": 42,
+          "passed_inclusive": 255,
+          "failed_tests": [
+            "TestActualMaximumPayloadFourWays"
+          ],
+          "skipped_tests": []
+        },
+        "light-media/internal/plugins/removelink": {
+          "passed_roots": 16,
+          "passed_inclusive": 158,
+          "failed_tests": [],
+          "skipped_tests": []
+        }
+      }
+    },
+    "protocol-race-main-baseline": {
+      "exit": 1,
+      "packages": {
+        "light-media/internal/plugins": {
+          "passed_roots": 40,
+          "passed_inclusive": 235,
+          "failed_tests": [
+            "TestActualMaximumPayloadFourWays"
+          ],
+          "skipped_tests": []
+        }
+      }
+    },
+    "app-modern": {
+      "exit": 0,
+      "packages": {
+        "light-media/internal/app": {
+          "passed_roots": 153,
+          "passed_inclusive": 529,
+          "failed_tests": [],
+          "skipped_tests": []
+        }
+      }
+    },
+    "web-full": {
+      "exit": 0
+    },
+    "web-check": {
+      "exit": 0
+    },
+    "web-build": {
+      "exit": 0
+    },
+    "final-vet": {
+      "exit": 0
+    },
+    "final-build": {
+      "exit": 0
+    },
+    "final-server": {
+      "exit": 0
+    }
+  },
+  "shared_known_and_unresolved": [
+    {
+      "test": "TestActualMaximumPayloadFourWays",
+      "status": "failed in combined full protocol race and exact current main full protocol race",
+      "shape": "execution_canceled calls=1 bytes=0, original Runner 90 seconds",
+      "cause": "unknown unchanged-code performance margin; no completed fix"
+    },
+    {
+      "test": "TestRunnerBudgetDoesNotResetAtHostCalls",
+      "status": "first combined ordinary full protocol run failed; one exact-main single and one unchanged-candidate single passed",
+      "shape": "execution_canceled calls=0, original 650ms budget",
+      "cause": "unknown; baseline attribution NOT established; no completed fix"
+    }
+  ],
+  "browser_evidence": "Worker final RuntimeSupport and VDivider candidate: real cloud Chrome, two disabled instances, all 13 fields, SDK saves and reload isolation; this combination has full UI tests/check/build but has not repeated those browser interactions.",
+  "earlier_reds_preserved": [
+    "App invalid -timeout20m invocation: zero tests; corrected command full pass",
+    "worker initial race cwd error and corrected same-binary singleton",
+    "worker initial VCS stamping failure and explicit -buildvcs=false",
+    "worker real VDivider unsupported form failure and red test before generic registration fix"
+  ],
+  "integration_date_utc": "2026-10-23",
+  "task_branch_final_verified": "f68f45e0fb75dc3ad6e2136910097684fc5919f4",
+  "acceptance": "RemoveLink Linux/local plugin functionality accepted within documented scope. Shared protocol performance risks below remain unresolved; not an all-repository green result.",
+  "integration_assets": "18 asset changes rebuilt and validated on main 6c6759e plus the 22 non-dist source/doc changes; main UTC notification changes and all old assets preserved.",
+  "remote_ci": "No remote CI pass is claimed. Local gates are listed separately."
+}

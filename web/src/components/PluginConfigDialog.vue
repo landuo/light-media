@@ -14,6 +14,8 @@ import PluginFormRenderer from './PluginFormRenderer.vue';
 import { loadPluginRemote } from '../features/plugin-federation';
 import { createPluginRemoteAPI } from '../features/plugin-remote-api';
 
+import { pluginRuntimeSupportNotice } from '../features/plugin-runtime-support';
+
 const props = defineProps<{ plugin: PluginCard }>();
 const emit = defineEmits<{ close: []; saved: []; switch: []; changed: [] }>();
 const display = useDisplay();
@@ -38,6 +40,7 @@ const nodes = ref<PluginFormNode[]>([]),
 const loading = ref(true),
   saving = ref(false),
   error = ref('');
+const supportNotice = computed(() => pluginRuntimeSupportNotice(props.plugin.runtime_support));
 const issues = computed(() => pluginFormIssues(nodes.value));
 const base = '/plugins/' + encodeURIComponent(props.plugin.instance_id);
 function pointerControl(event: MouseEvent): HTMLElement | null {
@@ -162,6 +165,14 @@ onUnmounted(() => {
       </VCardTitle>
       <VDivider />
       <VCardText class="plugin-dialog-content">
+        <VAlert
+          v-if="supportNotice"
+          type="warning"
+          variant="tonal"
+          class="mb-4"
+          data-testid="plugin-runtime-support"
+          >{{ supportNotice }}</VAlert
+        >
         <p v-if="loading" role="status">正在加载配置…</p>
         <VAlert v-if="error" type="error" variant="tonal" class="plugin-form-error">{{
           error
@@ -192,6 +203,14 @@ onUnmounted(() => {
     </VCard>
     <VCard v-else class="plugin-config-card">
       <VCardText class="pa-0">
+        <VAlert
+          v-if="supportNotice"
+          type="warning"
+          variant="tonal"
+          class="mb-4"
+          data-testid="plugin-runtime-support"
+          >{{ supportNotice }}</VAlert
+        >
         <p v-if="loading" class="pa-4" role="status">正在加载配置…</p>
         <VAlert v-if="error" type="error" variant="tonal" class="ma-4">{{ error }}</VAlert>
         <VProgressLinear v-if="saving" indeterminate aria-label="正在保存配置" />

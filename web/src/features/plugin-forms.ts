@@ -1,3 +1,4 @@
+import type { PluginRuntimeSupport } from './plugin-runtime-support';
 export type PluginFormNode = {
   component: string;
   props?: Record<string, any>;
@@ -7,6 +8,7 @@ export type PluginFormNode = {
 
 const supported = new Set([
   'VForm',
+  'VDivider',
   'VRow',
   'VCol',
   'VSwitch',
@@ -265,6 +267,7 @@ export function pluginFieldProps(
 }
 
 export type PluginCard = {
+  runtime_support?: PluginRuntimeSupport;
   plugin_id: string;
   instance_id: string;
   name: string;

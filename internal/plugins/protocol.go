@@ -30,27 +30,31 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
 type Manifest struct {
-	SchemaVersion int       `json:"schema_version"`
-	PluginID      string    `json:"plugin_id"`
-	Name          string    `json:"name"`
-	Description   string    `json:"description,omitempty"`
-	Icon          string    `json:"icon,omitempty"`
-	Author        string    `json:"author,omitempty"`
-	AuthorURL     string    `json:"author_url,omitempty"`
-	Version       string    `json:"version"`
-	Runtime       string    `json:"runtime"`
-	Entry         string    `json:"entry"`
-	HostAPIMin    int       `json:"host_api_min"`
-	HostAPIMax    int       `json:"host_api_max"`
-	Methods       []string  `json:"methods"`
-	Capabilities  []string  `json:"capabilities"`
-	Events        []string  `json:"events,omitempty"`
-	HasPage       bool      `json:"has_page,omitempty"`
-	Dashboards    []string  `json:"dashboards,omitempty"`
-	APIs          []HTTPAPI `json:"apis,omitempty"`
+	RuntimeSupport *RuntimeSupport `json:"runtime_support,omitempty"`
+	SchemaVersion  int             `json:"schema_version"`
+	PluginID       string          `json:"plugin_id"`
+	Name           string          `json:"name"`
+	Description    string          `json:"description,omitempty"`
+	Icon           string          `json:"icon,omitempty"`
+	Author         string          `json:"author,omitempty"`
+	AuthorURL      string          `json:"author_url,omitempty"`
+	Version        string          `json:"version"`
+	Runtime        string          `json:"runtime"`
+	Entry          string          `json:"entry"`
+	HostAPIMin     int             `json:"host_api_min"`
+	HostAPIMax     int             `json:"host_api_max"`
+	Methods        []string        `json:"methods"`
+	Capabilities   []string        `json:"capabilities"`
+	Events         []string        `json:"events,omitempty"`
+	HasPage        bool            `json:"has_page,omitempty"`
+	Dashboards     []string        `json:"dashboards,omitempty"`
+	APIs           []HTTPAPI       `json:"apis,omitempty"`
 }
 
 func (m Manifest) Validate() error {
+	if err := m.RuntimeSupport.Validate(); err != nil {
+		return err
+	}
 	if m.SchemaVersion != 1 || !identityPattern.MatchString(m.PluginID) || !versionPattern.MatchString(m.Version) ||
 		m.Name == "" || len(m.Name) > 256 || m.Runtime != "go-executable" || m.HostAPIMin < 1 || m.HostAPIMax < m.HostAPIMin ||
 		m.Entry == "" || filepath.IsAbs(m.Entry) || strings.Contains(m.Entry, "\\") || filepath.ToSlash(filepath.Clean(m.Entry)) != m.Entry ||

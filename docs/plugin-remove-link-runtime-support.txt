@@ -1,0 +1,52 @@
+RemoveLink: Linux/local support declaration and complete original-form rendering
+
+Scope
+This project currently targets Linux and local storage. Windows, macOS, and
+remote/cloud storage adapters are not claimed as implemented or accepted.
+RuntimeSupport is optional descriptive package metadata, not RPC authorization.
+Legacy manifests without this field remain valid and do not imply universal
+support. Validation bounds identifier sizes/counts and rejects duplicates.
+
+Implementation
+The centrally declared RemoveLink manifest advertises linux/local. The common
+plugin configuration dialog renders a generic support notice for any declared
+package, with no RemoveLink ID branch. Original descriptions, form.json and
+source/oracle fixtures are unchanged. Their historic cloud examples are not a
+claim of current support. Existing host enforcement rejects unsupported active
+nonlocal requests, independently verified in six ordinary and race cases.
+
+A real browser attempt found that the original form's three VDivider components
+were missing from the common renderer. This previously made the whole form
+unavailable and disabled Save. The failure is retained. The fix only registers
+Vuetify's standard VDivider in the generic allowlist/renderer. A test loads the
+actual original form, checks all 13 model fields and the three exact dividers;
+no simplified substitute form or plugin-specific renderer is used.
+
+Validation
+- Targeted RuntimeSupport ordinary and race tests passed in protocol, RemoveLink
+  core and App, including legacy manifests, validation, instance projection,
+  source/form immutability, and nonlocal rejection integration.
+- Complete ordinary protocol suite: 43 roots / 256 including subtests passed.
+  Complete ordinary RemoveLink core suite: 16 roots / 158 including subtests.
+- After the VDivider fix: all 206 web tests, Vue/TypeScript check and production
+  frontend build passed. Prior dist assets were retained, not deleted.
+- Actual assistant cloud Chrome used the production App/web handlers and SDK
+  with two owned disabled instances. Each showed 7 switches, 5 textareas and
+  1 number field, original dividers, and the Linux/local notice. Both saved
+  revision 2 and their actual SDK init runs succeeded. After whole-page reload,
+  all 13 fields were read back; distinct delay/keyword/suffix/notification/
+  delayed-deletion values and the second instance's local mapping stayed
+  isolated. No real user's media, remote account or deployed service was used.
+- The bounded browser fixture exited 0 and its child was reaped; its tab closed.
+  This is an actual App+SDK UI integration test, not a deployed-main-program run.
+- Final CGO-disabled modernconly vet/build results are recorded in the paired
+  JSON evidence after the exact final frontend assets were frozen.
+
+Evidence boundaries
+The earlier producer ordinary/race/modernconly 150-root suite belongs to its
+separately frozen published producer layer. It is not relabeled as a full run
+of every test on this later metadata/UI candidate. The Go metadata bytes were
+unchanged after their own ordinary/race gates. Earlier browser rejection and
+regression red are retained alongside the final pass. Full hashes, control
+counts, source inputs, dist entries and actual gate outcomes are recorded in
+plugin-remove-link-runtime-support-verification.json.
