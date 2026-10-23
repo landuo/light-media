@@ -1,5 +1,5 @@
 {
-  "stage": "local-normal-and-race-verified-not-final-delivery",
+  "stage": "local-build-vet-and-partial-ui-verified-form-renderer-blocked",
   "baseline": "2f4ab1e5333501d890c2c803d11cbe0d32487329",
   "scope": "Linux local storage; fresh install/configuration; owned synthetic data only",
   "results": {
@@ -907,9 +907,8 @@
     }
   ],
   "pending": [
-    "final Linux CGO=0 modernconly production build",
-    "affected-package vet",
-    "current cloud Chrome business UI acceptance",
+    "common form renderer VSubheader and boolean show:{{webdav_enabled}} implementation",
+    "actual cloud Chrome configuration save/run and final acceptance on corrected renderer",
     "final dedicated branch and aggregate publication/readback"
   ],
   "excluded": [
@@ -919,5 +918,57 @@
     "user NAS deployment",
     "real external notification"
   ],
-  "race_worker_note": "Actual cmd/server subprocess is ordinary build; raced parent App does not imply raced production worker."
+  "race_worker_note": "Actual cmd/server subprocess is ordinary build; raced parent App does not imply raced production worker.",
+  "previous_stage_commit": "c8a28aee4c2abd5cd71a1d0ea5ec0679b94d55d4",
+  "build_and_vet": {
+    "final-linux-build": {
+      "exit": 0,
+      "seconds": 113.40969681739807,
+      "source_changes": []
+    },
+    "final-vet": {
+      "exit": 0,
+      "seconds": 72.70060396194458,
+      "source_changes": []
+    },
+    "final-ui-build": {
+      "exit": 0,
+      "seconds": 70.61757302284241,
+      "source_changes": []
+    }
+  },
+  "build_identity": {
+    "worker_sha256": "9b3a10f2400be2afacf0310cf7fbdedd657eeea35186a638a7457fdaa461f875",
+    "fixture_sha256": "a719114cde8208fd3a981c10d19d801b9eb252f000f4cb5c325c3dd19cb678b2",
+    "production_worker_cgo": 0,
+    "production_worker_tags": "modernconly",
+    "source_changes": []
+  },
+  "browser": {
+    "dismiss_exact_no_business_changes": true,
+    "confirm_archives_unchanged": true,
+    "confirm_clone_rows_unchanged": true,
+    "confirm_recovery_attestations": 1,
+    "confirm_retry_records": 0,
+    "reset_archives_unchanged": true,
+    "reset_clone_rows_unchanged": true,
+    "default_generation_before": 1,
+    "default_generation_after": 2,
+    "confirmed_unknown_state": {
+      "state": "canceled",
+      "error_code": "AUTO_BACKUP_ABANDONED_UNKNOWN"
+    },
+    "form_ui_status": "blocked VSubheader and show:webdav_enabled; not passed",
+    "actual_form_json": "actual-clone-form.json",
+    "normal_exit": {
+      "exit": 0,
+      "owned_child_reaped": true
+    },
+    "failed_connection_attempt": "First sandbox-loopback fixture not reachable by cloud Chrome; terminated normally; not a UI pass. Final cloud-host service launched via official native Terminal."
+  },
+  "remote_ci": {
+    "check_runs": 0,
+    "statuses": 0,
+    "interpretation": "no remote CI execution evidence"
+  }
 }

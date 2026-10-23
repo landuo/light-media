@@ -74,3 +74,28 @@ This is a verified intermediate stage, not final plugin delivery. Final Linux
 production build, vet, current cloud-browser acceptance and final publication
 remain open. The compressed evidence bundle includes both failures and passes;
 individual execution plans and source hashes make their scopes distinguishable.
+
+## Build and partial browser verification, 2026-10-23
+
+Production Linux CGO=0 / modernconly build, affected-package vet and the
+opt-in browser fixture build all completed with exit 0 on unchanged source.
+The real cloud Chrome session used the resulting production worker and owned
+synthetic account/storage. Native Clone succeeded. Dismissing unknown-archive
+abandonment left every observed business row and archive unchanged. Explicit
+abandonment produced AUTO_BACKUP_ABANDONED_UNKNOWN, one durable recovery
+attestation and zero retry records, preserving the archive and clone. Immediate
+UI Reset advanced only the default instance generation from 1 to 2 and preserved
+the archive and all clone rows. The owned fixture exited 0 and was reaped.
+
+A real remaining blocker was found, not waived: the common form renderer rejects
+VSubheader and the original boolean show binding {{webdav_enabled}}, leaving
+AutoBackup configuration unavailable and Save disabled. Formal-clone Form JSON
+and a screenshot preserve this failure. The shared renderer owner is repairing
+these explicit source behaviors; a fresh real configuration-save/run browser
+check remains required. No API save is substituted for this UI gate.
+
+The first sandbox-loopback browser connection failed; it is not counted as a UI
+pass. A separate official cloud-native Terminal launch supplied the reachable
+owned service. No authentication bypass was introduced: the normal login form
+used only the existing public test constants. Remote CI has no recorded checks
+or statuses and is not claimed as passed.
