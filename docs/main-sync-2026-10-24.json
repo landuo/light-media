@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-24",
+  "repository": "https://github.com/landuo/light-media.git",
+  "worktree": "/Users/accidia/projects/light-media",
+  "scope": "Merge local main with origin/main; retain independent plugin task branches and the verified production baseline.",
+  "main_before": "cbaa809f08d96166735bba2fd6bbbbbe129b5265",
+  "origin_main_before": "2f4ab1e5333501d890c2c803d11cbe0d32487329",
+  "merge_commit": "de8822e72b4e24061c49b085636c28a46e03f4b4",
+  "pre_merge_main_commits": {
+    "local_only": 9,
+    "remote_only": 45
+  },
+  "publish_branches": {
+    "main": "merged integration",
+    "dev/ui": "9c4bed4e577fc86aefa3305a3d5c69cad371cc11",
+    "production/v0.4.15": "4d4b79d8dab523daf40c06889a54ec5c0c615ab6"
+  },
+  "resolutions": [
+    "Rebuild frontend assets and original MDI icons from the combined source.",
+    "Keep MoviePilot card styling and bundled icon colors while preserving clone actions, display versions, safe custom icons, update and reviewed restore actions.",
+    "Keep the remote application-domain setting with the local Vuetify form presentation and existing save semantics.",
+    "Isolate ignored Go drafts with work/go.mod; keep every other work path ignored.",
+    "Canonicalize only the migration test temporary directory; keep production symlink rejection unchanged.",
+    "Preserve byte-exact clone reference source, including its final blank line."
+  ],
+  "passed_checks": [
+    {
+      "command": "npm --prefix web run build",
+      "scope": "Vue type check, original asset generation and production frontend build"
+    },
+    {
+      "command": "npm --prefix web test",
+      "tests": 258,
+      "passed": 258,
+      "failed": 0
+    },
+    {
+      "command": "go test ./cmd/remove-link-migrate-owned",
+      "scope": "All CLI tests after canonical-path fixture correction"
+    },
+    {
+      "command": "go test -run ^$ ./...",
+      "scope": "Compile every product package; no runtime test claim"
+    },
+    {
+      "command": "go vet ./..."
+    },
+    {
+      "command": "go mod verify"
+    },
+    {
+      "command": "CGO_ENABLED=0 go test -tags modernconly -timeout=5m ./internal/app -run '^(TestCatalog|TestRecommend|TestSystemMessage|TestPluginBuiltinUpdateActualAuthenticatedHTTP|TestPluginInstanceCloneDefaultReferenceIsolation)'",
+      "seconds": 8.432
+    },
+    {
+      "command": "go test -race -timeout=5m ./internal/app -run '^(TestCatalog|TestRecommend|TestSystemMessage|TestPluginBuiltinUpdateActualAuthenticatedHTTP|TestPluginInstanceCloneDefaultReferenceIsolation)'",
+      "seconds": 19.174,
+      "scope": "Selected package tests instrumented with race detector; not full repository race acceptance"
+    },
+    {
+      "command": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags modernconly -o bin/sync-server-linux-amd64 ./cmd/server",
+      "scope": "Linux/amd64 static build only; verification binary removed after recording"
+    },
+    {
+      "command": "git diff --cached --check"
+    }
+  ],
+  "full_regression": {
+    "command": "go test -timeout=20m ./...",
+    "exit": 1,
+    "all_tests_green": false,
+    "initial_failures": [
+      "TestDryRunSubprocessZeroWrites",
+      "TestApplySubprocessDisabledAndIdempotent",
+      "TestReplayPreservesLaterUserState",
+      "TestPluginAutoBackupOwnerRootRejectsMissingReplacedAndRolledBackEvidence",
+      "TestPluginAutoBackupLifecycleWaitsOnlyInstanceGate",
+      "TestPluginAutoBackupSnapshotCutCancelsOnlyOwnRunAndPreservesUnknown",
+      "TestPluginAutoBackupAuthenticatedAbandonKeepsUnknownEvidenceAndUnlocksNewRun",
+      "TestBrushFlowColdBeforeNativeEntryAndPreparedAreZeroEffect",
+      "TestBrushFlowActualPreSDKCancelAfterRetirementNeverChangesAncestor",
+      "TestPluginDeferredHistoryNativeSelfResetBridgeAndColdQuarantine",
+      "TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun",
+      "TestPluginResultSaveFailureStopsActualWorkerReplayAfterSideEffect",
+      "TestPluginMediaRefreshUncertainSubmitIsNotReplayedAndConfirmedReceiptIsReused",
+      "TestPluginRemoveLinkOwnerDisabledInstallResetAndSaveWithoutRoots",
+      "TestPluginResultChannelSideEffectBlocksStartupAndAllowsExplicitRevision",
+      "TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations",
+      "TestSeedRescueMissingProtocolPreservesColdPendingAndBlocksHost",
+      "TestSiteStatisticRouterColdRecoveryAndLegacyReceipt",
+      "TestReviewedRemoveLinkSyntheticClonesColdStartIsolation",
+      "TestReviewedRemoveLinkAtomicProofAndTargetDrift",
+      "TestReviewedRemoveLinkReplayChecksCurrentGenerationAndRun",
+      "TestTransportCodecOracleDependency",
+      "TestFrozenCandidateSourceAndEvidence"
+    ],
+    "initial_scratch_compile_failures": "Ignored work Go fragments were included before adding the nested-module boundary.",
+    "baseline_recheck": {
+      "ref": "2f4ab1e5333501d890c2c803d11cbe0d32487329",
+      "command_packages": [
+        "./cmd/remove-link-migrate-owned",
+        "./internal/app",
+        "./internal/plugins",
+        "./internal/plugins/removelink/host"
+      ],
+      "run_pattern": "^(TestDryRunSubprocessZeroWrites|TestApplySubprocessDisabledAndIdempotent|TestReplayPreservesLaterUserState|TestPluginAutoBackupOwnerRootRejectsMissingReplacedAndRolledBackEvidence|TestPluginAutoBackupLifecycleWaitsOnlyInstanceGate|TestPluginAutoBackupSnapshotCutCancelsOnlyOwnRunAndPreservesUnknown|TestPluginAutoBackupAuthenticatedAbandonKeepsUnknownEvidenceAndUnlocksNewRun|TestBrushFlowColdBeforeNativeEntryAndPreparedAreZeroEffect|TestBrushFlowActualPreSDKCancelAfterRetirementNeverChangesAncestor|TestPluginDeferredHistoryNativeSelfResetBridgeAndColdQuarantine|TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun|TestPluginResultSaveFailureStopsActualWorkerReplayAfterSideEffect|TestPluginMediaRefreshUncertainSubmitIsNotReplayedAndConfirmedReceiptIsReused|TestPluginRemoveLinkOwnerDisabledInstallResetAndSaveWithoutRoots|TestPluginResultChannelSideEffectBlocksStartupAndAllowsExplicitRevision|TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations|TestSeedRescueMissingProtocolPreservesColdPendingAndBlocksHost|TestSiteStatisticRouterColdRecoveryAndLegacyReceipt|TestReviewedRemoveLinkSyntheticClonesColdStartIsolation|TestReviewedRemoveLinkAtomicProofAndTargetDrift|TestReviewedRemoveLinkReplayChecksCurrentGenerationAndRun|TestTransportCodecOracleDependency|TestFrozenCandidateSourceAndEvidence)$",
+      "exit": 1,
+      "failed_root_sets_identical": true
+    },
+    "fixed_test_environment_roots": [
+      "TestDryRunSubprocessZeroWrites",
+      "TestApplySubprocessDisabledAndIdempotent",
+      "TestReplayPreservesLaterUserState"
+    ],
+    "remaining_existing_failure_roots": [
+      "TestPluginAutoBackupOwnerRootRejectsMissingReplacedAndRolledBackEvidence",
+      "TestPluginAutoBackupLifecycleWaitsOnlyInstanceGate",
+      "TestPluginAutoBackupSnapshotCutCancelsOnlyOwnRunAndPreservesUnknown",
+      "TestPluginAutoBackupAuthenticatedAbandonKeepsUnknownEvidenceAndUnlocksNewRun",
+      "TestBrushFlowColdBeforeNativeEntryAndPreparedAreZeroEffect",
+      "TestBrushFlowActualPreSDKCancelAfterRetirementNeverChangesAncestor",
+      "TestPluginDeferredHistoryNativeSelfResetBridgeAndColdQuarantine",
+      "TestPluginDeferredRecoveryNeverReplaysStartedOrCreatesFreshStartupRun",
+      "TestPluginResultSaveFailureStopsActualWorkerReplayAfterSideEffect",
+      "TestPluginMediaRefreshUncertainSubmitIsNotReplayedAndConfirmedReceiptIsReused",
+      "TestPluginRemoveLinkOwnerDisabledInstallResetAndSaveWithoutRoots",
+      "TestPluginResultChannelSideEffectBlocksStartupAndAllowsExplicitRevision",
+      "TestPluginRunsRestartRecoversOnlyKnownIdempotentOperations",
+      "TestSeedRescueMissingProtocolPreservesColdPendingAndBlocksHost",
+      "TestSiteStatisticRouterColdRecoveryAndLegacyReceipt",
+      "TestReviewedRemoveLinkSyntheticClonesColdStartIsolation",
+      "TestReviewedRemoveLinkAtomicProofAndTargetDrift",
+      "TestReviewedRemoveLinkReplayChecksCurrentGenerationAndRun",
+      "TestTransportCodecOracleDependency",
+      "TestFrozenCandidateSourceAndEvidence"
+    ],
+    "limitation": "Remaining plugin recovery/migration/provenance failures are reproducible on the pre-merge remote main. They were not hidden, weakened or reported as passing. This integration is not full plugin business acceptance."
+  }
+}
