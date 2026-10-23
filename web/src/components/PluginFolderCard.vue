@@ -51,22 +51,31 @@ const background = computed(() =>
         <p>{{ count }} 个插件</p>
       </div>
     </div>
-    <VMenu v-if="!sortable" location="top end" :transition="false"
+    <VMenu
+      v-if="!sortable"
+      location="top end"
+      :transition="false"
+      content-class="plugin-dialog-surface"
       ><template #activator="{ props: menuProps }"
         ><VBtn
           v-bind="menuProps"
           class="folder-menu"
           variant="text"
           icon
-          size="small"
+          size="40"
           :aria-label="name + '文件夹操作'"
           @click.stop
-          ><VIcon icon="mdi-dots-vertical" /></VBtn></template
+          ><VIcon icon="mdi-dots-vertical" size="20" /></VBtn></template
       ><VList
-        ><VListItem title="设置外观" @click="emit('appearance')" /><VListItem
+        ><VListItem
+          title="设置外观"
+          prepend-icon="mdi-palette"
+          @click="emit('appearance')" /><VListItem
           title="重命名"
+          prepend-icon="mdi-pencil"
           @click="emit('rename')" /><VListItem
           title="删除文件夹"
+          prepend-icon="mdi-delete"
           base-color="error"
           @click="emit('delete')" /></VList
     ></VMenu>
@@ -77,7 +86,9 @@ const background = computed(() =>
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  min-height: 168px;
+  min-height: 136px;
+  border: 0;
+  border-radius: 12px;
   height: 100%;
   background-size: cover;
   background-position: top;
@@ -95,6 +106,7 @@ const background = computed(() =>
   gap: 16px;
   padding: 16px 24px;
   height: 100%;
+  min-height: 136px;
 }
 .folder-body.no-icon {
   align-items: flex-start;

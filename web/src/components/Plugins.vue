@@ -7,6 +7,7 @@ import { VTabs, VTab } from 'vuetify/components/VTabs';
 import { VMenu } from 'vuetify/components/VMenu';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VAlert } from 'vuetify/components/VAlert';
+import { VTextField } from 'vuetify/components/VTextField';
 import { VCombobox } from 'vuetify/components/VCombobox';
 import { VDivider } from 'vuetify/components/VDivider';
 import { VList, VListItem, VListItemTitle, VListSubheader } from 'vuetify/components/VList';
@@ -48,6 +49,7 @@ function openPlugin(plugin: PluginCard) {
 
 const tab = ref('installed'),
   query = ref(''),
+  marketFilterMenu = ref(false),
   items = ref<PluginCard[]>([]),
   market = ref<PluginCard[]>([]);
 const installedQuery = ref<string | null>(null),
@@ -78,7 +80,7 @@ const visible = computed(() =>
   (tab.value === 'installed' ? items.value : market.value).filter((item) =>
     (item.name + ' ' + item.description + ' ' + item.author)
       .toLowerCase()
-      .includes(query.value.toLowerCase()),
+      .includes((query.value || '').toLowerCase()),
   ),
 );
 const organization = ref<PluginOrganization>({ revision: 0, folders: {}, order: [] });
@@ -119,6 +121,7 @@ watch(tab, () => {
   sortMode.value = false;
   currentFolder.value = '';
   filterMenu.value = false;
+  marketFilterMenu.value = false;
   load();
 });
 async function load() {
@@ -413,22 +416,48 @@ onUnmounted(() => clearInterval(timer));
   <VThemeProvider theme="light" with-background class="plugin-surface">
     <div class="plugin-toolbar">
       <VTabs v-model="tab" color="primary"
-        ><VTab value="installed">我的插件</VTab><VTab value="market">插件市场</VTab></VTabs
+        ><VTab value="installed" prepend-icon="mdi-apps">我的插件</VTab
+        ><VTab value="market" prepend-icon="mdi-shopping">插件市场</VTab></VTabs
       >
       <div class="plugin-toolbar-actions">
-        <input
+        <VMenu
           v-if="tab === 'market'"
-          v-model="query"
-          type="search"
-          aria-label="搜索插件"
-          placeholder="搜索插件"
-        /><VBtn
+          v-model="marketFilterMenu"
+          location="bottom end"
+          :close-on-content-click="false"
+          content-class="plugin-dialog-surface"
+        >
+          <template #activator="{ props: menuProps }">
+            <VBtn
+              v-bind="menuProps"
+              variant="text"
+              icon
+              aria-label="筛选插件市场"
+              :color="query ? 'primary' : 'secondary'"
+              ><VIcon icon="mdi-filter-multiple-outline"
+            /></VBtn>
+          </template>
+          <VCard min-width="260" max-width="320"
+            ><div class="pa-3">
+              <VTextField
+                v-model="query"
+                aria-label="搜索插件"
+                placeholder="名称"
+                prepend-inner-icon="mdi-magnify"
+                density="compact"
+                hide-details
+                clearable
+                @keyup.enter="marketFilterMenu = false"
+              /></div
+          ></VCard>
+        </VMenu>
+        <VBtn
           v-if="tab === 'installed'"
           variant="text"
           icon
           aria-label="筛选已安装插件"
           data-menu-activator="installed-filter-btn"
-          :color="installedFiltering ? 'primary' : undefined"
+          :color="installedFiltering ? 'primary' : 'secondary'"
           @click="filterMenu = true"
           ><VIcon icon="mdi-filter-multiple-outline"
         /></VBtn>
@@ -448,8 +477,9 @@ onUnmounted(() => clearInterval(timer));
           aria-label="排序插件"
           :disabled="organizing"
           :active="sortMode"
+          :color="sortMode ? 'warning' : 'secondary'"
           @click="sortMode = !sortMode"
-          ><VIcon icon="mdi-sort"
+          ><VIcon icon="mdi-sort-variant"
         /></VBtn>
       </div>
     </div>
@@ -752,7 +782,7 @@ onUnmounted(() => clearInterval(timer));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   gap: 16px;
 }
 .plugin-toolbar-actions {
@@ -760,12 +790,15 @@ onUnmounted(() => clearInterval(timer));
   align-items: center;
   gap: 8px;
 }
-.plugin-toolbar-actions input {
-  max-width: 220px;
+.plugin-toolbar :deep(.v-tabs) {
+  min-width: 0;
+}
+.plugin-toolbar-actions {
+  flex-shrink: 0;
 }
 .plugin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 256px), 1fr));
   gap: 16px;
 }
 .plugin-grid-item {
@@ -823,14 +856,14 @@ onUnmounted(() => clearInterval(timer));
 }
 @media (max-width: 640px) {
   .plugin-toolbar {
-    align-items: flex-start;
-    flex-direction: column;
+    gap: 4px;
   }
   .plugin-toolbar-actions {
-    width: 100%;
+    gap: 0;
   }
-  .plugin-toolbar-actions input {
-    max-width: none;
+  .plugin-toolbar :deep(.v-tab) {
+    min-width: 0;
+    padding-inline: 10px;
   }
 }
 </style>

@@ -65,7 +65,7 @@ function render(node: PluginFormNode): any {
   if (node.component === 'VImg' && /^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(bound.src || ''))
     bound.src = import.meta.env.BASE_URL + bound.src.slice(1);
   if (node.component === 'VAceEditor')
-    bound.options = { useWorker: false, fontSize: 14, tabSize: 2 };
+    bound.options = { useWorker: false, fontSize: 12, tabSize: 2 };
   return h(
     component,
     bound,

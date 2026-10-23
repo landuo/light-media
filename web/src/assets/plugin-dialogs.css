@@ -13,24 +13,103 @@
   --app-surface-hover-shadow: none;
 }
 .plugin-dialog-surface {
-  color: var(--text);
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
   font-family: inherit;
 }
-.plugin-dialog-surface .plugin-config-card {
-  border-radius: 8px;
+/* Match the original theme's Vuetify Sass values, scoped to plugins. The
+   host uses Vuetify's precompiled styles, whose defaults differ here. */
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-card {
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+  box-shadow: none !important;
 }
-.plugin-dialog-surface .plugin-dialog-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px !important;
-  font-size: 20px !important;
+.v-dialog > .v-overlay__content:is(.plugin-dialog-surface, .plugin-log-surface) > .v-card {
+  border-radius: 12px;
 }
-.plugin-dialog-content {
-  padding: 24px !important;
+.v-dialog
+  > .v-overlay__content:is(.plugin-dialog-surface, .plugin-log-surface)
+  > .v-card
+  > .v-card-item {
+  padding: 16px;
 }
-.plugin-dialog-content .v-row + .v-row {
-  margin-top: 12px;
+:where(.plugin-dialog-surface, .plugin-log-surface) .v-card-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: 0.15px;
+  color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+}
+:where(.plugin-dialog-surface, .plugin-log-surface) .v-card-text {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: normal;
+}
+.v-dialog
+  > .v-overlay__content:is(.plugin-dialog-surface, .plugin-log-surface)
+  > .v-card
+  > .v-card-text {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: normal;
+}
+.v-dialog--fullscreen
+  > .v-overlay__content:is(.plugin-dialog-surface, .plugin-log-surface)
+  > .v-card {
+  border-radius: 0;
+}
+.v-overlay__content:is(.plugin-dialog-surface, .plugin-log-surface):focus-visible {
+  outline: none;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-divider {
+  margin: 0;
+  color: rgb(var(--v-border-color));
+}
+.plugin-surface .v-tabs {
+  --v-tabs-height: 40px;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface)
+  :is(.v-checkbox, .v-switch).v-input {
+  --v-input-control-height: auto;
+  flex: unset;
+}
+:is(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-switch .v-switch__track {
+  background-color: rgb(66, 66, 66);
+}
+/* Do not let the host's native table typography and striped header style leak
+   into the original plugin's VTable. Density still belongs to Vuetify. */
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-table table {
+  font: inherit;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-table :is(th, td) {
+  color: inherit;
+  font-size: inherit;
+  background: transparent;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-table tbody tr:hover {
+  background: transparent;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-btn {
+  min-height: 0;
+  gap: normal;
+  line-height: normal;
+  letter-spacing: 0.4px;
+  box-shadow: none;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-btn--size-default {
+  --v-btn-height: 38px;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface)
+  .v-btn--icon.v-btn--size-default {
+  width: 40px;
+  height: 40px;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface)
+  .v-btn:not(.v-btn--icon, .v-btn--rounded) {
+  border-radius: 6px;
+}
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) .v-btn:active {
+  transform: none;
 }
 .plugin-dialog-surface .v-label {
   flex-direction: row;
@@ -54,15 +133,26 @@
   resize: none;
 }
 .plugin-dialog-actions {
-  padding: 16px 24px !important;
-  justify-content: flex-end;
-  border-top: 1px solid var(--line);
+  flex: 0 0 auto;
+  min-height: unset;
+  gap: 8px;
+  padding: 12px 24px 16px !important;
 }
-.plugin-dialog-actions .v-btn {
-  min-width: 100px;
+.plugin-dialog-actions > .v-btn {
+  flex: 0 0 auto;
 }
-.plugin-dialog-actions .app-icon {
-  margin-right: 8px;
+@media (max-width: 600px) {
+  .plugin-dialog-actions {
+    flex-wrap: wrap;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+  .plugin-dialog-actions > .v-btn {
+    flex: 1 1 9rem;
+    min-width: 0;
+  }
+  .plugin-dialog-actions > .v-spacer {
+    display: none;
+  }
 }
 .plugin-form-error {
   margin-bottom: 16px;

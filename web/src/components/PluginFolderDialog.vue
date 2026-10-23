@@ -56,9 +56,15 @@ function save() {
   >
     <VCard
       ><VCardTitle class="plugin-dialog-title"
-        >{{
-          mode === 'create' ? '新建文件夹' : mode === 'rename' ? '重命名文件夹' : '文件夹外观设置'
-        }}<VBtn
+        ><span class="folder-dialog-title-text"
+          ><VIcon
+            v-if="mode === 'rename' || mode === 'appearance'"
+            :icon="mode === 'rename' ? 'mdi-pencil' : 'mdi-palette'"
+            size="24"
+          />{{
+            mode === 'create' ? '新建文件夹' : mode === 'rename' ? '重命名文件夹' : '文件夹外观设置'
+          }}</span
+        ><VBtn
           variant="text"
           icon
           :disabled="busy"
@@ -154,6 +160,7 @@ function save() {
         ><VBtn
           color="primary"
           variant="flat"
+          class="px-5"
           :prepend-icon="
             mode === 'create'
               ? 'mdi-folder-plus'
@@ -185,6 +192,18 @@ function save() {
 .color-btn,
 .gradient-btn {
   min-width: 0 !important;
+  border-radius: 8px !important;
+  height: 60px !important;
+}
+.gradient-grid {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  max-height: 200px;
+  overflow-y: auto;
+}
+.folder-dialog-title-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .folder-dialog-actions {
   justify-content: flex-end;

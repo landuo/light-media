@@ -1,35 +1,76 @@
 <script setup lang="ts">
-import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard';
+import { computed, ref, watch } from 'vue';
+import { VCard, VCardText } from 'vuetify/components/VCard';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VMenu } from 'vuetify/components/VMenu';
 import { VList, VListItem } from 'vuetify/components/VList';
 import { VIcon } from 'vuetify/components/VIcon';
 import type { PluginCard } from '../features/plugin-forms';
-import AppIcon from './AppIcon.vue';
-defineProps<{ plugin: PluginCard; busy?: boolean; sortable?: boolean; inFolder?: boolean }>();
+import iconColors from '../features/plugin-icon-colors.json';
+
+const props = defineProps<{
+  plugin: PluginCard;
+  busy?: boolean;
+  sortable?: boolean;
+  inFolder?: boolean;
+}>();
 const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
+const iconFailed = ref(false);
+const sourceIconName = computed(() => props.plugin.icon?.split('/').at(-1) || '');
+const iconName = computed(() => {
+  const name = sourceIconName.value;
+  return !iconFailed.value &&
+    /^[A-Za-z0-9_.-]+\.(?:png|jpe?g)$/i.test(name) &&
+    Object.hasOwn(iconColors, name)
+    ? name
+    : 'plugin.png';
+});
+const iconPath = computed(() => '/plugin_icon/' + iconName.value);
+const coverStyle = computed(() => {
+  // These colors are generated with MoviePilot's ColorThief quality=20 from
+  // the bundled original icons, keeping the original cover offline and stable.
+  const color = (iconColors as Record<string, string>)[iconName.value] || '#28a9e1';
+  return { background: `linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, .5)), ${color}` };
+});
+watch(sourceIconName, () => {
+  iconFailed.value = false;
+});
 </script>
 <template>
   <div class="plugin-item-wrapper">
     <VCard
       class="plugin-card"
       :class="{ sortable }"
+      :ripple="!sortable"
       @click="!sortable && emit('action', 'open', plugin)"
     >
-      <div class="plugin-card-cover">
-        <VCardTitle class="plugin-card-title"
-          ><span class="plugin-state-dot" :class="{ active: plugin.state }"></span>{{ plugin.name
-          }}<span class="plugin-version">v{{ plugin.version }}</span></VCardTitle
-        >
+      <div class="plugin-card-cover" :style="coverStyle">
+        <div class="plugin-card-title" :title="plugin.name + ' v' + plugin.version">
+          <span class="plugin-state-dot" :class="{ active: plugin.state }"></span>
+          <span class="plugin-card-name"
+            >{{ plugin.name }} <span class="plugin-version">v{{ plugin.version }}</span></span
+          >
+        </div>
         <div class="plugin-card-description">
-          <span>{{ plugin.description }}</span>
-          <div class="plugin-card-icon"><AppIcon name="plugin" /></div>
+          <span :title="plugin.description">{{ plugin.description }}</span>
+          <div class="plugin-card-icon">
+            <img :src="iconPath" alt="" @error="iconFailed = true" />
+          </div>
         </div>
       </div>
-      <VCardText class="plugin-card-footer"
-        ><a :href="plugin.author_url" target="_blank" rel="noopener noreferrer" @click.stop>{{
-          plugin.author
-        }}</a>
+      <VCardText class="plugin-card-footer">
+        <div class="plugin-author">
+          <VIcon class="author-avatar" icon="mdi-github" size="20" />
+          <span v-if="sortable">{{ plugin.author }}</span>
+          <a
+            v-else
+            :href="plugin.author_url"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click.stop
+            >{{ plugin.author }}</a
+          >
+        </div>
         <VBtn
           v-if="!plugin.installed"
           size="small"
@@ -38,35 +79,64 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
           @click.stop="emit('action', 'install', plugin)"
           >安装</VBtn
         >
-        <VMenu v-else-if="!sortable" location="bottom end" :transition="false">
-          <template #activator="{ props: menuProps }"
-            ><VBtn
+        <VMenu
+          v-else-if="!sortable"
+          location="bottom end"
+          :transition="false"
+          content-class="plugin-dialog-surface"
+        >
+          <template #activator="{ props: menuProps }">
+            <VBtn
               v-bind="menuProps"
+              class="plugin-menu-button"
               variant="text"
+              color="default"
               icon
-              size="small"
+              size="40"
               :aria-label="plugin.name + '操作'"
               @click.stop
-              ><AppIcon name="more" /></VBtn
-          ></template>
-          <VList class="plugin-menu"
-            ><VListItem
+            >
+              <VIcon icon="mdi-dots-vertical" size="24" />
+            </VBtn>
+          </template>
+          <VList class="plugin-menu">
+            <VListItem
               v-if="plugin.has_page"
               title="详情"
-              @click="emit('action', 'detail', plugin)" /><VListItem
+              prepend-icon="mdi-information-outline"
+              @click="emit('action', 'detail', plugin)"
+            />
+            <VListItem
               title="设置"
-              @click="emit('action', 'settings', plugin)" /><VListItem
+              prepend-icon="mdi-cog-outline"
+              @click="emit('action', 'settings', plugin)"
+            />
+            <VListItem
               title="重置"
-              @click="emit('action', 'reset', plugin)" /><VListItem
+              prepend-icon="mdi-cancel"
+              base-color="warning"
+              @click="emit('action', 'reset', plugin)"
+            />
+            <VListItem
               title="卸载"
-              @click="emit('action', 'uninstall', plugin)" /><VListItem
+              prepend-icon="mdi-trash-can-outline"
+              base-color="error"
+              @click="emit('action', 'uninstall', plugin)"
+            />
+            <VListItem
               title="执行记录"
-              @click="emit('action', 'runs', plugin)" /><VListItem
+              prepend-icon="mdi-history"
+              @click="emit('action', 'runs', plugin)"
+            />
+            <VListItem
               title="查看日志"
+              prepend-icon="mdi-file-document-outline"
               @click="emit('action', 'logs', plugin)"
-          /></VList>
+            />
+          </VList>
         </VMenu>
       </VCardText>
+      <VIcon v-if="plugin.has_update" class="plugin-update" icon="mdi-new-box" color="white" />
     </VCard>
     <VBtn
       v-if="inFolder && !sortable"
@@ -85,27 +155,42 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
 .plugin-item-wrapper {
   position: relative;
   height: 100%;
+  min-width: 0;
 }
 .plugin-card {
   cursor: pointer;
-  border: 1px solid var(--surface-border);
   overflow: hidden;
   height: 100%;
+  border: 0;
+  border-radius: 12px;
+  transition: transform 0.3s;
+}
+.plugin-card:not(.sortable):hover {
+  transform: translateY(-4px);
 }
 .plugin-card.sortable {
   cursor: move;
 }
 .plugin-card-cover {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), #28a9e1;
-  min-height: 108px;
+  height: 108px;
   color: #fff;
 }
 .plugin-card-title {
-  padding: 12px 16px 4px;
-  font-size: 18px;
+  padding: 12px 16px 0;
+  height: 36px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-shadow: 0 1px 2px #0006;
+}
+.plugin-card-name {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .plugin-state-dot {
   height: 8px;
@@ -118,44 +203,84 @@ const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
   background: #56ca00;
 }
 .plugin-version {
-  font-size: 13px;
-  opacity: 0.8;
+  font-size: 14px;
+  font-weight: 400;
+  color: #e5e7eb;
 }
 .plugin-card-description {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 4px 16px 12px;
-  gap: 12px;
+  padding: 4px 8px 8px 16px;
+  gap: 8px;
   font-size: 14px;
 }
 .plugin-card-description > span {
-  line-height: 1.5;
-  min-height: 42px;
+  flex: 1;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  line-height: 20px;
+  text-shadow: 0 1px 2px #0006;
 }
 .plugin-card-icon {
   width: 48px;
   height: 48px;
+  margin-top: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #ffffff21;
+  overflow: hidden;
   flex: none;
 }
-.plugin-card-icon .app-icon {
-  width: 28px;
-  height: 28px;
+.plugin-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .plugin-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px 8px 2px 16px !important;
+  padding: 8px !important;
   height: 40px;
+  min-height: 40px;
+  gap: 8px;
 }
-.plugin-card-footer a {
+.plugin-author {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding-right: 32px;
   font-size: 14px;
+}
+.plugin-author a,
+.plugin-author > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex: none;
+  object-fit: cover;
+}
+.plugin-menu-button {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.plugin-update {
+  position: absolute;
+  right: 8px;
+  top: 0;
 }
 .remove-from-folder-btn {
   position: absolute;
