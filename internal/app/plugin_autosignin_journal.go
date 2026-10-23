@@ -63,6 +63,8 @@ type pluginAutoSignInBackend struct {
 	run   *PluginRun // immutable, host-created snapshot; nil is outbox maintenance only.
 	mu    sync.Mutex
 	held  int
+	// Only the native host may bind a source entrypoint after verifying its sealed event origin.
+	sourcePlan json.RawMessage
 }
 
 var _ signinjournal.StateBackend = (*pluginAutoSignInBackend)(nil)
@@ -498,6 +500,12 @@ func (b *pluginAutoSignInBackend) Update(ctx context.Context, binding signinjour
 	if err = b.projectConfigTx(ctx, tx, before, loaded.State); err != nil {
 		return err
 	}
+	if err = b.projectSchedulesTx(ctx, tx, before, loaded.State); err != nil {
+		return err
+	}
+	if err = b.projectSiteDeletedSubscriptionTx(ctx, tx, before, loaded.State); err != nil {
+		return err
+	}
 
 	return tx.Commit()
 }
@@ -522,6 +530,9 @@ func (b *pluginAutoSignInBackend) allowedDelta(before map[string]pluginAutoSignI
 		}
 		if run := after.Runs[b.run.ID]; run != nil {
 			matches := run.Action == b.run.Action || run.Action == "cold_init" && b.run.Action == "init"
+			if !matches && b.run.Action == "event" && run.Action == "site_deleted" && len(b.sourcePlan) > 0 {
+				matches = bytes.Equal(run.Plan, b.sourcePlan)
+			}
 			if !matches {
 				return signinjournal.ErrStale
 			}

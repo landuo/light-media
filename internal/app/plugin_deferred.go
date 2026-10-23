@@ -31,6 +31,7 @@ type pluginDeferredRecord struct {
 	Plugin, Instance, Version, Run, Action, Method string
 	Generation, Revision                           int64
 	InputSHA                                       string
+	ConfigSHA                                      string `json:",omitempty"`
 	Raw, Ack, Result                               json.RawMessage
 	Phase                                          string
 	ErrorCode                                      string `json:",omitempty"`
@@ -62,6 +63,9 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 		return "identifiers.refresh", raw, nil
 	}
 
+	if in.PluginID == "AutoSignIn" && in.Version == "2.9.14" {
+		return autoSignInDeferredSpec(run)
+	}
 	if in.PluginID == "LarkMessager" && in.Version == "0.9.1" {
 		return larkDeferredSpec(run)
 	}
@@ -160,7 +164,7 @@ func pluginDeferredSpec(in PluginInstallation, run PluginRun) (string, json.RawM
 func deferredSameRun(r pluginDeferredRecord, in PluginInstallation, run PluginRun) bool {
 	return run.InstanceID == r.Instance && run.Version == r.Version && r.Schema == 1 && r.Plugin == in.PluginID && r.Instance == in.InstanceID && r.Version == in.Version && r.Run == run.ID && r.Action == run.Action && r.Generation == run.Generation && r.Revision == run.ConfigRevision && r.InputSHA == deferredInputSHA(run.Input)
 }
-func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJournalReader, run PluginRun) (pluginDeferredRecord, []byte, error) {
+func (p *PluginStore) readDeferred(ctx context.Context, q PluginProofReader, run PluginRun) (pluginDeferredRecord, []byte, error) {
 	var r pluginDeferredRecord
 	var sealed []byte
 	if err := q.QueryRowContext(ctx, `SELECT sealed FROM plugin_deferred_operations WHERE run_id=?`, run.ID).Scan(&sealed); err != nil {
@@ -172,7 +176,7 @@ func (p *PluginStore) readDeferred(ctx context.Context, q pluginRemoveLinkJourna
 	}
 	d := json.NewDecoder(bytes.NewReader(raw))
 	d.DisallowUnknownFields()
-	if d.Decode(&r) != nil || d.Decode(new(any)) != io.EOF || r.Run != run.ID || r.Instance != run.InstanceID || r.Schema != 1 || !json.Valid(r.Ack) || !json.Valid(r.Raw) {
+	if d.Decode(&r) != nil || d.Decode(new(any)) != io.EOF || r.Run != run.ID || r.Instance != run.InstanceID || r.Schema != 1 || !json.Valid(r.Ack) || !json.Valid(r.Raw) || (r.ConfigSHA != "" && !pluginStorageDigest.MatchString(r.ConfigSHA)) {
 		return r, nil, bad("PLUGIN_DEFERRED_INVALID", "插件操作收据损坏")
 	}
 	switch r.Phase {
@@ -205,6 +209,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 		return r.ErrorCode == transferSourceFailed && transferResultErrorCode(r.Result) == r.ErrorCode
 	}
 
+	if r.Plugin == "AutoSignIn" && r.Version == "2.9.14" {
+		return r.ErrorCode == autoSignInSourceFailed && json.Valid(r.Result)
+	}
 	if r.Plugin == "LarkMessager" && r.Version == "0.9.1" {
 		return r.ErrorCode == "LARK_SOURCE_FAILED" && json.Valid(r.Result)
 	}
@@ -224,6 +231,9 @@ func validPluginDeferredOutcome(r pluginDeferredRecord) bool {
 		(r.ErrorCode == "CLEAN_SEED_SOURCE_FAILED" || r.ErrorCode == "CLEAN_SEED_HOST_DENIED") && json.Valid(r.Result)
 }
 func (p *PluginStore) writeDeferred(ctx context.Context, tx *sql.Tx, r pluginDeferredRecord, previous []byte) error {
+	if err := p.checkPluginFormWrite(ctx, r.Instance, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if !validPluginDeferredOutcome(r) {
 		return bad("PLUGIN_DEFERRED_INVALID", "插件操作终态收据无效")
 	}
@@ -252,6 +262,10 @@ func (p *PluginStore) writeDeferred(ctx context.Context, tx *sql.Tx, r pluginDef
 	return nil
 }
 func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, run PluginRun) (*pluginDeferredCall, error) {
+	// A scoped Form must fail before dereferencing the app/call or preparing effects.
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	method, raw, err := pluginDeferredSpec(in, run)
 	if err != nil || method == "" {
 		return nil, err
@@ -277,6 +291,17 @@ func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, 
 	if errors.Is(err, sql.ErrNoRows) {
 		ack, _ := json.Marshal(map[string]string{"deferred": id("pd_")})
 		r = pluginDeferredRecord{Schema: 1, Plugin: in.PluginID, Instance: in.InstanceID, Version: in.Version, Run: run.ID, Action: run.Action, Method: method, Generation: run.Generation, Revision: run.ConfigRevision, InputSHA: deferredInputSHA(run.Input), Raw: raw, Ack: ack, Phase: "prepared"}
+		var configSealed []byte
+		anchorErr := tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main' AND revision=?`, run.InstanceID, run.ConfigRevision).Scan(&configSealed)
+		if anchorErr == nil {
+			configRaw, decodeErr := a.pluginStore.unseal("config", run.InstanceID, "main", configSealed)
+			if decodeErr != nil {
+				return nil, decodeErr
+			}
+			r.ConfigSHA = deferredInputSHA(configRaw)
+		} else if !errors.Is(anchorErr, sql.ErrNoRows) {
+			return nil, anchorErr
+		}
 		err = a.pluginStore.writeDeferred(ctx, tx, r, nil)
 	} else if err == nil && (!deferredSameRun(r, in, run) || r.Method != method || !bytes.Equal(r.Raw, raw) || r.Phase != "prepared") {
 		err = bad("PLUGIN_DEFERRED_UNCERTAIN", "插件操作已经开始，不能重复执行")
@@ -290,6 +315,9 @@ func (a *App) preparePluginDeferred(ctx context.Context, in PluginInstallation, 
 	return &pluginDeferredCall{a: a, installation: in, run: run, record: r}, nil
 }
 func (d *pluginDeferredCall) handshake(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Compare semantic JSON after strict decoding: SDK whitespace is irrelevant,
@@ -347,6 +375,10 @@ func (d *pluginDeferredCall) changePhase(ctx context.Context, from, to string, r
 	return d.changeOutcome(ctx, from, to, result, "")
 }
 func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string, result json.RawMessage, code string) error {
+	// A scoped Form must fail before dereferencing the app/call or preparing effects.
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := d.a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -356,7 +388,7 @@ func (d *pluginDeferredCall) changeOutcome(ctx context.Context, from, to string,
 	if err != nil {
 		return err
 	}
-	if !deferredSameRun(r, d.installation, d.run) || r.Method != d.record.Method || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) || r.Phase != from {
+	if !deferredSameRun(r, d.installation, d.run) || r.Method != d.record.Method || r.ConfigSHA != d.record.ConfigSHA || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) || r.Phase != from {
 		return bad("PLUGIN_DEFERRED_CONFLICT", "插件操作执行身份或阶段已变化")
 	}
 	if from == "prepared" {
@@ -425,21 +457,21 @@ func (d *pluginDeferredCall) ready(result plugins.RunResult) error {
 // lifecycle/file locks and cannot be constructed from worker JSON.
 func (a *App) requireDeferredExecution(ctx context.Context, run *PluginRun, method string) error {
 	d, ok := ctx.Value(pluginDeferredExecutionKey{}).(*pluginDeferredCall)
-	if !ok || d == nil || d.a != a || run == nil || !deferredSameRun(d.record, d.installation, *run) || method != d.record.Method || ctx.Err() != nil {
+	if !ok || d == nil || d.a != a || run == nil || !deferredSameRun(d.record, d.installation, d.run) || method != d.record.Method || ctx.Err() != nil {
 		return bad("PLUGIN_DEFERRED_REQUIRED", "操作没有绑定可信宿主执行")
-	}
-	r, _, err := a.pluginStore.readDeferred(ctx, a.Store.DB, *run)
-	if err != nil {
-		return err
-	}
-	if !deferredSameRun(r, d.installation, *run) || r.Phase != "started" || r.Method != method || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) {
-		return bad("PLUGIN_DEFERRED_REQUIRED", "操作没有处于已授权阶段")
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+	r, _, err := a.pluginStore.readDeferred(ctx, tx, d.run)
+	if err != nil {
+		return err
+	}
+	if !deferredSameRun(r, d.installation, d.run) || r.Phase != "started" || r.Method != method || r.ConfigSHA != d.record.ConfigSHA || !bytes.Equal(r.Ack, d.record.Ack) || !bytes.Equal(r.Raw, d.record.Raw) {
+		return bad("PLUGIN_DEFERRED_REQUIRED", "操作没有处于已授权阶段")
+	}
 	return a.pluginStore.validateDeferredRunTx(ctx, tx, r, *run)
 }
 
@@ -448,15 +480,27 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 	if err != nil {
 		return err
 	}
-	if actual.State != "running" || actual.ID != r.Run || actual.InstanceID != r.Instance || actual.Version != r.Version || actual.Generation != r.Generation || actual.ConfigRevision != r.Revision || actual.Action != r.Action || deferredInputSHA(actual.Input) != r.InputSHA || !bytes.Equal(actual.Input, run.Input) {
+	if actual.State != "running" || actual.ID != r.Run || actual.InstanceID != r.Instance || actual.Version != r.Version || actual.Generation != r.Generation || actual.Action != r.Action || deferredInputSHA(actual.Input) != r.InputSHA || actual.ID != run.ID || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || !bytes.Equal(actual.Input, run.Input) {
 		return bad("PLUGIN_SNAPSHOT_STALE", "插件执行已结束或快照已变化")
 	}
+	if err = p.validateDeferredRunRevisionTx(ctx, tx, r, actual); err != nil {
+		return err
+	}
 	var current int
-	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=? AND i.generation=? AND i.installed=1 AND i.desired_enabled=1 AND v.revision=?`, r.Instance, r.Plugin, r.Version, r.Generation, r.Revision).Scan(&current)
+	err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.plugin_id=? AND i.version=? AND i.generation=? AND i.installed=1 AND i.desired_enabled=1 AND v.revision=?`, r.Instance, r.Plugin, r.Version, r.Generation, actual.ConfigRevision).Scan(&current)
 	if err != nil {
 		return err
 	}
 	if current != 1 {
+		if actual.ConfigRevision != r.Revision {
+			return bad("PLUGIN_SNAPSHOT_STALE", "插件安装或配置已变化")
+		}
+		if r.Plugin == "AutoSignIn" && r.Version == "2.9.14" {
+			handled, proofErr := p.autoSignInScheduleAdmissionTx(ctx, tx, r.Instance, r.Generation, r.Revision)
+			if handled && proofErr == nil {
+				return nil
+			}
+		}
 		if r.Plugin == "BrushFlowLanduo" && r.Version == "5.2.15" && r.Phase == "started" {
 			if err = p.brushFlowAcceptedRevisionTx(ctx, tx, r, run); err == nil {
 				return nil
@@ -468,6 +512,9 @@ func (p *PluginStore) validateDeferredRunTx(ctx context.Context, tx *sql.Tx, r p
 }
 
 func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.RawMessage, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	if d.installation.PluginID == "LarkMessager" {
 		var release func()
 		var err error
@@ -616,6 +663,19 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 			}
 		}
 	}
+	if d.record.Plugin == "AutoSignIn" && d.record.Version == "2.9.14" {
+		known, knownCode, found, proofErr := d.a.pluginStore.autoSignInDeferredOutcome(finish, d.run, d.record.Method)
+		if proofErr != nil || !found {
+			phase, result = "uncertain", nil
+			err = bad("PLUGIN_DEFERRED_UNCERTAIN", "签到结果尚未持久确认，未重新执行")
+		} else {
+			phase, result, err = "confirmed", known, nil
+			if knownCode != "" {
+				phase, code = "terminal_failed", knownCode
+				err = bad(code, "签到源流程失败，已保留已完成步骤")
+			}
+		}
+	}
 	if d.record.Plugin == "CleanInvalidSeed" && d.record.Version == "2.1" {
 		known, knownCode, found, proofErr := d.a.pluginStore.cleanInvalidSeedDeferredOutcome(finish, d.run, d.record.Method)
 		if proofErr != nil || !found {
@@ -682,6 +742,9 @@ func (d *pluginDeferredCall) execute(ctx context.Context, run *PluginRun) (json.
 // old run even after reset/reinstallation; prepared interrupted workers can be
 // retried because the actual owner entry was never entered.
 func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	rows, err := p.store.DB.QueryContext(ctx, `SELECT r.id,r.instance_id FROM plugin_runs r JOIN plugin_deferred_operations d ON d.run_id=r.id WHERE r.state IN ('pending','running','reconcile_pending','failed')`)
 	if err != nil {
 		return err
@@ -711,10 +774,14 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		// An uninstall receipt may have advanced its own revision. That recovery
-		// already completed above; an unfinished deferred record stays conservative.
-		if r.Run != run.ID || r.Instance != run.InstanceID || r.Version != run.Version || r.Generation != run.Generation || r.Action != run.Action || r.InputSHA != deferredInputSHA(run.Input) {
-			return bad("PLUGIN_DEFERRED_INVALID", "插件操作恢复身份不匹配")
+		if err = p.validateDeferredHistory(ctx, r, run); err != nil {
+			if r.Plugin == "PluginUnInstall" && r.Version == "2.2" && r.Method == uninstall.ApplyCapability && (r.Phase == "started" || r.Phase == "uncertain") && pluginErrorCodeInternal(err) == "PLUGIN_UNINSTALL_EVIDENCE_INVALID" {
+				if _, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='reconcile_pending',error_code='PLUGIN_UNINSTALL_EVIDENCE_INVALID',updated_at=? WHERE id=?`, now(), run.ID); err != nil {
+					return err
+				}
+				continue
+			}
+			return err
 		}
 
 		if r.Plugin == "RemoteIdentifiers" && r.Version == "2.4.1" && (r.Phase == "started" || r.Phase == "uncertain") {
@@ -844,12 +911,14 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 		if r.Plugin == "CleanInvalidSeed" && r.Revision != run.ConfigRevision {
 			return bad("PLUGIN_DEFERRED_INVALID", "清理操作原始配置身份已变化")
 		}
-		if (r.Plugin == "PluginUnInstall" || r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
+		if (r.Plugin == "AutoSignIn" || r.Plugin == "PluginUnInstall" || r.Plugin == "ScrapeFileClean" || r.Plugin == "RemoveLink" || r.Plugin == "CleanInvalidSeed" || r.Plugin == "AutoBackup" || r.Plugin == "CloudflareSpeedTest" || r.Plugin == "SeedRescue" || r.Plugin == "BrushFlowLanduo") && (r.Phase == "started" || r.Phase == "uncertain") {
 			var result json.RawMessage
 			var code string
 			var found bool
 			var proofErr error
-			if r.Plugin == "PluginUnInstall" {
+			if r.Plugin == "AutoSignIn" {
+				result, code, found, proofErr = p.autoSignInDeferredOutcome(ctx, run, r.Method)
+			} else if r.Plugin == "PluginUnInstall" {
 				result, code, found, proofErr = p.uninstallSourceOutcome(ctx, run)
 			} else if r.Plugin == "BrushFlowLanduo" {
 				result, code, found, proofErr = p.brushFlowOutcome(ctx, run, r.Method)
@@ -959,6 +1028,10 @@ func (p *PluginStore) recoverDeferredRuns(ctx context.Context) error {
 // Only a failed worker whose trusted owner entry was never started is eligible.
 // The existing run/input and transition are retained; reload is not repurposed.
 func (a *App) retryPluginDeferred(ctx context.Context, instance, runID string) (PluginRun, error) {
+	// A scoped Form must fail before dereferencing the app/call or preparing effects.
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	a.pluginLifecycleMu.Lock()
 	defer a.pluginLifecycleMu.Unlock()
 	a.pluginMu.Lock()

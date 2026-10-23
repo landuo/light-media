@@ -24,6 +24,7 @@ type BoundSite struct {
 	Revision string
 }
 type Dependencies struct {
+	Source    SourcePort
 	Inventory func(context.Context) (source.Inventory, error)
 	Lookup    func(context.Context, string) (source.Object, error)
 	// Factory returns only trusted host-bound capabilities. No SDK/worker may
@@ -86,7 +87,7 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 	if err != nil {
 		return nil, err
 	}
-	if head.RuntimeEpoch != c.Binding.Epoch && command.Action != "cold_init" && !head.Exists {
+	if head.RuntimeEpoch != c.Binding.Epoch && command.Action != "cold_init" && !(command.Action == "init" && head.Fresh) && !head.Exists {
 		return nil, ErrStale
 	}
 	var inventory source.Inventory
@@ -109,7 +110,20 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 	if err != nil {
 		return nil, err
 	}
+	if run.Phase == "failed_source" {
+		raw, failure := ReplaySourceFailure(ctx, c.Journal, c.Binding, run, c.Dependencies.Source)
+		var out source.Object
+		if len(raw) > 0 {
+			if decodeErr := decode(raw, &out); decodeErr != nil {
+				return nil, decodeErr
+			}
+		}
+		return out, failure
+	}
 	if run.Phase == "completed" {
+		if err := verifyCompletedSourceResults(ctx, c.Binding, run, c.Dependencies.Source); err != nil {
+			return nil, err
+		}
 		var out source.Object
 		err = decode(run.Result, &out)
 		return out, err
@@ -134,7 +148,7 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 		}
 		history[key] = value
 	}
-	execution := &Execution{Store: c.Journal, Binding: c.Binding, RunID: runID, DigestKey: c.DigestKey}
+	execution := &Execution{Store: c.Journal, Binding: c.Binding, RunID: runID, Epoch: run.Epoch, DigestKey: c.DigestKey}
 	main := execution.Lane("main", "")
 	clock := execution.Lane("main-clock", "")
 	engine, err := source.NewAtZone(inventory, clock.Clock(ctx, now), zone)
@@ -236,9 +250,9 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 		}
 		return source.Result{SiteName: result.SiteName, Message: result.Message, Success: result.Success, LoggedIn: result.LoggedIn}, err
 	}, Emit: func(ctx context.Context, kind string, payload source.Object) error {
-		return main.Effect(ctx, "emit", kind, source.Object{"event": kind, "data": payload}, Mutation{Kind: "outbox"})
+		return main.Source(ctx, "source.emit", source.Object{"event": kind, "data": payload}, c.Dependencies.Source)
 	}, Notify: func(ctx context.Context, payload source.Object) error {
-		return main.Effect(ctx, "notify", "", payload, Mutation{Kind: "outbox"})
+		return main.Source(ctx, "source.notify", payload, c.Dependencies.Source)
 	}}
 	keys := func() []string {
 		keys := []string{}
@@ -358,7 +372,18 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 	if apiResult != nil {
 		result = apiResult
 	}
-	finishErr := c.Journal.Finish(finishCtx, c.Binding, runID, marshal(engine.Runtime()), marshal(result), phase)
+	var finishErr error
+	execution.mu.Lock()
+	failure, failureIdentity := execution.sourceFailure, execution.sourceFailureIdentity
+	execution.mu.Unlock()
+	if failure != nil && err == failure {
+		finishErr = c.Journal.FinishSourceFailure(finishCtx, c.Binding, runID, marshal(engine.Runtime()), marshal(result), failureIdentity)
+		if finishErr != nil {
+			return result, finishErr
+		}
+	} else {
+		finishErr = c.Journal.Finish(finishCtx, c.Binding, runID, marshal(engine.Runtime()), marshal(result), phase)
+	}
 	if err == nil {
 		err = finishErr
 	}

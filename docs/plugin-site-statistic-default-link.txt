@@ -1,0 +1,27 @@
+站点数据统计：默认插件链接与接受时冻结（开发阶段，未部署）
+
+2026-10-21。在 bb2834c7c1f58ed284521ac4cb59295dbe13664d 后独立修复 SiteStatistic 通知缺少插件基类默认链接的问题。本轮只接 SiteStatistic；新的内部 helper 可供后续插件复用，不代表 RemoveLink 或其他插件已接通。正式迁移仍7/23。
+
+配置与冻结
+- 复用现有 Settings.AppDomain / app_domain，不新增插件专属域名、不从请求Host猜部署地址、不读取或修改真实生产配置。AppDomain可通过现有设置API配置；本轮未新增前端编辑入口。
+- 显式非空链接保留；默认域名为空得到nil，否则按插件类名SiteStatistic构造 #/plugins?tab=installed&id=SiteStatistic。分身不把instance ID当插件类名。
+- 新接受事实采用私有box Version2，AppDomain使用非nil指针表达已冻结（可指向空串）。接受时的域名、完整信封、历史链接与摘要在同一事务固定，之后编辑AppDomain、新请求、冷启动或重放都不能改变原事实。新事件才读取新配置。
+- 原Version1消息省略该新字段，继续按原无链接信封验证；不补发、不把旧记录改写成v2。版本/冻结字段组合无效、信封或历史链接被篡改均拒绝。
+- 无法构造的地址返回固定脱敏错误并回滚接受事务，不把失败伪装为空链接成功，不写新的通知去重成功状态。
+
+来源证据与边界
+固定安装基类片段：testdata/plugins/remove-link-outbox/installed-source.json，SHA256 f72c9142c01970d2ddabe03ddfda1012a14c65c8c4003c15f287ee2ad4277f0f。其中plugins/__init__.py原文件SHA256 e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f，第328–340行证明假值link使用MP_DOMAIN及插件类名fragment。
+
+本地没有完整固定安装版MP_DOMAIN/UrlUtils实现。本轮参照公开v2可见源码：
+https://raw.githubusercontent.com/jxxghp/MoviePilot/v2/app/core/config.py
+https://github.com/jxxghp/MoviePilot/blob/v2/app/utils/url.py
+这些是分支引用，未声称与固定安装版同字节，也没有伪造commit或原文件SHA。基于可见规则手工转录的Python合成演算只作开发对照，不是已安装源oracle，不引入Python生产依赖。
+
+已实现/测试的规则包括：补尾斜杠、无http(s)时补http://、fragment替换、主query忽略空值、重复键按首次出现顺序分组及quote_plus重编码。旧fragment和query末尾补斜杠的反直觉行为按合成案例固定。helper仅用于固定插件fragment，不是完整Python URL库；部分异常域名的Go解析边界与Python不同，不能宣称所有异常URL或固定安装版全面1:1。
+
+验证
+新测试覆盖合成域名/子路径/主query/旧fragment、显式链接、双实例固定类名、真实App接受与历史、编辑配置后接受重放和冷恢复、新事件新域名、v1旧哈希兼容、空域名、重新密封的冻结域名/信封/历史等篡改及构造失败事务回滚。发送端仅合成stub，不访问真实外发渠道。最终普通、race、共享Router回归、纯Go构建与日志SHA见配套JSON；前一未含历史Link修正的调查日志不作最终证据。
+
+最终验证结果：普通35个顶层/165含子项通过；共享Router modernconly 32/80通过；完整串行race并集46/185通过（1169.952秒），0失败、0跳过、无竞争告警；go vet ./internal/app与22个cmd纯Go构建通过。初次两组并行race出现三处安装/实时回调截止失败，广组又触及默认10分钟总预算；保留所有失败日志，三项在当前与bb2834基线串行race均通过。整组串行仅将包总预算设30分钟，不修改测试自身截止时间。不能据此确定原失败根因，亦不能把专项通过改称全项目绿色。
+
+未完成：原真实APP_DOMAIN值正式迁移、完整安装版URL构造来源固定化、设置UI入口、SystemError/SSE及插件整体交接/部署。此前全项目基线失败、条件跳过与40个二进制缺件仍如实保留，不以本专项通过覆盖。

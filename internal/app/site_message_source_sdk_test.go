@@ -135,6 +135,34 @@ func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
 			if strings.Join(paths, ",") != strings.Join(want, ",") {
 				t.Fatal("imported flag/user override/revocation changed IO", paths, want)
 			}
+			if mode == "revoke-before-mark" {
+				// A synchronous guard denial is terminal, unlike interrupted
+				// admission. Reopening cannot recollect, mark read, or post.
+				collection, found, err := cold.pluginStore.siteMessageCollectionForRun(ctx, cold.Store.DB, run)
+				if err != nil || !found || collection.Stage != "aborted" || collection.Failure != "SITE_CHANGED" {
+					t.Fatal("missing terminal local denial", collection.Stage, err)
+				}
+				before := len(paths)
+				if err = cold.Close(); err != nil {
+					t.Fatal(err)
+				}
+				restarted, err := New(Options{DataDir: dir})
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer restarted.Close()
+				if err = restarted.resumePluginNoticeRoutes(ctx, 200); err != nil {
+					t.Fatal(err)
+				}
+				terminal, err := restarted.pluginStore.Run(ctx, run.ID)
+				if err != nil || terminal.State != "failed" || terminal.ErrorCode != "SITE_CHANGED" || len(paths) != before {
+					t.Fatal("cold restart retried terminal denied read", terminal.State, paths, err)
+				}
+				var visible int
+				if err = restarted.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history','notification'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_site_statistic_operations)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&visible); err != nil || visible != 0 {
+					t.Fatal("denied admission published effects", visible, err)
+				}
+			}
 			if mode == "corrupt-proof" {
 				projection := cold.publicSettings()
 				if projection["effective_read_site_messages"] != nil || projection["read_site_messages_error"] == nil || projection["read_site_messages"] != nil {

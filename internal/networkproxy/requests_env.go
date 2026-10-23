@@ -24,9 +24,17 @@ func RequestsEnvironmentProxy(environ []string, target *url.URL) (*url.URL, erro
 	if host == "" || requestsBypass(environment, proxies, host, target.Port()) {
 		return nil, nil
 	}
-	scheme := strings.ToLower(target.Scheme)
+	return requestsSelectProxy(proxies, target)
+}
+
+func requestsSelectProxy(proxies map[string]string, target *url.URL) (*url.URL, error) {
+	scheme, host := strings.ToLower(target.Scheme), strings.ToLower(target.Hostname())
+	keys := []string{scheme + "://" + host, scheme, "all://" + host, "all"}
+	if host == "" {
+		keys = []string{scheme, "all"}
+	}
 	raw := ""
-	for _, key := range []string{scheme + "://" + host, scheme, "all://" + host, "all"} {
+	for _, key := range keys {
 		if v, ok := proxies[key]; ok {
 			raw = v
 			break
@@ -149,9 +157,16 @@ func requestsGetproxies(environment []environmentItem) map[string]string {
 	return proxies
 }
 func requestsBypass(environment []environmentItem, proxies map[string]string, host, port string) bool {
+	return requestsBypassOverride(environment, proxies, host, port, nil)
+}
+
+func requestsBypassOverride(environment []environmentItem, proxies map[string]string, host, port string, override *string) bool {
 	noProxy, _ := environmentValue(environment, "no_proxy")
 	if noProxy == "" {
 		noProxy, _ = environmentValue(environment, "NO_PROXY")
+	}
+	if override != nil {
+		noProxy = *override
 	}
 	if noProxy != "" {
 		if ip, ipv4 := requestsIPv4(host); ipv4 {
@@ -188,6 +203,9 @@ func requestsBypass(environment []environmentItem, proxies map[string]string, ho
 	// environment fallback is case-insensitive and also understands '*'. The
 	// port is intentionally absent here; requests passed only parsed.hostname.
 	noProxy = proxies["no"]
+	if override != nil {
+		noProxy = *override
+	}
 	if noProxy == "*" {
 		return true
 	}

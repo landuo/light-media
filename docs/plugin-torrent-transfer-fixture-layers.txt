@@ -1,0 +1,35 @@
+TorrentTransfer：真实 SDK 与普通 server 分层测试可靠性改进
+阶段验证记录，2026-10-22。
+
+范围与结论
+本轮基于已发布 0b4d4c48606eaf9771f65ddccb7ad89481babd6c，仅调整 TorrentTransfer 测试夹具并新增默认执行的普通 cmd/server worker 主链路验收，不修改生产实现、产品表单的外层或 Runner 10 秒预算，不增加重试或默认跳过。三份既有测试各仅替换一行进程 helper，原失败场景及业务断言保持。此为测试层可靠性改进，不是两次历史间歇失败根因已确定或已修复，不增加整插件完成数。
+
+分层覆盖
+既有 App 业务测试改用仅导入真实 Transfer SDK 的独立 worker，仍执行 plugins.Serve、torrenttransfer.Manifest/Handle、真实协议、Runner 和 App host。父测试开启 race 时该 worker 也开启 race，并在构建后核对 BuildInfo；没有把无 race 子进程称为双方 race。
+新增 TestTransferActualServerInstallConfigServiceDualIdentity 没有 opt-in 或环境缺失 skip，实际构建并执行普通 ./cmd/server --plugin-worker。qBittorrent 和 Transmission 两种合成协议各覆盖 TorrentTransfer 与 TorrentTransfermusic，各身份使用独立源/目标 daemon，经过自建 loopback HTTP 的安装、表单、保存配置、服务请求及运行记录查询，再由真实 App 持久队列执行。核验完整表单与动态下载器选项、默认值和独立配置、成功 checkpoint 身份、独立历史命名空间、另一身份配置/状态/daemon 调用不变、真实适配器 add/start、qB 显式 recheck、目标路径以及源文件/种子材料保留。Transmission 原逻辑不发显式 verify，未误设此期待。
+另一独立表单调用使用同一普通 server 二进制和真实 App host，核验身份、能力、host 往返和完整 stop/Wait 成功序列；不将这次观测冒充 HTTP 请求本身的阶段记录。这里覆盖实际生产 worker 入口，不覆盖 server 长期 HTTP/bootstrap/scheduler 主循环；下载器是自建协议模拟，不是用户下载器或真实 swarm。
+
+来源与进程边界
+冻结输入 manifest SHA256：e89c50adbf95a5367009b04a0445d9e282b6380702e71dca75d8980c28b9f256。外层 -overlay 与嵌套 -transfer-worker-source-overlay 使用相同绝对 JSON 路径，每步前后核验冻结源清单与 overlay 摘要；不混入未提交 OCR、其他插件或独立 codec 性能候选。
+helper 要求 target/replacement 为绝对路径，拒绝模块外目标和错误嵌套模块；12 个 source-isolation 子例覆盖合法虚拟文件、正确嵌套模块、错根、相邻前缀、相对路径、空替换和坏 JSON 等。helper 本身不是来源哈希认证，replacement 的可信来源及外层/嵌套一致性依靠冻结清单与执行脚本。
+构建使用明确环境、GOENV=off、GOWORK=off、GOTOOLCHAIN=local、GOPROXY=off、GOSUMDB=off。构建独立 5 分钟期限仅用于测试准备，不延长运行预算。可复用默认或显式缓存，不读取 go env -w 自定义缓存配置；离线缺依赖显式失败。BuildInfo 核验 race、CGO、平台、tags 和 Go 版本，输出二进制 SHA。TestMain 仅移除该进程自身 MkdirTemp 返回路径，不按前缀扫描，不清理外部缓存/源码/证据。既有 os.Exit fixture 的退出路径未改，正常构建及 Runner 均等待直接子进程；强杀/异常退出后残留不被说成已有保证。
+
+本轮已确认结果
+以下为冻结输入的实际验证结果。
+- 初始专项普通：4 个顶层、含子例 21 个通过，无跳过。
+- Transfer 核心/原生宿主普通与 race：各 16 个顶层、含子例 138 个通过。
+- 所选 App 普通与 race：各 28 个顶层、含子例 73 个通过；各有既有 TestReviewedTransferSelectedStdin 1 个明确跳过，不计为通过。
+- 两个离线 CLI 包测试 exit 0；日志共有 1 个测试顶层通过，不能将无测试文件的包计为额外测试。
+- vet，以及 CGO=0、modernconly 的 server/两个 CLI 构建均 exit 0；输入后验 changed=[]。整个串行任务实际终态 exit 0；结束后的进程快照未见测试 worker 残留。
+- 普通 SDK SHA256：27a4d08deea3df5caed05b3ec8fee996bf87f58ca7f816519b5e6f07ba4cf031。
+- race SDK SHA256：5fed35ea843dbedeed924b5a0c2215cd89fee5d3a966a6ff9c20da99b92f175e。
+- 普通 server SHA256：8bca4af06100f89dd800c61cd4240810eb45ed7165248c7ebc20daeb0db3ba36，普通与 race App 轮次相同；race App 轮次中该 server 仍明确为非 race。
+- 三入口单次固定压力对照：同一 CPU、16 个自有 runnable 压力子进程、同一 10 秒预算，真实表单与 host：旧全 App race worker 10167.895ms、exit 1，handshake 等待到期限、0 host；轻量 SDK 双方 race 1820.655ms、exit 0；实际普通 server 3168.212ms、exit 0。后两者完整 Form 相等、1 次 host、stop/Wait 成功，二进制 SHA 与上列最终验收完全一致。三格 DB WaitCount/WaitDuration 均为 0，worker 子进程 CPU 分别 606043/35787/175505us。每格 16/16 压力子进程已回收，无外层急停，构建缓存正常清理。诊断整体 exit 1，保留对照失败，不写成全绿。
+- 这一固定实验显示旧全 App race 子进程携带的无关初始化负担会消耗受压时的业务预算；测试分层去掉该额外耦合，同时另验真实生产入口。它不是历史两次现场根因证明，不保证任意资源枯竭下仍能在期限内完成。没有改变生产入口或关闭生产初始化。
+
+不能抹去的历史失败和未完成项
+历史第一次为安装 POST 失败 10809ms；第二次安装 POST 已成功 1732ms、初始化完成，随后 transferReadyApp 的首次 GET /form 失败 10027ms，尚未进入无效 cron 及纠正执行主体。本轮通过保留这些失败，不证明其具体原因。
+共享 Runner 的真实 16MiB 四向最大载荷 race 曾在原 90 秒预算下失败；精确 bdfab 前像单次对照也在同预算失败（约 91.34 秒，execution_canceled，host_calls=1，结果字节 0）。本轮未重跑这一完整共享协议门禁，未跳过该失败、未增加预算，不能声称整个协议 race 全绿；独立 codec 性能候选不属于本报告。
+40 个原二进制缺件继续保留，不删除、不替换、不宣称全量源码验收。私密来源 stdin 本轮明确跳过；历史真实来源证据独立保留，不借用作本轮重新通过。正式部署、真实账户迁移、种子备份目录只读挂载和新旧定时写操作交接尚未执行；所有本轮运行只用独占合成文件/协议/进程，无用户账户或生产下载器、通知渠道操作。不把这些生产前置工作或历史证据与本次测试层结果混算，不宣称整插件完整或用户已验收。
+
+验证摘要与证据摘要见同目录 plugin-torrent-transfer-fixture-verification.json。历史失败边界参照 plugin-torrent-transfer-form-diagnostics.txt、plugin-torrent-transfer-cancel-result-consistency.txt、plugin-transfer-reviewed-migration.txt。

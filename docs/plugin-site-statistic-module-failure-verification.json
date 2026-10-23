@@ -1,0 +1,129 @@
+{
+  "scope": "synthetic isolated sites module failure provenance only; no host/SSE integration",
+  "sha256": {
+    "internal/sites/userdata.go": "4d80dfd2ab83d3026793f59ace89140bd77ede465b8aa1f4217634a8a8f21ec4",
+    "internal/sites/userdata_mteam.go": "eaaa40bd14e25c2a4d984cc57bdac7f4939693ba18d7934db0f99b8e498220ce",
+    "internal/sites/userdata_nexus.go": "40fae819972b9ba26b1ebcb54c58d190064d3c73d84aa261acdecf0d06241d74",
+    "internal/sites/userdata_failure_test.go": "d73e62410f18dc96a35db8d7e65b5035403e0448e050e96f4c88d7f7628aef7c"
+  },
+  "tests": {
+    "sites.json": {
+      "test_and_subtest_passes": 315,
+      "failures": 0,
+      "complete": true
+    },
+    "sites-race.json": {
+      "test_and_subtest_passes": 315,
+      "failures": 0,
+      "complete": true
+    }
+  },
+  "date": "2026-10-21",
+  "base_commit": "dc62de226f1fbf312d4f3917d2663d2d1260ebcf",
+  "branch": "dev/plugins-continuation",
+  "migration_count": "7/23 unchanged",
+  "deployed": false,
+  "real_accounts_used": false,
+  "toolchain": "go1.26.10 linux/amd64",
+  "oracle": {
+    "path": "testdata/plugins/site-account-outcomes-original-oracle.json",
+    "sha256": "a7af2afd71f09adcbf03c45a65ef894e1955ae9c9a6140cf4355b6f9a36e7798",
+    "total_cases": 12,
+    "real_dispatch_cases_checked": 10,
+    "not_implemented_native_dispatch": [
+      "module-throws",
+      "unsupported"
+    ],
+    "module_errors_semantics": "sum of one batch and one API invocation; four real exception cases classify once per invocation"
+  },
+  "logs": {
+    "sites.json": {
+      "path": "work/site-module-failure-validation/sites.json",
+      "sha256": "3e78afb366e18c1341084456e4b5e20cf674d72e05d2f982d76de0a54de1ca07",
+      "bytes": 266216,
+      "command": "go test -json ./internal/sites -count=1",
+      "exit_code": 0,
+      "top_level_passed": 55,
+      "passed_including_subtests": 315,
+      "failures": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:26:19.990142667+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/sites",
+          "Elapsed": 1.046
+        }
+      ]
+    },
+    "sites-race.json": {
+      "path": "work/site-module-failure-validation/sites-race.json",
+      "sha256": "1c26bf509267238fdde66bcd05e5e486a02f81fc499e14dd6944da20aa1de1b3",
+      "bytes": 266385,
+      "command": "go test -race -json ./internal/sites -count=1",
+      "exit_code": 0,
+      "top_level_passed": 55,
+      "passed_including_subtests": 315,
+      "failures": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:26:33.767142058+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/sites",
+          "Elapsed": 9.885
+        }
+      ]
+    },
+    "app-affected-final.jsonl": {
+      "path": "work/site-module-failure-validation/app-affected-final.jsonl",
+      "sha256": "277c2ecf69e6e80941c1b7abaf273b521ab7678e38dc25024b0906c8099dd2df",
+      "bytes": 1009418,
+      "command": "go test -timeout 15m -json ./internal/app -run 'TestSiteStatistic|TestPluginSiteStatistic|TestPluginHTTP|TestSiteStatistics|TestSiteDataRefresh|TestSiteRefreshEvent|TestSourceAccount|TestManagedRousi|TestPluginMergeSiteSwitchActually' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 48,
+      "passed_including_subtests": 216,
+      "failures": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:33:55.783592984+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 172.494
+        }
+      ]
+    },
+    "vet.log": {
+      "path": "work/site-module-failure-validation/vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "command": "go vet ./internal/sites ./internal/app",
+      "exit_code": 0,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "failures": [],
+      "skipped_tests": [],
+      "terminal_packages": []
+    },
+    "build.log": {
+      "path": "work/site-module-failure-validation/build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "command": "CGO_ENABLED=0 go build -tags modernconly -o work/site-module-failure-validation/bin/ ./cmd/...",
+      "exit_code": 0,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "failures": [],
+      "skipped_tests": [],
+      "terminal_packages": []
+    }
+  },
+  "known_unfinished": [
+    "No host SystemError publication or realtime MessageHelper SSE integration.",
+    "Exact installed IndexerModule 42309-byte source SHA b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf remains missing; bounded official v2 history request returned HTTP 403 and stopped.",
+    "SiteStatistic default AppDomain plugin link still absent in the prior notification milestone; separate correction is planned with acceptance-time freezing and v1 compatibility.",
+    "Full-suite baseline failures/skips and 40 missing binary inputs remain as recorded in plugin-site-statistic-notice-routing-verification.json. This milestone does not claim full project acceptance or complete deployable artifacts."
+  ],
+  "build_command_count": 22
+}

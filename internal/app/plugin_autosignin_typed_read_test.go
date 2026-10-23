@@ -311,7 +311,7 @@ func TestPluginAutoSignInTypedReplacementOwnerRetainsUnknownAndUncertainOutbox(t
 
 func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisit(t *testing.T) {
 	ctx := context.Background()
-	f := signinSQLSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
+	f := signinSQLClaimedSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requests.Add(1)
@@ -330,6 +330,7 @@ func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisi
 		t.Fatal(err)
 	}
 	c := signinjournal.Controller{Journal: j, Binding: f.o.binding, DigestKey: [32]byte{1, 2, 3}, Dependencies: signinjournal.Dependencies{
+		Source: newAutoSignInSourcePort(f.b),
 		Inventory: func(context.Context) (autosignin.Inventory, error) {
 			site := autosignin.Object{"id": 1, "name": "Owned typed loopback"}
 			return autosignin.Inventory{Configured: []autosignin.Object{site}, Indexers: []autosignin.Object{site}}, nil
@@ -342,7 +343,7 @@ func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisi
 	if _, err = c.Execute(ctx, f.run.ID, signinjournal.Command{Action: "cold_init"}); err != nil {
 		t.Fatal(err)
 	}
-	if err = f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err = finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	run, err := f.a.pluginStore.EnqueueRun(ctx, "AutoSignIn", "service", json.RawMessage(`{}`))
@@ -365,15 +366,36 @@ func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisi
 		t.Fatal(err)
 	}
 	c.Journal = j
-	if _, err = f.a.Store.DB.Exec(`CREATE TRIGGER signin_typed_notify_failure BEFORE INSERT ON plugin_signin_rows WHEN NEW.collection='outbox.head' BEGIN SELECT RAISE(ABORT,'owned typed source boundary'); END`); err != nil {
+	c.Dependencies.Source = newAutoSignInSourcePort(backend)
+	faultJournal := &signinSourceIntentJournal{StateJournal: j, t: t}
+	c.Journal = faultJournal
+	// Fail durable intent storage before source Invoke, after both history writes.
+	sourceToken := f.o.token("entry.head", signinKey(run.ID, "main", "2"))
+	if _, err = f.a.Store.DB.Exec(`CREATE TRIGGER signin_typed_notify_failure BEFORE INSERT ON plugin_signin_rows WHEN NEW.collection='entry.head' AND NEW.token='` + sourceToken + `' BEGIN SELECT RAISE(ABORT,'owned typed source intent boundary'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = c.Execute(ctx, run.ID, signinjournal.Command{Action: "service"}); err == nil || requests.Load() != 1 {
 		t.Fatal("source interruption/visit prefix missing", err, requests.Load())
 	}
+	if !faultJournal.attempted {
+		t.Fatal("SQL failure did not target source BeginSource")
+	}
+	signinAssertBeforeSourceIntent(t, f, j, run.ID, server.Listener.Addr().String())
 	if _, err = f.a.Store.DB.Exec(`DROP TRIGGER signin_typed_notify_failure`); err != nil {
 		t.Fatal(err)
 	}
+	// Rebuild the typed journal and source port to exercise a cold replay.
+	backend, err = f.o.backend(&run)
+	if err != nil {
+		t.Fatal(err)
+	}
+	j, err = newPluginAutoSignInTypedJournal(backend)
+	if err != nil {
+		t.Fatal(err)
+	}
+	deps := c.Dependencies
+	deps.Source = newAutoSignInSourcePort(backend)
+	c = signinjournal.Controller{Journal: j, Binding: f.o.binding, DigestKey: [32]byte{1, 2, 3}, Dependencies: deps}
 	c.Dependencies.Inventory = func(context.Context) (autosignin.Inventory, error) {
 		return autosignin.Inventory{}, errors.New("current inventory deliberately unavailable")
 	}
@@ -382,11 +404,18 @@ func TestPluginAutoSignInTypedControllerUsesActualSQLAndResumesWithoutSecondVisi
 		t.Fatal("native replay refetched inventory/network or lost history", err, requests.Load())
 	}
 	state, err := j.State(ctx, f.o.binding)
-	if err != nil || state.Stats[server.Listener.Addr().String()].Success != 1 || len(state.Outbox) != 1 || state.ActiveRun != "" {
+	if err != nil || state.Stats[server.Listener.Addr().String()].Success != 1 || len(state.Outbox) != 0 || state.ActiveRun != "" {
 		t.Fatal("source effects were not completed", err)
 	}
 	config, err := f.a.pluginStore.Config(ctx, "AutoSignIn")
 	if err != nil || config.Revision != 3 || run.ConfigRevision != 2 || f.o.binding.Revision != 1 {
 		t.Fatal("typed execution changed immutable admission/public CAS", config.Revision, err)
+	}
+	signinAssertCompletedSourceProof(t, f, j, run.ID)
+	if _, err = f.a.Store.DB.Exec(`DELETE FROM plugin_signin_source_results`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = c.Execute(ctx, run.ID, signinjournal.Command{Action: "service"}); err == nil || requests.Load() != 1 {
+		t.Fatal("typed replay accepted missing source proof or repeated HTTP", err, requests.Load())
 	}
 }

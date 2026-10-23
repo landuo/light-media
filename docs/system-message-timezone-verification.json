@@ -1,0 +1,57 @@
+{
+  "base_commit": "b4a33f6a0cb1c2387d8c948758da2b38a6f9b8c2",
+  "scope": "Shared system-message absolute timestamp display, not all plugins/full repository",
+  "input_manifest_sha256": "23c32d24710945c555c1523e5b0de912f3af3c0b3e052e4df2926b56a3e73e6f",
+  "unchanged_input_files": 5318,
+  "app": {
+    "ordinary": {
+      "exit": 0,
+      "root_pass": 7,
+      "pass_including_children": 16,
+      "fail": 0,
+      "skip": 0
+    },
+    "race": {
+      "exit": 0,
+      "root_pass": 7,
+      "pass_including_children": 16,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "frontend": {
+    "check_exit": 0,
+    "test_exit": 0,
+    "pass": 202,
+    "skip": 0,
+    "build_exit": 0,
+    "all_phase_source_hashes_unchanged": true
+  },
+  "vet_exit": 0,
+  "server_build_exit": 0,
+  "server_sha256": "702ef66a922672c44ca317105179b8e2c175fae50fb734e548d98914f4936876",
+  "dist_manifest_sha256": "123a1ae2bdbf4065051667c1860ff7e317c536d16c2c1e120ce555c66facc1ab",
+  "browser": {
+    "fixture": "Actual App.Handler/web.Handler, authentication, production FIFO and SSE DTO; directly emitted synthetic messages, not a business producer",
+    "service_TZ": "UTC",
+    "producer_offsets": [
+      "Z",
+      "+08:00"
+    ],
+    "result": "Both messages visibly displayed 几秒前 in assistant cloud Chrome",
+    "emitted_instant": "2026-10-22T14:43:47.769739191Z",
+    "screenshot_sha256": "1462c1270f3cec93fbe73c322ed68b5410b14e3f6e55e0f36a8dd2671ec54979",
+    "binary_sha256": "7085615594dab8a77be12a33bc1c0402d560b71620516b7614b4b739dd799453",
+    "exit": {
+      "exit": 0,
+      "owned_child_reaped": true
+    }
+  },
+  "compatibility": {
+    "date": "unchanged original wall-clock string",
+    "timestamp": "new RFC3339Nano absolute instant with offset",
+    "legacy_frames": "old interpretation retained; timezone not guessed",
+    "minute_dedup": "unchanged",
+    "invalid_new_timestamp": "rejected"
+  }
+}

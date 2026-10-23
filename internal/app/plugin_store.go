@@ -67,6 +67,7 @@ type PluginMigrationReceipt struct {
 }
 
 type PluginImport struct {
+	reviewedRemoveLink     *reviewedRemoveLinkBinding   // Offline disabled-only path references; never an HTTP flag.
 	reviewedStatistic      *reviewedStatisticImport     // Reviewed core account history; never a public migration flag.
 	reviewedTransfer       *reviewedTransferBinding     // Reviewed source identities for each independent transfer instance.
 	reviewedSeed           *reviewedSeedBinding         // Reviewed original SeedRescue namespace; never supplied by HTTP.
@@ -85,6 +86,8 @@ type PluginImport struct {
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
+	runSupervisor    *pluginRunSupervisor
+	runJournal       *pluginRunAttemptJournal
 	store            *Store
 	uninstallConfig  pluginUninstallConfigCache
 	installedSource  pluginSourceInstalledCache
@@ -106,6 +109,9 @@ var pluginStorageDigest = regexp.MustCompile(`^[a-f0-9]{64}$`)
 // transaction. Core schema v1 remains unchanged; an unsupported future plugin
 // schema is rejected instead of being silently treated as compatible.
 func NewPluginStore(ctx context.Context, store *Store) (*PluginStore, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	if store == nil || store.DB == nil || len(store.key) != 32 {
 		return nil, errors.New("invalid plugin store")
 	}
@@ -125,6 +131,9 @@ func NewPluginStore(ctx context.Context, store *Store) (*PluginStore, error) {
 		return nil, errors.New("unsupported plugin storage schema")
 	}
 	_, err = tx.ExecContext(ctx, `
+CREATE TABLE IF NOT EXISTS plugin_run_origins(run_id TEXT PRIMARY KEY,sealed BLOB NOT NULL);
+CREATE TABLE IF NOT EXISTS plugin_event_admissions(run_id TEXT PRIMARY KEY,sealed BLOB NOT NULL,FOREIGN KEY(run_id) REFERENCES plugin_runs(id));
+CREATE TABLE IF NOT EXISTS plugin_run_config_transitions(run_id TEXT NOT NULL,from_revision INTEGER NOT NULL,to_revision INTEGER NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(run_id,from_revision),UNIQUE(run_id,to_revision));
 CREATE TABLE IF NOT EXISTS plugin_site_control_watchers(instance_id TEXT PRIMARY KEY,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,config BLOB NOT NULL,updated_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_site_control_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_site_statistic_operations(run_id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,config_revision INTEGER NOT NULL,result BLOB NOT NULL);
@@ -235,7 +244,7 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 			return nil, err
 		}
 	}
-	if _, err = tx.ExecContext(ctx, pluginOrganizationSchema); err != nil {
+	if _, err = tx.ExecContext(ctx, pluginOrganizationSchema+pluginInstanceSchema); err != nil {
 		return nil, err
 	}
 	if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS plugin_run_startup_blocks(run_id TEXT PRIMARY KEY,FOREIGN KEY(run_id) REFERENCES plugin_runs(id))`); err != nil {
@@ -253,10 +262,18 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err = (&PluginStore{store: store}).initNotificationChannelsTx(ctx, tx); err != nil {
 		return nil, err
 	}
+	if _, err = tx.ExecContext(ctx, pluginRunAttemptJournalSchema); err != nil {
+		return nil, err
+	}
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
-	return &PluginStore{store: store}, nil
+	p := &PluginStore{store: store, runSupervisor: newPluginRunSupervisor()}
+	p.runJournal, err = newPluginRunAttemptJournal(p)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
 }
 
 func pluginJSON(value any, object bool) (json.RawMessage, error) {
@@ -299,6 +316,15 @@ func (p *PluginStore) seal(kind, instanceID, key string, raw []byte) ([]byte, er
 }
 
 func (p *PluginStore) unseal(kind, instanceID, key string, sealed []byte) (json.RawMessage, error) {
+	if eventAdmissionRunMarked(sealed) {
+		if kind != "run" {
+			return nil, bad("PLUGIN_DATA_CORRUPT", "插件数据无法通过完整性校验")
+		}
+		if bytes.HasPrefix(sealed, []byte(pluginEventAdmissionBrushRunPrefix)) {
+			return p.unsealBound(pluginEventAdmissionBrushPurpose, instanceID, key, sealed[len(pluginEventAdmissionBrushRunPrefix):], 0)
+		}
+		return p.unsealBound(pluginEventAdmissionRunPurpose, instanceID, key, sealed[len(pluginEventAdmissionRunPrefix):], -1)
+	}
 	if bytes.HasPrefix(sealed, []byte(brushFlowSnapshotPrefix)) {
 		if kind != "config" && kind != "run" {
 			return nil, bad("PLUGIN_DATA_CORRUPT", "插件数据无法通过完整性校验")
@@ -350,12 +376,32 @@ func validatePluginInstallation(in PluginInstallation) (PluginInstallation, erro
 }
 
 func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstallation) error {
+	return p.installTxWithReviewRestore(ctx, tx, in, nil)
+}
+
+func (p *PluginStore) installTxWithReviewRestore(ctx context.Context, tx *sql.Tx, in PluginInstallation, restore *pluginReviewRestorePermit) error {
+	if err := p.checkPluginFormWrite(ctx, in.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
+	var restoreReview *pluginUpdateReview
+	if restore == nil {
+		if err := p.requirePluginUpdateActivation(ctx, tx, in.InstanceID); err != nil {
+			return err
+		}
+	} else {
+		var err error
+		restoreReview, err = p.consumeReviewRestorePermit(ctx, tx, in, restore)
+		if err != nil {
+			return err
+		}
+	}
 	if _, e := p.larkTransitionTx(ctx, tx, in.InstanceID); e != nil {
 		return e
 	}
 	var previousID string
 	var wasInstalled bool
-	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &wasInstalled)
+	var previousGeneration int64
+	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed,generation FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &wasInstalled, &previousGeneration)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
@@ -410,6 +456,17 @@ func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstal
 		if err != nil {
 			return err
 		}
+	}
+	// Fresh host evidence is bound to the target, never copied from a source
+	// manifest. Clone metadata is inserted later in this same transaction.
+	in.Generation = previousGeneration + 1
+	if restoreReview == nil {
+		in.Manifest, err = pluginLifecycleManifest(in, pluginLifecycleCold)
+	} else {
+		in.Manifest, err = pluginUpdateReviewManifest(in, pluginLifecycleCold, restoreReview.Revision, restoreReview.ConfigSHA)
+	}
+	if err != nil {
+		return err
 	}
 	sealed, err := p.seal("manifest", in.InstanceID, "main", in.Manifest)
 	if err != nil {
@@ -473,6 +530,9 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 }
 
 func (p *PluginStore) Install(ctx context.Context, in PluginInstallation) error {
+	if err := p.checkPluginFormWrite(ctx, in.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	in, err := validatePluginInstallation(in)
 	if err != nil {
 		return err
@@ -526,6 +586,9 @@ func (p *PluginStore) Data(ctx context.Context, instanceID, key string) (PluginS
 // expectedRevision=0 creates a missing value; otherwise a stale writer is
 // rejected. Namespace keys are data keys, never filesystem paths.
 func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, kind, key string, expectedRevision int64, raw json.RawMessage) (PluginStoredValue, error) {
+	if err := p.checkPluginFormValueWrite(ctx, tx, instanceID, kind); err != nil {
+		return PluginStoredValue{}, err
+	}
 	if !pluginStorageID.MatchString(instanceID) || !validPluginKey(key) || expectedRevision < 0 {
 		return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", "插件数据命名空间或修订无效")
 	}
@@ -541,6 +604,9 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 		return PluginStoredValue{}, bad("INVALID_PLUGIN_VALUE", "插件数据不是有效JSON或超过大小上限")
 	}
 	if kind == "config" && key == "main" {
+		if err := p.requirePluginUpdateActivation(ctx, tx, instanceID); err != nil {
+			return PluginStoredValue{}, err
+		}
 		if err := p.pluginNativeConfigWriteTx(ctx, tx, instanceID, expectedRevision, raw); err != nil {
 			return PluginStoredValue{}, err
 		}
@@ -563,6 +629,13 @@ func (p *PluginStore) saveValueTx(ctx context.Context, tx *sql.Tx, instanceID, k
 }
 
 func (p *PluginStore) saveValue(ctx context.Context, instanceID, kind, key string, expectedRevision int64, value any) (PluginStoredValue, error) {
+	operation := pluginFormWriteData
+	if kind == "config" {
+		operation = pluginFormWriteDirectConfig
+	}
+	if err := p.checkPluginFormWrite(ctx, instanceID, operation); err != nil {
+		return PluginStoredValue{}, err
+	}
 	limit := pluginValueLimit
 	if kind == "data" {
 		limit = pluginDataValueLimit
@@ -603,6 +676,9 @@ func (p *PluginStore) Uninstall(ctx context.Context, instanceID string) error {
 	return p.iyuuUninstallWithEffect(ctx, instanceID, nil)
 }
 func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) error {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -642,6 +718,9 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 	}
 	if changed, _ := result.RowsAffected(); changed == 0 {
 		return sql.ErrNoRows
+	}
+	if err = p.recordPluginGenerationLifecycleTx(ctx, tx, instanceID); err != nil {
+		return err
 	}
 	if err = p.updateSourceInstalledMembershipTx(ctx, tx, instanceID, false); err != nil {
 		return err
@@ -713,12 +792,35 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 	return p.iyuuResetWithEffect(ctx, instanceID, nil)
 }
-func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) error {
+func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) (returnErr error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
+	ctx, proof, owned, err := p.prepareResetAdmission(ctx, instanceID)
+	if err != nil {
+		return err
+	}
+	if owned {
+		defer func() { returnErr = proof.finish(returnErr) }()
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer proof.rollback(tx)
+	if err = p.requireResetAdmissionIdentityTx(ctx, tx, instanceID); err != nil {
+		return err
+	}
+	// Preserve the native integrity classification before the generic attempt
+	// proof, without moving the old schema-writing parent hooks ahead of it.
+	if proof.installation.PluginID == "IYUUAutoSeed" {
+		if _, err = p.iyuuTransitionParentReadTx(ctx, tx, instanceID); err != nil {
+			return err
+		}
+	}
+	if err = p.requireResetJournalQuiescenceTx(ctx, tx, instanceID); err != nil {
+		return err
+	}
 	isLark, larkErr := p.larkTransitionTx(ctx, tx, instanceID)
 	if larkErr != nil {
 		return larkErr
@@ -755,6 +857,11 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 		return sql.ErrNoRows
 	}
 	if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, instanceID); err != nil {
+		return err
+	}
+	// A real Reset clears retained intent before stamping either installed or
+	// inactive lifecycle state in this same transaction. Uninstall retains it.
+	if err = p.recordPluginGenerationLifecycleTx(ctx, tx, instanceID); err != nil {
 		return err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instanceID); err != nil {
@@ -818,7 +925,7 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 			return e
 		}
 	}
-	return tx.Commit()
+	return proof.commit(tx)
 }
 
 const pluginMigrationColumns = `id,source_fingerprint,source_plugin_id,instance_id,state,error_code,details,created_at,updated_at`
@@ -839,6 +946,9 @@ func (p *PluginStore) Migration(ctx context.Context, runID string) (PluginMigrat
 }
 
 func (p *PluginStore) BeginMigration(ctx context.Context, sourceFingerprint, sourcePluginID, instanceID string) (PluginMigrationRun, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return PluginMigrationRun{}, err
+	}
 	if !pluginStorageDigest.MatchString(sourceFingerprint) || !pluginStorageID.MatchString(sourcePluginID) || !pluginStorageID.MatchString(instanceID) {
 		return PluginMigrationRun{}, bad("INVALID_PLUGIN_MIGRATION", "插件迁移来源或实例无效")
 	}
@@ -855,6 +965,9 @@ func (p *PluginStore) BeginMigration(ctx context.Context, sourceFingerprint, sou
 }
 
 func (p *PluginStore) SetMigrationState(ctx context.Context, runID, state, errorCode string, details any) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if state != "running" && state != "failed" || errorCode != "" && !pluginStorageID.MatchString(errorCode) || state != "failed" && errorCode != "" {
 		return bad("INVALID_PLUGIN_MIGRATION", "插件迁移状态或错误代码无效")
 	}
@@ -885,6 +998,9 @@ func (p *PluginStore) SetMigrationState(ctx context.Context, runID, state, error
 // Existing target instances are not overwritten. Replaying an identical import
 // returns its receipt without reverting later user edits or running onlyonce.
 func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrationReceipt, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return PluginMigrationReceipt{}, err
+	}
 	installation, err := validatePluginInstallation(in.Installation)
 	if err != nil {
 		return PluginMigrationReceipt{}, err
@@ -919,6 +1035,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedSeed != nil && !validReviewedSeedImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedSeed()
+	}
+	if in.reviewedRemoveLink != nil && !validReviewedRemoveLinkImport(in, installation) {
+		return PluginMigrationReceipt{}, invalidReviewedRemoveLink()
 	}
 	if in.reviewedTransfer != nil && !validReviewedTransferImport(in, installation) {
 		return PluginMigrationReceipt{}, invalidReviewedTransfer()
@@ -981,8 +1100,9 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 		ReviewedIYUU           *reviewedIYUUImportBinding   `json:",omitempty"`
 		ReviewedSeed           *reviewedSeedBinding         `json:",omitempty"`
 		ReviewedTransfer       *reviewedTransferBinding     `json:",omitempty"`
+		ReviewedRemoveLink     *reviewedRemoveLinkBinding   `json:",omitempty"`
 		ReviewedStatistic      *sourceAccountBinding        `json:",omitempty"`
-	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer, statisticBinding})
+	}{installation.PluginID, installation.Version, installation.ManifestSchemaVersion, installation.Manifest, config, in.Data, in.SourceConfigAbsent, in.systemProcessDashboard, in.reviewedServerStatus, in.reviewedCustomHosts, in.reviewedMediaRefresh, in.reviewedIYUU, in.reviewedSeed, in.reviewedTransfer, in.reviewedRemoveLink, statisticBinding})
 	if err != nil {
 		return PluginMigrationReceipt{}, err
 	}
@@ -1024,12 +1144,25 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	if statisticBinding != nil && (run.SourcePluginID != "SiteStatistic" || run.SourceFingerprint != statisticBinding.SourceFingerprint) {
 		return PluginMigrationReceipt{}, invalidSourceAccounts()
 	}
+	if in.reviewedRemoveLink != nil && (run.SourcePluginID != "RemoveLink" || run.SourceFingerprint != in.reviewedRemoveLink.SourceFingerprint) {
+		return PluginMigrationReceipt{}, invalidReviewedRemoveLink()
+	}
+	if in.reviewedRemoveLink != nil {
+		if err = p.reviewedRemoveLinkTargetTx(ctx, tx, *in.reviewedRemoveLink); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
 	receipt := PluginMigrationReceipt{RunID: run.ID, SourceFingerprint: run.SourceFingerprint, SourcePluginID: run.SourcePluginID, InstanceID: run.InstanceID, State: "imported", Digest: digest}
 	var previousDigest string
 	err = tx.QueryRowContext(ctx, `SELECT digest,imported_at FROM plugin_migration_receipts WHERE source_fingerprint=? AND source_plugin_id=? AND instance_id=?`, run.SourceFingerprint, run.SourcePluginID, run.InstanceID).Scan(&previousDigest, &receipt.ImportedAt)
 	if err == nil {
 		if previousDigest != digest {
 			return PluginMigrationReceipt{}, bad("PLUGIN_MIGRATION_CONFLICT", "相同来源迁移内容已变化，未覆盖现有插件")
+		}
+		if in.reviewedRemoveLink != nil {
+			if err = p.verifyReviewedRemoveLinkReceiptTx(ctx, tx, *in.reviewedRemoveLink, run.ID, digest); err != nil {
+				return PluginMigrationReceipt{}, err
+			}
 		}
 		return receipt, tx.Commit()
 	}
@@ -1124,6 +1257,11 @@ func (p *PluginStore) Import(ctx context.Context, in PluginImport) (PluginMigrat
 	}
 	if in.reviewedTransfer != nil {
 		if err = p.commitReviewedTransferReferencesTx(ctx, tx, *in.reviewedTransfer, run.ID, digest); err != nil {
+			return PluginMigrationReceipt{}, err
+		}
+	}
+	if in.reviewedRemoveLink != nil {
+		if err = p.commitReviewedRemoveLinkTx(ctx, tx, *in.reviewedRemoveLink, run.ID, digest); err != nil {
 			return PluginMigrationReceipt{}, err
 		}
 	}

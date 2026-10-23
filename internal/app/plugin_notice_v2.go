@@ -15,6 +15,7 @@ import (
 )
 
 type pluginNoticeV2Binding struct {
+	SiteMessage                         *siteMessageIdentity            `json:",omitempty"`
 	Added                               *subscriptionAddIdentity        `json:",omitempty"`
 	Completion                          *subscriptionCompletionIdentity `json:",omitempty"`
 	Kind, Instance, Inbox, CoreInputSHA string
@@ -67,7 +68,7 @@ func (p *PluginStore) validateNoticeBusinessV2(ctx context.Context, q pluginRemo
 	}
 	switch b.Binding.Kind {
 	case "lark_core":
-		if b.Binding.Added != nil || b.Binding.Completion != nil || b.Binding.Ordinal < 0 || r.Token != p.noticeID("lark-business", b.Binding.Inbox, b.Binding.Ordinal) || r.EffectID != b.Binding.Inbox+"/"+fmt.Sprint(b.Binding.Ordinal) || b.Binding.CoreInputSHA != tokenHash(string(b.Input)) {
+		if b.Binding.SiteMessage != nil || b.Binding.Added != nil || b.Binding.Completion != nil || b.Binding.Ordinal < 0 || r.Token != p.noticeID("lark-business", b.Binding.Inbox, b.Binding.Ordinal) || r.EffectID != b.Binding.Inbox+"/"+fmt.Sprint(b.Binding.Ordinal) || b.Binding.CoreInputSHA != tokenHash(string(b.Input)) {
 			return seedhost.ErrUnsafe
 		}
 		root, e := p.larkRootRead(ctx, q, r.Instance, r.Generation)
@@ -86,6 +87,10 @@ func (p *PluginStore) validateNoticeBusinessV2(ctx context.Context, q pluginRemo
 		if s.Kind != "write" || s.Operation != "notice.post" || s.InputSHA != b.Binding.CoreInputSHA {
 			return seedhost.ErrUnsafe
 		}
+	case "site_message":
+		if e := p.validateSiteMessageNoticeBinding(ctx, q, r); e != nil {
+			return e
+		}
 	case "subscription_add":
 		if e := p.validateSubscriptionAddNoticeBinding(ctx, q, r); e != nil {
 			return e
@@ -101,7 +106,7 @@ func (p *PluginStore) validateNoticeBusinessV2(ctx context.Context, q pluginRemo
 	if cleanupJournalStrict(b.Input, &payload) != nil {
 		return seedhost.ErrUnsafe
 	}
-	if b.Projection != sourceBusinessProjection(payload) || payload.AbsentContext && b.Binding.Kind != "lark_core" {
+	if b.Projection != sourceBusinessProjection(payload) || payload.AbsentContext && b.Binding.Kind != "lark_core" && b.Binding.Kind != "site_message" {
 		return seedhost.ErrUnsafe
 	}
 	env, e := notice.NewEnvelope(payload.Envelope)
@@ -188,7 +193,10 @@ func (p *PluginStore) noticeTemplateHelper() *noticetemplate.Helper {
 }
 
 func (a *App) runNoticeBusinessV2(ctx context.Context, initial pluginNoticeRoute) error {
-	if e := a.pluginStore.requireNoticeV2ExecutionTx(ctx, a.Store.DB, initial); e != nil {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
+	if e := a.requireNoticeV2Execution(ctx, initial); e != nil {
 		return e
 	}
 	d := &pluginNoticeDriver{a: a, id: initial.ID}
@@ -311,11 +319,21 @@ func (a *App) runNoticeBusinessV2(ctx context.Context, initial pluginNoticeRoute
 				if e != nil {
 					return nil, e
 				}
-				n := Notification{ID: "notice_" + a.pluginStore.noticeID("business-history", r.ID, ordinal), Title: a.clean(title), Message: a.clean(message), MType: mtype, Link: link, CreatedAt: a.pluginStore.noticeNow().UTC().Format(time.RFC3339Nano)}
+				source, e := text("source")
+				if e != nil {
+					return nil, e
+				}
+				n := Notification{Source: source, ID: "notice_" + a.pluginStore.noticeID("business-history", r.ID, ordinal), Title: a.clean(title), Message: a.clean(message), MType: mtype, Link: link, CreatedAt: a.pluginStore.noticeNow().UTC().Format(time.RFC3339Nano)}
 				if e = txPut(ctx, tx, "notification", n.ID, n); e != nil {
 					return nil, e
 				}
-				return pluginNoticeV2History{History: n, Digest: a.pluginStore.noticeID("business-history-value", n)}, nil
+				saved := pluginNoticeV2History{History: n, Digest: a.pluginStore.noticeID("business-history-value", n)}
+				if r.BusinessV2.Binding.Kind == "site_message" {
+					if e = a.pluginStore.saveSiteMessageHistoryExecutionTx(ctx, tx, r, ordinal, fields, saved); e != nil {
+						return nil, e
+					}
+				}
+				return saved, nil
 			})
 			return e
 		},

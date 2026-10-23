@@ -16,7 +16,7 @@ const subscriptionCompletionNoticeOwner = "system.subscription"
 
 func (p *PluginStore) validateSubscriptionCompletionNoticeBinding(ctx context.Context, q subscriptionCompletionReader, r pluginNoticeRoute) error {
 	b := r.BusinessV2
-	if b == nil || b.Binding.Added != nil || b.Binding.Kind != "subscription_completion" || b.Binding.Completion == nil || r.Instance != subscriptionCompletionNoticeOwner || r.Generation != 1 || b.Binding.Inbox != "" || b.Binding.Ordinal != 0 || b.Binding.CoreInputSHA != "" {
+	if b == nil || b.Binding.SiteMessage != nil || b.Binding.Added != nil || b.Binding.Kind != "subscription_completion" || b.Binding.Completion == nil || r.Instance != subscriptionCompletionNoticeOwner || r.Generation != 1 || b.Binding.Inbox != "" || b.Binding.Ordinal != 0 || b.Binding.CoreInputSHA != "" {
 		return seedhost.ErrUnsafe
 	}
 	identity := *b.Binding.Completion
@@ -165,6 +165,12 @@ func (a *App) requireSubscriptionCompletionRawNoticeTx(ctx context.Context, tx *
 }
 
 func (p *PluginStore) requireNoticeV2ExecutionTx(ctx context.Context, q subscriptionCompletionReader, r pluginNoticeRoute) error {
+	if r.Version == 2 && r.BusinessV2 != nil && r.BusinessV2.Binding.Kind == "site_message" {
+		if r.BusinessV2.Binding.SiteMessage == nil {
+			return siteMessageNoticeEvidenceError()
+		}
+		return p.requireSiteMessageExecutionTx(ctx, q, *r.BusinessV2.Binding.SiteMessage)
+	}
 	if r.Version == 2 && r.BusinessV2 != nil && r.BusinessV2.Binding.Kind == "subscription_add" {
 		if r.BusinessV2.Binding.Added == nil {
 			return subscriptionAddEvidenceError()

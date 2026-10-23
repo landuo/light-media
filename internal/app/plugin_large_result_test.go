@@ -29,7 +29,7 @@ func TestPluginLargeResultEncryptedReopenAndPublicList(t *testing.T) {
 	}
 	private := "synthetic-private-result-" + strings.Repeat("r", 2<<20)
 	raw, _ := json.Marshal(map[string]string{"private": private})
-	if err := p.FinishRun(ctx, run.ID, "succeeded", "", raw); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, run, "succeeded", "", raw); err != nil {
 		t.Fatal("valid result above one frame could not be stored", err)
 	}
 	var sealed []byte
@@ -86,6 +86,7 @@ func TestPluginLargeResultLimitsDoNotChangeOrdinaryValuesOrTerminalDecisions(t *
 	if err != nil {
 		t.Fatal(err)
 	}
+	runContext := executionLeaseActivate(t, p, run)
 	for _, sample := range []struct {
 		raw  json.RawMessage
 		code string
@@ -95,7 +96,7 @@ func TestPluginLargeResultLimitsDoNotChangeOrdinaryValuesOrTerminalDecisions(t *
 		// Encoded size matters even when the unescaped raw value is smaller.
 		{json.RawMessage(`"` + strings.Repeat("<", 3<<20) + `"`), "PLUGIN_RESULT_TOO_LARGE"},
 	} {
-		if err := p.FinishRun(ctx, run.ID, "succeeded", "", sample.raw); pluginErrorCode(err) != sample.code {
+		if err := p.FinishRun(runContext, run.ID, "succeeded", "", sample.raw); pluginErrorCode(err) != sample.code {
 			t.Fatal("unbounded or invalid result was accepted", sample.code, err)
 		}
 		current, err := p.Run(ctx, run.ID)
@@ -103,22 +104,25 @@ func TestPluginLargeResultLimitsDoNotChangeOrdinaryValuesOrTerminalDecisions(t *
 			t.Fatal("rejected result committed partial bytes", err)
 		}
 	}
-	if err := p.failPluginResult(ctx, run.ID, "PLUGIN_RESULT_TOO_LARGE"); err != nil {
+	if err := p.failPluginResult(runContext, run.ID, "PLUGIN_RESULT_TOO_LARGE"); err != nil {
 		t.Fatal(err)
 	}
 	failed, err := p.Run(ctx, run.ID)
 	if err != nil || failed.State != "failed" || failed.ErrorCode != "PLUGIN_RESULT_TOO_LARGE" {
 		t.Fatal("result failure was not terminal", err)
 	}
-	if err := p.FinishRun(ctx, run.ID, "succeeded", "", json.RawMessage(`{"late":true}`)); pluginErrorCode(err) != "PLUGIN_RUN_TERMINAL" {
+	if err := p.FinishRun(runContext, run.ID, "succeeded", "", json.RawMessage(`{"late":true}`)); pluginErrorCode(err) != "PLUGIN_RUN_TERMINAL" {
 		t.Fatal("late result replaced the failure", err)
 	}
-	if err := p.failPluginResult(ctx, run.ID, "INVALID_PLUGIN_RESULT"); err != nil {
+	if err := p.failPluginResult(runContext, run.ID, "INVALID_PLUGIN_RESULT"); err != nil {
 		t.Fatal(err)
 	}
 	retained, err := p.Run(ctx, run.ID)
 	if err != nil || retained.ErrorCode != failed.ErrorCode {
 		t.Fatal("fallback overwrote another terminal decision", err)
+	}
+	if err := p.releaseSupervisedRun(run); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -140,7 +144,7 @@ func TestPluginLargeResultExactBoundaryAndRunIdentity(t *testing.T) {
 		t.Fatal(err)
 	}
 	raw := json.RawMessage(`"` + strings.Repeat("b", pluginDataValueLimit-2) + `"`)
-	if err := p.FinishRun(ctx, first.ID, "succeeded", "", raw); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, first, "succeeded", "", raw); err != nil {
 		t.Fatal("exact encoded result limit was rejected", err)
 	}
 	current, err := p.Run(ctx, first.ID)
@@ -216,11 +220,13 @@ func TestPluginResultFailureCommitsScheduleStateAtomically(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	runContext := executionLeaseActivate(t, a.pluginStore, run)
+	t.Cleanup(run.executionLease.runCleanup)
 	if _, err := a.Store.DB.Exec(`CREATE TRIGGER synthetic_occurrence_result_failure BEFORE UPDATE OF state ON plugin_schedule_occurrences BEGIN SELECT RAISE(ABORT,'synthetic occurrence update failure'); END;`); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.failPluginResult(ctx, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err == nil {
-		t.Fatal("failed occurrence update reported a saved terminal state")
+	if err := a.pluginStore.failPluginResult(runContext, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err == nil || !strings.Contains(err.Error(), "synthetic occurrence update failure") {
+		t.Fatal("fallback did not reach injected occurrence SQL failure", err)
 	}
 	current, err := a.pluginStore.Run(ctx, run.ID)
 	_, occurrence := pluginTimerOccurrence(t, a, run.ID)
@@ -230,13 +236,16 @@ func TestPluginResultFailureCommitsScheduleStateAtomically(t *testing.T) {
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER synthetic_occurrence_result_failure`); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.failPluginResult(ctx, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+	if err := a.pluginStore.failPluginResult(runContext, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
 		t.Fatal(err)
 	}
 	current, err = a.pluginStore.Run(ctx, run.ID)
 	_, occurrence = pluginTimerOccurrence(t, a, run.ID)
 	if err != nil || current.State != "failed" || occurrence != "failed" {
 		t.Fatal("result failure did not finish execution and occurrence together", current.State, occurrence, err)
+	}
+	if err := a.pluginStore.releaseSupervisedRun(run); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -252,7 +261,12 @@ func TestPluginResultFailureAlsoBlocksFreshStartupInitialization(t *testing.T) {
 	if err != nil || run.Action != "init" {
 		t.Fatal("fixture init not claimed", err)
 	}
-	if err := a.pluginStore.failPluginResult(ctx, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+	runContext := executionLeaseActivate(t, a.pluginStore, run)
+	t.Cleanup(run.executionLease.runCleanup)
+	if err := a.pluginStore.failPluginResult(runContext, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.pluginStore.releaseSupervisedRun(run); err != nil {
 		t.Fatal(err)
 	}
 	dir := a.Dir

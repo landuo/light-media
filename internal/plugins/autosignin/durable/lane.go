@@ -16,13 +16,16 @@ import (
 func itoa(i int) string { return strconv.Itoa(i) }
 
 type Execution struct {
-	Store     Journal
-	Binding   Binding
-	RunID     string
-	DigestKey [32]byte
-	mu        sync.Mutex
-	lanes     map[string]*Lane
-	fault     error
+	Store                 Journal
+	Binding               Binding
+	RunID                 string
+	Epoch                 string
+	DigestKey             [32]byte
+	mu                    sync.Mutex
+	lanes                 map[string]*Lane
+	fault                 error
+	sourceFailure         *source.SourceFailure
+	sourceFailureIdentity SourceIdentity
 }
 type Lane struct {
 	execution   *Execution

@@ -384,13 +384,30 @@ func TestPluginUninstallRealSDKOriginalFormSelfRemovalAndSharedExecutableSurvive
 }
 
 func TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned(t *testing.T) {
+	assertUninstallHTTPInstallReinstallForms(t, useUninstallSDKProcess, false)
+}
+
+// Always exercise the same full assertions through owned loopback HTTP and
+// the actual normal cmd/server --plugin-worker entry, not only a reduced SDK.
+func TestPluginUninstallHTTPFreshInstallAndReinstallActualServer(t *testing.T) {
+	assertUninstallHTTPInstallReinstallForms(t, useUninstallServerProcess, true)
+}
+
+func assertUninstallHTTPInstallReinstallForms(t *testing.T, useProcess func(*testing.T, *App), loopback bool) {
+	t.Helper()
 	a := newTestApp(t)
-	useBuiltInPluginProcess(t, a)
+	useProcess(t, a)
 	ctx := context.Background()
 	cookie := setupTestAdmin(t, a)
+	request := func(method, path, body string) *httptest.ResponseRecorder {
+		return callTest(t, a.Handler(), method, path, body, cookie, "")
+	}
+	if loopback {
+		request = uninstallOwnedAPIRequests(t, a, cookie)
+	}
 	var first PluginInstallation
 	for attempt := 0; attempt < 2; attempt++ {
-		response := callTest(t, a.Handler(), "POST", "/api/plugins/install", `{"plugin_id":"PluginUnInstall"}`, cookie, "")
+		response := request("POST", "/api/plugins/install", `{"plugin_id":"PluginUnInstall"}`)
 		if response.Code != http.StatusOK {
 			t.Fatal("catalog preview blocked HTTP install", attempt, response.Code, response.Body.String())
 		}
@@ -410,7 +427,7 @@ func TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPin
 		if attempt == 0 {
 			first = current
 		}
-		response = callTest(t, a.Handler(), "GET", "/api/plugins/PluginUnInstall/form", "", cookie, "")
+		response = request("GET", "/api/plugins/PluginUnInstall/form", "")
 		if response.Code != http.StatusOK || !strings.Contains(response.Body.String(), "插件彻底卸载 v2.2") {
 			t.Fatal("installed form must include itself", response.Code, response.Body.String())
 		}
@@ -427,7 +444,7 @@ func TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPin
 			}
 			break
 		}
-		response = callTest(t, a.Handler(), "POST", "/api/plugins/PluginUnInstall/uninstall", `{}`, cookie, "")
+		response = request("POST", "/api/plugins/PluginUnInstall/uninstall", `{}`)
 		if response.Code != http.StatusOK {
 			t.Fatal("ordinary fixture uninstall failed", response.Code, response.Body.String())
 		}

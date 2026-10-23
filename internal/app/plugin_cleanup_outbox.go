@@ -40,6 +40,7 @@ type pluginCleanupHandoff struct {
 	Identity, Kind, Stage, Reference string
 	Effect                           []byte
 	PublicDigest                     []byte
+	Notice                           *removeLinkNoticeProof `json:",omitempty"`
 }
 
 type pluginCleanupAuditCursor struct {
@@ -129,13 +130,17 @@ func (p *PluginStore) downloadFileEvent(ctx context.Context, q pluginRemoveLinkJ
 }
 
 func (a *App) committedCleanupOutbox(ctx context.Context, tx *sql.Tx, row pluginCleanupOutboxRow) (*pluginRemoveLinkEffects, cleanuphost.Effect, pluginRemoveLinkPrivateOutbox, error) {
+	return a.pluginStore.committedCleanupOutbox(ctx, tx, row)
+}
+
+func (p *PluginStore) committedCleanupOutbox(ctx context.Context, q pluginRemoveLinkJournalReader, row pluginCleanupOutboxRow) (*pluginRemoveLinkEffects, cleanuphost.Effect, pluginRemoveLinkPrivateOutbox, error) {
 	var x cleanuphost.Effect
 	var box pluginRemoveLinkPrivateOutbox
 	if !pluginStorageID.MatchString(row.Instance) || row.Generation < 1 || !pluginStorageDigest.MatchString(row.Token) {
 		return nil, x, box, cleanuphost.ErrUnsafe
 	}
-	e := &pluginRemoveLinkEffects{a: a, j: &pluginRemoveLinkJournal{p: a.pluginStore, instance: row.Instance, generation: row.Generation}}
-	raw, err := a.pluginStore.unseal("cleanup_journal", row.Instance, e.aad("outbox", row.Token), row.Sealed)
+	e := &pluginRemoveLinkEffects{j: &pluginRemoveLinkJournal{p: p, instance: row.Instance, generation: row.Generation}}
+	raw, err := p.unseal("cleanup_journal", row.Instance, e.aad("outbox", row.Token), row.Sealed)
 	if err != nil {
 		return nil, x, box, err
 	}
@@ -143,12 +148,12 @@ func (a *App) committedCleanupOutbox(ctx context.Context, tx *sql.Tx, row plugin
 		Effect  cleanuphost.Effect
 		Payload []byte
 	}
-	if cleanupJournalStrict(raw, &box) != nil || box.Version != 1 || cleanupJournalStrict(box.Effect, &encoded) != nil {
+	if cleanupJournalStrict(raw, &box) != nil || (box.Version != 1 && box.Version != 2 && box.Version != 3) || cleanupJournalStrict(box.Effect, &encoded) != nil {
 		return nil, x, box, cleanuphost.ErrUnsafe
 	}
 	x = encoded.Effect
 	x.Payload = encoded.Payload
-	if x.Binding.InstanceID != row.Instance || x.Binding.Generation != row.Generation || x.Binding.Revision < 1 || e.token(x.ID) != row.Token || x.State != "" || x.Error != "" || x.Result {
+	if x.Binding.InstanceID != row.Instance || x.Binding.Generation != row.Generation || x.Binding.Revision < 1 || e.token(x.ID) != row.Token || x.State != "" || x.Error != "" || x.SourceError != "" || x.Result {
 		return nil, x, box, cleanuphost.ErrUnsafe
 	}
 	_, original, err := e.identity(x)
@@ -157,12 +162,28 @@ func (a *App) committedCleanupOutbox(ctx context.Context, tx *sql.Tx, row plugin
 	}
 	// The producer's SQL receipt proves that this exact intent was authorized
 	// and committed; possessing a raw pending row is not such proof.
-	receipt, err := e.receipt(ctx, tx, x)
+	receipt, err := e.receipt(ctx, q, x)
 	if err != nil || !receipt.Result {
 		if err == nil {
 			err = cleanuphost.ErrUnsafe
 		}
 		return nil, x, box, err
+	}
+	if box.Version >= 2 {
+		if x.Kind != "notification" || box.Notice == nil || row.Created != box.Notice.CreatedAt {
+			return nil, x, box, cleanuphost.ErrUnsafe
+		}
+	} else {
+		if box.Notice != nil || receipt.NoticeAcceptanceSHA != "" {
+			return nil, x, box, cleanuphost.ErrUnsafe
+		}
+		var routes int
+		if err := q.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_notice_routes WHERE instance_id=? AND generation=? AND source_token=?`, row.Instance, row.Generation, row.Token).Scan(&routes); err != nil {
+			return nil, x, box, err
+		}
+		if routes != 0 {
+			return nil, x, box, cleanuphost.ErrUnsafe
+		}
 	}
 	return e, x, box, nil
 }
@@ -251,7 +272,7 @@ func (a *App) auditRemoveLinkHandoffs(ctx context.Context, cursor pluginCleanupA
 		switch x.Kind {
 		case "download_file_deleted":
 			wantID := "pfe_" + hex.EncodeToString(e.j.mac("file-event", []byte(v.row.Token)))
-			if h.Stage != "published" || h.Reference != wantID || len(h.PublicDigest) != 0 {
+			if h.Stage != "published" || h.Reference != wantID || len(h.PublicDigest) != 0 || h.Notice != nil {
 				return cursor, cleanuphost.ErrUnsafe
 			}
 			private, err := a.pluginStore.downloadFileEvent(ctx, tx, wantID)
@@ -278,6 +299,19 @@ func (a *App) auditRemoveLinkHandoffs(ctx context.Context, cursor pluginCleanupA
 			}
 			var notice Notification
 			if cleanupJournalStrict(noticeRaw, &notice) != nil || notice.ID != wantID || !hmac.Equal(h.PublicDigest, cleanupNoticeDigest(e, notice)) {
+				return cursor, cleanuphost.ErrUnsafe
+			}
+			if box.Version >= 2 {
+				if h.Notice == nil {
+					return cursor, cleanuphost.ErrUnsafe
+				}
+				if h.Notice.RouteID != a.pluginStore.noticeID("route", v.row.Instance, v.row.Generation, v.row.Token) {
+					return cursor, cleanuphost.ErrUnsafe
+				}
+				if _, _, err := a.pluginStore.readNoticeRoute(ctx, tx, h.Notice.RouteID); err != nil {
+					return cursor, err
+				}
+			} else if h.Notice != nil {
 				return cursor, cleanuphost.ErrUnsafe
 			}
 		default:
@@ -309,6 +343,12 @@ func (a *App) dispatchRemoveLinkOutboxes(ctx context.Context, limit int) error {
 // Retired producers may transfer already committed intents: no current worker,
 // config, filesystem or downloader authority is acquired by this operation.
 func (a *App) transferRemoveLinkOutbox(ctx context.Context) (bool, error) {
+	return a.transferRemoveLinkOutboxFor(ctx, "", 0, "")
+}
+
+// A synchronous source barrier must transfer only its own accepted token, not
+// whichever unrelated pending producer happens to be oldest in the queue.
+func (a *App) transferRemoveLinkOutboxFor(ctx context.Context, wantedInstance string, wantedGeneration int64, wantedToken string) (bool, error) {
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return false, err
@@ -317,10 +357,17 @@ func (a *App) transferRemoveLinkOutbox(ctx context.Context) (bool, error) {
 	var instance, token, created string
 	var generation int64
 	var sealed []byte
-	err = tx.QueryRowContext(ctx, `SELECT o.instance_id,o.generation,o.token,o.sealed,o.created_at
+	query := `SELECT o.instance_id,o.generation,o.token,o.sealed,o.created_at
 FROM plugin_cleanup_private_outbox o LEFT JOIN plugin_cleanup_outbox_handoffs h
 ON h.instance_id=o.instance_id AND h.generation=o.generation AND h.token=o.token
-WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &token, &sealed, &created)
+WHERE h.token IS NULL`
+	var args []any
+	if wantedInstance != "" {
+		query += ` AND o.instance_id=? AND o.generation=? AND o.token=?`
+		args = []any{wantedInstance, wantedGeneration, wantedToken}
+	}
+	query += ` ORDER BY o.rowid LIMIT 1`
+	err = tx.QueryRowContext(ctx, query, args...).Scan(&instance, &generation, &token, &sealed, &created)
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}
@@ -381,12 +428,25 @@ WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &t
 		settings := a.Settings()
 		noticeID := "cleanup_notice_" + hex.EncodeToString(e.j.mac("notice-history", []byte(token)))
 		n := Notification{ID: noticeID, Title: cleanWithSettings(data.Title, settings), Message: cleanWithSettings(data.Text, settings), MType: "站点", Link: "#/plugins?tab=installed&id=RemoveLink", CreatedAt: created}
+		if box.Version >= 2 {
+			accepted, err := removeLinkAcceptedHistory(e, token, box, x)
+			if err != nil {
+				return true, err
+			}
+			n = accepted
+		}
 		if err = putCleanupNoticeTx(ctx, tx, n); err != nil {
 			return true, err
 		}
 		handoff.PublicDigest = cleanupNoticeDigest(e, n)
 		handoff.Stage, handoff.Reference = "history_saved", noticeID
-		box.State = "history_saved" // NoticeMessage routing/external sending is still pending.
+		if box.Version >= 2 {
+			handoff.Notice, err = a.pluginStore.initRemoveLinkNoticeTx(ctx, tx, e, x, token, box, n)
+			if err != nil {
+				return true, err
+			}
+		}
+		box.State = "history_saved" // Router completion and delivery have separate receipts.
 	default:
 		return true, cleanuphost.ErrUnsupported
 	}
@@ -412,5 +472,5 @@ WHERE h.token IS NULL ORDER BY o.rowid LIMIT 1`).Scan(&instance, &generation, &t
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_cleanup_private_outbox SET sealed=? WHERE instance_id=? AND generation=? AND token=?`, boxSealed, instance, generation, token); err != nil {
 		return true, err
 	}
-	return true, tx.Commit()
+	return true, a.pluginStore.commitNoticeTx(tx, "remove_link_handoff")
 }

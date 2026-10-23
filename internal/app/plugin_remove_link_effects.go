@@ -14,6 +14,7 @@ import (
 	"strings"
 	"sync"
 	"syscall"
+	"time"
 
 	"light-media/internal/plugins/removelink"
 	cleanuphost "light-media/internal/plugins/removelink/host"
@@ -35,6 +36,8 @@ type pluginRemoveLinkEffectLease struct {
 	eventID              string // actual sealed running event invocation, never a worker patch.
 	binding              cleanuphost.Binding
 	roots                []cleanuphost.RootStamp
+	pause                func()
+	resume               func() error
 	prior                map[string]bool
 }
 type pluginRemoveLinkCoreReceipt struct {
@@ -43,11 +46,13 @@ type pluginRemoveLinkCoreReceipt struct {
 	Effect                                   []byte `json:"effect"`
 	Result                                   bool   `json:"result"`
 	HistoryID, FileID, ExecutionKey, AssetID string
+	NoticeAcceptanceSHA                      string `json:",omitempty"`
 }
 type pluginRemoveLinkPrivateOutbox struct {
-	Version int    `json:"version"`
-	Effect  []byte `json:"effect"`
-	State   string `json:"state"`
+	Version int                         `json:"version"`
+	Effect  []byte                      `json:"effect"`
+	State   string                      `json:"state"`
+	Notice  *removeLinkNoticeAcceptance `json:",omitempty"`
 }
 
 const pluginRemoveLinkEffectsSchema = `CREATE TABLE IF NOT EXISTS plugin_cleanup_core_receipts(
@@ -256,10 +261,13 @@ func (e *pluginRemoveLinkEffects) guardTx(ctx context.Context, tx *sql.Tx, l *pl
 	return e.j.p.unseal("config", l.binding.InstanceID, "main", sealed)
 }
 func cleanupEffectEqual(a, b cleanuphost.Effect) bool {
-	return a.ID == b.ID && a.Scope == b.Scope && a.Kind == b.Kind && a.Path == b.Path && a.Role == b.Role && a.Binding == b.Binding && a.Expected == b.Expected && a.Stage == b.Stage && bytes.Equal(a.Payload, b.Payload)
+	return a.ID == b.ID && a.Scope == b.Scope && a.Kind == b.Kind && a.Path == b.Path && a.Role == b.Role && a.Binding == b.Binding && a.Expected == b.Expected && a.Stage == b.Stage && a.SourceBarrierVersion == b.SourceBarrierVersion && a.NoticeSite == b.NoticeSite && a.NoticeOrdinal == b.NoticeOrdinal && bytes.Equal(a.Payload, b.Payload)
 }
 func (e *pluginRemoveLinkEffects) validate(ctx context.Context, l *pluginRemoveLinkEffectLease, s cleanuphost.Durable, x cleanuphost.Effect, raw json.RawMessage) error {
 	if x.ID == "" || x.Scope == "" || x.Binding != l.binding || x.Stage != "" {
+		return cleanuphost.ErrUnsafe
+	}
+	if x.SourceBarrierVersion != 0 && (x.Kind != "notification" || x.SourceBarrierVersion != 1 || !validRemoveLinkNoticeSite(x.NoticeSite) || x.NoticeOrdinal < 1) || x.SourceBarrierVersion == 0 && (x.NoticeSite != "" || x.NoticeOrdinal != 0) {
 		return cleanuphost.ErrUnsafe
 	}
 	if err := cleanupEffectRoots(l.roots); err != nil {
@@ -405,6 +413,7 @@ func (e *pluginRemoveLinkEffects) aad(kind, token string) string {
 func (e *pluginRemoveLinkEffects) identity(x cleanuphost.Effect) (string, []byte, error) {
 	x.State = ""
 	x.Error = ""
+	x.SourceError = ""
 	x.Result = false
 	// Payload is an opaque byte slot in the journal, not reserialized JSON.
 	payload := x.Payload
@@ -440,6 +449,26 @@ func (e *pluginRemoveLinkEffects) receipt(ctx context.Context, q pluginRemoveLin
 	if out.Version != 1 || out.Identity != identity || !bytes.Equal(out.Effect, original) {
 		return out, cleanuphost.ErrUnsafe
 	}
+	if x.Kind == "notification" {
+		var sealed []byte
+		if err := q.QueryRowContext(ctx, `SELECT sealed FROM plugin_cleanup_private_outbox WHERE instance_id=? AND generation=? AND token=?`, e.j.instance, e.j.generation, token).Scan(&sealed); err != nil {
+			return out, err
+		}
+		raw, err := e.j.p.unseal("cleanup_journal", e.j.instance, e.aad("outbox", token), sealed)
+		if err != nil {
+			return out, err
+		}
+		var box pluginRemoveLinkPrivateOutbox
+		if cleanupJournalStrict(raw, &box) != nil || !bytes.Equal(box.Effect, original) {
+			return out, cleanuphost.ErrUnsafe
+		}
+		sha, err := removeLinkNoticeAcceptanceSHA(box, x)
+		if err != nil || out.NoticeAcceptanceSHA != sha {
+			return out, cleanuphost.ErrUnsafe
+		}
+	} else if out.NoticeAcceptanceSHA != "" {
+		return out, cleanuphost.ErrUnsafe
+	}
 	return out, nil
 }
 func (e *pluginRemoveLinkEffects) saveReceipt(ctx context.Context, tx *sql.Tx, x cleanuphost.Effect, r pluginRemoveLinkCoreReceipt) error {
@@ -464,6 +493,17 @@ func (e *pluginRemoveLinkEffects) saveReceipt(ctx context.Context, tx *sql.Tx, x
 }
 
 func (e *pluginRemoveLinkEffects) Commit(ctx context.Context, x cleanuphost.Effect) (bool, error) {
+	result, err := e.commitAccepted(ctx, x)
+	if err != nil || x.SourceBarrierVersion == 0 {
+		return result, err
+	}
+	if x.Kind != "notification" || x.SourceBarrierVersion != 1 {
+		return false, cleanuphost.ErrUnsafe
+	}
+	return result, e.completeRemoveLinkSourceBarrier(ctx, x)
+}
+
+func (e *pluginRemoveLinkEffects) commitAccepted(ctx context.Context, x cleanuphost.Effect) (bool, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 	l, err := e.active(ctx)
@@ -510,10 +550,23 @@ func (e *pluginRemoveLinkEffects) Commit(ctx context.Context, x cleanuphost.Effe
 		if err == nil {
 			var sealed []byte
 			token := e.token(x.ID)
-			data, _ := json.Marshal(pluginRemoveLinkPrivateOutbox{Version: 1, Effect: original, State: "pending"})
+			box := pluginRemoveLinkPrivateOutbox{Version: 1, Effect: original, State: "pending"}
+			created := now()
+			if x.Kind == "notification" {
+				box, err = e.acceptRemoveLinkNotice(x, original)
+				if err != nil {
+					return false, err
+				}
+				created = box.Notice.CreatedAt
+				r.NoticeAcceptanceSHA, err = removeLinkNoticeAcceptanceSHA(box, x)
+				if err != nil {
+					return false, err
+				}
+			}
+			data, _ := json.Marshal(box)
 			sealed, err = e.j.p.seal("cleanup_journal", e.j.instance, e.aad("outbox", token), data)
 			if err == nil {
-				_, err = tx.ExecContext(ctx, `INSERT INTO plugin_cleanup_private_outbox VALUES(?,?,?,?,?)`, e.j.instance, e.j.generation, token, sealed, now())
+				_, err = tx.ExecContext(ctx, `INSERT INTO plugin_cleanup_private_outbox VALUES(?,?,?,?,?)`, e.j.instance, e.j.generation, token, sealed, created)
 			}
 		}
 	}
@@ -526,8 +579,19 @@ func (e *pluginRemoveLinkEffects) Commit(ctx context.Context, x cleanuphost.Effe
 	if err = e.saveReceipt(ctx, tx, x, r); err != nil {
 		return false, err
 	}
-	if err = tx.Commit(); err != nil {
-		return false, cleanuphost.ErrUncertain
+	if x.Kind == "notification" {
+		err = e.j.p.commitNoticeTx(tx, "remove_link_acceptance")
+	} else {
+		err = tx.Commit()
+	}
+	if err != nil {
+		_ = tx.Rollback()
+		readCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
+		defer cancel()
+		actual, readErr := e.receipt(readCtx, e.a.Store.DB, x)
+		if readErr != nil || !bytes.Equal(mustCleanSeedJSON(actual), mustCleanSeedJSON(rWithIdentity(e, x, r))) {
+			return false, cleanuphost.ErrUncertain
+		}
 	}
 	return r.Result, nil
 }
@@ -905,4 +969,11 @@ func (e *pluginRemoveLinkEffects) confirmedParent(l *pluginRemoveLinkEffectLease
 		return cleanuphost.ErrUncertain
 	}
 	return e.confirmedParent(l, s, root, matched.Expected.ParentPath, matched.Expected.Parent, seen)
+}
+
+// rWithIdentity produces the exact accepted receipt for commit-ack readback.
+func rWithIdentity(e *pluginRemoveLinkEffects, x cleanuphost.Effect, r pluginRemoveLinkCoreReceipt) pluginRemoveLinkCoreReceipt {
+	r.Version = 1
+	r.Identity, r.Effect, _ = e.identity(x)
+	return r
 }

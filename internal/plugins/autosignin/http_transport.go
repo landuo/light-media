@@ -6,6 +6,7 @@ import (
 	"compress/zlib"
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/binary"
 	"errors"
 	"io"
@@ -23,6 +24,7 @@ import (
 	"golang.org/x/text/encoding/htmlindex"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
+	"light-media/internal/networkproxy"
 	"light-media/internal/releasemeta/legacyanime"
 )
 
@@ -31,14 +33,63 @@ var ErrSiteEncodingNotReady = errors.New("site character encoding cannot be dete
 var ErrSiteResponseLimit = errors.New("site response exceeds bounded transport limits")
 var ErrSiteCodecNotReady = errors.New("site compression outside verified codecs")
 
+// RequestsProxyPolicy is a trusted, frozen host snapshot of requests routing.
+// It is never accepted from plugin configuration or exposed in serialized data.
+type RequestsProxyPolicy struct {
+	Environment []string          `json:"-"`
+	Explicit    map[string]string `json:"-"`
+}
+
+func cloneRequestsProxyPolicy(policy *RequestsProxyPolicy) *RequestsProxyPolicy {
+	if policy == nil {
+		return nil
+	}
+	copyPolicy := &RequestsProxyPolicy{Environment: append([]string(nil), policy.Environment...)}
+	if policy.Explicit != nil {
+		copyPolicy.Explicit = make(map[string]string, len(policy.Explicit))
+		for key, value := range policy.Explicit {
+			copyPolicy.Explicit[key] = value
+		}
+	}
+	return copyPolicy
+}
+
 // SiteHTTPBinding is constructed by a trusted host from its current SiteStore.
 // This prototype never accepts it from SDK invocation input. Transport objects
 // must not be shared across sites or persisted to plugin JSON/history/logs.
 type SiteHTTPBinding struct {
-	URL, Cookie string
-	UserAgent   any
-	ProxyURL    *url.URL
+	// RootCAs is a trusted host-only trust snapshot; nil uses system roots.
+	RootCAs       *x509.CertPool `json:"-"`
+	URL, Cookie   string
+	UserAgent     any
+	ProxyURL      *url.URL
+	RequestsProxy *RequestsProxyPolicy `json:"-"`
+	// BeforeRequest is a host-only grant check, run for every redirect hop too.
+	BeforeRequest func(context.Context) error `json:"-"`
 }
+
+// siteHostGuardError distinguishes host denial from ordinary network failures.
+// Its text must not expose the host callback's potentially sensitive cause.
+type siteHostGuardError struct{ cause error }
+
+func (e *siteHostGuardError) Error() string { return "site host request guard denied" }
+func (e *siteHostGuardError) Unwrap() error { return e.cause }
+
+type siteHostGuardTransport struct {
+	next          http.RoundTripper
+	beforeRequest func(context.Context) error
+}
+
+func (t siteHostGuardTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if err := req.Context().Err(); err != nil {
+		return nil, &siteHostGuardError{cause: err}
+	}
+	if err := t.beforeRequest(req.Context()); err != nil {
+		return nil, &siteHostGuardError{cause: err}
+	}
+	return t.next.RoundTrip(req)
+}
+
 type BoundSiteHTTP struct {
 	binding                SiteHTTPBinding
 	origin                 string
@@ -48,6 +99,13 @@ type BoundSiteHTTP struct {
 }
 
 func BindSiteHTTP(binding SiteHTTPBinding) (*BoundSiteHTTP, error) {
+	if binding.RequestsProxy != nil && binding.ProxyURL != nil {
+		return nil, ErrSiteTargetDenied
+	}
+	binding.RequestsProxy = cloneRequestsProxyPolicy(binding.RequestsProxy)
+	if binding.RootCAs != nil {
+		binding.RootCAs = binding.RootCAs.Clone()
+	}
 	u, err := url.Parse(binding.URL)
 	if err != nil || u == nil || u.Host == "" || u.User != nil || (u.Scheme != "http" && u.Scheme != "https") {
 		return nil, ErrSiteTargetDenied
@@ -176,7 +234,8 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	if _, err := b.authorize(request.URL); err != nil {
+	initialURL, err := b.authorize(request.URL)
+	if err != nil {
 		return nil, err
 	}
 	if request.Method != "GET" && request.Method != "POST" {
@@ -219,12 +278,15 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	transport := &http.Transport{DisableKeepAlives: false, DisableCompression: true, ForceAttemptHTTP2: false, TLSHandshakeTimeout: idle, MaxResponseHeaderBytes: 64 << 10, TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{}}
 	// Normal authenticated site requests always validate both origin and HTTPS
 	// proxy certificates. No caller option can weaken this policy.
-	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
+	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12, RootCAs: b.binding.RootCAs}
 	if b.testTLS != nil {
 		tlsConfig = b.testTLS.Clone()
 		if tlsConfig.InsecureSkipVerify {
 			return nil, errors.New("insecure test TLS is forbidden")
 		}
+	}
+	if tlsConfig.MinVersion < tls.VersionTLS12 {
+		tlsConfig.MinVersion = tls.VersionTLS12
 	}
 	transport.TLSClientConfig = tlsConfig
 	transport.DialContext = func(ctx context.Context, network, address string) (net.Conn, error) {
@@ -237,9 +299,19 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	if b.binding.ProxyURL != nil {
 		transport.Proxy = http.ProxyURL(b.binding.ProxyURL)
 	}
-	defer transport.CloseIdleConnections()
+	var routed http.RoundTripper = transport
+	if policy := b.binding.RequestsProxy; policy != nil {
+		requestsTransport, err := networkproxy.NewRequestsProxyTransport(transport, policy.Environment, policy.Explicit, initialURL)
+		if err != nil {
+			return nil, err
+		}
+		routed = requestsTransport
+		defer requestsTransport.CloseIdleConnections()
+	} else {
+		defer transport.CloseIdleConnections()
+	}
 	jar, _ := cookiejar.New(nil)
-	client := &http.Client{Transport: transport, Jar: jar, CheckRedirect: func(req *http.Request, via []*http.Request) error {
+	client := &http.Client{Transport: routed, Jar: jar, CheckRedirect: func(req *http.Request, via []*http.Request) error {
 		if len(via) > 30 {
 			return errors.New("site redirect limit exceeded")
 		}
@@ -264,6 +336,13 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		}
 		return nil
 	}}
+	// Public media never consumes Set-Cookie, including on redirect hops.
+	if fixedPublicReferer != "" {
+		client.Jar = nil
+	}
+	if b.binding.BeforeRequest != nil {
+		client.Transport = siteHostGuardTransport{next: routed, beforeRequest: b.binding.BeforeRequest}
+	}
 	var body io.Reader
 	if request.JSON != nil {
 		raw, err := encodeSourceJSON(request.JSON)
@@ -362,8 +441,15 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		if res != nil && res.Body != nil {
 			res.Body.Close()
 		}
+		var guardErr *siteHostGuardError
+		if errors.As(err, &guardErr) {
+			return nil, guardErr.cause
+		}
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
+		}
+		if errors.Is(err, networkproxy.ErrRequestsProxyAuthEncoding) {
+			return nil, networkproxy.ErrRequestsProxyAuthEncoding
 		}
 		if errors.Is(err, ErrSiteTargetDenied) {
 			return nil, ErrSiteTargetDenied

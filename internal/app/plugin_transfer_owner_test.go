@@ -237,7 +237,7 @@ func TestTransferActualAppSDKInstallConfigRunDualIdentity(t *testing.T) {
 	for _, kind := range []string{"qbittorrent", "transmission"} {
 		t.Run(kind, func(t *testing.T) {
 			a := newTestApp(t)
-			useBuiltInPluginProcess(t, a)
+			useTransferSDKProcess(t, a)
 			ctx := context.Background()
 			cookie := setupTestAdmin(t, a)
 			hash, raw := transferTestMaterial()

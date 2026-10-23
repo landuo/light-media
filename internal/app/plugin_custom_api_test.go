@@ -41,7 +41,7 @@ func enqueueSyntheticPluginHTTP(t *testing.T, a *App) PluginRun {
 	return run
 }
 
-func TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch(t *testing.T) {
+func TestPluginHTTPReceiptFailurePreservesCollectionAndRestartDoesNotRefetch(t *testing.T) {
 	a, _, known, _ := pluginHTTPFixture(t)
 	ctx := context.Background()
 	if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_api_receipt BEFORE INSERT ON plugin_site_statistic_operations BEGIN SELECT RAISE(ABORT,'synthetic late receipt failure'); END`); err != nil {
@@ -50,20 +50,20 @@ func TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch(t *testing.T) {
 	run := enqueueSyntheticPluginHTTP(t, a)
 	a.executePluginRun(ctx, run)
 	failed, err := a.pluginStore.Run(ctx, run.ID)
-	if err != nil || failed.State != "failed" || known.Load() != 3 {
+	if err != nil || failed.State != "reconcile_pending" || known.Load() != 3 {
 		t.Fatal("late failure path", failed.State, known.Load(), err)
 	}
 	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history"} {
 		var count int
 		a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind=?`, kind).Scan(&count)
-		if count != 0 {
-			t.Fatal("API published data before its receipt", kind)
+		if count != 1 {
+			t.Fatal("late API failure lost committed collection", kind)
 		}
 	}
 	var facts int
 	a.Store.DB.QueryRow(`SELECT COUNT(*) FROM domain_events`).Scan(&facts)
-	if facts != 0 {
-		t.Fatal("rolled back API published an event")
+	if facts != 1 {
+		t.Fatal("late API failure lost single-site event")
 	}
 	a.Store.DB.Exec(`DROP TRIGGER fail_api_receipt`)
 	run = enqueueSyntheticPluginHTTP(t, a)
@@ -94,8 +94,10 @@ func TestPluginHTTPReceiptRollbackAndActualRestartDoesNotRefetch(t *testing.T) {
 func TestPluginHTTPRevocationWhileCollectingRollsBackPublication(t *testing.T) {
 	a, _, _, _ := pluginHTTPFixture(t)
 	ctx := context.Background()
+	var totalRequests atomic.Int32
 	entered, release := make(chan struct{}), make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		totalRequests.Add(1)
 		if r.URL.Path == "/" {
 			close(entered)
 			<-release
@@ -144,6 +146,7 @@ func TestPluginHTTPRevocationWhileCollectingRollsBackPublication(t *testing.T) {
 	if count != 0 {
 		t.Fatal("revoked read published account data")
 	}
+	siteMessageAssertColdRevocationHasNoEffects(t, a, run, func() int { return int(totalRequests.Load()) })
 }
 
 const syntheticPluginAPIKey = "synthetic-api-reference-key-2026"

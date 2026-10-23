@@ -133,3 +133,13 @@ func TestMTeamTrustedProxyStillHonorsSourceSiteFlag(t *testing.T) {
 		}
 	}
 }
+
+func TestMTeamPublicBindingHasNoHostGuard(t *testing.T) {
+	grant, err := BindMTeam(Credentials{URL: "https://kp.m-team.cc/", Token: "synthetic-token"}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if grant.api.(*BoundSiteHTTP).binding.BeforeRequest != nil {
+		t.Fatal("public binding unexpectedly installed a host guard")
+	}
+}

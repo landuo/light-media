@@ -1,0 +1,774 @@
+{
+  "scope": "TorrentTransfer safe form failure diagnostics only; not a root-cause fix or complete plugin acceptance",
+  "parent_commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+  "branch": "dev/plugins-continuation",
+  "production_deployed": false,
+  "plugin_complete": false,
+  "frozen_input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+  "frozen_files": 5317,
+  "preimage_sha256": "59cac40a62deec7152002ef6795df0e8329e659bf57cdf4211958a16e7ff795e",
+  "base_input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+  "original_missing_binary_count": 40,
+  "missing_inventory_reference": "docs/plugin-site-statistic-notice-routing-verification.json source_limitations",
+  "release_source": {
+    "internal/app/plugin_http.go": "f8aa806f3a29d924fbd813fa1a826be1a1791d0489e60c3bcab2ec5baa6f557a",
+    "internal/app/plugin_transfer_form_observation.go": "acc9ff7fefc1ccf6b7138c9d6f3836587b03a626d1bbf285c0c4b0020e357afc",
+    "internal/app/plugin_transfer_form_observation_test.go": "94e06ff64c0d77a5e2d2c393656c15a7da5f7cfbbffe5b53f283c39c5a9c9d2d",
+    "internal/plugins/protocol.go": "fc320e11d6729c4cf0ebc6e4886c3750b29e53c11f8ba19f4e3e0fbad87edb56",
+    "internal/plugins/runner_observation.go": "28e727ff7be397037b8aa026b9e0e19bac5c83f2060aae3f6f212e7c55ba8fe9",
+    "internal/plugins/runner_observation_test.go": "9a926cd3ed641b0ec38f106cafae71b034530385761bbb3090cf161ec13b46e5",
+    "internal/app/plugin_transfer_form_diagnostic_test.go": "b9c0eadad7a3cd05ad9b6b4c3e19a5b992bf588ccd44a2aa1ec31836d250d4b5"
+  },
+  "safety": {
+    "test_endpoints": "owned local fixtures only; no real accounts or production IO",
+    "runner": "empty environment, fresh owned HOME/TMPDIR, offline module cache; not a process-wide network sandbox",
+    "original_form_budget_seconds": 10,
+    "budget_changed": false,
+    "api_failure_changed": false,
+    "raw_error_payload_stderr_logged": false,
+    "unrelated_uncommitted_work_included": false
+  },
+  "checks": {
+    "app-normal": {
+      "stdout_sha256": "0b1af4c11353a7a8fb68be9c082358688d4cfaeaaa64f6a07e1424acae96e906",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 21,
+          "inclusive": 44
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 1,
+          "inclusive": 1
+        }
+      },
+      "failures": [],
+      "skips": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "app-race-repeat1": {
+      "stdout_sha256": "a3446ab0c50728db8446132c24c1deec1b4f38dfa5846503177a9c9c0e9d837f",
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 20,
+          "inclusive": 43
+        },
+        "fail": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "skip": {
+          "top": 1,
+          "inclusive": 1
+        }
+      },
+      "failures": [
+        "TestTransferActualSourceFailureCanBeCorrected"
+      ],
+      "skips": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "app-race": {
+      "stdout_sha256": "0f96c6844055a90d6283db39a0753bcf320eef8da0df3f675e3da0f6a936afef",
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 20,
+          "inclusive": 42
+        },
+        "fail": {
+          "top": 1,
+          "inclusive": 2
+        },
+        "skip": {
+          "top": 1,
+          "inclusive": 1
+        }
+      },
+      "failures": [
+        "TestTransferActualPrequeuedClaimedPreparedUnknown/claimed",
+        "TestTransferActualPrequeuedClaimedPreparedUnknown"
+      ],
+      "skips": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "build": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "claimed-isolated-race": {
+      "stdout_sha256": "4991c311e58570f374113d88504665d6fa9b7463bdf2b9fb3708c6bd305aa49f",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 1,
+          "inclusive": 2
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "cli-test": {
+      "stdout_sha256": "38bdd598e77f998e5ffbcbc5a4ac05c1ca39860ea85f010c589bf203b73e5189",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "core-native-normal": {
+      "stdout_sha256": "bc291cfadccf4219e562ea78dd4be626657bc3303b9beb1ac79d222792bf412c",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 16,
+          "inclusive": 138
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "core-native-race": {
+      "stdout_sha256": "ec1cbe914c71b21478d0c672dbd14476587ec2ac2587a240f97495fe4daa05a6",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 16,
+          "inclusive": 138
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "form-diagnostic-race": {
+      "stdout_sha256": "547b98ae20825324c332a62eb205d7187cbf4c5dbed85ab3971c48e738ac031a",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 3,
+          "inclusive": 3
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    },
+    "observation-app-race": {
+      "stdout_sha256": "811bbe48ab5299bcbd9dc9ab0c560fd0be333a098dc4bb8f4f61b723ff0edeb1",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 21,
+          "inclusive": 44
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 1,
+          "inclusive": 1
+        }
+      },
+      "failures": [],
+      "skips": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "input_before": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      },
+      "input_after": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      }
+    },
+    "observation-build": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": []
+    },
+    "observation-focused-race": {
+      "stdout_sha256": "3d70269b29936ad0c280a03c5f9fd2fb99366d0fc8fde277e58f2b50ed99c13e",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 6,
+          "inclusive": 11
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      },
+      "input_after": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      }
+    },
+    "observation-mirror-final-race": {
+      "stdout_sha256": "6fad37efdf733573312dbfb147ae470727727948632d96e476cc3ece5957f11f",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      },
+      "input_after": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      }
+    },
+    "observation-original-entry-race": {
+      "stdout_sha256": "3b91488b9004e5509908c2205500b65d1ade0768107e57447db2fa7fd64d9d5d",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 6,
+          "inclusive": 15
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      },
+      "input_after": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      }
+    },
+    "observation-protocol-normal": {
+      "stdout_sha256": "ad76c860ba46ba13fbd01478c8aefc2e7e31ae104098bc90a75d12413d01d854",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 33,
+          "inclusive": 86
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      },
+      "input_after": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      }
+    },
+    "observation-protocol-race": {
+      "stdout_sha256": "fa87296c0379b8fc31357786930273e9eab90731eb486572bd17db1c0c18252a",
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 32,
+          "inclusive": 85
+        },
+        "fail": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [
+        "TestActualMaximumPayloadFourWays"
+      ],
+      "skips": [],
+      "input_before": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      },
+      "input_after": {
+        "input_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+        "changed": []
+      }
+    },
+    "observation-vet": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": []
+    },
+    "plugin-handoff-owned.build": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": null,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": []
+    },
+    "plugin-handoff-owned.invalid": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": []
+    },
+    "pristine-maximum-payload-race": {
+      "stdout_sha256": "75629b4f491d1767ceafb3d6ba0fda7abb7042509e47b7c8080ecffb1050f89f",
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [
+        "TestActualMaximumPayloadFourWays"
+      ],
+      "skips": [],
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "changed": []
+      }
+    },
+    "transfer-migrate-owned.build": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": null,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": []
+    },
+    "transfer-migrate-owned.invalid": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": []
+    },
+    "vet": {
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "input_before": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      },
+      "input_after": {
+        "commit": "bdfab1a0f34755059ea4a3e25d914a0546588f43",
+        "input_sha256": "c2cc39c495876d4c8470b5b403aba7d299c88e792309769065737bd791b5058a",
+        "files": 5312,
+        "missing": 40,
+        "changed": []
+      }
+    }
+  },
+  "additional_checks": {
+    "observation-vet": {
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "observation-build": {
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "app_selection": [
+    "TestPluginSourceHandoffRejectsDataImportedBeforeStop",
+    "TestPluginSourceHandoffRejectsMissingAndRunningObservations",
+    "TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates",
+    "TestPluginStoreMigrationReceiptFailureRollsBackWholeImport",
+    "TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues",
+    "TestReviewedTransferRejectsUnreviewedSource",
+    "TestReviewedTransferSelectedStdin",
+    "TestTransferActualAppSDKInstallConfigRunDualIdentity",
+    "TestTransferActualCloneRunsIndependentSameHistoryKey",
+    "TestTransferActualInactiveAndLostHostReply",
+    "TestTransferActualLifecycleAndMissingEvidence",
+    "TestTransferActualMixedDownloaders",
+    "TestTransferActualOnceAndColdRecheck",
+    "TestTransferActualOriginalImportRemainsUnclaimed",
+    "TestTransferActualPrequeuedClaimedPreparedUnknown",
+    "TestTransferActualPrivateNoticeAndLogOwnership",
+    "TestTransferActualRemovedDownloaderKeepsOldRecheckProof",
+    "TestTransferActualSourceFailureCanBeCorrected",
+    "TestTransferActualUnknownAdmissionAndColdRecovery",
+    "TestTransferCatalogPreservesCurrentSixteenPlugins",
+    "TestTransferOriginalRetainedReinstallDoesNotClaimNativeNames",
+    "TestTransferReviewedOptionsKeepStableIDAndOriginalValue"
+  ],
+  "unresolved_form_failures": [
+    {
+      "run": "app-race",
+      "test": "TestTransferActualPrequeuedClaimedPreparedUnknown/claimed",
+      "phase": "installation POST before claimed business assertion",
+      "http_error": "PLUGIN_FORM_FAILED",
+      "request_duration_ms": 10809
+    },
+    {
+      "run": "app-race-repeat1",
+      "test": "TestTransferActualSourceFailureCanBeCorrected",
+      "phase": "first installed GET /form inside transferReadyApp, after successful installation and initialization, before invalid-cron/correction test body",
+      "http_error": "PLUGIN_FORM_FAILED",
+      "request_duration_ms": 10027,
+      "preceding_install_post_duration_ms": 1732
+    }
+  ],
+  "protocol_race_baseline": {
+    "test": "TestActualMaximumPayloadFourWays",
+    "runner_budget_seconds": 90,
+    "observed_input_elapsed_seconds": 91.53,
+    "pristine_bdfab_elapsed_seconds": 91.34,
+    "both_error": "execution_canceled",
+    "both_host_calls": 1,
+    "both_result_bytes": 0,
+    "interpretation": "same timeout failure reproduced on exact pristine baseline; neither run passed, no complete race claim"
+  },
+  "limits": [
+    "Two intermittent form failures remain unexplained. Later observed runs and bounded three-sample entry checks passed, but do not prove a fix.",
+    "The diagnostic callback is synchronous, adds bounded in-memory work charged to original deadlines, and is enabled only for TorrentTransfer identities.",
+    "Phase ends mean operations returned, not business success; phase data are host-side boundaries, not child CPU attribution.",
+    "Current private reviewed-source stdin unavailable; its explicit skip and older verified evidence remain separate.",
+    "No new full-App or production UI/account/deployment acceptance. Production backup mount and scheduling handoff remain distinct from code verification.",
+    "Other uncommitted OCR, MIME, metadata isolation, and BrushFlow test work is frozen and excluded."
+  ]
+}

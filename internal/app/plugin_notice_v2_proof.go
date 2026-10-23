@@ -59,6 +59,13 @@ func (p *PluginStore) validateNoticeBusinessV2Steps(ctx context.Context, q plugi
 			if cleanupJournalStrict(step.Output, &saved) != nil || saved.History.ID != "notice_"+p.noticeID("business-history", r.ID, step.Ordinal) || saved.Digest != p.noticeID("business-history-value", saved.History) {
 				return seedhost.ErrUnsafe
 			}
+			if r.BusinessV2.Binding.Kind == "site_message" {
+				if e := p.validateSiteMessageHistoryExecution(ctx, q, r, step, saved); e != nil {
+					return e
+				}
+				history++
+				continue
+			}
 			var raw []byte
 			if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='notification' AND id=?`, saved.History.ID).Scan(&raw); e != nil {
 				return seedhost.ErrUnsafe

@@ -51,6 +51,10 @@ type Effect struct {
 	Stage, State, Error         string
 	Payload                     json.RawMessage
 	Result                      bool
+	SourceBarrierVersion        int    `json:",omitempty"`
+	NoticeSite                  string `json:",omitempty"`
+	NoticeOrdinal               int    `json:",omitempty"`
+	SourceError                 string `json:",omitempty"`
 }
 type EventReceipt struct {
 	Event        Event
@@ -99,6 +103,36 @@ type Watcher interface {
 	Close() error
 }
 type WatchFactory func(context.Context, []removelink.Watch, func(string) (*os.File, error)) (Watcher, error)
+
+// WatchInitFailure is native observer initialization evidence, not a generic
+// host error. Private fields prevent SDK payloads or external Go literals from
+// manufacturing source system messages. Ordinals are zero-based top-level specs.
+type WatchInitFailure struct {
+	spec    removelink.Watch
+	ordinal int
+	stage   string
+	cause   error
+}
+
+func (f *WatchInitFailure) Spec() removelink.Watch { return f.spec }
+func (f *WatchInitFailure) Ordinal() int           { return f.ordinal }
+func (f *WatchInitFailure) Stage() string          { return f.stage }
+func (f *WatchInitFailure) Error() string {
+	if f == nil || f.cause == nil {
+		return "invalid watch initialization failure"
+	}
+	return f.cause.Error()
+}
+func (f *WatchInitFailure) Unwrap() error {
+	if f == nil {
+		return nil
+	}
+	return f.cause
+}
+func (f *WatchInitFailure) Valid() bool {
+	return f != nil && f.cause != nil && f.ordinal >= 0 && f.spec.Path != "" && (f.spec.Mode == "hardlink" || f.spec.Mode == "strm") && f.stage == "inotify_add_watch"
+}
+
 type Options struct {
 	Binding Binding
 	Roots   []Root
@@ -109,11 +143,14 @@ type Options struct {
 	// exact Guard lease is still held. App owners must provide it to reconcile
 	// confirmed filesystem facts, including when all optional effects are off.
 	// Nil preserves the standalone host contract for non-App consumers.
-	AfterAction     func(context.Context, Binding, string) error
-	Watch           WatchFactory
-	Now             func() time.Time
-	MediaExtensions []string
-	AsyncTimeout    time.Duration
+	AfterAction func(context.Context, Binding, string) error
+	// Called only after configure observer failure has durably blocked the host,
+	// with its original Guard lease still held. Never marks configure successful.
+	WatchInitDiagnostic func(context.Context, Binding, string, *WatchInitFailure) error
+	Watch               WatchFactory
+	Now                 func() time.Time
+	MediaExtensions     []string
+	AsyncTimeout        time.Duration
 	// Fault injection is private to isolated fixture tests and not worker input.
 	fault func(string, string) error
 }

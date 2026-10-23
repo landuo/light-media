@@ -189,10 +189,11 @@ func (h *Host) guard(ctx context.Context, action string) (func(), error) {
 	return func() { h.guardAction = previous; release() }, nil
 }
 func (h *Host) afterAction(ctx context.Context, active *Event) error {
-	if h.opts.AfterAction == nil {
-		return nil
+	var err error
+	if h.opts.AfterAction != nil {
+		err = h.opts.AfterAction(ctx, h.binding, h.guardAction)
 	}
-	err := h.opts.AfterAction(ctx, h.binding, h.guardAction)
+	err = errors.Join(err, h.ops.noticeFatal)
 	if err == nil {
 		return nil
 	}
@@ -236,7 +237,7 @@ func (h *Host) save(ctx context.Context, active *Event, extra func(*Durable)) er
 		return nil
 	})
 }
-func (h *Host) block(reason string) {
+func (h *Host) block(reason string) error {
 	h.blocked = reason
 	h.running = false
 	_ = h.closeWatch(context.Background(), false)
@@ -244,9 +245,11 @@ func (h *Host) block(reason string) {
 	// failure's active scope (or any earlier interrupted execution evidence).
 	ctx, cancel := context.WithTimeout(context.Background(), h.opts.AsyncTimeout)
 	defer cancel()
-	if s, err := h.opts.Journal.Read(ctx); err == nil {
-		_ = h.checkpoint(ctx, s.Active)
+	s, err := h.opts.Journal.Read(ctx)
+	if err != nil {
+		return err
 	}
+	return h.checkpoint(ctx, s.Active)
 }
 func (h *Host) Snapshot(ctx context.Context) (Durable, error) {
 	var out Durable
@@ -377,13 +380,22 @@ func (h *Host) configureOwner(ctx context.Context, binding Binding, raw json.Raw
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	if e = h.checkpoint(ctx, &event); e != nil {
 		return e
 	}
 	if len(specs) > 0 {
 		h.watcher, e = h.opts.Watch(context.Background(), specs, h.ops.openWatchDir)
 		if e != nil {
-			h.block(e.Error())
+			blockErr := h.block(e.Error())
+			if blockErr != nil {
+				return errors.Join(e, blockErr)
+			}
+			failure, nativeFailure := e.(*WatchInitFailure)
+			if h.opts.WatchInitDiagnostic != nil && nativeFailure && failure.Valid() && failure.Ordinal() < len(specs) && specs[failure.Ordinal()] == failure.Spec() {
+				return errors.Join(e, h.opts.WatchInitDiagnostic(ctx, binding, event.ID, failure))
+			}
 			return e
 		}
 	}
@@ -451,6 +463,8 @@ func (h *Host) Recover(ctx context.Context, binding Binding) error {
 		h.ops.ctx = ctx
 		h.ops.scope = "recover:" + digest([]any{binding, h.opts.Now()})
 		h.ops.errors = nil
+		h.ops.noticeOrdinal = 0
+		h.ops.barrierSelection = nil
 		old := map[string]removelink.Tracked{}
 		for _, r := range h.machine.State {
 			old[r.Path] = r
@@ -614,6 +628,8 @@ func (h *Host) process(ctx context.Context, event Event, guarded bool) (err erro
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	before := len(h.machine.Errors)
 	if event.Mode != "hardlink" && event.Mode != "strm" {
 		return ErrUnsafe
@@ -721,6 +737,8 @@ func (h *Host) tick(ctx context.Context, guarded bool) error {
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	before := len(h.machine.Errors)
 	h.machine.Tick()
 	var err error
@@ -782,6 +800,8 @@ func (h *Host) stopOwner(ctx context.Context, reason string, finish func(context
 	h.ops.ctx = ctx
 	h.ops.scope = event.ID
 	h.ops.errors = nil
+	h.ops.noticeOrdinal = 0
+	h.ops.barrierSelection = nil
 	before := len(h.machine.Errors)
 	h.machine.Stop()
 	if len(h.machine.Errors) > before {

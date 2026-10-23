@@ -43,11 +43,12 @@ func subscribeGroupClaim(t *testing.T, a *App) PluginRun {
 }
 func subscribeGroupConfigure(t *testing.T, a *App, run PluginRun) PluginRun {
 	t.Helper()
+	claimedRun := run
 	result, err := a.configureSubscribeGroup(context.Background(), &run)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err = a.pluginStore.FinishRun(context.Background(), run.ID, "succeeded", "", result); err != nil {
+	if err = finishClaimedFixtureRun(context.Background(), a.pluginStore, claimedRun, "succeeded", "", result); err != nil {
 		t.Fatal(err)
 	}
 	return run
@@ -182,7 +183,7 @@ func TestSubscribeGroupAddedActualOutboxFieldsHistoryAndSearch(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(priorityCandidateIDs(out), []string{"1"}) {
 		t.Fatal("host fields did not reach actual search", priorityCandidateIDs(out), err)
 	}
-	if err = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", result); err != nil {
+	if err = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", result); err != nil {
 		t.Fatal(err)
 	}
 }

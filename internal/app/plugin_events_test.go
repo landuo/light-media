@@ -27,7 +27,7 @@ func pluginEventFixture(t *testing.T, delay time.Duration) (*App, PluginRun) {
 	if err := p.configureEventSubscription(context.Background(), run, "refresh", []string{"import.completed"}, delay, true); err != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(context.Background(), run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(context.Background(), p, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	return a, run
@@ -69,7 +69,7 @@ func TestPluginEventsDeliverOnlyCommittedMatchingFactsOnce(t *testing.T) {
 		if err != nil || run.Action != "event" || !json.Valid(run.Input) {
 			t.Fatal("matching event run missing", run.Action, err)
 		}
-		if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+		if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -106,7 +106,7 @@ func TestPluginEventsDebounceExtendsAndEnqueuesOneDurableBatch(t *testing.T) {
 	if err != nil || run.Action != "event" {
 		t.Fatal("due batch not queued", err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.dispatchPluginEvents(ctx, at.Add(10*time.Second)); err != nil {
@@ -182,7 +182,7 @@ func TestPluginEventsUserEditCancelsOldDelayAndSkipsDisabledHistory(t *testing.T
 	if err := a.pluginStore.configureEventSubscription(ctx, run, "refresh", []string{"import.completed"}, time.Hour, false); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	commitDomainFixture(t, a, domainFixture("import.completed", "disabled"))
@@ -193,7 +193,7 @@ func TestPluginEventsUserEditCancelsOldDelayAndSkipsDisabledHistory(t *testing.T
 	if err != nil || a.pluginStore.configureEventSubscription(ctx, run, "refresh", []string{"import.completed"}, 0, true) != nil {
 		t.Fatal("re-enable failed", err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.dispatchPluginEvents(ctx, time.Now().Add(2*time.Hour)); err != nil || pluginEventCount(t, a, "plugin_event_deliveries") != 1 {
@@ -222,7 +222,7 @@ func TestPluginEventsInternalConfigPatchPreservesActiveConsumerAndBatch(t *testi
 	if err := a.pluginStore.patchRunConfig(ctx, &run, map[string]json.RawMessage{"onlyonce": json.RawMessage(`false`)}); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.dispatchPluginEvents(ctx, time.Now().Add(2*time.Second)); err != nil {
@@ -264,7 +264,7 @@ func TestPluginEventsRestartRetainsCursorAndPendingBatch(t *testing.T) {
 	if err != nil || run.ConfigRevision != first.ConfigRevision || p.configureEventSubscription(ctx, run, "refresh", []string{"import.completed"}, 10*time.Second, true) != nil {
 		t.Fatal("restart could not restore unchanged consumer", err)
 	}
-	if err := p.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.dispatchPluginEvents(ctx, at.Add(time.Second)); err != nil {
@@ -297,7 +297,7 @@ func TestPluginEventsRestartRetainsCursorAndPendingBatch(t *testing.T) {
 	if _, err := p.pluginBatchEvents(ctx, wrong, batchID, 0, 200); pluginErrorCode(err) != "PLUGIN_BATCH_SCOPE_DENIED" {
 		t.Fatal("cross-instance batch access accepted", err)
 	}
-	if err := p.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := p.pluginBatchEvents(ctx, run, batchID, 0, 200); pluginErrorCode(err) != "PLUGIN_BATCH_SCOPE_DENIED" {
@@ -318,7 +318,7 @@ func TestPluginEventsFirstEnableUsesCommittedHighWater(t *testing.T) {
 	if err != nil || p.configureEventSubscription(ctx, run, "refresh", []string{"import.completed"}, 0, true) != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, p, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.dispatchPluginEvents(ctx, time.Now()); err != nil || pluginEventCount(t, a, "plugin_event_deliveries") != 0 {
@@ -427,7 +427,7 @@ func TestPluginEventsCapacityCanDrainWhileMoreFactsAreWaiting(t *testing.T) {
 	if err != nil || run.Action != "noop" {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.dispatchPluginEvents(ctx, time.Now()); pluginErrorCode(err) != "PLUGIN_QUEUE_FULL" {

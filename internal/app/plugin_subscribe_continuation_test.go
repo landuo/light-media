@@ -405,7 +405,7 @@ func TestSubscribeGroupFillIntentContinuationRollsBackWithLateReceiptFailure(t *
 	if err != nil {
 		t.Fatal("same exact continuation could not retry", err)
 	}
-	if err = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", result); err != nil {
+	if err = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", result); err != nil {
 		t.Fatal(err)
 	}
 	subscribeContinuationRun(t, f, secondJob)

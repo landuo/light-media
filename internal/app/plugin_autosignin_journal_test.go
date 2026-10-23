@@ -32,9 +32,19 @@ type signinSQLFixture struct {
 }
 
 func signinSQLSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
+	return signinSQLSetupMode(t, false, configs...)
+}
+
+// Only completion/continuation tests request a genuine host claim. Pure SQL
+// journal fixtures retain their original controlled setup and negative inputs.
+func signinSQLClaimedSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
+	return signinSQLSetupMode(t, true, configs...)
+}
+
+func signinSQLSetupMode(t *testing.T, claim bool, configs ...map[string]any) *signinSQLFixture {
 	t.Helper()
 	s, p := pluginStoreFixture(t)
-	a := &App{Store: s, pluginStore: p, Dir: filepath.Dir(s.lock.Name())}
+	a := &App{Store: s, pluginStore: p, Dir: filepath.Dir(s.lock.Name()), autoSignInEnvironment: func() []string { return nil }}
 	manifest, _ := json.Marshal(autosignin.Manifest())
 	config := map[string]any{"enabled": false, "onlyonce": false, "sign_sites": []any{}, "login_sites": []any{}}
 	if len(configs) > 0 {
@@ -44,12 +54,20 @@ func signinSQLSetup(t *testing.T, configs ...map[string]any) *signinSQLFixture {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = s.DB.Exec(`UPDATE plugin_runs SET state='running' WHERE id=?`, run.ID); err != nil {
-		t.Fatal(err)
-	}
-	run, err = p.Run(context.Background(), run.ID)
-	if err != nil {
-		t.Fatal(err)
+	if claim {
+		queued := run
+		run, err = p.claimRunForInstance(context.Background(), queued.InstanceID)
+		if err != nil || run.ID != queued.ID {
+			t.Fatal("exact initial claim", err)
+		}
+	} else {
+		if _, err = s.DB.Exec(`UPDATE plugin_runs SET state='running' WHERE id=?`, run.ID); err != nil {
+			t.Fatal(err)
+		}
+		run, err = p.Run(context.Background(), run.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 	o, err := claimPluginAutoSignInOwner(context.Background(), a, run.InstanceID, signinSQLImplementation, "UTC")
 	if err != nil {
@@ -483,7 +501,7 @@ func TestPluginAutoSignInSQLBlockedExecutionLeavesViewsAndOtherInstanceAvailable
 
 func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplicateResume(t *testing.T) {
 	ctx := context.Background()
-	f := signinSQLSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
+	f := signinSQLClaimedSetup(t, map[string]any{"enabled": true, "notify": true, "onlyonce": false, "sign_sites": []any{1}, "login_sites": []any{}, "queue_cnt": 1, "cron": "2"})
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requests.Add(1)
@@ -498,6 +516,7 @@ func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplica
 		t.Fatal(err)
 	}
 	deps := signinjournal.Dependencies{
+		Source: newAutoSignInSourcePort(f.b),
 		Inventory: func(context.Context) (autosignin.Inventory, error) {
 			site := autosignin.Object{"id": 1, "name": "Owned loopback"}
 			return autosignin.Inventory{Configured: []autosignin.Object{site}, Indexers: []autosignin.Object{site}}, nil
@@ -515,7 +534,7 @@ func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplica
 	if err != nil || cfg.Revision != 2 {
 		t.Fatal("real cold init did not publish its config save", cfg.Revision, err)
 	}
-	if err = f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err = finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	run, err := f.a.pluginStore.EnqueueRun(ctx, "AutoSignIn", "service", json.RawMessage(`{}`))
@@ -529,12 +548,22 @@ func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplica
 	if err != nil {
 		t.Fatal(err)
 	}
-	backend, _ := f.o.backend(&run)
-	journal, _ := signinjournal.NewStateJournal(backend)
+	backend, err := f.o.backend(&run)
+	if err != nil {
+		t.Fatal(err)
+	}
+	journal, err := signinjournal.NewStateJournal(backend)
+	if err != nil {
+		t.Fatal(err)
+	}
 	controller.Journal = journal
-	// A failure after HTTP and history have committed leaves the exact source
-	// prefix recoverable. It does not convert a received reply into another visit.
-	if _, err = f.a.Store.DB.Exec(`CREATE TRIGGER signin_notify_failure BEFORE INSERT ON plugin_signin_rows WHEN NEW.collection='outbox.head' BEGIN SELECT RAISE(ABORT,'owned synthetic notification boundary'); END`); err != nil {
+	controller.Dependencies.Source = newAutoSignInSourcePort(backend)
+	faultJournal := &signinSourceIntentJournal{StateJournal: journal, t: t}
+	controller.Journal = faultJournal
+	// main[0:2] are committed history writes. Fail the next SQL intent row,
+	// before Invoke, not an ambiguous source send or its terminal proof.
+	sourceToken := f.o.token("entry.head", signinKey(run.ID, "main", "2"))
+	if _, err = f.a.Store.DB.Exec(`CREATE TRIGGER signin_notify_failure BEFORE INSERT ON plugin_signin_rows WHEN NEW.collection='entry.head' AND NEW.token='` + sourceToken + `' BEGIN SELECT RAISE(ABORT,'owned source intent boundary'); END`); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = controller.Execute(ctx, run.ID, signinjournal.Command{Action: "service"}); err == nil {
@@ -543,9 +572,27 @@ func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplica
 	if requests.Load() != 1 {
 		t.Fatal("initial owned source visit count", requests.Load())
 	}
+	if !faultJournal.attempted {
+		t.Fatal("SQL failure did not target source BeginSource")
+	}
+	signinAssertBeforeSourceIntent(t, f, journal, run.ID, server.Listener.Addr().String())
 	if _, err = f.a.Store.DB.Exec(`DROP TRIGGER signin_notify_failure`); err != nil {
 		t.Fatal(err)
 	}
+	// Reconstruct the execution objects; replay cannot rely on warm memory.
+	backend, err = f.o.backend(&run)
+	if err != nil {
+		t.Fatal(err)
+	}
+	journal, err = signinjournal.NewStateJournal(backend)
+	if err != nil {
+		t.Fatal(err)
+	}
+	deps.Source = newAutoSignInSourcePort(backend)
+	deps.Inventory = func(context.Context) (autosignin.Inventory, error) {
+		return autosignin.Inventory{}, errors.New("current inventory deliberately unavailable")
+	}
+	controller = signinjournal.Controller{Journal: journal, Binding: f.o.binding, DigestKey: [32]byte{1, 2, 3}, Dependencies: deps}
 	result, err := controller.Execute(ctx, run.ID, signinjournal.Command{Action: "service"})
 	if err != nil {
 		t.Fatal(err)
@@ -557,12 +604,19 @@ func TestPluginAutoSignInSQLControllerUsesRealCoreRunsAndOwnedHTTPWithoutDuplica
 	if err != nil {
 		t.Fatal(err)
 	}
-	if state.Stats[server.Listener.Addr().String()].Success != 1 || len(state.Outbox) != 1 || state.ActiveRun != "" {
+	if state.Stats[server.Listener.Addr().String()].Success != 1 || len(state.Outbox) != 0 || state.ActiveRun != "" {
 		t.Fatal("source receipt/effect chain was not completed", state.Stats, len(state.Outbox), state.ActiveRun)
 	}
 	cfg, err = f.a.pluginStore.Config(ctx, "AutoSignIn")
 	if err != nil || cfg.Revision != 3 || run.ConfigRevision != 2 || f.o.binding.Revision != 1 {
 		t.Fatal("run admission or public revision changed incorrectly", cfg.Revision, run.ConfigRevision, f.o.binding.Revision, err)
+	}
+	signinAssertCompletedSourceProof(t, f, journal, run.ID)
+	if _, err = f.a.Store.DB.Exec(`DELETE FROM plugin_signin_source_results`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = controller.Execute(ctx, run.ID, signinjournal.Command{Action: "service"}); err == nil || requests.Load() != 1 {
+		t.Fatal("missing independent source proof became successful replay or repeated HTTP", err, requests.Load())
 	}
 }
 
@@ -596,7 +650,7 @@ func TestPluginAutoSignInSQLActualStoreRestartRetainsBytesAndRejectsForgedEffect
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.a = &App{Store: store, pluginStore: p, Dir: f.a.Dir}
+	f.a = &App{Store: store, pluginStore: p, Dir: f.a.Dir, autoSignInEnvironment: func() []string { return nil }}
 	o, err := claimPluginAutoSignInOwner(ctx, f.a, "AutoSignIn", signinSQLImplementation, "UTC")
 	if err != nil {
 		t.Fatal(err)
@@ -698,5 +752,90 @@ func TestPluginAutoSignInSQLRunBackendCannotSelectAnotherActiveRunOrRuntimeEpoch
 				t.Fatal("run selected a different header authority", err)
 			}
 		})
+	}
+}
+
+// Keep the real SQL BeginSource implementation (and typed optional readers),
+// while proving that the injected row failure targets notification intent.
+type signinSourceIntentJournal struct {
+	*signinjournal.StateJournal
+	t         *testing.T
+	attempted bool
+}
+
+func (j *signinSourceIntentJournal) BeginSource(ctx context.Context, b signinjournal.Binding, req signinjournal.SourceRequest) (signinjournal.Entry, bool, error) {
+	j.t.Helper()
+	if req.Identity.Kind != "source.notify" || req.Identity.Lane != "main" || req.Identity.Index != 2 {
+		j.t.Fatalf("unexpected source intent targeted by SQL fault: %+v", req.Identity)
+	}
+	j.attempted = true
+	return j.StateJournal.BeginSource(ctx, b, req)
+}
+
+func signinAssertBeforeSourceIntent(t *testing.T, f *signinSQLFixture, j *signinjournal.StateJournal, runID, domain string) {
+	t.Helper()
+	state, err := j.State(context.Background(), f.o.binding)
+	if err != nil {
+		t.Fatal(err)
+	}
+	run := state.Runs[runID]
+	if run == nil || len(run.Lanes["main"]) != 2 || len(state.History) != 2 || state.Stats[domain].Success != 1 || state.ActiveRun != runID || len(state.Outbox) != 0 {
+		t.Fatal("SQL intent failure lost committed HTTP/history prefix or advanced source", state)
+	}
+	for _, entry := range run.Lanes["main"] {
+		if entry.Kind != "history.put" || entry.Phase != "applied" {
+			t.Fatal("history prefix changed", entry)
+		}
+	}
+	for _, entries := range run.Lanes {
+		for _, entry := range entries {
+			if entry.Phase == "intent" || entry.Phase == "uncertain" || strings.HasPrefix(entry.Kind, "source.") {
+				t.Fatal("pre-Invoke failure was turned into an unknown source send", entry)
+			}
+		}
+	}
+	for _, table := range []string{"plugin_signin_source_acceptances", "plugin_signin_source_results"} {
+		var count int
+		if err := f.a.Store.DB.QueryRow(`SELECT COUNT(*) FROM ` + table).Scan(&count); err != nil || count != 0 {
+			t.Fatal("source invoked despite rejected intent", table, count, err)
+		}
+	}
+}
+
+func signinAssertCompletedSourceProof(t *testing.T, f *signinSQLFixture, j *signinjournal.StateJournal, runID string) {
+	t.Helper()
+	ctx := context.Background()
+	state, err := j.State(ctx, f.o.binding)
+	if err != nil {
+		t.Fatal(err)
+	}
+	run := state.Runs[runID]
+	if run == nil || run.Phase != "completed" || len(run.Lanes["main"]) != 4 {
+		t.Fatal("source chain incomplete", run)
+	}
+	entries := run.Lanes["main"]
+	for i, kind := range []string{"history.put", "history.put", "source.notify", "config"} {
+		if entries[i].Kind != kind {
+			t.Fatal("source ordering changed", i, entries[i])
+		}
+	}
+	var env signinjournal.SourceEnvelope
+	if entries[2].Phase != "receipt" || json.Unmarshal(entries[2].Value, &env) != nil || env.Result == nil || env.Result.Outcome != signinjournal.SourceNormal || signinjournal.ValidateSourceResult(env.Request, *env.Result) != nil {
+		t.Fatal("source lacks typed normal receipt", entries[2])
+	}
+	for _, table := range []string{"plugin_signin_source_acceptances", "plugin_signin_source_results"} {
+		var count int
+		if err := f.a.Store.DB.QueryRow(`SELECT COUNT(*) FROM ` + table).Scan(&count); err != nil || count != 1 {
+			t.Fatal("source did not commit exactly once", table, count, err)
+		}
+	}
+	tx, err := f.a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	proof, found, err := f.a.pluginStore.autoSignInSourceResultHistoricalTx(ctx, tx, run, env.Request.Identity)
+	if err != nil || !found || proof != *env.Result {
+		t.Fatal("receipt lacks independent authenticated terminal proof", proof, found, err)
 	}
 }

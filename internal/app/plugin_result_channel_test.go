@@ -239,11 +239,13 @@ func TestPluginResultChannelStartupMarkerSharesFinishTransaction(t *testing.T) {
 	ctx := context.Background()
 	a := newTestApp(t)
 	run := installPluginResultChannelFixture(t, a)
+	execution := executionLeaseActivate(t, a.pluginStore, run)
+	defer run.executionLease.runCleanup()
 	if _, err := a.Store.DB.Exec(`CREATE TRIGGER synthetic_startup_marker_atomicity BEFORE INSERT ON plugin_run_startup_blocks BEGIN SELECT RAISE(ABORT,'synthetic marker insertion failure'); END`); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.finishRun(ctx, run.ID, "failed", "worker_io_failed", json.RawMessage(`null`), true); err == nil {
-		t.Fatal("rejected marker insertion committed a terminal run")
+	if err := a.pluginStore.finishRun(execution, run.ID, "failed", "worker_io_failed", json.RawMessage(`null`), true); err == nil || !strings.Contains(err.Error(), "synthetic marker insertion failure") {
+		t.Fatal("terminal transaction did not reach the injected marker failure", err)
 	}
 	current, err := a.pluginStore.Run(ctx, run.ID)
 	if err != nil || current.State != "running" || current.ErrorCode != "" || len(current.Result) != 0 || resultChannelStartupBlocks(t, a, run.ID) != 0 {
@@ -252,11 +254,14 @@ func TestPluginResultChannelStartupMarkerSharesFinishTransaction(t *testing.T) {
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER synthetic_startup_marker_atomicity`); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.finishRun(ctx, run.ID, "failed", "worker_io_failed", json.RawMessage(`null`), true); err != nil {
+	if err := a.pluginStore.finishRun(execution, run.ID, "failed", "worker_io_failed", json.RawMessage(`null`), true); err != nil {
 		t.Fatal(err)
 	}
 	current, err = a.pluginStore.Run(ctx, run.ID)
 	if err != nil || current.State != "failed" || current.ErrorCode != "worker_io_failed" || string(current.Result) != "null" || resultChannelStartupBlocks(t, a, run.ID) != 1 {
 		t.Fatal("terminal failure and startup marker did not commit together", current.State, current.ErrorCode, err)
+	}
+	if err := a.pluginStore.releaseSupervisedRun(run); err != nil {
+		t.Fatal(err)
 	}
 }

@@ -35,6 +35,13 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 	if !installation.Installed {
 		return nil, &APIError{"NOT_FOUND", "插件已卸载", 404}
 	}
+	var resetProof *pluginResetAdmission
+	if operation == "reset" {
+		resetProof, err = a.pluginStore.resetAdmission(ctx, installation.InstanceID)
+		if err != nil {
+			return nil, err
+		}
+	}
 	var revision int64
 	var raw json.RawMessage
 	if operation == "config" {
@@ -62,6 +69,9 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 	if kind == "config" {
 		kind = "init"
 	}
+	if resetProof != nil {
+		resetProof.setOwnerPending(true)
+	}
 	prepared, err := a.prepareScrapeFileCleanTransition(ctx, installation, kind)
 	if err != nil {
 		return nil, err
@@ -86,7 +96,9 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 	}
 	if operation == "reset" || operation == "uninstall" {
 		if err = prepared.drain(ctx); err != nil {
-			_ = resolveScrapeFileCleanPrepared(prepared, false)
+			if resolveErr := resolveScrapeFileCleanPrepared(prepared, false); resolveErr == nil && resetProof != nil {
+				resetProof.setOwnerPending(false)
+			}
 			return nil, err
 		}
 	}
@@ -100,7 +112,14 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 		if err != nil {
 			return nil, err
 		}
-		defer tx.Rollback()
+		if resetProof != nil {
+			defer resetProof.rollback(tx)
+			if err = a.pluginStore.requireResetAdmissionTx(ctx, tx, installation.InstanceID); err != nil {
+				return nil, err
+			}
+		} else {
+			defer tx.Rollback()
+		}
 		var currentGeneration int64
 		var installed bool
 		if err = tx.QueryRowContext(ctx, `SELECT generation,installed FROM plugin_installations WHERE instance_id=? AND plugin_id='ScrapeFileClean' AND version='1.0.7'`, installation.InstanceID).Scan(&currentGeneration, &installed); err != nil {
@@ -146,6 +165,9 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 			if _, err = tx.ExecContext(ctx, query, now(), installation.InstanceID); err != nil {
 				return nil, err
 			}
+			if err = a.pluginStore.recordPluginGenerationLifecycleTx(ctx, tx, installation.InstanceID); err != nil {
+				return nil, err
+			}
 			if operation == "reset" {
 				if _, err = tx.ExecContext(ctx, `DELETE FROM plugin_values WHERE instance_id=?`, installation.InstanceID); err != nil {
 					return nil, err
@@ -175,13 +197,21 @@ func (a *App) pluginScrapeCleanLifecycleHTTP(w http.ResponseWriter, r *http.Requ
 				return nil, err
 			}
 		}
-		if err = tx.Commit(); err != nil {
+		if resetProof != nil {
+			err = resetProof.commit(tx)
+		} else {
+			err = tx.Commit()
+		}
+		if err != nil {
 			return nil, err
 		}
 		committed = true
 		return result, nil
 	}()
 	resolveErr := resolveScrapeFileCleanPrepared(prepared, committed)
+	if resolveErr == nil && resetProof != nil {
+		resetProof.setOwnerPending(false)
+	}
 	if mutationErr != nil && resolveErr == nil {
 		return nil, mutationErr
 	}

@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	systemMessages          systemMessageRuntime
 	bigMemoryMode           bool // Trusted startup option; not worker or plugin configuration.
 	transferExtensions      nativeTransferExtensionRuntime
 	subscriptionStats       subscriptionStatsRuntime
@@ -78,6 +79,9 @@ type App struct {
 	pluginProcessStats      pluginProcessSnapshotter
 	pluginServerStatus      pluginServerStatusRuntime
 	pluginRemoveLink        pluginRemoveLinkRuntime
+	pluginAutoSignIn        pluginAutoSignInRuntime
+	autoSignInEnvironment   func() []string               // Private startup-only seam; nil reads os.Environ.
+	autoSignInTjuptStartup  func() autoSignInTjuptStartup // Private trusted test input; nil uses only the startup environment and system roots.
 	pluginScrapeClean       pluginScrapeCleanRuntime
 	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
 	pluginAutoBackup        pluginAutoBackupRuntime
@@ -216,6 +220,7 @@ func (a *App) Start(parent context.Context) {
 	a.log("INFO", "runtime", "recovery_checked", fmt.Sprintf("数据库版本1；启动恢复%d个未完成任务；自动化状态%s", a.Store.RecoveredJobs, initialControl), "", "")
 }
 func (a *App) Close() error {
+	a.systemMessages.close()
 	if a.cancel != nil {
 		a.cancel()
 	}
@@ -224,6 +229,7 @@ func (a *App) Close() error {
 	a.closeSubscriptionStatisticsHTTP()
 	a.stopScrapeFileCleanPlugins()
 	a.stopRemoveLinkPlugins()
+	a.stopAutoSignInPlugins()
 	a.stopCleanInvalidSeedPlugins()
 	if a.cancel != nil {
 		a.stopMediaRefreshPlugins()

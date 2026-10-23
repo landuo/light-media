@@ -1,0 +1,81 @@
+{
+  "base": "ae0835e43da0caa1d3e115e74101c9fee00e7f2d",
+  "scope": "SiteStatistic AppDomain UI; no backend production changes; real authenticated settings API test and existing default-link/clone/recovery tests. Not complete SiteStatistic acceptance.",
+  "source_manifest_sha256": "9f9c8a724c6c263373c5758c8753574b34d48aac3e3ffe6c8dd5b131a2956fce",
+  "source_after_unchanged": true,
+  "frontend_tests": {
+    "targeted": 13,
+    "full": 178,
+    "fail": 0,
+    "skip": 0
+  },
+  "gates": {
+    "app-ordinary": {
+      "exit": 0,
+      "inclusive": {
+        "pass": 29
+      },
+      "root": {
+        "pass": 7
+      }
+    },
+    "app-race": {
+      "exit": 0,
+      "inclusive": {
+        "pass": 29
+      },
+      "root": {
+        "pass": 7
+      }
+    },
+    "targeted": {
+      "exit": 0
+    },
+    "layout-v2-test": {
+      "exit": 0
+    },
+    "layout-v2-check": {
+      "exit": 0
+    },
+    "layout-v2-build": {
+      "exit": 0
+    },
+    "vet": {
+      "exit": 0
+    },
+    "build-server": {
+      "exit": 0
+    }
+  },
+  "build_sha256": "d1b18aac162380c41ed6fd41e68f3b29533d97d42aada1507a42d41238ba0dc4",
+  "preserved_initial_failure": "First web-only harness lacked repository-relative internal/ and testdata/, causing 10 ENOENT failures. Added baseline read-only dependency roots; no source/assertion change. Initial logs preserved.",
+  "logs_sha256": {
+    "app-race.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "layout-v2-test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "layout-v2-build.stdout": "1f379dfb9c2da6ab32e06d496361d658e2a05ed164690b4dfb06d2a7bc6e5575",
+    "app-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "vet.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "vet.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "layout-v2-build.stderr": "34497ea05e70f401e90d16dc4a9193bcab93c68fae144ce70800711cad2d0dff",
+    "app-ordinary.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build-server.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "targeted.stdout": "f2f9f13a2486796e53c5cb35a51c47e77246c163a4dd1c727af03f0f137fa69f",
+    "layout-v2-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "test.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "targeted.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test.stdout": "b394c26b021a60b17da3f8332ff6511ef9224a965a5766ee99203c5cc05e4a11",
+    "targeted.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "layout-v2-check.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "app-ordinary.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "layout-v2-test.stdout": "f817b8c03eb61c4e22028bbe9488ef8c6a6ae616d09f0c0da2bc3152f065f8d1",
+    "layout-v2-check.stdout": "0d1c8af0293cca70ac64d854b1a3c72c8b28235e17796ee2dad5028dfbdffe59",
+    "layout-v2-check.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build-server.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app-ordinary.jsonl": "c2c804fc432706befcefcb33695b7457d654e55918021f7be03ad4d30a3fad31",
+    "app-race.jsonl": "5e4b536f8884da286b3323277a62b1c562ca7d8b6a854463d5cf03dc26ddaed1",
+    "layout-v2-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build-server.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/autosignin"
 	"light-media/internal/plugins/builtin"
 )
 
@@ -38,11 +39,17 @@ func (a *App) pluginView(ctx context.Context, installation PluginInstallation, m
 	hostErrorCode := ""
 	hostErrorMessage := "读取当前容器进程失败，请重试"
 	result, err := (plugins.Runner{Timeout: budget}).Run(ctx, command, manifest, installation.InstanceID, method, payload, func(ctx context.Context, identity plugins.Identity, capability string, raw json.RawMessage) (json.RawMessage, error) {
-		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read" && capability != "subscriptions.rules.history" && capability != "server.status.snapshot") {
+		if identity.PluginID != installation.PluginID || identity.InstanceID != installation.InstanceID || identity.Version != installation.Version || !slices.Contains(manifest.Capabilities, capability) || (capability != "process.list" && capability != "site.statistics.read" && capability != "subscriptions.rules.history" && capability != "server.status.snapshot" && capability != autosignin.SnapshotCapability) {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件页面只能调用已授权的只读查询")
 		}
 		if err := a.pluginViewCurrent(ctx, installation, config.Revision); err != nil {
 			return nil, err
+		}
+		if capability == autosignin.SnapshotCapability {
+			if installation.PluginID != "AutoSignIn" || method != "page" {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "签到页面只能查询自身快照")
+			}
+			return a.pluginAutoSignInHost(ctx, installation, nil, capability, raw)
 		}
 		if capability == "server.status.snapshot" {
 			return a.pluginServerStatusSnapshot(ctx, installation, config.Revision, config.Value, method, raw)

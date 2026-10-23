@@ -14,6 +14,7 @@ type requestsDialBinding struct {
 	ctx      context.Context
 	released bool
 	stops    []func() bool
+	conns    []net.Conn
 }
 
 func (b *requestsDialBinding) watch(conn net.Conn) {
@@ -24,15 +25,22 @@ func (b *requestsDialBinding) watch(conn net.Conn) {
 		return
 	}
 	b.stops = append(b.stops, context.AfterFunc(b.ctx, func() { conn.Close() }))
+	b.conns = append(b.conns, conn)
 }
 func (b *requestsDialBinding) release() {
 	b.mu.Lock()
 	b.released = true
-	stops := b.stops
-	b.stops = nil
+	stops, conns := b.stops, b.conns
+	canceled := b.ctx.Err() != nil
+	b.stops, b.conns = nil, nil
 	b.mu.Unlock()
-	for _, stop := range stops {
+	for i, stop := range stops {
 		stop()
+		// RoundTrip may return cancellation before AfterFunc has run.
+		// Stopping that callback must not orphan its handshake socket.
+		if canceled {
+			conns[i].Close()
+		}
 	}
 }
 func requestsBindDial(transport *http.Transport) *http.Transport {

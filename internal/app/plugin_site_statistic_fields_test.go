@@ -98,9 +98,11 @@ func TestSiteStatisticExtendedFieldsActualSDKAndEncryptedColdSnapshot(t *testing
 func TestSiteStatisticAPIRevocationBeforeMessageReadStopsSideEffect(t *testing.T) {
 	a, _, _, _ := pluginHTTPFixture(t)
 	ctx := context.Background()
+	var totalRequests atomic.Int32
 	var reads atomic.Int32
 	var revoked atomic.Bool
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		totalRequests.Add(1)
 		nav := `<a href="logout.php">退出</a>`
 		switch r.URL.Path {
 		case "/":
@@ -142,16 +144,17 @@ func TestSiteStatisticAPIRevocationBeforeMessageReadStopsSideEffect(t *testing.T
 	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history')`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("revoked response published private account data", err)
 	}
+	siteMessageAssertColdRevocationHasNoEffects(t, a, run, func() int { return int(totalRequests.Load()) })
 }
 
 func TestSiteStatisticSourceDefaultsStaySeparateFromNativeUnknowns(t *testing.T) {
 	size, count := int64(1234), int64(0)
 	message := "owned error"
 	title, date, body := "title", "date", "body"
-	s := siteSnapshot{Stats: &sites.UserStats{}, SourceData: &sites.SourceUserData{LeechingSize: size, MessageUnread: count, Messages: [][3]any{{title, date, body}}, SeedingInfo: [][2]int64{{2, 1024}}, Error: &message}}
+	s := siteSnapshot{Stats: &sites.UserStats{}, SourceData: &sites.SourceUserData{LeechingSize: size, MessageUnread: count, Messages: [][]any{{title, date, body}}, SeedingInfo: [][2]int64{{2, 1024}}, Error: &message}}
 	for _, populated := range []bool{true, false} {
 		if !populated {
-			s.SourceData = &sites.SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]any{}}
+			s.SourceData = &sites.SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][]any{}}
 		}
 		raw, e := json.Marshal(siteStatisticAPIData(s))
 		if e != nil {

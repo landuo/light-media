@@ -18,7 +18,7 @@ const ConfigureCapability = "cleanup.configure"
 const ApplyCapability = "cleanup.apply"
 
 func Manifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "RemoveLink", Name: "清理媒体文件", Description: "媒体文件清理工具：支持硬链接文件清理、STRM文件清理、刮削文件清理（元数据、图片、字幕）、转移记录清理、种子联动删除等功能", Version: "2.17", Icon: "Ombi_A.png", Author: "DzAvril", AuthorURL: "https://github.com/DzAvril", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{ConfigureCapability, ApplyCapability}}
+	return plugins.Manifest{RuntimeSupport: &plugins.RuntimeSupport{Platforms: []string{"linux"}, StorageTypes: []string{"local"}}, SchemaVersion: 1, PluginID: "RemoveLink", Name: "清理媒体文件", Description: "媒体文件清理工具：支持硬链接文件清理、STRM文件清理、刮削文件清理（元数据、图片、字幕）、转移记录清理、种子联动删除等功能", Version: "2.17", Icon: "Ombi_A.png", Author: "DzAvril", AuthorURL: "https://github.com/DzAvril", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{ConfigureCapability, ApplyCapability}}
 }
 func Form() json.RawMessage { return append(json.RawMessage(nil), form...) }
 

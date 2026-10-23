@@ -73,6 +73,7 @@ func (a *App) pluginSiteStatisticAPIHost(ctx context.Context, installation Plugi
 	a.pluginMu.Unlock()
 	var result json.RawMessage
 	_, err = a.collectManagedSite(allowDisabledSiteRequests(ctx), site.ID, run.ID+":domain", &siteCollectionHooks{
+		Origin: siteCollectionOrigin{Kind: "api", ID: run.ID, Instance: run.InstanceID, Generation: run.Generation, Revision: run.ConfigRevision, Version: run.Version, Domain: wanted.Domain},
 		RequestGuard: func(requestCtx context.Context) error {
 			a.pluginMu.Lock()
 			defer a.pluginMu.Unlock()
@@ -101,7 +102,7 @@ func (a *App) pluginSiteStatisticAPIHost(ctx context.Context, installation Plugi
 // remain nullable; they are observations rather than protocol defaults.
 func siteStatisticAPIData(snapshot siteSnapshot) map[string]any {
 	if d := snapshot.SourceData; d != nil {
-		return map[string]any{"domain": d.Domain, "username": d.Username, "userid": d.UserID, "user_level": d.UserLevel, "join_at": d.JoinAt, "bonus": d.Bonus, "upload": d.Upload, "download": d.Download, "ratio": d.Ratio, "seeding": d.Seeding, "leeching": d.Leeching, "seeding_size": d.SeedingSize, "leeching_size": d.LeechingSize, "seeding_info": d.SeedingInfo, "message_unread": d.MessageUnread, "message_unread_contents": d.Messages, "err_msg": d.Error, "updated_day": d.Day, "updated_time": d.Time}
+		return map[string]any{"domain": d.Domain, "username": d.Username, "userid": d.UserID, "user_level": d.UserLevel, "join_at": d.JoinAt, "bonus": d.Bonus, "upload": d.Upload, "download": d.Download, "ratio": d.Ratio, "seeding": d.Seeding, "leeching": d.Leeching, "seeding_size": d.SeedingSize, "leeching_size": d.LeechingSize, "seeding_info": d.SeedingInfo, "message_unread": d.MessageUnread, "message_unread_contents": d.SourceMessageRows(), "err_msg": d.Error, "updated_day": d.Day, "updated_time": d.Time}
 	}
 	return nil
 }

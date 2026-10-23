@@ -23,6 +23,35 @@ import (
 const ProtocolVersion = 1
 const HostAPIVersion = 1
 
+// ConfigDefaultsPure declares that missing-default writes have no independent
+// business-owner state or frozen work to rebind. Only a matching compiled
+// manifest can grant this contract; a stored manifest is not write authority.
+const ConfigDefaultsPure = "pure/v1"
+
+// ConfigDefaultsTransactional additionally requires a trusted host projection of
+// business-owner state in the configuration transaction. This is not permission
+// for worker-supplied hooks, arbitrary config replacement, or lifecycle actions.
+const ConfigDefaultsTransactional = "transactional/v1"
+
+// ConfigFormProjectionTransactional separately declares trusted host Form Save
+// projection, including full replacements and equal-config source saves. A
+// defaults declaration does not grant this contract. No worker RPC capability
+// is implied, and a compiled adapter must validate its original business proof.
+const ConfigFormProjectionTransactional = "transactional/v1"
+
+// FormModelPolicy controls presentation only. It is independent of defaults or
+// Form write permission and is authoritative only from the compiled catalog.
+// A nil policy preserves the host overlay; a declaration specifies both modes.
+const (
+	FormModelHostOverlay = "host_overlay"
+	FormModelSource      = "source"
+)
+
+type FormModelPolicy struct {
+	Installed string `json:"installed"`
+	Preview   string `json:"preview"`
+}
+
 var identityPattern = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 var versionPattern = regexp.MustCompile(`^[0-9]+(?:\.[0-9]+){0,3}(?:[-+][A-Za-z0-9.-]+)?$`)
 var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
@@ -30,27 +59,47 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
 type Manifest struct {
-	SchemaVersion int       `json:"schema_version"`
-	PluginID      string    `json:"plugin_id"`
-	Name          string    `json:"name"`
-	Description   string    `json:"description,omitempty"`
-	Icon          string    `json:"icon,omitempty"`
-	Author        string    `json:"author,omitempty"`
-	AuthorURL     string    `json:"author_url,omitempty"`
-	Version       string    `json:"version"`
-	Runtime       string    `json:"runtime"`
-	Entry         string    `json:"entry"`
-	HostAPIMin    int       `json:"host_api_min"`
-	HostAPIMax    int       `json:"host_api_max"`
-	Methods       []string  `json:"methods"`
-	Capabilities  []string  `json:"capabilities"`
-	Events        []string  `json:"events,omitempty"`
-	HasPage       bool      `json:"has_page,omitempty"`
-	Dashboards    []string  `json:"dashboards,omitempty"`
-	APIs          []HTTPAPI `json:"apis,omitempty"`
+	RuntimeSupport       *RuntimeSupport  `json:"runtime_support,omitempty"`
+	SchemaVersion        int              `json:"schema_version"`
+	PluginID             string           `json:"plugin_id"`
+	Name                 string           `json:"name"`
+	Description          string           `json:"description,omitempty"`
+	Icon                 string           `json:"icon,omitempty"`
+	Author               string           `json:"author,omitempty"`
+	AuthorURL            string           `json:"author_url,omitempty"`
+	Version              string           `json:"version"`
+	Runtime              string           `json:"runtime"`
+	Entry                string           `json:"entry"`
+	HostAPIMin           int              `json:"host_api_min"`
+	HostAPIMax           int              `json:"host_api_max"`
+	Methods              []string         `json:"methods"`
+	Capabilities         []string         `json:"capabilities"`
+	Events               []string         `json:"events,omitempty"`
+	HasPage              bool             `json:"has_page,omitempty"`
+	Dashboards           []string         `json:"dashboards,omitempty"`
+	APIs                 []HTTPAPI        `json:"apis,omitempty"`
+	ConfigDefaults       string           `json:"config_defaults,omitempty"`
+	ConfigFormProjection string           `json:"config_form_projection,omitempty"`
+	FormModelPolicy      *FormModelPolicy `json:"form_model_policy,omitempty"`
 }
 
 func (m Manifest) Validate() error {
+	if err := m.RuntimeSupport.Validate(); err != nil {
+		return err
+	}
+	if m.FormModelPolicy != nil {
+		for _, mode := range []string{m.FormModelPolicy.Installed, m.FormModelPolicy.Preview} {
+			if mode != FormModelHostOverlay && mode != FormModelSource {
+				return failure("invalid_manifest")
+			}
+		}
+	}
+	if m.ConfigFormProjection != "" && m.ConfigFormProjection != ConfigFormProjectionTransactional {
+		return failure("invalid_manifest")
+	}
+	if m.ConfigDefaults != "" && m.ConfigDefaults != ConfigDefaultsPure && m.ConfigDefaults != ConfigDefaultsTransactional {
+		return failure("invalid_manifest")
+	}
 	if m.SchemaVersion != 1 || !identityPattern.MatchString(m.PluginID) || !versionPattern.MatchString(m.Version) ||
 		m.Name == "" || len(m.Name) > 256 || m.Runtime != "go-executable" || m.HostAPIMin < 1 || m.HostAPIMax < m.HostAPIMin ||
 		m.Entry == "" || filepath.IsAbs(m.Entry) || strings.Contains(m.Entry, "\\") || filepath.ToSlash(filepath.Clean(m.Entry)) != m.Entry ||
@@ -155,6 +204,8 @@ type Command struct {
 }
 
 type Runner struct {
+	// ObservePhase is nil by default; it does not alter execution policy.
+	ObservePhase     func(RunObservation)
 	MaxInputBytes    int
 	MaxMessageBytes  int
 	MaxChunkBytes    int
@@ -184,6 +235,15 @@ type RunResult struct {
 // Run starts one short-lived worker, handshakes before sending the invocation,
 // serves bounded host calls, then requests cleanup before accepting success.
 func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest, instanceID, method string, payload json.RawMessage, host HostHandler) (out RunResult, err error) {
+	runner.observe(PhaseRunEntered, ctx)
+	// This closure runs after cleanup and result counters, but before the caller.
+	// Its context is updated below to the actual Runner context.
+	var observationContext context.Context
+	defer func() {
+		if observationContext == nil {
+			runner.observe(PhaseRunReturned, ctx)
+		}
+	}()
 	if err := manifest.Validate(); err != nil {
 		return out, err
 	}
@@ -229,6 +289,8 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	}
 	ctx, cancel, budget := runnerContext(ctx, runner.Timeout, runner.ExcludeHostTime)
 	defer cancel()
+	observationContext = ctx
+	defer func() { runner.observe(PhaseRunReturned, observationContext) }()
 	cmd := exec.CommandContext(ctx, command.Path, command.Args...)
 	cmd.Dir, cmd.WaitDelay = command.Dir, time.Second
 	// Do not inherit provider credentials or management sessions from the host.
@@ -249,7 +311,10 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		stdin.Close()
 		return out, failure("worker_start_failed")
 	}
-	if err = cmd.Start(); err != nil {
+	runner.observe(PhaseStartBegin, ctx)
+	err = cmd.Start()
+	runner.observe(PhaseStartEnd, ctx)
+	if err != nil {
 		stdin.Close()
 		stdout.Close()
 		return out, failure("worker_start_failed")
@@ -258,14 +323,21 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	defer func() {
 		stdin.Close()
 		if !waited {
+			runner.observe(PhaseCleanupWaitBegin, ctx)
 			_ = cmd.Process.Kill()
 			_ = cmd.Wait()
+			runner.observe(PhaseCleanupWaitEnd, ctx)
 		}
 		out.StderrBytes = stderr.bytes
 		if stderr.exceeded {
 			err = failure("stderr_limit")
 		} else if ctx.Err() != nil {
 			err = failure("execution_canceled")
+		}
+		// Cancellation can win after Wait succeeded but before this final check.
+		// Error results retain transport evidence, never a successful payload.
+		if err != nil {
+			out.Result = nil
 		}
 	}()
 	identity := Identity{PluginID: manifest.PluginID, InstanceID: instanceID, Version: manifest.Version}
@@ -280,7 +352,9 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		out.ReadChunks = session.readChunks
 	}()
 	hello, _ := json.Marshal(map[string]int{"protocol": ProtocolVersion, "host_api": HostAPIVersion})
+	runner.observe(PhaseHandshakeBegin, ctx)
 	raw, err := session.exchange("handshake", hello)
+	runner.observe(PhaseHandshakeEnd, ctx)
 	if err != nil {
 		return out, err
 	}
@@ -294,7 +368,9 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		}
 		limits := transportLimits{Version: 1, FrameBytes: min(runner.MaxFrameBytes, 1<<20), LogicalBytes: runner.MaxMessageBytes, HostSendBytes: runner.MaxInputBytes, HostReadBytes: runner.MaxOutputBytes, ChunkBytes: runner.MaxChunkBytes, MessageChunks: runner.MaxMessageChunks, SessionChunks: runner.MaxSessionChunks, Transfers: runner.MaxHostCalls + 4}
 		proposal, _ := json.Marshal(limits)
+		runner.observe(PhaseNegotiateBegin, ctx)
 		answer, negotiateErr := session.exchange("transport.negotiate", proposal)
+		runner.observe(PhaseNegotiateEnd, ctx)
 		var accepted transportLimits
 		if negotiateErr != nil {
 			return out, negotiateErr
@@ -306,16 +382,23 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	} else if !explicitOutput {
 		session.maxOutput = 8 << 20
 	}
+	runner.observe(PhaseInvokeBegin, ctx)
 	result, err := session.exchange(method, payload)
+	runner.observe(PhaseInvokeEnd, ctx)
 	if err != nil {
 		return out, err
 	}
-	if _, err = session.exchange("stop", nil); err != nil {
+	runner.observe(PhaseStopBegin, ctx)
+	_, err = session.exchange("stop", nil)
+	runner.observe(PhaseStopEnd, ctx)
+	if err != nil {
 		return out, err
 	}
 	stdin.Close()
+	runner.observe(PhaseWaitBegin, ctx)
 	err = cmd.Wait()
 	waited = true
+	runner.observe(PhaseWaitEnd, ctx)
 	if err != nil {
 		return out, failure("worker_failed")
 	}

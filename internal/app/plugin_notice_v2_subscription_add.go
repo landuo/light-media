@@ -15,7 +15,7 @@ const subscriptionAddNoticeOwner = "system.subscription.add"
 
 func (p *PluginStore) validateSubscriptionAddNoticeBinding(ctx context.Context, q subscriptionCompletionReader, r pluginNoticeRoute) error {
 	b := r.BusinessV2
-	if b == nil || b.Binding.Kind != "subscription_add" || b.Binding.Added == nil || b.Binding.Completion != nil || r.Instance != subscriptionAddNoticeOwner || r.Generation != 1 || b.Binding.Inbox != "" || b.Binding.Ordinal != 0 || b.Binding.CoreInputSHA != "" {
+	if b == nil || b.Binding.SiteMessage != nil || b.Binding.Kind != "subscription_add" || b.Binding.Added == nil || b.Binding.Completion != nil || r.Instance != subscriptionAddNoticeOwner || r.Generation != 1 || b.Binding.Inbox != "" || b.Binding.Ordinal != 0 || b.Binding.CoreInputSHA != "" {
 		return subscriptionAddEvidenceError()
 	}
 	identity := *b.Binding.Added

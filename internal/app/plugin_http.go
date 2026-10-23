@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/autosignin"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/remoteidentifiers"
 	"light-media/internal/plugins/removelink"
@@ -19,6 +20,14 @@ import (
 )
 
 type pluginCard struct {
+	RestoreReview              *pluginReviewRestoreRequest `json:"restore_review,omitempty"`
+	RestoreReviewBlockedReason string                      `json:"restore_review_blocked_reason,omitempty"`
+	UpdateReviewPending        bool                        `json:"update_review_pending,omitempty"`
+	UpdateBlockedReason        string                      `json:"update_blocked_reason,omitempty"`
+	Update                     *pluginUpdateRequest        `json:"update,omitempty"`
+	HasUpdate                  bool                        `json:"has_update,omitempty"`
+	DisplayVersion             string                      `json:"display_version,omitempty"`
+	SourceInstanceID           string                      `json:"source_instance_id,omitempty"`
 	plugins.Manifest
 	InstanceID string `json:"instance_id"`
 	Installed  bool   `json:"installed"`
@@ -122,10 +131,35 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 					}
 				}
 			}
-			items = append(items, pluginCard{Manifest: manifest, InstanceID: installation.InstanceID, Installed: true, State: state})
+			card, err := a.pluginStore.presentInstance(ctx, installation, manifest)
+			if err != nil {
+				return nil, err
+			}
+			card.Update, card.UpdateBlockedReason, err = a.pluginStore.builtinUpdateOffer(ctx, installation)
+			if err != nil {
+				return nil, err
+			}
+			card.HasUpdate = card.Update != nil
+			review, e := a.pluginStore.pluginUpdateReviewRead(ctx, a.Store.DB, installation)
+			if e != nil {
+				return nil, e
+			}
+			card.UpdateReviewPending = review != nil
+			card.State = state && !card.UpdateReviewPending
+			items = append(items, card)
 		}
 	}
 	if market {
+		recoverable, err := a.pluginReviewRestoreCards(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, card := range recoverable {
+			items = append(items, card)
+			if card.InstanceID == card.PluginID {
+				seen[card.PluginID] = true
+			}
+		}
 		for _, manifest := range builtin.Catalog() {
 			if !seen[manifest.PluginID] {
 				items = append(items, pluginCard{Manifest: manifest, InstanceID: manifest.PluginID})
@@ -146,42 +180,67 @@ func decodePluginBody(w http.ResponseWriter, r *http.Request, value any) error {
 }
 
 func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (map[string]any, error) {
+	return a.pluginFormWithOrigin(ctx, installation, pluginFormOriginInstalled)
+}
+
+func (a *App) pluginFormWithOrigin(ctx context.Context, installation PluginInstallation, origin pluginFormOrigin) (map[string]any, error) {
+	diagnostic := newTransferFormObservation(installation.PluginID)
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	select {
 	case a.pluginProcess <- struct{}{}:
 		defer func() { <-a.pluginProcess }()
 	case <-ctx.Done():
+		a.logTransferFormFailure(diagnostic, installation, ctx, "queue", plugins.RunResult{}, ctx.Err())
 		return nil, bad("PLUGIN_BUSY", "插件正在执行，请稍后重试")
 	}
+	diagnostic.acquired()
 	manifest, _, exists := builtin.Lookup(installation.PluginID)
 	if !exists || manifest.Version != installation.Version {
 		return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的Go实现尚未完成，不能配置或运行")
 	}
+	session, err := a.pluginStore.beginPluginFormSession(ctx, installation, origin)
+	if err != nil {
+		a.logTransferFormFailure(diagnostic, installation, ctx, "snapshot", plugins.RunResult{}, err)
+		return nil, err
+	}
+	installation = pluginFormInstallationCopy(session.resolution.installation)
+	ctx = withPluginFormSession(ctx, session)
 	command, err := a.pluginExecutable(installation.PluginID)
 	if err != nil {
 		return nil, err
 	}
-	result, err := (plugins.Runner{Timeout: 10 * time.Second}).Run(ctx, command, manifest, installation.InstanceID, "config_form", nil, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+	runner := plugins.Runner{Timeout: 10 * time.Second}
+	if diagnostic != nil {
+		runner.ObservePhase = diagnostic.observe
+	}
+	result, err := runner.Run(ctx, command, manifest, installation.InstanceID, "config_form", nil, diagnostic.wrapHost(session.wrapHost(func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 		return a.pluginHostCall(ctx, installation, nil, identity, method, raw)
-	})
+	})))
 	if err != nil {
+		a.logTransferFormFailure(diagnostic, installation, ctx, "runner", result, err)
+		if session.hostFailure != nil {
+			failure := *session.hostFailure
+			return nil, &failure
+		}
 		return nil, bad("PLUGIN_FORM_FAILED", "加载插件配置表单失败")
 	}
+	if session.hostFailure != nil {
+		a.logTransferFormFailure(diagnostic, installation, ctx, "host", result, session.hostFailure)
+		failure := *session.hostFailure
+		return nil, &failure
+	}
 	var form struct {
-		Conf             json.RawMessage            `json:"conf"`
-		Model            map[string]json.RawMessage `json:"model"`
-		SnapshotRevision *int64                     `json:"revision"`
-		RenderMode       string                     `json:"render_mode"`
+		Conf       json.RawMessage            `json:"conf"`
+		Model      map[string]json.RawMessage `json:"model"`
+		RenderMode string                     `json:"render_mode"`
 	}
 	if json.Unmarshal(result.Result, &form) != nil || form.Model == nil || !json.Valid(form.Conf) {
+		a.logTransferFormFailure(diagnostic, installation, ctx, "form_decode", result, nil)
 		return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回格式无效")
 	}
-	stored, err := a.pluginStore.Config(ctx, installation.InstanceID)
-	if err != nil && !missingPluginValue(err) {
-		return nil, err
-	}
-	if err == nil && installation.PluginID != "MergeSiteSwitch" {
+	stored := pluginFormValueCopy(session.display)
+	if session.configExists && !pluginFormSourceModel(manifest, session.resolution.mode) {
 		// Private subscription sources remain encrypted and are projected below.
 		var config map[string]json.RawMessage
 		if json.Unmarshal(stored.Value, &config) != nil {
@@ -220,9 +279,6 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 			form.Model["file_urls"], _ = json.Marshal(privateIdentifiersURLs)
 		}
 	}
-	if installation.PluginID == "MergeSiteSwitch" && form.SnapshotRevision != nil {
-		stored.Revision = *form.SnapshotRevision
-	}
 	if installation.PluginID == "SeedRescue" {
 		projectSeedRescueSecrets(form.Model)
 	}
@@ -232,12 +288,16 @@ func (a *App) pluginForm(ctx context.Context, installation PluginInstallation) (
 			return nil, err
 		}
 	}
-	response := map[string]any{"conf": form.Conf, "model": form.Model, "revision": stored.Revision}
+	response := map[string]any{"conf": form.Conf, "model": form.Model, "revision": session.durable.Revision}
 	if form.RenderMode != "" {
 		if form.RenderMode != "vue" && form.RenderMode != "vuetify" {
+			a.logTransferFormFailure(diagnostic, installation, ctx, "render_mode", result, nil)
 			return nil, bad("PLUGIN_FORM_FAILED", "插件配置表单返回界面格式无效")
 		}
 		response["render_mode"] = form.RenderMode
+	}
+	if err = session.validateFinal(ctx); err != nil {
+		return nil, err
 	}
 	return response, nil
 }
@@ -310,7 +370,7 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		}
 		raw, _ := json.Marshal(manifest)
 		installation := PluginInstallation{PluginID: in.PluginID, InstanceID: in.PluginID, Version: manifest.Version, ManifestSchemaVersion: 1, Manifest: raw}
-		form, err := a.pluginForm(ctx, installation)
+		form, err := a.pluginFormWithOrigin(ctx, installation, pluginFormOriginInstall)
 		if err != nil {
 			return nil, err
 		}
@@ -343,6 +403,16 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		return nil, &APIError{"NOT_FOUND", "插件已卸载", 404}
 	}
 	switch {
+	case parts[1] == "tjupt-cache" && r.Method == "GET":
+		return a.ExportAutoSignInTjuptCache(ctx, installation.InstanceID)
+	case parts[1] == "tjupt-cache" && r.Method == "POST":
+		raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, autoSignInTjuptCacheTransferLimit))
+		if err != nil {
+			return nil, bad("AUTOSIGNIN_CACHE_INPUT_INVALID", "签到缓存文件无效或过大")
+		}
+		// The existing lifecycle lock above is held. Import must not initialize
+		// the plugin, enqueue work or grant any source/network capability.
+		return a.importAutoSignInTjuptCacheLocked(ctx, installation.InstanceID, raw)
 	case parts[1] == "page" && r.Method == "GET":
 		if installation.PluginID == "LarkMessager" {
 			return a.larkPage(ctx, installation)
@@ -369,7 +439,7 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 	case parts[1] == "runs" && r.Method == "GET":
 		return a.pluginRunHistory(ctx, installation.InstanceID)
 	case parts[1] == "config" && r.Method == "PUT":
-		if !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" && installation.PluginID != "LarkMessager" {
+		if installation.PluginID != "AutoSignIn" && !isTorrentTransfer(installation.PluginID) && installation.PluginID != "IYUUAutoSeed" && installation.PluginID != "CategoryEditor" && installation.PluginID != "CustomHosts" && installation.PluginID != "SystemProcess" && installation.PluginID != "MediaServerRefresh" && installation.PluginID != "RemoteIdentifiers" && installation.PluginID != "MergeSiteSwitch" && installation.PluginID != "SiteStatistic" && installation.PluginID != "SubscribeGroup" && installation.PluginID != "PluginUnInstall" && installation.PluginID != "MPServerStatus" && installation.PluginID != "LarkMessager" {
 			return nil, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "此插件的配置和业务尚未实现")
 		}
 		var in struct {
@@ -441,11 +511,15 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		}
 		return map[string]any{"run": run}, err
 	case parts[1] == "reset" && r.Method == "POST":
-		if err := a.drainMediaRefresh(ctx, installation); err != nil {
+		proof, err := a.pluginStore.resetAdmission(ctx, installation.InstanceID)
+		if err != nil {
 			return nil, err
 		}
+		if installation.PluginID == "MediaServerRefresh" && !proof.mediaDrained {
+			return nil, errPluginRunTransitionState
+		}
 		a.pluginMu.Lock()
-		err := a.pluginStore.Reset(ctx, installation.InstanceID)
+		err = a.pluginStore.Reset(ctx, installation.InstanceID)
 		if err == nil {
 			a.pluginServerStatus.invalidate(installation.InstanceID)
 		}
@@ -483,6 +557,12 @@ func (a *App) validateNativePluginConfig(pluginID string, raw json.RawMessage) (
 		return nil
 	}
 	switch pluginID {
+	case "AutoSignIn":
+		var config autosignin.Object
+		if autosignin.Decode(raw, &config) != nil || config == nil {
+			return nil, bad("INVALID_PLUGIN_CONFIG", "签到配置必须为有效对象")
+		}
+		return append(json.RawMessage(nil), raw...), nil
 	case "CloudflareSpeedTest":
 		if _, e := cloudflareConfig(raw); e != nil {
 			return nil, e

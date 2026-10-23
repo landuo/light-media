@@ -15,9 +15,10 @@ import (
 )
 
 type pluginNoticeDriver struct {
-	a      *App
-	id     string
-	cursor int
+	a       *App
+	id      string
+	cursor  int
+	failure *removeLinkSourceFailure
 }
 
 func noticeValue(raw json.RawMessage) (any, error) {
@@ -42,6 +43,9 @@ func sourceNoticeError(err error) string {
 	return "RuntimeError"
 }
 func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, apply func(*sql.Tx, pluginNoticeRoute, int) (any, error)) (any, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	raw, err := cleanupJournalJSON(input)
 	if err != nil {
 		return nil, err
@@ -57,6 +61,9 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	if err != nil {
 		return nil, seedhost.ErrUnknown
 	}
+	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
+		return nil, err
+	}
 	if ordinal < r.Count {
 		s := steps[ordinal]
 		if s.Kind != kind || s.InputSHA != inputSHA {
@@ -71,11 +78,12 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	if ordinal != r.Count || r.Complete || ordinal >= pluginNoticeStepLimit {
 		return nil, seedhost.ErrUnknown
 	}
-	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
+	if err = d.a.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
 		return nil, err
 	}
 	value, err := apply(tx, r, ordinal)
 	if err != nil {
+		d.failure = &removeLinkSourceFailure{Kind: kind, Ordinal: ordinal, InputSHA: inputSHA}
 		return nil, err
 	}
 	output, err := cleanupJournalJSON(value)
@@ -109,6 +117,9 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	return noticeValue(output)
 }
 func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := d.a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -121,11 +132,25 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	if r.Count != d.cursor {
 		return seedhost.ErrUnknown
 	}
-	if err = d.a.pluginStore.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
+	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
+		return err
+	}
+	if err = d.a.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
 		return err
 	}
 	r.Complete = true
 	r.SourceError = sourceNoticeError(sourceErr)
+	if err = d.a.pluginStore.finishAutoSignInNoticeTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
+		return seedhost.ErrUnknown
+	}
+	if err = d.a.pluginStore.finishRemoveLinkSourceTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
+		return seedhost.ErrUnknown
+	}
+	if r.Kind == "site_statistic" {
+		if err = d.a.pluginStore.finishSiteStatisticNoticeTx(ctx, tx, r); err != nil {
+			return seedhost.ErrUnknown
+		}
+	}
 	if err = d.a.pluginStore.saveNoticeRouteTx(ctx, tx, r); err != nil {
 		return seedhost.ErrUnknown
 	}
@@ -145,6 +170,9 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 // callbacks. A callback replays only its own recorded result; it never repeats a
 // publication, an accepted core queue call or an external attempt.
 func (a *App) runNoticeRoute(ctx context.Context, id string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	release, err := a.pluginStore.noticeLock(ctx, "route/"+id)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -153,12 +181,26 @@ func (a *App) runNoticeRoute(ctx context.Context, id string) error {
 	return a.runNoticeRouteLocked(ctx, id)
 }
 func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if _, err := a.pluginStore.noticePeriods(ctx); err != nil {
 		return seedhost.ErrUnknown
 	}
 	initial, _, err := a.pluginStore.readNoticeRoute(ctx, a.Store.DB, id)
 	if err != nil {
 		return seedhost.ErrUnknown
+	}
+	if initial.Kind == "auto_signin" {
+		tx, guardErr := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+		if guardErr != nil {
+			return seedhost.ErrUnknown
+		}
+		guardErr = a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, initial)
+		_ = tx.Rollback()
+		if guardErr != nil {
+			return seedhost.ErrUnknown
+		}
 	}
 	if initial.Complete {
 		if initial.SourceError != "" {
@@ -214,7 +256,10 @@ func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
 	router := notice.Router{Dependencies: notice.Dependencies{
 		Superuser: superuser,
 		SaveHistory: func(_ context.Context, v notice.Object) error {
-			_, err := d.step(ctx, "history", v, func(_ *sql.Tx, r pluginNoticeRoute, _ int) (any, error) {
+			_, err := d.step(ctx, "history", v, func(tx *sql.Tx, r pluginNoticeRoute, _ int) (any, error) {
+				if r.Kind == "auto_signin" {
+					return a.pluginStore.autoSignInNoticeHistoryTx(ctx, tx, r, v)
+				}
 				if r.HistoryID == "" || !bytes.Equal(mustCleanSeedJSON(v), r.Envelope) {
 					return nil, seedhost.ErrUnsafe
 				}
@@ -329,6 +374,9 @@ func (c *pluginCleanInvalidSeedCore) AfterNotice(ctx context.Context, inv seedho
 // the original Clean function or granting its interrupted run new effects.
 
 func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if limit < 1 || limit > 200 {
 		return seedhost.ErrUnsafe
 	}
@@ -368,7 +416,11 @@ func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
 		release, ok := p.tryNoticeLock("route/" + v.id)
 		if ok {
 			r, _, e := p.readNoticeRoute(ctx, a.Store.DB, v.id)
-			if e == nil && !r.Complete {
+			// Core collection recovery reconstructs its live job/API authority and
+			// resumes ordinals in order. A generic route scan cannot supply that
+			// authority, even though it can validate the immutable route.
+			siteMessage := r.BusinessV2 != nil && r.BusinessV2.Binding.Kind == "site_message"
+			if e == nil && !r.Complete && !siteMessage {
 				e = a.runNoticeRouteLocked(ctx, v.id)
 			}
 			release()
@@ -384,5 +436,13 @@ func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
 	p.notices.mu.Lock()
 	p.notices.routeAfter, p.notices.routeThrough = after, through
 	p.notices.mu.Unlock()
+	// The source worker may have exited while this accepted route was still
+	// incomplete. Finish that original run without invoking its SDK again.
+	if err := a.resumeSiteMessageCollections(ctx); err != nil && first == nil {
+		first = err
+	}
+	if err := p.reconcileSiteStatisticNoticeRuns(ctx); err != nil && first == nil {
+		first = err
+	}
 	return first
 }

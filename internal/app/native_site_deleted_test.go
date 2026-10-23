@@ -200,7 +200,7 @@ func TestNativeSiteDeletedActualEventCollectionAuthenticatesTombstoneBeforeCurso
 			if err = p.configureEventSubscription(context.Background(), run, "refresh", []string{"site.deleted"}, 0, true); err != nil {
 				t.Fatal(err)
 			}
-			if err = p.FinishRun(context.Background(), run.ID, "succeeded", "", nil); err != nil {
+			if err = finishClaimedFixtureRun(context.Background(), p, run, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 			var before int64

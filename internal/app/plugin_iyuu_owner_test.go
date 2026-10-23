@@ -39,14 +39,14 @@ func TestIYUUActualSDKWorker(t *testing.T) {
 		}
 	}
 }
-func invokeIYUUActualSDK(t *testing.T, a *App, run PluginRun) PluginRun {
-	got, e := invokeIYUUActualSDKOutcome(t, a, run, true)
+func invokeIYUUActualSDK(t *testing.T, a *App, run PluginRun, commands ...plugins.Command) PluginRun {
+	got, e := invokeIYUUActualSDKOutcome(t, a, run, true, commands...)
 	if e != nil {
 		t.Fatal("actual deferred owner", e)
 	}
 	return got
 }
-func prepareIYUUActualSDK(t *testing.T, a *App, run PluginRun) *pluginDeferredCall {
+func prepareIYUUActualSDK(t *testing.T, a *App, run PluginRun, commands ...plugins.Command) *pluginDeferredCall {
 	t.Helper()
 	ctx := context.Background()
 	in, e := a.pluginStore.Installation(ctx, run.InstanceID)
@@ -68,7 +68,14 @@ func prepareIYUUActualSDK(t *testing.T, a *App, run PluginRun) *pluginDeferredCa
 		manifest = uninstall.Manifest()
 		flag = "--iyuu-owned-uninstall-worker"
 	}
-	worker, e := (plugins.Runner{Timeout: 20 * time.Second}).Run(ctx, plugins.Command{Path: executable, Args: []string{"-test.run=^TestIYUUActualSDKWorker$", "--", flag}}, manifest, run.InstanceID, "invoke", run.Input, d.handshake)
+	command := plugins.Command{Path: executable, Args: []string{"-test.run=^TestIYUUActualSDKWorker$", "--", flag}}
+	if len(commands) > 1 {
+		t.Fatal("multiple worker commands")
+	}
+	if len(commands) == 1 {
+		command = commands[0]
+	}
+	worker, e := (plugins.Runner{Timeout: 20 * time.Second}).Run(ctx, command, manifest, run.InstanceID, "invoke", run.Input, d.handshake)
 	<-a.pluginProcess
 	if e != nil {
 		t.Fatal("actual SDK child", e)
@@ -78,10 +85,10 @@ func prepareIYUUActualSDK(t *testing.T, a *App, run PluginRun) *pluginDeferredCa
 	}
 	return d
 }
-func invokeIYUUActualSDKOutcome(t *testing.T, a *App, run PluginRun, finish bool) (PluginRun, error) {
+func invokeIYUUActualSDKOutcome(t *testing.T, a *App, run PluginRun, finish bool, commands ...plugins.Command) (PluginRun, error) {
 	t.Helper()
 	ctx := context.Background()
-	d := prepareIYUUActualSDK(t, a, run)
+	d := prepareIYUUActualSDK(t, a, run, commands...)
 	result, e := d.execute(ctx, &run)
 	if e != nil {
 		return run, e
@@ -89,7 +96,7 @@ func invokeIYUUActualSDKOutcome(t *testing.T, a *App, run PluginRun, finish bool
 	if !finish {
 		return run, nil
 	}
-	if e = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", result); e != nil {
+	if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", result); e != nil {
 		t.Fatal(e)
 	}
 	got, e := a.pluginStore.Run(ctx, run.ID)
@@ -139,6 +146,7 @@ func TestIYUUActualAppSDKDaemonDirectoryChangeAndLostACK(t *testing.T) {
 }
 
 type iyuuActualSDKSetup struct {
+	WorkerCommand    *plugins.Command
 	Prepare          func(*testing.T, *App, map[string]any) PluginRun
 	SuccessCacheBase int
 	Verify           func(*testing.T, *App, PluginRun)
@@ -148,6 +156,10 @@ func testIYUUActualAppSDK(t *testing.T, kind string, lostACK bool, stages ...str
 	testIYUUActualAppSDKWithSetup(t, kind, lostACK, nil, stages...)
 }
 func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setup *iyuuActualSDKSetup, stages ...string) {
+	commands := []plugins.Command{}
+	if setup != nil && setup.WorkerCommand != nil {
+		commands = append(commands, *setup.WorkerCommand)
+	}
 	stage := "pending"
 	if len(stages) > 0 {
 		stage = stages[0]
@@ -388,7 +400,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 		config["categoryafterseed"] = "movie"
 	}
 	var run PluginRun
-	if setup == nil {
+	if setup == nil || setup.Prepare == nil {
 		run = uninstallInstall(t, a, "OwnedIYUU", iyuu.Manifest(), config, true)
 	} else {
 		run = setup.Prepare(t, a, config)
@@ -397,7 +409,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 	if _, _, found := builtin.Lookup("IYUUAutoSeed"); !found {
 		t.Fatal("owned catalog overlay missing")
 	}
-	run = invokeIYUUActualSDK(t, a, run)
+	run = invokeIYUUActualSDK(t, a, run, commands...)
 	if run.State != "succeeded" {
 		t.Fatal(run.State)
 	}
@@ -423,7 +435,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 		t.Fatal(e)
 	}
 	if directoryMode == "directory-before-change" || directoryMode == "directory-after-change" || directoryMode == "directory-lost-add" {
-		run, e = invokeIYUUActualSDKOutcome(t, a, run, directoryMode == "directory-before-change")
+		run, e = invokeIYUUActualSDKOutcome(t, a, run, directoryMode == "directory-before-change", commands...)
 		if directoryMode == "directory-before-change" {
 			if e != nil || run.State != "succeeded" {
 				t.Fatal("known-undispatched directory change", run.State, e)
@@ -435,7 +447,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 			if directoryMode == "directory-after-change" && (e == nil || !strings.Contains(e.Error(), "destination changed")) {
 				t.Fatal("unobserved daemon destination continued", e)
 			}
-			if e = a.pluginStore.FinishRun(ctx, run.ID, "failed", "OWNED_DESTINATION_RECONCILE", nil); e != nil {
+			if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "failed", "OWNED_DESTINATION_RECONCILE", nil); e != nil {
 				t.Fatal(e)
 			}
 			iyuuAssertUnknownAdmissionsWarmCold(t, a, run)
@@ -467,12 +479,12 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 				t.Fatal(e)
 			}
 			if stage == "prepared" {
-				secondDeferred = prepareIYUUActualSDK(t, a, second)
+				secondDeferred = prepareIYUUActualSDK(t, a, second, commands...)
 			}
 		}
 		var secondOutcome error
 		if stage == "prepared" {
-			firstDeferred := prepareIYUUActualSDK(t, a, run)
+			firstDeferred := prepareIYUUActualSDK(t, a, run, commands...)
 			firstDone, secondDone := make(chan error, 1), make(chan error, 1)
 			go func() { _, err := firstDeferred.execute(ctx, &run); firstDone <- err }()
 			select {
@@ -502,14 +514,14 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 				t.Fatal("second owner waiter timeout")
 			}
 		} else {
-			run, e = invokeIYUUActualSDKOutcome(t, a, run, false)
+			run, e = invokeIYUUActualSDKOutcome(t, a, run, false, commands...)
 		}
 		if !errors.Is(e, iyuu.ErrUnconfirmed) {
 			t.Fatal("lost native ACK did not remain unknown", e)
 		}
 		// An operator may acknowledge the failed App task. That cannot manufacture
 		// a native receipt or permit a new source timeline to repeat the effect.
-		if e = a.pluginStore.FinishRun(ctx, run.ID, "failed", "IYUU_OWNED_UNKNOWN", nil); e != nil {
+		if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "failed", "IYUU_OWNED_UNKNOWN", nil); e != nil {
 			t.Fatal(e)
 		}
 		if stage != "pending" {
@@ -532,7 +544,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 			if stage == "prepared" && (readErr != nil || record.Phase != "prepared") {
 				t.Fatal("blocked start changed prepared receipt", record.Phase, readErr)
 			}
-			if e = a.pluginStore.FinishRun(ctx, second.ID, "failed", "IYUU_UNCONFIRMED", nil); e != nil {
+			if e = finishClaimedFixtureRun(ctx, a.pluginStore, second, "failed", "IYUU_UNCONFIRMED", nil); e != nil {
 				t.Fatal(e)
 			}
 		}
@@ -555,7 +567,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 	// deferred call loses its final acknowledgement. Cold recovery must finish
 	// from the original immutable CP without replaying any HTTP/native effect.
 	a.pluginIYUU.afterCheckpoint = func() error { return errors.New("owned lost final checkpoint acknowledgement") }
-	run, e = invokeIYUUActualSDKOutcome(t, a, run, false)
+	run, e = invokeIYUUActualSDKOutcome(t, a, run, false, commands...)
 	if e == nil {
 		t.Fatal("missing owned final ACK failure")
 	}

@@ -7,6 +7,7 @@ import { VList, VListItem } from 'vuetify/components/VList';
 import { VIcon } from 'vuetify/components/VIcon';
 import type { PluginCard } from '../features/plugin-forms';
 import iconColors from '../features/plugin-icon-colors.json';
+import { safePluginIcon } from '../features/plugin-clone';
 
 const props = defineProps<{
   plugin: PluginCard;
@@ -16,7 +17,9 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
 const iconFailed = ref(false);
-const sourceIconName = computed(() => props.plugin.icon?.split('/').at(-1) || '');
+const sourceIcon = computed(() => props.plugin.icon || '');
+const sourceIconName = computed(() => sourceIcon.value.split('/').at(-1) || '');
+const displayVersion = computed(() => props.plugin.display_version ?? props.plugin.version);
 const iconName = computed(() => {
   const name = sourceIconName.value;
   return !iconFailed.value &&
@@ -25,14 +28,23 @@ const iconName = computed(() => {
     ? name
     : 'plugin.png';
 });
-const iconPath = computed(() => '/plugin_icon/' + iconName.value);
+const iconPath = computed(() => {
+  if (
+    iconFailed.value ||
+    Object.hasOwn(iconColors, sourceIconName.value) ||
+    !sourceIcon.value.includes('/') ||
+    sourceIcon.value.startsWith('../')
+  )
+    return safePluginIcon(iconName.value);
+  return safePluginIcon(sourceIcon.value) || safePluginIcon('plugin.png');
+});
 const coverStyle = computed(() => {
   // These colors are generated with MoviePilot's ColorThief quality=20 from
   // the bundled original icons, keeping the original cover offline and stable.
   const color = (iconColors as Record<string, string>)[iconName.value] || '#28a9e1';
   return { background: `linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, .5)), ${color}` };
 });
-watch(sourceIconName, () => {
+watch(sourceIcon, () => {
   iconFailed.value = false;
 });
 </script>
@@ -45,16 +57,22 @@ watch(sourceIconName, () => {
       @click="!sortable && emit('action', 'open', plugin)"
     >
       <div class="plugin-card-cover" :style="coverStyle">
-        <div class="plugin-card-title" :title="plugin.name + ' v' + plugin.version">
+        <div class="plugin-card-title" :title="plugin.name + ' v' + displayVersion">
           <span class="plugin-state-dot" :class="{ active: plugin.state }"></span>
           <span class="plugin-card-name"
-            >{{ plugin.name }} <span class="plugin-version">v{{ plugin.version }}</span></span
+            >{{ plugin.name }} <span class="plugin-version">v{{ displayVersion }}</span></span
           >
         </div>
         <div class="plugin-card-description">
           <span :title="plugin.description">{{ plugin.description }}</span>
           <div class="plugin-card-icon">
-            <img :src="iconPath" alt="" @error="iconFailed = true" />
+            <img
+              :key="iconPath"
+              :src="iconPath"
+              alt=""
+              referrerpolicy="no-referrer"
+              @error="iconFailed = true"
+            />
           </div>
         </div>
       </div>
@@ -75,9 +93,18 @@ watch(sourceIconName, () => {
           v-if="!plugin.installed"
           size="small"
           variant="text"
-          :disabled="busy"
-          @click.stop="emit('action', 'install', plugin)"
-          >安装</VBtn
+          :disabled="busy || !!plugin.restore_review_blocked_reason"
+          :title="plugin.restore_review_blocked_reason || undefined"
+          @click.stop="
+            emit('action', plugin.restore_review ? 'restore-reviewed' : 'install', plugin)
+          "
+          >{{
+            plugin.restore_review
+              ? '恢复为待确认'
+              : plugin.restore_review_blocked_reason
+                ? '恢复暂不可用'
+                : '安装'
+          }}</VBtn
         >
         <VMenu
           v-else-if="!sortable"
@@ -94,6 +121,7 @@ watch(sourceIconName, () => {
               icon
               size="40"
               :aria-label="plugin.name + '操作'"
+              :disabled="busy"
               @click.stop
             >
               <VIcon icon="mdi-dots-vertical" size="24" />
@@ -110,6 +138,28 @@ watch(sourceIconName, () => {
               title="设置"
               prepend-icon="mdi-cog-outline"
               @click="emit('action', 'settings', plugin)"
+            />
+            <VListItem
+              title="分身"
+              prepend-icon="mdi-content-copy"
+              :disabled="busy"
+              @click="!busy && emit('action', 'clone', plugin)"
+            />
+            <VListItem
+              v-if="plugin.has_update && plugin.update"
+              :title="'更新至 v' + plugin.update.target_version"
+              prepend-icon="mdi-update"
+              @click="emit('action', 'update', plugin)"
+            />
+            <VListItem
+              v-if="plugin.update_review_pending"
+              title="更新已迁移，打开设置确认执行意图"
+              @click="emit('action', 'settings', plugin)"
+            />
+            <VListItem
+              v-if="plugin.update_blocked_reason"
+              disabled
+              :title="'更新暂不可用：' + plugin.update_blocked_reason"
             />
             <VListItem
               title="重置"

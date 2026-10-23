@@ -5,6 +5,7 @@ package builtin
 import (
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/autobackup"
+	"light-media/internal/plugins/autosignin"
 	"light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/cleaninvalidseed"
 	"light-media/internal/plugins/cloudflarespeedtest"
@@ -19,6 +20,8 @@ import (
 
 func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 	switch pluginID {
+	case "AutoSignIn":
+		return autosignin.Manifest(), autosignin.Handle, true
 	case "TorrentTransfer", "TorrentTransfermusic":
 		return transfer.Manifest(pluginID), transfer.Handle, true
 	case "CloudflareSpeedTest":
@@ -63,5 +66,5 @@ func Lookup(pluginID string) (plugins.Manifest, plugins.Handler, bool) {
 }
 
 func Catalog() []plugins.Manifest {
-	return []plugins.Manifest{scrapefileclean.Manifest(), brushflow.NativeManifest(), transfer.Manifest("TorrentTransfer"), transfer.Manifest("TorrentTransfermusic"), seedrescue.NativeManifest(), cloudflarespeedtest.NativeManifest(), iyuu.Manifest(), autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
+	return []plugins.Manifest{autosignin.Manifest(), scrapefileclean.Manifest(), brushflow.NativeManifest(), transfer.Manifest("TorrentTransfer"), transfer.Manifest("TorrentTransfermusic"), seedrescue.NativeManifest(), cloudflarespeedtest.NativeManifest(), iyuu.Manifest(), autobackup.Manifest(), CategoryEditorManifest(), CustomHostsManifest(), SystemProcessManifest(), MediaServerRefreshManifest(), RemoteIdentifiersManifest(), MergeSiteSwitchManifest(), SiteStatisticManifest(), SubscribeGroupManifest(), uninstall.Manifest(), serverstatus.Manifest(), removelink.Manifest(), cleaninvalidseed.Manifest()}
 }

@@ -1,0 +1,17 @@
+AutoSignIn 2.9.14 冻结代理请求链（重要开发阶段，非整插件验收）
+
+沿用实际 SDK、独立分身 owner、不可变站点快照与逐 RoundTrip 守卫；补齐原 RequestUtils 的显式 settings.PROXY、环境代理合并及 HTTP/HTTPS/SOCKS 请求路径。proxy=false 仅不传显式字典，不再错误地等同关闭 Requests trust_env。每条 Do/重定向链独立持有复制的环境/显式 map，不读取执行过程中的 live env，不因代理失败降级直连；fixed 与 MTeam 使用实际目标协议路由。
+
+证据：官方 Requests v2.34.2 utils.py 的 SHA256 657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c 与安装冻结记录精确相同；sessions.py 为官方同版本，不冒称安装文件逐字已核验。源码片段、离线 AST 生成器、原版合成结果及许可证引用见 testdata/plugins/auto-signin-proxy-routing。100 例原版 oracle 中，Go 对比本调用范围 85 例/252 跳。
+
+其余 15 例不是安全限制：nullable 显式条目3、非空 Session.proxies 经 request 5、非空 session 直接 merge 5、trust_env=false 1、非法端口1。前14是通用 Session 的正常语义，但固定 AutoSignIn 使用 requests.request 新空 Session、默认 trust_env=true，settings.PROXY 仅含 http/https 字符串或 None，不会产生这些输入；非法端口在本宿主 URL 授权前置拒绝。它们未计入 Go 通过，也未标成永久 unsupported；若扩为通用 Session 库须另行实现。
+
+代理选择忠于代码而非误导性注释：初始环境键只 setdefault；host-specific 环境键可能优先于普通显式 scheme 键。NO_PROXY 控制环境补入，不会清除既有显式或先前重定向字典。保留原 HTTP Latin-1 代理认证、SOCKS UTF-8 和5/5h DNS差别。代理认证仅由代理传输处理，不把认证复制给源站。
+
+安全边界保持：严格 TLS>=1.2、源站及 HTTPS 代理证书校验、同源重定向、headers/响应/解压限额、idle超时、原 admission/API 权限及每跳守卫。未引入 .netrc 或 CA_BUNDLE 自动读取；这与代理选择是否完整分开记录。只过滤捕获代理相关变量及 REQUEST_METHOD，参与私有 HMAC v2；不保存或上传当前环境的真实值。旧快照不自动继承新授权。
+
+本轮真实 race 暴露了原取消回调与 release 的竞态：回调可能在关闭握手 socket 前被停止。现在仅取消收尾同步关闭受跟踪连接，正常响应连接保留供 body 读取；有确定性排队回调负例、真实 CONNECT/TLS/SOCKS 握手关闭及重复压力回归。第一次失败和修前像保留，不以偶然重跑通过掩盖。
+
+最终同字节验证：完整 App 1161 个顶层/4068 含子项通过，保留8个原基线失败及14项原实机前置跳过；新增失败0。受影响 race/modernconly 各286顶层/1840含子项通过，核心 networkproxy/AutoSignIn/durable/builtin/Apprise 普通及race各159顶层/6243含子项通过，vet及23 CLI构建通过。环境切换曾丢失旧race session，旧日志不计完成；恢复后在独立目录完整重跑，精确哈希与退出码见 verification JSON。
+
+未完代码：Browser/OCR、Tjupt可信图像能力及原答案文件导入/可见语义、下游事件消费者和此前明确的源依赖差异仍待继续。未接真实账户、未迁移生产配置/KV、未部署NAS或生产；正式完成仍7/23，不将代理阶段或注册/构建算作整插件完成。

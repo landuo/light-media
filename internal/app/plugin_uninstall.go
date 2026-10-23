@@ -353,6 +353,9 @@ func (o *uninstallDatabaseOperations) RemovePlugin(ctx context.Context, instance
 	if n, _ := changed.RowsAffected(); n != 1 {
 		return bad("PLUGIN_SNAPSHOT_STALE", "待卸载插件状态已变化")
 	}
+	if err = o.p.recordPluginGenerationLifecycleTx(ctx, o.tx, instance); err != nil {
+		return err
+	}
 	for _, query := range []string{
 		`UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`,
 		`UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND state IN ('collecting','queued')`,

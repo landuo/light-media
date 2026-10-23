@@ -1,0 +1,27 @@
+RemoveLink：已接受通知 outbox 接共享 Router（开发阶段，未部署）
+
+2026-10-21，基线 82dd5c90b0e0937de0d5203eb9cb925641accbc3。本轮只补已获授权并提交的 notification 副作用从私有 outbox 到共享 Router/持久消息队列的缺口，不改变文件清理权限，不代表 RemoveLink 整体迁移或原通知异常控制流已全部完成。正式迁移仍7/23。
+
+接受与来源证明
+- 在原 Commit 的有效租约、完整计划、当前实例/代次/配置检查后，对新 notification 使用私有 outbox v2。首次接受冻结完整信封、AppDomain（含空值）、同一时刻的 CreatedAt/本地 CurrentTime/时区偏移，以及最小脱敏历史标题/正文。只保存需要的配置字段，不复制整份含凭据 Settings。
+- 复用 sourcePluginDefaultLink，以 RemoveLink 类名而非分身实例ID构造链接；空域名不再虚构相对链接。URL规则来源和边界沿用 plugin-site-statistic-default-link.txt，仍未取得固定安装版完整 MP_DOMAIN/UrlUtils 源码。
+- 原核心收据增加 NoticeAcceptanceSHA，绑定不可变接受事实（不含可变 outbox State）。重复 Commit 读取原收据，不能刷新域名、时间或信封。download_file_deleted 不转为通知v2。
+- 来源链为：原授权效果/核心收据 → 精确接受事实 → 冻结信封及独立重建历史 → 专属 remove_link 路由 → handoff 路由ID/初始摘要/历史摘要。不能通过通用SDK JSON、自选收件人或其他插件的来源事实授权通知。
+- 校验全程使用调用方同一个 DB/Tx reader；不回退另一DB连接，不读取实时配置或重新获取owner/文件权限。历史、路由、handoff与checkpoint同事务提交，SQL结束后才由共享恢复器调用Router。
+
+兼容与分身
+旧v1 pending继续原本地历史行为，旧相对历史链接保持，不升级、不补外发；拒绝旧v1夹带新接受字段或附加路由。新v2必须有匹配的收据绑定，拒绝单独降级或信封/域名/时间/历史身份变更。实例、代次、效果token与历史ID相互绑定；同名效果跨分身不共用来源。已退休代次仅可完成此前提交的通知，不获得新文件清理、Observe/Apply/Configure或新配置权限。history_saved仅表示历史交接完成，不等于Router完成或外部送达；未知发送沿用共享队列的不重发处理。
+
+精确来源与未完成语义
+固定 RemoveLink 原版2.17证据在 testdata/plugins/remove-link-2.17；source.py是脱敏副本（SHA256 a10aca1b9a55ab3ee64f90c6c5c69c055309ebcb368db45e3c63354ae745b854），不能冒充原安装文件SHA256 1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4。通知调用位于第1230、1388、1585、2069行，使用SiteMessage/title/text；不同外层异常处理会影响后续清理流程。
+
+当前 host/local.go Notice 仍在 outbox Commit 后返回，并非等到Router源调用返回。因此本阶段没有恢复通知异常同步回传到空目录/即时/延迟/STRM清理分支的全部原版控制流。该缺口继续明确保留，不能把外发接通称作原插件1:1完成。
+
+共享基础还有继承的终态完整性边界：v1路由的初始摘要有意不含Complete/SourceError/步骤计数；拥有内部重新密封能力时，单独改写终态字段可能让路由跳过执行。该边界不是本批引入，也不授予文件删除权限；本轮不可变来源证明并不等于所有可变终态都具有独立证明。需要单独设计共享终态收据，不能用随意限制最小步骤数替代合法提前退出/异常语义。
+
+验证范围
+配套JSON记录最终命令、退出码、测试/子项数、日志SHA及初次失败。新增集成验证仅使用独占临时文件、合成域名/本地服务与发送stub；真实SDK安装/配置创建宿主后，可信本地Observe触发已授权硬链接清理，再交接Router，不把worker提供的原始事件JSON当文件权限。旧夹具的v2空域名历史预期调整保留冲突拒绝及已读保护；真实v1另有明确测试。没有访问真实外发账户、NAS、用户Mac或生产数据，没有部署。
+
+全项目既有失败、条件跳过及40项缺失原始二进制输入仍按前阶段报告保留；专项通过和构建成功不等于完整可部署材料或整插件验收。生产迁移、同步来源异常控制流及共享终态证明均未完成。
+
+最终门禁：新增及受影响历史测试12个顶层/38含子项通过；广范围App普通、race、modernconly各112/399通过，0失败、0跳过；go vet ./internal/app和22个cmd纯Go构建通过。RemoveLink核心race各包结果见JSON。所有最终源码哈希匹配冻结文件，未宣称全项目绿色。

@@ -1,0 +1,13 @@
+TorrentTransfer：取消后的 Runner 返回值一致性修复
+
+范围：基于 f8a1beb7f9260951b877a5f6782c4c9211d33333，仅修改共享 Runner 最终错误出口并增加真实 TorrentTransfer/分身 SDK 的退出边界测试。不是旧表单间歇失败的修复，也不计为插件开发完成。
+
+确定性问题：实际 Serve 已完成且子进程 Wait 成功后，在 WaitEnd 观察点取消上下文。旧代码最终返回 execution_canceled，却同时保留 96 字节成功 Result。原红例失败已保留；正常退出、等待退出时取消、原 10 秒期限、随后独立分身调用均通过。
+修复：最终错误分类完成后，如果 err 非空，清空 Result。HostCalls、收发字节和分块等证据保持不变；不改超时、取消规则、进程回收或 App 的错误处理。
+
+验证：退出边界五场景普通/race均通过；共享协议普通33顶层86含子例通过，race32顶层85含子例通过，但原最大载荷例仍失败。Transfer核心/原生宿主普通与race各16顶层138含子例通过。受影响App普通与race各26顶层57含子例通过，原私密stdin各1例明确跳过。CLI测试、vet、CGO=0 modernconly的server与迁移/交接CLI构建均成功。每轮使用同一冻结overlay和已审空环境/offline clean-go；不混入未提交OCR、MIME、BrushFlow或新的性能实验。
+
+保留失败：共享Runner的真实16MiB四向最大载荷race在原90秒预算下仍为execution_canceled，host调用1次、Result为空；此前在精确bdfab前像也独立失败。本批没有将其跳过或改预算。两次旧App表单失败仍无根因；本轮原入口通过不等于修复。
+历史纠正：第一次是安装POST失败10809ms；第二次安装POST已成功1732ms，初始化运行完成后，transferReadyApp内第一次GET /form失败10027ms，尚未进入无效cron/纠正运行主体。原诊断报告同步修正此入口描述，不更改历史测试结果。
+
+所有新增数据为自建合成fixture、固定错误类别、计数及源码/日志哈希，无账户、凭据或生产文件操作。仍缺40个原二进制输入，不宣称项目全量验收。正式部署与真实账户迁移未执行；下一插件未开始。详细输入、红例与全部门禁终态见相邻verification.json。

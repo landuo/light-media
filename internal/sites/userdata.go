@@ -4,12 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
+	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
 
 	"light-media/internal/logging"
+	"light-media/internal/releasemeta/legacyanime"
 )
 
 // SourceUserData is the MoviePilot DTO, distinct from observed native values.
@@ -30,10 +34,18 @@ type SourceUserData struct {
 	LeechingSize  int64      `json:"leeching_size"`
 	SeedingInfo   [][2]int64 `json:"seeding_info"`
 	MessageUnread int64      `json:"message_unread"`
-	Messages      [][3]any   `json:"message_unread_contents"`
-	Error         *string    `json:"err_msg"`
-	Day           string     `json:"updated_day"`
-	Time          *string    `json:"updated_time"`
+	// Messages preserves every source-supplied array element. Parsers that provide
+	// only heading/date/body continue to serialize exactly three values; an optional
+	// fourth source and later metadata must survive private snapshot roundtrips.
+	Messages [][]any `json:"message_unread_contents"`
+	// JSON-decoded snapshots keep authoritative raw rows, including nested object
+	// key order. Messages remains a compatibility view for all-array lists.
+	// Parser-created DTOs have no overlay until serialized and reopened; decoded
+	// snapshots are immutable, so modifying Messages does not replace raw authority.
+	rawMessageRows []json.RawMessage
+	Error          *string `json:"err_msg"`
+	Day            string  `json:"updated_day"`
+	Time           *string `json:"updated_time"`
 }
 
 // Private snapshots must not round an original integer ID or arbitrary JSON
@@ -41,18 +53,71 @@ type SourceUserData struct {
 func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 	type plain SourceUserData
 	var value plain
-	if !decodeJSON(raw, &value) {
+	wire := struct {
+		*plain
+		Rows json.RawMessage `json:"message_unread_contents"`
+	}{plain: &value}
+	if !decodeJSON(raw, &wire) {
 		return sourceModuleError(nil)
+	}
+	var rows []json.RawMessage
+	if len(wire.Rows) != 0 && !decodeJSON(wire.Rows, &rows) {
+		return sourceModuleError(nil)
+	}
+	if rows != nil {
+		value.rawMessageRows = rows
+		value.Messages = make([][]any, len(rows))
+		for i, row := range rows {
+			var array []any
+			if len(row) == 0 || row[0] != '[' || !decodeJSON(row, &array) {
+				value.Messages = nil
+				break
+			}
+			value.Messages[i] = array
+		}
 	}
 	*d = SourceUserData(value)
 	return nil
 }
 
+func (d SourceUserData) MarshalJSON() ([]byte, error) {
+	type plain SourceUserData
+	if d.rawMessageRows == nil {
+		return json.Marshal(plain(d))
+	}
+	return json.Marshal(struct {
+		plain
+		Rows []json.RawMessage `json:"message_unread_contents"`
+	}{plain: plain(d), Rows: d.rawMessageRows})
+}
+
+// SourceMessageRows preserves list entries even when a source row cannot be
+// unpacked. The producer must examine entries in order, rather than rejecting a
+// later invalid row before earlier message side effects and the collected fact.
+func (d SourceUserData) SourceMessageRows() []any {
+	if d.rawMessageRows != nil {
+		rows := make([]any, len(d.rawMessageRows))
+		for i, row := range d.rawMessageRows {
+			rows[i] = row
+		}
+		return rows
+	}
+	if d.Messages == nil {
+		return nil
+	}
+	rows := make([]any, len(d.Messages))
+	for i, row := range d.Messages {
+		rows[i] = row
+	}
+	return rows
+}
+
 type sourceUserStatsKey struct{}
 type sourceUserStatsTrace struct {
-	guardError  error
-	status      int
-	contentType string
+	parserFailure *sourceUserParserFailure
+	guardError    error
+	status        int
+	contentType   string
 }
 
 func sourceStatsTrace(ctx context.Context) *sourceUserStatsTrace {
@@ -88,10 +153,76 @@ func (c *Client) SourceUserStats(ctx context.Context, options UserStatsOptions) 
 		return s, nil, ctx.Err()
 	}
 	if trace.guardError != nil {
-		return s, nil, trace.guardError
+		return s, nil, &sourceUserRevokedError{trace.guardError}
+	}
+	if marker, ok := e.(*sourceUserParserFailure); ok && d == nil && marker == trace.parserFailure {
+		e = &sourceUserModuleFailure{kind: marker.kind, stack: marker.stack}
 	}
 	return s, d, e
 }
+
+// SourceUserModuleFailureKind classifies only a fresh SourceUserStats module
+// failure. It intentionally does not unwrap: a guard may return an older failure,
+// and wrapping or reusing one is not evidence of another parser execution.
+func SourceUserModuleFailureKind(err error) (string, bool) {
+	failure, ok := err.(*sourceUserModuleFailure)
+	if !ok || failure == nil {
+		return "", false
+	}
+	return failure.kind, true
+}
+
+// SourceUserModuleFailureDiagnostic exposes only an audited fresh failure and
+// Go function names/line numbers, never response bodies, credentials or paths.
+func SourceUserModuleFailureDiagnostic(err error) (kind, stack string, ok bool) {
+	failure, ok := err.(*sourceUserModuleFailure)
+	if !ok || failure == nil || failure.stack == "" {
+		return "", "", false
+	}
+	return failure.kind, failure.stack, true
+}
+
+type sourceUserModuleFailure struct{ kind, stack string }
+
+func (*sourceUserModuleFailure) Error() string { return "site_user_source_module_failed" }
+
+type sourceUserParserFailure struct{ kind, stack string }
+
+func (*sourceUserParserFailure) Error() string { return "site_user_source_module_failed" }
+
+// Registration occurs only immediately after an audited parser branch, never
+// by searching an arbitrary returned error chain for a matching type or text.
+func recordSourceUserParserFailure(ctx context.Context, err error) error {
+	if marker, ok := err.(*sourceUserParserFailure); ok {
+		if trace := sourceStatsTrace(ctx); trace != nil {
+			pcs := make([]uintptr, 32)
+			n := runtime.Callers(2, pcs)
+			frames := runtime.CallersFrames(pcs[:n])
+			var lines strings.Builder
+			lines.WriteString("Go native parser diagnostic (not Python traceback):\n")
+			for {
+				frame, more := frames.Next()
+				if strings.HasPrefix(frame.Function, "light-media/internal/sites.") {
+					fmt.Fprintf(&lines, "%s:%d\n", frame.Function, frame.Line)
+				}
+				if !more {
+					break
+				}
+			}
+			marker.stack = lines.String()
+			trace.parserFailure = marker
+		}
+	}
+	return err
+}
+
+type sourceUserRevokedError struct{ error }
+
+func (e *sourceUserRevokedError) Unwrap() error { return e.error }
+
+type sourceUserIntegerFormatError struct{}
+
+func (*sourceUserIntegerFormatError) Error() string { return "site_user_source_module_failed" }
 
 func sourceModuleError(err error) error {
 	if err != nil {
@@ -101,7 +232,7 @@ func sourceModuleError(err error) error {
 }
 
 func emptySourceUserData() *SourceUserData {
-	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][3]any{}}
+	return &SourceUserData{SeedingInfo: [][2]int64{}, Messages: [][]any{}}
 }
 
 func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {
@@ -166,12 +297,22 @@ func sourceMTeamProfile(dto *SourceUserData, root map[string]any) error {
 	return nil
 }
 
+var sourceUserDecimalDigits = regexp.MustCompile(legacyanime.DecimalClass())
+
 func sourceUserInteger(v any) (int64, error) {
 	if !sourceTruth(v) {
 		return 0, nil
 	}
 	n, e := sourceInteger(v)
-	if e == nil && n.IsInt64() {
+	if e != nil {
+		// The audited case is a malformed string conversion. Numeric overflow,
+		// non-string schema errors, and conversion size limits are not promoted.
+		if value, ok := v.(string); ok && len(sourceUserDecimalDigits.FindAllStringIndex(value, 4301)) <= 4300 {
+			return 0, &sourceUserIntegerFormatError{}
+		}
+		return 0, sourceModuleError(nil)
+	}
+	if n.IsInt64() {
 		return n.Int64(), nil
 	}
 	return 0, sourceModuleError(nil)

@@ -1,0 +1,305 @@
+{
+  "scope": "Published framework e1fd integrated with aggregate61cc only; excludes unpublished MergeMessageNotify and SubscribeGroup batches.",
+  "parents": [
+    "61cc7d5c3823bf3615321fcc00cc13b760c37dfa",
+    "e1fd711e6e1bb26d9f36c893c56c6f0196eb99eb"
+  ],
+  "ordinary": [
+    {
+      "package": "internal/app",
+      "exit": 0,
+      "seconds": 157.78223967552185,
+      "passed": [
+        "TestPluginBuiltinUpdateFormalCloneIsolation",
+        "TestPluginInstanceCloneDefaultReferenceIsolation",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/CategoryEditor",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/SystemProcess",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/SiteStatistic",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/AutoSignIn",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/RemoveLink",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/BrushFlowLanduo",
+        "TestPluginInstanceCloneActualWorkersAndHTTP",
+        "TestPluginInstanceCloneMissingMetadataDoesNotRetargetReferences",
+        "TestIYUUCustomSiteLookupDoesNotReadSiblingConfig",
+        "TestIYUUActualServerWorkerSiblingInstancesIsolation",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/checkpoint-ack-loss-cold-recovery",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/native-ack-loss-no-replay",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/checkpoint-ack-loss-cold-recovery",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/native-ack-loss-no-replay",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown",
+        "TestRuntimeSupportCardsUsePackageMetadataForEveryInstance",
+        "TestPluginSiteDependencyIntegratedCloneLineage/formal-clone",
+        "TestPluginSiteDependencyIntegratedCloneLineage/unmarked-duplicate",
+        "TestPluginSiteDependencyIntegratedCloneLineage/missing-clone-proof",
+        "TestPluginSiteDependencyIntegratedCloneLineage",
+        "TestPluginSiteDependencyReadIsNarrowAndAggregationStaysStrict",
+        "TestPluginReviewRestoreActualHTTPAndServer/default",
+        "TestPluginReviewRestoreActualHTTPAndServer/clone",
+        "TestPluginReviewRestoreActualHTTPAndServer",
+        "TestPluginReviewRestoreFormalCloneKeepsIdentity"
+      ],
+      "failed": [],
+      "skip": [],
+      "missing": [],
+      "extra": []
+    },
+    {
+      "package": "internal/plugins",
+      "exit": 0,
+      "seconds": 1.1213834285736084,
+      "passed": [
+        "TestManifestFormModelPolicyIsPresentationOnly",
+        "TestManifestFormModelPolicyRejectsUnknownOrPartialValues",
+        "TestManifestConfigDefaultsContract",
+        "TestManifestConfigFormProjectionContract",
+        "TestRuntimeSupportManifestCompatibility",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/Linux",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/Linux",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/local,local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/local,local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/../local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/../local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/a_b",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/a_b",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/<script>",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/<script>",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/linux_",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/linux_",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/,,,,,,,,,,,,,,,,",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/,,,,,,,,,,,,,,,,",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers"
+      ],
+      "failed": [],
+      "skip": [],
+      "missing": [],
+      "extra": []
+    }
+  ],
+  "race": [
+    {
+      "package": "internal/app",
+      "exit": 0,
+      "seconds": 325.54646921157837,
+      "passed": [
+        "TestPluginBuiltinUpdateFormalCloneIsolation",
+        "TestPluginInstanceCloneDefaultReferenceIsolation",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/CategoryEditor",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/SystemProcess",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/SiteStatistic",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/AutoSignIn",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/RemoveLink",
+        "TestPluginInstanceCloneActualWorkersAndHTTP/BrushFlowLanduo",
+        "TestPluginInstanceCloneActualWorkersAndHTTP",
+        "TestPluginInstanceCloneMissingMetadataDoesNotRetargetReferences",
+        "TestIYUUCustomSiteLookupDoesNotReadSiblingConfig",
+        "TestIYUUActualServerWorkerSiblingInstancesIsolation",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/checkpoint-ack-loss-cold-recovery",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/native-ack-loss-no-replay",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/checkpoint-ack-loss-cold-recovery",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/native-ack-loss-no-replay",
+        "TestIYUUActualServerWorkerNativeCompletionAndUnknown",
+        "TestRuntimeSupportCardsUsePackageMetadataForEveryInstance",
+        "TestPluginSiteDependencyIntegratedCloneLineage/formal-clone",
+        "TestPluginSiteDependencyIntegratedCloneLineage/unmarked-duplicate",
+        "TestPluginSiteDependencyIntegratedCloneLineage/missing-clone-proof",
+        "TestPluginSiteDependencyIntegratedCloneLineage",
+        "TestPluginSiteDependencyReadIsNarrowAndAggregationStaysStrict",
+        "TestPluginReviewRestoreActualHTTPAndServer/default",
+        "TestPluginReviewRestoreActualHTTPAndServer/clone",
+        "TestPluginReviewRestoreActualHTTPAndServer",
+        "TestPluginReviewRestoreFormalCloneKeepsIdentity"
+      ],
+      "failed": [],
+      "skip": [],
+      "missing": [],
+      "extra": []
+    },
+    {
+      "package": "internal/plugins",
+      "exit": 0,
+      "seconds": 4.329892873764038,
+      "passed": [
+        "TestManifestFormModelPolicyIsPresentationOnly",
+        "TestManifestFormModelPolicyRejectsUnknownOrPartialValues",
+        "TestManifestConfigDefaultsContract",
+        "TestManifestConfigFormProjectionContract",
+        "TestRuntimeSupportManifestCompatibility",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/Linux",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/Linux",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/local,local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/local,local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/../local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/../local",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/a_b",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/a_b",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/<script>",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/<script>",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/linux_",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/linux_",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/,,,,,,,,,,,,,,,,",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/,,,,,,,,,,,,,,,,",
+        "TestRuntimeSupportManifestRejectsInvalidIdentifiers"
+      ],
+      "failed": [],
+      "skip": [],
+      "missing": [],
+      "extra": []
+    }
+  ],
+  "web": {
+    "tests": 227,
+    "passed": 227,
+    "check_exit": 0,
+    "build_exit": 0,
+    "preserves_previous_dist_assets": true
+  },
+  "build": {
+    "results": {
+      "vet": 0,
+      "commands": 0,
+      "server": 0,
+      "fixture": 0
+    },
+    "source_unchanged": true,
+    "binaries": {
+      "server": "df9602b1ef9419840d8a8d2d0116e1f3dc8820dc1cfca22873ae88a92249f268",
+      "fixture.test": "30403247557868939725aeb4ac148af3f9096d49b05e7689f069435567af9698"
+    },
+    "cmd_count": 23
+  },
+  "browser": {
+    "main_workflow": [
+      "cold restore remains pending after reload",
+      "cancel does not run",
+      "one explicit save yields one successful run",
+      "oneshot consumed and content retained after reload",
+      "sibling unchanged and zero runs"
+    ],
+    "main_final_state": {
+      "owned_file_matches": true,
+      "review_pending": false,
+      "sibling_config_unchanged": true,
+      "sibling_generation": 1,
+      "sibling_version": "1.2",
+      "source_generation": 1,
+      "source_version": "1.3",
+      "target_config": {
+        "revision": 4,
+        "updated_at": "2026-10-23T09:34:27.070490665Z"
+      },
+      "target_generation": 4,
+      "target_runs": 1,
+      "target_succeeded": 1,
+      "target_version": "1.3"
+    },
+    "main_exit": {
+      "exit": 0,
+      "owned_child_reaped": true
+    },
+    "removelink": {
+      "result": "passed",
+      "identity": "RemoveLink / \u6e05\u7406\u5a92\u4f53\u6587\u4ef6 / 2.17 / DzAvril",
+      "support_notice": true,
+      "original_form_dividers": 3,
+      "dialog_heading_divider": 1,
+      "form_fields": 13,
+      "enabled": false,
+      "saved": false,
+      "paths_entered": false,
+      "exit": {
+        "exit": 0,
+        "owned_child_reaped": true
+      },
+      "final_state": {
+        "owned_file_matches": true,
+        "review_pending": false,
+        "sibling_config_unchanged": true,
+        "sibling_generation": 1,
+        "sibling_version": "1.2",
+        "source_generation": 1,
+        "source_version": "1.3",
+        "target_config": {
+          "revision": 4,
+          "updated_at": "2026-10-23T09:42:30.644568551Z"
+        },
+        "target_generation": 4,
+        "target_runs": 1,
+        "target_succeeded": 1,
+        "target_version": "1.3"
+      },
+      "artifacts": {
+        "02-removelink-dom.txt": "1ea8b941051f7279c1eecb55a1e0fbe748eaeeddde17c459314e9a5a4ca4b26d",
+        "02-removelink-form.png": "5ce8cfcf2fa34c9dccb48b68f23eb9b867de3d57e3c579be87c687100184b1c7",
+        "01-removelink-identity.txt": "72123773dcab1a1ff880807264b1d3f58acd5efc5cc0b1867e55d0ac983eb11e",
+        "02-removelink-form.txt": "3d1434ef5edf2f7983d3bd61c58ebb33c09875e1403a894265d4bc73e2d04cea"
+      }
+    },
+    "observation_correction": "The first optional inspection accidentally selected ScrapeFileClean 1.0.7, not RemoveLink; its original artifacts are retained and are not a RemoveLink product failure or acceptance. A fresh owned session with identical binaries verified the exact RemoveLink 2.17 identity.",
+    "browser": "assistant cloud Chrome via CUA",
+    "production_binary_unchanged": true
+  },
+  "not_claimed": [
+    "Full repository suite",
+    "Remote CI success",
+    "Unprovided private IYUU/FNOS environment tests",
+    "All historical plugin version migrations",
+    "Clone of a source bound to original migration reference receipts",
+    "Acceptance of every compiled plugin business implementation"
+  ],
+  "historical_failures_retained": [
+    "NoticeV2 grouped deadline observation, not reproduced by later isolated diagnostic",
+    "Legacy full App-test-race SDK startup failure",
+    "Nested Form grouped deadline: test request setup corrected, original cause not established",
+    "Shared maximum payload baseline performance failure retained separately from plugin acceptance"
+  ],
+  "unread_preserved_objects": [
+    {
+      "path": "testdata/plugins/auto-signin-image-hash/jpeg/jpeg-pillow-12.2.0.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "915423d5ede2e5615b00244615d1b23933b4b0c0"
+    },
+    {
+      "path": "testdata/plugins/business-source-integration/verification/all-normal.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed0d6d718c6f70f4926e86cebeb30e07b5d6f8fa"
+    },
+    {
+      "path": "testdata/plugins/business-source-integration/verification/v1-all-normal.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c859f991f099c9fe8e93c7aa6c06491cd0ea3a2"
+    },
+    {
+      "path": "testdata/plugins/release-meta-legacy-anitopy-oracle.json.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "41eb201bda00971dd65c86495903414d51b0610c"
+    }
+  ],
+  "race_scope": "The selected Go packages were built with -race. Actual cmd/server fixtures deliberately use the ordinary production worker where specified; this is not a claim that both processes were race-instrumented.",
+  "frozen_local_input": {
+    "file_count": 5709,
+    "manifest_sha256": "bcb36d50a3d63f916696229804702fdc0d13b71387b16007567c8f608445a8e3",
+    "ordinary_race_build_exact_input": true,
+    "post_build_document_only_additions": "Current contract index, author guide, and this verification record are not executable changes."
+  },
+  "upstream_framework_association": {
+    "commit": "e1fd711e6e1bb26d9f36c893c56c6f0196eb99eb",
+    "local_ordinary_race_roots": 225,
+    "nodes": 1492,
+    "rerun_all_225_in_this_integration": false,
+    "integration_selected_roots": 18,
+    "integration_nodes": 51
+  },
+  "publication_note": "This record describes the validated input to the aggregate merge. Final branch CAS and remote readback are recorded in the publication receipt; local tests alone are not final delivery."
+}

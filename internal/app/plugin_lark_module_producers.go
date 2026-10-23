@@ -140,17 +140,28 @@ func (a *App) executeLarkSourceRun(ctx context.Context, run PluginRun) (json.Raw
 	return a.executeLarkBoundRun(ctx, run, lark.ModuleCapability)
 }
 func (a *App) executeLarkBoundRun(ctx context.Context, run PluginRun, method string) (json.RawMessage, error) {
+	window, e := a.pluginStore.beginSupervisedClaim(ctx)
+	if e != nil {
+		return nil, e
+	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return nil, e
 	}
+	var lease *pluginExecutionLease
+	commitAttempted := false
+	defer func() {
+		if !commitAttempted {
+			if err := tx.Rollback(); err == nil && lease != nil {
+				lease.rollbackClaim()
+			}
+		}
+	}()
 	actual, e := a.pluginStore.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, run.ID))
 	if e != nil {
-		tx.Rollback()
 		return nil, e
 	}
 	if actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || !larkSameRaw(actual.Input, run.Input) {
-		tx.Rollback()
 		return nil, lark.ErrDenied
 	}
 	claimed := false
@@ -166,26 +177,37 @@ func (a *App) executeLarkBoundRun(ctx context.Context, run PluginRun, method str
 			_, _, e = a.larkSourceTx(ctx, tx, actual, method)
 		}
 		if e != nil {
-			tx.Rollback()
 			return nil, e
 		}
 		r, e := tx.ExecContext(ctx, `UPDATE plugin_runs SET state='running',updated_at=? WHERE id=? AND state='pending'`, now(), actual.ID)
 		if e != nil {
-			tx.Rollback()
 			return nil, e
 		}
 		if n, _ := r.RowsAffected(); n != 1 {
-			tx.Rollback()
 			return nil, larkEvidenceError()
+		}
+		if e = a.pluginStore.markPluginExecutionStartedTx(ctx, tx, actual); e != nil {
+			return nil, e
+		}
+		lease, e = a.pluginStore.reserveSupervisedClaimTx(ctx, tx, window, actual)
+		if e != nil {
+			return nil, e
 		}
 		actual.State = "running"
 		claimed = true
 	}
-	if e = tx.Commit(); e != nil {
-		return nil, e
-	}
+	commitAttempted = true
+	commitErr := tx.Commit()
 	if claimed {
-		a.executePluginRun(ctx, actual)
+		if e = a.pluginStore.commitSupervisedClaim(ctx, lease, commitErr); e != nil {
+			return nil, e
+		}
+		actual.executionLease = lease
+		if e = a.executePluginRun(ctx, actual); e != nil {
+			return nil, e
+		}
+	} else if commitErr != nil {
+		return nil, commitErr
 	}
 	ticker := time.NewTicker(25 * time.Millisecond)
 	defer ticker.Stop()
@@ -197,7 +219,7 @@ func (a *App) executeLarkBoundRun(ctx context.Context, run PluginRun, method str
 		switch actual.State {
 		case "succeeded":
 			return actual.Result, nil
-		case "reconcile_pending", "failed", "cancelled":
+		case "reconcile_pending", "failed", "canceled", "cancelled":
 			_, _, found, proofErr := a.pluginStore.larkOutcome(ctx, actual, method)
 			if proofErr != nil {
 				return nil, proofErr

@@ -16,6 +16,7 @@ import (
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/autobackup"
+	"light-media/internal/plugins/autosignin"
 	bf "light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/cleaninvalidseed"
@@ -47,6 +48,9 @@ func (a *App) wakePlugins() {
 }
 
 func (a *App) initializeNativePlugins(ctx context.Context) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	installations, err := a.pluginStore.Installations(ctx)
@@ -57,6 +61,13 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		// Import staging must never reapply hosts or replay one-shot config.
 		if !installation.DesiredEnabled {
 			continue
+		}
+		if err := a.pluginStore.requirePluginUpdateActivation(ctx, a.Store.DB, installation.InstanceID); err != nil {
+			if pluginErrorCodeInternal(err) == "PLUGIN_UPDATE_REVIEW_REQUIRED" {
+				a.log("WARN", "plugins", "update_activation_review_pending", "插件版本已迁移，等待核对并显式保存该实例设置；未重放旧执行意图", "", "")
+				continue
+			}
+			return err
 		}
 		if siteReferencePlugin(installation.PluginID) {
 			if _, e := a.pluginStore.readSiteReferenceProtocol(ctx, a.Store.DB, installation); e != nil {
@@ -77,6 +88,16 @@ func (a *App) initializeNativePlugins(ctx context.Context) error {
 		}
 		if err != nil {
 			return err
+		}
+		if installation.PluginID == "AutoSignIn" {
+			initialize, err := a.shouldInitializeAutoSignIn(ctx, installation, config)
+			if err != nil {
+				a.log("ERROR", "plugins", "signin_initialize_pending", "签到存在待核对状态，未重新初始化；其他插件继续启动", "", "")
+				continue
+			}
+			if !initialize {
+				continue
+			}
 		}
 		if installation.PluginID == "ScrapeFileClean" {
 			initialize, err := a.shouldInitializeScrapeFileClean(ctx, installation, config)
@@ -218,11 +239,15 @@ func (a *App) pluginWorker(ctx context.Context) {
 						}
 						a.wakePlugins()
 					}()
-					a.executePluginRun(ctx, run)
+					if e := a.executePluginRun(ctx, run); e != nil {
+						a.log("ERROR", "plugins", "execution_unresolved", "插件执行生命周期尚未完成，请核对执行记录", "", "")
+					}
 				}()
 				continue
 			}
-			a.executePluginRun(ctx, run)
+			if e := a.executePluginRun(ctx, run); e != nil {
+				a.log("ERROR", "plugins", "execution_unresolved", "插件执行生命周期尚未完成，请核对执行记录", "", "")
+			}
 			if budget.release != nil {
 				budget.release()
 			}
@@ -240,7 +265,33 @@ func (a *App) pluginWorker(ctx context.Context) {
 	}
 }
 
-func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
+func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
+	// This is the outermost admitted-execution cleanup. A lease cannot finish
+	// before the SDK, deferred business owner and process slot have all exited.
+	// Business host calls can replace run with a freshly authenticated durable
+	// snapshot. That revision projection must not replace the private admission
+	// capability owned by this outer execution frame.
+	claimedRun := run
+	defer func() {
+		if releaseErr := a.pluginStore.releaseSupervisedRun(claimedRun); runtimeErr == nil {
+			runtimeErr = releaseErr
+		}
+	}()
+	supervisedCtx, err := a.pluginStore.activateSupervisedRun(ctx, run)
+	if err != nil {
+		if errors.Is(err, errPluginRunCanceled) {
+			finish, cancel := context.WithTimeout(context.WithoutCancel(supervisedCtx), 3*time.Second)
+			defer cancel()
+			if finishErr := a.pluginStore.finalizeSupervisedUnentered(finish, run); finishErr != nil {
+				return errors.Join(err, finishErr)
+			}
+		}
+		return err
+	}
+	ctx = supervisedCtx
 	if run.RequestID != "" {
 		ctx = a.traceContext(ctx, "", "", run.RequestID)
 	}
@@ -262,10 +313,12 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	case <-ctx.Done():
 		finish, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
 		defer cancel()
-		if run.Version == bf.Version {
-			_ = a.pluginStore.brushFlowCancelBeforeSDK(finish, run)
+		// No SDK process or deferred business owner was entered. Persist that
+		// exact fact before releasing the lease, retaining source-specific proof.
+		if err := a.pluginStore.finalizeSupervisedUnentered(finish, run); err != nil {
+			return err
 		}
-		return
+		return ctx.Err()
 	}
 	installation, err := a.pluginStore.Installation(ctx, run.InstanceID)
 	var manifest plugins.Manifest
@@ -304,6 +357,10 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	}
 	workerMethod := "invoke"
 	workerInput := run.Input
+	if err == nil && installation.PluginID == "AutoSignIn" && run.Action == "api" {
+		workerMethod = "http"
+		workerInput = json.RawMessage(`{}`)
+	}
 	if err == nil && installation.PluginID == "LarkMessager" {
 		workerMethod, workerInput, err = larkWorkerInput(run)
 	}
@@ -381,7 +438,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 		state, errorCode = "failed", "execution_canceled"
 	}
 	brushNotStarted := false
-	finishCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	finishCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
 	if brushFlowSnapshotOwner(installation.PluginID, installation.Version) && ctx.Err() == nil {
 		cancel()
 		finishCtx, cancel = brushFlowCompletionContext(ctx)
@@ -401,6 +458,56 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 			result.Result, err, state, errorCode = committed, nil, "succeeded", ""
 		} else if !errors.Is(receiptErr, sql.ErrNoRows) {
 			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_SITE_RECEIPT_INVALID"
+		}
+	}
+	if installation.PluginID == "SiteStatistic" && run.Action == "api" {
+		collection, found, collectionErr := a.pluginStore.siteMessageCollectionForRun(finishCtx, a.Store.DB, run)
+		if collectionErr != nil {
+			err, state, errorCode = collectionErr, "reconcile_pending", "SITE_MESSAGE_COLLECTION_UNCONFIRMED"
+		} else if found {
+			committed, receiptErr := a.pluginStore.siteStatisticReceipt(finishCtx, run)
+			if collection.Stage == "failed" || collection.Stage == "aborted" {
+				// The original synchronous exception is terminal. A restart must
+				// neither publish later ordinals nor turn the API into success.
+				errorCode = collection.Failure
+				if errorCode == "" {
+					errorCode = "SITE_MESSAGE_POST_FAILED"
+				}
+				err, state = bad(errorCode, "站点采集或消息发布已终止，未重试外部操作"), "failed"
+				result.Result = nil
+			} else if receiptErr == nil && collection.Stage == "complete" {
+				if proofErr := a.pluginStore.validateSiteCollectionCompletion(finishCtx, a.Store.DB, collection); proofErr != nil {
+					err, state, errorCode = proofErr, "reconcile_pending", "SITE_MESSAGE_COLLECTION_UNCONFIRMED"
+				} else {
+					result.Result, err, state, errorCode = committed, nil, "succeeded", ""
+				}
+			} else {
+				// Includes an interrupted HTTP/mark-read admission and a completed
+				// source sequence whose final API-result write was not confirmed.
+				// Recovery may use persisted facts only; never run the SDK again.
+				err, state, errorCode = bad("SITE_MESSAGE_COLLECTION_UNCONFIRMED", "站点采集或通知结果尚待核对，未重复执行"), "reconcile_pending", "SITE_MESSAGE_COLLECTION_UNCONFIRMED"
+				result.Result = nil
+			}
+		}
+	}
+	if installation.PluginID == "SiteStatistic" && run.Action == "event" {
+		committed, receiptErr := a.pluginStore.siteStatisticReceipt(finishCtx, run)
+		if receiptErr == nil {
+			outcome, outcomeCode, routed, outcomeErr := a.pluginStore.siteStatisticReceiptOutcome(finishCtx, run, committed)
+			if routed {
+				result.Result, state, errorCode = committed, outcome, outcomeCode
+				if outcomeErr != nil {
+					err = outcomeErr
+				} else if outcome == "succeeded" {
+					err = nil
+				} else {
+					err = bad(outcomeCode, "统计通知保留原始路由结果，未重新发送")
+				}
+			} else if outcomeErr != nil {
+				err, state, errorCode = outcomeErr, "reconcile_pending", "PLUGIN_SITE_STATISTIC_NOTICE_INVALID"
+			}
+		} else if !errors.Is(receiptErr, sql.ErrNoRows) {
+			err, state, errorCode = receiptErr, "reconcile_pending", "PLUGIN_SITE_STATISTIC_NOTICE_INVALID"
 		}
 	}
 	if err != nil && deferred != nil {
@@ -429,15 +536,15 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	if !brushNotStarted {
 		if finishErr := a.pluginStore.finishRun(finishCtx, run.ID, state, errorCode, result.Result, blockStartup); finishErr != nil {
 			code := pluginResultFailureCode(finishErr)
-			fallbackCtx, fallbackCancel := context.WithTimeout(context.Background(), 3*time.Second)
+			fallbackCtx, fallbackCancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
 			fallbackErr := a.pluginStore.failPluginResult(fallbackCtx, run.ID, code)
 			fallbackCancel()
 			if fallbackErr != nil {
 				a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "插件结果及失败状态均无法保存，请检查存储并核对实际操作", "PLUGIN_FINISH_FAILED")
-				return
+				return errors.Join(finishErr, fallbackErr)
 			}
 			a.pluginExecutionLog(installation, run, "ERROR", "finish_failed", "保存插件执行结果失败，已阻止本次执行自动重放，请核对实际操作", code)
-			return
+			return finishErr
 		}
 	}
 	if installation.PluginID == "MediaServerRefresh" {
@@ -448,6 +555,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) {
 	} else {
 		a.pluginExecutionLog(installation, run, "INFO", "execution_completed", "插件执行已完成", "")
 	}
+	return nil
 }
 
 func (a *App) pluginExecutionLog(installation PluginInstallation, run PluginRun, level, event, message, code string) {
@@ -464,8 +572,23 @@ func (a *App) validatePluginHostRun(ctx context.Context, installation PluginInst
 			return bad("PLUGIN_SNAPSHOT_STALE", "插件已卸载、重置或变更，旧执行已停止")
 		}
 		config, err := a.pluginStore.Config(ctx, run.InstanceID)
-		if err != nil || config.Revision != run.ConfigRevision {
-			return bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
+		if err != nil {
+			return err
+		}
+		if config.Revision != run.ConfigRevision {
+			accepted := false
+			if current.PluginID == "AutoSignIn" && current.Version == autosignin.Version {
+				tx, e := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+				if e != nil {
+					return e
+				}
+				handled, e := a.pluginStore.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision)
+				tx.Rollback()
+				accepted = handled && e == nil
+			}
+			if !accepted {
+				return bad("PLUGIN_REVISION_CONFLICT", "插件配置已变化，旧执行已停止")
+			}
 		}
 		persisted, err := a.pluginStore.Run(ctx, run.ID)
 		if err != nil || persisted.State != "running" {
@@ -489,8 +612,14 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 	if !exists || !slices.Contains(trusted.Capabilities, method) {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "该插件未获授权调用此操作")
 	}
+	if method == autosignin.OptionsCapability || method == autosignin.ConfigureCapability || method == autosignin.RunCapability || method == autosignin.SnapshotCapability || method == autosignin.DeleteCapability {
+		return a.pluginAutoSignInHost(ctx, installation, run, method, raw)
+	}
 	if method == "sites.controls.read" || method == "sites.controls.configure" {
 		return a.pluginSiteControlsHost(ctx, installation, run, method, raw)
+	}
+	if method == "site.statistics.notify" {
+		return a.pluginSiteStatisticNotifyHost(ctx, installation, run, raw)
 	}
 	if method == "site.statistics.refresh_domain" {
 		return a.pluginSiteStatisticAPIHost(ctx, installation, run, raw)
@@ -548,7 +677,7 @@ func (a *App) pluginHostCall(ctx context.Context, installation PluginInstallatio
 		return nil, err
 	}
 	switch method {
-	case "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify":
+	case "site.statistics.configure", "site.statistics.refresh":
 		return a.pluginSiteStatisticHost(ctx, installation, run, method, raw)
 	case "media.servers", "events.configure", "media.refresh":
 		return a.pluginMediaHost(ctx, installation, run, method, raw)

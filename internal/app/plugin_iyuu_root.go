@@ -177,6 +177,12 @@ func (p *PluginStore) iyuuTransitionParentTx(ctx context.Context, tx *sql.Tx, in
 	if _, e := tx.ExecContext(ctx, iyuuRootSchema+pluginIYUURetirementSchema); e != nil {
 		return iyuuOwnerParent{}, e
 	}
+	return p.iyuuTransitionParentReadTx(ctx, tx, instance)
+}
+
+// This preflight consumes existing native evidence only. In particular it must
+// not recreate missing schema before an integrity failure is reported.
+func (p *PluginStore) iyuuTransitionParentReadTx(ctx context.Context, tx *sql.Tx, instance string) (iyuuOwnerParent, error) {
 	var plugin, version string
 	var g int64
 	e := tx.QueryRowContext(ctx, "SELECT plugin_id,version,generation FROM plugin_installations WHERE instance_id=?", instance).Scan(&plugin, &version, &g)

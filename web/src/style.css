@@ -2226,7 +2226,7 @@ details .panel {
   position: fixed;
   top: 67px;
   right: 28px;
-  width: 385px;
+  width: 400px;
   max-width: calc(100vw - 30px);
   max-height: 75vh;
   overflow: auto;
@@ -2411,4 +2411,89 @@ small,
   label:not(.v-label) {
     font-size: 14px;
   }
+}
+
+/* The original system-message bell is an in-memory 400px notification center.
+   The extra task tab preserves this app's separate durable failure workflow. */
+.bell-button > .notification-unread-dot {
+  top: 3px;
+  right: 4px;
+  min-width: 0;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 50%;
+  background: #e05252;
+}
+.notification-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.notification-tabs > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 8px;
+  color: var(--muted);
+}
+.notification-tabs > button[aria-selected='true'] {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+.tab-unread-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e05252;
+}
+.notification-list-container {
+  max-height: 50vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.system-message-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 8px;
+}
+.system-message-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  height: 40px;
+  color: var(--muted);
+  background: var(--surface);
+  border-radius: 6px;
+}
+.system-message-content {
+  min-width: 0;
+}
+.system-message-content > strong,
+.system-message-content > p {
+  overflow-wrap: anywhere;
+  white-space: break-spaces;
+}
+.system-message-content > strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.5;
+}
+.system-message-content > p {
+  margin: 6px 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.system-message-content > small {
+  color: var(--accent);
+  font-size: 12px;
 }

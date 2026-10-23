@@ -36,6 +36,8 @@ type pluginRemoveLinkOwner struct {
 	gate       chan struct{}
 	ready      chan struct{}
 	err        error
+	// Private isolated-fixture fault seam; never set from worker or API input.
+	initDiagnosticCommit func(*sql.Tx) error
 }
 type pluginRemoveLinkPrepared struct {
 	a      *App
@@ -333,6 +335,11 @@ func (o *pluginRemoveLinkOwner) open(ctx context.Context) error {
 	// A legacy confirmed file deletion without a core index receipt cannot be
 	// attached to a later same-path owner merely because the process restarted.
 	for _, fact := range s.Effects {
+		if fact.SourceBarrierVersion != 0 {
+			if err = o.e.confirmedRemoveLinkSourceEffect(ctx, fact); err != nil {
+				return err
+			}
+		}
 		if cleanupEffectFileFact(fact) && fact.Role == "media" {
 			x := fact
 			x.ID = "file-index:" + fact.ID
@@ -373,7 +380,7 @@ func (o *pluginRemoveLinkOwner) openHost(i PluginInstallation, c PluginStoredVal
 	if len(o.roots) == 0 {
 		return nil
 	}
-	opts := cleanuphost.Options{Binding: removeLinkBinding(i, c), Roots: make([]cleanuphost.Root, 0, len(o.roots)), Journal: o.j, Effects: o.e, Guard: o.guard, AfterAction: o.e.afterAction, Watch: o.a.pluginRemoveLink.watch, MediaExtensions: removeLinkMediaExtensions(), AsyncTimeout: 2 * time.Minute}
+	opts := cleanuphost.Options{Binding: removeLinkBinding(i, c), Roots: make([]cleanuphost.Root, 0, len(o.roots)), Journal: o.j, Effects: o.e, Guard: o.guard, AfterAction: o.e.afterAction, WatchInitDiagnostic: o.watchInitDiagnostic, Watch: o.a.pluginRemoveLink.watch, MediaExtensions: removeLinkMediaExtensions(), AsyncTimeout: 2 * time.Minute}
 	for _, r := range o.roots {
 		opts.Roots = append(opts.Roots, r.Root)
 	}

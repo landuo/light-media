@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-21",
+  "baseline": "82dd5c90b0e0937de0d5203eb9cb925641accbc3",
+  "branch": "dev/plugins-continuation",
+  "scope": "RemoveLink accepted notification outbox to shared Router, synthetic isolated cloud tests only",
+  "deployed": false,
+  "real_accounts_used": false,
+  "migration_count": "7/23 unchanged",
+  "toolchain": "go1.26.10 linux/amd64",
+  "source_sha256": {
+    "internal/app/plugin_remove_link_notice.go": "a7dfa5ee2d5658af45e3e60d220c481f2174137a53e7a2d7682aaa7728705228",
+    "internal/app/plugin_remove_link_effects.go": "943dbe4c40afaddca4c71a90d498cfc9de45b47e61b53e9c96fcaf45a56b43b2",
+    "internal/app/plugin_cleanup_outbox.go": "250d4c0e88d163174e044b8c2d5dc2111c571e3fd522414ad68388a633e10f2d",
+    "internal/app/plugin_notice_storage.go": "b0190e5f98393c42cf8ba6d4de1663a80c76a6c13ca67e0f2ab081905d02b438",
+    "internal/app/plugin_remove_link_notice_router_test.go": "237ee675d8d1721322e31ca23df9f0b7739526a8401e0f9a38ef16c53472d755",
+    "internal/app/plugin_cleanup_outbox_test.go": "9fdd93e64543e25bf3bfb6aa1aa39aeb41630ef8ea5c34861f2381f636bb11fc"
+  },
+  "logs": {
+    "initial-new": {
+      "path": "work/remove-link-notice-validation/initial-new.jsonl",
+      "sha256": "969c8eab790e640bb4426f94efc7d46296bfa06ee63f237765cc9b715d617077",
+      "bytes": 78602,
+      "command": "go test -timeout 15m -json ./internal/app -run 'TestRemoveLinkNoticeRouter|TestPluginRemoveLinkOutboxHistorySaved|TestPluginRemoveLinkOutboxNoticeIDConflict' -count=1",
+      "exit_code": 1,
+      "top_level_passed": 9,
+      "passed_including_subtests": 34,
+      "failed_entries": [
+        "TestPluginRemoveLinkOutboxNoticeIDConflictNeverOverwritesReadMessage/matching",
+        "TestPluginRemoveLinkOutboxNoticeIDConflictNeverOverwritesReadMessage",
+        "TestRemoveLinkNoticeRouterLegacyPendingStaysLocalOnly",
+        "TestRemoveLinkNoticeRouterCompiledSDKOwnedCleanupToStub",
+        "<package>"
+      ],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:24:29.37113222+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 4.97
+        }
+      ],
+      "race_detector_warning": false
+    },
+    "new-final": {
+      "path": "work/remove-link-notice-validation/new-final.jsonl",
+      "sha256": "f3687ac1d01cf7fe1907a3b21f718da3e0bd5889cd5dd0b5d467f1beb85013f6",
+      "bytes": 78293,
+      "command": "go test -timeout 15m -json ./internal/app -run 'TestRemoveLinkNoticeRouter|TestPluginRemoveLinkOutboxHistorySaved|TestPluginRemoveLinkOutboxNoticeIDConflict' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 12,
+      "passed_including_subtests": 38,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:26:54.96028906+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 5.261
+        }
+      ],
+      "race_detector_warning": false
+    },
+    "regression-normal": {
+      "path": "work/remove-link-notice-validation/regression-normal.jsonl",
+      "sha256": "b382b49dfbb5a2783d438a7f1874caa0c26ba27dde0e0004b7da9100f7ca9c14",
+      "bytes": 773565,
+      "command": "go test -timeout 30m -json ./internal/app -run 'TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 112,
+      "passed_including_subtests": 399,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:29:02.174561084+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 101.821
+        }
+      ],
+      "race_detector_warning": false
+    },
+    "regression-race": {
+      "path": "work/remove-link-notice-validation/regression-race.jsonl",
+      "sha256": "9ad1a4b2613bdf181d870af21a517c54b1f02b5f57c8a1447e8495e32631d844",
+      "bytes": 773905,
+      "command": "go test -timeout 30m -race -json ./internal/app -run 'TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 112,
+      "passed_including_subtests": 399,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:43:43.739925638+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 793.032
+        }
+      ],
+      "race_detector_warning": false
+    },
+    "regression-modernconly": {
+      "path": "work/remove-link-notice-validation/regression-modernconly.jsonl",
+      "sha256": "935adcf0a4153aee03e855c1bf41b644d7cc79c65aa08b927b01c95e31c10389",
+      "bytes": 773543,
+      "command": "CGO_ENABLED=0 go test -timeout 30m -tags modernconly -json ./internal/app -run 'TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink' -count=1",
+      "exit_code": 0,
+      "top_level_passed": 112,
+      "passed_including_subtests": 399,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:45:43.19313555+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 86.856
+        }
+      ],
+      "race_detector_warning": false
+    },
+    "core-race": {
+      "path": "work/remove-link-notice-validation/core-race.jsonl",
+      "sha256": "29c8500b7cb2b9c51de9bdfc1c0f9f4f928dc495e5e08ec6a933de8f8a53f38f",
+      "bytes": 201032,
+      "command": "go test -race -json ./internal/plugins/removelink/...",
+      "exit_code": 0,
+      "top_level_passed": 54,
+      "passed_including_subtests": 223,
+      "failed_entries": [],
+      "skipped_tests": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T00:46:24.291125339+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink",
+          "Elapsed": 4.55
+        },
+        {
+          "Time": "2026-10-22T00:46:50.460857372+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/removelink/host",
+          "Elapsed": 29.005
+        }
+      ],
+      "race_detector_warning": false
+    },
+    "vet": {
+      "path": "work/remove-link-notice-validation/vet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "command": "go vet ./internal/app",
+      "exit_code": 0
+    },
+    "build": {
+      "path": "work/remove-link-notice-validation/build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "command": "CGO_ENABLED=0 go build -tags modernconly ./cmd/...",
+      "exit_code": 0
+    }
+  },
+  "initial_failure_resolution": [
+    "Existing matching-history conflict fixture used old invented fragment although it now creates v2 with empty AppDomain; only expected Link changed, conflict/read preservation retained.",
+    "Legacy fixture changed outbox before reading its coupled v2 receipt; receipt validation correctly rejected that mismatched pair. Fixture now reads original receipt first then creates matching genuine legacy pair.",
+    "New SDK test called RecordEvent without trusted capture and was correctly rejected. Final test accurately uses compiled SDK install/configure to create owner, then trusted native Observe to trigger owned synthetic cleanup. It does not claim worker JSON conveys file authority.",
+    "No production validator or individual test deadline was weakened to make these pass. Initial log retained but final source hashes describe corrected test fixtures."
+  ],
+  "review": {
+    "mode": "independent read-only source review, not test execution",
+    "new_path_blockers": [],
+    "inherited_boundary": "Shared v1 Complete/SourceError lack independent terminal proof; internal resealing can skip execution. This patch proves immutable acceptance identity and history, not all mutable terminal fields. No new cleanup authority is granted."
+  },
+  "source_evidence": {
+    "sanitized_source": "testdata/plugins/remove-link-2.17/source.py",
+    "sanitized_sha256": "a10aca1b9a55ab3ee64f90c6c5c69c055309ebcb368db45e3c63354ae745b854",
+    "installed_original_sha256": "1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4",
+    "default_link_evidence": "docs/plugin-site-statistic-default-link.txt; installed base fragment plus public unpinned URL rules, not full fixed-core URL parity"
+  },
+  "remaining": [
+    "Synchronous original notification exception control-flow backprop into deletion branches is not implemented by asynchronous accepted-outbox routing.",
+    "Full shared v1 terminal proof hardening is separate work.",
+    "Production migration/deployment and real-channel acceptance not performed.",
+    "Full-project prior baseline failures, skips and40missing binary blobs remain; targeted/build success does not assert complete deployable inputs or whole plugin completion."
+  ]
+}

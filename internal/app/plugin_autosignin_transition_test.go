@@ -17,13 +17,19 @@ import (
 func signinTransitionSetup(t *testing.T) (*signinSQLFixture, PluginRun, signinjournal.State) {
 	t.Helper()
 	ctx := context.Background()
-	f := signinSQLSetup(t)
+	f := signinSQLClaimedSetup(t)
 	f.start(t)
 	config := json.RawMessage(`{"enabled":true,"notify":false,"onlyonce":false,"sign_sites":[],"login_sites":[],"queue_cnt":5,"cron":"2.3/9-23"}`)
 	if _, err := f.j.Apply(ctx, f.o.binding, signinjournal.Effect{RunID: f.run.ID, Lane: "main", Kind: "config", Digest: "original-native-config-effect", Value: config, Mutation: signinjournal.Mutation{Kind: "config", Value: config}}); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := f.j.Apply(ctx, f.o.binding, signinjournal.Effect{RunID: f.run.ID, Lane: "main", Index: 1, Kind: "notify", Digest: "old-pending-notice", Value: json.RawMessage(`{"title":"old source pending notice"}`), Mutation: signinjournal.Mutation{Kind: "outbox"}}); err != nil {
+		t.Fatal(err)
+	}
+	// This is a journal transition fixture, not an Engine oracle. A completed
+	// initialization now needs an explicit authenticated (empty) service set;
+	// merely setting phase=completed must never activate fabricated timers.
+	if _, err := f.j.Apply(ctx, f.o.binding, signinjournal.Effect{RunID: f.run.ID, Lane: "main", Index: 2, Kind: "service.definitions", Digest: "owned-empty-transition-services", Value: json.RawMessage(`[]`), Mutation: signinjournal.Mutation{Kind: "services", Value: json.RawMessage(`[]`)}}); err != nil {
 		t.Fatal(err)
 	}
 	runtime := json.RawMessage(`{"enabled":true,"notify":false,"cron":"2.3/9-23","onlyonce":false,"queue_cnt":5,"sign_sites":[],"login_sites":[],"auto_cf":0,"clean":false,"start_time":9,"end_time":23,"schema_loaded":true,"config":{"enabled":true}}`)
@@ -47,7 +53,7 @@ func signinTransitionSetup(t *testing.T) (*signinSQLFixture, PluginRun, signinjo
 	}
 	f.release()
 	f.release = nil
-	if err := f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err := finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	_, next, err := f.a.pluginStore.SaveConfigAndQueue(ctx, "AutoSignIn", 2, map[string]any{"enabled": true, "notify": false, "onlyonce": false, "sign_sites": []any{}, "login_sites": []any{}, "queue_cnt": 5, "cron": "2"})

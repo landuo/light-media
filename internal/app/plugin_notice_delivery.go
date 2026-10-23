@@ -57,6 +57,9 @@ func validateNoticeMessageBackingTx(ctx context.Context, tx *sql.Tx, event Domai
 	return nil
 }
 func (a *App) publishPluginNoticeTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute, ordinal int, data notice.Object) (any, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	id := "pnm_" + a.pluginStore.noticeID("publication", r.ID, ordinal)
 	raw, err := cleanupJournalJSON(data)
 	if err != nil {
@@ -143,6 +146,9 @@ func noticeQueueInitialSHA(q pluginNoticeQueueEntry) string {
 	return tokenHash(string(mustCleanSeedJSON(q)))
 }
 func (a *App) acceptPluginMessageTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute, ordinal int, call notice.Call) (any, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return nil, err
+	}
 	if len(call.Args) != 1 || call.Args[0] != "post_message" {
 		return nil, seedhost.ErrUnsafe
 	}
@@ -189,13 +195,19 @@ func (p *PluginStore) readPluginMessage(ctx context.Context, qry pluginRemoveLin
 		return q, seedhost.ErrUnsafe
 	}
 	switch q.State {
-	case "queued", "intent", "consumed", "unknown":
+	case "queued", "intent", "consumed", "unknown", "revoked":
 	default:
 		return q, seedhost.ErrUnsafe
 	}
-	_, steps, err := p.readNoticeRoute(ctx, qry, routeID)
+	if q.State == "revoked" && (q.ErrorCode != "NOTICE_AUTH_REVOKED" || q.Modules != 0 || q.FinishedAt == "") {
+		return q, seedhost.ErrUnsafe
+	}
+	route, steps, err := p.readNoticeRoute(ctx, qry, routeID)
 	if err != nil {
 		return q, err
+	}
+	if q.State == "revoked" && (route.Version != 2 || route.BusinessV2 == nil || route.BusinessV2.Binding.Kind != "site_message") {
+		return q, seedhost.ErrUnsafe
 	}
 	if ordinal < 0 || ordinal >= len(steps) || steps[ordinal].Kind != "queue" || steps[ordinal].InputSHA != tokenHash(string(mustCleanSeedJSON(q.Call))) {
 		return q, seedhost.ErrUnsafe
@@ -211,6 +223,9 @@ func (p *PluginStore) readPluginMessage(ctx context.Context, qry pluginRemoveLin
 	return q, nil
 }
 func (p *PluginStore) savePluginMessageTx(ctx context.Context, tx *sql.Tx, q pluginNoticeQueueEntry) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	sealed, err := p.noticeSeal("queue", q.ID, q)
 	if err != nil {
 		return err
@@ -227,6 +242,9 @@ func (p *PluginStore) savePluginMessageTx(ctx context.Context, tx *sql.Tx, q plu
 }
 
 func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, operation string, expected pluginNoticeQueueEntry) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if err := p.commitNoticeTx(tx, operation); err != nil {
 		_ = tx.Rollback()
 		readCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
@@ -243,9 +261,15 @@ func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, opera
 // Their private producers freeze recipients; neither queue JSON nor an SDK can
 // select a transport or acquire a native owner grant.
 func (a *App) sendPluginMessageModules(ctx context.Context, q pluginNoticeQueueEntry) (int, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return 0, err
+	}
 	return a.larkMessageModules(ctx, q)
 }
 func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	release, err := a.pluginStore.noticeLock(ctx, "queue/"+id)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -259,6 +283,12 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	q, err := a.pluginStore.readPluginMessage(ctx, tx, id)
 	if err != nil {
 		return seedhost.ErrUnknown
+	}
+	if q.State == "revoked" {
+		if q.Direct {
+			return siteMessageAuthorityRevoked{}
+		}
+		return nil
 	}
 	if q.State == "consumed" || q.State == "unknown" {
 		return nil
@@ -274,6 +304,28 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 		}
 		if err = a.pluginStore.commitPluginMessage(ctx, tx, "queue_unknown", q); err != nil {
 			return seedhost.ErrUnknown
+		}
+		return nil
+	}
+	// Current authority is checked in this same transaction before minting the
+	// durable send intent. Existing unknown intents are never re-sent.
+	if err = a.requireSiteMessageQueueAuthorityTx(ctx, tx, q); err != nil {
+		if !siteMessageIsAuthorityRevoked(err) {
+			return err
+		}
+		revokedErr := err
+		q.State = "revoked"
+		q.ErrorCode = "NOTICE_AUTH_REVOKED"
+		q.Modules = 0
+		q.FinishedAt = now()
+		if err = a.pluginStore.savePluginMessageTx(ctx, tx, q); err != nil {
+			return seedhost.ErrUnknown
+		}
+		if err = a.pluginStore.commitPluginMessage(ctx, tx, "queue_revoked", q); err != nil {
+			return seedhost.ErrUnknown
+		}
+		if q.Direct {
+			return revokedErr
 		}
 		return nil
 	}
@@ -297,7 +349,22 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 		return seedhost.ErrUnknown
 	}
 	delete(copied.Call.Kwargs, "immediately")
-	modules, sendErr := invokePluginNoticeSender(ctx, send, copied)
+	// A revocation may have committed after intent acceptance. Recheck at the
+	// dispatch boundary, outside the completed transaction and lifecycle locks.
+	// An authenticated revocation before invocation is a known not-sent result;
+	// all uncertain evidence retains the intent and must never cause a resend.
+	var revokedErr error
+	if err = a.requireSiteMessageQueueAuthority(ctx, copied); err != nil {
+		if !siteMessageIsAuthorityRevoked(err) {
+			return seedhost.ErrUnknown
+		}
+		revokedErr = err
+	}
+	var modules int
+	var sendErr error
+	if revokedErr == nil {
+		modules, sendErr = invokePluginNoticeSender(ctx, send, copied)
+	}
 	q.Modules = modules
 	q.FinishedAt = a.pluginStore.noticeNow().UTC().Format(time.RFC3339Nano)
 	q.State = "consumed"
@@ -307,6 +374,11 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 			q.State = "unknown"
 			q.ErrorCode = "NOTICE_SEND_UNCONFIRMED"
 		}
+	}
+	if revokedErr != nil {
+		q.State = "revoked"
+		q.ErrorCode = "NOTICE_AUTH_REVOKED"
+		q.Modules = 0
 	}
 	finishCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
 	defer cancel()
@@ -325,10 +397,16 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	if err = a.pluginStore.commitPluginMessageRow(finishCtx, finish, "queue_finish", result); err != nil {
 		return seedhost.ErrUnknown
 	}
+	if revokedErr != nil && q.Direct {
+		return revokedErr
+	}
 	return nil // Original MessageQueue._send consumes callback errors.
 }
 
 func invokePluginNoticeSender(ctx context.Context, send func(context.Context, pluginNoticeQueueEntry) (int, error), q pluginNoticeQueueEntry) (modules int, err error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return 0, err
+	}
 	defer func() {
 		if recover() != nil {
 			modules = 0
@@ -338,6 +416,9 @@ func invokePluginNoticeSender(ctx context.Context, send func(context.Context, pl
 	return send(ctx, q)
 }
 func (a *App) drainPluginMessages(ctx context.Context, limit int) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if limit < 1 || limit > 200 {
 		return seedhost.ErrUnsafe
 	}

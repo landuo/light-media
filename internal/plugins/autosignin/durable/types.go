@@ -92,6 +92,10 @@ type NetworkIntent struct {
 	Index                            int
 }
 type Journal interface {
+	FinishSourceFailure(context.Context, Binding, string, json.RawMessage, json.RawMessage, SourceIdentity) error
+	BeginSource(context.Context, Binding, SourceRequest) (Entry, bool, error)
+	CompleteSource(context.Context, Binding, SourceRequest, SourceResult) error
+	UnknownSource(context.Context, Binding, SourceRequest) error
 	AcquireExecution(context.Context, Binding) (func(), error)
 	State(context.Context, Binding) (State, error)
 	Start(context.Context, Binding, string, string, json.RawMessage, Baseline) (Run, error)

@@ -183,7 +183,7 @@ func (r *sourceRousiReader) messages(d *SourceUserData) error {
 		if !ok {
 			return sourceModuleError(nil)
 		}
-		values := [3]any{row["title"], rousiDate(row["created_at"], r.now), row["content"]}
+		values := []any{row["title"], rousiDate(row["created_at"], r.now), row["content"]}
 		d.Messages = append(d.Messages, values)
 		var observed [3]*string
 		for i, v := range values {

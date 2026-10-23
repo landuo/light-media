@@ -1,0 +1,87 @@
+{
+  "scope": "Backend process-fixture tests, not complete plugin framework acceptance",
+  "parent": "2310034256d6b4b25faf10ce105f213a56f6286b",
+  "go_version": "go1.26.10",
+  "changes": [
+    {
+      "path": "internal/app/plugin_transfer_process_test.go",
+      "before_sha256": "e12a38c7cde71eba6e12ac09ea65c129140949b792c04f307354fbf23ab4ff3b",
+      "after_sha256": "9fd401d7103a517ae9bb00aa8ca10356fd7f7c9298a85d390085214910b6e908"
+    },
+    {
+      "path": "internal/app/plugin_uninstall_test.go",
+      "before_sha256": "83360a4e7de10fb4816cb0122a645f70dd78e4b64c51e8780bc0fc5c2bd261cd",
+      "after_sha256": "312a17a6be6f796f1e4c9a6b1c2f8dfbc8d3270567b50e00c97e11187a7b19ca"
+    },
+    {
+      "path": "internal/app/plugin_uninstall_process_test.go",
+      "before_sha256": null,
+      "after_sha256": "10353dedae2fd4034f57f0e4a3751465f7fe11aa4719a5987a56f340e44b0007"
+    },
+    {
+      "path": "internal/app/testdata/uninstall-worker/main.go",
+      "before_sha256": null,
+      "after_sha256": "d34ada73c7e1e4e2ca0596d3f367abe6d47cc0a4a7fc4e17e6230256c2ddd0fb"
+    }
+  ],
+  "roots": [
+    "TestPluginUninstallCanceledRefreshDrainKeepsTargetAndRestoresConsumer",
+    "TestPluginUninstallHTTPFreshInstallAndReinstallActualServer",
+    "TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned",
+    "TestPluginUninstallHostOriginalOrderRetainsDataAndStopsRealLifecycle",
+    "TestPluginUninstallHostRejectsPayloadForgedStaleAndReadOnlyRequests",
+    "TestPluginUninstallHostSelfReceiptSurvivesReplyLossAndReinstallation",
+    "TestPluginUninstallReadOnlyOptionsUseInstalledOrderAndDoNotExposeConfiguration",
+    "TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot",
+    "TestPluginUninstallRealSDKFailureBeforeTerminalCompletionCannotUninstall",
+    "TestPluginUninstallRealSDKOriginalFormSelfRemovalAndSharedExecutableSurvives",
+    "TestPluginUninstallReplyLossFixture",
+    "TestPluginUninstallRestartRestoresOnlyItsUncommittedSameSnapshotDrain",
+    "TestPluginUninstallSourceCommitProofRequiresExactExpectedOrPreviousCiphertext",
+    "TestPluginUninstallSourceCompletionDoesNotDependOnLegacyReceipt",
+    "TestPluginUninstallSourceCrossRunInstalledASTOracle",
+    "TestPluginUninstallSourceEmptySelectionDoesNotReadDamagedGlobalList",
+    "TestPluginUninstallSourceGlobalAbsentThenEqualEmptyFollowsSystemConfigSet",
+    "TestPluginUninstallSourceHTTPNewRunUsesWarmOrColdInstalledListAfterCommitFailure",
+    "TestPluginUninstallSourceHTTPReinstallAppendsAndSelfFirstStillCompletes",
+    "TestPluginUninstallSourceHTTPWorkerFailureWarmCacheAndActualColdReopen",
+    "TestPluginUninstallSourceInstalledCommitFailureKeepsCacheAndEarlierPackages",
+    "TestPluginUninstallSourceInterruptedOrMissingProofCannotReplayReplacement",
+    "TestPluginUninstallSourceLaterOwnerPreparationCannotPreemptEarlierRemoval",
+    "TestPluginUninstallSourceLocalSequenceSurvivesResetUpgradeAndColdReopen",
+    "TestPluginUninstallSourceNewRunAfterMiddleFailureSeesEarlierRemovedClass",
+    "TestPluginUninstallSourceOwnResetFailureKeepsEarlierRemoval",
+    "TestPluginUninstallSourceOwnWarmCacheReturnsBeforeInventoryOnNextInvocation",
+    "TestPluginUninstallSourceReinstallAfterFailedInstalledCommitUsesSourceWarmOrColdOrder",
+    "TestPluginUninstallSourceSchedulerCatchAndNotificationFailureKeepEarlierPackages",
+    "TestPluginUninstallSourceSequenceLegacyBackfillOnceAndMissingRowsAreNotRebased",
+    "TestPluginUninstallSourceStopExceptionDoesNotRetainTarget",
+    "TestTransferActualServerInstallConfigServiceDualIdentity"
+  ],
+  "normal": {
+    "exit": 0,
+    "passed_roots": 32,
+    "passed_including_subtests": 54,
+    "missing_roots": [],
+    "failed": [],
+    "input_files": 5431,
+    "changed": [],
+    "completed_at": "2026-10-22T20:13:53.773850581Z",
+    "checked_at": "2026-10-22T20:14:19.253562+00:00"
+  },
+  "race": {
+    "exit": 0,
+    "passed_roots": 32,
+    "passed_including_subtests": 54,
+    "missing_roots": [],
+    "failed": [],
+    "input_files": 5431,
+    "changed": [],
+    "completed_at": "2026-10-22T20:23:20.368779888Z",
+    "checked_at": "2026-10-22T20:23:46.981606+00:00"
+  },
+  "input_manifest_sha256": "75c50460d84a38e36b42323bbdcb5cd2efe05b99f734594dbce2f6a8b66fc62a",
+  "artifact_boundary": "Frozen validation source includes retained unpublished UI assets. Actual cmd/server is exercised only in plugin-worker mode via owned loopback App host; this is not standalone HTTP-daemon or browser acceptance. No frontend assets are in this commit. Final aggregate must rebuild and revalidate its own combined tree.",
+  "historical_failure": "Original V5 B root TestPluginUninstallHTTPFreshInstallAndReinstallPreviewKeepsExistingFormsPinned failed PLUGIN_FORM_FAILED after 10504 ms. No Uninstall phase capture existed for that failure. One later bounded diagnostic passed; historical cause is not proved.",
+  "budgets": "Product form deadline remains 10 seconds. Package test watchdog is 6 minutes to include real nested worker builds; functional assertions unchanged."
+}

@@ -39,8 +39,20 @@ const PluginFolderDialog = defineAsyncComponent(() => import('./PluginFolderDial
 const PluginConfigDialog = defineAsyncComponent(() => import('./PluginConfigDialog.vue'));
 const PluginDataDialog = defineAsyncComponent(() => import('./PluginDataDialog.vue'));
 const PluginLogDialog = defineAsyncComponent(() => import('./PluginLogDialog.vue'));
+const PluginCloneDialog = defineAsyncComponent(() => import('./PluginCloneDialog.vue'));
 const detail = ref<PluginCard>();
 const logPlugin = ref<PluginCard>();
+const cloneSource = ref<PluginCard>();
+async function cloneCreated() {
+  // The clone transaction already preserves its source folder. Refresh both
+  // lists instead of racing it with a second organization write.
+  cloneSource.value = undefined;
+  installedQuery.value = null;
+  runningFilter.value = false;
+  updateFilter.value = false;
+  toast('插件分身已创建，默认暂停');
+  await load();
+}
 function openPlugin(plugin: PluginCard) {
   if (!plugin.installed) return;
   if (plugin.has_page) detail.value = plugin;
@@ -71,7 +83,7 @@ const loading = ref(true),
   error = ref(''),
   busy = ref(false),
   selected = ref<PluginCard>();
-const confirmation = ref<{ plugin: PluginCard; action: 'reset' | 'uninstall' }>();
+const confirmation = ref<{ plugin: PluginCard; action: 'reset' | 'uninstall' | 'update' }>();
 const history = ref<any[] | null>(null),
   historyName = ref(''),
   historyInstance = ref(''),
@@ -294,14 +306,18 @@ async function dropToFolder(name: string) {
   }
 }
 async function cardAction(action: string, plugin: PluginCard) {
-  if (sortMode.value || organizing.value) return;
+  if (sortMode.value || organizing.value || busy.value) return;
   if (action === 'open') openPlugin(plugin);
   else if (action === 'detail') detail.value = plugin;
   else if (action === 'settings') selected.value = plugin;
+  else if (action === 'clone' && plugin.installed) cloneSource.value = plugin;
+  else if (action === 'update' && plugin.update && plugin.has_update)
+    confirmation.value = { plugin, action };
   else if (action === 'reset' || action === 'uninstall') confirmation.value = { plugin, action };
   else if (action === 'runs') await showRuns(plugin);
   else if (action === 'logs') logPlugin.value = plugin;
   else if (action === 'install') await install(plugin);
+  else if (action === 'restore-reviewed' && plugin.restore_review) await restoreReviewed(plugin);
   else if (action === 'remove-folder' && currentFolder.value) {
     const next = copyOrganization(organization.value),
       name = currentFolder.value;
@@ -312,8 +328,40 @@ async function cardAction(action: string, plugin: PluginCard) {
     if (await persistOrganization(next)) toast('插件已移出文件夹');
   }
 }
+async function restoreReviewed(plugin: PluginCard) {
+  if (
+    busy.value ||
+    plugin.installed ||
+    !plugin.restore_review ||
+    plugin.restore_review_blocked_reason
+  )
+    return;
+  busy.value = true;
+  try {
+    await api(
+      '/plugins/' + encodeURIComponent(plugin.instance_id) + '/restore-reviewed',
+      plugin.restore_review,
+    );
+    toast(plugin.name + '已恢复为待确认，尚未执行；请打开设置核对并保存');
+    installedQuery.value = null;
+    runningFilter.value = false;
+    updateFilter.value = false;
+    tab.value = 'installed';
+    await load();
+  } catch (e) {
+    error.value = errorText(e);
+  } finally {
+    busy.value = false;
+  }
+}
 async function install(plugin: PluginCard) {
-  if (busy.value) return;
+  if (
+    busy.value ||
+    plugin.update_review_pending ||
+    plugin.restore_review ||
+    plugin.restore_review_blocked_reason
+  )
+    return;
   busy.value = true;
   try {
     await api('/plugins/install', { plugin_id: plugin.plugin_id });
@@ -334,11 +382,22 @@ async function confirmAction() {
   if (!choice || busy.value) return;
   busy.value = true;
   try {
-    await api(
+    if (choice.action === 'update' && !choice.plugin.update) return;
+    const result = await api(
       '/plugins/' + encodeURIComponent(choice.plugin.instance_id) + '/' + choice.action,
-      {},
+      choice.action === 'update' ? choice.plugin.update : {},
     );
-    toast(choice.action === 'reset' ? '插件配置及数据已重置' : '插件已卸载，配置及数据保留');
+    toast(
+      choice.action === 'update'
+        ? result.review_pending
+          ? '版本已迁移，尚未执行；请打开当前实例设置核对并保存'
+          : result.initialization
+            ? '内置版本迁移已提交，初始化结果请查看执行记录'
+            : '内置版本已确认，配置和数据保留'
+        : choice.action === 'reset'
+          ? '插件配置及数据已重置'
+          : '插件已卸载，配置及数据保留',
+    );
     confirmation.value = undefined;
     await load();
   } catch (e) {
@@ -386,8 +445,11 @@ async function abandonUnknownRun() {
     history.value = await api('/plugins/' + encodeURIComponent(historyInstance.value) + '/runs');
     abandonChoice.value = undefined;
     toast('已放弃旧执行并保留未知证据，旧动作不会重放');
-  } catch (e) { toast(errorText(e)); }
-  finally { abandoningRun.value = ''; }
+  } catch (e) {
+    toast(errorText(e));
+  } finally {
+    abandoningRun.value = '';
+  }
 }
 const states: Record<string, string> = {
   pending: '等待执行',
@@ -671,6 +733,13 @@ onUnmounted(() => clearInterval(timer));
       :plugin="logPlugin"
       @close="logPlugin = undefined"
     />
+    <PluginCloneDialog
+      v-if="cloneSource"
+      :key="cloneSource.instance_id"
+      :plugin="cloneSource"
+      @close="cloneSource = undefined"
+      @created="cloneCreated"
+    />
     <PluginDataDialog
       v-if="detail"
       :key="detail.instance_id"
@@ -688,7 +757,10 @@ onUnmounted(() => clearInterval(timer));
       :plugin="selected"
       @changed="load"
       @close="selected = undefined"
-      @switch="detail = selected; selected = undefined"
+      @switch="
+        detail = selected;
+        selected = undefined;
+      "
       @saved="
         selected = undefined;
         load();
@@ -702,11 +774,19 @@ onUnmounted(() => clearInterval(timer));
       @update:model-value="!busy && (confirmation = undefined)"
       ><VCard v-if="confirmation"
         ><VCardTitle class="plugin-dialog-title"
-          >确认{{ confirmation.action === 'reset' ? '重置' : '卸载' }}</VCardTitle
+          >确认{{
+            confirmation.action === 'update'
+              ? '更新'
+              : confirmation.action === 'reset'
+                ? '重置'
+                : '卸载'
+          }}</VCardTitle
         ><VCardText class="plugin-dialog-content">{{
-          confirmation.action === 'reset'
-            ? '重置将清除该插件的配置及运行数据，是否继续？'
-            : '卸载此插件？配置及运行数据会保留。'
+          confirmation.action === 'update'
+            ? '更新到当前已编译版本，保留该实例配置、数据和分身信息。旧一次性执行意图不会自动重放，需要时请打开设置重新确认。迁移提交与初始化执行结果分别记录，是否继续？'
+            : confirmation.action === 'reset'
+              ? '重置将清除该插件的配置及运行数据，是否继续？'
+              : '卸载此插件？配置及运行数据会保留。'
         }}</VCardText>
         <div class="plugin-confirm-actions">
           <VBtn variant="text" :disabled="busy" @click="confirmation = undefined">取消</VBtn
@@ -739,8 +819,15 @@ onUnmounted(() => clearInterval(timer));
               <div v-if="run.recovery" class="plugin-run-recovery" role="status">
                 <strong>{{ run.recovery.stage }}</strong>
                 <p>{{ run.recovery.message }}</p>
-                <VBtn v-if="run.recovery.abandon_allowed" size="small" color="warning" variant="tonal"
-                  :disabled="!!abandoningRun" @click="abandonChoice = run">核对后放弃旧执行</VBtn>
+                <VBtn
+                  v-if="run.recovery.abandon_allowed"
+                  size="small"
+                  color="warning"
+                  variant="tonal"
+                  :disabled="!!abandoningRun"
+                  @click="abandonChoice = run"
+                  >核对后放弃旧执行</VBtn
+                >
               </div>
               <VBtn
                 v-if="run.retryable"
@@ -756,24 +843,58 @@ onUnmounted(() => clearInterval(timer));
         ></VCard
       ></VDialog
     >
-    <VDialog :model-value="!!abandonChoice" max-width="500" content-class="plugin-dialog-surface"
-      @update:model-value="value => { if (!value && !abandoningRun) abandonChoice = undefined }">
-      <VCard><VCardTitle>确认放弃旧执行</VCardTitle><VCardText>
-        <p>请先核对备份目录及相关 WebDAV 文件。当前待核对阶段：{{ abandonChoice?.recovery?.stage }}。</p>
-        <p>此操作保留全部未知副作用证据，取消旧任务及其定时触发，不回滚文件，不重试旧动作。完成后可修改配置或发起新备份。</p>
-        <div class="plugin-run-abandon-actions">
-          <VBtn variant="text" :disabled="!!abandoningRun" @click="abandonChoice = undefined">返回核对</VBtn>
-          <VBtn color="warning" :loading="!!abandoningRun" @click="abandonUnknownRun">已核对，确认放弃</VBtn>
-        </div>
-      </VCardText></VCard>
+    <VDialog
+      :model-value="!!abandonChoice"
+      max-width="500"
+      content-class="plugin-dialog-surface"
+      @update:model-value="
+        (value) => {
+          if (!value && !abandoningRun) abandonChoice = undefined;
+        }
+      "
+    >
+      <VCard
+        ><VCardTitle>确认放弃旧执行</VCardTitle
+        ><VCardText>
+          <p>
+            请先核对备份目录及相关 WebDAV 文件。当前待核对阶段：{{
+              abandonChoice?.recovery?.stage
+            }}。
+          </p>
+          <p>
+            此操作保留全部未知副作用证据，取消旧任务及其定时触发，不回滚文件，不重试旧动作。完成后可修改配置或发起新备份。
+          </p>
+          <div class="plugin-run-abandon-actions">
+            <VBtn variant="text" :disabled="!!abandoningRun" @click="abandonChoice = undefined"
+              >返回核对</VBtn
+            >
+            <VBtn color="warning" :loading="!!abandoningRun" @click="abandonUnknownRun"
+              >已核对，确认放弃</VBtn
+            >
+          </div>
+        </VCardText></VCard
+      >
     </VDialog>
-
   </VThemeProvider>
 </template>
 <style scoped>
-.plugin-run-recovery { flex-basis: 100%; border-inline-start: 3px solid rgb(var(--v-theme-warning)); padding: 10px 12px; background: rgba(var(--v-theme-warning), 0.06); border-radius: 4px; }
-.plugin-run-recovery p { margin: 4px 0 10px; line-height: 1.6; }
-.plugin-run-abandon-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.plugin-run-recovery {
+  flex-basis: 100%;
+  border-inline-start: 3px solid rgb(var(--v-theme-warning));
+  padding: 10px 12px;
+  background: rgba(var(--v-theme-warning), 0.06);
+  border-radius: 4px;
+}
+.plugin-run-recovery p {
+  margin: 4px 0 10px;
+  line-height: 1.6;
+}
+.plugin-run-abandon-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
 .plugin-surface {
   background: transparent !important;
   min-height: 320px;

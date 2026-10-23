@@ -56,7 +56,7 @@ func (r *sourceNexusReader) messages() {
 		if r.err != nil {
 			return
 		}
-		var row [3]any
+		row := make([]any, 3)
 		if nodes := r.x(doc, `//h1/text()|//div[@class="layui-card-header"]/span[1]/text()`); len(nodes) > 0 {
 			row[0] = legacyanime.Strip(sourceNexusText(nodes[len(nodes)-1]))
 		}

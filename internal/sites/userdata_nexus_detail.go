@@ -206,8 +206,12 @@ func (r *sourceNexusReader) native() {
 	if r.observed["messages"] {
 		r.s.Messages = [][3]*string{}
 		for _, row := range r.d.Messages {
+			if len(row) < 3 {
+				r.s.Messages = nil
+				return
+			}
 			var values [3]*string
-			for i, v := range row {
+			for i, v := range row[:3] {
 				if v != nil {
 					s, ok := v.(string)
 					if !ok {

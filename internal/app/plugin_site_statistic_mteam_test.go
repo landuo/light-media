@@ -215,4 +215,5 @@ func TestSiteStatisticMTeamRevocationStopsMarkReadAndSeeding(t *testing.T) {
 	if err = a.Store.DB.QueryRow(`SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history')`).Scan(&count); err != nil || count != 0 {
 		t.Fatal("revoked source reader published account data", err)
 	}
+	siteMessageAssertColdRevocationHasNoEffects(t, a, run, func() int { return len(calls) })
 }

@@ -23,9 +23,12 @@ func pluginResultJSON(value json.RawMessage) (json.RawMessage, error) {
 }
 
 // A returned worker result must not leave a claim running just because its
-// result column could not be saved. This fallback writes no result bytes, never
+// result column could not be saved. This fallback records authenticated null, never
 // replaces another terminal decision, and cannot replay the completed worker.
 func (p *PluginStore) failPluginResult(ctx context.Context, runID, code string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if code != "PLUGIN_RESULT_TOO_LARGE" && code != "INVALID_PLUGIN_RESULT" {
 		code = "PLUGIN_RESULT_SAVE_FAILED"
 	}
@@ -34,7 +37,24 @@ func (p *PluginStore) failPluginResult(ctx context.Context, runID, code string) 
 		return err
 	}
 	defer tx.Rollback()
-	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state='failed',error_code=?,updated_at=? WHERE id=? AND state='running'`, code, now(), runID)
+	if completed, err := p.completedSupervisedRunTx(ctx, tx, runID); err != nil {
+		return err
+	} else if completed {
+		return nil
+	}
+	lease, err := p.requireSupervisedFinishTx(ctx, tx, runID)
+	if err != nil {
+		return err
+	}
+	var instance string
+	if err = tx.QueryRowContext(ctx, `SELECT instance_id FROM plugin_runs WHERE id=?`, runID).Scan(&instance); err != nil {
+		return err
+	}
+	sealed, err := p.seal("run_result", instance, runID, []byte(`null`))
+	if err != nil {
+		return err
+	}
+	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state='failed',result=?,error_code=?,updated_at=? WHERE id=? AND state='running'`, sealed, code, now(), runID)
 	if err != nil {
 		return err
 	}
@@ -48,6 +68,9 @@ func (p *PluginStore) failPluginResult(ctx context.Context, runID, code string) 
 		return tx.Commit()
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state='failed' WHERE run_id=? AND state='running'`, runID); err != nil {
+		return err
+	}
+	if err = p.recordSupervisedCompletionTx(ctx, tx, lease, runID); err != nil {
 		return err
 	}
 	return tx.Commit()

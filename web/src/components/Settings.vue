@@ -39,6 +39,7 @@ async function load() {
   form.value = JSON.parse(JSON.stringify(await refreshSettings()));
   form.value.tmdb ||= { api_key: '', access_token: '' };
   form.value.fnos ||= { host: '', username: '', password: '', enabled: false };
+  form.value.app_domain ??= '';
   form.value.site_data_refresh_hours ??= 6;
   form.value.read_site_messages = displayedReadMessages(form.value);
   logging.value = await api('/settings/logging');
@@ -47,7 +48,8 @@ function displayedReadMessages(settings: any) {
   if (settings.read_site_messages_error) return settings.read_site_messages;
   return settings.effective_read_site_messages ?? settings.read_site_messages ?? true;
 }
-async function save(section: 'tmdb' | 'fnos' | 'site') {
+async function save(section: 'app' | 'tmdb' | 'fnos' | 'site') {
+  if (saving.value) return false;
   if (section === 'site' && form.value.read_site_messages_error) {
     toast(form.value.read_site_messages_error, true);
     return false;
@@ -59,6 +61,7 @@ async function save(section: 'tmdb' | 'fnos' | 'site') {
     const current = await refreshSettings();
     const c = JSON.parse(JSON.stringify(current));
     delete c.secret_state;
+    if (section === 'app') c.app_domain = form.value.app_domain;
     if (section === 'tmdb') c.tmdb = form.value.tmdb;
     if (section === 'site') {
       c.site_data_refresh_hours = form.value.site_data_refresh_hours;
@@ -76,6 +79,7 @@ async function save(section: 'tmdb' | 'fnos' | 'site') {
     if (result) {
       ui.settings = result;
       form.value.secret_state = result.secret_state;
+      if (section === 'app') form.value.app_domain = result.app_domain ?? '';
       if (section === 'tmdb') form.value.tmdb = result.tmdb;
       if (section === 'fnos') form.value.fnos = result.fnos;
       if (section === 'site') {
@@ -166,6 +170,22 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
         :configured="!!form.secret_state?.api_token"
         @saved="form.secret_state = $event.secret_state"
       />
+      <section class="panel">
+        <header class="section-heading"><h2>应用地址</h2></header>
+        <div class="form-grid">
+          <VTextField
+            class="span-two"
+            v-model="form.app_domain"
+            label="访问地址"
+            type="text"
+            placeholder="https://media.example.invalid"
+          />
+        </div>
+        <p class="hint">用于插件通知的默认应用链接；留空不生成默认链接。</p>
+        <div class="button-row">
+          <button class="primary" :disabled="saving" @click="save('app')">保存</button>
+        </div>
+      </section>
       <section class="panel">
         <header class="section-heading">
           <h2>TMDB 元数据</h2>

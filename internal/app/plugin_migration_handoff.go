@@ -245,6 +245,9 @@ func ValidateReviewedPluginExecutionHandoffTarget(ctx context.Context, db *sql.D
 	return pluginHandoffSnapshotTime(*source, stopped)
 }
 func (p *PluginStore) ImportReviewedPluginExecutionHandoff(ctx context.Context, instance string, raw []byte) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	stopped, e := validateStoppedPluginInput(raw)
 	if e != nil {
 		return e

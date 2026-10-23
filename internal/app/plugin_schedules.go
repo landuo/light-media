@@ -40,6 +40,9 @@ func (p *PluginStore) configureIdentifiersOnce(ctx context.Context, run *PluginR
 	return p.configurePluginSchedulesWithReplacement(ctx, run, "once", definitions, at, nil, nil, replacement)
 }
 func (p *PluginStore) configurePluginSchedulesWithReplacement(ctx context.Context, run *PluginRun, group string, definitions []pluginScheduleDefinition, at time.Time, patch map[string]json.RawMessage, effect func(context.Context, *sql.Tx, PluginRun) error, replacement json.RawMessage) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if !pluginStorageID.MatchString(group) || len(definitions) > 1000 || at.IsZero() {
 		return bad("INVALID_PLUGIN_SCHEDULE", "插件定时服务声明无效")
 	}
@@ -210,6 +213,9 @@ func latestPluginScheduleDue(trigger *schedule.Trigger, due, at time.Time) (time
 }
 
 func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Time) (int, error) {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return 0, err
+	}
 	queued := 0
 	// Only this dispatch skips a positively identified unknown owner. Its due
 	// instant is untouched and the next dispatch checks the owner again.
@@ -222,7 +228,7 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		var instanceID, serviceID, dueText, pluginID string
 		var generation, revision int64
 		var sealed []byte
-		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND v.revision=s.config_revision`
+		query := `SELECT s.instance_id,s.service_id,s.generation,s.config_revision,s.definition,s.next_due,i.plugin_id FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.active=1 AND s.next_due IS NOT NULL AND s.next_due<=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=s.generation AND (v.revision=s.config_revision OR i.plugin_id='AutoSignIn')`
 		args := []any{schedule.FormatTime(at)}
 		if len(blocked) > 0 {
 			// At most 200 instances are considered in one bounded dispatch. IDs
@@ -242,6 +248,15 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 		}
 		enqueued := false
 		applyErr := func() error {
+			if pluginID == "AutoSignIn" {
+				handled, e := p.autoSignInScheduleAdmissionTx(ctx, tx, instanceID, generation, revision)
+				if e != nil {
+					return e
+				}
+				if !handled {
+					return bad("SIGNIN_SCHEDULE_DENIED", "签到调度身份未匹配")
+				}
+			}
 			raw, err := p.unseal("schedule", instanceID, serviceID, sealed)
 			if err != nil {
 				return err
@@ -334,6 +349,12 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 }
 
 func (p *PluginStore) claimPluginScheduleTx(ctx context.Context, tx *sql.Tx, run PluginRun, at time.Time) (string, error) {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return "", err
+	}
+	if handled, code, err := p.claimAutoSignInScheduleTx(ctx, tx, run, at); handled || err != nil {
+		return code, err
+	}
 	var invocation struct {
 		Input struct {
 			OccurrenceID string `json:"occurrence_id"`
@@ -394,6 +415,9 @@ func (p *PluginStore) pluginScheduledInvocation(ctx context.Context, run PluginR
 }
 
 func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID, serviceID string, at time.Time) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	if !pluginStorageID.MatchString(instanceID) || !pluginServiceID.MatchString(serviceID) || at.IsZero() {
 		return PluginRun{}, bad("INVALID_PLUGIN_SCHEDULE", "定时服务标识无效")
 	}

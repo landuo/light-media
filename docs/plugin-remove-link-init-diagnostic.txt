@@ -1,0 +1,21 @@
+RemoveLink：可信监听注册失败的本地系统提示（受影响门禁通过，未部署）
+
+基线 dc42db237043d475c5d9c134aa3d4b4efae5a7a4。本阶段补充实际尝试注册监听失败时的本地systemmessage，不走post_message/Router，不外发，不因为提示已保存而重新允许文件操作。
+
+冻结来源与限定
+固定 RemoveLink 2.17 原文件SHA256 1f9e719e16f5f72340aa50e942d6f7062390a4bddd82f5f3f47d58ef757dbda4。现有脱敏source.py:476–509、511–544分别捕获硬链接/STRM observer初始化异常，标题“媒体文件清理”，正文为路径加“启动硬链接监控失败：”或“启动 STRM 监控失败：”及异常文本；原版随后继续其余目录。
+本宿主原已采用整批失败闭锁，此安全偏差保留并明确列出，不宣称逐目录partial-watch等价。共享InotifyInit、随机数、授权/符号链接/目录检查及运行中故障不冒充某个已尝试目录的原初始化异常。仅顶层spec循环内真实add-watch系统调用失败产生私有typed证据，包含零基spec序号、路径/模式、阶段和cause；未尝试目录不生成提示。正文使用本机Go/errno经现有脱敏后的文本，不冒称Python str(e)完全相同。
+
+后续依赖静态核对：官方watchdog v6.0.0 release指向commit 76c091dc8841de1d1a1cd6511bb509fe4f058de6。该版本 InotifyObserver构造仅选择emitter；fd在emitter.on_thread_start→InotifyBuffer→Inotify时创建。因此Go InotifyInit系统调用失败不能误当原“导入/observer构造失败”而切polling；原schedule/start失败仍由外围提示分支处理。本轮没有增加错误降级。此为官方固定版本源码阅读，不是实际已安装依赖的逐字节证明，也没有取得原文件bytes来计算哈希。来源：https://github.com/gorakhargosh/watchdog/releases/tag/v6.0.0 ，https://raw.githubusercontent.com/gorakhargosh/watchdog/v6.0.0/src/watchdog/observers/inotify.py ，https://raw.githubusercontent.com/gorakhargosh/watchdog/v6.0.0/src/watchdog/observers/inotify_buffer.py ，https://raw.githubusercontent.com/gorakhargosh/watchdog/v6.0.0/src/watchdog/observers/inotify_c.py 。
+
+可信控制流
+NativeWatch失败关闭已注册部分的整个fd批次，Host保存Blocked并保留Active configure。闭锁读取/持久化失败直接保留错误，不继续声称诊断成功。只有exact typed失败且与当前spec/ordinal相符才调用独立诊断回调；任意、joined或wrapped错误不会被误分类。回调不提供给SDK worker自由填入路径/文案。
+App复用原configure Guard lease，核对当前实例/代次/修订/运行中init或reload、发布阶段transition、Active configure scope及Blocked原因。通知、独立INSERT-only密封core receipt和journal effect同SQL原子写入；三者需精确对应，缺件或篡改不补造。ID绑定scope/run/spec及事实，用户已读标记不改变消息不可变内容。
+提交ACK未知只在限定读回中校验原授权和三方事实，不重新启动watch、不外发、也不解除文件闭锁。提示成功后原watch错误仍返回，已开始的deferred调用保持uncertain，run为reconcile_pending而非终态failed或succeeded，lifecycle不得记applied；普通claim只取pending，冷恢复只读完成证据，Active/Blocked不允许重放。私有nil-default commit seam仅用于可区别的“提交前失败”和“真实SQL已提交但返回ACK错误”测试，不是公开API权限。
+
+验证口径
+新host测试在任务临时目录中先注册第一spec，再使第二spec的真实add-watch系统调用失败，核对第三项未尝试及/proc/self/fd无inotify泄漏；这是受控故障，不是声称真实耗尽inotify资源。
+App测试使用实际SDK子进程和临时SQLite/媒体sentinel，覆盖init/reload、两模式、本地消息/独立回执、未决失败闭锁、原子失败、未知提交读回、冷恢复和分身边界。最终核心普通/race各60顶层、257含子项通过；App普通/race/modernconly各134顶层、475含子项通过，无skip。受影响go vet及23个CLI的modernconly构建通过。初始测试关于run终态、lazy schema和新运行入队的错误假设均保留在原失败日志，修正fixture后未弱化真实owner闭锁断言，详情见配套JSON。
+
+未完成边界
+本专项不涵盖共享全局InotifyInit目录归属、原版继续其他目录的partial-watch语义或Python原错误文本；非local StorageChain/provider与非Linux监听仍未完整实现。实际源配置/引用清单、真实渠道/账户验收、正式导入/交接和部署仍未做。正式迁移仍7/23；全项目既有失败及40项二进制输入缺件仍按前阶段保留，不把专项通过说成全项目可部署材料完整。

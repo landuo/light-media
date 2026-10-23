@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, defineAsyncComponent, type Component } from 'vue';
 import { VForm } from 'vuetify/components/VForm';
+import { VDivider } from 'vuetify/components/VDivider';
 import { VRow, VCol } from 'vuetify/components/VGrid';
 import { VSwitch } from 'vuetify/components/VSwitch';
 import { VAlert } from 'vuetify/components/VAlert';
@@ -24,6 +25,7 @@ import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 const props = defineProps<{ node: PluginFormNode; model: Record<string, any> }>();
 const components: Record<string, Component | string> = {
   VForm,
+  VDivider,
   VRow,
   VCol,
   VSwitch,

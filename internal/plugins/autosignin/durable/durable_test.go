@@ -41,7 +41,7 @@ func inventory() source.Inventory {
 	return source.Inventory{Configured: []source.Object{row}, Indexers: []source.Object{row}}
 }
 func controller(store Journal, binding Binding, target source.PageTransport) *Controller {
-	return &Controller{Journal: store, Binding: binding, DigestKey: fixtureKey, Dependencies: Dependencies{Inventory: func(context.Context) (source.Inventory, error) { return inventory(), nil }, Factory: func(context.Context, source.Object) (BoundSite, error) {
+	return &Controller{Journal: store, Binding: binding, DigestKey: fixtureKey, Dependencies: Dependencies{Source: &syntheticSourcePort{}, Inventory: func(context.Context) (source.Inventory, error) { return inventory(), nil }, Factory: func(context.Context, source.Object) (BoundSite, error) {
 		return BoundSite{Site: source.Object{"id": 1, "name": "Synthetic", "url": "https://synthetic.invalid/", "cookie": "synthetic-secret-cookie"}, Hooks: source.SiteVisitHooks{HTTP: target}, Revision: "synthetic-site-grant-v1"}, nil
 	}, Now: func() time.Time { return time.Date(2026, 1, 2, 12, 0, 0, 0, time.UTC) }, RandomInt: func(a, b int) (int, error) { return a, nil }}}
 }
@@ -90,10 +90,10 @@ func TestDurableCorePerEffectOrderAndCompletedReplay(t *testing.T) {
 	for _, entry := range entries {
 		kinds = append(kinds, entry.Kind)
 	}
-	if string(marshal(kinds)) != `["history.put","history.put","notify","config"]` {
+	if string(marshal(kinds)) != `["history.put","history.put","source.notify","config"]` {
 		t.Fatal("source commit order changed", kinds)
 	}
-	if http.Calls.Load() != 1 || state.Stats["synthetic.invalid"].Success != 1 || len(state.Outbox) != 1 || state.ActiveRun != "" {
+	if http.Calls.Load() != 1 || state.Stats["synthetic.invalid"].Success != 1 || len(state.Outbox) != 0 || state.ActiveRun != "" {
 		t.Fatal("missing real effects", http.Calls.Load(), state)
 	}
 	second, err := c.Execute(context.Background(), "service-one", Command{Action: "service"})
@@ -132,6 +132,13 @@ func (f *failEffectStore) Apply(ctx context.Context, b Binding, e Effect) (Entry
 	}
 	return f.Journal.Apply(ctx, b, e)
 }
+func (f *failEffectStore) BeginSource(ctx context.Context, b Binding, r SourceRequest) (Entry, bool, error) {
+	if r.Identity.Kind == "source."+f.Kind && !f.Once {
+		f.Once = true
+		return Entry{}, false, ErrStore
+	}
+	return f.Journal.BeginSource(ctx, b, r)
+}
 func TestMonthlyHistoryBeforeDailyFailureResumesWithoutNetworkOrDuplicateRows(t *testing.T) {
 	store, binding, _ := fixture(t)
 	http := &fixedHTTP{Response: confirmed}
@@ -155,7 +162,7 @@ func TestMonthlyHistoryBeforeDailyFailureResumesWithoutNetworkOrDuplicateRows(t 
 	state, _ = store.State(context.Background(), binding)
 	var rows []any
 	json.Unmarshal(state.History["1月2日"], &rows)
-	if http.Calls.Load() != 1 || len(rows) != 1 || state.Stats["synthetic.invalid"].Success != 1 || len(state.Outbox) != 1 {
+	if http.Calls.Load() != 1 || len(rows) != 1 || state.Stats["synthetic.invalid"].Success != 1 || len(state.Outbox) != 0 {
 		t.Fatal("resume duplicated prior effects", http.Calls.Load(), len(rows), state)
 	}
 }

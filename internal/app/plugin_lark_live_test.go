@@ -22,10 +22,12 @@ func larkCoreFixture(t *testing.T, a *App, source string) (Job, string) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = a.Store.DB.ExecContext(ctx, `UPDATE plugin_runs SET state='running' WHERE id=? AND state='pending'`, run.ID); e != nil {
-		t.Fatal(e)
+	queued := run
+	run, e = a.pluginStore.claimRunForInstance(ctx, queued.InstanceID)
+	if e != nil || run.ID != queued.ID {
+		t.Fatal("exact webhook claim", e)
 	}
-	if e = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); e != nil {
+	if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); e != nil {
 		t.Fatal(e)
 	}
 	var inv plugins.Invocation

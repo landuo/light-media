@@ -1,0 +1,450 @@
+{
+  "scope": "IYUUAutoSeed 2.19, Linux/local storage; business acceptance and real owned-browser verification. Generic clone/reset/update remains shared framework responsibility.",
+  "task_branch": "plugins/iyuu-auto-seed",
+  "tested_production_commit": "525131cc80787c1f959f99e4c5be464e0afda274",
+  "full_repository_ci_claim": false,
+  "v4_exact": {
+    "files": 5516,
+    "manifest_sha256": "bd372dad50965519c9986145c4fa43c503a676c958f2a93da17a9be31f2b0a44",
+    "production_delta": [
+      "internal/app/plugin_site_controls.go",
+      "internal/app/plugin_iyuu_owner.go"
+    ],
+    "normal_and_race_affected": {
+      "normal": {
+        "exit": 0,
+        "roots": 12,
+        "nodes": 12,
+        "skips": [],
+        "failures": [],
+        "package": {
+          "Time": "2026-10-23T03:51:13.761147107Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 25.453
+        }
+      },
+      "race": {
+        "exit": 0,
+        "roots": 12,
+        "nodes": 12,
+        "skips": [],
+        "failures": [],
+        "package": {
+          "Time": "2026-10-23T03:53:43.232085166Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 76.991
+        }
+      },
+      "files": 5516,
+      "source_unchanged": true
+    },
+    "ordinary_full_iyuu_app": {
+      "exit": 0,
+      "business_roots": 34,
+      "passed_nodes": 102,
+      "skips": [],
+      "failures": [],
+      "package": {
+        "Time": "2026-10-23T03:57:50.429920785Z",
+        "Action": "pass",
+        "Package": "light-media/internal/app",
+        "Elapsed": 41.136
+      },
+      "source_files": 5516,
+      "source_unchanged": true
+    },
+    "vet_exit": 0,
+    "ordinary_server_build_exit": 0,
+    "cgo0_modernconly_server_build_exit": 0,
+    "ui_fixture_compile_exit": 0,
+    "binaries": {
+      "worker_sha256": "c4d620157920fab7d5bed8047a54ad31c1805f9e462e76ac940f8fed312e930d",
+      "cgo0_sha256": "62d53bb0a4c353b0667865398d31ea64ea49de35e688161ac1222735b3cda367",
+      "fixture_sha256": "39cf993ebc614da44c13aeeaf90ff082b98fb161e6b8e60aa389c9047a8b0ae9",
+      "overlay_sha256": "724352a6780f3f1e7dd5a668912889e3e36d25ca5e499f3e5bee7938367b0cd7",
+      "fixture_source_sha256": "78bf4a071db61facb4954a9630f95f4612bfe806c76d3a1bfa1ae14ceb3fe3a8"
+    }
+  },
+  "associated_unchanged_layer_evidence_not_v4_reruns": {
+    "core_52_roots_each_mode": {
+      "input_unchanged": true,
+      "files": 5513,
+      "modes": {
+        "normal": {
+          "exit": 0,
+          "roots": 52,
+          "passed_nodes": 302,
+          "skips": 0,
+          "failures": 0
+        },
+        "race": {
+          "exit": 0,
+          "roots": 52,
+          "passed_nodes": 302,
+          "skips": 0,
+          "failures": 0
+        }
+      }
+    },
+    "native_48_roots_each_mode": {
+      "input_unchanged": true,
+      "files": 5514,
+      "modes": {
+        "normal": {
+          "exit": 0,
+          "roots": 48,
+          "passed_nodes": 284,
+          "skips": 0,
+          "failures": 0
+        },
+        "race": {
+          "exit": 0,
+          "roots": 48,
+          "passed_nodes": 284,
+          "skips": 0,
+          "failures": 0
+        }
+      }
+    },
+    "long_scan_ordinary": {
+      "input_unchanged": true,
+      "files": 5514,
+      "exit": 0,
+      "pass": [
+        {
+          "Time": "2026-10-23T02:54:03.385513029Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+          "Elapsed": 126.71
+        },
+        {
+          "Time": "2026-10-23T02:54:03.393306962Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 126.895
+        }
+      ],
+      "skip": [],
+      "timing": [
+        "    plugin_iyuu_long_test.go:81: actual native HTTP completions=7 elapsed=2m6.466690045s state=succeeded code=\n"
+      ]
+    },
+    "long_scan_race": {
+      "exit": 0,
+      "roots": [
+        {
+          "Time": "2026-10-23T03:30:22.363197448Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+          "Elapsed": 132.22
+        }
+      ],
+      "package": {
+        "Time": "2026-10-23T03:30:23.37299218Z",
+        "Action": "pass",
+        "Package": "light-media/internal/app",
+        "Elapsed": 134.175
+      },
+      "evidence": [
+        "    plugin_iyuu_long_test.go:81: actual native HTTP completions=7 elapsed=2m9.427575597s state=succeeded code=\n"
+      ],
+      "source_files": 5514,
+      "source_unchanged_after_all_gates": true,
+      "host_and_sdk_worker": "race-instrumented test binary; SDK child invokes TestIYUUActualSDKWorker",
+      "ordinary_server_worker_is_separate": true
+    },
+    "rationale": "Core/native source bytes unchanged. Long test, HTTP wait/budget and worker protocol/deadline bytes unchanged; its older host binary is expressly not v4. The changed dependency-read path is covered by fresh12 race/34 App ordinary and actual v4 server UI. No new shared state, lock or goroutine.",
+    "app34_race_v3_not_v4": {
+      "part1": {
+        "files": 5514,
+        "input_unchanged": true,
+        "exit": 0,
+        "roots": 17,
+        "passed_nodes": 59,
+        "skips": 0,
+        "failures": 0
+      },
+      "part2": {
+        "files": 5514,
+        "input_unchanged": true,
+        "exit": 0,
+        "roots": 17,
+        "passed_nodes": 43,
+        "skips": [],
+        "failures": [],
+        "package_result": {
+          "Time": "2026-10-23T03:23:41.915746749Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 40.148
+        }
+      },
+      "exact_root_coverage": {
+        "business_roots": [
+          "TestIYUUActualAppSDKConfigScheduleAndNativeHTTP",
+          "TestIYUUActualAppSDKDaemonDefaultDirectories",
+          "TestIYUUActualAppSDKDaemonDirectoryChangeAndLostACK",
+          "TestIYUUActualAppSDKDownloaderAPIKeyAndOptions",
+          "TestIYUUActualAppSDKUnknownBlocksLaterRun",
+          "TestIYUUActualBulkUninstallSDKRetiresOwner",
+          "TestIYUUActualCompletedResultSurvivesLaterCheckpoint",
+          "TestIYUUActualEvidenceLossNeverCreatesGenesisOrRetires",
+          "TestIYUUActualHTTPFormConfigAndLifecycle",
+          "TestIYUUActualHTTPPrivateTokenFormAndSave",
+          "TestIYUUActualNativeParentCancellationPreservesColdEvidence",
+          "TestIYUUActualNativeSiteDeletedConsumer",
+          "TestIYUUActualOwnerNamespaceLossCannotRetireUnknown",
+          "TestIYUUActualServerWorkerNativeCompletionAndUnknown",
+          "TestIYUUActualTypedNativeAndCustomIDsRemainDistinct",
+          "TestIYUUAlreadyClaimedAndPreparedWorkCannotCrossLaterUnknown",
+          "TestIYUULifecycleAuthenticatedUnknownBlocksRetirement",
+          "TestIYUULifecyclePublicationNeedsDrainedExactRootTarget",
+          "TestIYUULifecyclePublicationUsesExistingTransactionUnderGlobalLocks",
+          "TestIYUULifecycleRejectsStaleAndUnsupportedScope",
+          "TestIYUULifecycleReleaseExactlyOnce",
+          "TestIYUULifecycleResolutionRequiresSealedCommittedFact",
+          "TestIYUULifecycleRetirementSharesRootTransaction",
+          "TestIYUULifecycleWaitDoesNotHoldGlobalLocksAndCancellationKeepsGate",
+          "TestIYUUOriginalImportCannotActivateCoincidentNativeID",
+          "TestIYUUSourceLogsRedactBeforeWriteAndStayInExactRunScope",
+          "TestIYUUStartedAdmissionSurvivesColdBeforeHostEntry",
+          "TestIYUUStartedAndAcceptedRollbackTogether",
+          "TestIYUUTokenRetentionDoesNotPanicOnLegacyValues",
+          "TestIYUUUnknownSchedulerRejectionRequiresExactCause",
+          "TestIYUUUserSavePreservesCachesUntilExplicitClear",
+          "TestReviewedIYUUCollectorWireDigest",
+          "TestReviewedIYUUDownloaderEffectiveEndpoint",
+          "TestReviewedIYUURejectsUnreviewedInput"
+        ],
+        "count": 34,
+        "normal_and_race_same_business_roots": true,
+        "excluded_helper": "TestIYUUActualSDKWorker",
+        "separate_long": "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+        "private_stdin_skip": "TestReviewedIYUUSelectedStdin"
+      },
+      "input_manifest_sha256": "996890f94e60640fb05e63d382f0ac4f24a9f053b1dee52ea681f3af616467f0",
+      "classification": "v3 pre-scoped-read binary evidence, not rerun on v4; v4 affected12 race and all34 ordinary are fresh."
+    }
+  },
+  "browser": {
+    "surface": "assistant cloud Chrome tab19, native Xfce Terminal; not user Mac",
+    "url": "http://127.0.0.1:3138/#plugins",
+    "original_fields": 19,
+    "two_instances_prebound_not_clone_creation": true,
+    "checks": [
+      "all19 original field controls rendered",
+      "saved token not exposed, blank retains",
+      "dynamic QB/TR downloader and owned native site options rendered",
+      "first UI save numeric13,label ui-first-owned,QB selection,native site1; real worker succeeded",
+      "reopen first restored13 and selections",
+      "change13to99 then close without save; reopening after sibling save still13",
+      "second initially2/instance-1/empty selections independent from first",
+      "second actualUI save23/ui-second-owned,real worker succeeded",
+      "reopen second kept23 while first stayed13",
+      "all unsafe execution flags remained false; any native network fixture request would fail"
+    ],
+    "first": {
+      "config_without_token": {
+        "addhosttotag": null,
+        "auto_category": null,
+        "auto_downloader": null,
+        "auto_start": null,
+        "categoryafterseed": null,
+        "clearcache": false,
+        "cron": "0 0 * * *",
+        "downloaders": [
+          "Owned qB"
+        ],
+        "enabled": false,
+        "error_caches": [],
+        "labelsafterseed": "ui-first-owned",
+        "nolabels": null,
+        "nopaths": null,
+        "notify": null,
+        "onlyonce": false,
+        "permanent_error_caches": [],
+        "reuse_save_path": true,
+        "sites": [
+          1
+        ],
+        "size": 13,
+        "skipverify": null,
+        "success_caches": []
+      },
+      "instance": "IYUUAutoSeed",
+      "revision": 4,
+      "run_state": "succeeded",
+      "saves": 1
+    },
+    "second": {
+      "config_without_token": {
+        "addhosttotag": null,
+        "auto_category": null,
+        "auto_downloader": null,
+        "auto_start": null,
+        "categoryafterseed": null,
+        "clearcache": false,
+        "cron": "0 0 * * *",
+        "downloaders": [],
+        "enabled": false,
+        "error_caches": [],
+        "labelsafterseed": "ui-second-owned",
+        "nolabels": null,
+        "nopaths": null,
+        "notify": null,
+        "onlyonce": false,
+        "permanent_error_caches": [],
+        "reuse_save_path": true,
+        "sites": [],
+        "size": 23,
+        "skipverify": null,
+        "success_caches": []
+      },
+      "instance": "IYUUAutoSeed.owned-second",
+      "revision": 4,
+      "run_state": "succeeded",
+      "saves": 1
+    },
+    "completed": {
+      "owned_processes": 0,
+      "saves": {
+        "IYUUAutoSeed": 1,
+        "IYUUAutoSeed.owned-second": 1
+      }
+    },
+    "exit": {
+      "exit": 0,
+      "owned_child_reaped": true
+    },
+    "tab_closed": true,
+    "service_stopped": true
+  },
+  "fresh_original_python": {
+    "form": {
+      "source_sha256": "a47d36432e87da046af025fc76281d99c714064a8fe05bdf8b11e83d2c683a3f",
+      "python": "3.12.14",
+      "method": "Unmodified get_form and __custom_sites AST bodies; controlled in-memory SiteOper and DownloaderHelper; no imports from original application, no network",
+      "cases": [
+        {
+          "name": "empty",
+          "exact_form": true,
+          "exact_defaults": true,
+          "form_sha256": "37ffcf3fc088d570b469c3fcb99e35da2e3d6f11cf6ef6ae7688aa9e7fb7320e"
+        },
+        {
+          "name": "dynamic",
+          "exact_form": true,
+          "exact_defaults": true,
+          "form_sha256": "b62cba15c4af83188c46e4fd173c13e02e54ab054c8ef09ed959a55f2e199358"
+        },
+        {
+          "name": "custom-disabled",
+          "exact_form": true,
+          "exact_defaults": true,
+          "form_sha256": "37ffcf3fc088d570b469c3fcb99e35da2e3d6f11cf6ef6ae7688aa9e7fb7320e"
+        }
+      ]
+    },
+    "cache": {
+      "source_sha256": "a47d36432e87da046af025fc76281d99c714064a8fe05bdf8b11e83d2c683a3f",
+      "python": "3.12.14",
+      "method": "Unmodified original cache AST method bodies, no network/imports or side effects",
+      "cases": [
+        {
+          "index": 0,
+          "exact": true,
+          "result": {
+            "value": []
+          }
+        },
+        {
+          "index": 1,
+          "exact": true,
+          "result": {
+            "value": [
+              "b",
+              "a",
+              true,
+              "1"
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "exact": true,
+          "result": {
+            "value": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "index": 3,
+          "exact": true,
+          "result": {
+            "value": [
+              "a",
+              "b",
+              "c"
+            ]
+          }
+        },
+        {
+          "index": 4,
+          "exact": true,
+          "result": {
+            "value": [
+              "a"
+            ]
+          }
+        },
+        {
+          "index": 5,
+          "exact": true,
+          "result": {
+            "value": [
+              "a"
+            ]
+          }
+        },
+        {
+          "index": 6,
+          "exact": true,
+          "result": {
+            "exception": "TypeError"
+          }
+        }
+      ]
+    }
+  },
+  "explicit_limits": [
+    "No production sites, real accounts, CAPTCHA, actual downloader seed mutation or media deletion",
+    "Private selected-stdin replay not run because original private input not supplied; not treated as pass",
+    "Parent test helper empty return excluded from business pass counts",
+    "Generic clone creation/reset/update is not claimed by these two prebound-instance tests",
+    "Retain framework authenticated lineage filter in future three-way merge; never replace newer common peer loop wholesale"
+  ],
+  "preserved_failures": [
+    "original browser run-ui-1 failed before ready with PLUGIN_REFERENCE_AMBIGUOUS",
+    "two original-baseline regression roots failed at real business assertions, then green with scoped fix",
+    "shell quoting parse failure before any build gate, corrected without source change",
+    "one DOM combobox Escape interaction targeted non-input div; inspected state and used observed textbox; no duplicate save"
+  ],
+  "separate_unresolved_asset_publication": {
+    "files_verified": 14,
+    "files_total": 15,
+    "unique_blobs_verified": 12,
+    "unique_total": 13,
+    "pending_path": "internal/plugins/iyuuautoseed/compat/encodingdetector/testdata/recovered-codecs-oracle.json",
+    "sha": "23b6e231b6d0d66ac56033853d126ab2ca918803",
+    "bytes": 766786,
+    "last_readonly_check": "2026-10-23T03:43Z 404; original upload outcome remains unknown",
+    "retried": false,
+    "assets": "All36 runtime tables were recovered by matching existing original Git blob SHA and size. Product runtime objects already exist in parent repository. New standalone asset tests/evidence batch has not been committed."
+  }
+}

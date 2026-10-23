@@ -1,0 +1,318 @@
+{
+  "scope": "Clear successful payload after final Runner error classification; real TorrentTransfer SDK exit-boundary regression. Not a fix for historical form timeouts.",
+  "parent_commit": "f8a1beb7f9260951b877a5f6782c4c9211d33333",
+  "branch": "dev/plugins-continuation",
+  "plugin_complete": false,
+  "historical_form_failure_resolved": false,
+  "production_deployed": false,
+  "baseline_available_input_manifest_sha256": "0a9896ed2e4f57d9442af0854acd863436ea48b59e66f77f01ea54d8c00f24b2",
+  "overlay_sha256": "37be4147c8388c6c41e6eba0c5a8e20b6f1f909df94177a198d3bf09f543eb93",
+  "release_source": {
+    "internal/plugins/protocol.go": "e3eef10bf7210d4b5caa15862cf3bf375fef6faa4ba1b12d661be788aa48cc61",
+    "internal/app/plugin_transfer_exit_boundary_test.go": "33b6a7c12e905bb5a0c30afa01e2803b586764ab98b3f16ae5e5326ae32f1695"
+  },
+  "runner_sha256": "973792e09ffb003d698589bcbe5488cd7ac536ad65f2cccabf8b54ac8e4ed3f4",
+  "safety": {
+    "original_form_budget_seconds": 10,
+    "budgets_changed": false,
+    "cancel_semantics_changed": false,
+    "successful_payload_on_final_error": false,
+    "host_and_wire_evidence_retained": true,
+    "actual_sdk_with_owned_synthetic_form": true,
+    "real_accounts_or_production_io": false,
+    "unrelated_uncommitted_work_included": false,
+    "process_wide_network_sandbox": false
+  },
+  "red_before_fix": {
+    "exit": 1,
+    "tests": {
+      "pass": {
+        "top": 0,
+        "inclusive": 4
+      },
+      "fail": {
+        "top": 1,
+        "inclusive": 2
+      },
+      "skip": {
+        "top": 0,
+        "inclusive": 0
+      }
+    },
+    "failures": [
+      "TestTransferActualSDKExitBoundary/cancel_at_wait_end_base",
+      "TestTransferActualSDKExitBoundary"
+    ],
+    "skips": [],
+    "package_elapsed_seconds": 10.899000000000001,
+    "stdout_sha256": "e124161d1f53fb9c830a3b637d77bc7a6e16bad6fd12d2f2de73e4cd868abf86",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "checks": {
+    "after-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 1,
+          "inclusive": 6
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": 10.923,
+      "stdout_sha256": "12f610134980c39f2536a9c9c3002a180730e280f278d60d377c822e17920740",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "after-race": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 1,
+          "inclusive": 6
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": 17.815,
+      "stdout_sha256": "db3ee4e1672e707a381ba232d9ba56a39d31cb792808264ba593a7788ca6b2dd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "protocol-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 33,
+          "inclusive": 86
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": 30.794,
+      "stdout_sha256": "e225d0600647e37a801d71aecd76f89c69db71ee40726d16d068c37d9f9cf4a6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "protocol-race": {
+      "exit": 1,
+      "tests": {
+        "pass": {
+          "top": 32,
+          "inclusive": 85
+        },
+        "fail": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [
+        "TestActualMaximumPayloadFourWays"
+      ],
+      "skips": [],
+      "package_elapsed_seconds": 197.457,
+      "stdout_sha256": "e848a94a8052fedab25ad037168100766049b94c614403d1fce42935665b1090",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "core-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 16,
+          "inclusive": 138
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": 2.423,
+      "stdout_sha256": "3800de500db1bd0419eaaaeca5e5e26d6eb1574311fdbb9432e6b312e7f9a7e3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "core-race": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 16,
+          "inclusive": 138
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": 10.517,
+      "stdout_sha256": "0b55bad54770cb64037c94804fd3c5bb65c5e3418d318e1dd6964ed524c236a3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "app-normal": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 26,
+          "inclusive": 57
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 1,
+          "inclusive": 1
+        }
+      },
+      "failures": [],
+      "skips": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "package_elapsed_seconds": 67.97,
+      "stdout_sha256": "30c72cf8666390fc2374c6c847bfb10b22413448c91bd2e20a78437b9a47d602",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "app-race": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 26,
+          "inclusive": 57
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 1,
+          "inclusive": 1
+        }
+      },
+      "failures": [],
+      "skips": [
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "package_elapsed_seconds": 479.549,
+      "stdout_sha256": "3b27881c9e2c751ccd3c8d90be28c76e0a0afa1421b841ea04d3576eb3888ff7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cli-test": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 1,
+          "inclusive": 1
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": 0.178,
+      "stdout_sha256": "469c01a2e0fdd860b38e833263b4c58cc2b30af599adaff6c1bd694151a5ab0f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vet": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "exit": 0,
+      "tests": {
+        "pass": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "fail": {
+          "top": 0,
+          "inclusive": 0
+        },
+        "skip": {
+          "top": 0,
+          "inclusive": 0
+        }
+      },
+      "failures": [],
+      "skips": [],
+      "package_elapsed_seconds": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "known_remaining_gate_failure": {
+    "test": "TestActualMaximumPayloadFourWays",
+    "runner_timeout_seconds": 90,
+    "status": "Fails on current fix and independently verified pristine bdfab baseline; execution_canceled, one host call, empty Result. Not hidden or repaired by this patch.",
+    "baseline_evidence": "docs/plugin-torrent-transfer-form-diagnostics-verification.json protocol_race_baseline"
+  },
+  "limits": [
+    "The two historical PLUGIN_FORM_FAILED cases remain unexplained. Current affected App normal/race passing does not prove they were repaired.",
+    "The second historical failure was the first installed GET /form inside transferReadyApp, not installation POST and not the correction business assertion.",
+    "Private retained original stdin is unavailable; TestReviewedTransferSelectedStdin is skipped explicitly.",
+    "40 pre-existing binary inputs remain missing. This is not an all-project test/build completeness claim.",
+    "No production deployment or real-account migration acceptance was attempted."
+  ],
+  "unrelated_frozen_work": {
+    "frozen_manifest_sha256": "37610d15ba81c7c32cb928d533518418fc1a627f136610ae00e4cb728958712b",
+    "unrelated_changed": []
+  }
+}

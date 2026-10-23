@@ -338,3 +338,115 @@ func TestBoundSiteTransportSlowHeadersAreIdleNotTotal(t *testing.T) {
 		t.Fatal("header deadline became total timeout", res, err, time.Since(start))
 	}
 }
+
+func TestSiteHostGuardRedirectBoundary(t *testing.T) {
+	for _, mode := range []string{"nil", "allow", "deny-first", "deny-second"} {
+		t.Run(mode, func(t *testing.T) {
+			var first, second, checks atomic.Int32
+			sentinel := errors.New("synthetic host grant revoked")
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path == "/first" {
+					first.Add(1)
+					http.Redirect(w, r, "/second", http.StatusFound)
+					return
+				}
+				second.Add(1)
+				w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+				io.WriteString(w, "allowed")
+			}))
+			defer server.Close()
+			binding := SiteHTTPBinding{URL: server.URL}
+			type contextKey struct{}
+			ctx := context.WithValue(context.Background(), contextKey{}, "host-context")
+			if mode != "nil" {
+				binding.BeforeRequest = func(ctx context.Context) error {
+					if ctx.Value(contextKey{}) != "host-context" {
+						t.Error("request context was not propagated")
+					}
+					n := checks.Add(1)
+					if mode == "deny-first" || mode == "deny-second" && n == 2 {
+						return sentinel
+					}
+					return nil
+				}
+			}
+			bound, err := BindSiteHTTP(binding)
+			if err != nil {
+				t.Fatal(err)
+			}
+			response, err := bound.Do(ctx, PageRequest{Method: "GET", URL: server.URL + "/first"})
+			switch mode {
+			case "deny-first":
+				if !errors.Is(err, sentinel) || response != nil || first.Load() != 0 || second.Load() != 0 || checks.Load() != 1 {
+					t.Fatalf("first request was not denied: response=%v err=%v first=%d second=%d checks=%d", response, err, first.Load(), second.Load(), checks.Load())
+				}
+			case "deny-second":
+				if !errors.Is(err, sentinel) || response != nil || first.Load() != 1 || second.Load() != 0 || checks.Load() != 2 {
+					t.Fatalf("redirect was not denied: response=%v err=%v first=%d second=%d checks=%d", response, err, first.Load(), second.Load(), checks.Load())
+				}
+			default:
+				wantChecks := int32(2)
+				if mode == "nil" {
+					wantChecks = 0
+				}
+				if err != nil || response == nil || response.Text != "allowed" || first.Load() != 1 || second.Load() != 1 || checks.Load() != wantChecks {
+					t.Fatalf("redirect behavior changed: response=%v err=%v first=%d second=%d checks=%d", response, err, first.Load(), second.Load(), checks.Load())
+				}
+			}
+		})
+	}
+}
+
+type siteHostGuardTestRoundTripper func(*http.Request) (*http.Response, error)
+
+func (f siteHostGuardTestRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	return f(req)
+}
+
+func TestSiteHostGuardCanceledContextAndRedaction(t *testing.T) {
+	sentinel := errors.New("synthetic-sensitive-cause")
+	wrapped := &siteHostGuardError{cause: sentinel}
+	if strings.Contains(wrapped.Error(), sentinel.Error()) || !errors.Is(wrapped, sentinel) {
+		t.Fatal("guard wrapper must redact its text and unwrap its cause")
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	req, err := http.NewRequestWithContext(ctx, "GET", "http://example.invalid", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	transport := siteHostGuardTransport{
+		beforeRequest: func(context.Context) error {
+			t.Error("canceled context reached host callback")
+			return nil
+		},
+		next: siteHostGuardTestRoundTripper(func(*http.Request) (*http.Response, error) {
+			t.Error("canceled context reached underlying transport")
+			return nil, nil
+		}),
+	}
+	response, err := transport.RoundTrip(req)
+	if response != nil || !errors.Is(err, context.Canceled) {
+		t.Fatal(response, err)
+	}
+}
+
+func TestSiteHostGuardPreservesOrdinaryNetworkFailure(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
+	server.Close()
+	for _, guarded := range []bool{false, true} {
+		binding := SiteHTTPBinding{URL: server.URL}
+		checks := 0
+		if guarded {
+			binding.BeforeRequest = func(context.Context) error { checks++; return nil }
+		}
+		bound, err := BindSiteHTTP(binding)
+		if err != nil {
+			t.Fatal(err)
+		}
+		response, err := bound.Do(context.Background(), PageRequest{Method: "GET", URL: server.URL})
+		if response != nil || err != nil || guarded && checks != 1 {
+			t.Fatal("ordinary network failure semantics changed", response, err, checks)
+		}
+	}
+}

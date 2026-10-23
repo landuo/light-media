@@ -325,7 +325,7 @@ func TestPluginDeferredStartedRequiresCurrentRunningInstallation(t *testing.T) {
 			}
 			switch mutation {
 			case "terminal":
-				err = a.pluginStore.FinishRun(ctx, run.ID, "failed", "PLUGIN_EXECUTION_FAILED", nil)
+				err = finishClaimedFixtureRun(ctx, a.pluginStore, run, "failed", "PLUGIN_EXECUTION_FAILED", nil)
 			case "revision":
 				_, err = a.pluginStore.SaveConfig(ctx, run.InstanceID, run.ConfigRevision, map[string]any{"plugin_ids": []string{}})
 			case "reset":
@@ -376,10 +376,15 @@ func TestPluginDeferredConfirmedReceiptRepairsFailedResultStorage(t *testing.T) 
 			if _, err = a.Store.DB.Exec(`CREATE TRIGGER synthetic_deferred_result_failure BEFORE UPDATE OF result ON plugin_runs WHEN NEW.state='succeeded' BEGIN SELECT RAISE(ABORT,'synthetic final result failure'); END`); err != nil {
 				t.Fatal(err)
 			}
-			if err = a.pluginStore.finishRun(ctx, run.ID, "succeeded", "", result, false); err == nil {
-				t.Fatal("injected result save failure ignored")
+			execution := executionLeaseActivate(t, a.pluginStore, run)
+			defer run.executionLease.runCleanup()
+			if err = a.pluginStore.finishRun(execution, run.ID, "succeeded", "", result, false); err == nil || !strings.Contains(err.Error(), "synthetic final result failure") {
+				t.Fatal("terminal write did not reach injected result save failure", err)
 			}
-			if err = a.pluginStore.failPluginResult(ctx, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+			if err = a.pluginStore.failPluginResult(execution, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+				t.Fatal(err)
+			}
+			if err = a.pluginStore.releaseSupervisedRun(run); err != nil {
 				t.Fatal(err)
 			}
 			if failureCode != "PLUGIN_RESULT_SAVE_FAILED" {
@@ -431,7 +436,12 @@ func TestPluginDeferredRetryPreservesOriginalRunAndRejectsStartedStaleOrConcurre
 					}
 				}
 			}
-			if err = a.pluginStore.finishRun(ctx, run.ID, "failed", "PLUGIN_EXECUTION_FAILED", nil, true); err != nil {
+			execution := executionLeaseActivate(t, a.pluginStore, run)
+			defer run.executionLease.runCleanup()
+			if err = a.pluginStore.finishRun(execution, run.ID, "failed", "PLUGIN_EXECUTION_FAILED", nil, true); err != nil {
+				t.Fatal(err)
+			}
+			if err = a.pluginStore.releaseSupervisedRun(run); err != nil {
 				t.Fatal(err)
 			}
 			switch scenario {
@@ -497,7 +507,12 @@ func TestPluginDeferredRecoveryRetainsLegacyCommittedUninstallReceipt(t *testing
 			}
 			// Direct trusted host exercises the older no-deferred receipt format.
 			uninstallApply(t, a, &run)
-			if err := a.pluginStore.failPluginResult(ctx, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+			execution := executionLeaseActivate(t, a.pluginStore, run)
+			defer run.executionLease.runCleanup()
+			if err := a.pluginStore.failPluginResult(execution, run.ID, "PLUGIN_RESULT_SAVE_FAILED"); err != nil {
+				t.Fatal(err)
+			}
+			if err := a.pluginStore.releaseSupervisedRun(run); err != nil {
 				t.Fatal(err)
 			}
 			if err := a.pluginStore.recoverPluginRuns(ctx); err != nil {

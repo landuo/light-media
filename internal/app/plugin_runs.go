@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -12,6 +13,7 @@ import (
 // PluginRun's public projection is metadata only. Config snapshots, input and
 // worker results may contain secrets and are never marshaled by list APIs.
 type PluginRun struct {
+	executionLease *pluginExecutionLease
 	Recovery       *autoBackupRecovery `json:"recovery,omitempty"`
 	Retryable      bool                `json:"retryable,omitempty"`
 	RequestID      string              `json:"request_id,omitempty"`
@@ -33,6 +35,9 @@ const pluginRunColumns = `id,instance_id,version,generation,config_revision,acti
 const pluginRunListColumns = `id,instance_id,version,generation,config_revision,action,state,input,NULL,error_code,created_at,updated_at`
 
 func (p *PluginStore) InstallAndQueue(ctx context.Context, in PluginInstallation, defaults any) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, in.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	in, err := validatePluginInstallation(in)
 	if err != nil {
 		return PluginRun{}, err
@@ -99,6 +104,9 @@ func (p *PluginStore) Installations(ctx context.Context) ([]PluginInstallation, 
 // SaveConfigAndQueue commits the user's config and its init invocation together.
 // This explicit user save releases migration staging, not config.enabled.
 func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string, revision int64, config any) (PluginStoredValue, PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	raw, err := p.pluginSnapshotJSON(ctx, p.store.DB, instanceID, config, true)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -108,6 +116,9 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 		return PluginStoredValue{}, PluginRun{}, err
 	}
 	defer tx.Rollback()
+	if err = p.releasePluginUpdateReviewForSaveTx(ctx, tx, instanceID, revision); err != nil {
+		return PluginStoredValue{}, PluginRun{}, err
+	}
 	var nativeID string
 	if err = tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&nativeID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -123,7 +134,7 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
-	activation, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
+	mediaCursor, err := p.mediaRefreshHandoffTx(ctx, tx, instanceID, revision, raw)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -143,6 +154,10 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_event_batches SET state='canceled' WHERE instance_id=? AND run_id IS NULL`, instanceID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
+	var activation json.RawMessage
+	if mediaCursor != nil {
+		activation, _ = json.Marshal(map[string]int64{"event_after": mediaCursor.after})
+	}
 	var pluginID string
 	if err := tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, instanceID).Scan(&pluginID); err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
@@ -150,7 +165,7 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 	if pluginID == "MergeSiteSwitch" {
 		activation = json.RawMessage(`{"config_saved":true}`)
 	}
-	run, err := p.enqueueRunTx(ctx, tx, instanceID, "init", activation)
+	run, err := p.enqueueRunWithMediaCursorTx(ctx, tx, instanceID, "init", activation, mediaCursor)
 	if err != nil {
 		return PluginStoredValue{}, PluginRun{}, err
 	}
@@ -160,7 +175,7 @@ func (p *PluginStore) SaveConfigAndQueue(ctx context.Context, instanceID string,
 // Carry the last drained cursor across an enabled-to-enabled config handoff.
 // Facts committed after drain froze its high water must reach the replacement
 // config. A previously disabled config still starts from the new save boundary.
-func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, instanceID string, revision int64, next json.RawMessage) (json.RawMessage, error) {
+func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, instanceID string, revision int64, next json.RawMessage) (*mediaRefreshAdmissionCursor, error) {
 	var sealed []byte
 	err := tx.QueryRowContext(ctx, `SELECT v.sealed FROM plugin_values v JOIN plugin_installations i ON i.instance_id=v.instance_id WHERE i.instance_id=? AND i.plugin_id='MediaServerRefresh' AND v.kind='config' AND v.item_key='main' AND v.revision=?`, instanceID, revision).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -192,10 +207,20 @@ func (p *PluginStore) mediaRefreshHandoffTx(ctx context.Context, tx *sql.Tx, ins
 	if err != nil {
 		return nil, err
 	}
-	return json.Marshal(map[string]int64{"event_after": cursor})
+	return &mediaRefreshAdmissionCursor{after: cursor}, nil
 }
 
 func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, action string, input json.RawMessage) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
+	return p.enqueueRunWithMediaCursorTx(ctx, tx, instanceID, action, input, nil)
+}
+
+func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.Tx, instanceID, action string, input json.RawMessage, mediaCursor *mediaRefreshAdmissionCursor) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	if !pluginStorageID.MatchString(instanceID) || !pluginStorageID.MatchString(action) || (len(input) > 0 && !json.Valid(input)) {
 		return PluginRun{}, bad("INVALID_PLUGIN_RUN", "插件执行参数无效")
 	}
@@ -215,6 +240,9 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if !installed || !allowed {
 		return PluginRun{}, bad("PLUGIN_INACTIVE", "插件已卸载或仍处于迁移暂存状态")
 	}
+	if err := p.requirePluginUpdateActivation(ctx, tx, instanceID); err != nil {
+		return PluginRun{}, err
+	}
 	if err := p.requireSiteReferenceProtocolTx(ctx, tx, instanceID); err != nil {
 		return PluginRun{}, err
 	}
@@ -224,28 +252,28 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err := p.pluginNativeQueueAdmissionTx(ctx, tx, instanceID, pluginID); err != nil {
 		return PluginRun{}, err
 	}
+	var config []byte
+	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config); err != nil {
+		return PluginRun{}, err
+	}
+	if pluginID == "MediaServerRefresh" && action == "reload" {
+		var err error
+		mediaCursor, err = p.mediaRefreshReloadCursorTx(ctx, tx, run)
+		if err != nil {
+			return PluginRun{}, err
+		}
+	}
 	if pluginID == "MediaServerRefresh" && (action == "init" || action == "reload") && len(input) == 0 {
-		// Save the activation boundary with the queued config, not when the
-		// asynchronous worker eventually starts. Imports committed in between
-		// must be delivered without replaying earlier disabled history.
+		// Preserve the original worker payload. The separate host cursor, not
+		// this JSON, conveys authority to the sealed event admission.
 		var cursor int64
 		if err := tx.QueryRowContext(ctx, `SELECT COALESCE(MAX(seq),0) FROM domain_events`).Scan(&cursor); err != nil {
 			return PluginRun{}, err
 		}
-		if action == "reload" {
-			var drained int64
-			err := tx.QueryRowContext(ctx, `SELECT s.cursor FROM plugin_event_subscriptions s JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main' WHERE s.instance_id=? AND s.handler_key='refresh' AND s.generation=? AND s.config_revision=v.revision`, instanceID, run.Generation).Scan(&drained)
-			if err == nil {
-				cursor = drained
-			} else if !errors.Is(err, sql.ErrNoRows) {
-				return PluginRun{}, err
-			}
+		if mediaCursor != nil {
+			cursor = mediaCursor.after
 		}
 		input, _ = json.Marshal(map[string]int64{"event_after": cursor})
-	}
-	var config []byte
-	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config); err != nil {
-		return PluginRun{}, err
 	}
 	clear, err := p.unseal("config", instanceID, "main", config)
 	if err != nil {
@@ -259,15 +287,29 @@ func (p *PluginStore) enqueueRunTx(ctx context.Context, tx *sql.Tx, instanceID, 
 	if err != nil {
 		return PluginRun{}, err
 	}
-	sealed, err := p.sealPluginSnapshot("run", instanceID, run.ID, pluginID, run.Version, run.Input)
+	var sealed []byte
+	if action == "init" || action == "reload" {
+		sealed, err = p.sealEventAdmissionRun(instanceID, run.ID, pluginID, run.Version, run.Input)
+	} else {
+		sealed, err = p.sealPluginSnapshot("run", instanceID, run.ID, pluginID, run.Version, run.Input)
+	}
 	if err != nil {
 		return PluginRun{}, err
 	}
 	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_runs VALUES(?,?,?,?,?,?,?,?,NULL,'',?,?)`, run.ID, instanceID, run.Version, run.Generation, run.ConfigRevision, action, run.State, sealed, run.CreatedAt, run.UpdatedAt)
+	if err == nil {
+		err = p.recordRunOriginTx(ctx, tx, pluginID, run, clear)
+	}
+	if err == nil {
+		err = p.recordEventAdmissionTx(ctx, tx, pluginID, run, clear, mediaCursor)
+	}
 	return run, err
 }
 
 func (p *PluginStore) EnqueueRun(ctx context.Context, instanceID, action string, input json.RawMessage) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return PluginRun{}, err
@@ -339,33 +381,53 @@ func (p *PluginStore) ClaimRun(ctx context.Context) (PluginRun, error) {
 }
 
 func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	afterCreated, afterID := "", ""
 	for {
+		window, err := p.beginSupervisedClaim(ctx)
+		if err != nil {
+			return PluginRun{}, err
+		}
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return PluginRun{}, err
 		}
+		var lease *pluginExecutionLease
+		committing := false
+		rollback := func() error {
+			if committing {
+				return sql.ErrTxDone
+			}
+			e := tx.Rollback()
+			if e == nil && lease != nil {
+				e = lease.rollbackClaim()
+			}
+			return e
+		}
+		defer rollback()
 		tasksFull, servicesFull := brushFlowClaimBlocked(ctx)
 		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND NOT(? AND action='task' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND NOT(? AND action='service' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, tasksFull, servicesFull, afterCreated, afterCreated, afterID))
 		if err != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, err
 		}
 		afterCreated, afterID = run.CreatedAt, run.ID
 		privateCore, e := p.larkPrivateCoreRunTx(ctx, tx, run)
 		if e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, e
 		}
 		if privateCore {
-			_ = tx.Rollback()
+			_ = rollback()
 			continue
 		}
 		// Preserve old admissions, including stale revisions, until a private
 		// source transition can bind their original input and terminal outcome.
 		// They must not prevent unrelated proven plugins from being claimed.
 		if e := p.requireSiteReferenceProtocolTx(ctx, tx, run.InstanceID); e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			if code := pluginErrorCodeInternal(e); code == "PLUGIN_SITE_PROTOCOL_UNCLAIMED" || code == "PLUGIN_SITE_PROTOCOL_INVALID" {
 				continue
 			}
@@ -375,11 +437,16 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		var pluginID string
 		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision).Scan(&current, &pluginID)
 		if err != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, err
 		}
+		if current == 0 {
+			if handled, proofErr := p.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision); handled && proofErr == nil {
+				current, pluginID = 1, "AutoSignIn"
+			}
+		}
 		if e := p.brushFlowClaimIdentityTx(ctx, tx, pluginID, run); e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, e
 		}
 		admissionErr := p.brushFlowQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID, run.Action, func() json.RawMessage {
@@ -393,7 +460,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			admissionErr = p.pluginNativeQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID)
 		}
 		if e := admissionErr; e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			if pluginNativeUnconfirmedQueueAdmission(e) {
 				continue // Keep this original pending identity; advance the cursor.
 			}
@@ -405,7 +472,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isCloudflareRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimCloudflareScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -414,7 +481,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isAutoBackupRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimAutoBackupScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -423,7 +490,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isBrushFlowRun(ctx, tx, run) && (run.Action == "task" || run.Action == "service") {
 			errorCode, err = p.claimBrushFlowScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -432,7 +499,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isSeedRescueRun(ctx, tx, run) && (run.Action == "once" || run.Action == "service") {
 			errorCode, err = p.claimSeedRescueScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -441,7 +508,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if run.Action == "service" {
 			errorCode, err = p.claimPluginScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -450,16 +517,16 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		}
 		if state == "canceled" {
 			if e := p.brushFlowCancelQueuedClaimTx(ctx, tx, run); e != nil {
-				tx.Rollback()
+				rollback()
 				return PluginRun{}, e
 			}
 			if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=CASE WHEN state='missed' THEN state ELSE 'canceled' END WHERE run_id=? AND state IN ('queued','running','missed')`, run.ID); err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 		}
 		if state == "running" && !brushFlowReserveClaim(ctx, pluginID, run) {
-			tx.Rollback()
+			rollback()
 			continue
 		}
 		releaseClaim := func() {
@@ -469,19 +536,52 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			}
 		}
 
-		_, err = tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
+		changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
 		if err != nil {
 			releaseClaim()
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, err
 		}
-		if err = tx.Commit(); err != nil {
+		if n, e := changed.RowsAffected(); e != nil || n != 1 {
+			releaseClaim()
+			_ = rollback()
+			return PluginRun{}, pluginLifecycleInvalid()
+		}
+		if state == "running" {
+			if err = p.markPluginExecutionStartedTx(ctx, tx, run); err != nil {
+				releaseClaim()
+				_ = rollback()
+				return PluginRun{}, err
+			}
+		}
+		if state == "running" {
+			lease, err = p.reserveSupervisedClaimTx(ctx, tx, window, run)
+			if err != nil {
+				rollbackErr := rollback()
+				releaseClaim()
+				// A fenced or unresolved instance must not starve unrelated
+				// instances. The cursor already advances, so this is bounded.
+				if rollbackErr == nil && instanceID == "" && (errors.Is(err, errPluginRunFenced) || errors.Is(err, errPluginRunAdmissionStale) || errors.Is(err, errPluginRunAttemptUnknown)) {
+					continue
+				}
+				return PluginRun{}, err
+			}
+		}
+		committing = true
+		commitErr := tx.Commit()
+		if lease != nil {
+			err = p.commitSupervisedClaim(ctx, lease, commitErr)
+		} else {
+			err = commitErr
+		}
+		if err != nil {
 			releaseClaim()
 			return PluginRun{}, err
 		}
 		if state == "canceled" {
 			continue
 		}
+		run.executionLease = lease
 		run.State = state
 		return run, nil
 	}
@@ -492,6 +592,9 @@ func (p *PluginStore) FinishRun(ctx context.Context, runID, state, errorCode str
 }
 
 func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode string, result json.RawMessage, blockStartup bool) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if state != "succeeded" && state != "failed" && state != "reconcile_pending" || (errorCode != "" && !pluginStorageID.MatchString(errorCode)) || (state == "succeeded" && errorCode != "") {
 		return bad("INVALID_PLUGIN_RUN", "插件执行终态无效")
 	}
@@ -515,9 +618,21 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 		return err
 	}
 	defer tx.Rollback()
+	if completed, err := p.completedSupervisedRunTx(ctx, tx, runID); err != nil {
+		return err
+	} else if completed {
+		return bad("PLUGIN_RUN_TERMINAL", "插件执行已结束或不在执行状态")
+	}
+	lease, err := p.requireSupervisedFinishTx(ctx, tx, runID)
+	if err != nil {
+		return err
+	}
 	if consumed, e := p.brushFlowFinishUnenteredTaskTx(ctx, tx, run, state); e != nil {
 		return e
 	} else if consumed {
+		if err = p.recordSupervisedCompletionTx(ctx, tx, lease, runID); err != nil {
+			return err
+		}
 		return tx.Commit()
 	}
 	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,result=?,error_code=?,updated_at=? WHERE id=? AND state='running'`, state, sealed, errorCode, now(), runID)
@@ -535,10 +650,16 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=? WHERE run_id=? AND state='running'`, state, runID); err != nil {
 		return err
 	}
+	if err = p.recordSupervisedCompletionTx(ctx, tx, lease, runID); err != nil {
+		return err
+	}
 	return tx.Commit()
 }
 
 func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	// These native operations are idempotent: category replaces a validated
 	// file; Hosts replaces only its marked tail; process init has no side effect.
 	// Other plugins require their own external-operation reconciliation.
@@ -574,6 +695,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 		}
 	}
 	if err == nil {
+		err = p.quarantineRecoveredAttempts(ctx)
+	}
+	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)
 	}
 	return err
@@ -588,6 +712,9 @@ func (p *PluginStore) recoverMediaRefreshRuns(ctx context.Context) error {
 }
 
 func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch map[string]json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -605,6 +732,9 @@ func (p *PluginStore) patchRunConfig(ctx context.Context, run *PluginRun, patch 
 }
 
 func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, patch map[string]json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	var revision int64
 	var sealed []byte
 	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, run.InstanceID).Scan(&revision, &sealed); err != nil {
@@ -634,14 +764,46 @@ func (p *PluginStore) patchRunConfigTx(ctx context.Context, tx *sql.Tx, run *Plu
 // Internal full replacements share the same snapshot propagation as patches.
 // Only trusted host adapters choose a replacement; it is not a worker method.
 func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *PluginRun, raw json.RawMessage) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
+	actual, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, run.ID))
+	if err != nil {
+		return err
+	}
+	if actual.State != "running" || actual.InstanceID != run.InstanceID || actual.Version != run.Version || actual.Generation != run.Generation || actual.ConfigRevision != run.ConfigRevision || actual.Action != run.Action || !bytes.Equal(actual.Input, run.Input) {
+		return bad("PLUGIN_RUN_PROOF_INVALID", "插件配置写入的执行前像不匹配")
+	}
+	var current bool
+	if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM plugin_installations WHERE instance_id=? AND version=? AND generation=? AND installed=1 AND desired_enabled=1)`, actual.InstanceID, actual.Version, actual.Generation).Scan(&current); err != nil {
+		return err
+	}
+	if !current {
+		return bad("PLUGIN_SNAPSHOT_STALE", "插件配置写入的实例快照已变化")
+	}
 	checked, err := p.pluginSnapshotJSON(ctx, tx, run.InstanceID, raw, true)
 	if err != nil {
 		return err
 	}
 	raw = checked
 	revision := run.ConfigRevision
+	var previousSealed []byte
+	if err = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, run.InstanceID).Scan(&previousSealed); err != nil {
+		return err
+	}
+	previousConfig, err := p.unseal("config", run.InstanceID, "main", previousSealed)
+	if err != nil {
+		return err
+	}
 	value, err := p.saveValueTx(ctx, tx, run.InstanceID, "config", "main", revision, raw)
 	if err != nil {
+		return err
+	}
+	plugin, _, err := p.pluginSnapshotOwner(ctx, tx, run.InstanceID)
+	if err != nil {
+		return err
+	}
+	if err = p.recordRunConfigTransitionTx(ctx, tx, plugin, actual, value.Revision, run.Input, previousConfig, raw); err != nil {
 		return err
 	}
 	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,updated_at=? WHERE id=? AND state='running' AND generation=? AND config_revision=?`, value.Revision, now(), run.ID, run.Generation, revision)
@@ -651,20 +813,38 @@ func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *P
 	if n, _ := changed.RowsAffected(); n != 1 {
 		return bad("PLUGIN_RUN_TERMINAL", "插件执行已停止")
 	}
+	if err := p.propagateInstanceConfigTx(ctx, tx, run.InstanceID, run.Generation, revision, value.Revision, previousConfig, raw); err != nil {
+		return err
+	}
+	run.ConfigRevision = value.Revision
+	return nil
+}
+
+// propagateInstanceConfigTx is shared by trusted runtime normalization and
+// quiescent form-default normalization. It never enables an instance, creates a
+// run, changes generation, or adopts snapshots from another revision.
+func (p *PluginStore) propagateInstanceConfigTx(ctx context.Context, tx *sql.Tx, instance string, generation, revision, nextRevision int64, previousConfig, raw json.RawMessage) error {
+	if err := p.checkPluginFormConfigProjection(ctx, tx, instance); err != nil {
+		return err
+	}
 	// Internal normalization and clearing one-shot flags must reach already
 	// queued invocations too. Only advance snapshots that still match this
 	// exact generation/revision; a user edit continues to invalidate old work.
 	for {
 		var pendingID string
 		var pendingSealed []byte
-		err := tx.QueryRowContext(ctx, `SELECT id,input FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state='pending' ORDER BY id LIMIT 1`, run.InstanceID, run.Generation, revision).Scan(&pendingID, &pendingSealed)
+		err := tx.QueryRowContext(ctx, `SELECT id,input FROM plugin_runs WHERE instance_id=? AND generation=? AND config_revision=? AND state='pending' ORDER BY id LIMIT 1`, instance, generation, revision).Scan(&pendingID, &pendingSealed)
 		if errors.Is(err, sql.ErrNoRows) {
 			break
 		}
 		if err != nil {
 			return err
 		}
-		pendingRaw, err := p.unseal("run", run.InstanceID, pendingID, pendingSealed)
+		pendingRaw, err := p.unseal("run", instance, pendingID, pendingSealed)
+		if err != nil {
+			return err
+		}
+		previous, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, pendingID))
 		if err != nil {
 			return err
 		}
@@ -673,38 +853,40 @@ func (p *PluginStore) replaceRunConfigTx(ctx context.Context, tx *sql.Tx, run *P
 			return bad("INVALID_PLUGIN_RUN", "排队插件执行快照无效")
 		}
 		invocation["config"] = raw
-		pendingRaw, err = p.pluginSnapshotJSON(ctx, tx, run.InstanceID, invocation, false)
+		pendingRaw, err = p.pluginSnapshotJSON(ctx, tx, instance, invocation, false)
 		if err != nil {
 			return err
 		}
-		plugin, version, scopeErr := p.pluginSnapshotOwner(ctx, tx, run.InstanceID)
+		plugin, version, scopeErr := p.pluginSnapshotOwner(ctx, tx, instance)
 		if scopeErr != nil {
 			return scopeErr
 		}
-		pendingSealed, err = p.sealPluginSnapshot("run", run.InstanceID, pendingID, plugin, version, pendingRaw)
+		if err = p.recordRunConfigTransitionTx(ctx, tx, plugin, previous, nextRevision, pendingRaw, previousConfig, raw); err != nil {
+			return err
+		}
+		pendingSealed, err = p.resealRunSnapshot(instance, pendingID, plugin, version, pendingSealed, pendingRaw)
 		if err != nil {
 			return err
 		}
-		if _, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,input=?,updated_at=? WHERE id=?`, value.Revision, pendingSealed, now(), pendingID); err != nil {
+		if _, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET config_revision=?,input=?,updated_at=? WHERE id=?`, nextRevision, pendingSealed, now(), pendingID); err != nil {
 			return err
 		}
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_api_calls SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_api_calls SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedules SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=?`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running'))`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, value.Revision, run.InstanceID, run.Generation, revision); err != nil {
+	if _, err := tx.ExecContext(ctx, `UPDATE plugin_event_batches SET config_revision=? WHERE instance_id=? AND generation=? AND config_revision=? AND (run_id IS NULL OR run_id IN (SELECT id FROM plugin_runs WHERE state IN ('pending','running')))`, nextRevision, instance, generation, revision); err != nil {
 		return err
 	}
-	run.ConfigRevision = value.Revision
 	return nil
 }
 

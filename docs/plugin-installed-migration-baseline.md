@@ -1,5 +1,21 @@
 # 已安装插件迁移基线
 
+2026-10-22 开发验收更新：TorrentTransfer（含 TorrentTransfermusic 分身）的正常业务开发已完成，依据 [首项验收矩阵](plugin-torrent-transfer-development-acceptance.txt)。取消返回一致性、真实 SDK/普通 server 分层测试与共享传输重复 JSON 工作已分别修复；最终 `8f1744ab8c52ce67992923c56db2f8e5b678f80d` 的共享协议普通/race各236、Transfer核心各138、受影响App各73通过，CLI/vet/modernconly构建通过，原90秒最大载荷race为73.31秒。历史两次表单现场原因不可还原、私密stdin本轮各1skip及生产只读挂载/调度交接未执行分别保留；40原缺件不在Transfer实际业务/本轮验证材料路径，不因此阻塞首项。此为开发完成，不增加正式迁移数，仍7/23。该SHA远端Actions/check runs/status条目均为0，不能称CI通过。下一开发项严格为SiteStatistic，完成该项后才推进下一插件。
+
+2026-10-21 RemoveLink 监听诊断补充：仅真实add-watch系统调用失败可生成可信目录归属的本地系统提示，提示/独立收据/journal同事务，未知ACK只读核验且不解除文件闭锁。核心普通/race各60/257、App普通/race/modernconly各134/475通过，vet与23个CLI构建通过；全局初始化归属、partial-watch源差异、远端provider与非Linux监听仍是开发缺口，真实配置/账户验收及部署另列未做。详见 [本轮范围](plugin-remove-link-init-diagnostic.txt) 与 [验证记录](plugin-remove-link-init-diagnostic-verification.json)。正式迁移仍7/23。
+
+2026-10-21 RemoveLink 专项停用导入补充：固定代码版本与调用者提供快照的校验分开标记，新增离线validate/只读dry-run/显式apply、已有授权本地目录映射、加密proof与原子收据、分身冷启动隔离。受影响App及真实CLI普通/race/modernconly均通过，真实来源stdin测试跳过不算生产验收；非local存储及整个配置缺失明确拒绝。详见 [工具范围](plugin-remove-link-reviewed-import.txt) 与 [验证记录](plugin-remove-link-reviewed-import-verification.json)。未读取真实NAS配置或部署，正式迁移仍7/23。
+
+2026-10-21 RemoveLink 同步来源屏障补充：新v3通知在原位置等待可验证的来源结果，已知typed异常按原捕获规则继续，未知结果保持文件写闭锁；独立收据绑定终态，旧v1/v2不升级补发。真实SDK事件/原生宿主、分身、冷恢复和撤销并发已通过受影响普通/race/modernconly验证。远端StorageChain适配、专项停用导入等开发缺口与实际迁移/部署缺口分列，未部署，正式迁移仍7/23。详见 [本轮范围](plugin-remove-link-source-barrier.txt) 与 [验证记录](plugin-remove-link-source-barrier-verification.json)。
+
+2026-10-21 RemoveLink 通知接线补充：新接受的 notification 在原 Commit 授权内冻结域名、信封及最小历史，并以核心收据绑定专属共享 Router 交接；旧v1保持本地历史、不升级补发。分身、退休代次、回滚与未知发送分别验证。原同步通知异常回传清理流程及共享v1终态独立证明仍待完成，未部署、正式迁移仍7/23。详见 [接线范围](plugin-remove-link-notice-routing.txt) 与 [验证记录](plugin-remove-link-notice-routing-verification.json)。
+
+2026-10-21 默认链接补充：SiteStatistic 新通知已复用 AppDomain，并把默认插件链接与站内历史在接受时冻结；旧v1通知不补发、不随设置漂移。采用固定基类片段及公开v2 URL规则的合成对照，未冒称完整安装版URL等价或真实域名迁移。详见 [链接阶段](plugin-site-statistic-default-link.txt) 与 [验证记录](plugin-site-statistic-default-link-verification.json)，正式迁移数仍7/23。
+
+2026-10-21 来源异常分类补充：SiteStatistic 的真实账户采集已对四类固定 oracle 解析异常建立调用级私有来源分类，普通/race 正反例与并发隔离留证；这不是 SystemError/SSE 完整接线，固定 IndexerModule 源码证据仍缺。通知默认插件链接差异另列待补，不计插件正式完成。详见 [分类与边界](plugin-site-statistic-module-failure-classification.txt) 及 [验证记录](plugin-site-statistic-module-failure-verification.json)。
+
+2026-10-21 开发续作：SiteStatistic 已补专属来源绑定的共享通知 Router/持久队列接线，并按精确原版源码修正为通知正常返回后才保存 last_notify；处理中去重、双实例隔离、未知发送不重放与冷恢复终态分别留证。该阶段未部署、未使用真实外发账户，不增加正式完成数，仍为7/23。专项、全项目回归及本机二进制输入限制见 [通知路由说明](plugin-site-statistic-notice-routing.txt) 与 [验证记录](plugin-site-statistic-notice-routing-verification.json)。
+
 2026-10-21 站点索引器目录补充：已取证的 17 行 SitesHelper 模板投影（23 个 host，含 ext_domains 别名）正式内建为 Go 目录并接入站点来源识别，站点地址如 hhan.club、kp.m-team.cc、cspt.top、www.pttime.top 现在按原版 schema 选择适配器并保存注册域；同时修复站点管理把导出 token 误报为已配置凭据的既有回归。详见 [说明](site-indexer-alias-go-port.txt) 与 [逐项验证](site-indexer-alias-verification.json)。这是 SiteStatistic 的模板/别名基础接线，未部署、未访问真实站点，正式完成仍为 7/23。
 
 最新交付（2026-10-21）：新服务已部署 v0.4.8，**二级分类策略1.3、插件彻底卸载2.2、共享识别词2.4.1、系统进程1.1、MoviePilot服务监控1.4、自定义Hosts1.2.1、媒体库服务器刷新1.3.3 已正式迁移，当前7/23已迁移，其余16项继续实施**。媒体库刷新保留原启用和延迟，唯一飞牛引用完成映射；生产表单、首次初始化与当前事件监听位置已核对，无历史重放或刷新调用。媒体连接停用时的表单过滤及选中引用保留已随v0.4.8对齐，完整23项目标继续实施。详见 [本轮交付](plugin-media-server-refresh-delivery.txt)、[部署收据](plugin-media-server-refresh-deployment.json)。下方旧日期记录保留历史阶段。
@@ -13,9 +29,9 @@
 | ID | 名称 | 原版本 | 原状态 | 数据键数量 | 状态 |
 | --- | --- | --- | --- | --- | --- |
 | CategoryEditor | 二级分类策略 | 1.3 | 停用 | 0 | 2026-10-20 已正式迁移并冷启动/UI核对；原停用配置保留、安装与收据各1、0任务/KV/新增通知，分类文件未改写；实际编辑/分类及错误缓存行为已在独占实例验证 |
-| TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 422（10-21复核） | 已接实际Go SDK/原生双下载器、原表单、调度、历史、通知、生命周期与冷恢复；2026-10-21完成原配置/422项历史和双下载器引用的隔离迁移、离线CLI及真实SDK正常/未知回执冷启动验证，普通/竞态和NAS通过；生产备份目录只读挂载、调度交接及正式迁移未完成，未部署 |
-| SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | 已接Go统计、原表单/卡片/饼图/明细、刷新与API基础；原配置、2133条21列账户档案、17个站点引用及离线CLI已验证。账户日记录/卡片/历史统一读取并加密；做种明细、站内消息采集、原版开关及逐请求授权/取消检查已通过普通/竞态/NAS与独占UI验证；刷新API 19字段与24例原HTTP对照一致。17行已装SitesHelper模板投影已内建并接入站点别名/schema解析，错误DTO与事件语义已对齐。原版通知的分类（站点）已对齐；SystemError、真实外发渠道、全局选项正式迁移、执行交接和部署仍未完成 |
-| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；NoticeMessage路由与外发、正式迁移和部署未完成 |
+| TorrentTransfer | 自动转移做种 | 1.10.3 | 启用 | 422（10-21复核） | 2026-10-22 正常业务开发完成（见首项验收矩阵）；已接实际Go SDK/原生双下载器、原表单、调度、历史、通知、生命周期与冷恢复；2026-10-21完成原配置/422项历史和双下载器引用的隔离迁移、离线CLI及真实SDK正常/未知回执冷启动验证，普通/竞态和NAS通过；生产备份目录只读挂载、调度交接及正式迁移未完成，未部署 |
+| SiteStatistic | 站点数据统计 | 1.9.7 | 启用 | 0 | 已接Go统计、原表单/卡片/饼图/明细、刷新与API基础；原配置、2133条21列账户档案、17个站点引用及离线CLI已验证。账户日记录/卡片/历史统一读取并加密；做种明细、站内消息采集、原版开关及逐请求授权/取消检查已通过普通/竞态/NAS与独占UI验证；刷新API 19字段与24例原HTTP对照一致。17行已装SitesHelper模板投影已内建并接入站点别名/schema解析，错误DTO与事件语义已对齐。原版通知分类（站点）、专属来源Router/持久队列和完成后去重已接，双实例及冷恢复专项已验证；SystemError、真实外发账户验收、全局选项正式迁移、执行交接和部署仍未完成 |
+| RemoveLink | 清理媒体文件 | 2.17 | 停用 | 0 | 已接正式catalog、真实SDK终态调用、连续owner/Guard/Core Effects、配置纠错/目录扩展/重启及卸载；NAS App61项和host44项通过。后续已接精确无hash事件发布/站内历史转交；新v3通知路由、同步来源结果及未知继续闭锁已验证；专项停用导入与本地引用映射工具已验证；已补可信add-watch失败本地系统提示与闭锁收据；远端存储适配、全局初始化/partial-watch差异、非Linux监听仍未完成；真实配置/渠道验收、正式迁移和部署另列待项 |
 | MPServerStatus | MoviePilot服务监控 | 1.4 | 启用 | 0 | 2026-10-21 已随 v0.4.5 正式迁移；原配置1条加密导入，既有五份布局/显示偏好保留，原单widget空key对齐。详情/表单/六卡、增量采样/缓存/刷新与冷启动已验证；生产真实公共状态及速率已核对，1次成功初始化、0计划/事件/其他业务运行 |
 | PluginUnInstall | 插件彻底卸载 | 2.2 | 停用 | 0 | 2026-10-20 已随v0.4.1部署并正式迁移；原true/true及空选择保留，安装与收据各1、0运行/KV/计划/事件/卸载步骤，实际生产表单已核对；失败后的warm/durable、连续新执行、重装及自卸载已在独占实例验证；原全局顺序/布局仍待后续独立迁移 |
 | AutoSignIn | 站点自动签到 | 2.9.14 | 启用 | 24 | 主流程、22类适配、原表单/详情及逐效果StateJournal已迁入正式Go包；实际SQLite分行/owner、内部配置CAS与旧admission归档切换已有NAS证据。实际Manager/调度/消息及Browser/OCR接线、资源按需加载/回收、注册、配置/KV迁移和实机验收未完成 |
@@ -28,7 +44,7 @@
 | AutoBackup | 自动备份 | 2.1.4 | 启用 | 0 | 已接实际App授权、原表单/SDK、持久once/cron/API、一致SQLite快照及密钥恢复、归档/保留/WebDAV、通知队列与生命周期；独立恢复证据、未知执行核对及零效果重试已验证。已进入可安装目录；真实外部通知渠道、原配置及7个历史文件迁移仍未完成 |
 | BrushFlowLanduo | 站点刷流-landuo | 5.2.15 | 启用 | 24 | 已接原生执行入口、实际SDK/owner/原表单及source容量快照；真实质量提升下载替换和完成通知继续组合验证，尚未完成正式配置/KV/引用迁移，不计已完成 |
 | MergeSiteSwitch | 聚合站点开关 | 1.2 | 停用 | 0 | Go 核心站点范围、原版动态表单、持久跟随及关联配置事务已接入；数字/自定义引用协议、不可变执行输入与已提交保存的丢失回复恢复已验证。旧来源采集、关联插件实际业务联动、正式配置和引用迁移仍未完成 |
-| TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 独立Go实例、原表单及与本体相同业务；2026-10-21完成原配置/36项历史及独立引用的隔离迁移，与本体同库458条历史不混用；离线CLI、真实SDK正常/未知回执冷启动普通/竞态和NAS通过。生产只读挂载、调度交接及正式迁移未完成，未部署 |
+| TorrentTransfermusic | 自动转移做种 分身 | 1.10.3 | 启用 | 36 | 2026-10-22 正常业务开发完成（见首项验收矩阵）；独立Go实例、原表单及与本体相同业务；2026-10-21完成原配置/36项历史及独立引用的隔离迁移，与本体同库458条历史不混用；离线CLI、真实SDK正常/未知回执冷启动普通/竞态和NAS通过。生产只读挂载、调度交接及正式迁移未完成，未部署 |
 | ScrapeFileClean | 源文件联动清理 | 1.0.7 | 停用 | 0 | 原算法、11字段原表单、Go SDK、67组完整原执行/224组helper/8组watchfiles参考与NAS隔离验证已完成；生产监听、删除宿主和正式迁移未接入，不在可安装目录 |
 | LarkMessager | Lark 应用消息通知 | 0.9.1 | 启用 | 2 | 主流程、13个消息模块、API/回调与受控HTTP已迁入正式Go包；1,376条原执行及28项NAS隔离测试通过。实际App持久宿主、可信消息入口、完整动态输入及配置/KV迁移未完成，不在可安装目录 |
 | CleanInvalidSeed | 清理无效做种 | 2.1 | 启用 | 0 | 已接正式catalog、真实SDK终态/owner/Core、配置生命周期与调度；下载器写前拒绝与未知写分开留证，源通知路由、私有事件和持久队列已接入。本轮107项联合NAS保留独立证据；原43/148项及mutation98项证据保留。可信远程五命令入口中 /detect_invalid_torrents 已从 Lark 分发接入真实命令事实（管理员门沿用原版消息层），其余四命令、真实通知渠道/完整依赖及正式迁移未完成 |
@@ -147,3 +163,13 @@ Lark 的正式纯Go算法、原执行参考、来源许可与28项NAS隔离验�
 2026-10-21：肉丝 RousiPro 单独以 Go 实现账户资料和 Token 消息流程，原版参考采集扩至 31 场景；补原生搜索/签名种子材料获取、API-only 导入和站点 Token 编辑/在途撤销。直接协议、实际插件 SDK、冷恢复及隔离 NAS 分别验证；原生搜索/下载为自有合成协议验证，未访问用户站点或下载器，未部署。详细边界见 `plugin-site-rousi-account-flow.txt` 与验证 JSON；仍为 7/23，不能把本项算作 SiteStatistic 整体迁移完成。
 
 2026-10-21：原版 SITE_MESSAGE 的独立加密迁移、父快照完整性、原生显式选择优先、页面实际值投影及逐请求撤销保护，见[说明](plugin-site-message-settings.txt)与[逐项验证](plugin-site-message-settings-verification.json)。实际来源只做冷推导与 stdin 校验，NAS 使用独占合成业务；未部署、未迁移生产开关，完整插件正式完成仍 7/23。
+
+2026-10-21：AutoSignIn 2.9.14 接入实际 SDK 宿主、分身 owner/历史/调度、原生事件及命令、逐请求撤销和同步通知/事件独立回执，见[说明](plugin-auto-signin-host-source.txt)与[验证](plugin-auto-signin-host-source-verification.json)。完整 App 保留 8 项已确认基线失败；受影响普通/race/modernconly、核心和构建分别计证。Browser/OCR、Tjupt 图像能力和拆分/SOCKS 代理等代码仍待补齐；未迁移真实账户或部署，正式完成仍 7/23。
+
+2026-10-21：AutoSignIn 再接显式/环境代理合并、HTTP/HTTPS/SOCKS 与逐跳撤销，保留原 proxy=false 的 trust_env；修复共享传输取消时握手 socket 回调竞态。详见[说明](plugin-auto-signin-proxy-routing.txt)与[验证](plugin-auto-signin-proxy-routing-verification.json)。同字节完整 App 无新增失败，受影响 race/modernconly、核心及构建通过；Browser/OCR/Tjupt 等仍待完成，未部署，正式完成仍7/23。
+
+- AutoSignIn Tjupt 宿主阶段：已接实际 SDK、可信公共图片/逐跳守卫和环境代理，原答案缓存采用分身隔离 SQL 原字节导入导出，冷恢复及未知结果不自动重发。冻结普通/扩大 race/modernconly/core/vet/23 CLI 已验证；完整 App 保留原8顶层失败，新增0。见 `plugin-auto-signin-tjupt-host.txt` 与 verification JSON。Browser/OCR 等代码缺口仍在，未操作真实账户或部署生产，正式完成数不变。
+
+2026-10-22：SiteStatistic 核心未读消息与低分享率提醒接入真实采集、Router、持久通知和原授权冷恢复，修复已接受 FIFO 被后续 job 状态阻断及已观察撤权被吞掉的问题。详见[说明](plugin-site-statistic-core-messages.txt)与[验证](plugin-site-statistic-core-messages-verification.json)。普通、完整分片 race、modernconly 及构建分别计证，原两次聚合 race 超时仍保留失败；SystemError / SSE 后续同插件阶段未验收，未部署，正式迁移仍 7/23。
+
+2026-10-22：SiteStatistic 补齐受真实来源约束的 SystemError → 共享 MessageHelper → 已认证 SSE → 铃铛消息中心，保留分身授权、撤权/回滚、原消息去重与不广播语义；使用固定官方 Day.js 1.11.13，并修复后台/登录后旧时钟导致的错误相对时间。受影响普通/race/modernconly、完整前端200例/check/build、vet、实际server及23 CLI构建通过；实际server合成HTTP冒烟验证54产物、SSE鉴权/节拍/退出。云端浏览器因沙箱网络与共享启动限制未完成视觉验收，明确保留待项，不以HTTP/SSR代替。详见 plugin-site-system-message-chain.md 与对应 verification JSON；未操作真实账户或部署，正式迁移仍7/23。

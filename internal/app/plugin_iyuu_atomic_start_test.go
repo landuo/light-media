@@ -119,7 +119,7 @@ func TestIYUUStartedAndAcceptedRollbackTogether(t *testing.T) {
 	if e != nil || json.Unmarshal(result, &outcome) != nil || !outcome.Completed {
 		t.Fatal("rolled back exact preparation could not complete actual source", string(result), e)
 	}
-	if e = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", result); e != nil {
+	if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", result); e != nil {
 		t.Fatal(e)
 	}
 }

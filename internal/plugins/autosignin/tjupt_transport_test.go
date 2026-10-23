@@ -2,12 +2,10 @@ package autosignin
 
 import (
 	"context"
-	"crypto/tls"
 	"crypto/x509"
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"sync/atomic"
 	"testing"
 )
@@ -52,7 +50,7 @@ func TestTjuptPublicGrantNoCredentialsExactRefererAndStrictTLS(t *testing.T) {
 		w.Write([]byte{0xff, 0xfe, 0xfd})
 	}))
 	defer server.Close()
-	public, err := BindTjuptPublicHTTP([]string{"https://img.doubanio.com"})
+	public, err := BindTjuptPublicHTTPWithBinding(TjuptPublicBinding{ImageOrigins: []string{"https://img.doubanio.com", server.URL}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -62,15 +60,16 @@ func TestTjuptPublicGrantNoCredentialsExactRefererAndStrictTLS(t *testing.T) {
 		}
 	}
 	bound, _ := BindSiteHTTP(SiteHTTPBinding{URL: server.URL})
-	originURL, _ := url.Parse(server.URL)
-	public.clients[originOf(originURL)] = tjuptPublicBound{bound}
 	response, err := public.Image(context.Background(), server.URL+"/image.png")
 	if err != nil || response != nil || calls.Load() != 0 {
 		t.Fatal("public images bypass strict TLS", response, err, calls.Load())
 	}
 	roots := x509.NewCertPool()
 	roots.AddCert(server.Certificate())
-	bound.testTLS = &tls.Config{RootCAs: roots, MinVersion: tls.VersionTLS12}
+	public, err = BindTjuptPublicHTTPWithBinding(TjuptPublicBinding{ImageOrigins: []string{server.URL}, RootCAs: roots})
+	if err != nil {
+		t.Fatal(err)
+	}
 	response, err = public.Image(context.Background(), server.URL+"/image.png")
 	if err != nil || response == nil || string(response.Content) != string([]byte{0xff, 0xfe, 0xfd}) || calls.Load() != 1 {
 		t.Fatal("owned public binary fixture failed", response, err, calls.Load())
@@ -80,7 +79,7 @@ func TestTjuptPublicGrantNoCredentialsExactRefererAndStrictTLS(t *testing.T) {
 	if !errors.Is(err, ErrSiteTargetDenied) || calls.Load() != 1 {
 		t.Fatal("public exception leaked into Generic", err)
 	}
-	for _, origin := range []string{"http://img.doubanio.com", "https://user@img.doubanio.com", "https://img.doubanio.com:443", "https://img.doubanio.com/path", "https://img.doubanio.com/?x=1"} {
+	for _, origin := range []string{"http://img.doubanio.com", "https://user@img.doubanio.com", "https://img.doubanio.com:443", "https://img.doubanio.com:65536", "https://img.doubanio.com:0", "https://img.doubanio.com/path", "https://img.doubanio.com/?x=1"} {
 		if _, err := BindTjuptPublicHTTP([]string{origin}); !errors.Is(err, ErrSiteTargetDenied) {
 			t.Fatal("invalid host origin grant", origin, err)
 		}

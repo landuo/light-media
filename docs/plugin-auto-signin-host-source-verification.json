@@ -1,0 +1,756 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "76e67b01d9ed834c5b9bb4d6d34622a6b7398ed6",
+  "branch": "dev/plugins-continuation",
+  "scope": "AutoSignIn 2.9.14 actual SDK host and synchronous source boundary milestone, not whole-plugin or production acceptance",
+  "migration_count": "7/23 unchanged",
+  "deployed": false,
+  "real_accounts_used": false,
+  "toolchain": "go1.26.10 linux/amd64; existing light-media-toolchain/gopath and cache",
+  "frozen_input": {
+    "manifest": "work/auto-signin-host-validation/frozen-input-v3/manifest.json",
+    "sha256": "2a37d3f20e05d01337a42b4e070d79416a0d425db5e0b76d94931d173ba1bbe3",
+    "available_files": 5292,
+    "missing_files": 40,
+    "before_images": "work/auto-signin-host-validation/frozen-input-v3/before-images.tar.gz",
+    "checks": "All final gates checked exact non-document source hashes before and after; no changes."
+  },
+  "code_sha256": {
+    "internal/app/plugin_autosignin_api_test.go": "0f3299c523cd0e5100dba262f2194381928a31a159947991eee416b46a8ab6d4",
+    "internal/app/plugin_autosignin_commands.go": "09b281f39884eace80ec748d0fe4364cdc61f3f766f66e1172c7104dee34b7cb",
+    "internal/app/plugin_autosignin_concurrency_test.go": "bd06648779b4252a341dcf0fc6bb38c86792d0722dcf2f555e6306c00b38c9d7",
+    "internal/app/plugin_autosignin_deleted.go": "0347eeaf1c9683770e4fe61bf8f50f19a1acfb1cab7a8922545706c264192312",
+    "internal/app/plugin_autosignin_deleted_test.go": "f5c57b21b871d91db282b10b634ed329f44ab917d42d327494dd621283d99a51",
+    "internal/app/plugin_autosignin_event.go": "a216ee3b1fbf85ecf5a836f819ee5553b4b46fa18b916086ca5a6aedb0342201",
+    "internal/app/plugin_autosignin_host.go": "ef13fa687c3553a6d21d4ec30dd4f4c2b0c7b9bfa3ca04cf7d36a1513de28bfc",
+    "internal/app/plugin_autosignin_host_test.go": "e6177078d5360680f006aee75adf66db19b3437f7f532d32af4f92388483280b",
+    "internal/app/plugin_autosignin_journal.go": "f7759cf2a3c570dfdd2069a2b772cc15281b8225fce4b54cbfd658b074f4ad01",
+    "internal/app/plugin_autosignin_journal_test.go": "2174dd67f9bd43e68f40855673c5672c29ea8f4a089caffb98a6a15c464597d5",
+    "internal/app/plugin_autosignin_notice.go": "5cbba6226878dbc114a397fa8540538e1320e56038e335fce6bc1e640cd83483",
+    "internal/app/plugin_autosignin_schedules.go": "a6c053f22a0f100295aadcda11b508e0236cc8c82b3716e7edcdc28232f7263f",
+    "internal/app/plugin_autosignin_schedules_test.go": "c78d7fe9cbd00da64cbb6825a4489568c4656ad23f1aa0ac205f88a320c8148f",
+    "internal/app/plugin_autosignin_sites.go": "4ddbef5c302b256f12c70d7ae4dbd9631891fcf086ac10936c813bce2e63c9a3",
+    "internal/app/plugin_autosignin_sites_test.go": "867e840a0cd5118655a05c3951db55676466c1332cc3df11a4947aae8e7a49ad",
+    "internal/app/plugin_autosignin_source.go": "298bb72af6e44713fdb96b57f6e9a3637296bf2dc4708a68a11287253ed98972",
+    "internal/app/plugin_autosignin_source_test.go": "ab630c696524af6991ef47300b665e9f07e24844cf1e4151062963780fe7b2ee",
+    "internal/app/plugin_autosignin_transition_test.go": "027a3ce7a7d7d3e7bbc88357ff39218d80c5104efa376512f284c57c39930e86",
+    "internal/app/plugin_autosignin_typed_read.go": "e72ad0f30b4cfe86feb274c8bc5d22cc855a0b85ee9d4ccc690400aa15d77c0c",
+    "internal/app/plugin_autosignin_typed_read_test.go": "e284376c9fca774f00d3b247e717b1372636004387b1f764afb87abc9a9d7170",
+    "internal/app/plugin_custom_api.go": "eb75d762f39c49307744f34fced91024c1231faaee32ed0556703c5898104172",
+    "internal/app/plugin_deferred.go": "741c54aa74ca7abfb55206e71ac5a6dac25b6c1cb412f7496f3835c88988c9a6",
+    "internal/app/plugin_http.go": "5e4828e6149b47e8250022f29c65b7ebacc729bf0e2a02f3880aa9ca605ec126",
+    "internal/app/plugin_lark_commands.go": "33077ff4ecc6d10824a4fe6a94c08cca2fb2c654ebcab27258846280e0e371bb",
+    "internal/app/plugin_lark_plugin_commands_test.go": "97d53bed9224de02aa8d834c82b9a03eb0d72f31a311e31b0fa944ab474d6ad1",
+    "internal/app/plugin_notice_route.go": "3192e78f5ec6aac73d20f5b5b80a4a4c717e040d5bc03a99a301fb4f071707bb",
+    "internal/app/plugin_notice_storage.go": "4eeddde55ab1b2868b2a1616db66f27138752cdbb9d2fd7aecf27958a9949f2d",
+    "internal/app/plugin_runs.go": "04b62a2c9cb00216e84b2226c3ac44484639f12ded10ddea1325af84d4ba2590",
+    "internal/app/plugin_runtime.go": "7c76a0385009614f074f6b5e112cc8a1bba6cb4ca3338a377536c5268b8c62ab",
+    "internal/app/plugin_schedules.go": "99cca6c5b28f8f869593be0aaf834904874bbda1bed96afa909c0285149c4979",
+    "internal/app/plugin_views.go": "ba6d46b2f63ebfe473a022605b0e0ec7da255b92fbedcaaca300b5107a693c45",
+    "internal/app/runtime.go": "81430515a90141e7e19390c21cafb828c4d785bd77535b5fdef78df193fabb39",
+    "internal/plugins/autosignin/durable/controller.go": "a7b120fe61c3a0e3b1804dc0ddcb3bdfde20b3c935418b80614b82e0289ab0d4",
+    "internal/plugins/autosignin/durable/durable_test.go": "ee6d2f341243687b07a699dd1df251be641603407df9aa5e2365301d155854ea",
+    "internal/plugins/autosignin/durable/lane.go": "54bae7fc3e0f408d63dc4222f99a684b02bd9784c46e9d79c3c915813c1e737f",
+    "internal/plugins/autosignin/durable/source_boundary.go": "a9643f12a6fa3a7f6afdfb4a2a6ef638a61daa861a2770abd58fbad53ee9162c",
+    "internal/plugins/autosignin/durable/source_boundary_fixture_test.go": "31a908e6cefd54c7056c3fd31350818d70a14dc3c01a37ab0fde3215f1c4661e",
+    "internal/plugins/autosignin/durable/source_boundary_test.go": "747e7060d038887e82ae613fe568cb4a6296d19e6fcbfc21fc7cf1e9d930980f",
+    "internal/plugins/autosignin/durable/state_journal.go": "7c90181452b74b7b6c280e62f72778216e1ea458fb2d3bfab3f5cafd5f9ac9bd",
+    "internal/plugins/autosignin/durable/typed.go": "7e9f248bce9531c2534273189c1a330f3579861120783065b0d5bb6269be97e2",
+    "internal/plugins/autosignin/durable/types.go": "cccb53ee6c0107be8ec2995543f5badd8b0e8f07eec54daed0d0ec5104c5c09a",
+    "internal/plugins/autosignin/host_grants.go": "a48cd8a3b589f8cc8f0921d6e539b580da69c25336634eaf598dd134c7852d2a",
+    "internal/plugins/autosignin/host_grants_test.go": "5102d9bd5db84df6dc9d450b18f74a6838a7d12169bca01978462ab062d0f073",
+    "internal/plugins/autosignin/http_transport.go": "675b8210e2456d567bd9ee8f5b589741384ede577c6b3c2ff3bb036ab6cf3893",
+    "internal/plugins/autosignin/http_transport_test.go": "8fc9e3721fbeb23d4c87dffa5220d0a29cf2ec2c8dd927a46ab99b324f9fa231",
+    "internal/plugins/autosignin/mteam_transport.go": "08a614628432a709337a08dd029a578f946f97053067f925b12bd9ce353ccf4b",
+    "internal/plugins/autosignin/mteam_transport_test.go": "b54a8ddce7e8c8a71a6795b0cfafe76ed432941c5584cd0725ee69c944e19a06",
+    "internal/plugins/autosignin/provenance_test.go": "3069526df99e5568f3f82e3283edbe0a3232e19baf503b9551c2323a41fd7adb",
+    "internal/plugins/builtin/catalog.go": "036b54680594b3ee649c647eb8d2711275dfb869dfb6d6619e7ed159e75e4fcd",
+    "testdata/plugins/auto-signin-2.9.14/host-source-manifest.json": "3d7ee2ea024298cf94caf1367f7a3b3bbb4fd3a83c472ea0ac6f3d44c8292989"
+  },
+  "gates": {
+    "integration9": {
+      "exit_code": 0,
+      "log": "work/auto-signin-host-validation/integration9.jsonl",
+      "sha256": "2743c950fdf737da2aec668afab6caee30579fb892464275caf0953ac2ea68f2",
+      "top_level_passed": 65,
+      "passed_including_subtests": 137,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T03:55:30.171538054+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 25.048
+        }
+      ]
+    },
+    "full-app-final": {
+      "exit_code": 1,
+      "log": "work/auto-signin-host-validation/full-app-final.jsonl",
+      "sha256": "f8709dbce9673d2e52f451c10aaf3963550bb7a1d92beb1a39a06852857cd64d",
+      "top_level_passed": 1156,
+      "passed_including_subtests": 4055,
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "skipped": [
+        "TestReviewedCustomHostsSelectedStdin",
+        "TestIsolatedDownloadersRealTransferAndImport",
+        "TestIsolatedFNOSProductWorkflow",
+        "TestReviewedIYUUSelectedStdin",
+        "TestReviewedMediaRefreshSelectedStdin",
+        "TestIsolatedCustomHostsNetwork",
+        "TestPublicRemoteIdentifiersCorpus",
+        "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline",
+        "TestSeedRescueHistoryImportSelectedStdin",
+        "TestPluginServerStatusOwnedUIFixture",
+        "TestPluginSystemProcessOwnedUIFixture",
+        "TestReviewedSeedSelectedStdin",
+        "TestReviewedStatisticSelectedStdin",
+        "TestReviewedTransferSelectedStdin"
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T04:14:23.942377479+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1131.345
+        }
+      ]
+    },
+    "final-app-race": {
+      "exit_code": 0,
+      "log": "work/auto-signin-host-validation/final-app-race.jsonl",
+      "sha256": "7df020877d61451edcb1cde3baf1a4c764c763f4114d63d6dd162e2b9584ad58",
+      "top_level_passed": 249,
+      "passed_including_subtests": 769,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T04:39:09.957980951+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1384.528
+        }
+      ]
+    },
+    "final-app-modernconly": {
+      "exit_code": 0,
+      "log": "work/auto-signin-host-validation/final-app-modernconly.jsonl",
+      "sha256": "de1f610d672a92e5ee484cbf08d408771e19a0b9a2b4300dc77b12e52b774c80",
+      "top_level_passed": 249,
+      "passed_including_subtests": 769,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T04:42:34.977954068+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 168.131
+        }
+      ]
+    },
+    "final-core-normal": {
+      "exit_code": 0,
+      "log": "work/auto-signin-host-validation/final-core-normal.jsonl",
+      "sha256": "0635ce39792ec33b8b662e93cb611d04fa7cbfbd69d855f4f9ee6be8fb84839f",
+      "top_level_passed": 119,
+      "passed_including_subtests": 3532,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T04:42:38.207998451+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/builtin",
+          "Elapsed": 0.251
+        },
+        {
+          "Time": "2026-10-22T04:42:39.235648599+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 1.279
+        },
+        {
+          "Time": "2026-10-22T04:44:46.135419272+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin",
+          "Elapsed": 128.179
+        }
+      ]
+    },
+    "final-core-race": {
+      "exit_code": 0,
+      "log": "work/auto-signin-host-validation/final-core-race.jsonl",
+      "sha256": "621aad57db7a0af107eda3c43b426dcb19bebeeefc2845c4d53a97d9766279b5",
+      "top_level_passed": 119,
+      "passed_including_subtests": 3532,
+      "failed": [],
+      "skipped": [],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-22T04:44:52.59226153+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/builtin",
+          "Elapsed": 1.964
+        },
+        {
+          "Time": "2026-10-22T04:44:57.992776319+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 7.364
+        },
+        {
+          "Time": "2026-10-22T04:47:21.404888089+09:00",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin",
+          "Elapsed": 150.777
+        }
+      ]
+    },
+    "final-vet": {
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-build": {
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "app_race_modernconly_scope": "TestRemoveLinkInitDiagnostic|TestRemoveLinkSourceBarrier|TestRemoveLinkNoticeRouter|TestPluginRemoveLink|TestDownloadFileDomainEvent|TestPluginNotice|TestSiteStatisticRouter|TestPluginDefaultLink|TestSiteStatisticDefaultLink|TestReviewedRemoveLink|TestPluginAutoSignIn|TestAutoSignIn|TestLarkPluginCommand|TestPluginHTTP|TestPluginDeferred|TestPluginRuns|TestPluginSchedules|TestPluginHostRejects|TestPluginRuntime|TestPluginCategory|TestPluginLogs|TestPluginStoreSupportsActualLargeMigratingHistory",
+  "baseline_comparison": {
+    "baseline_tmdb": {
+      "command": "exact original HEAD overlay: three TMDB/image tests",
+      "log": "work/verification/baseline-tmdb.jsonl",
+      "sha256": "434811fb92dcf9b8bfd68b3a03abec5e75afe41da80149d0337bd5cfdc7853b3",
+      "bytes": 5352,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestAssetImagesUseFixedHostBoundedValidatedPublication"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCatalogImageUsesOfficialOriginAndCachesBoundedImage"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:44:12.172999274+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 7.246
+        }
+      ]
+    },
+    "baseline_media": {
+      "command": "exact original HEAD overlay: proxy mount and media category tests",
+      "log": "work/verification/baseline-media.jsonl",
+      "sha256": "d70c51760215d290652c7fa09cb187088a859b2e3cf363cc15a0afa664404fe9",
+      "bytes": 13450,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestProxyMountAuthenticatedImagesDownloadsAndSSE"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryRefreshesLegacyCacheBeforePlanning"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:48:31.661623757+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 11.964
+        }
+      ]
+    },
+    "baseline_scrapeclean": {
+      "command": "exact original HEAD overlay: actual kernel rename/delete/timer test",
+      "log": "work/verification/baseline-scrapeclean.jsonl",
+      "sha256": "31b2b03ef6c82dc17246a0e0646d383fe381f608ccf71686665fe5d7f38d4d2b",
+      "bytes": 13404,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/false"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer/true"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestPluginScrapeCleanActualKernelRenameDeleteAndTimer"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:08:44.252398708+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 12.362
+        }
+      ]
+    },
+    "baseline_subscribegroup": {
+      "command": "exact original HEAD overlay: added event metadata/edit/cancellation test",
+      "log": "work/verification/baseline-subscribegroup.jsonl",
+      "sha256": "3c2c5ffe873cc34b2228dc3814ee632572a5550d6bb87569b66abf49556ccde0",
+      "bytes": 7047,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/edit"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation/cancel"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation"
+        },
+        {
+          "package": "light-media/internal/app",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T23:12:40.094259717+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 10.264
+        }
+      ]
+    },
+    "baseline_missing_inputs": {
+      "command": "exact original HEAD overlay: failing JPEG, legacy anime and IYUU tests",
+      "log": "work/verification/baseline-missing-inputs.jsonl",
+      "sha256": "a957f20adef5fbc200e0c0ab8bb3df0746eab63e7689547a60e982f076e6ad3f",
+      "bytes": 8006,
+      "top_level_passed": 0,
+      "passed_including_subtests": 0,
+      "skipped_tests": [],
+      "failed": [
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": "TestFrozenInstalledJPEGSourceAndReferences"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": "TestExpandedPillowJPEG"
+        },
+        {
+          "package": "light-media/internal/plugins/autosignin/imagehash",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/releasemeta/legacyanime",
+          "test": "TestInstalledCompletePipeline"
+        },
+        {
+          "package": "light-media/internal/releasemeta/legacyanime",
+          "test": null
+        },
+        {
+          "package": "light-media/internal/plugins/iyuuautoseed",
+          "test": "TestSiteHTTPActualResponseDecodeAgainstInstalledOracle"
+        },
+        {
+          "package": "light-media/internal/plugins/iyuuautoseed",
+          "test": null
+        }
+      ],
+      "terminal_packages": [
+        {
+          "Time": "2026-10-21T22:49:08.874206977+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/autosignin/imagehash",
+          "Elapsed": 0.038
+        },
+        {
+          "Time": "2026-10-21T22:49:09.444028146+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/releasemeta/legacyanime",
+          "Elapsed": 0.008
+        },
+        {
+          "Time": "2026-10-21T22:49:10.094583941+09:00",
+          "Action": "fail",
+          "Package": "light-media/internal/plugins/iyuuautoseed",
+          "Elapsed": 0.659
+        }
+      ]
+    }
+  },
+  "source_limitations": {
+    "source_commit": "f2ec1396c5984ead199d7b091fc22328515f0fa6",
+    "expected_files": 5279,
+    "missing": [
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/ascii-strict.bin.z",
+        "sha": "c3aa56abdbfc913ee7faa60e5c62ad223c23c3b7",
+        "size": 480
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1006-ignore.bin.z",
+        "sha": "dd0acbbf58035d00b69cc27967a7b9ff61fa4f7e",
+        "size": 1029
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1006-replace.bin.z",
+        "sha": "dd0acbbf58035d00b69cc27967a7b9ff61fa4f7e",
+        "size": 1029
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1006-strict.bin.z",
+        "sha": "dd0acbbf58035d00b69cc27967a7b9ff61fa4f7e",
+        "size": 1029
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1250-strict.bin.z",
+        "sha": "87fdeffc176d9bc5cb819063f8ce9aab9f4ba22c",
+        "size": 1048
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1251-replace.bin.z",
+        "sha": "69753a4f3a1c3aa471f84ba31f1a7b344ceb503d",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1253-replace.bin.z",
+        "sha": "93c6cdf7a5958c87d3e72d550a9bb2096a1c0b0f",
+        "size": 999
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1253-strict.bin.z",
+        "sha": "9d06cd1ed076895a4f512cfae7ceac470c4474ec",
+        "size": 998
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1255-strict.bin.z",
+        "sha": "a81a56b8f34473d7c61d108b181acad7c7f3eddc",
+        "size": 982
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1257-ignore.bin.z",
+        "sha": "b79b460ce352e04869c42a99811c57e24b0766b8",
+        "size": 1025
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp1257-strict.bin.z",
+        "sha": "d6ecd4c5e8768addd28bf9df69ba7be45bcbca16",
+        "size": 1032
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp720-ignore.bin.z",
+        "sha": "1be341e0ead0cd50e5ab68659b2d78b4b1449150",
+        "size": 1052
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp720-replace.bin.z",
+        "sha": "1be341e0ead0cd50e5ab68659b2d78b4b1449150",
+        "size": 1052
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp720-strict.bin.z",
+        "sha": "1be341e0ead0cd50e5ab68659b2d78b4b1449150",
+        "size": 1052
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp850-ignore.bin.z",
+        "sha": "9a9151a8eeff1141982b7fcd58c392082e94e797",
+        "size": 1040
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp850-replace.bin.z",
+        "sha": "9a9151a8eeff1141982b7fcd58c392082e94e797",
+        "size": 1040
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp850-strict.bin.z",
+        "sha": "9a9151a8eeff1141982b7fcd58c392082e94e797",
+        "size": 1040
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp858-ignore.bin.z",
+        "sha": "994bf94570ba545a4036ac059fc9fda7dfd5d210",
+        "size": 1041
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp858-replace.bin.z",
+        "sha": "994bf94570ba545a4036ac059fc9fda7dfd5d210",
+        "size": 1041
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/cp858-strict.bin.z",
+        "sha": "994bf94570ba545a4036ac059fc9fda7dfd5d210",
+        "size": 1041
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/iso8859-14-ignore.bin.z",
+        "sha": "3fe5fc330f72fe34f418fcc021feba638052c7be",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/iso8859-14-replace.bin.z",
+        "sha": "3fe5fc330f72fe34f418fcc021feba638052c7be",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/iso8859-14-strict.bin.z",
+        "sha": "3fe5fc330f72fe34f418fcc021feba638052c7be",
+        "size": 1046
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/koi8-r-ignore.bin.z",
+        "sha": "584400766014a7e7b528a6bb9ff365b6fb68365e",
+        "size": 1038
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/koi8-r-replace.bin.z",
+        "sha": "584400766014a7e7b528a6bb9ff365b6fb68365e",
+        "size": 1038
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/koi8-r-strict.bin.z",
+        "sha": "584400766014a7e7b528a6bb9ff365b6fb68365e",
+        "size": 1038
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-arabic-ignore.bin.z",
+        "sha": "34bc9fdef499f9a59b7b9a7accca91b74b6816fc",
+        "size": 959
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-arabic-replace.bin.z",
+        "sha": "34bc9fdef499f9a59b7b9a7accca91b74b6816fc",
+        "size": 959
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-arabic-strict.bin.z",
+        "sha": "34bc9fdef499f9a59b7b9a7accca91b74b6816fc",
+        "size": 959
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-farsi-ignore.bin.z",
+        "sha": "df1fa3a3c400a3f7ee7a8ded612a008b5b687d3e",
+        "size": 960
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-farsi-replace.bin.z",
+        "sha": "df1fa3a3c400a3f7ee7a8ded612a008b5b687d3e",
+        "size": 960
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-farsi-strict.bin.z",
+        "sha": "df1fa3a3c400a3f7ee7a8ded612a008b5b687d3e",
+        "size": 960
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-roman-ignore.bin.z",
+        "sha": "475171acff3d2b7fadf4a35ce364e658b28d9fea",
+        "size": 1061
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-roman-replace.bin.z",
+        "sha": "475171acff3d2b7fadf4a35ce364e658b28d9fea",
+        "size": 1061
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/codecs/mac-roman-strict.bin.z",
+        "sha": "475171acff3d2b7fadf4a35ce364e658b28d9fea",
+        "size": 1061
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/compat/encodingdetector/reference/generated/iso/iso2022_jp_2-g2F.bin.z",
+        "sha": "7a089a498eaf4693c777e35f7d2e44e469b6f3ca",
+        "size": 471
+      },
+      {
+        "path": "testdata/plugins/auto-signin-image-hash/jpeg/jpeg-pillow-12.2.0.jsonl.gz",
+        "sha": "915423d5ede2e5615b00244615d1b23933b4b0c0",
+        "size": 2759103
+      },
+      {
+        "path": "testdata/plugins/business-source-integration/verification/all-normal.jsonl.gz",
+        "sha": "ed0d6d718c6f70f4926e86cebeb30e07b5d6f8fa",
+        "size": 2637329
+      },
+      {
+        "path": "testdata/plugins/business-source-integration/verification/v1-all-normal.jsonl.gz",
+        "sha": "2c859f991f099c9fe8e93c7aa6c06491cd0ea3a2",
+        "size": 2666681
+      },
+      {
+        "path": "testdata/plugins/release-meta-legacy-anitopy-oracle.json.gz",
+        "sha": "41eb201bda00971dd65c86495903414d51b0610c",
+        "size": 2645685
+      }
+    ],
+    "changed": [
+      {
+        "path": "docs/plugin-installed-migration-baseline.md",
+        "base_sha": "a382921b45879c486b26e2166460f59b1ca04068",
+        "current_sha": "0b089e26a28da51550c2958e6a403e1e67e80dec"
+      },
+      {
+        "path": "internal/app/plugin_notice_route.go",
+        "base_sha": "7b6214d458a3551c5e975a8376b730877a9aa992",
+        "current_sha": "6d07531a1afab727e357206c368706bd50b22c69"
+      },
+      {
+        "path": "internal/app/plugin_notice_storage.go",
+        "base_sha": "ca8d166bcdc641076c4cd611b4200fee4bdb500c",
+        "current_sha": "adb790633500392bbe4121383b94ff933c6e5efc"
+      },
+      {
+        "path": "internal/app/plugin_runtime.go",
+        "base_sha": "a6a46be6466a4fdb34c8543a85b23ac7ed9e245f",
+        "current_sha": "a50f895f352e45494eb86be941b89376f7e9a62d"
+      },
+      {
+        "path": "internal/app/plugin_site_statistic.go",
+        "base_sha": "59e595e835ac08543b58f706cd7f7b5aa6944e38",
+        "current_sha": "7b985f300f522ec2f3357e2bf479443578d1b2ce"
+      },
+      {
+        "path": "internal/app/plugin_site_statistic_test.go",
+        "base_sha": "4bf3d3e66883952abbd8356f989a21e07565ec17",
+        "current_sha": "9006b549dd36acede028797ec7611c548a48487a"
+      }
+    ]
+  },
+  "known_failed_gates": {
+    "full_app": "8 top-level existing failures; 14 existing credential/real-environment prerequisite skips. Full App is not green. Final result includes all changed source including cold page/redirect/Lark fixes.",
+    "imagehash": "Original JPEG gzip references remain missing; baseline-core includes two imagehash failures. Core final normal/race explicitly cover autosignin,durable,builtin, not imagehash.",
+    "prior_full_app_provenance": "Prior full-app-normal binary was compiled before cold-page edits without retained exact source bytes. Its result is diagnostic only; no source hash assigned. Final full-app-final reran every App test from frozen-input-v3."
+  },
+  "remaining_code_gaps": [
+    "Trusted browser/render and OCR production capabilities",
+    "Tjupt trusted public image origin, per-I/O guard and original answer-file import/visibility semantics; SQL durable cache already implemented",
+    "Split HTTP/HTTPS and SOCKS proxy wiring",
+    "PluginAction downstream consumers separately pending; durable acceptance is not handler success",
+    "Other original source dependency and full 1:1 semantics remain as documented"
+  ],
+  "production_pending": [
+    "No real config/KV/credential migration",
+    "No NAS or production deployment",
+    "No real-site sign-in or outbound-account acceptance"
+  ],
+  "notes": [
+    "No immutable installed reference or formal-manifest replacement",
+    "No missing binary deletion or test skip added",
+    "Synthetic HTTP, file and SDK child tests only",
+    "RoundTrip guard denies later redirect hops after original API or site snapshot revocation; does not promise atomic recall of an already sent request",
+    "Cold read-only page does not initialize owner/config/scheduler or send HTTP/notifications",
+    "Routine Lark denial retains native sanitized LARK_PLUGIN_COMMAND_DENIED contract; positive executes actual native dispatcher -> SDK -> source HTTP"
+  ],
+  "baseline_comparison_new_test_failures": []
+}

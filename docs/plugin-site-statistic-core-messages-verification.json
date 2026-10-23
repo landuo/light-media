@@ -1,0 +1,81 @@
+{
+  "base": "32f3dc0e81f9fe915be652a882dd59f6691ef0b8",
+  "source_manifest_sha256": "c9acfee06c67dae96cd72d94dcf288f2b9e802e2cbff413e1abf6909951b6f13",
+  "frozen_files": 5376,
+  "ordinary": {
+    "counts_inclusive": {
+      "pass": 633,
+      "skip": 1
+    },
+    "root_counts": {
+      "pass": 152,
+      "skip": 1
+    },
+    "failed": [],
+    "skipped": [
+      "TestReviewedStatisticSelectedStdin"
+    ],
+    "source_changed": [],
+    "exit": 0
+  },
+  "race": {
+    "verdict": "Exhaustive selected race root/subtest coverage passed, except explicit private stdin skip; original aggregate invocations timed out and remain failed.",
+    "root_total": 153,
+    "root_pass": 152,
+    "root_skip": 1,
+    "test_pass": 632,
+    "test_skip": 1,
+    "exact_ordinary_subtest_set": true,
+    "source_unchanged_files": 5376
+  },
+  "aggregate_race_timeout": {
+    "exit": 1,
+    "terminal_time": "2026-10-22T07:48:57.507435047Z",
+    "package_elapsed": 600.87,
+    "passed_test_entries": 258,
+    "passed_roots": 59,
+    "assertion_failures": [],
+    "race_warning": false,
+    "verdict": "Original whole-package invocation failed on default aggregate 10-minute timeout; later exhaustive coverage is reported separately, not a retroactive pass."
+  },
+  "modernconly": {
+    "exit": 0,
+    "test_pass": 632,
+    "root_pass": 152,
+    "skip": 1
+  },
+  "vet_exit": 0,
+  "server_build_exit": 0,
+  "cli_modernconly_build_exit": 0,
+  "cli_count": 23,
+  "server_binary_sha256": "4005a9c54b9ff54d0dd88bb02495fc3af9496cdb68e6c04d74c86e4e9e1b4ea6",
+  "core_unchanged_proof": {
+    "ordinary_race_source": "site-message-validation-v5",
+    "input_manifest_sha256": "c9acfee06c67dae96cd72d94dcf288f2b9e802e2cbff413e1abf6909951b6f13",
+    "changes_from_core_test_input": [
+      "internal/app/plugin_custom_api_test.go",
+      "internal/app/plugin_site_statistic_fields_test.go",
+      "internal/app/plugin_site_statistic_mteam_test.go",
+      "internal/app/site_manage.go",
+      "internal/app/site_message_collection.go",
+      "internal/app/site_message_guard_failure_test.go",
+      "internal/app/site_message_restored_guard_test.go"
+    ],
+    "note": "Only App production/tests changed; all non-App sources/modules/fixtures remain byte-identical. This reuses identical core-package inputs only, not a full-App result."
+  },
+  "not_claimed": [
+    "full unrestricted App suite",
+    "production migration or real account replay",
+    "private stdin test",
+    "complete SiteStatistic; SystemError/SSE pending"
+  ],
+  "first_partition_timeout": {
+    "exit": 1,
+    "package_elapsed": 602.04,
+    "test_pass": 124,
+    "root_pass": 37,
+    "active_test": "TestSiteMessagePostUnknownStopsBatchButPreservesCollectedFact",
+    "later_isolated_root_elapsed": 7.13,
+    "verdict": "Aggregate timeout retained as failure; remaining complete roots isolated without changing assertions or product deadlines."
+  }
+}
