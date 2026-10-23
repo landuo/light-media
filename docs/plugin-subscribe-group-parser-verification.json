@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-23",
+  "base_commit": "61cc7d5c3823bf3615321fcc00cc13b760c37dfa",
+  "branch": "plugins/subscribe-group",
+  "scope": "Pinned SubscribeGroup 2.8.7 ASCII parser patterns: Python IGNORECASE dotted/dotless I matching; unmatched text preserved. No general regex expansion.",
+  "source_url": "https://github.com/thsrite/MoviePilot-Plugins/blob/main/plugins.v2/subscribegroup/__init__.py",
+  "source_git_blob": "f1cedaa460a9959c67dfe5ee11131d851d666ee8",
+  "source_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+  "oracle_cases": 51,
+  "oracle_sha256": "bef73d3da964cb8910b593c205b3bd5b50f40a46f703d29d4d03bf758a1b901d",
+  "baseline_package_files_verified_against_remote_tree": 7,
+  "red": {
+    "failed_subcases": 14,
+    "failed_root": 1,
+    "exit": 1
+  },
+  "green": {
+    "normal_nodes": 126,
+    "race_nodes": 126,
+    "failures": 0,
+    "skips": 0,
+    "normal_seconds": 0.023,
+    "race_seconds": 1.158
+  },
+  "full_app_or_browser_acceptance": false,
+  "whole_plugin_complete": false,
+  "remaining": [
+    "Complete RSS Context producer/reader/consumer integration remains unverified.",
+    "Arbitrary legal 16MiB history expansion exceeds existing page/protocol budgets.",
+    "Shared rule test UI and synthetic migration/reference validation not completed.",
+    "No real user config/KV migration or deployment performed."
+  ]
+}
