@@ -1,0 +1,1162 @@
+[
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "start",
+    "line_start": 72,
+    "line_end": 119,
+    "sha256": "83630110d88a00e60651b2de46be5123177439f9b3545341fedc725abe8e75ef",
+    "text": "    def start(self, pid: Optional[str] = None):\n        \"\"\"\n        启动加载插件\n        :param pid: 插件ID，为空加载所有插件\n        \"\"\"\n\n        def check_module(module: Any):\n            \"\"\"\n            检查模块\n            \"\"\"\n            if not hasattr(module, 'init_plugin') or not hasattr(module, \"plugin_name\"):\n                return False\n            return True\n\n        # 已安装插件\n        installed_plugins = SystemConfigOper().get(SystemConfigKey.UserInstalledPlugins) or []\n        # 扫描插件目录，只加载符合条件的插件\n        plugins = self._load_selective_plugins(pid, installed_plugins, check_module)\n        # 排序\n        plugins.sort(key=lambda x: x.plugin_order if hasattr(x, \"plugin_order\") else 0)\n        for plugin in plugins:\n            plugin_id = plugin.__name__\n            if pid and plugin_id != pid:\n                continue\n            try:\n                # 判断插件是否满足认证要求，如不满足则不进行实例化\n                if not self.__set_and_check_auth_level(plugin=plugin):\n                    # 如果是插件热更新实例，这里则进行替换\n                    if plugin_id in self._plugins:\n                        self._plugins[plugin_id] = plugin\n                    continue\n                # 存储Class\n                self._plugins[plugin_id] = plugin\n                # 生成实例\n                plugin_obj = plugin()\n                # 生效插件配置\n                plugin_obj.init_plugin(self.get_plugin_config(plugin_id))\n                # 存储运行实例\n                self._running_plugins[plugin_id] = plugin_obj\n                logger.info(f\"加载插件：{plugin_id} 版本：{plugin_obj.plugin_version}\")\n                # 启用的插件才设置事件注册状态可用\n                if plugin_obj.get_state():\n                    eventmanager.enable_event_handler(plugin)\n                else:\n                    eventmanager.disable_event_handler(plugin)\n            except Exception as err:\n                logger.error(f\"加载插件 {plugin_id} 出错：{str(err)} - {traceback.format_exc()}\")\n        self.clear_plugin_agent_tools_cache()\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "init_plugin",
+    "line_start": 121,
+    "line_end": 139,
+    "sha256": "75344bc8fa2c4ff6401491e6cb7045329aedaddc051795fb2f416baa62b1e269",
+    "text": "    def init_plugin(self, plugin_id: str, conf: dict):\n        \"\"\"\n        初始化插件\n        :param plugin_id: 插件ID\n        :param conf: 插件配置\n        \"\"\"\n        plugin = self._running_plugins.get(plugin_id)\n        if not plugin:\n            return\n        # 初始化插件\n        plugin.init_plugin(conf)\n        # 检查插件状态并启用/禁用事件处理器\n        if plugin.get_state():\n            # 启用插件类的事件处理器\n            eventmanager.enable_event_handler(type(plugin))\n        else:\n            # 禁用插件类的事件处理器\n            eventmanager.disable_event_handler(type(plugin))\n        self.clear_plugin_agent_tools_cache()\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_state",
+    "line_start": 836,
+    "line_end": 842,
+    "sha256": "b04cd87e88f2cfdfbf078eb1ac8018f0343efc778219a0966b630e2eeb12af95",
+    "text": "    def get_plugin_state(self, pid: str) -> bool:\n        \"\"\"\n        获取插件状态\n        :param pid: 插件ID\n        \"\"\"\n        plugin = self._running_plugins.get(pid)\n        return plugin.get_state() if plugin else False\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_commands",
+    "line_start": 844,
+    "line_end": 871,
+    "sha256": "70eab7accb9f7c2ed84fc2be8e6f9e45469b48c88775f321880dabced59bb999",
+    "text": "    def get_plugin_commands(self, pid: Optional[str] = None) -> List[Dict[str, Any]]:\n        \"\"\"\n        获取插件命令\n        [{\n            \"cmd\": \"/xx\",\n            \"event\": EventType.xx,\n            \"desc\": \"xxxx\",\n            \"data\": {},\n            \"pid\": \"\",\n        }]\n        \"\"\"\n        ret_commands = []\n        # 创建字典快照避免并发修改\n        running_plugins_snapshot = dict(self._running_plugins)\n        for plugin_id, plugin in running_plugins_snapshot.items():\n            if pid and pid != plugin_id:\n                continue\n            if hasattr(plugin, \"get_command\") and ObjectUtils.check_method(plugin.get_command):\n                try:\n                    if not plugin.get_state():\n                        continue\n                    commands = plugin.get_command() or []\n                    for command in commands:\n                        command[\"pid\"] = plugin_id\n                    ret_commands.extend(commands)\n                except Exception as e:\n                    logger.error(f\"获取插件命令出错：{str(e)}\")\n        return ret_commands\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_apis",
+    "line_start": 873,
+    "line_end": 903,
+    "sha256": "ef2a6eb7fb1e4d0d4a0258b8b9831982bd2677faee54182002217765be5e78ad",
+    "text": "    def get_plugin_apis(self, pid: Optional[str] = None) -> List[Dict[str, Any]]:\n        \"\"\"\n        获取插件API\n        [{\n            \"path\": \"/xx\",\n            \"endpoint\": self.xxx,\n            \"methods\": [\"GET\", \"POST\"],\n            \"summary\": \"API名称\",\n            \"description\": \"API说明\",\n            \"allow_anonymous\": false\n        }]\n        \"\"\"\n        ret_apis = []\n        if pid:\n            plugins = {pid: self._running_plugins.get(pid)}\n        else:\n            plugins = self._running_plugins\n        for plugin_id, plugin in plugins.items():\n            if pid and pid != plugin_id:\n                continue\n            if hasattr(plugin, \"get_api\") and ObjectUtils.check_method(plugin.get_api):\n                try:\n                    apis = plugin.get_api() or []\n                    for api in apis:\n                        api[\"path\"] = f\"/{plugin_id}{api['path']}\"\n                        if not api.get(\"auth\"):\n                            api[\"auth\"] = \"apikey\"\n                    ret_apis.extend(apis)\n                except Exception as e:\n                    logger.error(f\"获取插件 {plugin_id} API出错：{str(e)}\")\n        return ret_apis\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_services",
+    "line_start": 905,
+    "line_end": 931,
+    "sha256": "1cc2a5b75b73428e28cfde3c9d214bca11d9a3ba54e75e4c2a6056d64e240ec4",
+    "text": "    def get_plugin_services(self, pid: Optional[str] = None) -> List[Dict[str, Any]]:\n        \"\"\"\n        获取插件服务\n        [{\n            \"id\": \"服务ID\",\n            \"name\": \"服务名称\",\n            \"trigger\": \"触发器：cron、interval、date、CronTrigger.from_crontab()\",\n            \"func\": self.xxx,\n            \"kwargs\": {} # 定时器参数,\n            \"func_kwargs\": {} # 方法参数\n        }]\n        \"\"\"\n        ret_services = []\n        # 创建字典快照避免并发修改\n        running_plugins_snapshot = dict(self._running_plugins)\n        for plugin_id, plugin in running_plugins_snapshot.items():\n            if pid and pid != plugin_id:\n                continue\n            if hasattr(plugin, \"get_service\") and ObjectUtils.check_method(plugin.get_service):\n                try:\n                    if not plugin.get_state():\n                        continue\n                    services = plugin.get_service() or []\n                    ret_services.extend(services)\n                except Exception as e:\n                    logger.error(f\"获取插件 {plugin_id} 服务出错：{str(e)}\")\n        return ret_services\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "clone_plugin",
+    "line_start": 1905,
+    "line_end": 2002,
+    "sha256": "5ad3e0f100cc6518d1889f18bc23835658827634be20cb8f96ea55782b6819c8",
+    "text": "    def clone_plugin(self, plugin_id: str, suffix: str, name: str, description: str,\n                     version: str = None, icon: str = None) -> Tuple[bool, str]:\n        \"\"\"\n        创建插件分身\n        :param plugin_id: 原插件ID\n        :param suffix: 分身后缀\n        :param name: 分身名称\n        :param description: 分身描述\n        :param version: 自定义版本号\n        :param icon: 自定义图标URL\n        :return: (是否成功, 错误信息)\n        \"\"\"\n        try:\n            # 验证参数\n            if not plugin_id or not suffix:\n                return False, \"插件ID和分身后缀不能为空\"\n\n            # 检查原插件是否存在\n            if plugin_id not in self._plugins:\n                return False, f\"原插件 {plugin_id} 不存在\"\n\n            # 生成分身插件ID\n            clone_id = f\"{plugin_id}{suffix.lower()}\"\n\n            # 检查分身插件是否已存在\n            if self.is_plugin_exists(clone_id):\n                return False, f\"分身插件 {clone_id} 已存在\"\n\n            # 获取原插件目录\n            original_plugin_dir = Path(settings.ROOT_PATH) / \"app\" / \"plugins\" / plugin_id.lower()\n            if not original_plugin_dir.exists():\n                return False, f\"原插件目录 {original_plugin_dir} 不存在\"\n\n            # 创建分身插件目录\n            clone_plugin_dir = Path(settings.ROOT_PATH) / \"app\" / \"plugins\" / clone_id.lower()\n\n            # 复制插件目录\n            import shutil\n            shutil.copytree(original_plugin_dir, clone_plugin_dir)\n            logger.info(f\"已复制插件目录：{original_plugin_dir} -> {clone_plugin_dir}\")\n\n            # 修改插件文件内容\n            success, msg = self._modify_plugin_files(\n                plugin_dir=clone_plugin_dir,\n                original_id=plugin_id,\n                suffix=suffix.lower(),\n                name=name,\n                description=description,\n                version=version,\n                icon=icon\n            )\n\n            if not success:\n                # 如果修改失败，清理已创建的目录\n                if clone_plugin_dir.exists():\n                    shutil.rmtree(clone_plugin_dir)\n                return False, msg\n\n            # 将分身插件添加到已安装列表\n            systemconfig = SystemConfigOper()\n            installed_plugins = systemconfig.get(SystemConfigKey.UserInstalledPlugins) or []\n            if clone_id not in installed_plugins:\n                installed_plugins.append(clone_id)\n                systemconfig.set(SystemConfigKey.UserInstalledPlugins, installed_plugins)\n\n            # 为分身插件创建初始配置（从原插件复制配置）\n            logger.info(f\"正在为分身插件 {clone_id} 创建初始配置...\")\n            original_config = self.get_plugin_config(plugin_id)\n            if original_config:\n                # 复制原插件配置作为分身插件的初始配置\n                clone_config = original_config.copy()\n                # 可以在这里修改一些默认值，比如禁用分身插件\n                # 默认禁用分身插件，让用户手动配置\n                clone_config['enable'] = False\n                clone_config['enabled'] = False\n                self.save_plugin_config(clone_id, clone_config, force=True)\n                logger.info(f\"已为分身插件 {clone_id} 设置初始配置\")\n            else:\n                logger.info(f\"原插件 {plugin_id} 没有配置，分身插件 {clone_id} 将使用默认配置\")\n\n            # 注册分身插件的API和服务\n            logger.info(f\"正在注册分身插件 {clone_id} ...\")\n            PluginManager().reload_plugin(clone_id)\n            # 确保分身插件正确初始化配置\n            if clone_id in self._running_plugins:\n                clone_instance = self._running_plugins[clone_id]\n                clone_config = self.get_plugin_config(clone_id)\n                if clone_config:\n                    logger.info(f\"正在为分身插件 {clone_id} 重新初始化配置...\")\n                    clone_instance.init_plugin(clone_config)\n                    logger.info(f\"分身插件 {clone_id} 配置重新初始化完成\")\n\n            logger.info(f\"插件分身 {clone_id} 创建成功\")\n            return True, clone_id\n\n        except Exception as e:\n            logger.error(f\"创建插件分身失败：{str(e)}\")\n            return False, f\"创建插件分身失败：{str(e)}\"\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin-base.py",
+    "method": "save_data",
+    "line_start": 269,
+    "line_end": 278,
+    "sha256": "a6a7d953c521d6a3c732147ce7efaecdb47fcb40317ffabb618d11cb1e4257d4",
+    "text": "    def save_data(self, key: str, value: Any, plugin_id: Optional[str] = None):\n        \"\"\"\n        保存插件数据\n        :param key: 数据key\n        :param value: 数据值\n        :param plugin_id: 插件ID\n        \"\"\"\n        if not plugin_id:\n            plugin_id = self.__class__.__name__\n        self.plugindata.save(plugin_id, key, value)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin-base.py",
+    "method": "get_data",
+    "line_start": 294,
+    "line_end": 302,
+    "sha256": "033218fbf205f6f8663ea9740acd03436955cc746040c9b234674cdbe7c944bc",
+    "text": "    def get_data(self, key: Optional[str] = None, plugin_id: Optional[str] = None) -> Any:\n        \"\"\"\n        获取插件数据\n        :param key: 数据key\n        :param plugin_id: plugin_id\n        \"\"\"\n        if not plugin_id:\n            plugin_id = self.__class__.__name__\n        return self.plugindata.get_data(plugin_id, key)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin-base.py",
+    "method": "del_data",
+    "line_start": 318,
+    "line_end": 326,
+    "sha256": "222f0f4338f4a85ef1febfe294340f93d2d2ce5e92d29a53d04bd99f52c8d8db",
+    "text": "    def del_data(self, key: str, plugin_id: Optional[str] = None) -> Any:\n        \"\"\"\n        删除插件数据\n        :param key: 数据key\n        :param plugin_id: plugin_id\n        \"\"\"\n        if not plugin_id:\n            plugin_id = self.__class__.__name__\n        return self.plugindata.del_data(plugin_id, key)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "stop",
+    "line_start": 156,
+    "line_end": 192,
+    "sha256": "d4737df660738f4a80cdb379496e2cba438cbf953ceca05c74600edb798664eb",
+    "text": "    def stop(self, pid: Optional[str] = None):\n        \"\"\"\n        停止插件服务\n        :param pid: 插件ID，为空停止所有插件\n        \"\"\"\n        # 停止插件\n        if pid:\n            logger.info(f\"正在停止插件 {pid}...\")\n            plugin_obj = self._running_plugins.get(pid)\n            if not plugin_obj:\n                # 指定插件可能在上次加载时已导入模块但初始化失败，此时不会进入运行态列表。\n                # 仍需继续清理类缓存和 sys.modules，避免后续热重载反复复用旧模块。\n                logger.debug(f\"插件 {pid} 不存在或未加载\")\n                plugins = {}\n            else:\n                plugins = {pid: plugin_obj}\n        else:\n            logger.info(\"正在停止所有插件...\")\n            plugins = self._running_plugins\n        for plugin_id, plugin in plugins.items():\n            eventmanager.disable_event_handler(type(plugin))\n            self.__stop_plugin(plugin)\n        # 清空对象\n        if pid:\n            # 清空指定插件\n            self._plugins.pop(pid, None)\n            self._running_plugins.pop(pid, None)\n            # 清除插件模块缓存，包括所有子模块\n            self._clear_plugin_modules(pid)\n        else:\n            # 清空\n            self._plugins = {}\n            self._running_plugins = {}\n            # 清除所有插件模块缓存\n            self._clear_plugin_modules()\n        self.clear_plugin_agent_tools_cache()\n        logger.info(\"插件停止完成\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "__stop_plugin",
+    "line_start": 619,
+    "line_end": 632,
+    "sha256": "45422f45f2be0ddab710baa11803962a0ad652728f9523c7113aa2fcc0431a33",
+    "text": "    def __stop_plugin(plugin: Any):\n        \"\"\"\n        停止插件\n        :param plugin: 插件实例\n        \"\"\"\n        try:\n            # 关闭数据库\n            if hasattr(plugin, \"close\"):\n                plugin.close()\n            # 关闭插件\n            if hasattr(plugin, \"stop_service\"):\n                plugin.stop_service()\n        except Exception as e:\n            logger.warn(f\"停止插件 {plugin.get_name()} 时发生错误: {str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "reload_plugin",
+    "line_start": 641,
+    "line_end": 651,
+    "sha256": "c6d9c8012cc588b24982dcca109d51090a1ece8d1cbba2cd6e6961cf16bd0ecd",
+    "text": "    def reload_plugin(self, plugin_id: str):\n        \"\"\"\n        将一个插件重新加载到内存\n        :param plugin_id: 插件ID\n        \"\"\"\n        # 先移除插件实例\n        self.stop(plugin_id)\n        # 重新加载\n        self.start(plugin_id)\n        # 广播事件\n        eventmanager.send_event(EventType.PluginReload, data={\"plugin_id\": plugin_id})\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_remote_entry",
+    "line_start": 1052,
+    "line_end": 1069,
+    "sha256": "7c21aaa85b486e3fe5a38792675e6c9802f949cfbe09426d701873026bfbafdc",
+    "text": "    def get_plugin_remote_entry(plugin_id: str, dist_path: str) -> str:\n        \"\"\"\n        获取插件的远程入口地址\n        :param plugin_id: 插件 ID\n        :param dist_path: 插件的分发路径\n        :return: 远程入口地址\n        \"\"\"\n        dist_path = dist_path.strip(\"/\")\n        path = posixpath.join(\n            \"plugin\",\n            \"file\",\n            plugin_id.lower(),\n            dist_path,\n            \"remoteEntry.js\",\n        )\n        if not path.startswith(\"/\"):\n            path = \"/\" + path\n        return path\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_remotes",
+    "line_start": 1071,
+    "line_end": 1090,
+    "sha256": "d5ed13b7712920c0eda70d6bead8fbcd77fad4aa1aae48afaa55edfde040b54c",
+    "text": "    def get_plugin_remotes(self, pid: Optional[str] = None) -> List[Dict[str, Any]]:\n        \"\"\"\n        获取插件联邦组件列表\n        \"\"\"\n        remotes = []\n        # 创建字典快照避免并发修改\n        running_plugins_snapshot = dict(self._running_plugins)\n        for plugin_id, plugin in running_plugins_snapshot.items():\n            if pid and pid != plugin_id:\n                continue\n            if hasattr(plugin, \"get_render_mode\"):\n                render_mode, dist_path = plugin.get_render_mode()\n                if render_mode != \"vue\":\n                    continue\n                remotes.append({\n                    \"id\": plugin_id,\n                    \"url\": self.get_plugin_remote_entry(plugin_id, dist_path),\n                    \"name\": plugin.plugin_name,\n                })\n        return remotes\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "_modify_plugin_files",
+    "line_start": 2004,
+    "line_end": 2058,
+    "sha256": "1d006655328089c113931192c2b992839d22db58a137e243a43b1109d2f9a3d8",
+    "text": "    def _modify_plugin_files(self, plugin_dir: Path, original_id: str, suffix: str,\n                             name: str, description: str, version: str = None,\n                             icon: str = None) -> Tuple[bool, str]:\n        \"\"\"\n        修改插件文件中的类名和相关信息\n        :param plugin_dir: 插件目录\n        :param original_id: 原插件ID\n        :param suffix: 分身后缀\n        :param name: 分身名称\n        :param description: 分身描述\n        :param version: 自定义版本号\n        :param icon: 自定义图标URL\n        :return: (是否成功, 错误信息)\n        \"\"\"\n        try:\n            # 获取原插件类\n            original_plugin_class = self._plugins.get(original_id)\n            if not original_plugin_class:\n                return False, f\"无法获取原插件类 {original_id}\"\n\n            # 获取原类名\n            original_class_name = original_plugin_class.__name__\n            clone_class_name = f\"{original_class_name}{suffix}\"\n\n            # 修改 __init__.py 文件\n            init_file = plugin_dir / \"__init__.py\"\n            if init_file.exists():\n                success, msg = self._modify_python_file(\n                    file_path=init_file,\n                    original_class_name=original_class_name,\n                    clone_class_name=clone_class_name,\n                    name=name,\n                    description=description,\n                    version=version,\n                    icon=icon\n                )\n                if not success:\n                    return False, msg\n\n            # 检查是否为联邦插件（存在dist目录）\n            dist_dir = plugin_dir / \"dist\"\n            if dist_dir.exists():\n                success, msg = self._modify_federation_files(\n                    dist_dir=dist_dir,\n                    original_class_name=original_class_name,\n                    clone_class_name=clone_class_name\n                )\n                if not success:\n                    return False, msg\n\n            return True, \"文件修改成功\"\n\n        except Exception as e:\n            logger.error(f\"修改插件文件失败：{str(e)}\")\n            return False, f\"修改插件文件失败：{str(e)}\"\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "_modify_python_file",
+    "line_start": 2061,
+    "line_end": 2137,
+    "sha256": "e221c70177736254ca45df7feeeb1c9fbaf759e60f4ddc3c89ddfa56bf3b2a8e",
+    "text": "    def _modify_python_file(file_path: Path, original_class_name: str,\n                            clone_class_name: str, name: str, description: str,\n                            version: str = None, icon: str = None) -> Tuple[bool, str]:\n        \"\"\"\n        修改Python文件中的类名和插件信息\n        \"\"\"\n        try:\n            with open(file_path, 'r', encoding='utf-8', errors='replace') as f:\n                content = f.read()\n\n            # 替换类名\n            content = content.replace(f\"class {original_class_name}\", f\"class {clone_class_name}\")\n\n            # 替换插件名称和描述\n            import re\n\n            # 替换 plugin_name\n            if name:\n                content = re.sub(\n                    r'plugin_name\\s*=\\s*[\"\\'][^\"\\']*[\"\\']',\n                    f'plugin_name = \"{name}\"',\n                    content\n                )\n\n            # 替换 plugin_desc\n            if description:\n                content = re.sub(\n                    r'plugin_desc\\s*=\\s*[\"\\'][^\"\\']*[\"\\']',\n                    f'plugin_desc = \"{description}\"',\n                    content\n                )\n\n            # 替换 plugin_config_prefix（如果存在）\n            content = re.sub(\n                r'plugin_config_prefix\\s*=\\s*[\"\\'][^\"\\']*[\"\\']',\n                f'plugin_config_prefix = \"{clone_class_name.lower()}_\"',\n                content\n            )\n\n            # 替换 plugin_version（如果提供了自定义版本）\n            if version:\n                content = re.sub(\n                    r'plugin_version\\s*=\\s*[\"\\'][^\"\\']*[\"\\']',\n                    f'plugin_version = \"{version}\"',\n                    content\n                )\n\n            # 替换 plugin_icon（如果提供了自定义图标）\n            if icon and icon.strip():\n                old_content = content\n                content = re.sub(\n                    r'plugin_icon\\s*=\\s*[\"\\'][^\"\\']*[\"\\']',\n                    f'plugin_icon = \"{icon}\"',\n                    content\n                )\n                if old_content != content:\n                    logger.info(f\"已替换插件图标为: {icon}\")\n                else:\n                    logger.warning(f\"插件图标替换失败，未找到匹配的图标设置\")\n            else:\n                logger.info(\"未提供自定义图标，保持原插件图标\")\n\n            # 添加分身标志\n            if \"def init_plugin(self\" in content:\n                init_index = content.index(\"def init_plugin(self\")\n                # 在 def init_plugin(self 前添加 is_clone = True\n                content = content[:init_index] + \"is_clone = True\\n\\n    \" + content[init_index:]\n\n            with open(file_path, 'w', encoding='utf-8') as f:\n                f.write(content)\n\n            logger.debug(f\"已修改Python文件：{file_path}\")\n            return True, \"Python文件修改成功\"\n\n        except Exception as e:\n            logger.error(f\"修改Python文件失败：{str(e)}\")\n            return False, f\"修改Python文件失败：{str(e)}\"\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "_modify_federation_files",
+    "line_start": 2139,
+    "line_end": 2206,
+    "sha256": "604ba452587274e0be3a26e83688894f9be7462d196f34eabf58381e5ba2ba48",
+    "text": "    def _modify_federation_files(self, dist_dir: Path, original_class_name: str,\n                                 clone_class_name: str) -> Tuple[bool, str]:\n        \"\"\"\n        修改联邦插件的前端文件\n        \"\"\"\n        try:\n            # 获取原始插件名（从类名推导）\n            original_plugin_name = original_class_name\n            clone_plugin_name = clone_class_name\n\n            # 遍历dist目录下的所有文件\n            for file_path in dist_dir.rglob(\"*\"):\n                if not file_path.is_file():\n                    continue\n\n                # 处理JS文件\n                if file_path.suffix == '.js':\n                    try:\n                        with open(file_path, 'r', encoding='utf-8', errors='replace') as f:\n                            content = f.read()\n\n                        # 替换类名引用（精确匹配）\n                        content = content.replace(original_class_name, clone_class_name)\n                        # 替换插件名引用（如果存在）\n                        content = content.replace(f'\"{original_plugin_name}\"', f'\"{clone_plugin_name}\"')\n                        content = content.replace(f\"'{original_plugin_name}'\", f\"'{clone_plugin_name}'\")\n                        # 替换CSS key中的类名（联邦插件特有）\n                        content = content.replace(f'css__{original_class_name}__', f'css__{clone_class_name}__')\n                        # 替换可能的小写类名引用\n                        content = content.replace(original_class_name.lower(), clone_class_name.lower())\n\n                        with open(file_path, 'w', encoding='utf-8') as f:\n                            f.write(content)\n\n                        logger.debug(f\"已修改联邦插件JS文件：{file_path}\")\n\n                    except Exception as e:\n                        logger.warning(f\"修改联邦插件文件 {file_path} 失败：{str(e)}\")\n                        continue\n\n                # 处理CSS文件\n                elif file_path.suffix == '.css':\n                    try:\n                        with open(file_path, 'r', encoding='utf-8', errors='replace') as f:\n                            content = f.read()\n\n                        # 替换CSS中可能的类名引用\n                        content = content.replace(original_class_name.lower(),\n                                                  clone_class_name.lower()).replace(original_class_name,\n                                                                                    clone_class_name)\n\n                        with open(file_path, 'w', encoding='utf-8') as f:\n                            f.write(content)\n\n                        logger.debug(f\"已修改联邦插件CSS文件：{file_path}\")\n\n                    except Exception as e:\n                        logger.warning(f\"修改联邦插件CSS文件 {file_path} 失败：{str(e)}\")\n                        continue\n\n            # 重命名构建文件（如果需要）\n            self._rename_federation_assets(dist_dir, original_class_name, clone_class_name)\n\n            return True, \"联邦插件文件修改完成\"\n\n        except Exception as e:\n            logger.error(f\"修改联邦插件文件失败：{str(e)}\")\n            return False, f\"修改联邦插件文件失败：{str(e)}\"\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "_rename_federation_assets",
+    "line_start": 2209,
+    "line_end": 2235,
+    "sha256": "1c9d98b9fa210a6fbb72d2e6860a1cde352d3693d355742cbb8ab6ebe52fd8ff",
+    "text": "    def _rename_federation_assets(dist_dir: Path, original_class_name: str, clone_class_name: str):\n        \"\"\"\n        重命名联邦插件的资源文件，避免文件名冲突\n        \"\"\"\n        try:\n            # 查找包含原类名的文件并重命名\n            for file_path in dist_dir.glob(\"*\"):\n                if not file_path.is_file():\n                    continue\n\n                file_name = file_path.name\n                # 如果文件名包含原类名，则重命名\n                if original_class_name.lower() in file_name.lower():\n                    new_name = file_name.replace(\n                        original_class_name.lower(),\n                        clone_class_name.lower()\n                    )\n                    new_path = file_path.parent / new_name\n\n                    # 避免重命名冲突\n                    if not new_path.exists():\n                        file_path.rename(new_path)\n                        logger.debug(f\"重命名联邦插件文件：{file_name} -> {new_name}\")\n\n        except Exception as e:\n            # 重命名失败不影响整体流程\n            logger.warning(f\"重命名联邦插件资源文件失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "plugin_form",
+    "line_start": 649,
+    "line_end": 677,
+    "sha256": "4cc3385212ab2c4b4655637e0f521614d53c6b6bd8f5dc01a49a25b58141cd63",
+    "text": "def plugin_form(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> dict:\n    \"\"\"\n    根据插件ID获取插件配置表单或Vue组件URL\n    \"\"\"\n    plugin_manager = PluginManager()\n    plugin_instance = plugin_manager.running_plugins.get(plugin_id)\n    if not plugin_instance:\n        raise HTTPException(\n            status_code=status.HTTP_404_NOT_FOUND,\n            detail=f\"插件 {plugin_id} 不存在或未加载\",\n        )\n\n    # 渲染模式\n    render_mode, _ = plugin_instance.get_render_mode()\n    try:\n        conf, model = plugin_instance.get_form()\n        stored_config = plugin_manager.get_plugin_config(plugin_id)\n        # Merge stored config with defaults so all keys exist for v-show evaluation\n        merged_model = {**model, **(stored_config or {})}\n        return {\n            \"render_mode\": render_mode,\n            \"conf\": conf,\n            \"model\": merged_model,\n        }\n    except Exception as e:\n        logger.error(f\"插件 {plugin_id} 调用方法 get_form 出错: {str(e)}\")\n    return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "install",
+    "line_start": 577,
+    "line_end": 623,
+    "sha256": "1a5df1c3df903e1606e66fd1d955789aa0c163ae8e06da30bb29f80c9df9abb8",
+    "text": "async def install(\n    plugin_id: str,\n    repo_url: Optional[str] = \"\",\n    release_version: Optional[str] = None,\n    force: Optional[bool] = False,\n    _: User = Depends(get_current_active_superuser_async),\n) -> Any:\n    \"\"\"\n    安装插件\n    \"\"\"\n    # 已安装插件\n    install_plugins = SystemConfigOper().get(SystemConfigKey.UserInstalledPlugins) or []\n    # 首先检查插件是否已经存在，并且是否强制安装，否则只进行安装统计\n    plugin_helper = PluginHelper()\n    if not force and plugin_id in PluginManager().get_plugin_ids():\n        if repo_url:\n            compatible_message = await plugin_helper.async_get_plugin_system_version_check_message(\n                plugin_id, repo_url\n            )\n            if compatible_message:\n                return schemas.Response(success=False, message=compatible_message)\n        await MoviePilotServerHelper.async_install_plugin_reg(plugin_id=plugin_id, repo_url=repo_url)\n    else:\n        # 插件不存在或需要强制安装，下载安装并注册插件\n        if repo_url:\n            state, msg = await plugin_helper.async_install(\n                pid=plugin_id, repo_url=repo_url, release_version=release_version, force_install=force\n            )\n            # 安装失败则直接响应\n            if not state:\n                return schemas.Response(success=False, message=msg)\n            await MoviePilotServerHelper.async_install_plugin_reg(plugin_id=plugin_id, repo_url=repo_url)\n        else:\n            # repo_url 为空时，也直接响应\n            return schemas.Response(\n                success=False, message=\"没有传入仓库地址，无法正确安装插件，请检查配置\"\n            )\n    # 安装插件\n    if plugin_id not in install_plugins:\n        install_plugins.append(plugin_id)\n        # 保存设置\n        await SystemConfigOper().async_set(\n            SystemConfigKey.UserInstalledPlugins, install_plugins\n        )\n    # 重新加载插件\n    await run_in_threadpool(reload_plugin, plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "get_plugin_config",
+    "line_start": 776,
+    "line_end": 787,
+    "sha256": "7e775d102f291b9fde5dd0a72124fe406a3309746843286656a67f508b980ccf",
+    "text": "    def get_plugin_config(self, pid: str) -> dict:\n        \"\"\"\n        获取插件配置\n        :param pid: 插件ID\n        \"\"\"\n        if not self._plugins.get(pid):\n            return {}\n        conf = SystemConfigOper().get(self._config_key % pid)\n        if conf:\n            # 去掉空Key\n            return {k: v for k, v in conf.items() if k}\n        return {}\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "save_plugin_config",
+    "line_start": 789,
+    "line_end": 799,
+    "sha256": "677c79de2dc352e59a5572f6c55db95e9ed2a7df318bd3d44785927b21f4aa13",
+    "text": "    def save_plugin_config(self, pid: str, conf: dict, force: bool = False) -> bool:\n        \"\"\"\n        保存插件配置\n        :param pid: 插件ID\n        :param conf: 配置\n        :param force: 强制保存\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        SystemConfigOper().set(self._config_key % pid, conf)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_config",
+    "line_start": 815,
+    "line_end": 823,
+    "sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+    "text": "    def delete_plugin_config(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件配置\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化配置\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        return SystemConfigOper().delete(self._config_key % pid)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/clone-scope-audit-20261023/plugin.py",
+    "method": "delete_plugin_data",
+    "line_start": 825,
+    "line_end": 834,
+    "sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+    "text": "    def delete_plugin_data(self, pid: str, force: bool = False) -> bool:\n        \"\"\"\n        删除插件数据\n        :param pid: 插件ID\n        :param force: 插件停止后仍允许按插件 ID 删除持久化数据\n        \"\"\"\n        if not force and not self._plugins.get(pid):\n            return False\n        PluginDataOper().del_data(pid)\n        return True\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "register_plugin",
+    "line_start": 223,
+    "line_end": 232,
+    "sha256": "f25561ea6fc20236e31cca116a1f72bb69671412bad490b6977c8d5f4fcade90",
+    "text": "def register_plugin(plugin_id: str):\n    \"\"\"\n    注册一个插件相关的服务\n    \"\"\"\n    # 注册插件服务\n    Scheduler().update_plugin_job(plugin_id)\n    # 注册菜单命令\n    Command().init_commands(plugin_id)\n    # 注册插件API\n    register_plugin_api(plugin_id)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reload_plugin",
+    "line_start": 563,
+    "line_end": 573,
+    "sha256": "e83057d09701c196b7ec2de8a717d70d9e6d37ea977988806371c93ab726c035",
+    "text": "def reload_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    重新加载插件\n    \"\"\"\n    # 重新加载插件\n    PluginManager().reload_plugin(plugin_id)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "clone_plugin",
+    "line_start": 936,
+    "line_end": 962,
+    "sha256": "8c33884c2a06bc6ac86e5b46f06c98fafc3730f22baffe35034ccd0c6cf1536a",
+    "text": "def clone_plugin(\n    plugin_id: str, clone_data: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    创建插件分身\n    \"\"\"\n    try:\n        success, message = PluginManager().clone_plugin(\n            plugin_id=plugin_id,\n            suffix=clone_data.get(\"suffix\", \"\"),\n            name=clone_data.get(\"name\", \"\"),\n            description=clone_data.get(\"description\", \"\"),\n            version=clone_data.get(\"version\", \"\"),\n            icon=clone_data.get(\"icon\", \"\"),\n        )\n\n        if success:\n            # 注册插件服务\n            reload_plugin(message)\n            # 将分身插件添加到原插件所在的文件夹中\n            _add_clone_to_plugin_folder(plugin_id, message)\n            return schemas.Response(success=True, message=\"插件分身创建成功\")\n        else:\n            return schemas.Response(success=False, message=message)\n    except Exception as e:\n        logger.error(f\"创建插件分身失败：{str(e)}\")\n        return schemas.Response(success=False, message=f\"创建插件分身失败：{str(e)}\")\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "set_plugin_config",
+    "line_start": 976,
+    "line_end": 989,
+    "sha256": "d4a86ea27f92ae40de8e44f3a34b20f6607de39ad429fb876669206db9cf4bfd",
+    "text": "def set_plugin_config(\n    plugin_id: str, conf: dict, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    更新插件配置\n    \"\"\"\n    plugin_manager = PluginManager()\n    # 保存配置\n    plugin_manager.save_plugin_config(plugin_id, conf)\n    # 重新生效插件\n    plugin_manager.init_plugin(plugin_id, conf)\n    # 注册插件服务\n    register_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "reset_plugin",
+    "line_start": 742,
+    "line_end": 761,
+    "sha256": "9f7822656ddcc2e2485388704c82688e77c9f91cd97058d92f0b623b4d8847eb",
+    "text": "def reset_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    根据插件ID重置插件配置及数据\n    \"\"\"\n    plugin_manager = PluginManager()\n    eventmanager.send_event(\n        ChainEventType.PluginDataReset,\n        PluginDataResetEventData(plugin_id=plugin_id, reset_config=True, reset_data=True),\n    )\n    # 事件处理器需要运行中插件完成补偿；补偿后先停止插件，避免删除数据时仍有任务读写旧状态。\n    plugin_manager.stop(plugin_id)\n    # 删除配置\n    plugin_manager.delete_plugin_config(plugin_id, force=True)\n    # 删除插件所有数据\n    plugin_manager.delete_plugin_data(plugin_id, force=True)\n    # 重新加载插件\n    reload_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  },
+  {
+    "path": "/workspace/scratch/a1d82674c6f8/light-media/work/plugin-module-parity-review-20261023/reference/api-plugin.py",
+    "method": "uninstall_plugin",
+    "line_start": 993,
+    "line_end": 1030,
+    "sha256": "3b1a8ee0ff4af8f2d97e651864b6742da2039e9ec4c7cd4fd935cb9f68e2b417",
+    "text": "def uninstall_plugin(\n    plugin_id: str, _: User = Depends(get_current_active_superuser)\n) -> Any:\n    \"\"\"\n    卸载插件\n    \"\"\"\n    config_oper = SystemConfigOper()\n    # 删除已安装信息\n    install_plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []\n    for plugin in install_plugins:\n        if plugin == plugin_id:\n            install_plugins.remove(plugin)\n            break\n    config_oper.set(SystemConfigKey.UserInstalledPlugins, install_plugins)\n    # 移除插件API\n    remove_plugin_api(plugin_id)\n    # 移除插件服务\n    Scheduler().remove_plugin_job(plugin_id)\n    # 判断是否为分身\n    plugin_manager = PluginManager()\n    plugin_class = plugin_manager.plugins.get(plugin_id)\n    if getattr(plugin_class, \"is_clone\", False):\n        # 如果是分身插件，则删除分身数据和配置\n        plugin_manager.delete_plugin_config(plugin_id)\n        plugin_manager.delete_plugin_data(plugin_id)\n        # 删除分身文件\n        plugin_base_dir = settings.ROOT_PATH / \"app\" / \"plugins\" / plugin_id.lower()\n        if plugin_base_dir.exists():\n            try:\n                shutil.rmtree(plugin_base_dir)\n                plugin_manager.plugins.pop(plugin_id, None)\n            except Exception as e:\n                logger.error(f\"删除插件分身目录 {plugin_base_dir} 失败: {str(e)}\")\n    # 从插件文件夹中移除该插件\n    _remove_plugin_from_folders(plugin_id)\n    # 移除插件\n    plugin_manager.remove_plugin(plugin_id)\n    return schemas.Response(success=True)\n"
+  }
+]

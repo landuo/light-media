@@ -27,72 +27,83 @@ import (
 )
 
 type App struct {
-	systemMessages          systemMessageRuntime
-	bigMemoryMode           bool // Trusted startup option; not worker or plugin configuration.
-	transferExtensions      nativeTransferExtensionRuntime
-	subscriptionStats       subscriptionStatsRuntime
-	recognitionMu           sync.Mutex
-	recognitionMatcher      atomic.Pointer[words.Matcher]
-	directoryFileMu         sync.Mutex
-	RestartRequested        chan struct{}
-	logs                    *runtimeLogger
-	logError                string
-	catMu                   sync.Mutex
-	mediaCategories         mediaCategoryRuntime
-	catClient               *catalog.Client
-	catCreds                TMDBConfig
-	catProxy                networkproxy.Config
-	metadataProxyMu         sync.Mutex
-	metadataProxyConfig     networkproxy.Config
-	metadataProxyClient     *http.Client
-	Store                   *Store
-	Dir                     string
-	web                     http.Handler
-	cfgMu                   sync.RWMutex
-	settingsMu              sync.Mutex
-	config                  Settings
-	controlMu               sync.Mutex
-	control                 string
-	activeWrites            int
-	logMu                   sync.Mutex
-	authMu                  sync.Mutex
-	authAttempts            map[string][]time.Time
-	jobWake                 chan struct{}
-	wg                      sync.WaitGroup
-	importMu                sync.Mutex
-	importSourceLink        func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
-	importAutoCommit        func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
-	subMu                   sync.Mutex
-	downloadMu              sync.Mutex
-	materialMu              sync.Mutex
-	materials               map[string][]byte
-	siteLocks               sync.Map
-	cancel                  context.CancelFunc
-	pluginMu                sync.Mutex
-	pluginIdentifiers       identifiersRuntime
-	pluginLifecycleMu       sync.Mutex
-	pluginStore             *PluginStore
-	pluginWake              chan struct{}
-	pluginProcess           chan struct{}
-	pluginCommand           func(string) (plugins.Command, error)
-	pluginHostsFile         string // Test seam; production always uses the container's /etc/hosts.
-	pluginProcessStats      pluginProcessSnapshotter
-	pluginServerStatus      pluginServerStatusRuntime
-	pluginRemoveLink        pluginRemoveLinkRuntime
-	pluginAutoSignIn        pluginAutoSignInRuntime
-	autoSignInEnvironment   func() []string               // Private startup-only seam; nil reads os.Environ.
-	autoSignInTjuptStartup  func() autoSignInTjuptStartup // Private trusted test input; nil uses only the startup environment and system roots.
-	pluginScrapeClean       pluginScrapeCleanRuntime
-	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
-	pluginAutoBackup        pluginAutoBackupRuntime
-	pluginIYUU              pluginIYUURuntime
-	pluginTransfer          pluginTransferRuntime
-	pluginCloudflare        pluginCloudflareRuntime
-	pluginSeedRescue        pluginSeedRescueRuntime
-	pluginBrushFlow         pluginBrushFlowRuntime
-	pluginLark              pluginLarkRuntime
-	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
-	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
+	pluginOriginalInitializingRuns sync.Map
+	pluginOriginalEventsMu         sync.Mutex
+	pluginOriginalReloadQueue      []string
+	pluginOriginalEventDispatching bool
+	pluginOriginalRunningMu        sync.Mutex
+	pluginOriginalRunningOrder     []string
+	pluginOriginalCommandsMu       sync.Mutex
+	pluginOriginalCommands         map[string]map[string]any
+	pluginOriginalServicesMu       sync.Mutex
+	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginRunningInstances         sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
+	systemMessages                 systemMessageRuntime
+	bigMemoryMode                  bool // Trusted startup option; not worker or plugin configuration.
+	transferExtensions             nativeTransferExtensionRuntime
+	subscriptionStats              subscriptionStatsRuntime
+	recognitionMu                  sync.Mutex
+	recognitionMatcher             atomic.Pointer[words.Matcher]
+	directoryFileMu                sync.Mutex
+	RestartRequested               chan struct{}
+	logs                           *runtimeLogger
+	logError                       string
+	catMu                          sync.Mutex
+	mediaCategories                mediaCategoryRuntime
+	catClient                      *catalog.Client
+	catCreds                       TMDBConfig
+	catProxy                       networkproxy.Config
+	metadataProxyMu                sync.Mutex
+	metadataProxyConfig            networkproxy.Config
+	metadataProxyClient            *http.Client
+	Store                          *Store
+	Dir                            string
+	web                            http.Handler
+	cfgMu                          sync.RWMutex
+	settingsMu                     sync.Mutex
+	config                         Settings
+	controlMu                      sync.Mutex
+	control                        string
+	activeWrites                   int
+	logMu                          sync.Mutex
+	authMu                         sync.Mutex
+	authAttempts                   map[string][]time.Time
+	jobWake                        chan struct{}
+	wg                             sync.WaitGroup
+	importMu                       sync.Mutex
+	importSourceLink               func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
+	importAutoCommit               func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
+	subMu                          sync.Mutex
+	downloadMu                     sync.Mutex
+	materialMu                     sync.Mutex
+	materials                      map[string][]byte
+	siteLocks                      sync.Map
+	cancel                         context.CancelFunc
+	pluginMu                       sync.Mutex
+	pluginIdentifiers              identifiersRuntime
+	pluginLifecycleMu              sync.Mutex
+	pluginStore                    *PluginStore
+	pluginWake                     chan struct{}
+	pluginProcess                  chan struct{}
+	pluginCommand                  func(string) (plugins.Command, error)
+	pluginHostsFile                string // Test seam; production always uses the container's /etc/hosts.
+	pluginProcessStats             pluginProcessSnapshotter
+	pluginServerStatus             pluginServerStatusRuntime
+	pluginRemoveLink               pluginRemoveLinkRuntime
+	pluginAutoSignIn               pluginAutoSignInRuntime
+	autoSignInEnvironment          func() []string               // Private startup-only seam; nil reads os.Environ.
+	autoSignInTjuptStartup         func() autoSignInTjuptStartup // Private trusted test input; nil uses only the startup environment and system roots.
+	pluginScrapeClean              pluginScrapeCleanRuntime
+	pluginCleanInvalidSeed         pluginCleanInvalidSeedRuntime
+	pluginAutoBackup               pluginAutoBackupRuntime
+	pluginIYUU                     pluginIYUURuntime
+	pluginTransfer                 pluginTransferRuntime
+	pluginCloudflare               pluginCloudflareRuntime
+	pluginSeedRescue               pluginSeedRescueRuntime
+	pluginBrushFlow                pluginBrushFlowRuntime
+	pluginLark                     pluginLarkRuntime
+	pluginSitePeerAvailable        func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
+	subscribeGroupCaches           map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
 
 	pluginCleanupOutboxAudit pluginCleanupAuditCursor // pluginMu; bounded integrity audit, never an execution cursor.
 	pluginScrapeOutboxAudit  pluginScrapeAuditCursor

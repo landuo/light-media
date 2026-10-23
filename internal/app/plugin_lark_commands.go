@@ -30,6 +30,9 @@ func (a *App) larkDispatchCommand(ctx context.Context, core *pluginLarkCoreExecu
 		return e
 	}
 	name, args := commandrouter.Split(text)
+	if command, instance, found := a.lookupOriginalPluginCommand(name); found {
+		return a.dispatchLarkPluginCommandInstance(ctx, command, instance, user)
+	}
 	command, ok := commandrouter.Lookup(name)
 	if !ok {
 		// Installed plugin get_command declarations (frozen registry) are a
@@ -247,6 +250,9 @@ func (a *App) larkCommandPresetAdmission(ctx context.Context) error {
 // invents a second authority: the channel channel/user fields are the same
 // source values the original PluginAction event carried.
 func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrouter.PluginCommand, user string) error {
+	return a.dispatchLarkPluginCommandInstance(ctx, command, command.PluginID, user)
+}
+func (a *App) dispatchLarkPluginCommandInstance(ctx context.Context, command commandrouter.PluginCommand, instance, user string) error {
 	if command.Name == "" || command.PluginID == "" || strings.TrimSpace(user) == "" {
 		return bad("LARK_PLUGIN_COMMAND_DENIED", "插件命令来源无效")
 	}
@@ -255,7 +261,7 @@ func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrout
 		if !command.Target("detect_invalid_torrents") {
 			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令动作不属于该插件")
 		}
-		if _, err := a.pluginStore.enqueueCleanInvalidSeedCommand(ctx, "CleanInvalidSeed", map[string]any{"action": command.Action, "channel": "飞书", "user": user}); err != nil {
+		if _, err := a.pluginStore.enqueueCleanInvalidSeedCommand(ctx, instance, map[string]any{"action": command.Action, "channel": "飞书", "user": user}); err != nil {
 			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令目标未安装、已停用或状态未就绪")
 		}
 		return nil
@@ -263,7 +269,7 @@ func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrout
 		if !command.Target("cloudflare_speedtest") {
 			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令动作不属于该插件")
 		}
-		if _, err := a.queueCloudflareCommand(ctx, "CloudflareSpeedTest", pluginAPIAuthority{Kind: "command"}, "飞书", user); err != nil {
+		if _, err := a.queueCloudflareCommand(ctx, instance, pluginAPIAuthority{Kind: "command"}, "飞书", user); err != nil {
 			return bad("LARK_PLUGIN_COMMAND_DENIED", "Cloudflare 命令目标未安装或已停用")
 		}
 		return nil
@@ -271,7 +277,7 @@ func (a *App) dispatchLarkPluginCommand(ctx context.Context, command commandrout
 		if !command.Target("site_signin") {
 			return bad("LARK_PLUGIN_COMMAND_DENIED", "命令动作不属于该插件")
 		}
-		if _, err := a.queueAutoSignInCommand(ctx, "AutoSignIn", pluginAPIAuthority{Kind: "command"}, "飞书", user); err != nil {
+		if _, err := a.queueAutoSignInCommand(ctx, instance, pluginAPIAuthority{Kind: "command"}, "飞书", user); err != nil {
 			return bad("LARK_PLUGIN_COMMAND_DENIED", "签到命令目标未安装或已停用")
 		}
 		return nil

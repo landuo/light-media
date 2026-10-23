@@ -262,8 +262,10 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 		return PluginRun{}, err
 	}
 	var config []byte
-	if err := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config); err != nil {
-		return PluginRun{}, err
+	configErr := tx.QueryRowContext(ctx, `SELECT revision,sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, instanceID).Scan(&run.ConfigRevision, &config)
+	configAbsent := errors.Is(configErr, sql.ErrNoRows) && (action == "init" || action == "reload")
+	if configErr != nil && !configAbsent {
+		return PluginRun{}, configErr
 	}
 	if pluginID == "MediaServerRefresh" && action == "reload" {
 		var err error
@@ -284,9 +286,14 @@ func (p *PluginStore) enqueueRunWithMediaCursorTx(ctx context.Context, tx *sql.T
 		}
 		input, _ = json.Marshal(map[string]int64{"event_after": cursor})
 	}
-	clear, err := p.unseal("config", instanceID, "main", config)
-	if err != nil {
-		return PluginRun{}, err
+	// Absence is init_plugin(None), not a persisted default configuration.
+	clear := []byte(`null`)
+	var err error
+	if !configAbsent {
+		clear, err = p.unseal("config", instanceID, "main", config)
+		if err != nil {
+			return PluginRun{}, err
+		}
 	}
 	run.Input, err = pluginSnapshotJSON(pluginID, run.Version, struct {
 		Action string          `json:"action"`
@@ -333,7 +340,17 @@ func (p *PluginStore) EnqueueRun(ctx context.Context, instanceID, action string,
 	if err != nil {
 		return PluginRun{}, err
 	}
-	return run, tx.Commit()
+	// Bind this synchronous call object before the committed run is visible to
+	// the server worker. Either executor invokes the same instance method.
+	call, bound := ctx.Value(originalInitializingObjectKey{}).(*originalInitializationCall)
+	if bound {
+		call.object.app.pluginOriginalInitializingRuns.Store(run.ID, call)
+	}
+	err = tx.Commit()
+	if err != nil && bound {
+		call.object.app.pluginOriginalInitializingRuns.Delete(run.ID)
+	}
+	return run, err
 }
 
 func (p *PluginStore) scanPluginRun(row interface{ Scan(...any) error }) (PluginRun, error) {
@@ -395,6 +412,12 @@ func (p *PluginStore) ClaimRun(ctx context.Context) (PluginRun, error) {
 }
 
 func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string) (PluginRun, error) {
+	return p.claimSelectedRun(ctx, instanceID, "")
+}
+
+// Original synchronous lifecycle calls claim only their own invocation; they
+// must not execute an unrelated pending task while waiting for an initializer.
+func (p *PluginStore) claimSelectedRun(ctx context.Context, instanceID, runID string) (PluginRun, error) {
 	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
 		return PluginRun{}, err
 	}
@@ -422,7 +445,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		}
 		defer rollback()
 		tasksFull, servicesFull := brushFlowClaimBlocked(ctx)
-		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND NOT(? AND action='task' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND NOT(? AND action='service' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, tasksFull, servicesFull, afterCreated, afterCreated, afterID))
+		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND (?='' OR id=?) AND NOT(? AND action='task' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND NOT(? AND action='service' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, runID, runID, tasksFull, servicesFull, afterCreated, afterCreated, afterID))
 		if err != nil {
 			_ = rollback()
 			return PluginRun{}, err
@@ -449,7 +472,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		}
 		var current int
 		var pluginID string
-		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision).Scan(&current, &pluginID)
+		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i LEFT JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND (v.revision=? OR (v.instance_id IS NULL AND ?=0 AND ? IN ('init','reload')))`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision, run.ConfigRevision, run.Action).Scan(&current, &pluginID)
 		if err != nil {
 			_ = rollback()
 			return PluginRun{}, err

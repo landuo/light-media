@@ -195,24 +195,16 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 		}
 	}
 	var config map[string]json.RawMessage
-	if json.Unmarshal(raw, &config) != nil || config == nil {
+	if json.Unmarshal(raw, &config) != nil {
 		return out, bad("INVALID_PLUGIN_CONFIG", "来源插件配置不是对象")
 	}
-	// Preserve the declared config shape: strict typed plugins need not accept
-	// an invented second spelling. The independent host staging gate remains
-	// false even when the plugin declares neither field.
-	for _, key := range []string{"enable", "enabled"} {
-		if _, exists := config[key]; exists {
-			config[key] = json.RawMessage(`false`)
-		}
-	}
-	// Copying an instance is not an explicit request to repeat an old one-shot
-	// operation. Business code declares the parameters; clone handling remains
-	// here, with exact compiled identity and no guessed key names.
-	for key, neutral := range builtin.CloneExecutionDefaults(out.PluginID, out.Version) {
-		if _, present := config[key]; present {
-			config[key] = append(json.RawMessage(nil), neutral...)
-		}
+	// MoviePilot 8a83efe core/plugin.py clone_plugin: only a nonempty
+	// source dictionary is copied. Both enable spellings are written, even
+	// when absent in the source. Every other value is preserved verbatim.
+	copyConfig := len(config) != 0
+	if copyConfig {
+		config["enable"] = json.RawMessage(`false`)
+		config["enabled"] = json.RawMessage(`false`)
 	}
 	raw, err = json.Marshal(config)
 	if err != nil {
@@ -260,14 +252,16 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 		return out, err
 	}
 	out.InstanceID = target
-	out.DesiredEnabled = false
+	out.DesiredEnabled = true
 	out.Generation = 1
 	out.Installed = true
 	if err = p.installTx(ctx, tx, out); err != nil {
 		return out, err
 	}
-	if _, err = p.saveValueTx(ctx, tx, target, "config", "main", 0, raw); err != nil {
-		return out, err
+	if copyConfig {
+		if _, err = p.saveValueTx(ctx, tx, target, "config", "main", 0, raw); err != nil {
+			return out, err
+		}
 	}
 	raw, err = json.Marshal(metadata)
 	if err != nil {
@@ -278,9 +272,6 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 		return out, err
 	}
 	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_instance_metadata(instance_id,sealed) VALUES(?,?) ON CONFLICT(instance_id) DO UPDATE SET sealed=excluded.sealed`, target, sealed); err != nil {
-		return out, err
-	}
-	if err = p.cloneOrganizationMemberTx(ctx, tx, source, target); err != nil {
 		return out, err
 	}
 	// Return the actual target manifest, including its fresh lifecycle evidence,
@@ -345,15 +336,35 @@ func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx,
 func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source string) (any, error) {
 	var request PluginCloneRequest
 	if err := decodePluginBody(w, r, &request); err != nil {
-		return nil, err
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
+	// The original FastAPI endpoint is synchronous (def); client disconnect
+	// does not cancel the already accepted method sequence.
+	ctx := context.WithoutCancel(r.Context())
 	a.pluginLifecycleMu.Lock()
 	defer a.pluginLifecycleMu.Unlock()
-	in, err := a.pluginStore.Clone(r.Context(), source, request)
+	in, err := a.pluginStore.Clone(ctx, source, request)
 	if err != nil {
-		return nil, err
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
-	return map[string]any{"created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
+	// Port the real initializer calls at the HTTP boundary, not trace hooks.
+	// The enclosing stop/reload-event/register operations are implemented in
+	// the original lifecycle adapter; do not use the removed lazy-write path.
+	if err = a.initializeOriginalCloneCalls(ctx, in.InstanceID); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	defer tx.Rollback()
+	if err = a.pluginStore.cloneOrganizationMemberTx(ctx, tx, source, in.InstanceID); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	if err = tx.Commit(); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	return map[string]any{"success": true, "message": "插件分身创建成功", "created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
 }
 
 func (p *PluginStore) presentInstance(ctx context.Context, in PluginInstallation, manifest plugins.Manifest) (pluginCard, error) {

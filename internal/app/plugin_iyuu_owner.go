@@ -224,6 +224,10 @@ func (a *App) configureIYUU(ctx context.Context, owner *pluginIYUUOwner, run *Pl
 	}
 	cfg := iyuu.NewConfig()
 	init, e := cfg.InitContext(ctx, input, ids)
+	captureOriginalNativeState(ctx, cfg)
+	if applied, snapshotErr := cfg.Snapshot(); snapshotErr == nil {
+		captureOriginalAppliedConfiguration(ctx, applied)
+	}
 	if e != nil {
 		return nil, e
 	}
@@ -231,11 +235,8 @@ func (a *App) configureIYUU(ctx context.Context, owner *pluginIYUUOwner, run *Pl
 	if e != nil {
 		return nil, e
 	}
-	services, e := cfg.Services(zone)
-	if e != nil {
-		return nil, e
-	}
-	jobs := append(append([]iyuu.Job{}, init.Jobs...), services...)
+	// Scheduler.update_plugin_job separately calls the original get_service.
+	jobs := init.Jobs
 	at := time.Now()
 	definitions := []pluginScheduleDefinition{}
 	for _, job := range jobs {

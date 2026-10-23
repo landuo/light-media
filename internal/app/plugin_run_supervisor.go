@@ -36,7 +36,7 @@ type pluginRunAdmission struct {
 
 func (v pluginRunAdmission) valid() bool {
 	return v.InstanceID != "" && v.PluginID != "" && v.Version != "" &&
-		v.RunID != "" && v.Action != "" && v.Generation > 0 && v.AdmissionRevision > 0
+		v.RunID != "" && v.Action != "" && v.Generation > 0 && (v.AdmissionRevision > 0 || (v.AdmissionRevision == 0 && (v.Action == "init" || v.Action == "reload")))
 }
 
 type pluginRunAttemptKey struct{ InstanceID, RunID string }

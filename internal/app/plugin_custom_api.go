@@ -160,6 +160,14 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
 		return true
 	}
+	// Original get_plugin_apis exposes routes registered from loaded objects,
+	// irrespective of the plugin business-enabled setting.
+	registered, registeredOK := a.pluginRegisteredAPIs.Load(instance)
+	if !registeredOK {
+		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
+		return true
+	}
+	manifest.APIs = registered.([]plugins.HTTPAPI)
 	var api *plugins.HTTPAPI
 	var params map[string]string
 	allowed := []string{}
@@ -186,11 +194,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		return true
 	}
 	readConfiguration := a.pluginConfigurationHTTPReader(manifest, *api, r.Method)
-	writeConfiguration := a.pluginConfigurationHTTPWriter(manifest, *api, r.Method)
-	if !installation.DesiredEnabled && readConfiguration == nil && writeConfiguration == nil {
-		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
-		return true
-	}
 	authority, failure := a.pluginHTTPAuthority(r, api.Auth, native)
 	if failure != nil {
 		pluginHTTPError(w, failure)
@@ -265,41 +268,9 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{422, []map[string]any{{"type": "missing", "loc": []string{"body"}, "msg": "Field required", "input": nil}}})
 		return true
 	}
-	if writeConfiguration != nil && writeConfiguration.prepare == nil {
-		if !installation.DesiredEnabled {
-			loaded, loadRun, loadErr := a.loadPluginForConfiguration(r.Context(), installation, authority)
-			if loadErr != nil {
-				pluginHTTPJSON(w, http.StatusConflict, map[string]any{"detail": "Instance initialization has not been confirmed; this configuration operation was not executed.", "initialization_started": loadRun.ID != "", "request_applied": false, "run": loadRun})
-				return true
-			}
-			installation = loaded
-		}
-		// Continue the existing native API dispatcher, including its original
-		// response, busy checks, configuration writes and explicit cleanup.
-		writeConfiguration = nil
-	}
-	if writeConfiguration != nil {
-		body, err := a.savePluginInstanceConfiguration(r.Context(), installation, authority, input, writeConfiguration)
-		if err != nil {
-			var applied *pluginConfigurationApplyError
-			if errors.As(err, &applied) {
-				pluginHTTPJSON(w, http.StatusConflict, map[string]any{"detail": "Configuration saved; application has not been confirmed. Inspect this run before another explicit save.", "configuration_saved": true, "run": applied.run})
-			} else {
-				pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin configuration changed or could not be saved"})
-			}
-			return true
-		}
-		var response plugins.HTTPResponse
-		if json.Unmarshal(body, &response) != nil || response.Status < 200 || response.Status > 599 {
-			pluginHTTPError(w, &pluginHTTPFailure{502, "Invalid plugin response"})
-			return true
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Cache-Control", "no-store")
-		w.WriteHeader(response.Status)
-		w.Write(response.Body)
-		return true
-	}
+	// A registered original API is already bound to a loaded instance. Its
+	// own implementation performs configuration edits. No first-write load,
+	// alternate configuration prepare/CAS, or extra framework init is inserted.
 	if readConfiguration != nil {
 		body, err := a.pluginStore.readPluginInstanceView(r.Context(), installation, func(ctx context.Context, view pluginFormView) (json.RawMessage, error) {
 			if err := a.validatePluginReadAuthority(ctx, authority); err != nil {

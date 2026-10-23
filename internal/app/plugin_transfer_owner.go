@@ -270,6 +270,10 @@ func (a *App) configureTransfer(ctx context.Context, owner *pluginTransferOwner,
 	defer host.Close()
 	cfg = transfer.NewConfig()
 	init, e := cfg.Init(ctx, input, host)
+	captureOriginalNativeState(ctx, cfg)
+	if applied, snapshotErr := cfg.Snapshot(); snapshotErr == nil {
+		captureOriginalAppliedConfiguration(ctx, applied)
+	}
 	if e != nil {
 		return a.transferConfigurationFailure(ctx, owner, in, run, jr, initial, cfg, e)
 	}
@@ -277,11 +281,9 @@ func (a *App) configureTransfer(ctx context.Context, owner *pluginTransferOwner,
 	if e != nil {
 		return a.transferConfigurationFailure(ctx, owner, in, run, jr, initial, cfg, e)
 	}
-	services, e := cfg.Services(zone)
-	if e != nil {
-		return a.transferConfigurationFailure(ctx, owner, in, run, jr, initial, cfg, e)
-	}
-	jobs := append(append([]transfer.Job{}, init.Jobs...), services...)
+	// Original init owns its private jobs; central get_service registration
+	// runs separately after reload, not as an extra initializer side effect.
+	jobs := init.Jobs
 	at := jr.Started
 	defs := []pluginScheduleDefinition{}
 	for _, job := range jobs {

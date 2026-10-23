@@ -266,6 +266,9 @@ func (a *App) pluginWorker(ctx context.Context) {
 }
 
 func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr error) {
+	if call, ok := a.pluginOriginalInitializingRuns.Load(run.ID); ok {
+		ctx = context.WithValue(ctx, originalInitializingObjectKey{}, call.(*originalInitializationCall))
+	}
 	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
 		return err
 	}

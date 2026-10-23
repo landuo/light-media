@@ -205,7 +205,7 @@ func (p *PluginStore) readEventAdmissionTx(ctx context.Context, q PluginProofRea
 		return nil, err
 	}
 	var proof pluginEventAdmission
-	if json.Unmarshal(raw, &proof) != nil || proof.Schema != 1 || proof.Run != run.ID || proof.Instance != run.InstanceID || proof.Plugin != plugin || proof.Version != run.Version || proof.Generation != run.Generation || proof.Action != run.Action || (proof.Action != "init" && proof.Action != "reload") || proof.Revision < 1 || proof.HighWater < 0 || !pluginStorageDigest.MatchString(proof.InputSHA) || !pluginStorageDigest.MatchString(proof.ConfigSHA) || proof.PerHandlerReloadCursor == nil {
+	if json.Unmarshal(raw, &proof) != nil || proof.Schema != 1 || proof.Run != run.ID || proof.Instance != run.InstanceID || proof.Plugin != plugin || proof.Version != run.Version || proof.Generation != run.Generation || proof.Action != run.Action || (proof.Action != "init" && proof.Action != "reload") || proof.Revision < 0 || proof.HighWater < 0 || !pluginStorageDigest.MatchString(proof.InputSHA) || !pluginStorageDigest.MatchString(proof.ConfigSHA) || proof.PerHandlerReloadCursor == nil {
 		return nil, bad("PLUGIN_RUN_PROOF_INVALID", "插件事件准入证明不匹配")
 	}
 	// Previously sealed schema-1 admissions may omit ActiveCursorFloor. They
