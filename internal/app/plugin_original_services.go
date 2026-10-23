@@ -17,6 +17,11 @@ import (
 func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginScheduleDefinition, error) {
 	p.methodMu.Lock()
 	defer p.methodMu.Unlock()
+	if p.external {
+		var definitions []pluginScheduleDefinition
+		err := p.readSession(ctx, "get_service", &definitions)
+		return definitions, err
+	}
 	switch p.installation.PluginID {
 	case "AutoBackup":
 		p.configMu.RLock()

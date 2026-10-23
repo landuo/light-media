@@ -177,13 +177,14 @@ type Frame struct {
 }
 
 type Handshake struct {
-	Protocol     int                     `json:"protocol"`
-	PluginID     string                  `json:"plugin_id"`
-	Version      string                  `json:"version"`
-	HostAPI      int                     `json:"host_api"`
-	Methods      []string                `json:"methods"`
-	Capabilities []string                `json:"capabilities"`
-	Transport    *transportAdvertisement `json:"transport,omitempty"`
+	Protocol          int                     `json:"protocol"`
+	PluginID          string                  `json:"plugin_id"`
+	Version           string                  `json:"version"`
+	HostAPI           int                     `json:"host_api"`
+	Methods           []string                `json:"methods"`
+	Capabilities      []string                `json:"capabilities"`
+	Transport         *transportAdvertisement `json:"transport,omitempty"`
+	PersistentSession int                     `json:"persistent_session,omitempty"`
 }
 
 // Error deliberately contains only a local code. Worker output, command paths,
@@ -253,39 +254,11 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 		(len(payload) > MaxLogicalMessageBytes || len(payload) > 0 && !json.Valid(payload)) {
 		return out, failure("invalid_invocation")
 	}
-	if runner.MaxFrameBytes == 0 {
-		runner.MaxFrameBytes = 1 << 20
-	}
 	explicitOutput := runner.MaxOutputBytes != 0
-	if runner.MaxOutputBytes == 0 {
-		runner.MaxOutputBytes = defaultWireBytes
-	}
-	if runner.MaxInputBytes == 0 {
-		runner.MaxInputBytes = defaultWireBytes
-	}
-	if runner.MaxMessageBytes == 0 {
-		runner.MaxMessageBytes = defaultLogicalBytes
-	}
-	if runner.MaxChunkBytes == 0 {
-		runner.MaxChunkBytes = defaultChunkBytes
-	}
-	if runner.MaxMessageChunks == 0 {
-		runner.MaxMessageChunks = 16384
-	}
-	if runner.MaxSessionChunks == 0 {
-		runner.MaxSessionChunks = 32768
-	}
-	if runner.MaxHostCalls == 0 {
-		runner.MaxHostCalls = 64
-	}
-	if runner.MaxStderrBytes == 0 {
-		runner.MaxStderrBytes = 1 << 20
-	}
-	if runner.Timeout == 0 {
-		runner.Timeout = 2 * time.Minute
-	}
-	if runner.MaxFrameBytes < 256 || runner.MaxFrameBytes > 4<<20 || runner.MaxOutputBytes < runner.MaxFrameBytes || runner.MaxOutputBytes > defaultWireBytes || runner.MaxInputBytes < runner.MaxFrameBytes || runner.MaxInputBytes > defaultWireBytes || runner.MaxMessageBytes < runner.MaxFrameBytes || runner.MaxMessageBytes > defaultLogicalBytes || runner.MaxChunkBytes < 1 || runner.MaxChunkBytes > defaultChunkBytes || runner.MaxMessageChunks < 1 || runner.MaxMessageChunks > 32768 || runner.MaxSessionChunks < 1 || runner.MaxSessionChunks > 65536 || runner.MaxStderrBytes < 256 || runner.MaxStderrBytes > 8<<20 || runner.MaxHostCalls < 1 || runner.MaxHostCalls > 256 || runner.Timeout < time.Millisecond || runner.Timeout > 30*time.Minute {
-		return out, failure("invalid_limits")
+	var limitsErr error
+	runner, limitsErr = runner.normalized()
+	if limitsErr != nil {
+		return out, limitsErr
 	}
 	ctx, cancel, budget := runnerContext(ctx, runner.Timeout, runner.ExcludeHostTime)
 	defer cancel()
@@ -407,12 +380,15 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 }
 
 type byteCounter struct {
+	mu           sync.Mutex
 	bytes, limit int64
 	exceeded     bool
 	cancel       context.CancelFunc
 }
 
 func (w *byteCounter) Write(p []byte) (int, error) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
 	w.bytes += int64(len(p))
 	if w.bytes > w.limit && !w.exceeded {
 		w.exceeded = true
@@ -458,9 +434,12 @@ type wireSession struct {
 	aborted                                                   atomic.Bool
 	host                                                      HostHandler
 	hostBudget                                                *runnerBudget
+	businessFailure                                           bool
+	scopedCallbacks                                           bool
 }
 
 func (s *wireSession) exchange(method string, payload json.RawMessage) (json.RawMessage, error) {
+	s.businessFailure = false
 	nonce := make([]byte, 16)
 	if _, err := rand.Read(nonce); err != nil {
 		return nil, failure("request_failed")
@@ -478,8 +457,11 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 			return nil, failure("identity_mismatch")
 		}
 		if frame.Type == "host_call" {
+			if s.scopedCallbacks && !strings.HasPrefix(frame.ID, id+".") {
+				return nil, failure("invalid_host_call")
+			}
 			// The initial handshake cannot request configuration or other host data.
-			if method == "handshake" || method == "transport.negotiate" || !methodPattern.MatchString(frame.Method) || strings.HasPrefix(frame.Method, "transport.") || frame.Result != nil || frame.Error != nil {
+			if method == "handshake" || strings.HasPrefix(method, "transport.") || !methodPattern.MatchString(frame.Method) || strings.HasPrefix(frame.Method, "transport.") || frame.Result != nil || frame.Error != nil {
 				return nil, failure("invalid_host_call")
 			}
 			if s.hostCalls >= s.maxHostCalls {
@@ -507,6 +489,7 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 			return nil, failure("invalid_reply")
 		}
 		if frame.Error != nil {
+			s.businessFailure = frame.Error.Code == "OPERATION_FAILED"
 			return nil, workerReplyFailure(frame.Error.Code)
 		}
 		if !json.Valid(frame.Result) {
@@ -514,4 +497,363 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 		}
 		return frame.Result, nil
 	}
+}
+
+func (runner Runner) normalized() (Runner, error) {
+	if runner.MaxFrameBytes == 0 {
+		runner.MaxFrameBytes = 1 << 20
+	}
+	if runner.MaxOutputBytes == 0 {
+		runner.MaxOutputBytes = defaultWireBytes
+	}
+	if runner.MaxInputBytes == 0 {
+		runner.MaxInputBytes = defaultWireBytes
+	}
+	if runner.MaxMessageBytes == 0 {
+		runner.MaxMessageBytes = defaultLogicalBytes
+	}
+	if runner.MaxChunkBytes == 0 {
+		runner.MaxChunkBytes = defaultChunkBytes
+	}
+	if runner.MaxMessageChunks == 0 {
+		runner.MaxMessageChunks = 16384
+	}
+	if runner.MaxSessionChunks == 0 {
+		runner.MaxSessionChunks = 32768
+	}
+	if runner.MaxHostCalls == 0 {
+		runner.MaxHostCalls = 64
+	}
+	if runner.MaxStderrBytes == 0 {
+		runner.MaxStderrBytes = 1 << 20
+	}
+	if runner.Timeout == 0 {
+		runner.Timeout = 2 * time.Minute
+	}
+	if runner.MaxFrameBytes < 256 || runner.MaxFrameBytes > 4<<20 || runner.MaxOutputBytes < runner.MaxFrameBytes || runner.MaxOutputBytes > defaultWireBytes || runner.MaxInputBytes < runner.MaxFrameBytes || runner.MaxInputBytes > defaultWireBytes || runner.MaxMessageBytes < runner.MaxFrameBytes || runner.MaxMessageBytes > defaultLogicalBytes || runner.MaxChunkBytes < 1 || runner.MaxChunkBytes > defaultChunkBytes || runner.MaxMessageChunks < 1 || runner.MaxMessageChunks > 32768 || runner.MaxSessionChunks < 1 || runner.MaxSessionChunks > 65536 || runner.MaxStderrBytes < 256 || runner.MaxStderrBytes > 8<<20 || runner.MaxHostCalls < 1 || runner.MaxHostCalls > 256 || runner.Timeout < time.Millisecond || runner.Timeout > 30*time.Minute {
+		return runner, failure("invalid_limits")
+	}
+	return runner, nil
+}
+
+func (w *byteCounter) snapshot() (int64, bool) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return w.bytes, w.exceeded
+}
+
+// resetEpoch is used only at an agreed persistent-call boundary. Transport
+// failure never resets abort state or makes an incomplete exchange reusable.
+func (s *wireSession) resetEpoch() {
+	s.inputBytes, s.outputBytes, s.hostCalls = 0, 0, 0
+	s.sentChunks, s.readChunks = 0, 0
+	s.seenTransfers = map[string]bool{}
+	s.assembly = nil
+}
+
+// SessionBinding pins a framework-owned object to one installed generation.
+// Generation is local authority, not worker-supplied data. Clones use another
+// binding and Client; plugin implementations do not manage clone registries.
+type SessionBinding struct {
+	Identity
+	Generation int64
+}
+
+// Client owns one worker object. Calls are sequential, not multiplexed. A
+// canceled/failed transport is terminal: recovering requires an explicit new
+// Start and reinitialization by the framework, never a silent restart.
+type Client struct {
+	runner        Runner
+	manifest      Manifest
+	binding       SessionBinding
+	session       *wireSession
+	life          context.Context
+	cancel        context.CancelFunc
+	gate          chan struct{}
+	done          chan struct{}
+	waitErr       error
+	stderr        *byteCounter
+	stopRequested atomic.Bool
+	stopped       bool
+	terminal      error
+}
+
+// Start handshakes and explicitly negotiates persistent operation. Timeout
+// bounds startup separately; idle lifetime is governed only by lifeCtx. No app
+// semaphore is acquired here: callers should hold active-call slots per Call.
+func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Manifest, binding SessionBinding) (_ *Client, err error) {
+	if err = manifest.Validate(); err != nil {
+		return nil, err
+	}
+	if lifeCtx == nil || binding.Generation < 1 || binding.PluginID != manifest.PluginID || binding.Version != manifest.Version || !identityPattern.MatchString(binding.InstanceID) || !filepath.IsAbs(command.Path) || command.Dir != "" && !filepath.IsAbs(command.Dir) {
+		return nil, failure("invalid_invocation")
+	}
+	runner, err = runner.normalized()
+	if err != nil {
+		return nil, err
+	}
+	life, cancel := context.WithCancel(lifeCtx)
+	c := &Client{runner: runner, manifest: manifest, binding: binding, life: life, cancel: cancel, gate: make(chan struct{}, 1), done: make(chan struct{})}
+	c.manifest.Methods = slices.Clone(manifest.Methods)
+	c.manifest.Capabilities = slices.Clone(manifest.Capabilities)
+	cmd := exec.CommandContext(life, command.Path, command.Args...)
+	cmd.Dir, cmd.WaitDelay = command.Dir, time.Second
+	cmd.Env = []string{"GOMEMLIMIT=64MiB"}
+	for _, key := range []string{"PATH", "LANG", "LC_ALL", "TZ", "SYSTEMROOT"} {
+		if value, ok := os.LookupEnv(key); ok {
+			cmd.Env = append(cmd.Env, key+"="+value)
+		}
+	}
+	c.stderr = &byteCounter{limit: int64(runner.MaxStderrBytes), cancel: cancel}
+	cmd.Stderr = c.stderr
+	stdin, e := cmd.StdinPipe()
+	if e != nil {
+		cancel()
+		return nil, failure("worker_start_failed")
+	}
+	// Unlike StdoutPipe, this writer is drained before Wait returns. Starting
+	// the reaper immediately cannot close stdout before the last reply is read.
+	stdout, writer := io.Pipe()
+	cmd.Stdout = writer
+	s := &wireSession{maxInput: runner.MaxInputBytes, role: "host", closeIO: func() { stdin.Close(); stdout.Close(); writer.Close() }, reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: binding.Identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, ctx: life}
+	c.session = s
+	if err = cmd.Start(); err != nil {
+		cancel()
+		s.abort()
+		return nil, failure("worker_start_failed")
+	}
+	stopLife := context.AfterFunc(life, s.abort)
+	go func() { c.waitErr = cmd.Wait(); writer.Close(); close(c.done); stopLife() }()
+	defer func() {
+		if err != nil {
+			canceled := life.Err() != nil
+			c.cancel()
+			s.abort()
+			<-c.done
+			_, exceeded := c.stderr.snapshot()
+			if exceeded {
+				err = failure("stderr_limit")
+			} else if canceled {
+				err = failure("execution_canceled")
+			}
+		}
+	}()
+	startup, finish, budget := runnerContext(life, runner.Timeout, runner.ExcludeHostTime)
+	defer finish()
+	s.ctx, s.hostBudget = startup, budget
+	startupStopped := make(chan struct{})
+	stopStartup := context.AfterFunc(startup, func() { s.abort(); cancel(); close(startupStopped) })
+	defer func() {
+		if !stopStartup() {
+			<-startupStopped
+			if err == nil {
+				err = failure("execution_canceled")
+			}
+		}
+		s.ctx, s.hostBudget = life, nil
+	}()
+	hello, _ := json.Marshal(map[string]int{"protocol": ProtocolVersion, "host_api": HostAPIVersion})
+	raw, err := s.exchange("handshake", hello)
+	if err != nil {
+		return nil, err
+	}
+	var agreed Handshake
+	if json.Unmarshal(raw, &agreed) != nil || agreed.Protocol != ProtocolVersion || agreed.HostAPI != HostAPIVersion || agreed.PluginID != manifest.PluginID || agreed.Version != manifest.Version || !sameSet(agreed.Methods, manifest.Methods) || !sameSet(agreed.Capabilities, manifest.Capabilities) {
+		return nil, failure("handshake_mismatch")
+	}
+	if agreed.PersistentSession != 1 {
+		return nil, failure("persistent_session_unsupported")
+	}
+	if agreed.Transport == nil || agreed.Transport.Version != 1 {
+		return nil, failure("transport_mismatch")
+	}
+	limits := transportLimits{Version: 1, FrameBytes: min(runner.MaxFrameBytes, 1<<20), LogicalBytes: runner.MaxMessageBytes, HostSendBytes: runner.MaxInputBytes, HostReadBytes: runner.MaxOutputBytes, ChunkBytes: runner.MaxChunkBytes, MessageChunks: runner.MaxMessageChunks, SessionChunks: runner.MaxSessionChunks, Transfers: runner.MaxHostCalls + 4}
+	proposal, _ := json.Marshal(limits)
+	raw, err = s.exchange("transport.negotiate", proposal)
+	if err != nil {
+		return nil, err
+	}
+	var accepted transportLimits
+	if strictJSON(raw, &accepted) != nil || accepted != limits || limits.valid() != nil {
+		return nil, failure("transport_mismatch")
+	}
+	s.enable(limits)
+	raw, err = s.exchange("transport.session", json.RawMessage(`{"version":1}`))
+	if err != nil {
+		return nil, err
+	}
+	var sessionVersion struct {
+		Version int `json:"version"`
+	}
+	if strictJSON(raw, &sessionVersion) != nil || sessionVersion.Version != 1 {
+		return nil, failure("session_mismatch")
+	}
+	s.scopedCallbacks = true
+	if startup.Err() != nil || life.Err() != nil {
+		return nil, failure("execution_canceled")
+	}
+	return c, nil
+}
+
+// CallOptions changes only the current invocation's time budget, not the
+// negotiated wire/resource limits or worker lifetime. Timeout zero inherits
+// Start's timeout. ExcludeHostTime is always the explicit per-call policy.
+type CallOptions struct {
+	Timeout         time.Duration
+	ExcludeHostTime bool
+}
+
+func (c *Client) defaultCallOptions() CallOptions {
+	return CallOptions{Timeout: c.runner.Timeout, ExcludeHostTime: c.runner.ExcludeHostTime}
+}
+
+// Call installs fresh authority and counters for this invocation only. Host
+// callbacks are supported only while its handler is running. Retaining a
+// callback for idle/background use is not a supported scheduling mechanism.
+func (c *Client) Call(ctx context.Context, method string, payload json.RawMessage, host HostHandler) (out RunResult, err error) {
+	return c.CallWithOptions(ctx, method, payload, host, c.defaultCallOptions())
+}
+
+// CallWithOptions uses fresh per-action timing policy without replacing the
+// live object. Invalid options are rejected before sending any invocation.
+func (c *Client) CallWithOptions(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions) (out RunResult, err error) {
+	if options.Timeout == 0 {
+		options.Timeout = c.runner.Timeout
+	}
+	if options.Timeout < time.Millisecond || options.Timeout > 30*time.Minute {
+		return out, failure("invalid_limits")
+	}
+
+	if c.stopRequested.Load() {
+		return out, failure("session_closed")
+	}
+	if ctx == nil || !methodPattern.MatchString(method) || method == "handshake" || method == "stop" || strings.HasPrefix(method, "transport.") || !slices.Contains(c.manifest.Methods, method) || len(payload) > MaxLogicalMessageBytes || len(payload) > 0 && !json.Valid(payload) {
+		return out, failure("invalid_invocation")
+	}
+	select {
+	case c.gate <- struct{}{}:
+	case <-ctx.Done():
+		return out, failure("execution_canceled")
+	case <-c.life.Done():
+		return out, failure("execution_canceled")
+	}
+	defer func() { <-c.gate }()
+	if c.stopRequested.Load() || c.stopped {
+		return out, failure("session_closed")
+	}
+	if c.terminal != nil {
+		return out, c.terminal
+	}
+	return c.exchange(ctx, method, payload, host, options)
+}
+
+// exchange is called with gate held; cancellation permanently kills and joins
+// this worker. A well-formed business error is the only reusable error result.
+func (c *Client) exchange(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions) (out RunResult, err error) {
+	if ctx.Err() != nil {
+		return out, failure("execution_canceled")
+	}
+	if c.life.Err() != nil {
+		return out, c.fail(failure("execution_canceled"))
+	}
+	parent, cancelParent := context.WithCancel(ctx)
+	stopLife := context.AfterFunc(c.life, cancelParent)
+	defer func() { stopLife(); cancelParent() }()
+	call, finish, budget := runnerContext(parent, options.Timeout, options.ExcludeHostTime)
+	s := c.session
+	s.resetEpoch()
+	s.ctx, s.host, s.hostBudget = call, host, budget
+	before, _ := c.stderr.snapshot()
+	stopped := make(chan struct{})
+	stopCancel := context.AfterFunc(call, func() { s.abort(); c.cancel(); close(stopped) })
+	defer func() {
+		if !stopCancel() {
+			<-stopped
+		}
+		canceled := call.Err() != nil || c.life.Err() != nil
+		finish()
+		s.host, s.hostBudget, s.ctx = nil, nil, c.life
+		out.HostCalls, out.SentWireBytes, out.ReadWireBytes = s.hostCalls, s.inputBytes, s.outputBytes
+		out.SentChunks, out.ReadChunks = s.sentChunks, s.readChunks
+		after, exceeded := c.stderr.snapshot()
+		out.StderrBytes = after - before
+		if exceeded {
+			err = failure("stderr_limit")
+		} else if canceled {
+			err = failure("execution_canceled")
+		}
+		if err != nil {
+			out.Result = nil
+			if !s.businessFailure || canceled || exceeded {
+				err = c.fail(err)
+			}
+		}
+	}()
+	out.Result, err = s.exchange(method, payload)
+	return out, err
+}
+
+func (c *Client) fail(err error) error {
+	c.cancel()
+	c.session.abort()
+	<-c.done
+	if c.terminal == nil {
+		c.terminal = err
+	}
+	return c.terminal
+}
+
+// Stop sends cleanup at most once, closes streams and joins the actual worker.
+// Repeated Stop observes the same terminal failure. No previous call's host
+// authorization is retained for cleanup. A canceled Stop aborts the process.
+func (c *Client) Stop(ctx context.Context) error {
+	return c.StopWithHost(ctx, nil)
+}
+
+// StopWithHost uses only the fresh cleanup authority supplied by the current
+// framework manager. It never retains or reuses an ordinary Call handler.
+func (c *Client) StopWithHost(ctx context.Context, host HostHandler) error {
+	if ctx == nil {
+		return failure("invalid_invocation")
+	}
+	c.stopRequested.Store(true)
+	select {
+	case c.gate <- struct{}{}:
+	default:
+		select {
+		case c.gate <- struct{}{}:
+		case <-ctx.Done():
+			c.cancel()
+			c.session.abort()
+			<-c.done
+			return failure("execution_canceled")
+		}
+	}
+	defer func() { <-c.gate }()
+	if c.stopped {
+		return c.terminal
+	}
+	c.stopped = true
+	if c.terminal != nil {
+		return c.terminal
+	}
+	_, err := c.exchange(ctx, "stop", nil, host, c.defaultCallOptions())
+	if err != nil {
+		return c.fail(err)
+	}
+	c.session.writer.(io.Closer).Close()
+	// Bound process exit independently of idle lifetime and expose failed join.
+	waitCtx, cancel := context.WithTimeout(ctx, c.runner.Timeout)
+	defer cancel()
+	select {
+	case <-c.done:
+		c.session.abort()
+		c.cancel()
+		if c.waitErr != nil {
+			c.terminal = failure("worker_failed")
+		}
+	case <-waitCtx.Done():
+		return c.fail(failure("execution_canceled"))
+	}
+	return c.terminal
 }

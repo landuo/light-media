@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	pluginImplementationMu         sync.RWMutex
 	pluginOriginalInitializingRuns sync.Map
 	pluginOriginalEventsMu         sync.Mutex
 	pluginOriginalResetHandlers    []originalPluginDataResetHandler
@@ -233,6 +234,7 @@ func (a *App) Start(parent context.Context) {
 	a.log("INFO", "runtime", "recovery_checked", fmt.Sprintf("数据库版本1；启动恢复%d个未完成任务；自动化状态%s", a.Store.RecoveredJobs, initialControl), "", "")
 }
 func (a *App) Close() error {
+	a.closeOriginalSessions()
 	a.systemMessages.close()
 	if a.cancel != nil {
 		a.cancel()

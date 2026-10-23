@@ -14,6 +14,11 @@ import (
 // getCommands reads the already initialized native object's actual state and
 // invokes the existing original command declaration, never init or get_config.
 func (p *originalPluginInstance) getCommands(ctx context.Context) ([]map[string]any, error) {
+	if p.external {
+		var commands []map[string]any
+		err := p.readSession(ctx, "get_command", &commands)
+		return commands, err
+	}
 	var declaration any
 	switch p.installation.PluginID {
 	case "AutoSignIn":

@@ -52,12 +52,13 @@ func Serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 		return failure("handshake_mismatch")
 	}
 	s.identity = first.Identity
-	helloResult, _ := json.Marshal(Handshake{Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}})
+	helloResult, _ := json.Marshal(Handshake{Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1})
 	if err = s.write(Frame{Protocol: ProtocolVersion, ID: first.ID, Type: "result", Identity: s.identity, Result: helloResult}); err != nil {
 		return err
 	}
 	gate := make(chan struct{}, 1)
 	invoked := false
+	persistent := false
 	for {
 		request, err := s.read()
 		if err != nil {
@@ -78,7 +79,21 @@ func Serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 			s.enable(limits)
 			continue
 		}
-		if !slices.Contains(manifest.Methods, request.Method) || request.Method == "handshake" || strings.HasPrefix(request.Method, "transport.") || invoked && request.Method != "stop" || !invoked && request.Method == "stop" {
+		if request.Method == "transport.session" {
+			var sessionVersion struct {
+				Version int `json:"version"`
+			}
+			if invoked || persistent || !s.enabled || strictJSON(request.Payload, &sessionVersion) != nil || sessionVersion.Version != 1 {
+				return failure("session_mismatch")
+			}
+			if err = s.write(Frame{Protocol: ProtocolVersion, ID: request.ID, Type: "result", Identity: s.identity, Result: json.RawMessage(`{"version":1}`)}); err != nil {
+				return err
+			}
+			persistent = true
+			s.resetEpoch()
+			continue
+		}
+		if !slices.Contains(manifest.Methods, request.Method) || request.Method == "handshake" || strings.HasPrefix(request.Method, "transport.") || !persistent && (invoked && request.Method != "stop" || !invoked && request.Method == "stop") {
 			return failure("invalid_invocation")
 		}
 		phase := &callbackPhase{}
@@ -105,6 +120,9 @@ func Serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 			id, err := randomID()
 			if err != nil {
 				return nil, err
+			}
+			if persistent {
+				id = request.ID + "." + id
 			}
 			if err = s.write(Frame{Protocol: ProtocolVersion, ID: id, Type: "host_call", Identity: s.identity, Method: method, Payload: payload}); err != nil {
 				s.abort()
@@ -149,12 +167,15 @@ func Serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 		if err != nil {
 			return err
 		}
-		if handleErr != nil {
+		if handleErr != nil && (!persistent || request.Method == "stop") {
 			return failure("plugin_operation_failed")
 		}
 		if request.Method == "stop" {
 			return nil
 		}
 		invoked = true
+		if persistent {
+			s.resetEpoch()
+		}
 	}
 }

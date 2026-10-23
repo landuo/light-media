@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"light-media/internal/plugins/artifacts"
 	"light-media/internal/plugins/builtin"
 )
 
@@ -53,7 +54,14 @@ func (a *App) originalDirectoryInstallation(ctx context.Context, instance string
 		return in, nil
 	}
 	manifest, _, exists := builtin.Lookup(instance)
-	if !exists || manifest.PluginID != instance {
+	if !exists {
+		acquired, readErr := artifacts.ReadInstalled(a.pluginPackageRoot(), instance, validatePluginArtifactContract)
+		if readErr != nil {
+			return in, readErr
+		}
+		manifest = acquired.Manifest
+	}
+	if manifest.PluginID != instance {
 		return in, sql.ErrNoRows
 	}
 	raw, err := json.Marshal(manifest)

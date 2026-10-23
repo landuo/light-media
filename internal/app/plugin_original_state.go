@@ -19,6 +19,11 @@ func (p *originalPluginInstance) getState(ctx context.Context) (bool, error) {
 	raw := append(json.RawMessage(nil), p.appliedConfig...)
 	nativeState := p.nativeState
 	p.configMu.RUnlock()
+	if p.external {
+		var state any
+		err := p.readSession(ctx, "get_state", &state)
+		return sourceSubscriptionTruth(state), err
+	}
 	switch p.installation.PluginID {
 	case "AutoBackup":
 		machine, ok := nativeState.(*ab.Plugin)

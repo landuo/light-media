@@ -155,8 +155,9 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{503, "Plugin storage unavailable"})
 		return true
 	}
-	manifest, _, exists := builtin.Lookup(installation.PluginID)
-	if err != nil || !installation.Installed || !exists || manifest.Version != installation.Version {
+	implementation, implementationErr := a.resolvePluginInvocation(r.Context(), installation)
+	manifest := implementation.Manifest
+	if err != nil || implementationErr != nil {
 		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
 		return true
 	}
@@ -544,7 +545,8 @@ func (a *App) validatePluginHTTPScopeTx(ctx context.Context, tx *sql.Tx, run Plu
 	if !pluginStrictJSON(raw, &scope) || scope.Key != request.Key || scope.Method != request.Method || scope.RequestID != request.RequestID {
 		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API授权与执行不一致")
 	}
-	manifest, _, available := builtin.Lookup(pluginID)
+	implementation, resolveErr := a.resolvePluginInvocation(ctx, PluginInstallation{InstanceID: run.InstanceID, PluginID: pluginID, Version: run.Version, Generation: run.Generation})
+	manifest, available := implementation.Manifest, resolveErr == nil
 	authorized := false
 	var queryAPI *plugins.HTTPAPI
 	if available && manifest.Version == run.Version {

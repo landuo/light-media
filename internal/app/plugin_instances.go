@@ -16,6 +16,7 @@ import (
 	"unicode"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/artifacts"
 	"light-media/internal/plugins/builtin"
 )
 
@@ -148,7 +149,7 @@ func (p *PluginStore) cloneWithOriginalClass(ctx context.Context, source string,
 		return out, bad("PLUGIN_NOT_INSTALLED", "来源插件已卸载")
 	}
 	manifest, _, available := builtin.Lookup(out.PluginID)
-	if !available || manifest.Version != out.Version {
+	if (!available || manifest.Version != out.Version) && !originalClass {
 		return out, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "来源插件的当前实现不可用，不能创建分身")
 	}
 	out.Manifest, err = p.unseal("manifest", source, "main", sealed)
@@ -158,6 +159,9 @@ func (p *PluginStore) cloneWithOriginalClass(ctx context.Context, source string,
 	var storedManifest plugins.Manifest
 	if json.Unmarshal(out.Manifest, &storedManifest) != nil || storedManifest.Validate() != nil || storedManifest.PluginID != out.PluginID || storedManifest.Version != out.Version {
 		return out, bad("PLUGIN_INSTANCE_METADATA_INVALID", "来源实例与已认证实现元数据不一致")
+	}
+	if !available && originalClass {
+		manifest = storedManifest
 	}
 	if !originalClass {
 		if _, err = p.pluginUpdateReviewRead(ctx, tx, out); err != nil {
@@ -355,6 +359,9 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 	if _, exists := a.pluginOriginalClasses.Load(source); !exists {
 		return map[string]any{"success": false, "message": "原插件 " + source + " 不存在"}, nil
 	}
+	if e := validatePluginCloneRequest(request); e != nil {
+		return map[string]any{"success": false, "message": e.Error()}, nil
+	}
 	target := source + strings.ToLower(request.Suffix)
 	if known, _, exists := builtin.Lookup(target); exists && known.PluginID == target {
 		return map[string]any{"success": false, "message": "分身插件 " + target + " 已存在"}, nil
@@ -369,6 +376,24 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 		}
 	} else if !errors.Is(e, sql.ErrNoRows) {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + e.Error()}, nil
+	}
+	sourceInstallation, lookupErr := a.pluginStore.Installation(ctx, source)
+	if lookupErr != nil {
+		return nil, lookupErr
+	}
+	implementation, lookupErr := a.resolvePluginImplementation(ctx, sourceInstallation)
+	if lookupErr != nil {
+		return nil, lookupErr
+	}
+	if implementation.External {
+		if _, copyErr := artifacts.CloneInstalled(a.pluginPackageRoot(), source, target, func(m plugins.Manifest, c string) error {
+			if m.PluginID != sourceInstallation.PluginID || m.Version != sourceInstallation.Version {
+				return bad("PLUGIN_IMPLEMENTATION_MISMATCH", "来源代码版本不匹配")
+			}
+			return validatePluginArtifactContract(m, c)
+		}); copyErr != nil {
+			return map[string]any{"success": false, "message": copyErr.Error()}, nil
+		}
 	}
 	in, err := a.pluginStore.cloneWithOriginalClass(ctx, source, request, true)
 	if err != nil {

@@ -57,15 +57,19 @@ func (a *App) initializeOriginalPlugin(ctx context.Context, instance string) (Pl
 // initializer, including writes performed by the preceding initializer.
 // It is ephemeral and never inferred from installed/desired_enabled flags.
 type originalPluginInstance struct {
-	app           *App
-	installation  PluginInstallation
-	handler       plugins.Handler
-	manifest      plugins.Manifest
-	methodMu      sync.Mutex
-	configMu      sync.RWMutex
-	appliedConfig json.RawMessage
-	eventsEnabled bool
-	nativeState   any
+	app            *App
+	installation   PluginInstallation
+	handler        plugins.Handler
+	manifest       plugins.Manifest
+	methodMu       sync.Mutex
+	configMu       sync.RWMutex
+	appliedConfig  json.RawMessage
+	eventsEnabled  bool
+	nativeState    any
+	external       bool
+	sessionMu      sync.Mutex
+	session        *plugins.Client
+	sessionStarted bool
 }
 
 type originalInitializingObjectKey struct{}
@@ -157,8 +161,10 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 		in.DesiredEnabled = err == nil
 	}
 	if err == nil {
-		manifest, handler, exists := builtin.Lookup(in.PluginID)
-		if !exists || manifest.Version != in.Version {
+		implementation, resolveErr := a.resolvePluginImplementation(ctx, in)
+		manifest := implementation.Manifest
+		_, handler, _ := builtin.Lookup(in.PluginID)
+		if resolveErr != nil {
 			return nil
 		}
 		meta, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.DB, instance)
@@ -166,8 +172,11 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			return nil
 		}
 		a.pluginOriginalClasses.Store(instance, originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""})
-		object := &originalPluginInstance{app: a, installation: in, handler: handler, manifest: manifest}
+		object := &originalPluginInstance{app: a, installation: in, handler: handler, manifest: manifest, external: implementation.External}
 		err = object.init(ctx)
+		if err != nil && object.external {
+			_ = object.stopSession(context.WithoutCancel(ctx))
+		}
 		if err == nil {
 			a.pluginOriginalRunningMu.Lock()
 			if _, exists := a.pluginRunningInstances.Load(instance); !exists {

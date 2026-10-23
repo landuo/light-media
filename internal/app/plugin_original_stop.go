@@ -8,6 +8,12 @@ import (
 // stopOriginalInstanceResources calls the existing owned resource implementation
 // for one loaded instance. It never uses the close-all application shutdown APIs.
 func (a *App) stopOriginalInstanceResources(ctx context.Context, instance, pluginID string) error {
+	if value, ok := a.pluginRunningInstances.Load(instance); ok {
+		object := value.(*originalPluginInstance)
+		if object.external {
+			return object.stopSession(ctx)
+		}
+	}
 	switch pluginID {
 	case "AutoBackup":
 		loaded, ok := a.pluginRunningInstances.Load(instance)

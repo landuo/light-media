@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"encoding/json"
+	"light-media/internal/plugins/artifacts"
 	"light-media/internal/plugins/builtin"
 	"net/http"
 	"strconv"
@@ -66,12 +68,23 @@ func (a *App) originalPluginInstallHTTP(w http.ResponseWriter, r *http.Request, 
 		if input.Repository == "" {
 			return map[string]any{"success": false, "message": "没有传入仓库地址，无法正确安装插件，请检查配置"}, nil
 		}
-		return map[string]any{"success": false, "message": "当前Go运行时尚未实现仓库插件制品下载和加载，未安装或替换插件代码"}, nil
+		if acquireErr := a.acquireOriginalImplementation(ctx, input.PluginID, input.Repository, input.ReleaseVersion, input.Force); acquireErr != nil {
+			return map[string]any{"success": false, "message": "插件制品获取失败: " + acquireErr.Error()}, nil
+		}
+
+		if _, reloadErr := a.reloadOriginalPlugin(ctx, input.PluginID); reloadErr != nil {
+			return nil, reloadErr
+		}
+		a.registerOriginalPlugin(ctx, input.PluginID)
+		return map[string]any{"success": true}, nil
 	}
 	if input.Repository != "" {
-		// The original branch checks repository compatibility before registration.
-		// Until that real acquisition metadata exists, do not assert compatibility.
-		return map[string]any{"success": false, "message": "当前Go运行时尚未实现此仓库的插件兼容性检查，未改动已安装列表"}, nil
+		if _, _, native := builtin.Lookup(input.PluginID); native {
+			return map[string]any{"success": false, "message": "此仓库契约不能替换已编译业务宿主"}, nil
+		}
+		if _, inspectErr := artifacts.InspectCompatible(ctx, artifacts.Request{RepositoryURL: input.Repository, PluginID: input.PluginID, Validate: validatePluginArtifactContract}, &http.Client{}); inspectErr != nil {
+			return map[string]any{"success": false, "message": "插件兼容性检查失败: " + inspectErr.Error()}, nil
+		}
 	}
 	// release_version is not consumed by the original already-present-class,
 	// non-force branch. Configuration is neither synthesized nor default-filled.
@@ -83,4 +96,30 @@ func (a *App) originalPluginInstallHTTP(w http.ResponseWriter, r *http.Request, 
 	}
 	a.registerOriginalPlugin(ctx, input.PluginID)
 	return map[string]any{"success": true}, nil
+}
+
+// Only the owned code publication and its trusted version binding are serialized
+// against active instance calls. Reload runs after releasing this lock.
+func (a *App) acquireOriginalImplementation(ctx context.Context, id, repository, release string, force bool) error {
+	a.pluginImplementationMu.Lock()
+	defer a.pluginImplementationMu.Unlock()
+	// This bounded contract cannot replace compiled native business code. Reject
+	// known unsupported targets before requesting any repository metadata.
+	if _, _, native := builtin.Lookup(id); native {
+		return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "当前独立制品契约不能替换已编译业务宿主")
+	}
+
+	acquired, err := artifacts.Acquire(ctx, artifacts.Request{Root: a.pluginPackageRoot(), RepositoryURL: repository, PluginID: id, ReleaseVersion: release, Force: force, Validate: validatePluginArtifactContract}, &http.Client{})
+	if err != nil {
+		return err
+	}
+	raw, err := json.Marshal(acquired.Manifest)
+	if err != nil {
+		return err
+	}
+	in, err := validatePluginInstallation(PluginInstallation{InstanceID: id, PluginID: acquired.Manifest.PluginID, Version: acquired.Manifest.Version, ManifestSchemaVersion: acquired.Manifest.SchemaVersion, Manifest: raw, DesiredEnabled: true})
+	if err != nil {
+		return err
+	}
+	return a.pluginStore.Install(ctx, in)
 }

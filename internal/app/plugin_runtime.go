@@ -328,8 +328,8 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 	if err == nil {
 		err = json.Unmarshal(installation.Manifest, &manifest)
 	}
-	compiled, _, available := builtin.Lookup(installation.PluginID)
-	available = available && compiled.Version == installation.Version
+	implementation, implementationErr := a.resolvePluginInvocation(ctx, installation)
+	compiled, available := implementation.Manifest, implementationErr == nil
 	if err == nil && (manifest.PluginID != installation.PluginID || manifest.Version != installation.Version || manifest.SchemaVersion != installation.ManifestSchemaVersion) {
 		err = bad("PLUGIN_MANIFEST_MISMATCH", "插件清单与固定安装版本不一致")
 	}
@@ -344,7 +344,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 	}
 	var command plugins.Command
 	if err == nil && available {
-		command, err = a.pluginExecutable(installation.PluginID)
+		command = implementation.Command
 	} else if err == nil {
 		err = bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "当前版本没有该插件的可执行实现")
 	}
@@ -382,7 +382,7 @@ func (a *App) executePluginRun(ctx context.Context, run PluginRun) (runtimeErr e
 	result := plugins.RunResult{}
 	hostErrorCode := ""
 	if err == nil {
-		result, err = (plugins.Runner{Timeout: policy.WorkerTimeout, ExcludeHostTime: policy.ExcludeHostTime}).Run(ctx, command, manifest, installation.InstanceID, workerMethod, workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
+		result, err = a.runPluginImplementation(ctx, plugins.Runner{Timeout: policy.WorkerTimeout, ExcludeHostTime: policy.ExcludeHostTime}, command, manifest, installation, workerMethod, workerInput, func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
 			var value json.RawMessage
 			var hostErr error
 			if deferred != nil {

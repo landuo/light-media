@@ -2,7 +2,10 @@ package app
 
 import (
 	"context"
+	"light-media/internal/plugins/builtin"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -36,7 +39,16 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 				return nil, err
 			}
 			retained = false
-			if err := a.writeOriginalCodeAlias(ctx, class.installation, false); err != nil {
+			var removeErr error
+			if _, _, compiled := builtin.Lookup(class.installation.PluginID); !compiled {
+				// Package roots are owned by the artifact manager; deleting this copied code
+				// does not remove configuration data paths or source/other instance packages.
+				removeErr = os.RemoveAll(filepath.Join(a.pluginPackageRoot(), instance))
+			}
+			if removeErr == nil {
+				removeErr = a.writeOriginalCodeAlias(ctx, class.installation, false)
+			}
+			if removeErr != nil {
 				// Original rmtree failures are logged; the endpoint still removes folders
 				// and stops the object, while the retained code may load again later.
 				a.log("ERROR", "plugins", "remove_code_failed", "删除插件分身代码别名失败", "", "")

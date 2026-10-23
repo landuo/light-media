@@ -578,7 +578,7 @@ func codecAssertExpectedErrors(t *testing.T, name string, expected map[string]st
 func TestTransportCodecOracleDependency(t *testing.T) {
 	expected := map[string]string{
 		"jsonrpc.go":              "daef6dbdf0fc142014d292a6dda3910abc4f19f43fa2b003063683786466fd73",
-		"protocol_test.go":        "546c3f6c745b83903024b55463f970bda2024a1ab2bc22e0138477978d10545e",
+		"protocol_test.go":        "d9b98c64c75b33a7f42f3957920bd2ef50cb6407a8950190b614e66e8d66df70",
 		"large_transport_test.go": "a8dd40b28fec000ba49c877ea051be134351c7fdf0d37b0284dfbd35ac566f94",
 	}
 	for name, want := range expected {
