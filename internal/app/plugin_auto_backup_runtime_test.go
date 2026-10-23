@@ -425,6 +425,7 @@ func TestPluginAutoBackupLifecycleWaitsOnlyInstanceGate(t *testing.T) {
 	changed := make(chan int, 1)
 	go func() {
 		w := callTest(t, a.Handler(), "POST", "/api/plugins/AutoBackup/reset", "", cookie, "")
+		t.Logf("owned lifecycle reset response: %s", w.Body.String())
 		changed <- w.Code
 	}()
 	select {
@@ -438,6 +439,10 @@ func TestPluginAutoBackupLifecycleWaitsOnlyInstanceGate(t *testing.T) {
 	select {
 	case code := <-changed:
 		if code != 200 {
+			state, _, readErr := a.pluginStore.autoBackupRead(context.Background(), a.Store.DB, run.InstanceID, run.Generation)
+			action := state.Runs[run.ID]
+			current, _ := a.pluginStore.Run(context.Background(), run.ID)
+			t.Logf("owned lifecycle state=%s code=%s owner=%s read_error=%v effects=%+v", current.State, current.ErrorCode, action.Phase, readErr, action.Effects)
 			t.Fatal("reset", code)
 		}
 	case <-time.After(3 * time.Second):

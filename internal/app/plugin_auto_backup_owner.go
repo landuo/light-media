@@ -332,7 +332,7 @@ func (a *App) pluginAutoBackupHost(ctx context.Context, i PluginInstallation, ru
 		if (!preview && (e != nil || current.PluginID != "AutoBackup" || !current.Installed || current.Generation != i.Generation)) || (preview && !errors.Is(e, sql.ErrNoRows) && (e != nil || current.Installed)) {
 			return nil, bad("AUTO_BACKUP_SCOPE_DENIED", "备份表单安装已变化")
 		}
-		formRaw, e := ab.Form(filepath.Join(a.Dir, "plugin-private", "AutoBackup", "backups"))
+		formRaw, e := ab.Form(filepath.Join(a.Dir, "plugin-private", i.InstanceID, "backups"))
 		if e != nil {
 			return nil, e
 		}
@@ -465,6 +465,13 @@ func (a *App) pluginAutoBackupHost(ctx context.Context, i PluginInstallation, ru
 	return result, sourceErr
 }
 func (c *autoBackupCall) effect(ctx context.Context, kind string, args any, apply func() (any, error)) (any, error) {
+	// Cancellation observed before the intent transaction cannot have started
+	// this effect. Preserve prior uncertainty, but do not invent a new unknown
+	// outcome for an operation that was never admitted. Errors after this point
+	// retain the conservative intent/commit ambiguity handling below.
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
 	if c.run.Action == "api" {
 		if err := c.o.a.validatePluginHTTPRun(ctx, c.run); err != nil {
 			return nil, err
@@ -704,7 +711,7 @@ func (c *autoBackupCall) now() time.Time {
 	return time.Now()
 }
 func (c *autoBackupCall) defaultPath() string {
-	return filepath.Join(c.o.a.Dir, "plugin-private", "AutoBackup", "backups")
+	return filepath.Join(c.o.a.Dir, "plugin-private", c.o.instance, "backups")
 }
 func (c *autoBackupCall) writeRoots() []string {
 	return append([]string{c.defaultPath()}, c.o.a.Settings().AllowedRoots...)

@@ -172,7 +172,7 @@ func (j *pluginRunAttemptJournal) nativeCompletionRecoveryTx(ctx context.Context
 	if err = tx.QueryRowContext(ctx, `SELECT state FROM plugin_runs WHERE id=?`, head.claim.Admission.RunID).Scan(&state); err != nil {
 		return false, err
 	}
-	if state != "succeeded" && state != "failed" {
+	if state != "succeeded" && state != "failed" && state != "canceled" {
 		return false, nil
 	}
 	run, err := j.runForAdmission(ctx, tx, head.claim.Admission)
@@ -180,7 +180,7 @@ func (j *pluginRunAttemptJournal) nativeCompletionRecoveryTx(ctx context.Context
 		// Keep the existing quarantine policy for unproven revision/identity.
 		return false, nil
 	}
-	if run.State != "succeeded" && run.State != "failed" {
+	if run.State != "succeeded" && run.State != "failed" && run.State != "canceled" {
 		return false, nil
 	}
 	if len(head.completion) > 0 && previous.FinalRevision > run.ConfigRevision {
@@ -191,9 +191,23 @@ func (j *pluginRunAttemptJournal) nativeCompletionRecoveryTx(ctx context.Context
 		return false, err
 	}
 	kind, nativeSHA := evidence.Kind, evidence.Digest
-	result, err := newPluginRunAttemptResult(run.State, run.ErrorCode, run.Result)
+	// Canceled is accepted only in this recovery record, after the exact native
+	// cancellation proof above. Ordinary attempt completion formats stay strict.
+	resultState := run.State
+	if resultState == "canceled" {
+		resultState = "failed"
+	}
+	result, err := newPluginRunAttemptResult(resultState, run.ErrorCode, run.Result)
+	if err == nil && run.State == "canceled" {
+		result.State = "canceled"
+	}
 	if err != nil {
 		return false, err
+	}
+	// Authenticated abandonment preserves the original unknown result bytes.
+	// Do not bless an unrelated old sealed result replayed into the SQL row.
+	if kind == "auto-backup-canceled/abandoned_unknown/v1" && len(head.completion) > 0 && result.ResultSHA != previous.Result.ResultSHA {
+		return false, errPluginRunAttemptEvidence
 	}
 	expected := pluginRunAttemptRecovery{1, head.claim.Nonce, head.claimSHA, sha256.Sum256(head.completion), nativeSHA, kind, run.ConfigRevision, result}
 	var sealed []byte

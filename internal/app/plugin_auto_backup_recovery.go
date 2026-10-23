@@ -221,6 +221,19 @@ func (a *App) pluginAutoBackupAbandonHTTP(w http.ResponseWriter, r *http.Request
 	if _, e = tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state='canceled' WHERE run_id=? AND instance_id=? AND generation=? AND config_revision=? AND state IN ('queued','running','reconcile_pending','failed')`, run.ID, instance, run.Generation, run.ConfigRevision); e != nil {
 		return nil, e
 	}
+	// Persist the common nonce-bound recovery in the very same authenticated
+	// abandonment transaction. Reset only reads this proof; it cannot create it.
+	head, e := a.pluginStore.runJournal.loadHead(ctx, tx, instance, run.ID)
+	if e != nil {
+		return nil, e
+	}
+	proven, e := a.pluginStore.runJournal.reconcileNativeCompletionTx(ctx, tx, head)
+	if e != nil {
+		return nil, e
+	}
+	if !proven {
+		return nil, errPluginRunAttemptEvidence
+	}
 	if e = tx.Commit(); e != nil {
 		return nil, e
 	}

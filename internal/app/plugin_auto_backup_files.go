@@ -103,7 +103,7 @@ func (c *autoBackupCall) archive(ctx context.Context, dest string) (*string, err
 		return nil, err
 	}
 	defer output.Close()
-	stageBase := filepath.Join(c.o.a.Dir, "plugin-private", "AutoBackup", "staging")
+	stageBase := filepath.Join(c.o.a.Dir, "plugin-private", c.o.instance, "staging")
 	if err = autoBackupAuthorize(stageBase, []string{c.o.a.Dir}); err != nil {
 		return nil, err
 	}
