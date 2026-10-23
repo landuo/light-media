@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { VSelect } from 'vuetify/components/VSelect';
-import { ref, onMounted, computed } from 'vue';
+import { VInfiniteScroll } from 'vuetify/components/VInfiniteScroll';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { api, action, go, image, date, ui, label, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
 import { startSearch, useExplicitSearch } from '../features/search-session';
@@ -13,7 +14,8 @@ const props = defineProps<{ route: string }>();
 const [routePath, routeQuery] = props.route.split('?'),
   routeParams = new URLSearchParams(routeQuery),
   parts = routePath!.split('/'),
-  page = ref(1),
+  page = ref(parts[0] === 'discover' ? 0 : 1),
+  feedVersion = ref(0),
   kind = ref(parts[0] === 'detail' ? parts[1] : 'movie'),
   list = ref('popular'),
   query = ref(routeParams.get('query') || routeParams.get('q') || ''),
@@ -28,7 +30,7 @@ const [routePath, routeQuery] = props.route.split('?'),
   seasonData = ref<any>(null),
   seasonLoading = ref(false),
   selected = ref<number[]>([]),
-  loading = ref(parts[0] !== 'search'),
+  loading = ref(!['search', 'discover'].includes(parts[0]!)),
   error = ref('');
 const visibleResults = computed(() => results.value);
 const filteredCredits = computed(() =>
@@ -40,6 +42,43 @@ const filteredCredits = computed(() =>
         : b.popularity - a.popularity || b.year - a.year,
     ),
 );
+async function loadRecommendations({ done }: { done: (status: 'ok' | 'empty' | 'error') => void }) {
+  if (loading.value) return;
+  const generation = loadSeq,
+    nextPage = page.value + 1;
+  loading.value = true;
+  error.value = '';
+  try {
+    const params = new URLSearchParams({
+      page: String(nextPage),
+      kind: kind.value!,
+      list: list.value,
+    });
+    const result = await api('/catalog/browse?' + params);
+    if (generation !== loadSeq) return done('empty');
+    const incoming = result.results || [],
+      seen = new Set(results.value.map((item) => `${item.media_type}/${item.id}`));
+    results.value = results.value.concat(
+      incoming.filter((item: any) => {
+        const key = `${item.media_type}/${item.id}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }),
+    );
+    page.value = nextPage;
+    total.value = result.total_pages || 0;
+    hasMore.value = incoming.length > 0 && (result.has_more ?? nextPage < total.value);
+    cached.value = result.cached_at || '';
+    done(hasMore.value ? 'ok' : 'empty');
+  } catch (e) {
+    if (generation !== loadSeq) return done('empty');
+    error.value = errorText(e);
+    done('error');
+  } finally {
+    if (generation === loadSeq) loading.value = false;
+  }
+}
 async function load() {
   const generation = ++loadSeq;
   loading.value = true;
@@ -91,8 +130,15 @@ async function loadSeason() {
   }
 }
 function change() {
-  page.value = 1;
-  load();
+  ++loadSeq;
+  page.value = 0;
+  results.value = [];
+  total.value = 0;
+  hasMore.value = false;
+  cached.value = '';
+  error.value = '';
+  loading.value = false;
+  ++feedVersion.value;
 }
 function resource() {
   startSearch(
@@ -124,11 +170,15 @@ function subscribe() {
   );
 }
 onMounted(() => {
-  if (parts[0] !== 'search') void load();
+  if (!['search', 'discover'].includes(parts[0]!)) void load();
+});
+onUnmounted(() => {
+  ++loadSeq;
+  ++seasonSeq;
 });
 </script>
 <template>
-  <div v-if="error" class="error-box">
+  <div v-if="error && parts[0] !== 'discover'" class="error-box">
     {{ error }} <button class="small" @click="load">重试</button
     ><button v-if="!ui.settings?.secret_state?.tmdb" class="small" @click="go('settings')">
       检查 TMDB 设置
@@ -173,7 +223,33 @@ onMounted(() => {
         "
       /><span v-if="cached" class="hint push-right">更新于 {{ date(cached) }}</span>
     </div>
-    <div v-if="loading" class="skeleton-grid">
+    <VInfiniteScroll
+      v-if="parts[0] === 'discover'"
+      :key="feedVersion"
+      mode="intersect"
+      side="end"
+      @load="loadRecommendations"
+    >
+      <div v-if="loading && !visibleResults.length" class="skeleton-grid">
+        <div v-for="i in 12" :key="i" class="skeleton"></div>
+      </div>
+      <MediaCards v-else :items="visibleResults" :quick-actions="true" />
+      <template #loading><span class="hint" role="status">正在加载…</span></template>
+      <template #empty>
+        <span class="hint" role="status">{{
+          visibleResults.length ? '没有更多内容了' : '暂无推荐内容'
+        }}</span>
+      </template>
+      <template #error="{ props: retryProps }">
+        <div class="error-box" role="alert">
+          {{ error }} <button class="small" @click="retryProps.onClick">重试</button>
+          <button v-if="!ui.settings?.secret_state?.tmdb" class="small" @click="go('settings')">
+            检查 TMDB 设置
+          </button>
+        </div>
+      </template>
+    </VInfiniteScroll>
+    <div v-else-if="loading" class="skeleton-grid">
       <div v-for="i in 12" :key="i" class="skeleton"></div>
     </div>
     <template v-else
