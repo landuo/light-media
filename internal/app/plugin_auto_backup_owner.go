@@ -332,7 +332,7 @@ func (a *App) pluginAutoBackupHost(ctx context.Context, i PluginInstallation, ru
 		if (!preview && (e != nil || current.PluginID != "AutoBackup" || !current.Installed || current.Generation != i.Generation)) || (preview && !errors.Is(e, sql.ErrNoRows) && (e != nil || current.Installed)) {
 			return nil, bad("AUTO_BACKUP_SCOPE_DENIED", "备份表单安装已变化")
 		}
-		formRaw, e := ab.Form(filepath.Join(a.Dir, "plugin-private", i.InstanceID, "backups"))
+		formRaw, e := autoBackupHostForm(filepath.Join(a.Dir, "plugin-private", i.InstanceID, "backups"))
 		if e != nil {
 			return nil, e
 		}
