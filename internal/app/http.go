@@ -115,6 +115,8 @@ func (a *App) handler() http.Handler {
 				a.writeError(w, r, &APIError{"UNAUTHORIZED", "请先登录", 401})
 				return
 			}
+			// The origin marker is minted only after authentication and CSRF checks.
+			r = pluginConfigSaveRequest(r)
 		}
 		mux.ServeHTTP(w, r)
 	})

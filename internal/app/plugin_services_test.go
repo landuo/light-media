@@ -137,7 +137,7 @@ func TestPublicPluginServicesAmbiguousOriginalIDCannotSelectAnotherInstance(t *t
 		if err := a.pluginStore.configurePluginSchedules(ctx, run, "services", []pluginScheduleDefinition{definition}, at); err != nil {
 			t.Fatal(err)
 		}
-		if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+		if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 			t.Fatal(err)
 		}
 	}

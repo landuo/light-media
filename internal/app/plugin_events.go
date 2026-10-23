@@ -21,6 +21,9 @@ type pluginEventSubscription struct {
 }
 
 func (p *PluginStore) configureEventSubscription(ctx context.Context, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -33,6 +36,9 @@ func (p *PluginStore) configureEventSubscription(ctx context.Context, run Plugin
 }
 
 func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.Tx, run PluginRun, handler string, types []string, delay time.Duration, active bool) error {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if !pluginStorageID.MatchString(handler) || len(types) == 0 || len(types) > 8 || delay < 0 {
 		return bad("INVALID_PLUGIN_SUBSCRIPTION", "插件事件订阅参数无效")
 	}
@@ -43,39 +49,58 @@ func (p *PluginStore) configureEventSubscriptionTx(ctx context.Context, tx *sql.
 		}
 		seen[eventType] = true
 	}
-	var current int
-	if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.generation=? AND i.version=? AND v.revision=? AND EXISTS(SELECT 1 FROM plugin_runs r WHERE r.id=? AND r.instance_id=i.instance_id AND r.generation=i.generation AND r.config_revision=v.revision AND r.state='running')`, run.InstanceID, run.Generation, run.Version, run.ConfigRevision, run.ID).Scan(&current); err != nil {
+	admission, err := p.readEventAdmissionTx(ctx, tx, run)
+	if err != nil {
 		return err
-	}
-	if current != 1 {
-		return bad("PLUGIN_SNAPSHOT_STALE", "插件配置已变化，未注册旧事件订阅")
 	}
 	var highWater int64
 	if err := tx.QueryRowContext(ctx, `SELECT COALESCE(MAX(seq),0) FROM domain_events`).Scan(&highWater); err != nil {
 		return err
 	}
+	if admission != nil && admission.HighWater > highWater {
+		return bad("PLUGIN_RUN_PROOF_INVALID", "插件事件准入边界超出已提交事件")
+	}
 	var generation, revision, cursor int64
 	var wasActive bool
-	err := tx.QueryRowContext(ctx, `SELECT generation,config_revision,active,cursor FROM plugin_event_subscriptions WHERE instance_id=? AND handler_key=?`, run.InstanceID, handler).Scan(&generation, &revision, &wasActive, &cursor)
+	err = tx.QueryRowContext(ctx, `SELECT generation,config_revision,active,cursor FROM plugin_event_subscriptions WHERE instance_id=? AND handler_key=?`, run.InstanceID, handler).Scan(&generation, &revision, &wasActive, &cursor)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
-	if err != nil || generation != run.Generation || revision != run.ConfigRevision || !wasActive {
-		cursor = highWater // First enable/re-enable never silently replays history.
-		var invocation struct {
-			Input *struct {
-				EventAfter int64 `json:"event_after"`
-			} `json:"input"`
+	matchingActive := err == nil && generation == run.Generation && revision == run.ConfigRevision && wasActive
+	if matchingActive && admission != nil {
+		if cursor < 0 || cursor > highWater {
+			return bad("PLUGIN_RUN_PROOF_INVALID", "插件活动事件游标超出已提交事件")
 		}
-		if (run.Action == "init" || run.Action == "reload") && len(run.Input) != 0 {
-			if json.Unmarshal(run.Input, &invocation) != nil {
-				return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无法读取")
+		if floor, captured := admission.ActiveCursorFloor[handler]; captured && cursor < floor {
+			return bad("PLUGIN_RUN_PROOF_INVALID", "插件活动事件游标低于准入时的已知边界")
+		}
+		// No enqueue-time row means no captured lower floor. An older in-flight
+		// init may legitimately register a smaller cursor after this admission.
+		// This is not authentication of all mutable subscription table state.
+	}
+	if !matchingActive {
+		cursor = highWater // Historical unmarked runs keep their original behavior.
+		if admission != nil {
+			cursor = admission.HighWater
+			if after, exists := admission.PerHandlerReloadCursor[handler]; exists {
+				cursor = after
 			}
-			if invocation.Input != nil {
-				if invocation.Input.EventAfter < 0 || invocation.Input.EventAfter > highWater {
-					return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无效")
+		} else {
+			var invocation struct {
+				Input *struct {
+					EventAfter int64 `json:"event_after"`
+				} `json:"input"`
+			}
+			if (run.Action == "init" || run.Action == "reload") && len(run.Input) != 0 {
+				if json.Unmarshal(run.Input, &invocation) != nil {
+					return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无法读取")
 				}
-				cursor = invocation.Input.EventAfter
+				if invocation.Input != nil {
+					if invocation.Input.EventAfter < 0 || invocation.Input.EventAfter > highWater {
+						return bad("PLUGIN_SNAPSHOT_CORRUPT", "插件事件启用边界无效")
+					}
+					cursor = invocation.Input.EventAfter
+				}
 			}
 		}
 	}
@@ -115,6 +140,9 @@ func (p *PluginStore) collectPluginEvents(ctx context.Context, subscription plug
 }
 
 func (p *PluginStore) collectPluginEventsUntil(ctx context.Context, subscription pluginEventSubscription, at time.Time, highWater int64) error {
+	if err := p.checkPluginFormWrite(ctx, subscription.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -242,6 +270,9 @@ func (p *PluginStore) enqueueDuePluginEvents(ctx context.Context, at time.Time) 
 }
 
 func (p *PluginStore) enqueueDuePluginEventsFor(ctx context.Context, at time.Time, drainingInstance string) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	for count := 0; count < 200; count++ {
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
@@ -284,11 +315,16 @@ type pluginEventPage struct {
 // supply file paths; the business host adapter resolves these committed asset
 // references and rechecks ownership/current configuration before any action.
 func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batchID string, after int64, limit int) (pluginEventPage, error) {
+	return p.pluginBatchEventsFrom(ctx, p.store.DB, run, batchID, after, limit, "running")
+}
+
+// Internal historical readers specify the already authenticated persisted state.
+func (p *PluginStore) pluginBatchEventsFrom(ctx context.Context, q pluginRemoveLinkJournalReader, run PluginRun, batchID string, after int64, limit int, state string) (pluginEventPage, error) {
 	out := pluginEventPage{Events: []DomainEvent{}, NextCursor: after}
 	if after < 0 || limit < 1 || limit > 200 {
 		return out, bad("INVALID_EVENT_CURSOR", "插件批次游标或每页数量无效")
 	}
-	err := p.store.DB.QueryRowContext(ctx, `SELECT b.item_count FROM plugin_event_batches b JOIN plugin_runs r ON r.id=b.run_id WHERE b.id=? AND b.run_id=? AND b.instance_id=? AND b.generation=? AND b.config_revision=? AND b.state='queued' AND r.state='running' AND r.instance_id=b.instance_id AND r.generation=b.generation AND r.config_revision=b.config_revision`, batchID, run.ID, run.InstanceID, run.Generation, run.ConfigRevision).Scan(&out.Total)
+	err := q.QueryRowContext(ctx, `SELECT b.item_count FROM plugin_event_batches b JOIN plugin_runs r ON r.id=b.run_id WHERE b.id=? AND b.run_id=? AND b.instance_id=? AND b.generation=? AND b.config_revision=? AND b.state='queued' AND r.state=? AND r.instance_id=b.instance_id AND r.generation=b.generation AND r.config_revision=b.config_revision`, batchID, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, state).Scan(&out.Total)
 	if errors.Is(err, sql.ErrNoRows) {
 		return out, bad("PLUGIN_BATCH_SCOPE_DENIED", "插件不能读取其他执行或已停止批次的事件")
 	}
@@ -298,7 +334,7 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 	if out.Total <= 0 {
 		return out, bad("PLUGIN_BATCH_CORRUPT", "插件事件批次数量无效")
 	}
-	rows, err := p.store.DB.QueryContext(ctx, `SELECT d.event_seq,d.event_id,e.payload FROM plugin_event_deliveries d LEFT JOIN domain_events e ON e.seq=d.event_seq AND e.event_id=d.event_id WHERE d.batch_id=? AND d.instance_id=? AND d.event_seq>? ORDER BY d.event_seq LIMIT ?`, batchID, run.InstanceID, after, limit+1)
+	rows, err := q.QueryContext(ctx, `SELECT d.event_seq,d.event_id,e.payload FROM plugin_event_deliveries d LEFT JOIN domain_events e ON e.seq=d.event_seq AND e.event_id=d.event_id WHERE d.batch_id=? AND d.instance_id=? AND d.event_seq>? ORDER BY d.event_seq LIMIT ?`, batchID, run.InstanceID, after, limit+1)
 	if err != nil {
 		return out, err
 	}
@@ -329,12 +365,12 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 	rows.Close()
 	for _, event := range out.Events {
 		if event.Type == "system.error" {
-			if _, err := p.systemErrorEvent(ctx, p.store.DB, event.SystemErrorID); err != nil {
+			if _, err := p.systemErrorEvent(ctx, q, event.SystemErrorID); err != nil {
 				return out, err
 			}
 		}
 		if event.Type == "plugin.triggered" {
-			if err := p.validateBrushFlowTriggered(ctx, p.store.DB, event); err != nil {
+			if err := p.validateBrushFlowTriggered(ctx, q, event); err != nil {
 				return out, err
 			}
 		}
@@ -350,6 +386,9 @@ func (p *PluginStore) pluginBatchEvents(ctx context.Context, run PluginRun, batc
 }
 
 func (a *App) dispatchPluginEvents(ctx context.Context, at time.Time) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	a.pluginMu.Lock()
 	defer a.pluginMu.Unlock()
 	// Transfer only previously committed effects. No filesystem/downloader or

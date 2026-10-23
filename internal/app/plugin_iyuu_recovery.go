@@ -3,6 +3,7 @@ package app
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"encoding/json"
 	"errors"
 
@@ -22,6 +23,20 @@ func (p *PluginStore) iyuuDeferredOutcome(ctx context.Context, run PluginRun, re
 		return nil, false, e
 	}
 	defer tx.Rollback()
+	result, found, e := p.iyuuDeferredOutcomeTx(ctx, tx, run, record)
+	if e != nil {
+		return nil, false, e
+	}
+	if e = tx.Commit(); e != nil {
+		return nil, false, e
+	}
+	return result, found, nil
+}
+
+func (p *PluginStore) iyuuDeferredOutcomeTx(ctx context.Context, tx *sql.Tx, run PluginRun, record pluginDeferredRecord) (json.RawMessage, bool, error) {
+	if record.Plugin != "IYUUAutoSeed" || record.Version != "2.19" {
+		return nil, false, nil
+	}
 	root, _, e := p.iyuuRootReadTx(ctx, tx, run.InstanceID, run.Generation)
 	if e != nil {
 		return nil, false, e
@@ -38,9 +53,6 @@ func (p *PluginStore) iyuuDeferredOutcome(ctx context.Context, run PluginRun, re
 	}
 	if record.Phase == "confirmed" && !bytes.Equal(fact.Result, record.Result) {
 		return nil, false, iyuu.ErrJournalIntegrity
-	}
-	if e = tx.Commit(); e != nil {
-		return nil, false, e
 	}
 	return append(json.RawMessage{}, fact.Result...), true, nil
 }

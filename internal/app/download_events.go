@@ -155,6 +155,10 @@ func (a *App) recordDownloadAddedTx(ctx context.Context, tx *sql.Tx, event Domai
 	return recordDomainEventTx(ctx, tx, valid)
 }
 func (a *App) downloadAddedSnapshot(ctx context.Context, event DomainEvent) (downloadAddedSnapshot, error) {
+	return a.pluginStore.downloadAddedSnapshotFrom(ctx, a.Store.DB, event)
+}
+
+func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginProofReader, event DomainEvent) (downloadAddedSnapshot, error) {
 	var snapshot downloadAddedSnapshot
 	input := event
 	input.Sequence = 0
@@ -163,10 +167,10 @@ func (a *App) downloadAddedSnapshot(ctx context.Context, event DomainEvent) (dow
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件引用无法核对")
 	}
 	var sealed []byte
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_added' AND id=?`, valid.EventID).Scan(&sealed); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='download_added' AND id=?`, valid.EventID).Scan(&sealed); err != nil {
 		return snapshot, err
 	}
-	raw, err := a.pluginStore.unseal("download_added", "system", valid.EventID, sealed)
+	raw, err := p.unseal("download_added", "system", valid.EventID, sealed)
 	if err != nil {
 		return snapshot, err
 	}
@@ -181,7 +185,7 @@ func (a *App) downloadAddedSnapshot(ctx context.Context, event DomainEvent) (dow
 		return snapshot, bad("INVALID_DOWNLOAD_EVENT", "下载事件与影视身份不符")
 	}
 	var stored []byte
-	if err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, snapshot.DownloadKind, snapshot.DownloadID).Scan(&stored); err != nil {
+	if err = q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, snapshot.DownloadKind, snapshot.DownloadID).Scan(&stored); err != nil {
 		return snapshot, err
 	}
 	var history struct {

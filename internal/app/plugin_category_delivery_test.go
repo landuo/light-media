@@ -41,6 +41,10 @@ func TestCategoryEditorDeliveryOriginalFormContract(t *testing.T) {
 	if err := a.pluginStore.Install(context.Background(), installation); err != nil {
 		t.Fatal(err)
 	}
+	installation, err = a.pluginStore.Installation(context.Background(), installation.InstanceID)
+	if err != nil {
+		t.Fatal(err)
+	}
 	form, err := a.pluginForm(context.Background(), installation)
 	if err != nil {
 		t.Fatal(err)

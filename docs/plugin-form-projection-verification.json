@@ -1,0 +1,69 @@
+{
+  "scope": "V8 trusted full-config Form transaction primitive, not a completed production lifecycle framework",
+  "parent": "1ac6924158b373836780a8f017279f941c644fd7",
+  "implementation_baseline": "2310034256d6b4b25faf10ce105f213a56f6286b",
+  "source_files": [
+    {
+      "path": "internal/app/plugin_config_defaults.go",
+      "before_sha256": "95cf08b71e9c587382325a3f7f679150dbc58b4807f1f194ff863901f9cfbea7",
+      "after_sha256": "e03990f94ce5ea8fb8cd8bc2494a9588298b214323341242248d50df618eac28",
+      "git_blob_sha": "a5021bccb21564527906d487b13fb684d0175243"
+    },
+    {
+      "path": "internal/app/plugin_config_form_projection.go",
+      "before_sha256": null,
+      "after_sha256": "59cc351a6c6dbab2c5885da9c55623aea4508403ee82140696794d09cf612c27",
+      "git_blob_sha": "9170803a7dff2b102b51f4220c63b0cde115c81f"
+    },
+    {
+      "path": "internal/app/plugin_config_form_projection_test.go",
+      "before_sha256": null,
+      "after_sha256": "707e1ef5c91327494536cdc1a70524fbe8d368074423b589a217b403ba7702fe",
+      "git_blob_sha": "ee7d4196880876c5fdb12610004551ce096bde94"
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "before_sha256": "e46a2b231458a4a11be33b2e236fea25fc50282725f7f4662bf2a64f7d8905e0",
+      "after_sha256": "cd81bbc0a689a237f50ce176eed6112bae9e6d09ced63885098ab7486473b531",
+      "git_blob_sha": "d8f4ebd2bdd12b996f8e8c2b5e3ec6f35e134123"
+    },
+    {
+      "path": "internal/plugins/protocol_test.go",
+      "before_sha256": "85d8c529ad92a825b275d2feb70ca662a1760445227feb3c90788dddd476866c",
+      "after_sha256": "d9b98c64c75b33a7f42f3957920bd2ef50cb6407a8950190b614e66e8d66df70",
+      "git_blob_sha": "52bebcf4b36ea86899c001e8c552574ab9294991"
+    }
+  ],
+  "frozen_input_files": 5431,
+  "normal": {
+    "exit": 0,
+    "passed_roots": 35,
+    "passed_including_subtests": 127,
+    "missing_roots": [],
+    "failed": [],
+    "input_files": 5431,
+    "changed": [],
+    "completed_at": "2026-10-22T20:27:40.162396949Z",
+    "checked_at": "2026-10-22T20:28:21.442363+00:00"
+  },
+  "race": {
+    "exit": 0,
+    "passed_roots": 35,
+    "passed_including_subtests": 127,
+    "missing_roots": [],
+    "failed": [],
+    "input_files": 5431,
+    "changed": [],
+    "completed_at": "2026-10-22T20:35:05.041184114Z",
+    "checked_at": "2026-10-22T20:36:14.136510+00:00"
+  },
+  "pattern": "^(TestPlugin(Normalize(Defaults|Projection)|ConfigSaveOrigin|FormProjection)|TestManifestConfig(Defaults|FormProjection)Contract$)",
+  "boundaries": [
+    "No production plugin declares config_form_projection in this milestone.",
+    "No HTTP Form or RPC route, Merge business adapter, event admission, lifecycle mode resolver, reset or update migration was added.",
+    "Positive replacement tests use the private shared transaction with a real compiled existing pure/defaults manifest; they do not prove a registered production adapter.",
+    "The isolated validation tree predates the four test-only fixture changes in parent 1ac6924; those parent files are preserved unchanged, not claimed as combined validation.",
+    "Unpublished frontend bytes and older unknown frontend blob are not part of this commit.",
+    "The original uninstall App-race form failure remains unexplained; its separate replacement fixture validation is documented in the parent milestone."
+  ]
+}

@@ -31,7 +31,7 @@ func pluginScheduleFixture(t *testing.T, at time.Time, trigger schedule.Spec, gr
 	if err := p.configurePluginSchedules(context.Background(), run, "services", []pluginScheduleDefinition{definition}, at); err != nil {
 		t.Fatal(err)
 	}
-	if err := p.FinishRun(context.Background(), run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(context.Background(), p, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	return a, run, definition
@@ -78,7 +78,7 @@ func TestPluginSchedulesPersistDueAndBindPrivateInvocation(t *testing.T) {
 	if _, err := a.pluginStore.pluginScheduledInvocation(ctx, other, occurrenceID); pluginErrorCode(err) != "PLUGIN_SCHEDULE_SCOPE_DENIED" {
 		t.Fatal("cross-instance invocation disclosed", err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", json.RawMessage(`{"completed":true}`)); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", json.RawMessage(`{"completed":true}`)); err != nil {
 		t.Fatal(err)
 	}
 	if _, state := pluginTimerOccurrence(t, a, run.ID); state != "succeeded" {
@@ -151,14 +151,19 @@ func TestPluginSchedulesQueueAndFinishFailuresAreAtomic(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	runContext := executionLeaseActivate(t, a.pluginStore, run)
+	t.Cleanup(run.executionLease.runCleanup) // SQL failure deliberately leaves the attempt unresolved.
 	if _, err := a.Store.DB.Exec(`CREATE TRIGGER fail_schedule_finish BEFORE UPDATE OF state ON plugin_schedule_occurrences WHEN NEW.state='succeeded' BEGIN SELECT RAISE(ABORT,'injected finish failure'); END`); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err == nil {
-		t.Fatal("partial finish reported success")
+	if err := a.pluginStore.FinishRun(runContext, run.ID, "succeeded", "", nil); err == nil || !strings.Contains(err.Error(), "injected finish failure") {
+		t.Fatal("finish did not reach the injected SQL failure", err)
 	}
 	if current, err := a.pluginStore.Run(ctx, run.ID); err != nil || current.State != "running" {
 		t.Fatal("run committed without its occurrence", current.State, err)
+	}
+	if _, state := pluginTimerOccurrence(t, a, run.ID); state != "running" {
+		t.Fatal("occurrence committed despite rollback", state)
 	}
 }
 
@@ -173,7 +178,7 @@ func TestPluginSchedulesDateDoesNotReplayOnSameConfigRestart(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := a.pluginStore.EnqueueRun(ctx, "timer", "init", nil); err != nil {
@@ -186,7 +191,7 @@ func TestPluginSchedulesDateDoesNotReplayOnSameConfigRestart(t *testing.T) {
 	if err := a.pluginStore.configurePluginSchedules(ctx, init, "services", []pluginScheduleDefinition{definition}, at.Add(time.Hour)); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, init.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, init, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	if count, err := a.pluginStore.enqueueDuePluginSchedules(ctx, at.Add(2*time.Hour)); err != nil || count != 0 {
@@ -266,7 +271,7 @@ func TestPluginSchedulesInternalFlagPatchPreservesQueuedWorkAndAnchor(t *testing
 	if err := a.pluginStore.configurePluginSchedules(ctx, reload, "services", []pluginScheduleDefinition{definition}, at.Add(time.Hour)); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.pluginStore.FinishRun(ctx, reload.ID, "succeeded", "", nil); err != nil {
+	if err := finishClaimedFixtureRun(ctx, a.pluginStore, reload, "succeeded", "", nil); err != nil {
 		t.Fatal(err)
 	}
 	run, err := a.pluginStore.ClaimRun(ctx)

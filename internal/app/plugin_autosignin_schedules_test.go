@@ -131,14 +131,14 @@ func TestAutoSignInScheduleRandomSourceChoicesPersist(t *testing.T) {
 
 func TestAutoSignInScheduleActualOccurrenceBindsDifferentEffectiveRevision(t *testing.T) {
 	ctx := context.Background()
-	f := signinSQLSetup(t, map[string]any{"enabled": false, "onlyonce": true, "sign_sites": []any{}, "login_sites": []any{}})
+	f := signinSQLClaimedSetup(t, map[string]any{"enabled": false, "onlyonce": true, "sign_sites": []any{}, "login_sites": []any{}})
 	stamp := time.Now().UTC().Truncate(time.Second)
 	c := durable.Controller{Journal: f.j, Binding: f.o.binding, DigestKey: [32]byte{3}, Dependencies: durable.Dependencies{Timezone: "UTC", Now: func() time.Time { return stamp }, Inventory: func(context.Context) (autosignin.Inventory, error) { return autosignin.Inventory{}, nil }}}
 	if _, err := c.Execute(ctx, f.run.ID, durable.Command{Action: "cold_init"}); err != nil {
 		t.Fatal(err)
 	}
 	signinScheduleProjectFixture(t, f)
-	if err := f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err := finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	tx, err := f.a.Store.DB.BeginTx(ctx, nil)

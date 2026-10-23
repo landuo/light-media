@@ -8,7 +8,7 @@ import (
 )
 
 func CategoryEditorManifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "CategoryEditor", Name: "二级分类策略", Description: "编辑下载和整理时自动二级分类的目录规则。", Version: "1.3", Icon: "Bookstack_A.png", Author: "jxxghp", AuthorURL: "https://github.com/jxxghp", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{"category.read", "category.write", "config.patch", "notification.post"}}
+	return plugins.Manifest{SchemaVersion: 1, ConfigDefaults: plugins.ConfigDefaultsPure, PluginID: "CategoryEditor", Name: "二级分类策略", Description: "编辑下载和整理时自动二级分类的目录规则。", Version: "1.3", Icon: "Bookstack_A.png", Author: "jxxghp", AuthorURL: "https://github.com/jxxghp", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{"category.read", "category.write", "config.patch", "notification.post"}}
 }
 
 type categoryConfig struct {

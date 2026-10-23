@@ -137,7 +137,7 @@ type SiteControlSnapshot struct {
 var mergeSiteSwitchForm []byte
 
 func MergeSiteSwitchManifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "MergeSiteSwitch", Name: "聚合站点开关", Description: "统一管理所有与站点相关的开关。", Icon: "world.png", Version: "1.2", Author: "hotlcc", AuthorURL: "https://github.com/hotlcc", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{"sites.controls.read", "sites.controls.configure"}}
+	return plugins.Manifest{SchemaVersion: 1, PluginID: "MergeSiteSwitch", Name: "聚合站点开关", Description: "统一管理所有与站点相关的开关。", Icon: "world.png", Version: "1.2", Author: "hotlcc", AuthorURL: "https://github.com/hotlcc", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "stop"}, Capabilities: []string{"sites.controls.read", "sites.controls.configure"}, FormModelPolicy: &plugins.FormModelPolicy{Installed: plugins.FormModelSource, Preview: plugins.FormModelSource}}
 }
 
 func HandleMergeSiteSwitch(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {

@@ -24,6 +24,7 @@ import (
 func subscribeDownloadSetup(t *testing.T, a *App, config subscribegroup.Configuration) {
 	t.Helper()
 	run := subscribeGroupInstall(t, a, config)
+	claimedRun := run
 	result, err := a.configureSubscribeGroup(context.Background(), &run)
 	if err != nil {
 		t.Fatal(err)
@@ -31,7 +32,7 @@ func subscribeDownloadSetup(t *testing.T, a *App, config subscribegroup.Configur
 	if err = a.pluginStore.configureEventSubscription(context.Background(), run, "downloaded", []string{"download.accepted"}, 0, true); err != nil {
 		t.Fatal(err)
 	}
-	if err = a.pluginStore.FinishRun(context.Background(), run.ID, "succeeded", "", result); err != nil {
+	if err = finishClaimedFixtureRun(context.Background(), a.pluginStore, claimedRun, "succeeded", "", result); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -212,7 +213,7 @@ func TestSubscribeGroupDownloadRangeFillCurrentRowsHistoryAndDedupAtomic(t *test
 	if afterHistory.Revision != hstored.Revision || afterHandled.Revision != dstored.Revision {
 		t.Fatal("receipt replay duplicated plugin KV")
 	}
-	if err = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", result); err != nil {
+	if err = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", result); err != nil {
 		t.Fatal(err)
 	}
 	// A separate accepted download in a different season is still deduplicated
@@ -580,7 +581,7 @@ func TestSubscribeGroupDownloadScopesAndCurrentExecutionAuthority(t *testing.T) 
 			}
 		},
 		"stopped run": func(a *App, run *PluginRun, _ *string) {
-			if err := a.pluginStore.FinishRun(context.Background(), run.ID, "failed", "TEST", nil); err != nil {
+			if err := finishClaimedFixtureRun(context.Background(), a.pluginStore, *run, "failed", "TEST", nil); err != nil {
 				panic(err)
 			}
 		},
