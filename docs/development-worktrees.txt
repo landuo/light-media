@@ -1,0 +1,55 @@
+光影开发与测试工作树约定（2026-10-24）
+
+仓库：https://github.com/landuo/light-media.git
+主检出：/Users/accidia/projects/light-media
+工作树目录：/Users/accidia/projects/light-media-worktrees/
+
+用户要求
+需求开发、修复、集成测试和发布构建均使用同一仓库的 Git worktree。
+禁止为了测试复制整套源码、再 clone 一份仓库，或按测试轮次累积 release 目录。
+Git 工作树仍有各自的文件检出，但共享对象库；节省空间还需要复用依赖缓存、及时清理临时产物并回收已完成的工作树。
+
+本次建立的生产基线
+- production/v0.4.15：4d4b79d8dab523daf40c06889a54ec5c0c615ab6。
+- 父提交：110ffc7b22755b53accaa3992ab2eb5c79ab91f3。
+- 保存已发布源码及当时的前端嵌入资产，共 4063 个文件；逐文件 Git blob 哈希与原发布目录一致。
+- 非 web/dist 文件 3983 个。保留了 http.go、Settings.vue、SiteManager.vue 及两个对应前端测试中的生产合并结果。
+- 已发布程序 SHA256：764cf9ffcca092dcd2164b4dbab048bb0f1caf82ea173fbac0a3622ed990e035。
+- 部署记录见主检出的 docs/poster-v0.4.15-deployment.json；本次工作树转换没有发布新程序。
+
+当前界面修复工作树
+- 分支：dev/ui，基于 production/v0.4.15。
+- 路径：/Users/accidia/projects/light-media-worktrees/ui。
+- 原 work/_poster_20261024/release 的文件通过移动进入正式工作树，没有另复制源码。
+- 排除了旧构建日志、.DS_Store 和六个补丁 .orig/.rej 残留。
+- web/node_modules 沿用原有共享依赖链接，没有复制依赖目录。
+- 现存 v0.4.15 发布二进制及审核记录保留；不因工作树转换删除唯一发布材料。
+
+分支选择
+先 git fetch origin，再 git worktree list --porcelain，检查工作区状态并复用合适的工作树。
+2026-10-24 本地 main 与 origin/main 已分叉：本地包含最近的界面修复，远端包含并行插件开发。不得直接 reset、覆盖或把未验收插件整批带入生产。
+线上修复以已验证生产提交为起点；新功能以确认的集成分支为起点；插件继续使用已有 plugins/* 或 dev/plugins-continuation 任务分支。
+新增工作树后先核对主检出的最新 AGENTS.md，并把适用规则带入任务分支。
+本次聊天未绑定 Git 项目，应用创建工具返回 Not a git repository，因此使用标准 git worktree 注册；它与主检出共享同一个 .git 对象库。
+
+操作示例（在主检出执行；名称按实际任务设置，不按每轮测试创建）
+  git fetch origin
+  git worktree list --porcelain
+  git worktree add -b fix/<任务> ../light-media-worktrees/<任务> production/v0.4.15
+  git worktree add -b feat/<任务> ../light-media-worktrees/<任务> origin/main
+  git -C ../light-media-worktrees/<任务> status --short
+
+测试与构建
+在对应工作树内运行该改动所需的检查，不建立额外的源码复制目录。
+沿用默认 GOMODCACHE、GOCACHE 和 npm 下载缓存，不给每次测试创建专用依赖缓存。
+依赖、锁文件及运行平台相同时可以复用已安装依赖。依赖变更使用该工作树自己的安装目录；不得在共享 node_modules 链接上运行 npm ci 或并发修改共享依赖。
+前端源码改动后在同一工作树重建 web/dist，再构建嵌入该资源的 Go 程序，不能从另一个分支复制 dist。
+web/dist 目前属于已有跟踪资产；其基线版本不等于新源码已构建。检查提交范围，不把临时二进制、测试数据库、日志和 node_modules 提交进去。
+临时产物只放本任务 bin/、work/；测试数据目录和端口独立，不能连接生产数据库写入测试数据。
+
+收尾
+记录提交、必要测试结果和交付哈希，停止本任务的测试进程，清理本任务生成且不再需要的临时产物。
+保留尚未提交、未合并或唯一的验证材料；不执行全仓库 git clean -fdx，不清理其他任务或 NAS 回滚目录。
+工作树不再使用后，标准工作树执行 git worktree remove <路径>；应用管理的工作树使用应用归档工具。不要强制移除有未保存工作的工作树。
+分支可继续保留历史，检出目录不必长期保留；后续需要时再从已保存提交创建工作树。
+旧报告中的 release 路径仅用于说明当时证据来源，后续开发不得再运行旧的复制发布流程。
