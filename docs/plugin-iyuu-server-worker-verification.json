@@ -1,0 +1,147 @@
+{
+  "base": "a2d93ce8c79cc4e46f6fcc49a0046fff317cf95c",
+  "scope": "IYUU actual ordinary cmd/server worker QB/TR checkpoint and native acknowledgement loss acceptance; not whole-plugin completion",
+  "production_changes": false,
+  "runtime_python_added": false,
+  "real_accounts_or_seeds": false,
+  "worker_command": [
+    "--plugin-worker",
+    "IYUUAutoSeed"
+  ],
+  "worker": "ordinary unmodified cmd/server, production built-in registry",
+  "host_modes": [
+    "ordinary App",
+    "race-instrumented App"
+  ],
+  "worker_race": false,
+  "source_files": {
+    "internal/app/plugin_iyuu_owner_test.go": {
+      "sha256": "288e6469951aa8bee6701f5d71e198f8239b4d55ad9374a320c5b9dc6730b98d"
+    },
+    "internal/app/plugin_iyuu_server_acceptance_test.go": {
+      "sha256": "214fa8380d22744b498dd5c44b5bdab36e2ec1bb9e2357a5ad10b60b1eedba13"
+    }
+  },
+  "tests": {
+    "normal": {
+      "exit": 0,
+      "full_log_sha256": "dc6b8fc61eca826c8933db4520f77cc67b9e5c07ef35be18b0f30063501741cf",
+      "server_events": [
+        {
+          "Time": "2026-10-23T02:47:33.897326214Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/checkpoint-ack-loss-cold-recovery",
+          "Elapsed": 1.74
+        },
+        {
+          "Time": "2026-10-23T02:47:36.898713531Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/native-ack-loss-no-replay",
+          "Elapsed": 3
+        },
+        {
+          "Time": "2026-10-23T02:47:37.90005536Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/checkpoint-ack-loss-cold-recovery",
+          "Elapsed": 1
+        },
+        {
+          "Time": "2026-10-23T02:47:40.78443861Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/native-ack-loss-no-replay",
+          "Elapsed": 2.88
+        },
+        {
+          "Time": "2026-10-23T02:47:40.784471271Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown",
+          "Elapsed": 24.34
+        }
+      ],
+      "surrounding_result": {
+        "files": 5514,
+        "input_unchanged": true,
+        "exit": 0,
+        "passed_roots_including_helper": 35,
+        "business_passed_roots": 34,
+        "helper_empty_return": [
+          "TestIYUUActualSDKWorker"
+        ],
+        "passed_nodes_including_helper": 103,
+        "skips": [
+          "TestReviewedIYUUSelectedStdin",
+          "TestIYUUActualLongNativeScanSurvivesWorkerHandshakeDeadline"
+        ],
+        "failures": [],
+        "server_worker_combinations": [
+          "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/checkpoint-ack-loss-cold-recovery",
+          "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/native-ack-loss-no-replay",
+          "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/checkpoint-ack-loss-cold-recovery",
+          "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/native-ack-loss-no-replay"
+        ]
+      }
+    },
+    "race": {
+      "exit": 0,
+      "full_log_sha256": "06fd5f67d7cbc66ba5d11a80dc3ad1a0a7d57d470b2e758c5b3db78f0b29a26b",
+      "server_events": [
+        {
+          "Time": "2026-10-23T03:14:31.231403929Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/checkpoint-ack-loss-cold-recovery",
+          "Elapsed": 5.36
+        },
+        {
+          "Time": "2026-10-23T03:15:04.821619754Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/qbittorrent/native-ack-loss-no-replay",
+          "Elapsed": 33.59
+        },
+        {
+          "Time": "2026-10-23T03:15:10.761874219Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/checkpoint-ack-loss-cold-recovery",
+          "Elapsed": 5.94
+        },
+        {
+          "Time": "2026-10-23T03:15:25.990691696Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown/transmission/native-ack-loss-no-replay",
+          "Elapsed": 15.23
+        },
+        {
+          "Time": "2026-10-23T03:15:25.990706279Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestIYUUActualServerWorkerNativeCompletionAndUnknown",
+          "Elapsed": 63.54
+        }
+      ],
+      "surrounding_result": {
+        "files": 5514,
+        "input_unchanged": true,
+        "exit": 0,
+        "roots": 17,
+        "passed_nodes": 59,
+        "skips": 0,
+        "failures": 0
+      }
+    }
+  },
+  "remaining": [
+    "second 17 App race roots",
+    "126-second long scan race (ordinary already passed)",
+    "real browser save/reopen/instance isolation",
+    "final vet/build/combination gates"
+  ],
+  "separate_pending_batch": "Encoding assets/oracle milestone has14/15 file paths (12/13 unique blobs) read back; final oracle upload unresolved. This independent commit neither retries nor substitutes that pending object. All36 recovered runtime bytes exactly match objects already present in base."
+}
