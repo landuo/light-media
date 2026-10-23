@@ -293,6 +293,13 @@ func (a *App) configureIYUU(ctx context.Context, owner *pluginIYUUOwner, run *Pl
 // existing App implementation obtains its usual lifecycle locks. This wrapper
 // never retains lifecycle/process/file locks while waiting for an active run.
 func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	if parts := strings.Split(path, "/"); r.Method == http.MethodPost && len(parts) == 2 && parts[1] == "reset" && pluginStorageID.MatchString(parts[0]) {
+		return a.pluginResetHTTP(w, r, path, parts[0])
+	}
+	return a.pluginAPIWithoutResetBarrier(w, r, path)
+}
+
+func (a *App) pluginAPIWithoutResetBarrier(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	// Clone reads a source snapshot but never publishes a source lifecycle change.
 	if parts := strings.Split(path, "/"); r.Method == "POST" && len(parts) == 2 && parts[1] == "clone" {
 		return a.pluginCloneHTTP(w, r, parts[0])

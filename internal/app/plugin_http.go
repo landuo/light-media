@@ -485,11 +485,15 @@ func (a *App) pluginAPIWithoutIYUUBarrier(w http.ResponseWriter, r *http.Request
 		}
 		return map[string]any{"run": run}, err
 	case parts[1] == "reset" && r.Method == "POST":
-		if err := a.drainMediaRefresh(ctx, installation); err != nil {
+		proof, err := a.pluginStore.resetAdmission(ctx, installation.InstanceID)
+		if err != nil {
 			return nil, err
 		}
+		if installation.PluginID == "MediaServerRefresh" && !proof.mediaDrained {
+			return nil, errPluginRunTransitionState
+		}
 		a.pluginMu.Lock()
-		err := a.pluginStore.Reset(ctx, installation.InstanceID)
+		err = a.pluginStore.Reset(ctx, installation.InstanceID)
 		if err == nil {
 			a.pluginServerStatus.invalidate(installation.InstanceID)
 		}

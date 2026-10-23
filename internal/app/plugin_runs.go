@@ -13,6 +13,7 @@ import (
 // PluginRun's public projection is metadata only. Config snapshots, input and
 // worker results may contain secrets and are never marshaled by list APIs.
 type PluginRun struct {
+	executionLease *pluginExecutionLease
 	Recovery       *autoBackupRecovery `json:"recovery,omitempty"`
 	Retryable      bool                `json:"retryable,omitempty"`
 	RequestID      string              `json:"request_id,omitempty"`
@@ -379,31 +380,48 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 	}
 	afterCreated, afterID := "", ""
 	for {
+		window, err := p.beginSupervisedClaim(ctx)
+		if err != nil {
+			return PluginRun{}, err
+		}
 		tx, err := p.store.DB.BeginTx(ctx, nil)
 		if err != nil {
 			return PluginRun{}, err
 		}
+		var lease *pluginExecutionLease
+		committing := false
+		rollback := func() error {
+			if committing {
+				return sql.ErrTxDone
+			}
+			e := tx.Rollback()
+			if e == nil && lease != nil {
+				e = lease.rollbackClaim()
+			}
+			return e
+		}
+		defer rollback()
 		tasksFull, servicesFull := brushFlowClaimBlocked(ctx)
 		run, err := p.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE state='pending' AND (?='' OR instance_id=?) AND NOT(? AND action='task' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND NOT(? AND action='service' AND version='5.2.15' AND instance_id IN(SELECT instance_id FROM plugin_installations WHERE plugin_id='BrushFlowLanduo')) AND (created_at>? OR (created_at=? AND id>?)) ORDER BY created_at,id LIMIT 1`, instanceID, instanceID, tasksFull, servicesFull, afterCreated, afterCreated, afterID))
 		if err != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, err
 		}
 		afterCreated, afterID = run.CreatedAt, run.ID
 		privateCore, e := p.larkPrivateCoreRunTx(ctx, tx, run)
 		if e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, e
 		}
 		if privateCore {
-			_ = tx.Rollback()
+			_ = rollback()
 			continue
 		}
 		// Preserve old admissions, including stale revisions, until a private
 		// source transition can bind their original input and terminal outcome.
 		// They must not prevent unrelated proven plugins from being claimed.
 		if e := p.requireSiteReferenceProtocolTx(ctx, tx, run.InstanceID); e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			if code := pluginErrorCodeInternal(e); code == "PLUGIN_SITE_PROTOCOL_UNCLAIMED" || code == "PLUGIN_SITE_PROTOCOL_INVALID" {
 				continue
 			}
@@ -413,7 +431,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		var pluginID string
 		err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(MAX(i.plugin_id),'') FROM plugin_installations i JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE i.instance_id=? AND i.installed=1 AND i.desired_enabled=1 AND i.version=? AND i.generation=? AND v.revision=?`, run.InstanceID, run.Version, run.Generation, run.ConfigRevision).Scan(&current, &pluginID)
 		if err != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, err
 		}
 		if current == 0 {
@@ -422,7 +440,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			}
 		}
 		if e := p.brushFlowClaimIdentityTx(ctx, tx, pluginID, run); e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, e
 		}
 		admissionErr := p.brushFlowQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID, run.Action, func() json.RawMessage {
@@ -436,7 +454,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 			admissionErr = p.pluginNativeQueueAdmissionTx(ctx, tx, run.InstanceID, pluginID)
 		}
 		if e := admissionErr; e != nil {
-			_ = tx.Rollback()
+			_ = rollback()
 			if pluginNativeUnconfirmedQueueAdmission(e) {
 				continue // Keep this original pending identity; advance the cursor.
 			}
@@ -448,7 +466,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isCloudflareRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimCloudflareScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -457,7 +475,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isAutoBackupRun(ctx, tx, run) && (run.Action == "service" || run.Action == "once") {
 			errorCode, err = p.claimAutoBackupScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -466,7 +484,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isBrushFlowRun(ctx, tx, run) && (run.Action == "task" || run.Action == "service") {
 			errorCode, err = p.claimBrushFlowScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -475,7 +493,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if p.isSeedRescueRun(ctx, tx, run) && (run.Action == "once" || run.Action == "service") {
 			errorCode, err = p.claimSeedRescueScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -484,7 +502,7 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		} else if run.Action == "service" {
 			errorCode, err = p.claimPluginScheduleTx(ctx, tx, run, time.Now())
 			if err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 			if errorCode != "" {
@@ -493,16 +511,16 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		}
 		if state == "canceled" {
 			if e := p.brushFlowCancelQueuedClaimTx(ctx, tx, run); e != nil {
-				tx.Rollback()
+				rollback()
 				return PluginRun{}, e
 			}
 			if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=CASE WHEN state='missed' THEN state ELSE 'canceled' END WHERE run_id=? AND state IN ('queued','running','missed')`, run.ID); err != nil {
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 		}
 		if state == "running" && !brushFlowReserveClaim(ctx, pluginID, run) {
-			tx.Rollback()
+			rollback()
 			continue
 		}
 		releaseClaim := func() {
@@ -515,28 +533,49 @@ func (p *PluginStore) claimRunForInstance(ctx context.Context, instanceID string
 		changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,error_code=?,updated_at=? WHERE id=? AND state='pending'`, state, errorCode, now(), run.ID)
 		if err != nil {
 			releaseClaim()
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, err
 		}
 		if n, e := changed.RowsAffected(); e != nil || n != 1 {
 			releaseClaim()
-			_ = tx.Rollback()
+			_ = rollback()
 			return PluginRun{}, pluginLifecycleInvalid()
 		}
 		if state == "running" {
 			if err = p.markPluginExecutionStartedTx(ctx, tx, run); err != nil {
 				releaseClaim()
-				_ = tx.Rollback()
+				_ = rollback()
 				return PluginRun{}, err
 			}
 		}
-		if err = tx.Commit(); err != nil {
+		if state == "running" {
+			lease, err = p.reserveSupervisedClaimTx(ctx, tx, window, run)
+			if err != nil {
+				rollbackErr := rollback()
+				releaseClaim()
+				// A fenced or unresolved instance must not starve unrelated
+				// instances. The cursor already advances, so this is bounded.
+				if rollbackErr == nil && instanceID == "" && (errors.Is(err, errPluginRunFenced) || errors.Is(err, errPluginRunAdmissionStale) || errors.Is(err, errPluginRunAttemptUnknown)) {
+					continue
+				}
+				return PluginRun{}, err
+			}
+		}
+		committing = true
+		commitErr := tx.Commit()
+		if lease != nil {
+			err = p.commitSupervisedClaim(ctx, lease, commitErr)
+		} else {
+			err = commitErr
+		}
+		if err != nil {
 			releaseClaim()
 			return PluginRun{}, err
 		}
 		if state == "canceled" {
 			continue
 		}
+		run.executionLease = lease
 		run.State = state
 		return run, nil
 	}
@@ -573,9 +612,16 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 		return err
 	}
 	defer tx.Rollback()
+	lease, err := p.requireSupervisedFinishTx(ctx, tx, runID)
+	if err != nil {
+		return err
+	}
 	if consumed, e := p.brushFlowFinishUnenteredTaskTx(ctx, tx, run, state); e != nil {
 		return e
 	} else if consumed {
+		if err = p.recordSupervisedCompletionTx(ctx, tx, lease, runID); err != nil {
+			return err
+		}
 		return tx.Commit()
 	}
 	changed, err := tx.ExecContext(ctx, `UPDATE plugin_runs SET state=?,result=?,error_code=?,updated_at=? WHERE id=? AND state='running'`, state, sealed, errorCode, now(), runID)
@@ -591,6 +637,9 @@ func (p *PluginStore) finishRun(ctx context.Context, runID, state, errorCode str
 		}
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=? WHERE run_id=? AND state='running'`, state, runID); err != nil {
+		return err
+	}
+	if err = p.recordSupervisedCompletionTx(ctx, tx, lease, runID); err != nil {
 		return err
 	}
 	return tx.Commit()
@@ -633,6 +682,9 @@ func (p *PluginStore) recoverPluginRuns(ctx context.Context) error {
 		if err == nil {
 			err = p.recoverSeedRescueReads(ctx)
 		}
+	}
+	if err == nil {
+		err = p.quarantineRecoveredAttempts(ctx)
 	}
 	if err == nil {
 		_, err = p.store.DB.ExecContext(ctx, `UPDATE plugin_schedule_occurrences SET state=(SELECT CASE WHEN r.state='pending' THEN 'queued' ELSE r.state END FROM plugin_runs r WHERE r.id=run_id) WHERE run_id IS NOT NULL AND state IN ('queued','running','reconcile_pending')`)

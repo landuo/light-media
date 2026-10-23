@@ -35,6 +35,13 @@ func (a *App) pluginCleanInvalidSeedLifecycleHTTP(w http.ResponseWriter, r *http
 	if !installation.Installed {
 		return nil, &APIError{"NOT_FOUND", "插件已卸载", 404}
 	}
+	var resetProof *pluginResetAdmission
+	if operation == "reset" {
+		resetProof, err = a.pluginStore.resetAdmission(ctx, installation.InstanceID)
+		if err != nil {
+			return nil, err
+		}
+	}
 	var revision int64
 	var raw json.RawMessage
 	if operation == "config" {
@@ -62,6 +69,9 @@ func (a *App) pluginCleanInvalidSeedLifecycleHTTP(w http.ResponseWriter, r *http
 	if kind == "config" {
 		kind = "init"
 	}
+	if resetProof != nil {
+		resetProof.setOwnerPending(true)
+	}
 	prepared, err := a.prepareCleanInvalidSeedTransition(ctx, installation, kind)
 	if err != nil {
 		return nil, err
@@ -86,7 +96,9 @@ func (a *App) pluginCleanInvalidSeedLifecycleHTTP(w http.ResponseWriter, r *http
 	}
 	if operation == "reset" || operation == "uninstall" {
 		if err = prepared.drain(ctx); err != nil {
-			_ = resolveCleanInvalidSeedPrepared(prepared, false)
+			if resolveErr := resolveCleanInvalidSeedPrepared(prepared, false); resolveErr == nil && resetProof != nil {
+				resetProof.setOwnerPending(false)
+			}
 			return nil, err
 		}
 	}
@@ -100,7 +112,14 @@ func (a *App) pluginCleanInvalidSeedLifecycleHTTP(w http.ResponseWriter, r *http
 		if err != nil {
 			return nil, err
 		}
-		defer tx.Rollback()
+		if resetProof != nil {
+			defer resetProof.rollback(tx)
+			if err = a.pluginStore.requireResetAdmissionTx(ctx, tx, installation.InstanceID); err != nil {
+				return nil, err
+			}
+		} else {
+			defer tx.Rollback()
+		}
 		var currentGeneration int64
 		var installed bool
 		if err = tx.QueryRowContext(ctx, `SELECT generation,installed FROM plugin_installations WHERE instance_id=? AND plugin_id='CleanInvalidSeed' AND version='2.1'`, installation.InstanceID).Scan(&currentGeneration, &installed); err != nil {
@@ -172,13 +191,21 @@ func (a *App) pluginCleanInvalidSeedLifecycleHTTP(w http.ResponseWriter, r *http
 		if err = prepared.publishTx(ctx, tx, to, runID); err != nil {
 			return nil, err
 		}
-		if err = tx.Commit(); err != nil {
+		if resetProof != nil {
+			err = resetProof.commit(tx)
+		} else {
+			err = tx.Commit()
+		}
+		if err != nil {
 			return nil, err
 		}
 		committed = true
 		return result, nil
 	}()
 	resolveErr := resolveCleanInvalidSeedPrepared(prepared, committed)
+	if resolveErr == nil && resetProof != nil {
+		resetProof.setOwnerPending(false)
+	}
 	if mutationErr != nil && resolveErr == nil {
 		return nil, mutationErr
 	}

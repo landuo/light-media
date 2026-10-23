@@ -21,7 +21,14 @@ func (p *PluginStore) brushFlowCancelBeforeSDK(ctx context.Context, run PluginRu
 		return e
 	}
 	defer tx.Rollback()
+	lease, e := p.requireSupervisedFinishTx(ctx, tx, run.ID)
+	if e != nil {
+		return e
+	}
 	if e = p.brushFlowCloseNotStartedTx(ctx, tx, run); e != nil {
+		return e
+	}
+	if e = p.recordSupervisedCompletionTx(ctx, tx, lease, run.ID); e != nil {
 		return e
 	}
 	return tx.Commit()

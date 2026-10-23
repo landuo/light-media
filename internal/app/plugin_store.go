@@ -86,6 +86,8 @@ type PluginImport struct {
 // PluginStore owns only its namespaced tables. It neither starts plugins nor
 // registers schedules, events, HTTP routes, or external operations.
 type PluginStore struct {
+ runSupervisor *pluginRunSupervisor
+ runJournal *pluginRunAttemptJournal
 	store            *Store
 	uninstallConfig  pluginUninstallConfigCache
 	installedSource  pluginSourceInstalledCache
@@ -260,10 +262,13 @@ INSERT OR IGNORE INTO plugin_storage_schema VALUES(1);`)
 	if err = (&PluginStore{store: store}).initNotificationChannelsTx(ctx, tx); err != nil {
 		return nil, err
 	}
+	if _,err=tx.ExecContext(ctx,pluginRunAttemptJournalSchema);err!=nil{return nil,err}
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
-	return &PluginStore{store: store}, nil
+	p := &PluginStore{store: store, runSupervisor:newPluginRunSupervisor()}
+ p.runJournal, err = newPluginRunAttemptJournal(p)
+ if err != nil { return nil, err }; return p,nil
 }
 
 func pluginJSON(value any, object bool) (json.RawMessage, error) {
@@ -759,15 +764,25 @@ func (p *PluginStore) iyuuUninstallWithEffect(ctx context.Context, instanceID st
 func (p *PluginStore) Reset(ctx context.Context, instanceID string) error {
 	return p.iyuuResetWithEffect(ctx, instanceID, nil)
 }
-func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) error {
+func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string, effect func(context.Context, *sql.Tx) error) (returnErr error) {
 	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
 		return err
+	}
+	ctx, proof, owned, err := p.prepareResetAdmission(ctx, instanceID)
+	if err != nil {
+		return err
+	}
+	if owned {
+		defer func() { returnErr = proof.finish(returnErr) }()
 	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer proof.rollback(tx)
+	if err = p.requireResetAdmissionTx(ctx, tx, instanceID); err != nil {
+		return err
+	}
 	isLark, larkErr := p.larkTransitionTx(ctx, tx, instanceID)
 	if larkErr != nil {
 		return larkErr
@@ -870,7 +885,7 @@ func (p *PluginStore) iyuuResetWithEffect(ctx context.Context, instanceID string
 			return e
 		}
 	}
-	return tx.Commit()
+	return proof.commit(tx)
 }
 
 const pluginMigrationColumns = `id,source_fingerprint,source_plugin_id,instance_id,state,error_code,details,created_at,updated_at`
