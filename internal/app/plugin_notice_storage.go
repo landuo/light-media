@@ -309,6 +309,9 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	return r, steps, nil
 }
 func (p *PluginStore) saveNoticeRouteTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	sealed, err := p.noticeSeal("route", r.ID, r)
 	if err != nil {
 		return err
@@ -328,6 +331,9 @@ func (p *PluginStore) saveNoticeRouteTx(ctx context.Context, tx *sql.Tx, r plugi
 // These methods are host-only; importing real settings still requires its own
 // authenticated source/reference migration receipt and management UI.
 func (p *PluginStore) putNoticePreferenceTx(ctx context.Context, tx *sql.Tx, kind, key string, value any) error {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if kind != "switch" && kind != "user" && kind != "window" && kind != "superuser" && kind != "templates" {
 		return seedhost.ErrUnsafe
 	}

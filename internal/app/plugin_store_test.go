@@ -99,6 +99,10 @@ func TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData(t *testing.T
 	if bytes.Contains(public, []byte(secret)) || bytes.Contains(public, []byte("value")) {
 		t.Fatal("storage metadata serialization exposed a value", string(public))
 	}
+	beforeRestart, err := p.Installation(ctx, "SyntheticPlugin")
+	if err != nil {
+		t.Fatal(err)
+	}
 	if err = s.Close(); err != nil {
 		t.Fatal(err)
 	}
@@ -121,8 +125,29 @@ func TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData(t *testing.T
 		t.Fatal("instances shared a data namespace", clone, err)
 	}
 	installation, err := p.Installation(ctx, "SyntheticPlugin")
-	if err != nil || !installation.Installed || installation.DesiredEnabled || !bytes.Equal(installation.Manifest, storedPluginFixture("SyntheticPlugin").Manifest) {
+	expected := storedPluginFixture("SyntheticPlugin")
+	if err != nil || !installation.Installed || installation.DesiredEnabled || installation.InstanceID != expected.InstanceID || installation.PluginID != expected.PluginID || installation.Version != expected.Version || installation.ManifestSchemaVersion != expected.ManifestSchemaVersion || installation.Generation != 1 {
 		t.Fatal("prepared installation was changed or enabled", installation, err)
+	}
+	// Lifecycle authority is a deliberate private host extension, authenticated
+	// with this installation's manifest AEAD. Validate its complete binding,
+	// rather than accepting arbitrary new fields or rewriting plugin metadata.
+	if state, err := pluginLifecycleState(installation); err != nil || state != pluginLifecycleCold {
+		t.Fatal("restart lost the authenticated cold lifecycle binding", state, err)
+	}
+	if !bytes.Equal(installation.Manifest, beforeRestart.Manifest) {
+		t.Fatal("restart changed the persisted manifest")
+	}
+	var actualFields, expectedFields map[string]json.RawMessage
+	if err = json.Unmarshal(installation.Manifest, &actualFields); err != nil {
+		t.Fatal(err)
+	}
+	if err = json.Unmarshal(expected.Manifest, &expectedFields); err != nil {
+		t.Fatal(err)
+	}
+	delete(actualFields, pluginLifecycleField)
+	if !reflect.DeepEqual(actualFields, expectedFields) {
+		t.Fatal("restart changed plugin-owned manifest fields", actualFields, expectedFields)
 	}
 	public, _ = json.Marshal(installation)
 	if bytes.Contains(public, []byte("manifest\"")) || bytes.Contains(public, []byte("runtime_enabled")) {

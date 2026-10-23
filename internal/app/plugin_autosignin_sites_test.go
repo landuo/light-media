@@ -284,7 +284,7 @@ func TestAutoSignInTrustedSitesEveryAPIIORechecksOriginalAdmission(t *testing.T)
 	for _, mutation := range []string{"sealed_scope", "rotated_key"} {
 		t.Run(mutation, func(t *testing.T) {
 			ctx := context.Background()
-			f := signinSQLSetup(t)
+			f := signinSQLClaimedSetup(t)
 			var count atomic.Int32
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { count.Add(1) }))
 			defer server.Close()
@@ -292,7 +292,7 @@ func TestAutoSignInTrustedSitesEveryAPIIORechecksOriginalAdmission(t *testing.T)
 			settings.APIToken = "synthetic-signin-original-api-key"
 			settings.Sites = []SiteConfig{signinSitesNative(server.URL)}
 			signinSitesPublish(t, f.a, settings)
-			if err := f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+			if err := finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 				t.Fatal(err)
 			}
 			in, err := f.a.pluginStore.Installation(ctx, f.run.InstanceID)
@@ -362,7 +362,7 @@ func TestAutoSignInTrustedSitesRedirectRechecksServiceSnapshot(t *testing.T) {
 func signinSitesRedirectRevocation(t *testing.T, api bool) {
 	t.Helper()
 	ctx := context.Background()
-	f := signinSQLSetup(t)
+	f := signinSQLClaimedSetup(t)
 	var first, second atomic.Int32
 	saved := make(chan error, 1)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -396,7 +396,7 @@ func signinSitesRedirectRevocation(t *testing.T, api bool) {
 	settings.APIToken = "synthetic-signin-redirect-original-key"
 	settings.Sites = []SiteConfig{signinSitesNative(server.URL)}
 	signinSitesPublish(t, f.a, settings)
-	if err := f.a.pluginStore.FinishRun(ctx, f.run.ID, "succeeded", "", json.RawMessage(`{}`)); err != nil {
+	if err := finishClaimedFixtureRun(ctx, f.a.pluginStore, f.run, "succeeded", "", json.RawMessage(`{}`)); err != nil {
 		t.Fatal(err)
 	}
 	var run PluginRun

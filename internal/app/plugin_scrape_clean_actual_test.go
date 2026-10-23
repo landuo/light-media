@@ -67,6 +67,11 @@ func scrapeActualHTTP(t *testing.T, a *App, instance, op string, body any) (any,
 		method = "PUT"
 	}
 	r := httptest.NewRequest(method, "/api/plugins/"+instance+"/"+op, bytes.NewReader(raw))
+	if op == "reset" {
+		// Production dispatch obtains the common fence/join proof before the
+		// native lifecycle handler; do not bypass that outer entry in fixtures.
+		return a.pluginResetHTTP(httptest.NewRecorder(), r, instance+"/"+op, instance)
+	}
 	return a.pluginScrapeCleanLifecycleHTTP(httptest.NewRecorder(), r, instance+"/"+op)
 }
 

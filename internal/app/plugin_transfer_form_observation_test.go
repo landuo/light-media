@@ -109,7 +109,8 @@ func TestTransferFormObservationActualProductFailure(t *testing.T) {
 			if !ok {
 				t.Fatal("manifest missing")
 			}
-			_, err := a.pluginForm(context.Background(), PluginInstallation{PluginID: pluginID, InstanceID: pluginID, Version: manifest.Version})
+			raw, _ := json.Marshal(manifest)
+			_, err := a.pluginFormWithOrigin(context.Background(), PluginInstallation{PluginID: pluginID, InstanceID: pluginID, Version: manifest.Version, ManifestSchemaVersion: manifest.SchemaVersion, Manifest: raw}, pluginFormOriginInstall)
 			var api *APIError
 			if !errors.As(err, &api) || api.Code != "PLUGIN_FORM_FAILED" || api.Message != "加载插件配置表单失败" {
 				t.Fatal("public error changed")

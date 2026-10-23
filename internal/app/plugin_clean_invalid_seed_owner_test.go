@@ -40,7 +40,17 @@ func TestPluginCleanInvalidSeedOwnerWorkerFixture(t *testing.T) {
 // native adapter. Catalog/runtime registration is a separate shared App slice.
 func cleanSeedOwnerInvoke(t *testing.T, a *App, run PluginRun) PluginRun {
 	t.Helper()
-	ctx := context.Background()
+	// Match the production executor: activate the real claim and retain its
+	// private lease through native work, durable completion, and cleanup.
+	ctx, activationErr := a.pluginStore.activateSupervisedRun(context.Background(), run)
+	if activationErr != nil {
+		t.Fatal(activationErr)
+	}
+	defer func() {
+		if err := a.pluginStore.releaseSupervisedRun(run); err != nil {
+			t.Error("release real claim", err)
+		}
+	}()
 	i, err := a.pluginStore.Installation(ctx, run.InstanceID)
 	if err != nil {
 		t.Fatal(err)

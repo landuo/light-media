@@ -40,6 +40,9 @@ func (p *PluginStore) configureIdentifiersOnce(ctx context.Context, run *PluginR
 	return p.configurePluginSchedulesWithReplacement(ctx, run, "once", definitions, at, nil, nil, replacement)
 }
 func (p *PluginStore) configurePluginSchedulesWithReplacement(ctx context.Context, run *PluginRun, group string, definitions []pluginScheduleDefinition, at time.Time, patch map[string]json.RawMessage, effect func(context.Context, *sql.Tx, PluginRun) error, replacement json.RawMessage) error {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return err
+	}
 	if !pluginStorageID.MatchString(group) || len(definitions) > 1000 || at.IsZero() {
 		return bad("INVALID_PLUGIN_SCHEDULE", "插件定时服务声明无效")
 	}
@@ -210,6 +213,9 @@ func latestPluginScheduleDue(trigger *schedule.Trigger, due, at time.Time) (time
 }
 
 func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Time) (int, error) {
+	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return 0, err
+	}
 	queued := 0
 	// Only this dispatch skips a positively identified unknown owner. Its due
 	// instant is untouched and the next dispatch checks the owner again.
@@ -343,6 +349,9 @@ func (p *PluginStore) enqueueDuePluginSchedules(ctx context.Context, at time.Tim
 }
 
 func (p *PluginStore) claimPluginScheduleTx(ctx context.Context, tx *sql.Tx, run PluginRun, at time.Time) (string, error) {
+	if err := p.checkPluginFormWrite(ctx, run.InstanceID, pluginFormWriteLifecycle); err != nil {
+		return "", err
+	}
 	if handled, code, err := p.claimAutoSignInScheduleTx(ctx, tx, run, at); handled || err != nil {
 		return code, err
 	}
@@ -406,6 +415,9 @@ func (p *PluginStore) pluginScheduledInvocation(ctx context.Context, run PluginR
 }
 
 func (p *PluginStore) enqueueManualPluginService(ctx context.Context, instanceID, serviceID string, at time.Time) (PluginRun, error) {
+	if err := p.checkPluginFormWrite(ctx, instanceID, pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	if !pluginStorageID.MatchString(instanceID) || !pluginServiceID.MatchString(serviceID) || at.IsZero() {
 		return PluginRun{}, bad("INVALID_PLUGIN_SCHEDULE", "定时服务标识无效")
 	}

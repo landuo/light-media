@@ -1,0 +1,232 @@
+{
+  "as_of_utc": "2026-10-23T09:35:00Z",
+  "branch": "plugins/subscribe-group",
+  "remote_head_readback": "7dd5baf18a4823faf4620902063b4c7646fac6c6",
+  "production_head": "c01ced21a297fefe4eb940115b5a347bcffbbb25",
+  "whole_plugin_complete": false,
+  "completion_status": "本地业务验证通过，但未最终验收交付；须完整验收、汇总推送与回读后才计完成。旧插桩工具路径400未闭合且根因未唯一证明。",
+  "original_reference": {
+    "version": "2.8.7",
+    "sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+    "new_samples_regenerated": 51,
+    "existing_frozen_rule_cases_retested": 31,
+    "existing_frozen_normalization_cases_retested": 36,
+    "baseline_unicode_subcase_failures": 14,
+    "normal_and_race_each_passed_nodes": 126,
+    "evidence": "validation/parser-result.json"
+  },
+  "app_25": {
+    "roots": [
+      "TestSubscribeGroupUnicodeRulesActualServerHTTP",
+      "TestSubscribeGroupAddedActualOutboxFieldsHistoryAndSearch",
+      "TestSubscribeGroupInitClearIsAtomicAndSourceFullReplacement",
+      "TestSubscribeGroupAddedLateFailureAndRestartRetry",
+      "TestSubscribeGroupCategoryCacheWarmReloadAndColdRestart",
+      "TestSubscribeGroupDownloadRangeFillCurrentRowsHistoryAndDedupAtomic",
+      "TestSubscribeGroupDownloadSingleSeasonAndRSSScope",
+      "TestSubscribeGroupDownloadLateSQLFailureRollsBackAndExactRetry",
+      "TestSubscribeGroupRPCRejectsPatchesViewWritesAndForeignIdentity",
+      "TestSubscribeGroupFillKeepsActualSelectedIntentBatchUsable",
+      "TestSubscribeGroupFillCategoryKeepsAlreadySelectedIntentBatchUsable",
+      "TestSubscribeGroupAPIRealWorkerInitializesClearsAndProcessesDownload",
+      "TestSubscribeGroupAddedEmptyPatchAndLegacyHistoryTruthiness",
+      "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation",
+      "TestSubscribeGroupAddedRejectsUnownedAndInvalidatedRuns",
+      "TestSubscribeGroupDownloadHandledContainerMembershipAndEarlyExits",
+      "TestSubscribeGroupDownloadKVFalseyAndTruthyScalarBehavior",
+      "TestSubscribeGroupDownloadPrerequisitesDoNotReadHistoryOrMarkHandled",
+      "TestSubscribeGroupDownloadProjectionPreservesSourceEmptyPresence",
+      "TestSubscribeGroupDownloadRangeMeansAllSeasonsAndBadSingleSeasonRollsBack",
+      "TestSubscribeGroupDownloadScopesAndCurrentExecutionAuthority",
+      "TestSubscribeGroupFillDoesNotBlessIntentsInvalidatedByUserEdit",
+      "TestSubscribeGroupFillIntentContinuationRollsBackWithLateReceiptFailure",
+      "TestSubscribeGroupFillWaitsForRunningSelectedDownloadContext",
+      "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP"
+    ],
+    "normal_passed_roots": 25,
+    "race_passed_roots": 24,
+    "race_historical_failed_root": "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP",
+    "race_failure": "HTTP400 on large history; exact original error code not captured. Isolated diagnostic later passed, not a production fix.",
+    "all_race_green": false,
+    "runs": {
+      "e2e-normal-result.json": {
+        "roots": 11,
+        "nodes": 15,
+        "failures": [],
+        "skips": [],
+        "exit": 0,
+        "source_manifest_sha256": "d42ff96850dea9e47f464abbe70663671269d262854be35bbd9669bc739c5138",
+        "new_test_only": true
+      },
+      "e2e-race-result.json": {
+        "roots": 11,
+        "nodes": 15,
+        "failures": [],
+        "skips": [],
+        "exit": 0,
+        "source_manifest_sha256": "d42ff96850dea9e47f464abbe70663671269d262854be35bbd9669bc739c5138",
+        "race_parent": true,
+        "ordinary_server_child": true
+      },
+      "browser/remaining-normal-result.json": {
+        "exit": 0,
+        "roots": [
+          "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP",
+          "TestSubscribeGroupFillIntentContinuationRollsBackWithLateReceiptFailure",
+          "TestSubscribeGroupFillDoesNotBlessIntentsInvalidatedByUserEdit",
+          "TestSubscribeGroupFillWaitsForRunningSelectedDownloadContext",
+          "TestSubscribeGroupDownloadRangeMeansAllSeasonsAndBadSingleSeasonRollsBack",
+          "TestSubscribeGroupDownloadKVFalseyAndTruthyScalarBehavior",
+          "TestSubscribeGroupDownloadHandledContainerMembershipAndEarlyExits",
+          "TestSubscribeGroupDownloadProjectionPreservesSourceEmptyPresence",
+          "TestSubscribeGroupDownloadPrerequisitesDoNotReadHistoryOrMarkHandled",
+          "TestSubscribeGroupDownloadScopesAndCurrentExecutionAuthority",
+          "TestSubscribeGroupAddedEmptyPatchAndLegacyHistoryTruthiness",
+          "TestSubscribeGroupAddedRejectsUnownedAndInvalidatedRuns",
+          "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation",
+          "TestSubscribeGroupAPIRealWorkerInitializesClearsAndProcessesDownload"
+        ],
+        "nodes": 88,
+        "failures": [],
+        "skips": []
+      },
+      "browser/remaining-race-result.json": {
+        "exit": 1,
+        "roots": [
+          "TestSubscribeGroupFillIntentContinuationRollsBackWithLateReceiptFailure",
+          "TestSubscribeGroupFillDoesNotBlessIntentsInvalidatedByUserEdit",
+          "TestSubscribeGroupFillWaitsForRunningSelectedDownloadContext",
+          "TestSubscribeGroupDownloadRangeMeansAllSeasonsAndBadSingleSeasonRollsBack",
+          "TestSubscribeGroupDownloadKVFalseyAndTruthyScalarBehavior",
+          "TestSubscribeGroupDownloadHandledContainerMembershipAndEarlyExits",
+          "TestSubscribeGroupDownloadProjectionPreservesSourceEmptyPresence",
+          "TestSubscribeGroupDownloadPrerequisitesDoNotReadHistoryOrMarkHandled",
+          "TestSubscribeGroupDownloadScopesAndCurrentExecutionAuthority",
+          "TestSubscribeGroupAddedEmptyPatchAndLegacyHistoryTruthiness",
+          "TestSubscribeGroupAddedRejectsUnownedAndInvalidatedRuns",
+          "TestSubscribeGroupAddedReadsCurrentRowAfterMetadataAndHonorsCancellation",
+          "TestSubscribeGroupAPIRealWorkerInitializesClearsAndProcessesDownload"
+        ],
+        "nodes": 86,
+        "failures": [
+          "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP/large_input_large_page",
+          "TestSubscribeGroupLargeHistoryFullPageOverRealWorkerHTTP",
+          "package"
+        ],
+        "skips": []
+      }
+    }
+  },
+  "real_production_server": {
+    "normal": {
+      "exit": 0,
+      "roots": [
+        "TestSubscribeGroupLargeHistoryActualServerHTTP"
+      ],
+      "nodes": 3,
+      "leaves": 2,
+      "failures": [],
+      "skips": [],
+      "http_measurements": [
+        "plugin_subscribe_history_server_test.go:64: owned actual HTTP /api/plugins/install: status=200 bytes=308 elapsed=188.512133ms",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=1121108 elapsed=512.044228ms",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=969.904701ms",
+        "plugin_subscribe_history_server_test.go:139: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=887.72904ms"
+      ]
+    },
+    "race": {
+      "exit": 0,
+      "roots": [
+        "TestSubscribeGroupLargeHistoryActualServerHTTP"
+      ],
+      "nodes": 3,
+      "leaves": 2,
+      "failures": [],
+      "skips": [],
+      "http_measurements": [
+        "plugin_subscribe_history_server_test.go:64: owned actual HTTP /api/plugins/install: status=200 bytes=308 elapsed=328.632918ms",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=1121108 elapsed=1.414821306s",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=4.027017916s",
+        "plugin_subscribe_history_server_test.go:139: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=4.032951289s"
+      ]
+    },
+    "oracle-normal": {
+      "exit": 0,
+      "roots": [
+        "TestResultCodecFrozenLegacyEquivalence",
+        "TestTransportCodecOracleDependency"
+      ],
+      "nodes": 640,
+      "leaves": 639,
+      "failures": [],
+      "skips": [],
+      "http_measurements": []
+    },
+    "oracle-race": {
+      "exit": 0,
+      "roots": [
+        "TestResultCodecFrozenLegacyEquivalence",
+        "TestTransportCodecOracleDependency"
+      ],
+      "nodes": 640,
+      "leaves": 639,
+      "failures": [],
+      "skips": [],
+      "http_measurements": []
+    },
+    "frozen_files_unchanged": 5522
+  },
+  "browser": {
+    "observed_passed": [
+      "six original configuration fields",
+      "save and reopen",
+      "cancel changes then refresh and reopen",
+      "two prebound instances isolated config/history",
+      "four-column newest-first history",
+      "clear first history and handled flags via real init without changing second instance"
+    ],
+    "cleanup": "First launcher exit -2 retained; process-group-fixed launcher with same frozen fixture binary completed exit0 and reaped owned processes.",
+    "generic_clone_creation_tested": false,
+    "evidence": "validation/browser/ui-observations.json"
+  },
+  "implemented_business": [
+    "category-rule replacement and download missing-field fill",
+    "season/site/handled/history semantics",
+    "atomic clear and rollback/restart retry",
+    "current-row authority/cancellation and private instance state",
+    "category cache reload and selected-intent continuation",
+    "full history rendering and exact persistence across reopen"
+  ],
+  "known_product_function_missing_in_scoped_plugin": [],
+  "classification_caveat": "No additional business gap identified within Linux/local synthetic acceptance scope; this is not proof of unlimited inputs or production migration.",
+  "retained_boundaries": [
+    "Race-child 4500 historical HTTP400 unresolved; instrumentation cost is a supported inference, not a proven unique cause.",
+    "4500 complete rows validated, not arbitrary 16MiB expanded history or unlimited full trees.",
+    "No production configuration/KV/reference migration or NAS deployment.",
+    "Generic clone/reset/update lifecycle belongs to framework; plugin uses shared identity context.",
+    "Broad generic RSSContext consumer integration is not claimed; no concrete current SourceMeta re-interpretation counterexample established."
+  ],
+  "protocol": {
+    "production_sha256": "daef6dbdf0fc142014d292a6dda3910abc4f19f43fa2b003063683786466fd73",
+    "optimization_withdrawn": true,
+    "reason": "Typed envelope accepted depth10000 input rejected by frozen legacy.",
+    "restored_legacy_comparison_cases": 638,
+    "ordinary_and_race_with_hash_guard_passed": true,
+    "full_protocol_race_new_run_claimed": false
+  },
+  "publication": {
+    "verified_blobs": 10,
+    "total_blobs": 11,
+    "pending_index": 7,
+    "pending_path": "testdata/plugins/subscribe-group-history/oracle-race.jsonl",
+    "pending_sha": "bc7722e99d8d38643718fe82a600c26fd0cb1ecc",
+    "readonly_lookup": "404 at 05:50 UTC; not evidence original write reached terminal failure",
+    "tree_commit_ref_started": false,
+    "approval_card_mapping": "unknown"
+  },
+  "local_plugin_business_acceptance_complete": false,
+  "final_publication_and_main_integration_complete": false,
+  "independent_review": "Coordinator reviewed all 5522 frozen hashes with zero drift, actual server build and complete-history assertions; parent accepted bounded Linux/local layered acceptance.",
+  "local_plugin_business_validation_passed": true,
+  "user_completion_rule": "Only complete acceptance plus aggregation push and readback counts as completed."
+}

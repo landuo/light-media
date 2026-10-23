@@ -96,7 +96,7 @@ func invokeIYUUActualSDKOutcome(t *testing.T, a *App, run PluginRun, finish bool
 	if !finish {
 		return run, nil
 	}
-	if e = a.pluginStore.FinishRun(ctx, run.ID, "succeeded", "", result); e != nil {
+	if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "succeeded", "", result); e != nil {
 		t.Fatal(e)
 	}
 	got, e := a.pluginStore.Run(ctx, run.ID)
@@ -447,7 +447,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 			if directoryMode == "directory-after-change" && (e == nil || !strings.Contains(e.Error(), "destination changed")) {
 				t.Fatal("unobserved daemon destination continued", e)
 			}
-			if e = a.pluginStore.FinishRun(ctx, run.ID, "failed", "OWNED_DESTINATION_RECONCILE", nil); e != nil {
+			if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "failed", "OWNED_DESTINATION_RECONCILE", nil); e != nil {
 				t.Fatal(e)
 			}
 			iyuuAssertUnknownAdmissionsWarmCold(t, a, run)
@@ -521,7 +521,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 		}
 		// An operator may acknowledge the failed App task. That cannot manufacture
 		// a native receipt or permit a new source timeline to repeat the effect.
-		if e = a.pluginStore.FinishRun(ctx, run.ID, "failed", "IYUU_OWNED_UNKNOWN", nil); e != nil {
+		if e = finishClaimedFixtureRun(ctx, a.pluginStore, run, "failed", "IYUU_OWNED_UNKNOWN", nil); e != nil {
 			t.Fatal(e)
 		}
 		if stage != "pending" {
@@ -544,7 +544,7 @@ func testIYUUActualAppSDKWithSetup(t *testing.T, kind string, lostACK bool, setu
 			if stage == "prepared" && (readErr != nil || record.Phase != "prepared") {
 				t.Fatal("blocked start changed prepared receipt", record.Phase, readErr)
 			}
-			if e = a.pluginStore.FinishRun(ctx, second.ID, "failed", "IYUU_UNCONFIRMED", nil); e != nil {
+			if e = finishClaimedFixtureRun(ctx, a.pluginStore, second, "failed", "IYUU_UNCONFIRMED", nil); e != nil {
 				t.Fatal(e)
 			}
 		}

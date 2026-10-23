@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "scope": "V6 transaction-scoped default projection and read-only proof interface; mechanical backend milestone only",
+  "parent": "b8cba481fe2e64137459ab1fe71831ceb4b6cdfc",
+  "files": [
+    {
+      "path": "internal/app/plugin_config_defaults.go",
+      "before_sha256": "3fdd60609f77e102bf6121402efe8d674f2784dba7803355809eadf538440a47",
+      "after_sha256": "95cf08b71e9c587382325a3f7f679150dbc58b4807f1f194ff863901f9cfbea7"
+    },
+    {
+      "path": "internal/app/plugin_config_defaults_projection_test.go",
+      "before_sha256": null,
+      "after_sha256": "7e63785ec09afacff8982fb55373482d8ba314cb6318e374ffe78e0ff64ce002"
+    },
+    {
+      "path": "internal/app/plugin_deferred.go",
+      "before_sha256": "689e890f94376fe0ecdfe0fa6dc0635ba4a5640ab97827831d987b7cebf1f8ba",
+      "after_sha256": "234aa13f61d417154b4666e069675f58261d8a7c063e273b65a5c122f53f8d7b"
+    },
+    {
+      "path": "internal/app/plugin_proof_reader.go",
+      "before_sha256": null,
+      "after_sha256": "e3eb5bbda53aef1a58a1c86b8dc46cd55bdbd0a51eb06417ac89a8bc7ddf47c9"
+    },
+    {
+      "path": "internal/app/plugin_run_origin.go",
+      "before_sha256": "6f67a1f04116915270482971f65f94bcc2ae08009e7518d8a2180dc665dde1ff",
+      "after_sha256": "c7227d7ca5df63ea4b08b319c1da429759738f474d6feeb386ce1b944955bf59"
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "before_sha256": "90072141e7d91add7d7aba91468f43d6e7ec3d87bb4268fd28ea434a21de4b4f",
+      "after_sha256": "e46a2b231458a4a11be33b2e236fea25fc50282725f7f4662bf2a64f7d8905e0"
+    },
+    {
+      "path": "internal/plugins/protocol_test.go",
+      "before_sha256": "e3893f67992849fe26be9ece846bce359198a7556c43a979f9e2aad62edd04b6",
+      "after_sha256": "85d8c529ad92a825b275d2feb70ca662a1760445227feb3c90788dddd476866c"
+    }
+  ],
+  "verification": {
+    "v6-projection-normal-1": {
+      "exit": 0,
+      "passed_roots": 16,
+      "passed_inclusive": 44,
+      "failures": [],
+      "changed": [],
+      "checked_files": 5428,
+      "missing_roots": [],
+      "completed_at": "2026-10-22T19:29:40.161682+00:00"
+    },
+    "v6-projection-race-1": {
+      "exit": 0,
+      "passed_roots": 16,
+      "passed_inclusive": 44,
+      "failures": [],
+      "changed": [],
+      "checked_files": 5428,
+      "missing_roots": [],
+      "completed_at": "2026-10-22T19:38:20.862917+00:00"
+    },
+    "v6-reader-normal-1": {
+      "exit": 0,
+      "passed_roots": 26,
+      "passed_inclusive": 71,
+      "failures": [],
+      "changed": [],
+      "checked_files": 5429,
+      "completed_at": "2026-10-22T19:45:21.352720+00:00"
+    },
+    "v6-reader-race-1": {
+      "exit": 0,
+      "passed_roots": 26,
+      "passed_inclusive": 71,
+      "missing_roots": [],
+      "failures": [],
+      "changed": [],
+      "checked_files": 5429,
+      "completed_at": "2026-10-22T19:50:43.31782841Z",
+      "checked_at": "2026-10-22T19:50:58.786737+00:00"
+    }
+  },
+  "limitations": [
+    "No production transactional/v1 caller or native owner declaration is enabled.",
+    "V6 focused tests use real SystemProcess and CategoryEditor manifests through the private mechanical primitive; public declarations fail closed.",
+    "No frontend or aggregate merge.",
+    "Historical full-App-race Uninstall form timeout remains unresolved; bounded diagnostic rerun passed but does not explain original timeout.",
+    "Full lifecycle reset/update/version migration is incomplete.",
+    "Missing-only defaults do not implement original Merge Form transitions that remove existing keys; separate trusted contract required."
+  ]
+}

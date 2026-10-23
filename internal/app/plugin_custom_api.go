@@ -314,6 +314,9 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 }
 
 func (a *App) enqueuePluginHTTP(ctx context.Context, installation PluginInstallation, input plugins.HTTPRequest, scope pluginAPIScope) (PluginRun, error) {
+	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
+		return PluginRun{}, err
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return PluginRun{}, err

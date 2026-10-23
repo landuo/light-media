@@ -1,0 +1,140 @@
+{
+  "scope": "SubscribeGroup current-framework integration, Linux/local fresh configuration",
+  "base_commit": "2f4ab1e5333501d890c2c803d11cbe0d32487329",
+  "base_tree": "f8d20ae5a0369f28025c55de1c3c9fd0b33d95bb",
+  "finished_utc": "2026-10-23T10:32:08Z",
+  "whole_plugin_complete": false,
+  "reason": "Final publication and aggregate push/readback are not complete.",
+  "preparation": {
+    "base_commit": "2f4ab1e5333501d890c2c803d11cbe0d32487329",
+    "base_tree": "f8d20ae5a0369f28025c55de1c3c9fd0b33d95bb",
+    "verified_base_files": 5711,
+    "unavailable_non_go_files": [
+      "docs/plugin-framework-main-integration-verification.json",
+      "testdata/plugins/auto-signin-image-hash/jpeg/jpeg-pillow-12.2.0.jsonl.gz",
+      "testdata/plugins/business-source-integration/verification/all-normal.jsonl.gz",
+      "testdata/plugins/business-source-integration/verification/v1-all-normal.jsonl.gz",
+      "testdata/plugins/release-meta-legacy-anitopy-oracle.json.gz"
+    ],
+    "delta": [
+      {
+        "path": "internal/plugins/subscribegroup/group.go",
+        "before": "b09d3feea50192ec2232e18394c3fa5d952b4740",
+        "after": "5f732deac1f84f5eab6db1f566a455306dc36323"
+      },
+      {
+        "path": "internal/plugins/subscribegroup/parser_source_test.go",
+        "before": null,
+        "after": "dca2a198cc73c1024148a1639bd4385f61df84ee"
+      },
+      {
+        "path": "testdata/plugins/subscribe-group-parser-oracle.json",
+        "before": null,
+        "after": "a128aeab5b25e7df6248e9e2309d1a72899ade66"
+      },
+      {
+        "path": "internal/app/plugin_subscribe_parser_acceptance_test.go",
+        "before": null,
+        "after": "f7dd5efc94c6f5a46c22370da4b1c7eeed5e0927"
+      },
+      {
+        "path": "internal/app/plugin_subscribe_history_server_test.go",
+        "before": null,
+        "after": "9079f0db315cc70c761be13b4a209eb6e8e21cb2"
+      }
+    ],
+    "candidate_files": 5715,
+    "shared_framework_helpers_unchanged": true
+  },
+  "first_runs": {
+    "pure-normal": {
+      "exit": 0,
+      "roots": 8,
+      "nodes": 126,
+      "failures": [],
+      "skips": []
+    },
+    "pure-race": {
+      "exit": 0,
+      "roots": 8,
+      "nodes": 126,
+      "failures": [],
+      "skips": []
+    },
+    "app-normal": {
+      "exit": 0,
+      "roots": 6,
+      "nodes": 8,
+      "failures": [],
+      "skips": []
+    },
+    "app-race": {
+      "exit": 1,
+      "roots": 4,
+      "nodes": 4,
+      "failures": [
+        {
+          "Time": "2026-10-23T10:29:09.735961363Z",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Test": "TestSubscribeGroupLargeHistoryActualServerHTTP",
+          "Elapsed": 2.85
+        },
+        {
+          "Time": "2026-10-23T10:29:09.736441797Z",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Test": "TestSubscribeGroupUnicodeRulesActualServerHTTP",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-10-23T10:29:09.765497279Z",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 6.977
+        }
+      ],
+      "skips": []
+    },
+    "hash_drift": [],
+    "frozen_files": 5715
+  },
+  "retry_two_only": {
+    "exit": 0,
+    "roots": 2,
+    "nodes": 4,
+    "failures": [],
+    "skips": [],
+    "hash_files": 5715,
+    "hash_drift": [],
+    "free_bytes": 979107840,
+    "measurements": [
+      "transfer_fixture_verified kind=server entry=./cmd/server race=false sha256=7c5a33648f86812e6137071b78658595906de65783f7dab07d770d4268c9a9ca",
+      "plugin_subscribe_history_server_test.go:64: owned actual HTTP /api/plugins/install: status=200 bytes=308 elapsed=216.727748ms",
+      "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=1121108 elapsed=1.438688467s",
+      "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=3.940303155s",
+      "plugin_subscribe_history_server_test.go:139: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=3.748141226s"
+    ]
+  },
+  "environment_failure": "First race attempt passed four roots; final two failed at TempDir mkdir ENOSPC before business execution. Preserved, not a product or timeout failure.",
+  "retained_historical_risk": "Earlier 61cc dual-race-child 4500 HTTP400 remains unresolved with no uniquely proven root cause. New production-worker layered pass does not erase it.",
+  "no_migration_required": true,
+  "framework_helpers_preserved": true,
+  "production_jsonrpc_unchanged": true,
+  "only_production_delta": "internal/plugins/subscribegroup/group.go",
+  "current_worker_sha256": "7c5a33648f86812e6137071b78658595906de65783f7dab07d770d4268c9a9ca",
+  "publication_scope": "Independent source/test/current-framework integration stage. Not whole-plugin final delivery.",
+  "pending_archive": {
+    "path": "testdata/plugins/subscribe-group-history/oracle-race.jsonl",
+    "sha": "bc7722e99d8d38643718fe82a600c26fd0cb1ecc",
+    "status": "Original blob creation has no terminal receipt; read-only object queries return404. Not retried, re-encoded, renamed or replaced.",
+    "runtime_or_test_input": false
+  },
+  "supersedes_scope_in_older_docs": "Old-system configuration/KV/history/reference migration and NAS production handoff are not required; user uses fresh native configuration. Older evidence is retained as historical scope, not current remaining work.",
+  "final_completion_rule": "Complete only after full acceptance, aggregate push and readback. This task branch stage is not aggregation.",
+  "source_stage_exclusions": [
+    "internal/app/plugin_subscribe_history_diagnostic_test.go",
+    "internal/plugins/result_codec_equivalence_test.go"
+  ],
+  "source_stage_note": "The new diagnostic and codec-equivalence test sources remain deferred with their separate evidence stage; they were not in the frozen 2f4 integration candidate. Existing tagged browser fixture from parent7dd is retained unchanged, not included in default test execution."
+}

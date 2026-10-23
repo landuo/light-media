@@ -173,6 +173,9 @@ onUnmounted(() => {
           data-testid="plugin-runtime-support"
           >{{ supportNotice }}</VAlert
         >
+        <VAlert v-if="plugin.update_review_pending" type="warning" variant="tonal" class="ma-4"
+          >版本已迁移，旧一次性操作尚未执行。请核对开关和内容后保存；保存仅确认当前实例，不影响其他分身。关闭或取消不会执行。</VAlert
+        >
         <p v-if="loading" role="status">正在加载配置…</p>
         <VAlert v-if="error" type="error" variant="tonal" class="plugin-form-error">{{
           error
@@ -210,6 +213,9 @@ onUnmounted(() => {
           class="mb-4"
           data-testid="plugin-runtime-support"
           >{{ supportNotice }}</VAlert
+        >
+        <VAlert v-if="plugin.update_review_pending" type="warning" variant="tonal" class="ma-4"
+          >版本已迁移，旧一次性操作尚未执行。请核对开关和内容后保存；保存仅确认当前实例，不影响其他分身。关闭或取消不会执行。</VAlert
         >
         <p v-if="loading" class="pa-4" role="status">正在加载配置…</p>
         <VAlert v-if="error" type="error" variant="tonal" class="ma-4">{{ error }}</VAlert>

@@ -699,7 +699,7 @@ func TestPluginNoticeEventsUseActualCollectionAndRejectMissingPrivateFacts(t *te
 			if err = p.configureEventSubscription(context.Background(), run, "refresh", []string{"notice.message"}, 0, true); err != nil {
 				t.Fatal(err)
 			}
-			if err = p.FinishRun(context.Background(), run.ID, "succeeded", "", nil); err != nil {
+			if err = finishClaimedFixtureRun(context.Background(), p, run, "succeeded", "", nil); err != nil {
 				t.Fatal(err)
 			}
 			var before int64
@@ -738,7 +738,7 @@ func TestPluginNoticeEventsUseActualCollectionAndRejectMissingPrivateFacts(t *te
 				if strings.Contains(string(eventRun.Input), "owned-event-user") {
 					t.Fatal("private recipient leaked through public event batch")
 				}
-				if err := p.FinishRun(context.Background(), eventRun.ID, "succeeded", "", nil); err != nil {
+				if err := finishClaimedFixtureRun(context.Background(), p, eventRun, "succeeded", "", nil); err != nil {
 					t.Fatal(err)
 				}
 			}

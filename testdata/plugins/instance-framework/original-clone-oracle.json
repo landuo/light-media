@@ -1,0 +1,97 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_blob": "8fc8954d7e7df32b970f16f461efa244fa2f142c",
+  "source_path": "app/core/plugin.py",
+  "source_lines": [
+    1905,
+    2003
+  ],
+  "excerpt_sha256": "3cfe7ec589af131c14dc40ddeeacb1e451e2c3c509a3d58e1dae6ab9eae72670",
+  "method": "exact original AST method; synthetic config/registration/code-rewrite boundaries; real stdlib copy in owned temp",
+  "cases": [
+    {
+      "name": "copied_flags_and_unknown_values",
+      "suffix": "ABC",
+      "config": {
+        "enabled": true,
+        "enable": true,
+        "onlyonce": true,
+        "zero": 0,
+        "flag": false,
+        "nested": {
+          "empty": ""
+        }
+      },
+      "success": true,
+      "result": "SystemProcessabc",
+      "clone_config": {
+        "enabled": false,
+        "enable": false,
+        "onlyonce": true,
+        "zero": 0,
+        "flag": false,
+        "nested": {
+          "empty": ""
+        }
+      },
+      "reloads": [
+        "SystemProcessabc"
+      ],
+      "init_count": 1,
+      "copied_directory": true
+    },
+    {
+      "name": "absent_config",
+      "suffix": "Empty",
+      "config": null,
+      "success": true,
+      "result": "SystemProcessempty",
+      "clone_config": null,
+      "reloads": [
+        "SystemProcessempty"
+      ],
+      "init_count": 0,
+      "copied_directory": true
+    },
+    {
+      "name": "single_flag_original_adds_second_spelling",
+      "suffix": "Single",
+      "config": {
+        "enable": true
+      },
+      "success": true,
+      "result": "SystemProcesssingle",
+      "clone_config": {
+        "enable": false,
+        "enabled": false
+      },
+      "reloads": [
+        "SystemProcesssingle"
+      ],
+      "init_count": 1,
+      "copied_directory": true
+    },
+    {
+      "name": "duplicate",
+      "suffix": "Dup",
+      "config": {},
+      "success": false,
+      "result": "分身插件 SystemProcessdup 已存在",
+      "clone_config": null,
+      "reloads": [],
+      "init_count": 0,
+      "copied_directory": false
+    },
+    {
+      "name": "rewrite_failure_cleans_owned_copy",
+      "suffix": "Fail",
+      "config": {},
+      "success": false,
+      "result": "synthetic rewrite refused",
+      "clone_config": null,
+      "reloads": [],
+      "init_count": 0,
+      "copied_directory": false
+    }
+  ]
+}

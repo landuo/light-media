@@ -1,0 +1,81 @@
+{
+  "status": "backend-only development checkpoint; not complete framework acceptance",
+  "base_code_commit": "4e50b3040c7cdb146097953447687f5aa355898e",
+  "branch_parent_commit": "b4a33f6a0cb1c2387d8c948758da2b38a6f9b8c2",
+  "target_branch": "plugins/framework-lifecycle",
+  "go_version": "go1.26.10",
+  "runs": [
+    {
+      "name": "clone-normal-5",
+      "root_passes": 11,
+      "inclusive_passes": 44,
+      "package_elapsed_seconds": 10.804,
+      "terminal_at": "2026-10-22T14:29:52.825628276Z",
+      "stdout_sha256": "27b660d11d58f1ae773430e1bf4a4c480f27f24506e61b3d2291ea35e8efdb75",
+      "stderr_bytes": 0
+    },
+    {
+      "name": "clone-race-1",
+      "root_passes": 11,
+      "inclusive_passes": 44,
+      "package_elapsed_seconds": 91.098,
+      "terminal_at": "2026-10-22T14:33:13.166132009Z",
+      "stdout_sha256": "50385c01e04f3fbd36923d86557b4fff15aa950eb4aa90983f1614d28611335d",
+      "stderr_bytes": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "internal/app/plugin_instances.go",
+      "sha256": "fbf9ba3e43ca219b87433f24f80029ab08d70b48736ba3a5e5df5c74b94ed8f3"
+    },
+    {
+      "path": "internal/app/plugin_instances_test.go",
+      "sha256": "80214d27f345ed8faca9a1441102fcb7d20fe3780f60c6aae1cb93903c7a9205"
+    },
+    {
+      "path": "internal/app/plugin_http.go",
+      "sha256": "754c45b64f3347079bd82c68e1bf25c1b9028f0dc6c296dc42b76dc1c6502a7f"
+    },
+    {
+      "path": "internal/app/plugin_store.go",
+      "sha256": "65239e2375431c05773469336c4d9abb01c1be315fcb7822b2b085c5d44b0594"
+    },
+    {
+      "path": "internal/app/plugin_iyuu_owner.go",
+      "sha256": "5595d0601233bf7d901d26dccbb275852ca16aa099629a39ff889407c42b90ef"
+    },
+    {
+      "path": "internal/app/plugin_site_controls.go",
+      "sha256": "ed37e4f0c5dd2891afa8a407f104c0f53ad674b367543517ff7b83b545d29d62"
+    },
+    {
+      "path": "testdata/plugins/instance-framework/original-clone-oracle.json",
+      "sha256": "963af4c4538c11e05bc673b7bb23c97eda21b2355d40f6f82f5b4ad62b33989d"
+    }
+  ],
+  "scope": [
+    "21 compiled builtin cold clones",
+    "6 actual SDK workers and authenticated HTTP config/init: CategoryEditor,SystemProcess,SiteStatistic,AutoSignIn,RemoveLink,BrushFlowLanduo",
+    "atomic conflict/tombstone/concurrency, encrypted namespaces and rollback",
+    "cold store reopen and clone-of-clone presentation",
+    "pinned original AST clone orchestration differential"
+  ],
+  "remaining": [
+    "Frontend candidate, typecheck/build and actual browser not included or claimed passed",
+    "Adjacent framework regression, vet and standalone server build remain pending",
+    "No new reset/update/cancellation lifecycle implementation in this checkpoint",
+    "No complete old migrated reference provenance claim; explicit legacy handoff remains fail-closed",
+    "No production deployment, media deletion or real-account operations"
+  ],
+  "original_safety_differences": [
+    "Cold creation does not reload/init as original Python does",
+    "Only existing enable/enabled flags are cleared, avoiding invented keys rejected by strict typed configuration",
+    "Uninstall retains data and tombstone rather than deleting original clone code/config"
+  ],
+  "earlier_failures_retained": [
+    "round 1 duplicate err declaration compile failure",
+    "round 2 overbroad declaration edit compile failure, corrected before final tested bytes"
+  ],
+  "source_changes_after_tests": "Only this verification document; six Go inputs and original oracle remain byte-exact"
+}

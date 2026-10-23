@@ -93,6 +93,12 @@ func transferBuildSettings(info *debug.BuildInfo) map[string]string {
 }
 
 func buildTransferFixture(server bool) (string, error) {
+	return buildPluginProcessFixture(server, "sdk", "./internal/app/testdata/transfer-worker")
+}
+
+// Shared test builder preserves the verified parent race/tags/toolchain and
+// actual normal cmd/server path. Targets are compiled test constants, not input.
+func buildPluginProcessFixture(server bool, sdkName, sdkTarget string) (string, error) {
 	parentInfo, ok := debug.ReadBuildInfo()
 	if !ok {
 		return "", fmt.Errorf("Transfer fixture: parent Go build information unavailable")
@@ -129,7 +135,7 @@ func buildTransferFixture(server bool) (string, error) {
 		}
 		root = next
 	}
-	name, target := "sdk", "./internal/app/testdata/transfer-worker"
+	name, target := sdkName, sdkTarget
 	race := parent["-race"] == "true"
 	if server {
 		name, target, race = "server", "./cmd/server", false
