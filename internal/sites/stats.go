@@ -30,6 +30,7 @@ type UserStats struct {
 	RatioInfinite bool              `json:"ratio_infinite,omitempty"`
 	Seeding       *int64            `json:"seeding"`
 	SeedingBytes  *int64            `json:"seeding_bytes"`
+	SeedingInfo   [][2]int64        `json:"seeding_info"`
 	Leeching      *int64            `json:"leeching"`
 	Bonus         *float64          `json:"bonus"`
 	CapturedAt    string            `json:"captured_at"`
@@ -41,6 +42,9 @@ func (c *Client) UserStats(ctx context.Context) (UserStats, error) {
 	ctx = logging.SiteContext(ctx, c.config.ID)
 	ctx, _ = logging.Target(ctx, "site")
 	s := UserStats{CapturedAt: time.Now().UTC().Format(time.RFC3339), Sources: map[string]string{}, Warnings: []string{}}
+	if c.config.Kind == "rousi" {
+		return c.rousiUserStats(ctx, s)
+	}
 	if c.config.Kind == "mteam" {
 		return c.mteamUserStats(ctx, s)
 	}
@@ -421,6 +425,8 @@ func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, er
 		}
 	}
 	var size, count int64
+	info := [][2]int64{}
+	infoComplete := true
 	seen := map[string]bool{}
 	complete := false
 	for page := 1; page <= 50; page++ {
@@ -455,6 +461,11 @@ func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, er
 			seen[id] = true
 			size += n
 			count++
+			if peers, ok := integer(torrent["source"]); ok {
+				info = append(info, [2]int64{peers, n})
+			} else {
+				infoComplete = false
+			}
 		}
 		if !valid {
 			s.Warnings = append(s.Warnings, "site_seeding_protocol_changed")
@@ -477,6 +488,10 @@ func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, er
 	if complete {
 		s.SeedingBytes = &size
 		s.Sources["seeding_bytes"] = "api/member/getUserTorrentList:all pages"
+		if infoComplete {
+			s.SeedingInfo = info
+			s.Sources["seeding_info"] = "api/member/getUserTorrentList:torrent.source,size/all pages"
+		}
 		if s.Seeding == nil {
 			s.Seeding = &count
 			s.Sources["seeding"] = "api/member/getUserTorrentList:all pages"
@@ -523,6 +538,8 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 		break
 	}
 	var total, count int64
+	info := [][2]int64{}
+	infoComplete := true
 	seenURLs := map[string]bool{}
 	seenIDs := map[string]bool{}
 	for page := 0; page < 50; page++ {
@@ -566,13 +583,19 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 			if len(rows) == 0 {
 				continue
 			}
-			sizeCol := -1
+			sizeCol, seedersCol := -1, -1
 			for i, cell := range directCells(rows[0]) {
 				label := strings.ToLower(text(cell))
+				if label == "在做种" || label == "做种者" || label == "做種者" || label == "seeders" {
+					seedersCol = i
+				}
 				if label == "大小" || label == "尺寸" || label == "size" {
 					sizeCol = i
 				}
 				for _, img := range find(cell, func(n *html.Node) bool { return n.Data == "img" }) {
+					if hasClass(img, "seeders") || strings.EqualFold(attribute(img, "alt"), "seeders") {
+						seedersCol = i
+					}
 					if attribute(img, "class") == "size" || attribute(img, "alt") == "size" {
 						sizeCol = i
 					}
@@ -615,6 +638,15 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 				}
 				total += *n
 				count++
+				if seedersCol >= 0 && seedersCol < len(cells) {
+					if peers, ok := statsInt(text(cells[seedersCol])); ok {
+						info = append(info, [2]int64{*peers, *n})
+					} else {
+						infoComplete = false
+					}
+				} else {
+					infoComplete = false
+				}
 			}
 			break
 		}
@@ -653,6 +685,10 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 			}
 			s.SeedingBytes = &total
 			s.Sources["seeding_bytes"] = "getusertorrentlistajax.php:all pages"
+			if infoComplete {
+				s.SeedingInfo = info
+				s.Sources["seeding_info"] = "getusertorrentlistajax.php:seeders,size/all pages"
+			}
 			if s.Seeding == nil {
 				s.Seeding = &count
 				s.Sources["seeding"] = "getusertorrentlistajax.php:all pages"

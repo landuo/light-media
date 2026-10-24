@@ -102,7 +102,7 @@ func (c *Client) CloseIdleConnections() {
 
 func New(c Config) (*Client, error) {
 	switch c.Kind {
-	case "mteam", "hhanclub", "ubits", "jiayuan", "1ptba", "nexusphp":
+	case "mteam", "hhanclub", "ubits", "jiayuan", "1ptba", "nexusphp", "rousi":
 	default:
 		return nil, errors.New("site_unsupported_kind")
 	}
@@ -131,6 +131,13 @@ func New(c Config) (*Client, error) {
 		}
 		if !mteamAPI(u) {
 			return nil, errors.New("site_mteam_origin_not_allowed")
+		}
+	} else if c.Kind == "rousi" {
+		if c.APIKey == "" {
+			return nil, errors.New("site_api_key_required")
+		}
+		if !rousiOrigin(u) {
+			return nil, errors.New("site_rousi_origin_not_allowed")
 		}
 	} else if c.Cookie == "" {
 		return nil, errors.New("site_cookie_required")
@@ -161,6 +168,9 @@ func (c *Client) Search(ctx context.Context, query string, page int) (SearchResu
 		page = 1
 	}
 	ctx, _ = logging.Target(ctx, "site")
+	if c.config.Kind == "rousi" {
+		return c.searchRousi(ctx, query, page)
+	}
 	if c.config.Kind == "mteam" {
 		return c.searchMTeam(ctx, query, page)
 	}
@@ -192,6 +202,9 @@ func (c *Client) Torrent(ctx context.Context, resourceID string) ([]byte, error)
 	if c.config.Kind == "mteam" {
 		u, err = c.mteamTorrentURL(ctx, resourceID)
 		headers = nil // Token URLs and the CDN must never receive API credentials.
+	} else if c.config.Kind == "rousi" {
+		u, err = c.rousiTorrentURL(ctx, resourceID)
+		headers = nil
 	} else if c.config.Kind == "hhanclub" {
 		u, err = c.hhanTorrentURL(ctx, resourceID)
 	} else {

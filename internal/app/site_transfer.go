@@ -58,6 +58,8 @@ func siteImportOrigin(value string) (kind, canonical, domain string, err error) 
 		}
 	case "m-team.io", "www.m-team.io", "kp.m-team.io", "api.m-team.io":
 		kind, domain, host = "mteam", "m-team.io", "api.m-team.io"
+	case "rousi.pro", "www.rousi.pro":
+		kind, domain, host = "rousi", "rousi.pro", "rousi.pro"
 	case "hhanclub.net", "www.hhanclub.net":
 		kind, domain = "hhanclub", "hhanclub.net"
 	case "ubits.club", "www.ubits.club":
@@ -266,7 +268,7 @@ func (a *App) importManagedSites(ctx context.Context, raw json.RawMessage) (site
 				report.Failed++
 			}
 		} else {
-			if (in.Kind == "mteam" && in.APIKey == "") || (in.Kind != "mteam" && in.Cookie == "") {
+			if ((in.Kind == "mteam" || in.Kind == "rousi") && in.APIKey == "") || (in.Kind != "mteam" && in.Kind != "rousi" && in.Cookie == "") {
 				result.Warnings = append(result.Warnings, "登录凭据尚未配置；已保存站点，补充凭据后再测试连接")
 			}
 			touched[in.ID] = true

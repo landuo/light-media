@@ -45,6 +45,7 @@ var nativeSiteTemplates = []SiteTemplate{
 	{"jiayuan", "家园", "https://hdhome.org", "https://hdhome.org"},
 	{"1ptba", "1PTBA", "https://1ptba.com", "https://1ptba.com"},
 	{"nexusphp", "NexusPHP", "", ""},
+	{"rousi", "肉丝", "https://rousi.pro", "https://rousi.pro"},
 }
 
 func (a *App) managedConnectionKey(namespace string, fields ...string) string {
@@ -74,7 +75,7 @@ func normalizeManagedSite(s *SiteConfig) error {
 	host := strings.ToLower(u.Hostname())
 	if host == "127.0.0.1" || host == "localhost" || host == "::1" {
 		// Existing protocol fixtures use explicit legacy adapters on loopback.
-		if s.Kind != "mteam" && s.Kind != "hhanclub" && s.Kind != "ubits" && s.Kind != "jiayuan" && s.Kind != "1ptba" {
+		if s.Kind != "mteam" && s.Kind != "hhanclub" && s.Kind != "ubits" && s.Kind != "jiayuan" && s.Kind != "1ptba" && s.Kind != "rousi" {
 			return bad("INVALID_SITE_URL", "站点地址须为公网域名的 HTTPS 根地址")
 		}
 	} else {
@@ -138,6 +139,9 @@ func (a *App) managedSites(ctx context.Context) (any, error) {
 			last = siteSnapshot{}
 		}
 		configured := s.Cookie != "" || s.APIKey != ""
+		if s.Kind == "mteam" || s.Kind == "rousi" {
+			configured = s.APIKey != ""
+		}
 		credentials := siteSecretState(s)
 		hideSiteSecrets(&s)
 		var used int

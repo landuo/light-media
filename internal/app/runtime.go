@@ -104,7 +104,7 @@ type Options struct {
 	Web           http.Handler
 }
 
-const appVersion = "0.4.15"
+const appVersion = "0.4.16"
 
 type APIError struct {
 	Code    string `json:"code"`
@@ -131,6 +131,17 @@ func New(opts Options) (*App, error) {
 	if e != nil {
 		s.Close()
 		return nil, e
+	}
+	// Earlier releases imported Rousi as generic NexusPHP. Select its native
+	// adapter on load while preserving the saved site ID, origin and credentials.
+	// The encrypted configuration is left intact until the user next saves it.
+	for i := range a.config.Sites {
+		site := &a.config.Sites[i]
+		if site.Kind == "nexusphp" {
+			if kind, _, _, err := siteImportOrigin(site.BaseURL); err == nil && kind == "rousi" {
+				site.Kind = "rousi"
+			}
+		}
 	}
 	if e = a.bootstrapNativeSiteIdentities(context.Background()); e != nil {
 		s.Close()

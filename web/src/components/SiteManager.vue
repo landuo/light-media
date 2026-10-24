@@ -2,12 +2,14 @@
 import { VTextField } from 'vuetify/components/VTextField';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTextarea } from 'vuetify/components/VTextarea';
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue';
 import { api, bytes, clone, date, errorText, friendly, refreshSettings, toast, ui } from '../api';
 import { downloadSiteExport, type SiteImportResult } from '../features/site-transfer';
 import SiteImportDialog from './SiteImportDialog.vue';
 import SiteResourceDialog from './SiteResourceDialog.vue';
 import AppIcon from './AppIcon.vue';
+
+const SiteUserDataDialog = defineAsyncComponent(() => import('./SiteUserDataDialog.vue'));
 
 const data = ref<any>({ sites: [], supported: [] });
 const filter = ref('all'),
@@ -197,8 +199,33 @@ function edit(row: any) {
   );
   menu.value = '';
   credentialTab.value =
-    row.config.kind === 'mteam' || row.credential_state?.api_key ? 'api' : 'cookie';
+    ['mteam', 'rousi'].includes(row.config.kind) || row.credential_state?.api_key
+      ? 'api'
+      : 'cookie';
 }
+watch(
+  () => editing.value?.base_url,
+  (url) => {
+    if (!url) return;
+    try {
+      if (
+        [
+          'rousi.pro',
+          'www.rousi.pro',
+          'm-team.cc',
+          'kp.m-team.cc',
+          'api.m-team.cc',
+          'm-team.io',
+          'kp.m-team.io',
+          'api.m-team.io',
+        ].includes(new URL(url).hostname.toLowerCase())
+      )
+        credentialTab.value = 'api';
+    } catch {
+      /* A partially typed URL has no adapter yet. */
+    }
+  },
+);
 async function save() {
   if (transferBusy.value || saving.value) return;
   saving.value = true;
@@ -342,18 +369,11 @@ async function refreshVisible() {
   batch.value.running = false;
   toast(`站点测试完成：成功 ${batch.value.ok}，失败 ${batch.value.failed}`, batch.value.failed > 0);
 }
-async function openHistory(row: any) {
-  history.value = { name: row.config.name, row, items: [], loading: true, error: '' };
-  try {
-    const result = await api('/sites/manage/' + encodeURIComponent(row.config.id) + '/history');
-    if (history.value?.row === row) history.value = { ...history.value, ...result, loading: false };
-  } catch (e) {
-    if (history.value?.row === row) {
-      history.value.error = errorText(e);
-      history.value.loading = false;
-    }
-  }
+function openHistory(row: any) {
+  history.value = row;
+  menu.value = '';
 }
+
 function openImport() {
   if (!transferBlocked.value) importVisible.value = true;
 }
@@ -604,7 +624,7 @@ onUnmounted(() => {
             :disabled="working"
             @click="
               edit(row);
-              credentialTab = 'cookie';
+              credentialTab = ['mteam', 'rousi'].includes(row.config.kind) ? 'api' : 'cookie';
             "
           >
             <AppIcon name="refresh" />
@@ -835,7 +855,7 @@ onUnmounted(() => {
                 autocomplete="new-password"
                 aria-label="API Key"
                 :placeholder="
-                  original?.credential_state?.api_key || original?.credential_configured
+                  original?.credential_state?.api_key
                     ? '已保存，留空保留原凭据'
                     : '填写站点 API Key'
                 "
@@ -937,34 +957,28 @@ onUnmounted(() => {
         </footer>
       </section>
     </div>
-    <div
-      v-if="history || statistics"
-      class="manager-backdrop"
-      @click.self="
-        history = null;
-        statistics = false;
-      "
-    >
+    <SiteUserDataDialog
+      v-if="history"
+      :key="history.config.id"
+      :site="history"
+      :blocked="working"
+      @close="history = null"
+      @refreshed="data = $event"
+    />
+    <div v-if="statistics" class="manager-backdrop" @click.self="statistics = false">
       <section
         class="manager-dialog manager-wide"
         role="dialog"
         aria-modal="true"
-        aria-label="站点数据"
+        aria-label="站点统计"
       >
         <header>
-          <h2>{{ history ? history.name + ' · 用户数据' : '站点统计' }}</h2>
-          <button
-            class="icon-button"
-            aria-label="关闭站点数据"
-            @click="
-              history = null;
-              statistics = false;
-            "
-          >
+          <h2>站点统计</h2>
+          <button class="icon-button" aria-label="关闭站点统计" @click="statistics = false">
             <AppIcon name="close" />
           </button>
         </header>
-        <template v-if="statistics"
+        <template
           ><div class="site-totals">
             <div v-for="total in totals" :key="total.key">
               <small>{{ names[total.key] }}</small
@@ -977,66 +991,6 @@ onUnmounted(() => {
               }}</strong
               ><small>{{ total.observed }} / {{ data.sites.length }} 个站点提供数据</small>
             </div>
-          </div></template
-        >
-        <template v-else-if="history"
-          ><p>
-            {{ history.row.stats?.username || '账户信息未获取' }} ·
-            {{ history.row.stats?.level || '等级未提供' }}
-          </p>
-          <dl class="site-metrics">
-            <div
-              v-for="key in [
-                'uploaded',
-                'downloaded',
-                'ratio',
-                'seeding',
-                'seeding_bytes',
-                'bonus',
-                'leeching',
-              ]"
-              :key="key"
-            >
-              <dt>{{ names[key] }}</dt>
-              <dd>{{ value(history.row.stats, key) }}</dd>
-            </div>
-          </dl>
-          <p v-if="history.row.connection.error" class="error-box">
-            {{ friendly(history.row.connection.error) }}
-          </p>
-          <p class="manager-note">
-            数据：{{ date(history.row.stats?.captured_at) }} · 近 24 小时请求
-            {{ history.row.usage_24h || 0 }} / {{ history.row.config.daily_budget || 600 }}
-          </p>
-          <h3>历史数据</h3>
-          <p v-if="history.loading">正在加载…</p>
-          <p v-else-if="history.error" class="error-box">{{ history.error }}</p>
-          <p v-else-if="!history.items.length">尚无成功快照，先测试 / 刷新站点数据。</p>
-          <div v-else class="manager-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>日期</th>
-                  <th
-                    v-for="key in ['uploaded', 'downloaded', 'ratio', 'seeding', 'bonus']"
-                    :key="key"
-                  >
-                    {{ names[key] }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in history.items" :key="item.stats.captured_at">
-                  <td>{{ date(item.stats.captured_at) }}</td>
-                  <td
-                    v-for="key in ['uploaded', 'downloaded', 'ratio', 'seeding', 'bonus']"
-                    :key="key"
-                  >
-                    {{ value(item.stats, key) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div></template
         >
       </section>
