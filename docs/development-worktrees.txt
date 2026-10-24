@@ -19,8 +19,8 @@ Git 工作树仍有各自的文件检出，但共享对象库；节省空间还�
 - 部署记录见主检出的 docs/poster-v0.4.15-deployment.json；本次工作树转换没有发布新程序。
 
 界面修复分支与检出目录
-- 分支：dev/ui，基于 production/v0.4.15。
-- 后续需要该分支时，在原目录 git switch dev/ui，不额外保留一份检出。
+- 历史界面分支：dev/ui，基于 production/v0.4.15；已于 2026-10-24 正式合入 main。
+- 最新界面和插件集成代码统一使用 main，在原目录 git switch main；dev/ui 保留分支历史。
 - 原 work/_poster_20261024/release 的源码已保存为生产基线提交；曾移动到附加工作树 ui，该附加检出现已回收，分支和提交继续保留。
 - 回收时只移除了附加工作树中的 node_modules 符号链接；原目录的依赖目录继续保留。
 - 现存 v0.4.15 发布二进制及审核记录保留；不因工作树转换删除唯一发布材料。
@@ -28,6 +28,7 @@ Git 工作树仍有各自的文件检出，但共享对象库；节省空间还�
 分支选择
 先 git fetch origin，再 git worktree list --porcelain，检查工作区状态并复用合适的工作树。
 2026-10-24 同步时，将本地 main 的最近界面修复与 origin/main 已集成的插件代码进行正常合并，保留双方历史。独立插件任务分支仍按各自验收范围集成；生产基线继续单独保留，不通过强制推送或整批合入未验收插件来同步。
+随后将 dev/ui 正式合入 main：相关界面源码已在 main 中，解决旧快照冲突时保留主分支现有的分身、更新、通知、站点认证及对应测试。合并前后的产品源码与构建产物字节一致，仅补齐分支历史和本操作说明。
 线上修复以已验证生产提交为起点；新功能以确认的集成分支为起点；插件继续使用已有 plugins/* 或 dev/plugins-continuation 任务分支。
 切换分支前确认当前任务成果已提交，核对最新 AGENTS.md，并把适用规则带入任务分支。禁止强制切换或覆盖其他任务的未提交工作。
 
@@ -35,7 +36,7 @@ Git 工作树仍有各自的文件检出，但共享对象库；节省空间还�
   git fetch origin
   git worktree list --porcelain
   git status --short
-  git switch dev/ui
+  git switch main
   git switch -c fix/<任务> production/v0.4.15
   git switch -c feat/<任务> origin/main
 
