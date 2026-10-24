@@ -78,12 +78,23 @@ func firstClass(n *html.Node, class string) *html.Node {
 	return all[0]
 }
 
-func pageDOM(b []byte) (*html.Node, error) {
+func hasLoginChallenge(b []byte) bool {
 	s := strings.ToLower(string(b))
+	// The passive Cloudflare JS Detection asset is also injected into valid,
+	// authenticated pages (including PTTime). It is not a challenge form.
+	// Ignore only that asset path; interactive challenge markers still fail.
+	s = strings.ReplaceAll(s, "/cdn-cgi/challenge-platform/scripts/jsd/main.js", "")
 	for _, marker := range []string{"cf-chl-", "challenge-platform", "just a moment...", "g-recaptcha", "h-captcha", "turnstile"} {
 		if strings.Contains(s, marker) {
-			return nil, errors.New("site_login_challenge")
+			return true
 		}
+	}
+	return false
+}
+
+func pageDOM(b []byte) (*html.Node, error) {
+	if hasLoginChallenge(b) {
+		return nil, errors.New("site_login_challenge")
 	}
 	doc, err := html.Parse(bytes.NewReader(b))
 	if err != nil {

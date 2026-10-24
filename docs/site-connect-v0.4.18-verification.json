@@ -1,0 +1,103 @@
+{
+  "version": "0.4.18",
+  "production_base": "fdbaa31",
+  "before": [
+    {
+      "site": "52pt",
+      "error": "",
+      "identity": true,
+      "http_statuses": [
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "site": "PT时间",
+      "error": "site_login_challenge",
+      "identity": false,
+      "http_statuses": [
+        200
+      ]
+    }
+  ],
+  "pttime_passive_script_confirmed": true,
+  "pttime_exact_empty_seeding_response": "没有记录",
+  "after": {
+    "kind": "NAS_authenticated_read_only_protocol",
+    "results": [
+      {
+        "download": true,
+        "error": "",
+        "identity": true,
+        "resources": 100,
+        "search_error": "",
+        "seeding": true,
+        "seeding_bytes": true,
+        "site": "52pt",
+        "upload": true,
+        "warnings": []
+      },
+      {
+        "download": true,
+        "error": "",
+        "identity": true,
+        "resources": 50,
+        "search_error": "",
+        "seeding": true,
+        "seeding_bytes": true,
+        "site": "PT时间",
+        "upload": true,
+        "warnings": []
+      }
+    ],
+    "real_torrent_download": false,
+    "original_settings_changed": false,
+    "owned_probe_container_and_binary_removed": true
+  },
+  "frontend": {
+    "tests": 202,
+    "passed": 202,
+    "build": "passed"
+  },
+  "go": {
+    "tests": "sites and app site scopes passed",
+    "race": "sites and app site scopes passed",
+    "vet": "sites and app passed",
+    "linux_amd64_build": "passed"
+  },
+  "reference": "https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/",
+  "live_browser": {
+    "version": "0.4.18",
+    "pttime": {
+      "business": "success",
+      "latency": "normal",
+      "account_dialog": true,
+      "explicit_empty_seeding": true
+    },
+    "52pt": {
+      "business": "success",
+      "latency": "slow"
+    },
+    "production_all_sites_refresh": false
+  },
+  "deployment": {
+    "first_attempt": "rolled_back_on_encrypted_config_digest_change",
+    "second_attempt": "verified",
+    "custom_hosts_canonical_digest_unchanged": true,
+    "hosts_file_unchanged": true,
+    "digest_helper_synthetic_test": "passed",
+    "digest_helper_removed": true
+  },
+  "main_integration_checks": {
+    "frontend_tests": 264,
+    "passed": 264,
+    "frontend_build": "passed",
+    "go_site_tests": "passed",
+    "go_app_site_scopes": "passed",
+    "race": "passed",
+    "vet": "passed",
+    "linux_amd64_build": "passed",
+    "whole_repository_go_suite": "not repeated; prior unrelated plugin baseline failures documented"
+  }
+}

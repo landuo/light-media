@@ -616,10 +616,8 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 			})) > 0 {
 				return errors.New("site_authentication_failed")
 			}
-			for _, marker := range []string{"cf-chl-", "challenge-platform", "just a moment...", "g-recaptcha", "h-captcha", "turnstile"} {
-				if strings.Contains(strings.ToLower(string(b)), marker) {
-					return errors.New("site_login_challenge")
-				}
+			if hasLoginChallenge(b) {
+				return errors.New("site_login_challenge")
 			}
 		}
 		// The AJAX response has no navigation/auth marker. A recognized size
@@ -699,7 +697,9 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 		}
 		if !found {
 			t := text(doc)
-			if page == 0 && (strings.Contains(t, "没有种子") || strings.Contains(t, "沒有種子") || strings.Contains(strings.ToLower(t), "no torrents")) {
+			// PTTime returns this exact plain-text response for an empty list.
+			// A blank or otherwise unrecognized response must remain unknown.
+			if page == 0 && (t == "没有记录" || strings.Contains(t, "没有种子") || strings.Contains(t, "沒有種子") || strings.Contains(strings.ToLower(t), "no torrents")) {
 				found = true
 			} else {
 				return errors.New("site_seeding_table_unrecognized")
