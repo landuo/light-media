@@ -9,8 +9,15 @@
   letter-spacing: normal;
 }
 .v-input ::before,
-.v-input ::after {
+.v-input ::after,
+/* Teleported menu items also need Vuetify's border-box focus outline. */
+.v-list-item::after {
   box-sizing: border-box;
+}
+/* The host omits Vuetify's global reset; native margins would move these
+   full-size, absolutely positioned checkbox/radio inputs outside their slot. */
+.v-selection-control__input > input {
+  margin: 0;
 }
 .v-field:not(.v-field--variant-plain, .v-field--variant-underlined, .v-field--rounded) {
   border-radius: var(--app-field-radius);
