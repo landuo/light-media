@@ -13,6 +13,9 @@ import (
 	"light-media/internal/plugins"
 )
 
+// fixtureVersion is set only when building a distinct owned test artifact.
+var fixtureVersion = "1.0"
+
 type object struct {
 	mu          sync.Mutex
 	initCount   int
@@ -28,7 +31,7 @@ type object struct {
 
 func manifest() plugins.Manifest {
 	return plugins.Manifest{
-		SchemaVersion: 1, PluginID: "OwnedStandardFixture", Name: "Owned standard fixture", Version: "1.0",
+		SchemaVersion: 1, PluginID: "OwnedStandardFixture", Name: "Owned standard fixture", Version: fixtureVersion,
 		Runtime: "go-executable", Entry: "owned-standard-fixture", HostAPIMin: 1, HostAPIMax: 1,
 		Methods:      []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "close", "stop_service", "stop", "snapshot", "tick", "command", "event", "http"},
 		Capabilities: plugins.BaseMethods(), Events: []string{"owned.standard"}, HasPage: true,
@@ -50,7 +53,7 @@ func (o *object) snapshot(ctx context.Context, base plugins.Base, config json.Ra
 		return nil, err
 	}
 	return json.Marshal(map[string]any{
-		"nonce": os.Getpid(), "init_count": o.initCount, "init_input": rawValue(o.initInput), "init_after": rawValue(o.initAfter),
+		"version": fixtureVersion, "nonce": os.Getpid(), "init_count": o.initCount, "init_input": rawValue(o.initInput), "init_after": rawValue(o.initAfter),
 		"config": rawValue(config), "calls": o.calls, "lastpayload": o.lastPayload, "stale_denied": o.staleDenied, "value": rawValue(value), "order": o.order,
 	})
 }
@@ -109,6 +112,18 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		if err := saveShared(ctx, base, config); err != nil {
 			return nil, err
 		}
+		// Only the genuine 1.0 executable writes this owned continuity marker.
+		// Version 2.0 must retain it through publication rather than recreate it.
+		if fixtureVersion == "1.0" {
+			if _, supplied := fields["key"]; supplied {
+				if err := base.SaveData(ctx, "owned_v1_preserved", map[string]any{"nonce": os.Getpid(), "value": fields["key"]}); err != nil {
+					return nil, err
+				}
+			}
+		}
+		if string(fields["fail_init"]) == "true" {
+			return nil, errors.New("owned init failure after actual member and Base mutation")
+		}
 		return o.snapshot(ctx, base, config)
 	case "get_state":
 		return json.Marshal(o.enabled)
@@ -153,7 +168,7 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		return json.Marshal(plugins.HTTPResponse{Status: 200, Body: body, Headers: map[string]string{"Content-Type": "application/json"}})
 	case "close", "stop_service":
 		o.order = append(o.order, method)
-		if err := base.SaveData(ctx, "owned_"+method, map[string]any{"nonce": os.Getpid(), "init_count": o.initCount, "order": o.order}); err != nil {
+		if err := base.SaveData(ctx, "owned_"+method, map[string]any{"version": fixtureVersion, "nonce": os.Getpid(), "init_count": o.initCount, "order": o.order}); err != nil {
 			return nil, err
 		}
 		if method == "close" {
@@ -170,7 +185,7 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		return json.RawMessage("null"), nil
 	case "stop":
 		o.order = append(o.order, method)
-		if err := base.SaveData(ctx, "owned_stop", map[string]any{"nonce": os.Getpid(), "init_count": o.initCount, "stop_count": o.calls["stop"], "stale_denied": o.staleDenied, "order": o.order}); err != nil {
+		if err := base.SaveData(ctx, "owned_stop", map[string]any{"version": fixtureVersion, "nonce": os.Getpid(), "init_count": o.initCount, "stop_count": o.calls["stop"], "stale_denied": o.staleDenied, "order": o.order}); err != nil {
 			return nil, err
 		}
 		return json.RawMessage("null"), nil

@@ -6,7 +6,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"net/http"
+	"light-media/internal/plugins/builtin"
+	iyuu "light-media/internal/plugins/iyuuautoseed"
+	iyuudownload "light-media/internal/plugins/iyuuautoseed/native"
+	"light-media/internal/plugins/schedule"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -14,11 +17,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"light-media/internal/plugins/builtin"
-	iyuu "light-media/internal/plugins/iyuuautoseed"
-	iyuudownload "light-media/internal/plugins/iyuuautoseed/native"
-	"light-media/internal/plugins/schedule"
 )
 
 // IYUU execution owner shares the application SDK, queue, and lifecycle locks.
@@ -293,64 +291,6 @@ func (a *App) configureIYUU(ctx context.Context, owner *pluginIYUUOwner, run *Pl
 // Administrative publication waits for the exact native owner gate, then the
 // existing App implementation obtains its usual lifecycle locks. This wrapper
 // never retains lifecycle/process/file locks while waiting for an active run.
-func (a *App) pluginAPI(w http.ResponseWriter, r *http.Request, path string) (any, error) {
-	if originalPluginInstallRoute(path, r.Method) {
-		return a.originalPluginInstallHTTP(w, r, path)
-	}
-	if originalPluginUninstallRoute(path, r.Method) {
-		return a.originalPluginUninstallHTTP(r, path)
-	}
-	if path == "markets" {
-		return a.pluginMarketsHTTP(w, r)
-	}
-	if originalPluginConfigurationRoute(path, r.Method) {
-		return a.originalPluginConfigurationHTTP(w, r, path)
-	}
-	if parts := strings.Split(path, "/"); r.Method == http.MethodPost && len(parts) == 2 && parts[1] == "restore-reviewed" && pluginStorageID.MatchString(parts[0]) {
-		return a.pluginRestoreReviewHTTP(w, r, parts[0])
-	}
-	if parts := strings.Split(path, "/"); r.Method == http.MethodPost && len(parts) == 2 && parts[1] == "update" && pluginStorageID.MatchString(parts[0]) {
-		return a.pluginUpdateHTTP(w, r, parts[0])
-	}
-	if parts := strings.Split(path, "/"); r.Method == http.MethodPost && len(parts) == 2 && parts[1] == "reset" && pluginStorageID.MatchString(parts[0]) {
-		return a.pluginResetHTTP(w, r, path, parts[0])
-	}
-	return a.pluginAPIWithoutResetBarrier(w, r, path)
-}
-
-func (a *App) pluginAPIWithoutResetBarrier(w http.ResponseWriter, r *http.Request, path string) (any, error) {
-	// Clone reads a source snapshot but never publishes a source lifecycle change.
-	if parts := strings.Split(path, "/"); r.Method == "POST" && len(parts) == 2 && parts[1] == "clone" {
-		return a.pluginCloneHTTP(w, r, parts[0])
-	}
-	if r.Method != "GET" {
-		instance := strings.Split(path, "/")[0]
-		if in, e := a.pluginStore.Installation(r.Context(), instance); e == nil && isTorrentTransfer(in.PluginID) && in.Installed {
-			return a.transferAPIWithBarrier(w, r, path, in)
-		}
-		if in, e := a.pluginStore.Installation(r.Context(), instance); e == nil && in.PluginID == "IYUUAutoSeed" && in.Installed {
-			if parts := strings.Split(path, "/"); r.Method == "POST" && len(parts) == 2 && (parts[1] == "reset" || parts[1] == "uninstall") {
-				return a.iyuuLifecycleHTTP(r.Context(), in, parts[1])
-			}
-			owner, e := a.iyuuOwner(r.Context(), in)
-			if e != nil {
-				return nil, e
-			}
-			if e = owner.lock(r.Context()); e != nil {
-				return nil, e
-			}
-			defer owner.unlock()
-			unknown, e := owner.journal.HasUnconfirmed(r.Context(), in.InstanceID, uint64(in.Generation))
-			if e != nil {
-				return nil, e
-			}
-			if unknown {
-				return nil, iyuu.ErrUnconfirmed
-			}
-		}
-	}
-	return a.pluginAPIWithoutIYUUBarrier(w, r, path)
-}
 
 func (a *App) executeIYUU(ctx context.Context, owner *pluginIYUUOwner, in PluginInstallation, run *PluginRun, raw json.RawMessage, settings Settings) (json.RawMessage, error) {
 	checkpoint, ok, e := owner.journal.ReadCheckpoint(ctx, run.InstanceID, uint64(run.Generation))

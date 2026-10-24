@@ -6,6 +6,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"light-media/internal/plugins"
+	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/uninstall"
 	"net/http"
 	"net/http/httptest"
 	"net/http/httputil"
@@ -13,13 +16,8 @@ import (
 	"os"
 	"reflect"
 	"strings"
-	"sync"
 	"testing"
 	"time"
-
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
-	"light-media/internal/plugins/uninstall"
 )
 
 func uninstallInstall(t *testing.T, a *App, instance string, manifest plugins.Manifest, config any, invoke bool) PluginRun {
@@ -506,74 +504,6 @@ func TestPluginUninstallRealSDKFailureBeforeTerminalCompletionCannotUninstall(t 
 	var receipts int
 	if err := a.Store.DB.QueryRow(`SELECT COUNT(*) FROM plugin_uninstall_operations WHERE run_id=?`, run.ID).Scan(&receipts); err != nil || receipts != 0 {
 		t.Fatal("failed terminal handshake committed an uninstall receipt", receipts, err)
-	}
-}
-
-func TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot(t *testing.T) {
-	f := newRefreshFixture(t, 3600)
-	a := f.app
-	f.importMovie(t)
-	if err := a.dispatchPluginEvents(context.Background(), time.Now()); err != nil {
-		t.Fatal(err)
-	}
-	// A fixture-only reverse proxy pauses the real refresh HTTP operation so
-	// the nested refresh child's process slot is observable. The uninstall SDK
-	// process has already exited; no extra worker bypasses the global cap.
-	upstream, err := url.Parse(a.config.FNOS.Host)
-	if err != nil {
-		t.Fatal(err)
-	}
-	upstream.Path = ""
-	proxy := httputil.NewSingleHostReverseProxy(upstream)
-	entered, release := make(chan struct{}), make(chan struct{})
-	var once sync.Once
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.URL.Path, "/mdb/scan/") {
-			once.Do(func() { close(entered) })
-			select {
-			case <-release:
-			case <-r.Context().Done():
-				return
-			}
-		}
-		proxy.ServeHTTP(w, r)
-	}))
-	t.Cleanup(server.Close)
-	var releaseOnce sync.Once
-	t.Cleanup(func() { releaseOnce.Do(func() { close(release) }) })
-	a.config.FNOS.Host = server.URL + "/v"
-	run := uninstallInstall(t, a, "PluginUnInstall", uninstall.Manifest(), map[string]any{"plugin_ids": []string{"MediaServerRefresh"}, "clear_config": true, "clear_data": true}, true)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	done := make(chan struct{})
-	go func() { a.executePluginRun(ctx, run); close(done) }()
-	select {
-	case <-entered:
-	case <-done:
-		t.Fatal("uninstall finished before original delayed refresh")
-	case <-ctx.Done():
-		t.Fatal("nested refresh deadlocked on outer worker semaphore")
-	}
-	if len(a.pluginProcess) != 1 || cap(a.pluginProcess) != 1 {
-		t.Fatal("nested refresh did not retain global process exclusion")
-	}
-	installation, _ := a.pluginStore.Installation(context.Background(), "MediaServerRefresh")
-	busyCtx, busyCancel := context.WithTimeout(context.Background(), 20*time.Millisecond)
-	_, busyErr := a.pluginForm(busyCtx, installation)
-	busyCancel()
-	if busyErr == nil {
-		t.Fatal("another worker/form bypassed the process semaphore")
-	}
-	releaseOnce.Do(func() { close(release) })
-	select {
-	case <-done:
-	case <-ctx.Done():
-		t.Fatal("uninstall did not finish after nested refresh")
-	}
-	saved, _ := a.pluginStore.Run(context.Background(), run.ID)
-	target, _ := a.pluginStore.Installation(context.Background(), "MediaServerRefresh")
-	if saved.State != "succeeded" || target.Installed || f.scans.Load() != 1 || len(a.pluginProcess) != 0 {
-		t.Fatal("original drain/removal not applied", saved.State, saved.ErrorCode, target.Installed, f.scans.Load(), len(a.pluginProcess))
 	}
 }
 

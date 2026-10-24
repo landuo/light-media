@@ -4,33 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	transfer "light-media/internal/plugins/torrenttransfer"
-	"net/http"
-	"strings"
 )
-
-func (a *App) transferAPIWithBarrier(w http.ResponseWriter, r *http.Request, path string, in PluginInstallation) (any, error) {
-	parts := strings.Split(path, "/")
-	if r.Method == "POST" && len(parts) == 2 && (parts[1] == "reset" || parts[1] == "uninstall") {
-		return a.transferLifecycleHTTP(r.Context(), in, parts[1])
-	}
-	owner, e := a.transferOwner(r.Context(), in)
-	if e != nil {
-		return nil, e
-	}
-	if e = owner.lock(r.Context()); e != nil {
-		return nil, e
-	}
-	defer owner.unlock()
-	unknown, e := owner.journal.HasUnconfirmed(r.Context(), in.InstanceID, uint64(in.Generation))
-	if e != nil {
-		return nil, e
-	}
-	if unknown {
-		return nil, transfer.ErrUnconfirmed
-	}
-	return a.pluginAPIWithoutIYUUBarrier(w, r, path)
-}
 
 func (a *App) transferLifecycleHTTP(ctx context.Context, in PluginInstallation, operation string) (any, error) {
 	prepared, e := a.prepareTransferTransition(ctx, in, operation)

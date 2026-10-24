@@ -194,7 +194,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{status, detail})
 		return true
 	}
-	readConfiguration := a.pluginConfigurationHTTPReader(manifest, *api, r.Method)
 	authority, failure := a.pluginHTTPAuthority(r, api.Auth, native)
 	if failure != nil {
 		pluginHTTPError(w, failure)
@@ -210,7 +209,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		return true
 	}
 	missing := []map[string]any{}
-	credentialProofs := map[string]string{}
 	input := plugins.HTTPRequest{RequestID: w.Header().Get("X-Request-ID"), Key: api.Key, Method: r.Method, Path: endpoint, Params: params, Query: map[string][]string{}, CredentialMatches: map[string]bool{}, Headers: map[string]string{}}
 	for key, values := range query {
 		input.Query[key] = slices.Clone(values)
@@ -226,9 +224,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 				value = values[len(values)-1]
 			}
 			input.CredentialMatches[parameter.Name] = apiKeyEqual(value, a.Settings().APIToken)
-			if api.Auth == "anonymous" && input.CredentialMatches[parameter.Name] {
-				credentialProofs[parameter.Name] = a.pluginAPIKeyProof(value)
-			}
 			delete(input.Query, parameter.Name)
 		}
 	}
@@ -249,9 +244,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 	}
 	if api.Body != "" && r.Body != nil {
 		bodyReader := io.Reader(http.MaxBytesReader(w, r.Body, 512<<10))
-		if brushFlowSnapshotOwner(installation.PluginID, installation.Version) {
-			bodyReader = r.Body
-		}
 		body, err := io.ReadAll(bodyReader)
 		if err != nil {
 			pluginHTTPError(w, &pluginHTTPFailure{413, "Request body too large"})
@@ -272,35 +264,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 	// A registered original API is already bound to a loaded instance. Its
 	// own implementation performs configuration edits. No first-write load,
 	// alternate configuration prepare/CAS, or extra framework init is inserted.
-	if readConfiguration != nil {
-		body, err := a.pluginStore.readPluginInstanceView(r.Context(), installation, func(ctx context.Context, view pluginFormView) (json.RawMessage, error) {
-			if err := a.validatePluginReadAuthority(ctx, authority); err != nil {
-				return nil, err
-			}
-			result, err := readConfiguration(ctx, view, input)
-			if err != nil {
-				return nil, err
-			}
-			if err := a.validatePluginReadAuthority(ctx, authority); err != nil {
-				return nil, err
-			}
-			return result, nil
-		})
-		if err != nil {
-			pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin configuration changed or is unavailable"})
-			return true
-		}
-		var response plugins.HTTPResponse
-		if json.Unmarshal(body, &response) != nil || response.Status < 200 || response.Status > 599 {
-			pluginHTTPError(w, &pluginHTTPFailure{502, "Invalid plugin response"})
-			return true
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Cache-Control", "no-store")
-		w.WriteHeader(response.Status)
-		w.Write(response.Body)
-		return true
-	}
 	if implementation.External {
 		response, err := a.callOriginalExternalHTTP(r.Context(), installation, *api, input, authority)
 		if err != nil {
@@ -323,57 +286,7 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		w.Write(response.Body)
 		return true
 	}
-	a.pluginMu.Lock()
-	run, err := a.enqueuePluginHTTP(r.Context(), installation, input, pluginAPIScope{Key: api.Key, Method: r.Method, RequestID: w.Header().Get("X-Request-ID"), Authority: authority, CredentialProofs: credentialProofs})
-	a.pluginMu.Unlock()
-	if err == nil {
-		if installation.PluginID == "BrushFlowLanduo" && installation.Version == "5.2.15" {
-			if e := a.executeBrushFlowHTTP(r.Context(), run); e != nil {
-				pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin changed"})
-				return true
-			}
-		}
-		if installation.PluginID == "SeedRescue" && installation.Version == "1.6.3" {
-			if e := a.executeSeedRescueHTTP(r.Context(), run); e != nil {
-				pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin changed"})
-				return true
-			}
-		}
-		a.wakePlugins()
-		response, err := a.waitPluginHTTP(r.Context(), run)
-		if err != nil {
-			status := 502
-			var failure *APIError
-			if errors.As(err, &failure) && failure.Code == "PLUGIN_API_AUTH_REVOKED" {
-				status = 401
-			}
-			pluginHTTPError(w, &pluginHTTPFailure{status, "Plugin execution failed"})
-			return true
-		}
-		for key, value := range response.Headers {
-			w.Header().Set(key, value)
-		}
-		if w.Header().Get("Content-Type") == "" {
-			w.Header().Set("Content-Type", "application/json")
-		}
-		w.Header().Set("Cache-Control", "no-store")
-		w.WriteHeader(response.Status)
-		w.Write(response.Body)
-		return true
-	}
-	status, detail := 409, "Plugin changed"
-	var apiError *APIError
-	if errors.As(err, &apiError) {
-		switch apiError.Code {
-		case "PLUGIN_API_AUTH_REVOKED":
-			status, detail = 401, "API credential revoked"
-		case "PLUGIN_QUEUE_FULL":
-			status, detail = 503, "Plugin busy"
-		case "INVALID_PLUGIN_VALUE":
-			status, detail = 413, "Request too large"
-		}
-	}
-	pluginHTTPError(w, &pluginHTTPFailure{status, detail})
+	pluginHTTPError(w, &pluginHTTPFailure{404, "Plugin adapter unavailable"})
 	return true
 }
 

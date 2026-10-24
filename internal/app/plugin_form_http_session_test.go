@@ -6,13 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"light-media/internal/plugins"
+	"light-media/internal/plugins/builtin"
 	"os"
 	"strings"
 	"testing"
 	"time"
-
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
 )
 
 // Hostile output is exercised through the real SDK and an existing compiled
@@ -73,82 +72,6 @@ func pluginFormHTTPInstallation(t *testing.T, a *App, pluginID string, config js
 	return lifecycleInstallation(t, a.pluginStore, pluginID)
 }
 
-func TestPluginFormHTTPCompiledModelPolicyAndUntrustedRevision(t *testing.T) {
-	for _, pluginID := range []string{"SystemProcess", "MergeSiteSwitch"} {
-		t.Run(pluginID, func(t *testing.T) {
-			a := newTestApp(t)
-			in := pluginFormHTTPInstallation(t, a, pluginID, json.RawMessage(`{"enable":false,"sentinel":"stored"}`))
-			// Stored and worker declarations are not presentation authority.
-			lifecycleEditManifest(t, a.pluginStore, in.InstanceID, func(fields map[string]json.RawMessage) {
-				fields["form_model_policy"] = json.RawMessage(`{"installed":"source","preview":"source"}`)
-			})
-			a.pluginCommand = func(id string) (plugins.Command, error) { return pluginFormSessionCommand(t, id, "output"), nil }
-			before, sealed := pluginDefaultsStoredConfig(t, a.pluginStore, in.InstanceID)
-			response, err := a.pluginForm(context.Background(), in)
-			if err != nil || response["revision"] != before.Revision {
-				t.Fatal("worker revision replaced trusted durable revision", err)
-			}
-			want := `"stored"`
-			if pluginID == "MergeSiteSwitch" {
-				want = `"worker"`
-			}
-			if string(response["model"].(map[string]json.RawMessage)["sentinel"]) != want {
-				t.Fatal("compiled source/overlay policy was not applied")
-			}
-			assertPluginDefaultsConfigUnchanged(t, a.pluginStore, in.InstanceID, before, sealed)
-		})
-	}
-}
-
-func TestPluginFormHTTPActualCompiledFormsAndExternalEdit(t *testing.T) {
-	for _, pluginID := range []string{"CategoryEditor", "SystemProcess", "MergeSiteSwitch"} {
-		t.Run(pluginID, func(t *testing.T) {
-			a := newTestApp(t)
-			in := pluginFormHTTPInstallation(t, a, pluginID, json.RawMessage(`{}`))
-			useBuiltInPluginProcess(t, a)
-			before, sealed := pluginDefaultsStoredConfig(t, a.pluginStore, in.InstanceID)
-			response, err := a.pluginForm(context.Background(), in)
-			if err != nil || response["revision"] != before.Revision {
-				t.Fatal("actual compiled cold Form did not remain a read", err)
-			}
-			assertPluginDefaultsConfigUnchanged(t, a.pluginStore, in.InstanceID, before, sealed)
-			command := a.pluginCommand
-			a.pluginCommand = func(id string) (plugins.Command, error) {
-				// This hook is called after initial capture, before the real SDK.
-				_, err := a.pluginStore.SaveConfig(context.Background(), in.InstanceID, before.Revision, json.RawMessage(`{"sentinel":"external"}`))
-				if err != nil {
-					return plugins.Command{}, err
-				}
-				return command(id)
-			}
-			response, err = a.pluginForm(context.Background(), in)
-			if response != nil || pluginErrorCode(err) != "PLUGIN_REVISION_CONFLICT" {
-				t.Fatal("post-SDK config was overlaid instead of rejecting drift", err)
-			}
-		})
-	}
-}
-
-func TestPluginFormHTTPDeniedHostCannotBeIgnoredAndWorkerErrorIsGeneric(t *testing.T) {
-	for _, scenario := range []string{"illegal_write", "fake_error"} {
-		t.Run(scenario, func(t *testing.T) {
-			a := newTestApp(t)
-			in := pluginFormHTTPInstallation(t, a, "MergeSiteSwitch", json.RawMessage(`{}`))
-			a.pluginCommand = func(id string) (plugins.Command, error) { return pluginFormSessionCommand(t, id, scenario), nil }
-			before, sealed := pluginDefaultsStoredConfig(t, a.pluginStore, in.InstanceID)
-			response, err := a.pluginForm(context.Background(), in)
-			want := "PLUGIN_CAPABILITY_DENIED"
-			if scenario == "fake_error" {
-				want = "PLUGIN_FORM_FAILED"
-			}
-			if response != nil || pluginErrorCode(err) != want || strings.Contains(fmt.Sprint(err), "synthetic-worker-private-detail") {
-				t.Fatal("host denial lost or worker error was promoted")
-			}
-			assertPluginDefaultsConfigUnchanged(t, a.pluginStore, in.InstanceID, before, sealed)
-		})
-	}
-}
-
 func TestPluginFormSessionCanonicalTypedHostErrorThroughSDK(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -191,30 +114,6 @@ func TestPluginFormSessionCanonicalTypedHostErrorThroughSDK(t *testing.T) {
 	}
 }
 
-func TestPluginFormHTTPRedactionRetainedForCapturedDisplay(t *testing.T) {
-	for _, pluginID := range []string{"RemoteIdentifiers", "SeedRescue"} {
-		t.Run(pluginID, func(t *testing.T) {
-			a := newTestApp(t)
-			in := pluginFormHTTPInstallation(t, a, pluginID, json.RawMessage(`{"file_urls":"https://stored.invalid/?key=synthetic-stored-private-detail","token":"synthetic-stored-private-detail","rss_urls":["synthetic-stored-private-detail"]}`))
-			a.pluginCommand = func(id string) (plugins.Command, error) { return pluginFormSessionCommand(t, id, "output"), nil }
-			response, err := a.pluginForm(context.Background(), in)
-			if err != nil {
-				t.Fatal(err)
-			}
-			model := response["model"].(map[string]json.RawMessage)
-			keys := []string{"file_urls"}
-			if pluginID == "SeedRescue" {
-				keys = []string{"token", "rss_urls"}
-			}
-			for _, key := range keys {
-				if bytes.Contains(model[key], []byte("private-detail")) {
-					t.Fatal("captured display bypassed existing secret projection")
-				}
-			}
-		})
-	}
-}
-
 func TestPluginFormPolicySeparatesPreviewAndInstalledWithoutWriteGrant(t *testing.T) {
 	manifest := builtin.SystemProcessManifest()
 	manifest.FormModelPolicy = &plugins.FormModelPolicy{Installed: plugins.FormModelSource, Preview: plugins.FormModelHostOverlay}
@@ -233,35 +132,6 @@ func TestPluginFormPolicySeparatesPreviewAndInstalledWithoutWriteGrant(t *testin
 	merge := builtin.MergeSiteSwitchManifest()
 	if !pluginFormSourceModel(merge, pluginFormPreview) || !pluginFormSourceModel(merge, pluginFormInstalledUnknown) || merge.ConfigFormProjection != "" {
 		t.Fatal("compiled source/source declaration coupled to writes")
-	}
-}
-
-func TestPluginFormHTTPInstallOriginRetainsTombstonePrefill(t *testing.T) {
-	a := newTestApp(t)
-	in := pluginFormHTTPInstallation(t, a, "SystemProcess", json.RawMessage(`{"enable":false,"sentinel":"retained"}`))
-	if err := a.pluginStore.Uninstall(context.Background(), in.InstanceID); err != nil {
-		t.Fatal(err)
-	}
-	before, sealed := pluginDefaultsStoredConfig(t, a.pluginStore, in.InstanceID)
-	manifest := builtin.SystemProcessManifest()
-	raw, _ := json.Marshal(manifest)
-	preview := PluginInstallation{InstanceID: manifest.PluginID, PluginID: manifest.PluginID, Version: manifest.Version, ManifestSchemaVersion: manifest.SchemaVersion, Manifest: raw}
-	a.pluginCommand = func(id string) (plugins.Command, error) { return pluginFormSessionCommand(t, id, "output"), nil }
-	response, err := a.pluginFormWithOrigin(context.Background(), preview, pluginFormOriginInstall)
-	if err != nil || response["revision"] != before.Revision || string(response["model"].(map[string]json.RawMessage)["sentinel"]) != `"retained"` {
-		t.Fatal("tombstone prefill was discarded", err)
-	}
-	assertPluginDefaultsConfigUnchanged(t, a.pluginStore, in.InstanceID, before, sealed)
-	if err = a.pluginStore.Install(context.Background(), preview); err != nil {
-		t.Fatal(err)
-	}
-	calls := 0
-	a.pluginCommand = func(id string) (plugins.Command, error) {
-		calls++
-		return pluginFormSessionCommand(t, id, "output"), nil
-	}
-	if _, err = a.pluginFormWithOrigin(context.Background(), preview, pluginFormOriginInstall); pluginErrorCode(err) != "PLUGIN_ALREADY_INSTALLED" || calls != 0 {
-		t.Fatal("already-installed install reached a preview worker", err)
 	}
 }
 

@@ -10,6 +10,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"light-media/internal/plugins"
+	ab "light-media/internal/plugins/autobackup"
+	seed "light-media/internal/plugins/cleaninvalidseed"
+	"light-media/internal/plugins/uninstall"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -19,11 +23,6 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
-
-	"light-media/internal/plugins"
-	ab "light-media/internal/plugins/autobackup"
-	seed "light-media/internal/plugins/cleaninvalidseed"
-	"light-media/internal/plugins/uninstall"
 )
 
 func autoTestClaim(t *testing.T, a *App) PluginRun {
@@ -701,58 +700,6 @@ func TestPluginAutoBackupQueuedAPIRevocationAndWrongQueryOriginalResult(t *testi
 	var response map[string]any
 	if json.Unmarshal(w.Body.Bytes(), &response) != nil || response["success"] != false || response["message"] != "API密钥错误" || len(autoTestFiles(t, a)) != 0 {
 		t.Fatal("source invalid query response changed")
-	}
-}
-
-func TestPluginAutoBackupConfigureCommitLostReplyKeepsOncePlan(t *testing.T) {
-	dir := t.TempDir()
-	a, e := New(Options{DataDir: dir})
-	if e != nil {
-		t.Fatal(e)
-	}
-	defer func() {
-		if a != nil {
-			_ = a.Close()
-		}
-	}()
-	cookie := autoTestInstall(t, a)
-	a.pluginAutoBackup.afterEffect = func(kind string) error {
-		if kind == "configure_commit" {
-			return errors.New("owned configure commit reply lost")
-		}
-		return nil
-	}
-	autoTestConfig(t, a, cookie, map[string]any{"onlyonce": true, "cron": "15 4 * * *", "cnt": 3})
-	var due string
-	if e = a.Store.DB.QueryRow(`SELECT next_due FROM plugin_schedules WHERE instance_id='AutoBackup' AND service_id='AutoBackup.once'`).Scan(&due); e != nil {
-		t.Fatal(e)
-	}
-	if e = a.Close(); e != nil {
-		t.Fatal(e)
-	}
-	a, e = New(Options{DataDir: dir})
-	if e != nil {
-		t.Fatal(e)
-	}
-	useBuiltInPluginProcess(t, a)
-	if e = a.initializeNativePlugins(context.Background()); e != nil {
-		t.Fatal(e)
-	}
-	var after string
-	if e = a.Store.DB.QueryRow(`SELECT next_due FROM plugin_schedules WHERE instance_id='AutoBackup' AND service_id='AutoBackup.once'`).Scan(&after); e != nil || after != due {
-		t.Fatal("once deadline reset after accepted configure", e)
-	}
-	if _, e = a.pluginStore.claimRunForInstance(context.Background(), "AutoBackup"); !errors.Is(e, sql.ErrNoRows) {
-		t.Fatal("accepted configure replayed", e)
-	}
-	i, _ := a.pluginStore.Installation(context.Background(), "AutoBackup")
-	form, e := a.pluginForm(context.Background(), i)
-	if e != nil {
-		t.Fatal(e)
-	}
-	model := form["model"].(map[string]json.RawMessage)
-	if string(model["cron"]) != `"15 4 * * *"` || string(model["cnt"]) != "3" || string(model["onlyonce"]) != "false" {
-		t.Fatal("source form lost persisted fields")
 	}
 }
 

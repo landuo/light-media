@@ -1,0 +1,416 @@
+{
+  "scope": "Selected independent upgrade/failure and retired-route checkpoint; not full acceptance",
+  "parent": "3360714340500455bb0ac2b2f7ff0ef7ff88b473",
+  "parent_tree": "b257e8b13bfbd85be0410c351f81ed0fddb73471",
+  "effective_go_inputs": 2333,
+  "input_drift": [],
+  "changed_source_files": [
+    {
+      "path": "cmd/owned-standard-fixture/main.go",
+      "sha": "d8388b999dcf2d032cd49965dee6a1f31ffec858",
+      "sha256": "11c2a48a7fc40285d47b589290cf82915d961db3d6c0fc8db532765a4c523fe1",
+      "bytes": 7863,
+      "preimage": "befb503e05f8f3821f36bf4e8031794223ab503b"
+    },
+    {
+      "path": "internal/app/plugin_auto_backup_runtime_test.go",
+      "sha": "3a521b349092d0e36eecf0bbe43fde23661ab862",
+      "sha256": "40b4b4ed8330405d3d5bfae572ed7708aab9807fc22d91f53ca217b0bfe01494",
+      "bytes": 41891,
+      "preimage": "87f0f67f8a090c2eefb24b33c7b986c9aee4d939"
+    },
+    {
+      "path": "internal/app/plugin_category_delivery_test.go",
+      "sha": "a51936aede5f5ee81a06512d9449bf122eac5a0a",
+      "sha256": "6fca8b70a0537847a1671db26c6bf329706ff669d9a8314fdb1cb4076c25407b",
+      "bytes": 4424,
+      "preimage": "0d513c0e79947c1b0d80f24df115a12fdb614fef"
+    },
+    {
+      "path": "internal/app/plugin_custom_api.go",
+      "sha": "fe34772eff79b69bf0e30f27d4d9d8632be0da4c",
+      "sha256": "657d3a0863b2902a74b7ed6a8e1575a85d54852ff6badb6216122435f8a76cd3",
+      "bytes": 23238,
+      "preimage": "2e3d2ac836d92701435c578cbd003a3d12960308"
+    },
+    {
+      "path": "internal/app/plugin_form_host_guard_test.go",
+      "sha": "6870b8028b697ed9a0f3c6161b0ad8dd554822e3",
+      "sha256": "4bc727433209f11a98910ecdb2bad96def557d03b366691a465a3a548692b345",
+      "bytes": 8295,
+      "preimage": "fab6e346961dbdd6377082be9bdff3a36070c846"
+    },
+    {
+      "path": "internal/app/plugin_form_http_session_test.go",
+      "sha": "46312930c99373fe34f26d0ea8161a12529f1122",
+      "sha256": "5f9ec8574273cf72bf5ac34056bb7ad44bc5f8e0e6e53fd32d09b66dd7d25782",
+      "bytes": 9329,
+      "preimage": "afa28766a3787adb08aaaea47765026867f51329"
+    },
+    {
+      "path": "internal/app/plugin_http.go",
+      "sha": "ddfeec0d097ae7a4ac1273028c0d084baf0ec8f1",
+      "sha256": "1e91d8111cbf7c95b763f835fd46e751c33b1e4315d0a3d4e4f5f1bdedf437cf",
+      "bytes": 9037,
+      "preimage": "ff4b9cfa8fb6e8980704d599c9d4a88191abeb9a"
+    },
+    {
+      "path": "internal/app/plugin_iyuu_http_test.go",
+      "sha": "5625812a1fc1dff48ecc69b353d37da0a8b11706",
+      "sha256": "3e848a34f51f62fd5a551e3d9fb63f4720c26dcd21b25f1786672d47314d6e5d",
+      "bytes": 1579,
+      "preimage": "110eebd01b6242fa371a16301766da1ecd68ba42"
+    },
+    {
+      "path": "internal/app/plugin_iyuu_owner.go",
+      "sha": "db76cdf47e1752f4d8cd3a409466c0a360f41561",
+      "sha256": "f990d2bb56dbfa2bf199e838c599d1ac1387896b8b6252e8ab2ea95cf1225fb4",
+      "bytes": 23784,
+      "preimage": "0ebe7fefec10b2b5f68daec0c674914bb613a5bc"
+    },
+    {
+      "path": "internal/app/plugin_original_standard_failures_test.go",
+      "sha": "3c9db89ba7c43db502ee1ed2cf1538280711746c",
+      "sha256": "04a20eac16201ad46a13989ac5f797cf009e124bf8a00901d6b8f997317c6a5c",
+      "bytes": 9158,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_original_standard_update_test.go",
+      "sha": "4c7be1ef8b9bfd36cc369d58ba9c840b2453fdff",
+      "sha256": "2a7a0e3a5cb08b59a794e3e061262726f098400245744ed79e578c47477274ce",
+      "bytes": 8230,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_reset_admission.go",
+      "sha": "4441b79265ed31c0fa8aeafe8e99d6958db1c5f0",
+      "sha256": "ea47efe2f40b50d4cd5ef65026b4060b26f4b2b33645f47c41151f9013ce51ed",
+      "bytes": 7971,
+      "preimage": "38898070ff6d4cfc44e43f37d95ed19dbe4318dd"
+    },
+    {
+      "path": "internal/app/plugin_scrape_clean_actual_test.go",
+      "sha": "cea81613bef9e54c86bf0e623b3f0735a5204195",
+      "sha256": "15b2434362b4969a0005c747d6464860e3c5c906e6aab3a173f574da76161eca",
+      "bytes": 14008,
+      "preimage": "ffc6b0b53956321dc7001e2df86c03a0d07e04b1"
+    },
+    {
+      "path": "internal/app/plugin_services.go",
+      "sha": "1ce32cd0b010ca136b1d400dd8f35a5ee925947e",
+      "sha256": "52acf7080b1536e3f206878385976c36d69acf41ffa0e3bb7c543f889c79dd74",
+      "bytes": 2773,
+      "preimage": "13238c89900774004dd5f7d8122552af4d790bf4"
+    },
+    {
+      "path": "internal/app/plugin_services_test.go",
+      "sha": "3fd5e24e96b528164f3f79afdeec34d9b45e3482",
+      "sha256": "2e4935067547dbfea556ee8de30f3e1c1fd2a3d7ac9506a9819db13ce01f5ed9",
+      "bytes": 1903,
+      "preimage": "e55168e8f5d9d740f9710923812c235f9f2303f3"
+    },
+    {
+      "path": "internal/app/plugin_transfer_form_observation_test.go",
+      "sha": "b6cf25705e309afe8f18694232458884741cfb69",
+      "sha256": "46f10368295ca2f137a28d807ad3baed8179549b4f841b01a27b2d138ccd09c4",
+      "bytes": 3771,
+      "preimage": "3af658a8223a5d530597373f7bb2b0591551c7fc"
+    },
+    {
+      "path": "internal/app/plugin_transfer_http.go",
+      "sha": "71c7b5057e2a871cac3f9bc03a41424157906e2b",
+      "sha256": "5b4731cd678e501f6adb75edeb472a29f6f32df922bd63d391444099737e02bf",
+      "bytes": 1091,
+      "preimage": "4c4aa3725018d42c2b2e83d9dfa400cb7c02ba4c"
+    },
+    {
+      "path": "internal/app/plugin_uninstall_test.go",
+      "sha": "208000ffc065c67e263c0188986a1cefe5fa3b81",
+      "sha256": "5da475be705c7832ca60b22632aee01b379a6a68ffe7830d3fb2187ebe3fef19",
+      "bytes": 26230,
+      "preimage": "7e6bcb88e0d2cbad830a25fca8a72d5b219f939c"
+    }
+  ],
+  "deleted_files": [
+    {
+      "path": "internal/app/plugin_services_host_manifest_test.go",
+      "preimage": "4ddb57694d8a2fddc75b990655913a596c069a9e"
+    }
+  ],
+  "retired_functions": [
+    {
+      "path": "internal/app/plugin_iyuu_owner.go",
+      "removed_functions": [
+        "pluginAPI",
+        "pluginAPIWithoutResetBarrier"
+      ],
+      "base_sha256": "b9632d71c235031496cb72060a219ec9d4c2678537da5d3ed91641c77e8406ff"
+    },
+    {
+      "path": "internal/app/plugin_reset_admission.go",
+      "removed_functions": [
+        "pluginResetHTTP"
+      ],
+      "base_sha256": "ad6fa792ad134d7d97fe24ba4f29ba7281ff1b4a0ffd635aacc2b8b8e72e5fd9"
+    },
+    {
+      "path": "internal/app/plugin_transfer_http.go",
+      "removed_functions": [
+        "transferAPIWithBarrier"
+      ],
+      "base_sha256": "75d49ed704e25d7876ce5bf6db2a1f3246248c03c84ca9b6a6d974aad5c6c0e8"
+    },
+    {
+      "path": "internal/app/plugin_http.go",
+      "removed_functions": [
+        "pluginAPIWithoutIYUUBarrier",
+        "pluginForm",
+        "pluginFormWithOrigin"
+      ],
+      "base_sha256": "fe344e3b529efcab9e310de1bbe7b5143cebedde91b3093c49e1e33fb56699e5"
+    },
+    {
+      "path": "internal/app/plugin_category_delivery_test.go",
+      "removed_functions": [
+        "TestCategoryEditorDeliveryDisabledMigrationColdReopen",
+        "TestCategoryEditorDeliveryOriginalFormContract"
+      ],
+      "base_sha256": "9e6c737be112f7393af945278e71b25393a6d0aa2e809a7d81a084297cb664ea"
+    },
+    {
+      "path": "internal/app/plugin_iyuu_http_test.go",
+      "removed_functions": [
+        "TestIYUUActualHTTPFormConfigAndLifecycle"
+      ],
+      "base_sha256": "3ba740050cfd4006468431535715cba2590a148d80cc0e9e14ab7e99b50f0573"
+    },
+    {
+      "path": "internal/app/plugin_auto_backup_runtime_test.go",
+      "removed_functions": [
+        "TestPluginAutoBackupConfigureCommitLostReplyKeepsOncePlan"
+      ],
+      "base_sha256": "211075e6476e20e83470377542efe6fcbb505af1ec79fdfb4ccae0a70fe8c686"
+    },
+    {
+      "path": "internal/app/plugin_form_http_session_test.go",
+      "removed_functions": [
+        "TestPluginFormHTTPActualCompiledFormsAndExternalEdit",
+        "TestPluginFormHTTPCompiledModelPolicyAndUntrustedRevision",
+        "TestPluginFormHTTPDeniedHostCannotBeIgnoredAndWorkerErrorIsGeneric",
+        "TestPluginFormHTTPInstallOriginRetainsTombstonePrefill",
+        "TestPluginFormHTTPRedactionRetainedForCapturedDisplay"
+      ],
+      "base_sha256": "ad2805ff6633217f950ab2e4299876722562ab4ff94d818df49d44dbd5d27fdb"
+    },
+    {
+      "path": "internal/app/plugin_form_host_guard_test.go",
+      "removed_functions": [
+        "TestPluginFormHTTPHostGuardDistinguishesDriftFromBusinessFailure"
+      ],
+      "base_sha256": "bdc00cb4c7a6af222f441b248f64265f66dd596d128c4a1a7430edc9cafc303b"
+    },
+    {
+      "path": "internal/app/plugin_uninstall_test.go",
+      "removed_functions": [
+        "TestPluginUninstallRealSDKExitsBeforeRefreshDrainRetainsSingleLiveWorkerSlot"
+      ],
+      "base_sha256": "312a17a6be6f796f1e4c9a6b1c2f8dfbc8d3270567b50e00c97e11187a7b19ca"
+    },
+    {
+      "path": "internal/app/plugin_transfer_form_observation_test.go",
+      "removed_functions": [
+        "TestTransferFormObservationActualProductFailure"
+      ],
+      "base_sha256": "c1d73143c33317bc14fd3b4673489ae66e5420c9a2d92f11c9929c7cf219cc22"
+    },
+    {
+      "path": "internal/app/plugin_scrape_clean_actual_test.go",
+      "removed_functions": [
+        "scrapeActualHTTP",
+        "TestPluginScrapeCleanActualIdleLifecycle",
+        "TestPluginScrapeCleanActualStopDiscardsOwnedPending",
+        "TestPluginScrapeCleanActualUnknownKeepsPendingAndOtherInstanceProgresses",
+        "TestPluginScrapeCleanActualWatcherFailureCannotReportSuccess"
+      ],
+      "base_sha256": "1cf70e2213a10bd4010f1fe45a5da78072c19a8f278d8f5342a58af6b44b0e55"
+    }
+  ],
+  "runs": {
+    "normal": {
+      "exit": 0,
+      "root_results": [
+        {
+          "Time": "2026-10-24T04:02:42.757621345Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerCloneResetUninstallActualObjects",
+          "Elapsed": 0.43
+        },
+        {
+          "Time": "2026-10-24T04:02:42.979796713Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerStartsWithEmptyConfigWithoutLegacyRun",
+          "Elapsed": 0.22
+        },
+        {
+          "Time": "2026-10-24T04:02:44.521274956Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardDirectModuleEndToEnd",
+          "Elapsed": 1.54
+        },
+        {
+          "Time": "2026-10-24T04:02:44.999958531Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardForceFailureThenMissingSourceReload",
+          "Elapsed": 0.48
+        },
+        {
+          "Time": "2026-10-24T04:02:45.652845907Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardSaveInitFailureRetainsPartial",
+          "Elapsed": 0.65
+        },
+        {
+          "Time": "2026-10-24T04:02:46.145102669Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardCloseFailureSkipsServiceButReaps",
+          "Elapsed": 0.49
+        },
+        {
+          "Time": "2026-10-24T04:02:46.914830475Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardActualArtifactUpgradePreservesClone",
+          "Elapsed": 0.77
+        },
+        {
+          "Time": "2026-10-24T04:02:47.158722086Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestPublicPluginServicesAuthAndCrossSiteGETGuard",
+          "Elapsed": 0.24
+        },
+        {
+          "Time": "2026-10-24T04:02:47.158743087Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginServiceTimeDifferenceOriginalUnits",
+          "Elapsed": 0
+        }
+      ],
+      "package_results": [
+        {
+          "Time": "2026-10-24T04:02:47.167547725Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 4.9879999999999995
+        }
+      ],
+      "log_sha256": "1ee473ce9ba95f1f6e38d7e7aa020c0f5bb27656442f8625faf3a3a6b535273f",
+      "race_instrumented_application": false
+    },
+    "race": {
+      "exit": 0,
+      "root_results": [
+        {
+          "Time": "2026-10-24T04:03:51.227340842Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerCloneResetUninstallActualObjects",
+          "Elapsed": 3.01
+        },
+        {
+          "Time": "2026-10-24T04:03:53.481154367Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerStartsWithEmptyConfigWithoutLegacyRun",
+          "Elapsed": 2.25
+        },
+        {
+          "Time": "2026-10-24T04:03:57.919914738Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardDirectModuleEndToEnd",
+          "Elapsed": 4.44
+        },
+        {
+          "Time": "2026-10-24T04:04:00.221357311Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardForceFailureThenMissingSourceReload",
+          "Elapsed": 2.3
+        },
+        {
+          "Time": "2026-10-24T04:04:02.518391992Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardSaveInitFailureRetainsPartial",
+          "Elapsed": 2.3
+        },
+        {
+          "Time": "2026-10-24T04:04:04.853507163Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardCloseFailureSkipsServiceButReaps",
+          "Elapsed": 2.33
+        },
+        {
+          "Time": "2026-10-24T04:04:08.468395988Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardActualArtifactUpgradePreservesClone",
+          "Elapsed": 3.61
+        },
+        {
+          "Time": "2026-10-24T04:04:10.10260964Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestPublicPluginServicesAuthAndCrossSiteGETGuard",
+          "Elapsed": 1.63
+        },
+        {
+          "Time": "2026-10-24T04:04:10.102664695Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginServiceTimeDifferenceOriginalUnits",
+          "Elapsed": 0
+        }
+      ],
+      "package_results": [
+        {
+          "Time": "2026-10-24T04:04:11.122301326Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 23.417
+        }
+      ],
+      "log_sha256": "3cdc4052a6f670ce6082ead39984443a19924c583f6d46bc84a86ab2479c08a3",
+      "race_instrumented_application": true
+    }
+  },
+  "fixtures": {
+    "owned-base-fixture": {
+      "build_exit": 0,
+      "binary_sha256": "52e69bad4ca66395edcd724b7316ef542f5f08eb946f23bada31d621c7e56e23",
+      "race_instrumented": false
+    },
+    "owned-standard-fixture": {
+      "build_exit": 0,
+      "binary_sha256": "762041a2dbd60152f1c6e8c50171a874ef28e7f8e54983e5111d4e909f29af74",
+      "race_instrumented": false
+    },
+    "owned-standard-fixture-v2": {
+      "build_exit": 0,
+      "binary_sha256": "f5afafbc9d7d30745aeb6340a82f19486633063ec0908b325154c9dc70a04a60",
+      "race_instrumented": false
+    }
+  },
+  "vet_run": false,
+  "full_module_acceptance": false
+}

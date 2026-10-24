@@ -6,17 +6,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http/httptest"
+	"light-media/internal/plugins"
+	"light-media/internal/plugins/builtin"
+	"light-media/internal/plugins/scrapefileclean"
+	scrapehost "light-media/internal/plugins/scrapefileclean/host"
 	"os"
 	"path/filepath"
 	"sync"
 	"testing"
 	"time"
-
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
-	"light-media/internal/plugins/scrapefileclean"
-	scrapehost "light-media/internal/plugins/scrapefileclean/host"
 )
 
 func TestPluginScrapeCleanWorkerFixture(t *testing.T) {
@@ -59,21 +57,6 @@ func scrapeActualWorker(t *testing.T, a *App, run PluginRun) {
 		t.Fatalf("actual SDK result %s %s %v", got.State, got.ErrorCode, err)
 	}
 }
-func scrapeActualHTTP(t *testing.T, a *App, instance, op string, body any) (any, error) {
-	t.Helper()
-	raw, _ := json.Marshal(body)
-	method := "POST"
-	if op == "config" {
-		method = "PUT"
-	}
-	r := httptest.NewRequest(method, "/api/plugins/"+instance+"/"+op, bytes.NewReader(raw))
-	if op == "reset" {
-		// Production dispatch obtains the common fence/join proof before the
-		// native lifecycle handler; do not bypass that outer entry in fixtures.
-		return a.pluginResetHTTP(httptest.NewRecorder(), r, instance+"/"+op, instance)
-	}
-	return a.pluginScrapeCleanLifecycleHTTP(httptest.NewRecorder(), r, instance+"/"+op)
-}
 
 type scrapeActualIdleWatcher struct {
 	events chan scrapehost.Event
@@ -111,68 +94,6 @@ func scrapeActualFixture(t *testing.T, delayed bool, flags bool) (*App, transfer
 		}
 	})
 	return a, item, run, o
-}
-func TestPluginScrapeCleanActualIdleLifecycle(t *testing.T) {
-	a := newTestApp(t)
-	a.config = Settings{}
-	run := scrapeActualInstall(t, a, map[string]any{"enabled": false})
-	scrapeActualWorker(t, a, run)
-	if _, err := scrapeActualHTTP(t, a, run.InstanceID, "reset", map[string]any{}); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := scrapeActualHTTP(t, a, run.InstanceID, "config", map[string]any{"revision": 0, "config": map[string]any{"enabled": false}}); err != nil {
-		t.Fatal(err)
-	}
-	next, err := a.pluginStore.claimRunForInstance(context.Background(), run.InstanceID)
-	if err != nil {
-		t.Fatal(err)
-	}
-	scrapeActualWorker(t, a, next)
-	if next.Generation != 2 {
-		t.Fatal(next.Generation)
-	}
-	if _, err = scrapeActualHTTP(t, a, run.InstanceID, "uninstall", map[string]any{}); err != nil {
-		t.Fatal(err)
-	}
-}
-func TestPluginScrapeCleanActualStopDiscardsOwnedPending(t *testing.T) {
-	for _, op := range []string{"config", "reload", "reset", "uninstall"} {
-		t.Run(op, func(t *testing.T) {
-			a, item, run, o := scrapeActualFixture(t, true, false)
-			ctx := context.Background()
-			if err := os.Remove(item.Source); err != nil {
-				t.Fatal(err)
-			}
-			if err := o.h.Observe(ctx, scrapehost.Event{ID: "owned-pending", Kind: "deleted", Path: item.Source, Mode: "hardlink", At: time.Now()}); err != nil {
-				t.Fatal(err)
-			}
-			s, err := o.j.Read(ctx)
-			if err != nil || len(s.Machine.Queue) != 1 {
-				t.Fatal("not queued", len(s.Machine.Queue), err)
-			}
-			var body any = map[string]any{}
-			if op == "config" {
-				body = map[string]any{"revision": run.ConfigRevision, "config": map[string]any{"enabled": false}}
-			}
-			if _, err = scrapeActualHTTP(t, a, run.InstanceID, op, body); err != nil {
-				t.Fatal(err)
-			}
-			if op == "config" || op == "reload" {
-				next, err := a.pluginStore.claimRunForInstance(ctx, run.InstanceID)
-				if err != nil {
-					t.Fatal(err)
-				}
-				scrapeActualWorker(t, a, next)
-			}
-			s, err = o.j.Read(ctx)
-			if err != nil || len(s.Machine.Queue) != 0 {
-				t.Fatal("source stop did not discard", len(s.Machine.Queue), err)
-			}
-			if _, err = os.Stat(item.Target); err != nil {
-				t.Fatal("source Stop deleted pending media", err)
-			}
-		})
-	}
 }
 func TestPluginScrapeCleanActualImmediateHistoryAndPrivateEvent(t *testing.T) {
 	a, item, _, o := scrapeActualFixture(t, false, true)
@@ -284,66 +205,6 @@ func TestPluginScrapeCleanActualColdStartupDiscardsPendingAndRescans(t *testing.
 		t.Fatal("cold created new init", count, err)
 	}
 }
-func TestPluginScrapeCleanActualUnknownKeepsPendingAndOtherInstanceProgresses(t *testing.T) {
-	a, item, run, o := scrapeActualFixture(t, false, false)
-	ctx := context.Background()
-	pending, err := a.pluginStore.EnqueueRun(ctx, run.InstanceID, "init", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = os.Remove(item.Source); err != nil {
-		t.Fatal(err)
-	}
-	if err = os.Remove(item.Target); err != nil {
-		t.Fatal(err)
-	}
-	replacement := []byte("owned new unrelated file must survive")
-	if err = os.WriteFile(item.Target, replacement, 0600); err != nil {
-		t.Fatal(err)
-	}
-	err = o.h.Observe(ctx, scrapehost.Event{ID: "owned-replaced-target", Kind: "deleted", Path: item.Source, Mode: "hardlink", At: time.Now()})
-	if err == nil {
-		t.Fatal("replacement mismatch did not stop deletion")
-	}
-	proof, err := o.j.Read(ctx)
-	if err != nil || proof.Blocked == "" {
-		t.Fatal("unknown not durable", err)
-	}
-	if _, err = a.pluginStore.EnqueueRun(ctx, run.InstanceID, "init", nil); !scrapeQueueRejected(err) {
-		t.Fatal("duplicate queue did not reject unknown", err)
-	}
-	if _, err = scrapeActualHTTP(t, a, run.InstanceID, "reset", map[string]any{}); err == nil {
-		t.Fatal("unknown retired")
-	}
-	other := uninstallInstall(t, a, "RemoteIdentifiers", builtin.RemoteIdentifiersManifest(), map[string]any{"enabled": false}, false)
-	_ = other
-	otherRun, err := a.pluginStore.EnqueueRun(ctx, "RemoteIdentifiers", "init", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	claimed, err := a.pluginStore.ClaimRun(ctx)
-	if err != nil || claimed.ID != otherRun.ID {
-		t.Fatal("unknown blocked unrelated queue", claimed.ID, err)
-	}
-	useBuiltInPluginProcess(t, a)
-	a.executePluginRun(ctx, claimed)
-	done, err := a.pluginStore.Run(ctx, claimed.ID)
-	if err != nil || done.State != "succeeded" {
-		t.Fatal("unrelated real SDK did not finish", done.State, err)
-	}
-	kept, err := a.pluginStore.Run(ctx, pending.ID)
-	if err != nil || kept.State != "pending" {
-		t.Fatal("prequeued identity poisoned", kept.State, err)
-	}
-	got, err := os.ReadFile(item.Target)
-	if err != nil || !bytes.Equal(got, replacement) {
-		t.Fatal("replacement changed", err)
-	}
-	after, err := o.j.Read(ctx)
-	if err != nil || after.Blocked != proof.Blocked || len(after.Effects) != len(proof.Effects) {
-		t.Fatal("rejection changed original proof", err)
-	}
-}
 func TestPluginScrapeCleanActualEvidenceLossCannotMintGenesis(t *testing.T) {
 	for _, mode := range []string{"machine_namespace", "owner_root", "root_and_machine", "deferred", "core_receipt"} {
 		t.Run(mode, func(t *testing.T) {
@@ -386,42 +247,6 @@ func TestPluginScrapeCleanActualEvidenceLossCannotMintGenesis(t *testing.T) {
 	}
 }
 
-func TestPluginScrapeCleanActualWatcherFailureCannotReportSuccess(t *testing.T) {
-	a, item := historyRemovalFixture(t)
-	ctx := context.Background()
-	var calls int
-	a.pluginScrapeClean.watch = func(context.Context, []scrapehost.Watch, func(string) (*os.File, error)) (scrapehost.Watcher, error) {
-		calls++
-		if calls > 1 {
-			return nil, errors.New("owned second observer creation failed")
-		}
-		return &scrapeActualIdleWatcher{events: make(chan scrapehost.Event), errs: make(chan error)}, nil
-	}
-	run := scrapeActualInstall(t, a, map[string]any{"enabled": true, "monitor_dirs": a.Settings().AllowedRoots[0] + "\n" + a.Settings().Roots[0].Path, "delayed_deletion": true})
-	scrapeActualWorker(t, a, run)
-	if _, err := scrapeActualHTTP(t, a, run.InstanceID, "reload", map[string]any{}); err != nil {
-		t.Fatal(err)
-	}
-	next, err := a.pluginStore.claimRunForInstance(ctx, run.InstanceID)
-	if err != nil {
-		t.Fatal(err)
-	}
-	a.executePluginRun(ctx, next)
-	got, err := a.pluginStore.Run(ctx, next.ID)
-	if err != nil || got.State != "reconcile_pending" {
-		t.Fatal("actual native failure swallowed", got.State, got.ErrorCode, err)
-	}
-	d, _, err := a.pluginStore.readDeferred(ctx, a.Store.DB, got)
-	if err != nil || d.Phase != "uncertain" {
-		t.Fatal("failure lost started identity", d.Phase, err)
-	}
-	if calls != 2 {
-		t.Fatal("failure did not occur at actual new observer", calls)
-	}
-	if _, err = os.Stat(item.Target); err != nil {
-		t.Fatal("failed observer deleted fixture media", err)
-	}
-}
 func TestPluginScrapeCleanActualKernelRenameDeleteAndTimer(t *testing.T) {
 	for _, delayed := range []bool{false, true} {
 		t.Run(fmt.Sprint(delayed), func(t *testing.T) {

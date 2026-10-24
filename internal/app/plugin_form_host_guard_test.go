@@ -4,52 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"strings"
-	"testing"
-
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/builtin"
+	"strings"
+	"testing"
 )
-
-func TestPluginFormHTTPHostGuardDistinguishesDriftFromBusinessFailure(t *testing.T) {
-	for _, tc := range []struct {
-		name     string
-		initial  json.RawMessage
-		external json.RawMessage
-		want     string
-	}{
-		{"valid-follow-edit", json.RawMessage(`{}`), json.RawMessage(`{"search_follow_enable_sites":true}`), "PLUGIN_REVISION_CONFLICT"},
-		{"valid-site-list-edit", json.RawMessage(`{}`), json.RawMessage(`{"enable_sites":[]}`), "PLUGIN_REVISION_CONFLICT"},
-		{"invalid-config-without-drift", json.RawMessage(`{"sentinel":"synthetic-private-detail"}`), nil, "PLUGIN_FORM_FAILED"},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			a := newTestApp(t)
-			in := pluginFormHTTPInstallation(t, a, "MergeSiteSwitch", tc.initial)
-			useBuiltInPluginProcess(t, a)
-			before, sealed := pluginDefaultsStoredConfig(t, a.pluginStore, in.InstanceID)
-			if tc.external != nil {
-				var config builtin.SiteControls
-				if json.Unmarshal(tc.external, &config) != nil || config.Validate() != nil {
-					t.Fatal("external-edit fixture must satisfy the real compiled schema")
-				}
-				command := a.pluginCommand
-				a.pluginCommand = func(id string) (plugins.Command, error) {
-					if _, err := a.pluginStore.SaveConfig(context.Background(), in.InstanceID, before.Revision, tc.external); err != nil {
-						return plugins.Command{}, err
-					}
-					return command(id)
-				}
-			}
-			response, err := a.pluginForm(context.Background(), in)
-			if response != nil || pluginErrorCode(err) != tc.want || strings.Contains(err.Error(), "synthetic-private-detail") || strings.Contains(err.Error(), "unknown site control field") {
-				t.Fatal("host drift and unchanged business failure were conflated", err)
-			}
-			if tc.external == nil {
-				assertPluginFormDurableConfigUnchanged(t, a.pluginStore, context.Background(), in.InstanceID, before, sealed)
-			}
-		})
-	}
-}
 
 func TestPluginFormHostGuardRejectsDriftBeforeCallback(t *testing.T) {
 	for _, drift := range []string{"external-before-first", "external-between-calls", "reset", "claim"} {

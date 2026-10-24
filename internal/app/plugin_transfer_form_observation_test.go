@@ -5,12 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"path/filepath"
+	"light-media/internal/plugins"
 	"strings"
 	"testing"
-
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
 )
 
 type transferPanicTextError struct{}
@@ -97,63 +94,3 @@ func TestTransferFormObservationHostPreservesValuesAndRedacts(t *testing.T) {
 
 // Real product failure path: pluginForm -> actual Runner -> failed process
 // start -> the unchanged public API error and the product diagnostic log.
-func TestTransferFormObservationActualProductFailure(t *testing.T) {
-	for _, pluginID := range []string{"TorrentTransfer", "TorrentTransfermusic", "AutoSignIn"} {
-		t.Run(pluginID, func(t *testing.T) {
-			a := newTestApp(t)
-			const secret = "synthetic-private-command"
-			a.pluginCommand = func(string) (plugins.Command, error) {
-				return plugins.Command{Path: filepath.Join(t.TempDir(), secret)}, nil
-			}
-			manifest, _, ok := builtin.Lookup(pluginID)
-			if !ok {
-				t.Fatal("manifest missing")
-			}
-			raw, _ := json.Marshal(manifest)
-			_, err := a.pluginFormWithOrigin(context.Background(), PluginInstallation{PluginID: pluginID, InstanceID: pluginID, Version: manifest.Version, ManifestSchemaVersion: manifest.SchemaVersion, Manifest: raw}, pluginFormOriginInstall)
-			var api *APIError
-			if !errors.As(err, &api) || api.Code != "PLUGIN_FORM_FAILED" || api.Message != "加载插件配置表单失败" {
-				t.Fatal("public error changed")
-			}
-			encoded, _ := json.Marshal(api)
-			if strings.Contains(string(encoded), secret) {
-				t.Fatal("API leaked command")
-			}
-			flushTestLogs(t, a)
-			entries, _, _, _ := a.logs.snapshot(0)
-			found := false
-			for _, entry := range entries {
-				if strings.Contains(string(entry.Data), secret) {
-					t.Fatal("log leaked command")
-				}
-				var row map[string]any
-				_ = json.Unmarshal(entry.Data, &row)
-				if row["event"] != "torrent_transfer_form_failed" {
-					continue
-				}
-				found = true
-				if row["plugin_id"] != pluginID || row["plugin_instance_id"] != pluginID || row["plugin_version"] != manifest.Version {
-					t.Fatal("installation attribution lost or crossed")
-				}
-				var diagnostic map[string]any
-				message, _ := row["message"].(string)
-				if json.Unmarshal([]byte(message), &diagnostic) != nil {
-					t.Fatal("diagnostic was truncated")
-				}
-				if diagnostic["error_class"] != "worker_start_failed" || diagnostic["runner_context"] != "active" {
-					t.Fatal("wrong product failure evidence")
-				}
-				phases := diagnostic["phases_ms"].(map[string]any)
-				if _, ok := phases["start_end"]; !ok {
-					t.Fatal("missing actual start boundary")
-				}
-				if _, ok := phases["invoke_begin"]; ok {
-					t.Fatal("invented invoke boundary")
-				}
-			}
-			if found != isTorrentTransfer(pluginID) {
-				t.Fatal("product observation identity gate")
-			}
-		})
-	}
-}

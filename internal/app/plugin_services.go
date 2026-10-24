@@ -1,20 +1,14 @@
 package app
 
 import (
-	"context"
-	"database/sql"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"sort"
 	"strings"
 	"time"
-
-	"light-media/internal/plugins"
 )
 
 // PluginServiceInfo is the public projection of a registered service. Its
-// encrypted declaration, invocation input and credentials never leave the host.
+// method input and credentials never leave the host. Registration is in-memory.
 type PluginServiceInfo struct {
 	ID         string `json:"id"`
 	InstanceID string `json:"instance_id"`
@@ -49,141 +43,6 @@ func pluginServiceTimeDifference(due, at time.Time) string {
 		fmt.Fprintf(&out, "%d秒", seconds)
 	}
 	return out.String()
-}
-
-func (p *PluginStore) publicPluginServices(ctx context.Context, at time.Time) ([]PluginServiceInfo, error) {
-	tx, err := p.store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-	rows, err := tx.QueryContext(ctx, `SELECT s.instance_id,s.service_id,s.definition,s.next_due,i.plugin_id,i.version,i.manifest,i.generation,i.manifest_schema,
- EXISTS(SELECT 1 FROM plugin_schedule_occurrences o JOIN plugin_runs r ON r.id=o.run_id WHERE o.instance_id=s.instance_id AND o.service_id=s.service_id AND r.state='pending'),
- EXISTS(SELECT 1 FROM plugin_schedule_occurrences o JOIN plugin_runs r ON r.id=o.run_id WHERE o.instance_id=s.instance_id AND o.service_id=s.service_id AND r.state='running'),
- EXISTS(SELECT 1 FROM plugin_runs r WHERE r.instance_id=s.instance_id AND r.generation=i.generation AND r.state='reconcile_pending')
- FROM plugin_schedules s JOIN plugin_installations i ON i.instance_id=s.instance_id JOIN plugin_values v ON v.instance_id=s.instance_id AND v.kind='config' AND v.item_key='main'
- WHERE s.active=1 AND i.installed=1 AND i.desired_enabled=1 AND s.generation=i.generation AND s.config_revision=v.revision`)
-	if err != nil {
-		return nil, err
-	}
-	items := make([]PluginServiceInfo, 0)
-	installations := make([]PluginInstallation, 0)
-	for rows.Next() {
-		var item PluginServiceInfo
-		var definitionSealed, manifestSealed []byte
-		in := PluginInstallation{Installed: true, DesiredEnabled: true}
-		var next sql.NullString
-		var pending, running, reconcile bool
-		if err := rows.Scan(&item.InstanceID, &item.ServiceID, &definitionSealed, &next, &in.PluginID, &in.Version, &manifestSealed, &in.Generation, &in.ManifestSchemaVersion, &pending, &running, &reconcile); err != nil {
-			rows.Close()
-			return nil, err
-		}
-		item.busy = pending || running || reconcile
-		if !next.Valid && !item.busy {
-			continue // An exhausted one-shot remains visible only while outstanding.
-		}
-		raw, err := p.unseal("schedule", item.InstanceID, item.ServiceID, definitionSealed)
-		var definition pluginScheduleDefinition
-		if err != nil || !pluginStrictJSON(raw, &definition) || definition.ID != item.ServiceID || definition.Name == "" {
-			rows.Close()
-			return nil, bad("PLUGIN_SCHEDULE_CORRUPT", "定时服务声明无法读取")
-		}
-		raw, err = p.unseal("manifest", item.InstanceID, "main", manifestSealed)
-		if err != nil {
-			rows.Close()
-			return nil, bad("PLUGIN_SCHEDULE_CORRUPT", "定时服务提供者无法读取")
-		}
-		item.ID = item.InstanceID + "_" + item.ServiceID
-		item.Name, item.Status = definition.Name, "等待"
-		in.InstanceID, in.Manifest = item.InstanceID, raw
-		item.CanRun = next.Valid && !item.busy
-		if running {
-			item.Status = "正在运行"
-		}
-		if reconcile {
-			item.Status = "等待核对"
-		}
-		if next.Valid {
-			item.due, err = time.Parse(time.RFC3339Nano, next.String)
-			if err != nil {
-				rows.Close()
-				return nil, bad("PLUGIN_SCHEDULE_CORRUPT", "定时服务时间无法读取")
-			}
-			item.NextRun = pluginServiceTimeDifference(item.due, at)
-		}
-		items = append(items, item)
-		installations = append(installations, in)
-	}
-	err = rows.Err()
-	rows.Close()
-	if err != nil {
-		return nil, err
-	}
-	// Close the service rows before metadata lookups on this same read snapshot.
-	// Never open a second pool connection while the read transaction is held.
-	for i, in := range installations {
-		manifest, err := p.pluginServiceProviderManifest(ctx, tx, in)
-		if err != nil {
-			return nil, bad("PLUGIN_SCHEDULE_CORRUPT", "定时服务提供者无法读取")
-		}
-		items[i].Provider = manifest.Name
-	}
-
-	if err := tx.Commit(); err != nil {
-		return nil, err
-	}
-	sort.SliceStable(items, func(i, j int) bool {
-		if items[i].busy != items[j].busy {
-			return items[i].busy
-		}
-		if !items[i].due.Equal(items[j].due) {
-			return items[i].due.Before(items[j].due)
-		}
-		return items[i].ID < items[j].ID
-	})
-	return items, nil
-}
-
-// Only authenticated host fields are separated from the strict worker manifest.
-// The caller supplies an AEAD-decoded installation captured in this transaction.
-func (p *PluginStore) pluginServiceProviderManifest(ctx context.Context, tx *sql.Tx, in PluginInstallation) (plugins.Manifest, error) {
-	var manifest plugins.Manifest
-	state, err := pluginLifecycleState(in)
-	if err != nil || state == pluginLifecycleInactive || !in.Installed {
-		return manifest, pluginLifecycleInvalid()
-	}
-	var fields map[string]json.RawMessage
-	if json.Unmarshal(in.Manifest, &fields) != nil || fields == nil {
-		return manifest, pluginLifecycleInvalid()
-	}
-	if raw, present := fields["host_instance"]; present {
-		var marker pluginInstanceMarker
-		if !pluginStrictJSON(raw, &marker) || marker.Purpose != "instance-clone/v1" || marker.InstanceID != in.InstanceID {
-			return manifest, pluginLifecycleInvalid()
-		}
-	}
-	if _, err = p.instanceMetadata(ctx, tx, in.InstanceID); err != nil {
-		return manifest, err
-	}
-	if _, err = p.pluginUpdateReviewRead(ctx, tx, in); err != nil {
-		return manifest, err
-	}
-	delete(fields, pluginLifecycleField)
-	delete(fields, "host_instance")
-	delete(fields, pluginUpdateReviewField)
-	raw, err := json.Marshal(fields)
-	if err != nil || !pluginStrictJSON(raw, &manifest) || manifest.Validate() != nil || manifest.PluginID != in.PluginID || manifest.Version != in.Version || manifest.SchemaVersion != in.ManifestSchemaVersion {
-		return plugins.Manifest{}, pluginLifecycleInvalid()
-	}
-	return manifest, nil
-}
-
-func (a *App) queuePublicPluginService(ctx context.Context, instanceID, serviceID string) (PluginRun, error) {
-	run, err := a.pluginStore.enqueueManualPluginService(ctx, instanceID, serviceID, time.Now())
-	if err == nil {
-		a.wakePlugins()
-	}
-	return run, err
 }
 
 // Called inside a.api, after its standard authentication and POST origin guard.
