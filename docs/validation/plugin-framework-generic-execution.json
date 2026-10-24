@@ -1,0 +1,126 @@
+{
+  "scope": "Shared plugin immediate submission, service refresh, transport retirement, startup order and reset-handler priority only.",
+  "base_commit": "52384c8ea95af608d7948a6fb828542b3302eb7f",
+  "source_files": [
+    {
+      "path": "cmd/owned-handler-order-fixture/main.go",
+      "sha256": "7d264e689263c430f651fcee4e3587778be0fd7d78c19d3d51ee02c294a60231"
+    },
+    {
+      "path": "cmd/owned-submitted-fixture/main.go",
+      "sha256": "4cccd77ac0450721550314d467c3bcf52d9a01e5d336e475f22f57c2ef167d9b"
+    },
+    {
+      "path": "docs/plugin-original-handler-order.md",
+      "sha256": "3fbdbbb52a5a3c8a6cef5d49fc6cbd15a6dd5585d10b029fdcafc7b109532b07"
+    },
+    {
+      "path": "internal/app/plugin_original_base.go",
+      "sha256": "6d2f946048c8d2e18ebeae969bc0a22a64f84884be26c5b507110c4da5e68330"
+    },
+    {
+      "path": "internal/app/plugin_original_base_session.go",
+      "sha256": "aa28d216617d864e7c43a30e6a56805b4f65ee667d7c0309871c7c04deaf2c4e"
+    },
+    {
+      "path": "internal/app/plugin_original_handler_order_test.go",
+      "sha256": "b01a78dd5882f86944b9da1eeb40e909a81f87853d4f720fca0caba8aff9f852"
+    },
+    {
+      "path": "internal/app/plugin_original_lifecycle.go",
+      "sha256": "91fc27c488cffbef14c2970fc84a42aacf5f42fcf4f192335ef065a81954078c"
+    },
+    {
+      "path": "internal/app/plugin_original_refresh_resource.go",
+      "sha256": "27fa118985a8ab3c6a34903aafa17c53da0360ba4bcda5d0ce6698824d27b596"
+    },
+    {
+      "path": "internal/app/plugin_original_reset_event.go",
+      "sha256": "69d1dd874536f9e59cf9d99681b3e4108cd505b0cf916f67456d5f4d8ae7aaca"
+    },
+    {
+      "path": "internal/app/plugin_original_resources.go",
+      "sha256": "d930f2085ecfcb3a9c7e15c91219d94d6b0ac21211bed77eaf264a5a16528808"
+    },
+    {
+      "path": "internal/app/plugin_original_session.go",
+      "sha256": "acbf7b06b335c7df067b0f2da3ffce5fcaf03879af6454db9196aee026dca375"
+    },
+    {
+      "path": "internal/app/plugin_original_startup.go",
+      "sha256": "45157ded3a95ea17e4564f2d4e20767ab66199e7d1e72feafe23f61a92126f7d"
+    },
+    {
+      "path": "internal/app/plugin_original_submitted.go",
+      "sha256": "204ceed6215109d8337e69b9ac31a76ea0ec9a2e63a542238803f369428b2b07"
+    },
+    {
+      "path": "internal/app/plugin_original_submitted_owned_test.go",
+      "sha256": "570bb7b7d8ccf33970f2e72947e33e52e398b0bd12d5dd75838736b3925f2d95"
+    },
+    {
+      "path": "internal/app/runtime.go",
+      "sha256": "f2c8242cbeb60baf2aa7603fcf9e8f763b314d4d124c0dddca431d29cba92c07"
+    },
+    {
+      "path": "internal/plugins/close_transport.go",
+      "sha256": "0fe69adfa2532d666e36a35295f2fb01b28ef172d98babe0e649ea0174acbbbf"
+    },
+    {
+      "path": "internal/plugins/concurrent_session.go",
+      "sha256": "c36f70926d106b5f6171d78f98ac08b1d05bbe4689cf6e04b87ed9916227ccc8"
+    },
+    {
+      "path": "internal/plugins/concurrent_transport.go",
+      "sha256": "eced9e86ea677124c4d87622ebb3c2432dd45f22bb5c34770149130a0819094c"
+    },
+    {
+      "path": "internal/plugins/concurrent_worker.go",
+      "sha256": "88fa642e9008c444897c362f165c6f1150547467a9365d49b24c727eb9d23e1e"
+    },
+    {
+      "path": "internal/plugins/handler_order_test.go",
+      "sha256": "a8b9d1396a76a048157663b226984cdf4e88accdd07a27bd794ffb652845ec18"
+    },
+    {
+      "path": "internal/plugins/manager_resources.go",
+      "sha256": "4d9ec61a1300203f5975be8f4b598c18422e2b9a2ea834d918c777fabf8a3089"
+    },
+    {
+      "path": "internal/plugins/pending_call.go",
+      "sha256": "89ccd4ba72560bf4ea26b1bdd70c58edccc1ab0d49bf0f85c6c447359e918053"
+    },
+    {
+      "path": "internal/plugins/pending_call_test.go",
+      "sha256": "d0deec4570c989e966beeb6ba07bf1751024c8ec8176a2c32710e18656cc09ed"
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "sha256": "89cc72015137a8016e69f8a0f208233145e5c21054323fec0f5599276a731cb5"
+    },
+    {
+      "path": "internal/plugins/worker.go",
+      "sha256": "d0638d1563ebeff86d237cb625d61eb9cc85786acafe1fd75cfdcaa951fddbfc"
+    }
+  ],
+  "validation": {
+    "normal": {
+      "passed_roots": 12,
+      "failed_roots": 0,
+      "skipped_roots": 0
+    },
+    "race": {
+      "passed_roots": 12,
+      "failed_roots": 0,
+      "skipped_roots": 0,
+      "host_race_enabled": true,
+      "all_five_owned_worker_variants_race_enabled": true
+    },
+    "vet_exit": 0
+  },
+  "limits": [
+    "Focused validation only, not a complete framework or full-repository test pass.",
+    "An earlier broader combined App race run failed one crash/list test. A diagnostic did not reproduce or explain it; this narrow gate does not resolve that failure.",
+    "Notification, site browse, downloader controls/mutations and external provider ingress are outside this change."
+  ]
+}

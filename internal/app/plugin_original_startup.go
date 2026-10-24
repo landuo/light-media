@@ -6,7 +6,7 @@ import (
 )
 
 // initializeOriginalPlugins is the installed-list manager init_config entry:
-// stop loaded objects, then start every installed compiled class in plugin_order.
+// stop loaded objects, then start every installed class in its actual manifest plugin_order.
 // get_state controls event/service availability, never whether init is called.
 func (a *App) initializeOriginalPlugins(ctx context.Context) error {
 	a.pluginOriginalRunningMu.Lock()
@@ -21,8 +21,22 @@ func (a *App) initializeOriginalPlugins(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	// Resolve actual installed executable metadata before sorting; neither an ID
+	// allowlist nor an unauthenticated UI/config value defines class order.
+	orders := make(map[string]int, len(installed))
+	loadable := installed[:0]
+	for _, in := range installed {
+		implementation, err := a.resolvePluginImplementation(ctx, in)
+		if err != nil {
+			a.log("ERROR", "plugins", "load_failed", "插件实现读取失败，继续加载其他插件", "", "")
+			continue
+		}
+		orders[in.InstanceID] = implementation.Manifest.PluginOrder
+		loadable = append(loadable, in)
+	}
+	installed = loadable
 	sort.SliceStable(installed, func(i, j int) bool {
-		return originalCompiledPluginOrder(installed[i].PluginID) < originalCompiledPluginOrder(installed[j].PluginID)
+		return orders[installed[i].InstanceID] < orders[installed[j].InstanceID]
 	})
 	for _, in := range installed {
 		a.startOriginalPlugin(ctx, in.InstanceID)

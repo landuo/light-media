@@ -42,6 +42,7 @@ type App struct {
 	pluginOriginalDirectJobs       originalDirectJobs
 	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
 	pluginOriginalClasses          sync.Map // Original _plugins: imported compiled class, independent of running and installed.
+	pluginSubmittedObjects         sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
 	pluginRunningInstances         sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
 	systemMessages                 systemMessageRuntime
 	bigMemoryMode                  bool // Trusted startup option; not worker or plugin configuration.
@@ -211,6 +212,7 @@ func (a *App) Start(parent context.Context) {
 func (a *App) Close() error {
 	a.closeOriginalBackgroundAdmission()
 	a.closeOriginalSessions()
+	a.stopOriginalUnpublishedSubmissions(context.Background(), "")
 	a.systemMessages.close()
 	if a.cancel != nil {
 		a.cancel()

@@ -38,7 +38,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		if p.stopping.Load() && phase != "stop" {
 			return bad("PLUGIN_CALL_CLOSED", "插件对象正在停止")
 		}
-		admitted := originalObjectStillLoaded(p)
+		admitted := originalObjectStillLoaded(p) || p.originalSubmittedScopeAllowed(callCtx)
 		if call, ok := callCtx.Value(originalInitializingObjectKey{}).(*originalInitializationCall); ok && call != nil && call.object == p {
 			admitted = true
 		}
@@ -68,7 +68,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		if !originalStandardCapabilityAllowed(p.hostContract, method) || !slices.Contains(p.manifest.Capabilities, method) {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "公共宿主契约未声明该方法")
 		}
-		scope := originalBaseCallScope{installation: p.installation, validate: validate, logCall: logCall}
+		scope := originalBaseCallScope{object: p, phase: phase, installation: p.installation, validate: validate, logCall: logCall}
 		if plugins.IsBaseMethod(method) {
 			return p.app.pluginOriginalBaseHost(ctx, scope, identity, method, raw)
 		}

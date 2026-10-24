@@ -35,6 +35,8 @@ type originalBaseConfigValue struct {
 }
 
 type originalBaseCallScope struct {
+	object *originalPluginInstance
+	phase string
 	installation PluginInstallation
 	logCall      originalPluginLogCall
 	// validate must reject expired/replaced calls, not merely installed objects.

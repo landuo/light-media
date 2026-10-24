@@ -3,6 +3,8 @@ package plugins
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"io"
 	"slices"
 	"strings"
 	"sync"
@@ -30,6 +32,7 @@ type concurrentWorker struct {
 	mu            sync.Mutex
 	calls         map[string]*concurrentWorkerCall
 	stopping      bool
+	retiring      bool
 	draining      bool
 	cleanupActive bool
 	handlers      sync.WaitGroup
@@ -78,9 +81,11 @@ func (w *concurrentWorker) readLoop() {
 		request, count, err := w.transport.read()
 		if err != nil {
 			w.mu.Lock()
-			stopping := w.stopping
+			stopping, retiring := w.stopping, w.retiring
 			w.mu.Unlock()
-			if !stopping {
+			if retiring && errors.Is(err, io.EOF) {
+				w.finish(nil)
+			} else if !stopping {
 				w.finish(err)
 			}
 			return
@@ -129,6 +134,21 @@ func (w *concurrentWorker) readLoop() {
 			}
 			continue
 		}
+		if request.Method == "transport.retire" {
+			var version struct { Version int `json:"version"` }
+			if !identityPattern.MatchString(request.ID) || strings.Contains(request.ID,".") || strictJSON(request.Payload,&version)!=nil || version.Version!=1 {
+				w.finish(failure("invalid_invocation"));return
+			}
+			w.mu.Lock()
+			if w.stopping || w.retiring || w.calls[request.ID]!=nil {w.mu.Unlock();w.finish(failure("invalid_invocation"));return}
+			w.retiring=true;w.draining=true
+			for _,old:=range w.calls{old.phase.closed.Store(true);old.cancel()}
+			w.mu.Unlock()
+			// Only this explicit transport-only fence authorizes normal EOF.
+			// No plugin lifecycle Handler is invoked; EOF cancels and joins.
+			if _,err=w.transport.write(Frame{Protocol:ProtocolVersion,ID:request.ID,Type:"result",Identity:w.transport.wire.identity,Result:json.RawMessage(`{"version":1}`)},nil);err!=nil{w.finish(err);return}
+			continue
+		}
 		if request.Method == "transport.shutdown" {
 			var version struct {
 				Version int `json:"version"`
@@ -170,7 +190,7 @@ func (w *concurrentWorker) readLoop() {
 		}
 		w.mu.Lock()
 		cleanup := w.draining && (request.Method == "close" || request.Method == "stop_service")
-		if w.stopping || w.calls[request.ID] != nil || w.draining && !cleanup && request.Method != "stop" || cleanup && w.cleanupActive || len(w.calls) >= w.proposal.MaxCalls && request.Method != "stop" && !cleanup {
+		if w.stopping || w.retiring || w.calls[request.ID] != nil || w.draining && !cleanup && request.Method != "stop" || cleanup && w.cleanupActive || len(w.calls) >= w.proposal.MaxCalls && request.Method != "stop" && !cleanup {
 			w.mu.Unlock()
 			cancel()
 			w.finish(failure("concurrent_call_limit"))

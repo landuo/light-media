@@ -3,6 +3,7 @@ package plugins
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"strings"
 	"sync"
@@ -35,6 +36,7 @@ type concurrentHostCall struct {
 }
 
 type concurrentClient struct {
+	transportClose bool
 	client       *Client
 	transport    *concurrentTransport
 	proposal     concurrentProposal
@@ -107,7 +109,8 @@ func (m *concurrentClient) readLoop() {
 			m.mu.Lock()
 			expected := m.expectedEOF
 			m.mu.Unlock()
-			if !expected {
+			if !expected || !errors.Is(err, io.EOF) {
+				if errors.Is(err, io.EOF) { err = failure("worker_io_failed") }
 				m.abort(err)
 			}
 			return
@@ -252,7 +255,19 @@ func (m *concurrentClient) callHost(call *concurrentHostCall, host HostHandler, 
 	}
 }
 
-func (m *concurrentClient) call(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions, cleanup bool) (out RunResult, err error) {
+func (m *concurrentClient) call(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions, cleanup bool) (RunResult, error) {
+	return m.callStarted(ctx, method, payload, host, options, cleanup, nil, nil)
+}
+
+// admitted is notified exactly once, before any worker completion is awaited.
+// An accepted call already owns the same bounded table slot as ordinary Call.
+func (m *concurrentClient) callStarted(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions, cleanup bool, admitted chan<- error, admissionCtx context.Context) (out RunResult, err error) {
+	announced := false
+	defer func() {
+		if admitted != nil && !announced {
+			admitted <- err
+		}
+	}()
 	if ctx.Err() != nil {
 		return out, failure("execution_canceled")
 	}
@@ -265,6 +280,13 @@ func (m *concurrentClient) call(ctx context.Context, method string, payload json
 	callCtx, finish, budget := invocationContext(parent, options)
 	call := &concurrentHostCall{id: id, method: method, ctx: callCtx, cancel: cancel, finish: finish, stopLife: stopLife, budget: budget, host: host, cleanup: cleanup, account: concurrentAccount{limits: m.client.session.limits}, result: make(chan concurrentOutcome, 1), sent: make(chan struct{}), seen: map[string]bool{}}
 	m.mu.Lock()
+	if admissionCtx != nil && admissionCtx.Err() != nil {
+		m.mu.Unlock()
+		stopLife()
+		cancel()
+		finish()
+		return out, failure("execution_canceled")
+	}
 	if m.terminal != nil || (m.draining || m.stopping) && !cleanup || m.stopping && method != "stop" || len(m.calls) >= m.proposal.MaxCalls && !cleanup {
 		reason := m.terminal
 		if reason == nil {
@@ -283,6 +305,10 @@ func (m *concurrentClient) call(ctx context.Context, method string, payload json
 	m.calls[id] = call
 	m.writes.Add(1)
 	m.mu.Unlock()
+	if admitted != nil {
+		announced = true
+		admitted <- nil
+	}
 	before, _ := m.client.stderr.snapshot()
 	defer func() {
 		result := out.Result

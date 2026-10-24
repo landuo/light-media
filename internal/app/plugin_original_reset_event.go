@@ -3,25 +3,27 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"sort"
+
+	"light-media/internal/plugins"
 )
 
 type originalPluginDataResetEvent struct {
-	PluginID    string
-	ResetConfig bool
-	ResetData   bool
+	PluginID    string `json:"plugin_id"`
+	ResetConfig bool   `json:"reset_config"`
+	ResetData   bool   `json:"reset_data"`
 }
 
 type originalPluginDataResetHandler struct {
 	ID       string
+	Instance string
 	Priority int
 	Enabled  func() bool
 	Invoke   func(context.Context, *originalPluginDataResetEvent) error
 }
 
-// The original event manager deduplicates identifiers, moves a replaced
-// subscriber to the insertion tail, and stably sorts ascending priority.
+// Like the original chain dictionary: replace an identifier by removing it
+// first, append at the insertion tail, then stably sort ascending priority.
 func (a *App) registerOriginalPluginDataResetHandler(handler originalPluginDataResetHandler) {
 	a.pluginOriginalEventsMu.Lock()
 	defer a.pluginOriginalEventsMu.Unlock()
@@ -36,30 +38,72 @@ func (a *App) registerOriginalPluginDataResetHandler(handler originalPluginDataR
 	a.pluginOriginalResetHandlers = handlers
 }
 
-// PluginDataReset is a synchronous chain, unlike PluginReload. Current 21
-// compiled original classes declare no such subscriber; an empty registry
-// returns false, which the original Reset endpoint deliberately ignores.
-func (a *App) sendOriginalPluginDataReset(ctx context.Context, instance string) bool {
-	handled := false
-	raw := mustOriginalEventJSON("plugin_data_reset", json.RawMessage(fmt.Sprintf(`{"plugin_id":%q,"reset_config":true,"reset_data":true}`, instance)))
-	a.pluginRunningInstances.Range(func(_, value any) bool {
-		object := value.(*originalPluginInstance)
-		object.configMu.RLock()
-		enabled := object.eventsEnabled
-		object.configMu.RUnlock()
-		if !enabled {
-			return true
+func (a *App) unregisterOriginalObjectResetHandlers(instance string) {
+	a.pluginOriginalEventsMu.Lock()
+	defer a.pluginOriginalEventsMu.Unlock()
+	handlers := a.pluginOriginalResetHandlers[:0]
+	for _, old := range a.pluginOriginalResetHandlers {
+		if old.Instance != instance {
+			handlers = append(handlers, old)
 		}
+	}
+	a.pluginOriginalResetHandlers = handlers
+}
+
+func (a *App) registerOriginalObjectResetHandlers(object *originalPluginInstance) {
+	instance := object.installation.InstanceID
+	a.unregisterOriginalObjectResetHandlers(instance)
+	declarations := object.manifest.ResetHandlers
+	if len(declarations) == 0 {
 		for _, event := range object.manifest.Events {
 			if event == "plugin_data_reset" {
-				handled = true
-				if _, err := object.callOriginalMethod(ctx, "event", raw); err != nil {
-					a.log("ERROR", "plugins", "data_reset_handler_failed", "插件重置事件处理失败", "", "")
-				}
+				declarations = []plugins.PluginDataResetHandler{{Method: "event"}}
 				break
 			}
 		}
-		return true
-	})
-	return handled
+	}
+	for _, declaration := range declarations {
+		method := declaration.Method
+		a.registerOriginalPluginDataResetHandler(originalPluginDataResetHandler{
+			ID: instance + "/" + method, Instance: instance, Priority: declaration.Order(),
+			Enabled: func() bool {
+				if !originalObjectStillLoaded(object) {
+					return false
+				}
+				object.configMu.RLock()
+				defer object.configMu.RUnlock()
+				return object.eventsEnabled
+			},
+			Invoke: func(ctx context.Context, event *originalPluginDataResetEvent) error {
+				data, err := json.Marshal(event)
+				if err != nil {
+					return err
+				}
+				_, err = object.callOriginalMethod(ctx, method, mustOriginalEventJSON("plugin_data_reset", data))
+				return err
+			},
+		})
+	}
+}
+
+// PluginDataReset is a synchronous chain. Snapshot enabled subscribers in
+// registration/priority order, release the registry lock before actual IPC,
+// and continue after a failed subscriber, as in the original safe invocation.
+func (a *App) sendOriginalPluginDataReset(ctx context.Context, instance string) bool {
+	a.pluginOriginalEventsMu.Lock()
+	handlers := append([]originalPluginDataResetHandler(nil), a.pluginOriginalResetHandlers...)
+	a.pluginOriginalEventsMu.Unlock()
+	enabled := handlers[:0]
+	for _, handler := range handlers {
+		if handler.Enabled == nil || handler.Enabled() {
+			enabled = append(enabled, handler)
+		}
+	}
+	event := &originalPluginDataResetEvent{PluginID: instance, ResetConfig: true, ResetData: true}
+	for _, handler := range enabled {
+		if err := handler.Invoke(ctx, event); err != nil {
+			a.log("ERROR", "plugins", "data_reset_handler_failed", "插件重置事件处理失败", "", "")
+		}
+	}
+	return len(enabled) > 0
 }

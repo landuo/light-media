@@ -15,6 +15,7 @@ import (
 // session and reads manager configuration before each direct initializer.
 // It is ephemeral and never inferred from installed/desired_enabled flags.
 type originalPluginInstance struct {
+	submitted             originalSubmittedState
 	app                   *App
 	installation          PluginInstallation
 	manifest              plugins.Manifest
@@ -80,7 +81,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract, frontendPackageSHA256: implementation.PackageSHA256}
 		err = object.init(ctx)
 		if err != nil && object.external {
-			_ = object.stopSession(context.WithoutCancel(ctx))
+			object.finishOriginalInitialization(false)
 		}
 		if err == nil {
 			a.pluginOriginalRunningMu.Lock()
@@ -89,6 +90,8 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			}
 			a.pluginRunningInstances.Store(instance, object)
 			a.pluginOriginalRunningMu.Unlock()
+			a.registerOriginalObjectResetHandlers(object)
+			object.finishOriginalInitialization(true)
 			// Original start stores the object before get_state/event registration.
 			// A later exception is caught without rolling back that stored object.
 			if err = a.updateOriginalPluginEventState(ctx, object); err != nil {
@@ -147,13 +150,16 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 // Only the manager decides stop order. Client.StopWithHost owns the actual
 // process shutdown/join; no legacy queue transition can veto this method.
 func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
+	a.unregisterOriginalObjectResetHandlers(instance)
 	loaded, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
+		a.stopOriginalUnpublishedSubmissions(ctx, instance)
 		a.pluginOriginalClasses.Delete(instance)
 		return nil
 	}
 	object := loaded.(*originalPluginInstance)
 	object.stopping.Store(true)
+	object.closeOriginalSubmissions()
 	object.configMu.Lock()
 	object.eventsEnabled = false
 	object.configMu.Unlock()

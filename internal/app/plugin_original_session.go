@@ -93,6 +93,7 @@ func (p *originalPluginInstance) readSession(ctx context.Context, method string,
 	return json.Unmarshal(result.Result, output)
 }
 func (p *originalPluginInstance) stopSession(ctx context.Context) error {
+	p.closeOriginalSubmissions()
 	p.sessionMu.Lock()
 	client := p.session
 	p.session = nil

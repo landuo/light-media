@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"strconv"
 	"strings"
 	"sync"
@@ -144,6 +145,7 @@ func (t *concurrentTransport) readLine() (frame Frame, count concurrentWireCount
 			continue
 		}
 		if e != nil {
+			if errors.Is(e, io.EOF) && len(raw) == 0 { return frame, count, io.EOF }
 			return frame, count, failure("worker_io_failed")
 		}
 		break
@@ -163,6 +165,7 @@ func (t *concurrentTransport) read() (frame Frame, count concurrentWireCount, er
 		current, part, err := t.readLine()
 		count.bytes += part.bytes
 		if err != nil {
+			if assembly != nil && errors.Is(err, io.EOF) { return frame, count, failure("incomplete_transport_message") }
 			return frame, count, err
 		}
 		if count.bytes > t.wire.maxOutput {

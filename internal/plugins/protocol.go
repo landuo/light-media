@@ -58,33 +58,64 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
+// PluginDataResetHandler names one synchronous chain subscriber. Nil priority
+// means MoviePilot's decorator default (10); explicit zero remains zero.
+type PluginDataResetHandler struct {
+	Method   string `json:"method"`
+	Priority *int   `json:"priority,omitempty"`
+}
+
+func (h PluginDataResetHandler) Order() int {
+	if h.Priority == nil {
+		return 10
+	}
+	return *h.Priority
+}
+
 type Manifest struct {
-	Frontend             *Frontend        `json:"frontend,omitempty"`
-	RuntimeSupport       *RuntimeSupport  `json:"runtime_support,omitempty"`
-	SchemaVersion        int              `json:"schema_version"`
-	PluginID             string           `json:"plugin_id"`
-	Name                 string           `json:"name"`
-	Description          string           `json:"description,omitempty"`
-	Icon                 string           `json:"icon,omitempty"`
-	Author               string           `json:"author,omitempty"`
-	AuthorURL            string           `json:"author_url,omitempty"`
-	Version              string           `json:"version"`
-	Runtime              string           `json:"runtime"`
-	Entry                string           `json:"entry"`
-	HostAPIMin           int              `json:"host_api_min"`
-	HostAPIMax           int              `json:"host_api_max"`
-	Methods              []string         `json:"methods"`
-	Capabilities         []string         `json:"capabilities"`
-	Events               []string         `json:"events,omitempty"`
-	HasPage              bool             `json:"has_page,omitempty"`
-	Dashboards           []string         `json:"dashboards,omitempty"`
-	APIs                 []HTTPAPI        `json:"apis,omitempty"`
-	ConfigDefaults       string           `json:"config_defaults,omitempty"`
-	ConfigFormProjection string           `json:"config_form_projection,omitempty"`
-	FormModelPolicy      *FormModelPolicy `json:"form_model_policy,omitempty"`
+	// Missing class attribute sorts as 0. A class inheriting MoviePilot Base's
+	// plugin_order=9999 must export 9999, not omit it.
+	PluginOrder          int                      `json:"plugin_order,omitempty"`
+	ResetHandlers        []PluginDataResetHandler `json:"reset_handlers,omitempty"`
+	Frontend             *Frontend                `json:"frontend,omitempty"`
+	RuntimeSupport       *RuntimeSupport          `json:"runtime_support,omitempty"`
+	SchemaVersion        int                      `json:"schema_version"`
+	PluginID             string                   `json:"plugin_id"`
+	Name                 string                   `json:"name"`
+	Description          string                   `json:"description,omitempty"`
+	Icon                 string                   `json:"icon,omitempty"`
+	Author               string                   `json:"author,omitempty"`
+	AuthorURL            string                   `json:"author_url,omitempty"`
+	Version              string                   `json:"version"`
+	Runtime              string                   `json:"runtime"`
+	Entry                string                   `json:"entry"`
+	HostAPIMin           int                      `json:"host_api_min"`
+	HostAPIMax           int                      `json:"host_api_max"`
+	Methods              []string                 `json:"methods"`
+	Capabilities         []string                 `json:"capabilities"`
+	Events               []string                 `json:"events,omitempty"`
+	HasPage              bool                     `json:"has_page,omitempty"`
+	Dashboards           []string                 `json:"dashboards,omitempty"`
+	APIs                 []HTTPAPI                `json:"apis,omitempty"`
+	ConfigDefaults       string                   `json:"config_defaults,omitempty"`
+	ConfigFormProjection string                   `json:"config_form_projection,omitempty"`
+	FormModelPolicy      *FormModelPolicy         `json:"form_model_policy,omitempty"`
 }
 
 func (m Manifest) Validate() error {
+	if len(m.ResetHandlers) > 64 {
+		return failure("invalid_manifest")
+	}
+	resetMethods := map[string]bool{}
+	for _, handler := range m.ResetHandlers {
+		if !methodPattern.MatchString(handler.Method) || !slices.Contains(m.Methods, handler.Method) || resetMethods[handler.Method] {
+			return failure("invalid_manifest")
+		}
+		resetMethods[handler.Method] = true
+	}
+	// Legacy events:[plugin_data_reset] remains one event method at priority10.
+	// Explicit handlers replace that shorthand rather than invoke it twice.
+
 	if err := m.Frontend.Validate(); err != nil {
 		return err
 	}
@@ -181,6 +212,7 @@ type Frame struct {
 }
 
 type Handshake struct {
+	TransportClose    int                     `json:"transport_close,omitempty"`
 	ConcurrentSession int                     `json:"concurrent_session,omitempty"`
 	Protocol          int                     `json:"protocol"`
 	PluginID          string                  `json:"plugin_id"`
@@ -717,6 +749,7 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 				return nil, failure("concurrent_session_mismatch")
 			}
 			c.concurrent = newConcurrentClient(c, proposal)
+			c.concurrent.transportClose = agreed.TransportClose == 1
 		} else if runner.RequireConcurrent {
 			return nil, failure("concurrent_session_unsupported")
 		}
