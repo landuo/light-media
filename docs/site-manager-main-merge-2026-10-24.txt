@@ -1,0 +1,11 @@
+站点管理 v0.4.17 main 集成（2026-10-24）
+
+生产修复提交：fdbaa31（codex/site-management-statistics-icons），基线 cb9551b。
+集成前 main：3738db1f24763e351b9c797c3dd01e68334b07be。
+
+正常合并修复分支，保留双方提交历史。stats.go 冲突处同时保留 main 的 UserStatsOptions / SourceUserStats 分流和新增 UUID 格式校验；原有更完整的肉丝解析、独立邮箱 Token、消息选项和账户历史未被生产快照替换。
+站点管理前端自动合并，测试冲突同时保留肉丝独立 Token 用例与新的统计弹框用例。web/dist 全部从合并后的 main 源码重建，未直接沿用生产分支静态包。
+
+验证：前端 264 / 264 测试通过、构建通过；站点 Go 测试、应用站点管理/导入/身份/统计/肉丝相关测试、相关 race 与 vet、Linux amd64 服务构建通过。未重新运行已记录有无关插件基线失败的整个 Go 仓库；此前边界见 docs/main-sync-2026-10-24.json。
+
+线上仍为已验证生产分支构建的 v0.4.17，main 的其他未验收插件不随本次发布。实机和合成证据分别记录在 docs/site-manager-v0.4.17-verification.json。

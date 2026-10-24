@@ -47,6 +47,8 @@ type UserStatsOptions struct {
 	Location     *time.Location
 }
 
+var userUUID = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
+
 func (c *Client) UserStats(ctx context.Context) (UserStats, error) {
 	return c.UserStatsWithOptions(ctx, UserStatsOptions{})
 }
@@ -88,16 +90,23 @@ func (c *Client) UserStatsWithOptions(ctx context.Context, options UserStatsOpti
 		parseHhanPanel(&s, doc, "index.php")
 	}
 	profileDoc := doc
+	profileKey := "id"
 	for _, a := range find(doc, func(n *html.Node) bool { return n.Data == "a" }) {
 		u, e := url.Parse(attribute(a, "href"))
-		if e != nil || path.Base(u.Path) != "userdetails.php" || !numericID.MatchString(u.Query().Get("id")) {
+		if e != nil || path.Base(u.Path) != "userdetails.php" {
 			continue
 		}
 		u = c.base.ResolveReference(u)
 		if !sameOrigin(c.base, u) {
 			continue
 		}
-		s.UserID = u.Query().Get("id")
+		if numericID.MatchString(u.Query().Get("id")) {
+			s.UserID, profileKey = u.Query().Get("id"), "id"
+		} else if userUUID.MatchString(u.Query().Get("uuid")) {
+			s.UserID, profileKey = u.Query().Get("uuid"), "uuid"
+		} else {
+			continue
+		}
 		s.Username = statsText(text(a), 128)
 		s.Sources["user_id"], s.Sources["username"] = "index.php:userdetails link", "index.php:userdetails link"
 		break
@@ -106,7 +115,7 @@ func (c *Client) UserStatsWithOptions(ctx context.Context, options UserStatsOpti
 		return s, errors.New("site_user_identity_missing")
 	}
 	u := c.endpoint("userdetails.php")
-	u.RawQuery = url.Values{"id": {s.UserID}}.Encode()
+	u.RawQuery = url.Values{profileKey: {s.UserID}}.Encode()
 	b, _, err = c.request(ctx, http.MethodGet, u, nil, c.auth(), htmlLimit)
 	if err != nil {
 		s.Warnings = append(s.Warnings, "userdetails:"+err.Error())
@@ -538,7 +547,11 @@ func (c *Client) mteamUserStats(ctx context.Context, s UserStats) (UserStats, er
 
 func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *html.Node) error {
 	u := c.endpoint("getusertorrentlistajax.php")
-	u.RawQuery = url.Values{"userid": {s.UserID}, "type": {"seeding"}}.Encode()
+	userKey := "userid"
+	if userUUID.MatchString(s.UserID) {
+		userKey = "useruuid"
+	}
+	u.RawQuery = url.Values{userKey: {s.UserID}, "type": {"seeding"}}.Encode()
 	var firstBody []byte
 	var csrf string
 	for _, meta := range find(profile, func(n *html.Node) bool { return n.Data == "meta" && attribute(n, "name") == "x-csrf" }) {
@@ -547,10 +560,10 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 	for _, a := range find(profile, func(n *html.Node) bool { return n.Data == "a" }) {
 		href := attribute(a, "href")
 		if csrf != "" && strings.Contains(href, "getusertorrentlistajax") && strings.Contains(href, "seeding") {
-			match := regexp.MustCompile(`getusertorrentlistajax\(\s*'([0-9]+)'`).FindStringSubmatch(href)
+			match := regexp.MustCompile(`getusertorrentlistajax\(\s*'([0-9a-fA-F-]+)'`).FindStringSubmatch(href)
 			if match != nil && match[1] == s.UserID {
 				u = c.endpoint("ajax_getusertorrentlist.php")
-				firstBody = []byte(url.Values{"userid": {s.UserID}, "type": {"seeding"}, "csrf": {csrf}}.Encode())
+				firstBody = []byte(url.Values{userKey: {s.UserID}, "type": {"seeding"}, "csrf": {csrf}}.Encode())
 				break
 			}
 		}
@@ -563,10 +576,10 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 			continue
 		}
 		q := link.Query()
-		if id := q.Get("userid"); id != "" && id != s.UserID {
+		if id := q.Get(userKey); id != "" && id != s.UserID {
 			continue
 		}
-		q.Set("userid", s.UserID)
+		q.Set(userKey, s.UserID)
 		link.RawQuery = q.Encode()
 		u = link
 		break
@@ -707,7 +720,7 @@ func (c *Client) nexusSeedingStats(ctx context.Context, s *UserStats, profile *h
 				return errors.New("site_seeding_pagination_invalid")
 			}
 			q := link.Query()
-			q.Set("userid", s.UserID)
+			q.Set(userKey, s.UserID)
 			q.Set("type", "seeding")
 			link.RawQuery = q.Encode()
 			next = link

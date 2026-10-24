@@ -8,13 +8,12 @@ import { downloadSiteExport, type SiteImportResult } from '../features/site-tran
 import SiteImportDialog from './SiteImportDialog.vue';
 import SiteResourceDialog from './SiteResourceDialog.vue';
 import AppIcon from './AppIcon.vue';
+import SiteIcon from './SiteIcon.vue';
 
 const SiteUserDataDialog = defineAsyncComponent(() => import('./SiteUserDataDialog.vue'));
 
 const data = ref<any>({ sites: [], supported: [] });
-const filter = ref('all'),
-  query = ref(''),
-  editing = ref<any>(null),
+const editing = ref<any>(null),
   original = ref<any>(null);
 const loading = ref(false),
   saving = ref(false),
@@ -96,23 +95,7 @@ const statuses: Record<string, string> = {
   failed: '连接失败',
   unknown: '未检测',
 };
-const filtered = computed<any[]>(() =>
-  data.value.sites.filter((row: any) => {
-    if (filter.value === 'enabled' && !row.config.enabled) return false;
-    if (filter.value === 'disabled' && row.config.enabled) return false;
-    const test = siteTests.value[row.config.id];
-    const current =
-      test?.status === 'queued' || test?.status === 'testing' ? savedState(row) : state(row);
-    if (
-      ['connected', 'slow', 'failed', 'unknown'].includes(filter.value) &&
-      current !== filter.value
-    )
-      return false;
-    return (row.config.name + row.config.base_url)
-      .toLowerCase()
-      .includes(query.value.toLowerCase());
-  }),
-);
+const allSites = computed<any[]>(() => data.value.sites);
 const totals = computed(() =>
   ['uploaded', 'downloaded', 'seeding_bytes', 'seeding'].map((key) => {
     const observed = data.value.sites
@@ -346,9 +329,9 @@ async function runTest(job: SiteTestJob) {
     pumpTests();
   }
 }
-async function refreshVisible() {
-  if (testBlocked.value || batch.value.running || !filtered.value.length) return;
-  const targets = [...filtered.value];
+async function testAll() {
+  if (testBlocked.value || batch.value.running || !allSites.value.length) return;
+  const targets = [...allSites.value];
   batch.value = {
     running: true,
     ids: targets.map((row) => row.config.id),
@@ -412,13 +395,9 @@ function homepage(row: any) {
 }
 function startSort() {
   if (working.value || importVisible.value) return;
-  filter.value = 'all';
-  query.value = '';
+  menu.value = '';
   sortMode.value = !sortMode.value;
 }
-watch([filter, query], () => {
-  if (filter.value !== 'all' || query.value) sortMode.value = false;
-});
 async function reorder(from: string, to: string) {
   if (!sortMode.value || working.value || importVisible.value || from === to) return;
   const rows = [...data.value.sites],
@@ -458,36 +437,16 @@ onUnmounted(() => {
 <template>
   <section class="site-manager" @keydown.esc="menu = ''">
     <div class="site-toolbar">
-      <div class="site-search">
-        <AppIcon name="search" />
-        <input v-model="query" aria-label="查找站点" placeholder="搜索站点名称或地址" />
-      </div>
-      <VSelect
-        v-model="filter"
-        aria-label="站点状态"
-        density="compact"
-        :items="Object.entries(statuses).map(([value, title]) => ({ title, value }))"
-      />
       <button
-        :disabled="testBlocked || batch.running || !filtered.length"
-        aria-label="测试连接"
-        title="测试当前列表中的站点"
-        @click="refreshVisible"
+        :disabled="testBlocked || batch.running || !allSites.length"
+        aria-label="全部测试"
+        title="测试全部站点"
+        @click="testAll"
       >
-        <AppIcon :name="batch.running ? 'refresh' : 'check'" :class="{ spinning: batch.running }" />
-        {{ batch.running ? '测试中…' : '测试连接' }}
-      </button>
-      <button
-        :disabled="working"
-        :aria-pressed="sortMode"
-        :aria-label="sortMode ? '退出排序' : '排序'"
-        @click="startSort"
-      >
-        <AppIcon name="sort" />
-        {{ sortMode ? '退出排序' : '排序' }}
-      </button>
-      <button :disabled="working" aria-label="刷新" @click="load">
-        <AppIcon name="refresh" />刷新
+        <AppIcon
+          :name="batch.running ? 'refresh' : 'check'"
+          :class="{ spinning: batch.running }"
+        />{{ batch.running ? '测试中…' : '全部测试' }}
       </button>
     </div>
     <div
@@ -514,16 +473,12 @@ onUnmounted(() => {
       拖动站点卡片调整优先级，松开后自动保存。<button @click="sortMode = false">退出</button>
     </p>
     <p v-if="loading && !data.sites.length" class="empty">正在加载站点…</p>
-    <p v-else-if="!filtered.length" class="empty">
-      {{
-        data.sites.length
-          ? '没有匹配的站点'
-          : '暂无站点，点击右下角添加站点，或从 MoviePilot 导入。'
-      }}
+    <p v-else-if="!allSites.length" class="empty">
+      {{ data.sites.length ? '暂无站点' : '暂无站点，点击右下角添加站点，或从 MoviePilot 导入。' }}
     </p>
     <div class="site-grid">
       <article
-        v-for="(row, index) in filtered"
+        v-for="(row, index) in allSites"
         :key="row.config.id"
         class="site-card"
         :class="[state(row), { inactive: !row.config.enabled, sortable: sortMode }]"
@@ -541,7 +496,7 @@ onUnmounted(() => {
       >
         <div class="site-card-body">
           <div class="site-card-title">
-            <span class="site-monogram">{{ row.config.name.slice(0, 1) }}</span>
+            <SiteIcon :url="homepage(row)" :name="row.config.name" />
             <div class="site-card-identity">
               <h2>{{ row.config.name }}</h2>
               <span
@@ -638,7 +593,8 @@ onUnmounted(() => {
               <AppIcon name="more" />
             </button>
             <div v-if="menu === row.config.id" class="site-menu-items">
-              <button :disabled="working" aria-label="编辑" @click="edit(row)">编辑</button
+              <button :disabled="working" aria-label="排序" @click="startSort">排序</button
+              ><button :disabled="working" aria-label="编辑" @click="edit(row)">编辑</button
               ><button
                 :disabled="working"
                 :aria-label="row.config.enabled ? '停用' : '启用'"
@@ -661,13 +617,13 @@ onUnmounted(() => {
           ><button
             :disabled="working || index === 0"
             :aria-label="'上移 ' + row.config.name"
-            @click="reorder(row.config.id, filtered[index - 1].config.id)"
+            @click="reorder(row.config.id, allSites[index - 1].config.id)"
           >
             <AppIcon name="arrow-up" /></button
           ><button
-            :disabled="working || index === filtered.length - 1"
+            :disabled="working || index === allSites.length - 1"
             :aria-label="'下移 ' + row.config.name"
-            @click="reorder(row.config.id, filtered[index + 1].config.id)"
+            @click="reorder(row.config.id, allSites[index + 1].config.id)"
           >
             <AppIcon name="arrow-down" />
           </button>
@@ -983,21 +939,19 @@ onUnmounted(() => {
             <AppIcon name="close" />
           </button>
         </header>
-        <template
-          ><div class="site-totals">
-            <div v-for="total in totals" :key="total.key">
-              <small>{{ names[total.key] }}</small
-              ><strong>{{
-                total.observed
-                  ? total.key === 'seeding'
-                    ? total.value
-                    : bytes(total.value)
-                  : '未获取'
-              }}</strong
-              ><small>{{ total.observed }} / {{ data.sites.length }} 个站点提供数据</small>
-            </div>
-          </div></template
-        >
+        <div class="site-totals">
+          <div v-for="total in totals" :key="total.key">
+            <small>{{ names[total.key] }}</small
+            ><strong>{{
+              total.observed
+                ? total.key === 'seeding'
+                  ? total.value
+                  : bytes(total.value)
+                : '未获取'
+            }}</strong
+            ><small>{{ total.observed }} / {{ data.sites.length }} 个站点提供数据</small>
+          </div>
+        </div>
       </section>
     </div>
   </section>
@@ -1017,27 +971,6 @@ onUnmounted(() => {
   gap: 8px;
   align-items: center;
   margin-bottom: 16px;
-}
-.site-search {
-  position: relative;
-  width: min(360px, 100%);
-  margin-right: auto;
-}
-.site-search > .app-icon {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--muted);
-  pointer-events: none;
-  width: 18px;
-  height: 18px;
-}
-.site-search input {
-  padding-left: 41px;
-}
-.site-toolbar select {
-  width: 154px;
 }
 .site-toolbar button {
   gap: 7px;
@@ -1147,10 +1080,6 @@ onUnmounted(() => {
 .site-card.inactive::before {
   display: none;
 }
-.site-card.inactive .site-monogram {
-  color: var(--muted);
-  background: color-mix(in srgb, var(--line) 65%, var(--surface));
-}
 .site-card.sortable {
   cursor: grab;
 }
@@ -1173,18 +1102,6 @@ onUnmounted(() => {
   display: grid;
   min-width: 0;
   gap: 2px;
-}
-.site-monogram {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 18px;
-  font-weight: 600;
 }
 .site-card h2 {
   font-size: 18px;
@@ -1844,15 +1761,6 @@ td {
   }
 }
 @media (max-width: 650px) {
-  .site-toolbar {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .site-search {
-    grid-column: 1 / -1;
-    width: 100%;
-    max-width: none;
-  }
   .site-grid {
     grid-template-columns: 1fr;
   }
@@ -1895,9 +1803,6 @@ td {
   }
   .site-metrics {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .site-toolbar select {
-    width: 100%;
   }
   .site-card-body {
     padding: 12px 48px 12px 12px;

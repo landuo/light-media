@@ -300,11 +300,10 @@ function connectionRun({ count = 5, reloadFails = false } = {}) {
   return run;
 }
 
-test('batch connection tests keep a filtered target snapshot, cap concurrency at three, and continue after business and network failures', async (t) => {
+test('batch connection tests use all sites, cap concurrency at three, and continue after business and network failures', async (t) => {
   const run = connectionRun();
   const view = await mount(t, 'SiteManager', { api: run.api });
-  await view.update('站点状态', 'failed');
-  view.label('测试连接').props.onClick();
+  view.label('全部测试').props.onClick();
   await settleConnectionTests();
   assert.deepEqual(run.started, ['one', 'two', 'three']);
   assert.equal(run.maximum, 3);
@@ -314,7 +313,7 @@ test('batch connection tests keep a filtered target snapshot, cap concurrency at
 
   run.complete('one');
   await settleConnectionTests();
-  assert.equal(view.label('示例一 资源'), undefined, 'success exits the failed filter');
+  assert.ok(view.label('示例一 资源'), 'successful sites remain visible');
   assert.deepEqual(run.started, ['one', 'two', 'three', 'four']);
   run.complete('two', { status: 'failed' });
   await settleConnectionTests();
@@ -344,7 +343,7 @@ test('individual and batch connection tests share slots and deduplicate already 
   await settleConnectionTests();
   assert.deepEqual(run.started, ['one', 'two']);
 
-  view.label('测试连接').props.onClick();
+  view.label('全部测试').props.onClick();
   firstButton.props.onClick();
   await settleConnectionTests();
   assert.deepEqual(run.started, ['one', 'two', 'three']);
@@ -370,7 +369,7 @@ test('individual and batch connection tests share slots and deduplicate already 
 test('out-of-order whole-list refresh responses preserve other site results when final calibration fails', async (t) => {
   const run = connectionRun({ count: 2, reloadFails: true });
   const view = await mount(t, 'SiteManager', { api: run.api });
-  view.label('测试连接').props.onClick();
+  view.label('全部测试').props.onClick();
   await settleConnectionTests();
   run.complete('two', { uploaded: 22222 });
   await settleConnectionTests();
@@ -396,7 +395,7 @@ test('out-of-order whole-list refresh responses preserve other site results when
 test('leaving site management cancels queued connection tests without sending new requests or reloading', async (t) => {
   const run = connectionRun();
   const view = await mount(t, 'SiteManager', { api: run.api });
-  view.label('测试连接').props.onClick();
+  view.label('全部测试').props.onClick();
   await settleConnectionTests();
   assert.deepEqual(run.started, ['one', 'two', 'three']);
   view.unmount();
@@ -497,8 +496,9 @@ test('site deletion uses one in-page confirmation and no native confirm', async 
   assert.equal(view.fixture.requests.filter((request) => request.method === 'DELETE').length, 1);
 });
 
-test('sorting posts the complete order and a filter exits sorting', async (t) => {
+test('sorting remains available in card actions and posts the complete order', async (t) => {
   const view = await mount(t, 'SiteManager');
+  await view.click('示例一 更多操作');
   await view.click('排序');
   await view.click('下移 示例一');
   assert.deepEqual(
@@ -508,9 +508,9 @@ test('sorting posts the complete order and a filter exits sorting', async (t) =>
       { id: 'one', pri: 2 },
     ],
   );
-  await view.update('站点状态', 'disabled');
+  await view.click('退出');
   assert.equal(view.button('退出排序'), undefined);
-  assert.equal(view.nodes().filter((node) => node.type === 'article').length, 1);
+  assert.equal(view.nodes().filter((node) => node.type === 'article').length, 2);
 });
 
 test('export downloads directly and failures remain visible without a success message', async (t) => {
@@ -784,4 +784,23 @@ test('Rousi edit opens API credentials and submits its independent mailbox token
   assert.equal(body.token, 'synthetic-new-mailbox-token');
   assert.equal(body.api_key, 'synthetic-profile-key');
   assert.equal(body.cookie, '');
+});
+
+test('site toolbar has only all-site testing, cards use icons, and statistics renders real DOM content', async (t) => {
+  const view = await mount(t, 'SiteManager');
+  assert.equal(view.label('查找站点'), undefined);
+  assert.equal(view.label('站点状态'), undefined);
+  assert.equal(view.label('刷新'), undefined);
+  assert.ok(view.label('全部测试'));
+  const icons = view.nodes().filter((n) => n.type?.name === 'SiteIcon');
+  assert.equal(icons.length, 2);
+  assert.equal(icons[0].props.url, 'https://one.invalid');
+  await view.click('站点统计');
+  assert.match(view.text(), /累计上传/);
+  assert.match(view.text(), /1 \/ 2 个站点提供数据/);
+  assert.equal(
+    view.nodes().some((n) => n.type === 'template'),
+    false,
+    'native template elements make dialog contents inert',
+  );
 });
