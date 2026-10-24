@@ -200,6 +200,9 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 	object.configMu.Unlock()
 	stopCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
+	if err := object.stopOriginalMethods(stopCtx); err != nil {
+		a.log("ERROR", "plugins", "stop_method_failed", "插件停止方法失败", "", "")
+	}
 	if err := object.stopSession(stopCtx); err != nil {
 		a.log("ERROR", "plugins", "stop_failed", "插件停止方法失败", "", "")
 	}

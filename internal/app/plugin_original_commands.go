@@ -2,119 +2,17 @@ package app
 
 import (
 	"context"
-	"database/sql"
-	"encoding/json"
-	"fmt"
 	"light-media/internal/commandrouter"
-	signin "light-media/internal/plugins/autosignin"
-	clean "light-media/internal/plugins/cleaninvalidseed"
-	cf "light-media/internal/plugins/cloudflarespeedtest"
 )
 
 // getCommands reads the already initialized native object's actual state and
 // invokes the existing original command declaration, never init or get_config.
 func (p *originalPluginInstance) getCommands(ctx context.Context) ([]map[string]any, error) {
-	if p.external {
-		var commands []map[string]any
-		err := p.readSession(ctx, "get_command", &commands)
-		return commands, err
-	}
-	if commands, handled, err := originalRemainingCommands(ctx, p); handled {
-		return commands, err
-	}
-	if commands, handled, err := originalEngineCommands(ctx, p); handled {
-		return commands, err
-	}
-	if commands, handled, err := originalWatcherCommands(ctx, p); handled {
-		return commands, err
-	}
-	if commands, handled, err := originalStatelessCommands(ctx, p); handled {
-		return commands, err
-	}
-	var declaration any
-	switch p.installation.PluginID {
-	case "AutoSignIn":
-		r := &p.app.pluginAutoSignIn
-		r.mu.Lock()
-		slot := r.owners[p.installation.InstanceID]
-		r.mu.Unlock()
-		if slot == nil {
-			return nil, fmt.Errorf("loaded signin owner missing")
-		}
-		select {
-		case <-slot.ready:
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
-		select {
-		case slot.gate <- struct{}{}:
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
-		defer func() { <-slot.gate }()
-		if slot.owner == nil {
-			return nil, fmt.Errorf("loaded signin owner missing")
-		}
-		tx, err := p.app.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
-		if err != nil {
-			return nil, err
-		}
-		defer tx.Rollback()
-		loaded, err := slot.owner.readTx(ctx, tx)
-		if err != nil {
-			return nil, err
-		}
-		var runtime signin.Object
-		if err = signin.Decode(loaded.State.Runtime, &runtime); err != nil {
-			return nil, err
-		}
-		if !signin.Truth(runtime["enabled"]) {
-			return nil, nil
-		}
-		declaration = signin.Commands()
-	case "CleanInvalidSeed":
-		r := &p.app.pluginCleanInvalidSeed
-		r.mu.Lock()
-		owner := r.owners[p.installation.InstanceID]
-		r.mu.Unlock()
-		if owner == nil {
-			return nil, fmt.Errorf("loaded clean seed owner missing")
-		}
-		if err := owner.lock(ctx); err != nil {
-			return nil, err
-		}
-		defer owner.unlock()
-		if owner.h == nil {
-			return nil, fmt.Errorf("loaded clean seed owner missing")
-		}
-		state, err := owner.h.GetState(ctx)
-		if err != nil {
-			return nil, err
-		}
-		if !clean.Truth(state) {
-			return nil, nil
-		}
-		declaration = clean.Commands()
-	case "CloudflareSpeedTest":
-		owner, release, err := originalCloudflareMachineOwner(ctx, p)
-		if err != nil {
-			return nil, err
-		}
-		defer release()
-		if !owner.machine.State() {
-			return nil, nil
-		}
-		declaration = cf.Commands()
-	default:
-		return nil, nil
-	}
-	raw, err := json.Marshal(declaration)
-	if err != nil {
-		return nil, err
-	}
-	var rows []map[string]any
-	err = json.Unmarshal(raw, &rows)
-	return rows, err
+	p.methodMu.Lock()
+	defer p.methodMu.Unlock()
+	var commands []map[string]any
+	err := p.readSession(ctx, "get_command", &commands)
+	return commands, err
 }
 
 // initOriginalPluginCommands follows Command.init_commands: submit a complete

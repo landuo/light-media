@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"light-media/internal/plugins"
+	"slices"
 	"time"
 )
 
@@ -79,15 +80,13 @@ func (p *originalPluginInstance) stopSession(ctx context.Context) error {
 	return client.StopWithHost(ctx, callback)
 }
 func (a *App) closeOriginalSessions() {
-	a.pluginRunningInstances.Range(func(_, value any) bool {
-		p := value.(*originalPluginInstance)
-		if p.external {
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-			_ = p.stopSession(ctx)
-			cancel()
-		}
+	a.pluginRunningInstances.Range(func(key, value any) bool {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		_ = a.stopOriginalPlugin(ctx, key.(string))
+		cancel()
 		return true
 	})
+	a.pluginOriginalClasses.Range(func(key, value any) bool { a.pluginOriginalClasses.Delete(key); return true })
 }
 func (a *App) runPluginImplementation(ctx context.Context, runner plugins.Runner, command plugins.Command, manifest plugins.Manifest, in PluginInstallation, method string, raw json.RawMessage, host plugins.HostHandler) (plugins.RunResult, error) {
 	var object *originalPluginInstance
@@ -127,4 +126,29 @@ func (a *App) runPluginImplementation(ctx context.Context, runner plugins.Runner
 		return plugins.RunResult{}, bad("PLUGIN_NOT_LOADED", "插件实例尚未加载")
 	}
 	return runner.Run(ctx, command, manifest, in.InstanceID, method, raw, host)
+}
+
+// Original close and stop_service are business methods; transport stop is
+// unconditional process cleanup. The detached/current exact client is the
+// authority, even when update has already replaced its installation metadata.
+func (p *originalPluginInstance) stopOriginalMethods(ctx context.Context) error {
+	p.sessionMu.Lock()
+	client := p.session
+	p.sessionMu.Unlock()
+	if client == nil {
+		return nil
+	}
+	for _, method := range []string{"close", "stop_service"} {
+		if !slices.Contains(p.manifest.Methods, method) {
+			continue
+		}
+		phaseCtx := context.WithValue(ctx, originalBaseStopKey{}, &originalBaseStopCall{object: p, client: client})
+		callback, revoke := p.originalBaseSessionHost(phaseCtx, "stop", nil)
+		_, err := client.CallWithOptions(phaseCtx, method, json.RawMessage(`{}`), callback, plugins.CallOptions{Timeout: 10 * time.Second})
+		revoke()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

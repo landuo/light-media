@@ -67,18 +67,30 @@ func (a *App) initOriginalLoadedPlugin(ctx context.Context, instance string) err
 	return a.updateOriginalPluginEventState(ctx, object)
 }
 
+// The source-sized snapshot contract belongs to a trusted imported class and
+// its current installation identity, not the request ID or submitted manifest.
+// Resolving the class's PluginID also preserves that contract for real clones.
+// Ordinary and unregistered targets keep the existing bounded decoder.
+func (a *App) decodeOriginalPluginConfigBody(w http.ResponseWriter, r *http.Request, instance string, value any) error {
+	if loaded, exists := a.pluginOriginalClasses.Load(instance); exists {
+		class := loaded.(originalPluginClass)
+		in, err := a.pluginStore.Installation(r.Context(), instance)
+		if err != nil {
+			return err
+		}
+		bound := class.installation
+		if bound.InstanceID == in.InstanceID && bound.PluginID == in.PluginID && bound.Version == in.Version && bound.Generation == in.Generation && brushFlowSnapshotOwner(in.PluginID, in.Version) {
+			return decodePluginJSONBody(r.Body, value)
+		}
+	}
+	return decodePluginBody(w, r, value)
+}
+
 func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	parts := strings.Split(path, "/")
 	instance := parts[0]
 	if r.Method == http.MethodGet {
-		raw, _, err := a.readOriginalBaseConfigForInit(r.Context(), instance)
-		if err != nil {
-			return nil, err
-		}
-		if len(raw) == 0 {
-			raw = json.RawMessage("null")
-		}
-		return raw, nil
+		return a.originalManagerConfiguration(r.Context(), instance)
 	}
 	var config map[string]json.RawMessage
 	if r.Method == http.MethodPut {
@@ -89,12 +101,12 @@ func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Req
 				Revision int64                      `json:"revision"`
 				Config   map[string]json.RawMessage `json:"config"`
 			}
-			if err := decodePluginBody(w, r, &envelope); err != nil {
+			if err := a.decodeOriginalPluginConfigBody(w, r, instance, &envelope); err != nil {
 				return nil, err
 			}
 			config = envelope.Config
 		} else {
-			if err := decodePluginBody(w, r, &config); err != nil {
+			if err := a.decodeOriginalPluginConfigBody(w, r, instance, &config); err != nil {
 				return nil, err
 			}
 		}
@@ -103,8 +115,8 @@ func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Req
 		}
 	}
 	ctx := context.WithoutCancel(r.Context())
-	a.pluginLifecycleMu.Lock()
-	defer a.pluginLifecycleMu.Unlock()
+	a.pluginOriginalOperationMu.Lock()
+	defer a.pluginOriginalOperationMu.Unlock()
 	var err error
 	if r.Method == http.MethodPut {
 		raw, err := json.Marshal(config)

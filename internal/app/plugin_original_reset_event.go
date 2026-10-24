@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"sort"
 )
 
@@ -38,35 +40,26 @@ func (a *App) registerOriginalPluginDataResetHandler(handler originalPluginDataR
 // compiled original classes declare no such subscriber; an empty registry
 // returns false, which the original Reset endpoint deliberately ignores.
 func (a *App) sendOriginalPluginDataReset(ctx context.Context, instance string) bool {
-	a.pluginOriginalEventsMu.Lock()
-	handlers := append([]originalPluginDataResetHandler(nil), a.pluginOriginalResetHandlers...)
-	a.pluginOriginalEventsMu.Unlock()
-	enabled := handlers[:0]
-	for _, handler := range handlers {
-		if handler.Enabled == nil || handler.Enabled() {
-			enabled = append(enabled, handler)
+	handled := false
+	raw := mustOriginalEventJSON("plugin_data_reset", json.RawMessage(fmt.Sprintf(`{"plugin_id":%q,"reset_config":true,"reset_data":true}`, instance)))
+	a.pluginRunningInstances.Range(func(_, value any) bool {
+		object := value.(*originalPluginInstance)
+		object.configMu.RLock()
+		enabled := object.eventsEnabled
+		object.configMu.RUnlock()
+		if !enabled {
+			return true
 		}
-	}
-	if len(enabled) == 0 {
-		return false
-	}
-	event := &originalPluginDataResetEvent{PluginID: instance, ResetConfig: true, ResetData: true}
-	for _, handler := range enabled {
-		if handler.Enabled != nil && !handler.Enabled() {
-			continue
-		}
-		func() {
-			defer func() {
-				if recover() != nil {
+		for _, event := range object.manifest.Events {
+			if event == "plugin_data_reset" {
+				handled = true
+				if _, err := object.callOriginalMethod(ctx, "event", raw); err != nil {
 					a.log("ERROR", "plugins", "data_reset_handler_failed", "插件重置事件处理失败", "", "")
 				}
-			}()
-			if handler.Invoke != nil {
-				if err := handler.Invoke(ctx, event); err != nil {
-					a.log("ERROR", "plugins", "data_reset_handler_failed", "插件重置事件处理失败", "", "")
-				}
+				break
 			}
-		}()
-	}
-	return true
+		}
+		return true
+	})
+	return handled
 }

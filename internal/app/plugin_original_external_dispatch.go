@@ -53,23 +53,16 @@ func (a *App) enqueueOriginalExternalCommand(ctx context.Context, object *origin
 	if err != nil {
 		return err
 	}
-	if err = a.pluginStore.checkPluginFormWrite(ctx, instance, pluginFormWriteLifecycle); err != nil {
-		return err
-	}
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-	run, err := a.pluginStore.enqueueRunTx(ctx, tx, instance, "original_command", input)
-	if err != nil {
-		return err
-	}
-	a.pluginStore.originalCommandRuns.Store(run.ID, originalCommandBinding{object: object, command: command, input: input})
-	if err = tx.Commit(); err != nil {
-		a.pluginStore.originalCommandRuns.Delete(run.ID)
-	}
-	return err
+	// Original command delivery submits the bound method independently.
+	a.wg.Add(1)
+	go func() {
+		defer a.wg.Done()
+		_, callErr := object.callOriginalMethod(context.WithoutCancel(ctx), command.Action, input)
+		if callErr != nil {
+			a.log("ERROR", "plugins", "command_failed", "插件命令执行失败", "", "")
+		}
+	}()
+	return nil
 }
 
 func (a *App) originalExternalRunCall(ctx context.Context, run PluginRun, method string, input json.RawMessage, boundObject **originalPluginInstance) (string, json.RawMessage, error) {

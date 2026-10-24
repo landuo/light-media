@@ -147,7 +147,7 @@ func (m Manifest) Validate() error {
 	if !slices.Contains(m.Methods, "stop") {
 		return failure("invalid_manifest")
 	}
-	if (m.HasPage && !slices.Contains(m.Methods, "page")) || (len(m.Dashboards) != 0 && !slices.Contains(m.Methods, "dashboard")) {
+	if (m.HasPage && !slices.Contains(m.Methods, "get_page")) || (len(m.Dashboards) != 0 && !slices.Contains(m.Methods, "get_dashboard")) {
 		return failure("invalid_manifest")
 	}
 	return nil

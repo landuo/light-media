@@ -19,15 +19,13 @@ func originalPluginUninstallRoute(path, method string) bool {
 func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, error) {
 	ctx := context.WithoutCancel(r.Context())
 	instance := strings.Split(path, "/")[0]
-	a.pluginLifecycleMu.Lock()
-	defer a.pluginLifecycleMu.Unlock()
+	a.pluginOriginalOperationMu.Lock()
+	defer a.pluginOriginalOperationMu.Unlock()
 	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE plugin_installations SET installed=0 WHERE instance_id=?`, instance); err != nil {
 		return nil, err
 	}
 	a.pluginRegisteredAPIs.Delete(instance)
-	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE plugin_schedules SET active=0,updated_at=? WHERE instance_id=? AND group_key='original_services'`, now(), instance); err != nil {
-		return nil, err
-	}
+	a.removeOriginalPluginJobs(instance)
 	retained := true
 	if value, ok := a.pluginOriginalClasses.Load(instance); ok {
 		class := value.(originalPluginClass)

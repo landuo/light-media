@@ -39,6 +39,7 @@ type App struct {
 	pluginOriginalCommandsMu       sync.Mutex
 	pluginOriginalCommands         map[string]map[string]any
 	pluginOriginalServicesMu       sync.Mutex
+	pluginOriginalDirectJobs       originalDirectJobs
 	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
 	pluginOriginalClasses          sync.Map // Original _plugins: imported compiled class, independent of running and installed.
 	pluginRunningInstances         sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
@@ -214,6 +215,8 @@ func (a *App) Start(parent context.Context) {
 	}
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.scheduler(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runOriginalPluginScheduler(ctx) }()
 	a.log("INFO", "runtime", "started", "服务已启动", "", "")
 	a.controlMu.Lock()
 	initialControl := a.control
@@ -303,14 +306,6 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	if err := a.reconcileNativeSiteIdentitiesTx(ctx, tx, previous, c); err != nil {
 		return err
 	}
-	if effect == nil {
-		if err := a.followSiteControlsTx(ctx, tx, previous, &c); err != nil {
-			return err
-		}
-	}
-	if err := a.pruneDeletedSiteSubscriptionsTx(ctx, tx, previous, c); err != nil {
-		return err
-	}
 	if err := validateSettings(c); err != nil {
 		return err
 	}
@@ -339,7 +334,6 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()
-	a.wakePlugins()
 	a.log("INFO", "settings", "updated", "连接和路径设置已更新", "", "")
 	return nil
 }

@@ -40,7 +40,7 @@ func validatePluginArtifactContract(m plugins.Manifest, contract string) error {
 	if _, _, native := builtin.Lookup(m.PluginID); native {
 		return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "不能用独立制品替换未匹配的已编译业务宿主")
 	}
-	for _, method := range []string{"invoke", "get_state", "get_service", "get_command", "stop"} {
+	for _, method := range []string{"init", "get_state", "get_service", "get_command", "stop"} {
 		if !slices.Contains(m.Methods, method) {
 			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件制品缺少实例生命周期方法")
 		}
@@ -68,12 +68,10 @@ func (a *App) resolvePluginImplementation(ctx context.Context, in PluginInstalla
 	if codePresent || !errors.Is(err, os.ErrNotExist) {
 		return pluginImplementation{}, err
 	}
-	manifest, _, exists := builtin.Lookup(in.PluginID)
-	if !exists || manifest.Version != in.Version {
-		return pluginImplementation{}, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "当前版本没有该插件的可执行实现")
+	if _, _, native := builtin.Lookup(in.PluginID); native {
+		return pluginImplementation{}, bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
 	}
-	command, err := a.pluginExecutable(in.PluginID)
-	return pluginImplementation{Manifest: manifest, Command: command}, err
+	return pluginImplementation{}, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "当前版本没有该插件的标准可执行实现")
 }
 
 // An already loaded object survives an unsuccessful force acquisition, just as

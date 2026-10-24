@@ -193,73 +193,39 @@ func (a *App) pluginServicesHTTP(w http.ResponseWriter, r *http.Request, path st
 	if strings.HasPrefix(path, "v1/") || strings.HasPrefix(path, "v2/") {
 		compat = path[3:]
 	}
-	switch {
-	case (path == "plugins/services" || compat == "dashboard/schedule") && r.Method == http.MethodGet:
-		items, err := a.pluginStore.publicPluginServices(r.Context(), time.Now())
-		if err != nil {
-			a.writeError(w, r, err)
-		} else if path == "plugins/services" {
-			writeJSON(w, r, items)
-		} else {
-			// Match ScheduleInfo's original public fields, without private host IDs.
-			projection := make([]map[string]any, 0, len(items))
-			for _, item := range items {
-				projection = append(projection, map[string]any{"id": item.ID, "name": item.Name, "provider": item.Provider, "status": item.Status, "next_run": item.NextRun})
-			}
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.Header().Set("Cache-Control", "no-store")
-			_ = json.NewEncoder(w).Encode(projection)
-		}
+	if (path == "plugins/services" || compat == "dashboard/schedule") && r.Method == http.MethodGet {
+		writeJSON(w, r, a.originalPublicServices(time.Now()))
 		return true
-	case path == "plugins/services/run" && r.Method == http.MethodPost:
-		var in struct {
+	}
+	instance, id := "", ""
+	if path == "plugins/services/run" && r.Method == http.MethodPost {
+		var input struct {
 			InstanceID string `json:"instance_id"`
 			ServiceID  string `json:"service_id"`
 		}
-		err := decodeBody(w, r, &in)
-		var run PluginRun
-		if err == nil {
-			run, err = a.queuePublicPluginService(r.Context(), in.InstanceID, in.ServiceID)
-		}
-		if err != nil {
+		if err := decodeBody(w, r, &input); err != nil {
 			a.writeError(w, r, err)
-		} else {
-			writeJSON(w, r, map[string]any{"accepted": true, "run_id": run.ID, "state": run.State})
+			return true
 		}
-		return true
-	case compat == "system/runscheduler" && r.Method == http.MethodGet:
+		instance, id = input.InstanceID, input.ServiceID
+	} else if compat == "system/runscheduler" && r.Method == http.MethodGet {
 		if !sameRequestOrigin(r) || r.Header.Get("Sec-Fetch-Site") == "cross-site" {
 			a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "禁止跨站写入请求", 403})
 			return true
 		}
-		requested := r.URL.Query().Get("jobid")
-		items, err := a.pluginStore.publicPluginServices(r.Context(), time.Now())
-		var selected *PluginServiceInfo
-		if err == nil {
-			for i := range items {
-				if items[i].ID == requested {
-					if selected != nil {
-						err = bad("PLUGIN_SERVICE_AMBIGUOUS", "定时服务标识不唯一，请刷新服务列表")
-						break
-					}
-					selected = &items[i]
-				}
-			}
-			if err == nil && selected == nil {
-				err = bad("PLUGIN_SERVICE_NOT_FOUND", "定时服务不存在或已停用")
+		for _, item := range a.originalPublicServices(time.Now()) {
+			if item.ID == r.URL.Query().Get("jobid") {
+				instance, id = item.InstanceID, item.ServiceID
+				break
 			}
 		}
-		if err == nil {
-			_, err = a.queuePublicPluginService(r.Context(), selected.InstanceID, selected.ServiceID)
-		}
-		if err != nil {
-			a.writeError(w, r, err)
-		} else {
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.Header().Set("Cache-Control", "no-store")
-			_ = json.NewEncoder(w).Encode(map[string]any{"success": true})
-		}
-		return true
+	} else {
+		return false
 	}
-	return false
+	if err := a.runOriginalPublicService(r.Context(), instance, id); err != nil {
+		a.writeError(w, r, err)
+	} else {
+		writeJSON(w, r, map[string]bool{"success": true, "accepted": true})
+	}
+	return true
 }

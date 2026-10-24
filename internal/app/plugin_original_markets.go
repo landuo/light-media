@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"slices"
 	"strings"
 	"time"
 
@@ -76,7 +77,7 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 		if market {
 			continue
 		}
-		implementation, resolveErr := a.resolvePluginInvocation(ctx, in)
+		implementation, resolveErr := a.resolvePluginImplementation(ctx, in)
 		manifest := implementation.Manifest
 		if resolveErr != nil {
 			manifest.PluginID = in.PluginID
@@ -87,10 +88,26 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 		if err != nil {
 			return nil, err
 		}
+		card.Available = resolveErr == nil && implementation.External
+		if !card.Available {
+			card.UnavailableReason = "插件尚未适配新的标准模块"
+			if resolveErr != nil {
+				card.UnavailableReason = "插件代码不可用或标准契约不匹配"
+			}
+		}
 		if loaded, ok := a.pluginRunningInstances.Load(in.InstanceID); ok {
-			state, e := loaded.(*originalPluginInstance).getState(ctx)
-			if e == nil {
-				card.State = state
+			object := loaded.(*originalPluginInstance)
+			if object.external {
+				raw, _, e := object.originalViewRead(ctx, "get_state", nil)
+				if e == nil {
+					card.State = originalViewJSONTruth(raw)
+				}
+				card.HasPage = slices.Contains(object.manifest.Methods, "get_page")
+			} else {
+				state, e := object.getState(ctx)
+				if e == nil {
+					card.State = state
+				}
 			}
 		}
 		if implementation.External {
@@ -98,29 +115,14 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 			if e == nil {
 				card.RepositoryURL = acquired.RepositoryURL
 			}
-		} else {
-			card.Update, card.UpdateBlockedReason, err = a.pluginStore.builtinUpdateOffer(ctx, in)
-			if err != nil {
-				return nil, err
-			}
-			card.HasUpdate = card.Update != nil
+
 		}
 		items = append(items, card)
 	}
 	if market {
-		recoverable, err := a.pluginReviewRestoreCards(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, card := range recoverable {
-			items = append(items, card)
-			if card.InstanceID == card.PluginID {
-				seen[card.PluginID] = true
-			}
-		}
 		for _, manifest := range builtin.Catalog() {
 			if !seen[manifest.PluginID] {
-				items = append(items, pluginCard{Manifest: manifest, InstanceID: manifest.PluginID})
+				items = append(items, pluginCard{Manifest: manifest, InstanceID: manifest.PluginID, Available: false, UnavailableReason: "插件尚未适配新的标准模块"})
 				seen[manifest.PluginID] = true
 			}
 		}
@@ -128,7 +130,7 @@ func (a *App) pluginCards(ctx context.Context, market bool) ([]pluginCard, error
 	for _, source := range a.originalMarketDeclarations(ctx) {
 		if market {
 			if !seen[source.PluginID] {
-				items = append(items, pluginCard{Manifest: source.Current.Manifest, InstanceID: source.PluginID, RepositoryURL: source.RepositoryURL, RepositoryVersion: source.CurrentVersion})
+				items = append(items, pluginCard{Manifest: source.Current.Manifest, InstanceID: source.PluginID, RepositoryURL: source.RepositoryURL, RepositoryVersion: source.CurrentVersion, Available: true})
 				seen[source.PluginID] = true
 			}
 		} else {

@@ -17,7 +17,7 @@ func originalPluginInstallRoute(path, method string) bool {
 
 // The existing-code branch of the original install endpoint. Repository code
 // acquisition is deliberately not faked by changing the stored version label.
-// The Go runtime currently executes only handlers compiled into its executable.
+// Only a verified standard package can be started; legacy native adapters are unavailable.
 func (a *App) originalPluginInstallHTTP(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	var input struct {
 		PluginID       string `json:"plugin_id"`
@@ -45,26 +45,13 @@ func (a *App) originalPluginInstallHTTP(w http.ResponseWriter, r *http.Request, 
 		return nil, bad("INVALID_PLUGIN_ID", "插件标识无效")
 	}
 	ctx := context.WithoutCancel(r.Context())
-	a.pluginLifecycleMu.Lock()
-	defer a.pluginLifecycleMu.Unlock()
+	a.pluginOriginalOperationMu.Lock()
+	defer a.pluginOriginalOperationMu.Unlock()
 	_, hasClass := a.pluginOriginalClasses.Load(input.PluginID)
-	// The existing Go market POST selects code already bundled in this server.
-	// It is a local compiled-artifact transport, not a claim that a Python
-	// repository was downloaded. The original GET keeps its class/repo rules.
-	bundled := false
-	if r.Method == http.MethodPost && !hasClass && !input.Force && input.Repository == "" {
-		manifest, _, exists := builtin.Lookup(input.PluginID)
-		if exists && manifest.PluginID == input.PluginID {
-			if input.ReleaseVersion != "" && input.ReleaseVersion != manifest.Version {
-				return map[string]any{"success": false, "message": "指定版本不是当前已打包的Go插件制品"}, nil
-			}
-			if _, err := a.originalDirectoryInstallation(ctx, input.PluginID); err != nil {
-				return nil, err
-			}
-			bundled = true
-		}
+	if _, _, native := builtin.Lookup(input.PluginID); native {
+		return map[string]any{"success": false, "message": "插件尚未适配新的标准模块，旧执行框架已停用"}, nil
 	}
-	if input.Force || (!hasClass && !bundled) {
+	if input.Force || !hasClass {
 		if input.Repository == "" {
 			return map[string]any{"success": false, "message": "没有传入仓库地址，无法正确安装插件，请检查配置"}, nil
 		}

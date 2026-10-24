@@ -16,7 +16,7 @@ func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallatio
 		return plugins.HTTPResponse{}, bad("PLUGIN_NOT_LOADED", "插件实例尚未加载")
 	}
 	object := value.(*originalPluginInstance)
-	if !object.external || len(object.manifest.Capabilities) != 0 {
+	if !object.external {
 		return plugins.HTTPResponse{}, bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件调用契约不匹配")
 	}
 	object.methodMu.Lock()
@@ -59,11 +59,7 @@ func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallatio
 	if err != nil {
 		return plugins.HTTPResponse{}, err
 	}
-	payload, err := json.Marshal(plugins.Invocation{Action: "api", Config: json.RawMessage("null"), Input: request})
-	if err != nil {
-		return plugins.HTTPResponse{}, err
-	}
-	result, err := object.callSession(ctx, plugins.Runner{Timeout: 30 * time.Second}, "invoke", payload, nil)
+	result, err := object.callSession(ctx, plugins.Runner{Timeout: 30 * time.Second}, "http", request, nil)
 	if err != nil {
 		return plugins.HTTPResponse{}, err
 	}

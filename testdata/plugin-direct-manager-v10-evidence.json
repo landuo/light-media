@@ -1,0 +1,362 @@
+{
+  "scope": "Independent direct-manager replacement checkpoint; selected gates only",
+  "parent": "7c946e3a9063546e91194ac742d54dc456b28635",
+  "parent_tree": "f92f41370c0c1f0f857f7e540bca2182744832f7",
+  "effective_go_inputs": 2332,
+  "input_drift": [],
+  "changed_source_files": [
+    {
+      "path": "internal/app/plugin_original_lifecycle.go",
+      "sha": "8db626309fbee5555fa212352ad10a0f97f101df",
+      "sha256": "299dee79515fff71d57a237f47a45b36f5c159b9743a1e776344e1ea2aa2a575",
+      "bytes": 9238,
+      "preimage": "557196faf7695e304f2684eaea0e89414f0003cc"
+    },
+    {
+      "path": "internal/app/plugin_http.go",
+      "sha": "ff4b9cfa8fb6e8980704d599c9d4a88191abeb9a",
+      "sha256": "fe344e3b529efcab9e310de1bbe7b5143cebedde91b3093c49e1e33fb56699e5",
+      "bytes": 23603,
+      "preimage": "cd2ea945d88b4843641d274a616cd55f3dbd3d07"
+    },
+    {
+      "path": "internal/app/plugin_original_config.go",
+      "sha": "4bb488721d9500e164a07a8825bcb64859849576",
+      "sha256": "fa0dcdc4af80815de1696cf01d36be963711f330dc7ecac5eab8587d0a95ac6c",
+      "bytes": 5858,
+      "preimage": "e6d61d90e6f3dfe279c52d3006464bd1dc194b81"
+    },
+    {
+      "path": "internal/app/runtime.go",
+      "sha": "a44499bcf1933ef6bd3c57d824c2cf8fe23d6ff2",
+      "sha256": "0ad59f415d5a5b35b7d7ae979c3fad41a87ff78d32d607f4d8976b4eace3d620",
+      "bytes": 19763,
+      "preimage": "731fe80d61e0700767f1f4d2a2fe0b65e0166f7e"
+    },
+    {
+      "path": "internal/app/plugin_original_state.go",
+      "sha": "eb02795d97def2eee76f43e078b997a902be127a",
+      "sha256": "41755ec9afef5ff72781530fd99c2e2f0659586288ff364444b7a82d997fc39e",
+      "bytes": 1321,
+      "preimage": "8ec9e31d55d67e22703f0bba888910e4e4dbc648"
+    },
+    {
+      "path": "internal/app/plugin_original_services.go",
+      "sha": "c37766cdecfaed37702c254823123781e39c3cd8",
+      "sha256": "996a5f105bba9c573cf2774cbf5fdbaacd350a99e8595cbb56bece49064e3d21",
+      "bytes": 2133,
+      "preimage": "e92b4fa9e20256884d5cfc2f36c756b955ee35e1"
+    },
+    {
+      "path": "internal/app/plugin_original_external_http.go",
+      "sha": "56ab9db611e1fed9eab85541691899090a6991c2",
+      "sha256": "e47b8f07d219abb171677c8ae0fc9ba7dd560972f3105ecdb335c1243bccb264",
+      "bytes": 2551,
+      "preimage": "92ada4fa4f967119722a5d80af67831e1f1d71c1"
+    },
+    {
+      "path": "internal/app/plugin_original_direct_dispatch.go",
+      "sha": "fc8ba6fda58c086e386c3d746137ed61614c9ca9",
+      "sha256": "23d127380f1eee845f9037405f1f6fa2e464e382d5e28b8ab871a1060d9c3620",
+      "bytes": 5501,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_original_commands.go",
+      "sha": "cfc3db40834ff2b526fabc32fc2564c2aaa93758",
+      "sha256": "0c4b5e16b3b67d2f701277a61ef84b5b12d4129da79822f60527d4daa7a24732",
+      "bytes": 3018,
+      "preimage": "15c4fb3e32a4539348cf429032a3c55fd3d350c9"
+    },
+    {
+      "path": "internal/app/plugin_original_external_dispatch.go",
+      "sha": "7d4ad138d911c6e73be688fa54ac3dc1bffe87de",
+      "sha256": "b9ef8145ec95b79681dea025d7158774e899959407bca3c42bb4766b6bfb0e86",
+      "bytes": 4330,
+      "preimage": "0de9548bb4433f92d04647b969062177076e1aa8"
+    },
+    {
+      "path": "internal/app/plugin_lark_commands.go",
+      "sha": "c5718a1b96a584cc2b04e256156179d410507a2b",
+      "sha256": "acc9fb0c134890afb58743131dad460fae1e37afa39684a532e018e207f4382b",
+      "bytes": 9508,
+      "preimage": "a9d6dc0ad6183a82b6b64aa4c07c3a8d335d0adc"
+    },
+    {
+      "path": "internal/app/plugin_original_events.go",
+      "sha": "163d03f1c0673ee90fc9c90bd7ecd059d6744564",
+      "sha256": "53681ca2df956f54ab7a7233cd0383590aa8ac7987293921eb709d983b6a02d4",
+      "bytes": 519,
+      "preimage": "f7a6ccf89b9df29f743e3587729d7b347ec6bede"
+    },
+    {
+      "path": "internal/app/plugin_original_data.go",
+      "sha": "ca5f965069f46205e1054702db6d8c6b823a458f",
+      "sha256": "295597e89731ab671573f9e668cd52ad3eda14dc3fedbe2240769bde0e6e9da2",
+      "bytes": 403,
+      "preimage": "445383d8f2513f0ab1eee543e5de79442ea1dd63"
+    },
+    {
+      "path": "internal/app/plugin_original_uninstall.go",
+      "sha": "a4a78fe4f46f37d6a01d4f5482dd86993bc3cd88",
+      "sha256": "dd903cd61b90aea4ce1ef3a208303816935a7c28349e5da5370c06c9acc42854",
+      "bytes": 2742,
+      "preimage": "c45aeab3d3d34072d2f3a788cd091d9fdd2e3a76"
+    },
+    {
+      "path": "internal/app/plugin_original_reset_event.go",
+      "sha": "4d20ee0023689e2dfa0f6598f51b9ce2076c877c",
+      "sha256": "92878be1aca3f1794efa6222223a0425d68db3f0f84bb488c6bfbb44571d584b",
+      "bytes": 2061,
+      "preimage": "2bfcb5da0e4797a3df249e3ca82f2cff615dcd41"
+    },
+    {
+      "path": "internal/app/plugin_services.go",
+      "sha": "13238c89900774004dd5f7d8122552af4d790bf4",
+      "sha256": "8bcd07edc9cf492908b0a49ad8adeb795d515b50acdc0cfeae994b8f44b29045",
+      "bytes": 8566,
+      "preimage": "b8eb3b95c8a5dc01fc0766a274d8bed183fb3421"
+    },
+    {
+      "path": "internal/app/plugin_original_view_http.go",
+      "sha": "fbbd0bf9312b9fdac7137039681ad31c10932c1e",
+      "sha256": "5cce7f0c4d8012e92ec0e5f28f1a881572f6490586b7cfc77a84994a5f2a5cc2",
+      "bytes": 3402,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/http.go",
+      "sha": "485df5084c4f1c1198bb853570fceb5e1bbe9b8e",
+      "sha256": "102c958565fdc93ac353ebdee8b001f9d110662aa2fa53988e184fabccde03e1",
+      "bytes": 33120,
+      "preimage": "201346d1cc162efaf2625a75d74effb692190e44"
+    },
+    {
+      "path": "internal/app/plugin_original_install.go",
+      "sha": "6366e19f49e6cbb6f1e60d8013076af08ed448f8",
+      "sha256": "7221d5a0fafc83d1aba8ef08a8049fdfa2f3e0cc9559aefacfce574ae13a1d78",
+      "bytes": 5000,
+      "preimage": "7a3acd917d757bec98d2ffb31294162cb053bec3"
+    },
+    {
+      "path": "internal/app/plugin_original_manager_http.go",
+      "sha": "5a8ffcc7fb555b09d3ad1cac4fc30d97640eb587",
+      "sha256": "235bc490eaa93fdd6388867f0d11ce49fd19280ee3f88a66513e2568072bba96",
+      "bytes": 2030,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_original_view_adapter.go",
+      "sha": "dd67977903345d331a6b0b2fdc688a6ba82d71c3",
+      "sha256": "7beba8979436750fb830c5c69b68189cb1c1d1571be450f48b2fdabe853e3b88",
+      "bytes": 2715,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_original_markets.go",
+      "sha": "b3ff13c737152dc1019997bc1341da0488b044db",
+      "sha256": "8f776328b8ce5861f8e7740b263a5ee330e863a532dbaf8ff0fb1429c056d8de",
+      "bytes": 4722,
+      "preimage": "f878c2ef7b7999387caac2d46e4518f6c4edb3f9"
+    },
+    {
+      "path": "internal/app/plugin_original_session.go",
+      "sha": "02f00abfb5aaa4e45d8daa28668aa7d3726d1383",
+      "sha256": "ff3c9a0bd854a892e7f3d7643aa841a367657386de2ada1b1ae3b2bfb858670b",
+      "bytes": 6278,
+      "preimage": "8cad088568b9eaa895a6ec9d935ddee33d91497c"
+    },
+    {
+      "path": "internal/app/plugin_implementation.go",
+      "sha": "6e8fdfffa6938ecdce5f7732715b514c32b1b58c",
+      "sha256": "e90a09a73fe0c9d8b3865e59a05075856fb411f7f79d9f5c7552bea9c48d595b",
+      "bytes": 4341,
+      "preimage": "cb8ebccefa863d9ea157aa366e320bac482832c5"
+    },
+    {
+      "path": "cmd/owned-standard-fixture/main.go",
+      "sha": "befb503e05f8f3821f36bf4e8031794223ab503b",
+      "sha256": "f3eda83cf15aa8647ae5d3466ef7aa14feee80a48d74806fc0b078ba8cce541a",
+      "bytes": 7138,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_original_standard_direct_contract_test.go",
+      "sha": "761dee00a6e3ab1b8365b29c352aae5051b87401",
+      "sha256": "15c80ec2e13323037f6b7f6227a5f72fa6790069c79d0a5127dc1d732359d3e1",
+      "bytes": 11506,
+      "preimage": null
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "sha": "611c3b0f7067fa9e253ae17bd0291eb8effd7596",
+      "sha256": "bccd2b990d4167b0de4aefb8b19e89b6261469407cf1ef99fcc2086ae64bc87f",
+      "bytes": 32379,
+      "preimage": "c79b64101500bdada439f1fe2317c4cf8aa60c6d"
+    },
+    {
+      "path": "internal/app/plugin_original_direct_lifecycle_test.go",
+      "sha": "edeb99ae0d54317bc4efc113695dce04cb592d12",
+      "sha256": "edd13e55f22f2f007ff56cc5799ab23f702e31c2c2bef4b0a1d4082baa59b997",
+      "bytes": 4143,
+      "preimage": null
+    }
+  ],
+  "deleted_files": [
+    {
+      "path": "internal/app/plugin_builtin_update_offer.go",
+      "preimage": "235ea5a13ef476680528b6563484975b068bbe55",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_instance_config_load.go",
+      "preimage": "49cacde6b43a43b71c82f2d84fb8d53110f282f1",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_clean_seed_init.go",
+      "preimage": "696f43fe0d3ee5b803f11c77cb03d0189274c09a",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_stateless_methods.go",
+      "preimage": "e7f51f94645f529abe63b647d896d420bc7ac76d",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_stop.go",
+      "preimage": "e281be3ee70a27cb80b1648ab3c68f1c447047d3",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_watcher_enqueue.go",
+      "preimage": "8f5fd8bf5a2fa64d76e9af04c3bcc7d5e168795e",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_watcher_methods.go",
+      "preimage": "e74d5e5bcb94c5b47e52fc86220c483b4c6e8010",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_builtin_update_offer_test.go",
+      "preimage": "b8aee0f6a07fc490beb4f2f6a2b1fc4d968281a7",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_builtin_object_integration_test.go",
+      "preimage": "c957d421889abdefa308a9c91e6414278da839d3",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_remaining_methods_test.go",
+      "preimage": "0c1b26ff7539188f907facf9aac9eb4a80ede1dc",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_stateless_methods_test.go",
+      "preimage": "ce74ad01e23057d2eabe3c9cab10784738142fe0",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_watcher_idle_test.go",
+      "preimage": "c7aa15dc18c8402d4e2a22d28dca3742d8dbebfb",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    },
+    {
+      "path": "internal/app/plugin_original_watcher_methods_test.go",
+      "preimage": "95cb839976872250f133c98f8ad5889f6cc01575",
+      "reason": "retired old framework native adapter or its test dependency closure; no standard contract test removed"
+    }
+  ],
+  "runs": {
+    "normal": {
+      "exit": 0,
+      "root_results": [
+        {
+          "Time": "2026-10-24T03:49:32.290343138Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerCloneResetUninstallActualObjects",
+          "Elapsed": 0.62
+        },
+        {
+          "Time": "2026-10-24T03:49:32.565368896Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerStartsWithEmptyConfigWithoutLegacyRun",
+          "Elapsed": 0.27
+        },
+        {
+          "Time": "2026-10-24T03:49:34.080022591Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardDirectModuleEndToEnd",
+          "Elapsed": 1.52
+        }
+      ],
+      "package_results": [
+        {
+          "Time": "2026-10-24T03:49:34.093318032Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 2.6
+        }
+      ],
+      "log_sha256": "1af423ec471bedef86d6c393afcdeda63153ef2ae9e43a8d5a944eb2dfdd656b",
+      "race_instrumented_application": false
+    },
+    "race": {
+      "exit": 0,
+      "root_results": [
+        {
+          "Time": "2026-10-24T03:50:44.656744355Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerCloneResetUninstallActualObjects",
+          "Elapsed": 3.7
+        },
+        {
+          "Time": "2026-10-24T03:50:47.059755277Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerStartsWithEmptyConfigWithoutLegacyRun",
+          "Elapsed": 2.4
+        },
+        {
+          "Time": "2026-10-24T03:50:52.087385783Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStandardDirectModuleEndToEnd",
+          "Elapsed": 5.03
+        }
+      ],
+      "package_results": [
+        {
+          "Time": "2026-10-24T03:50:53.119925431Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 12.703
+        }
+      ],
+      "log_sha256": "14d8c13043a8a8f16b2e5ad8e59e2282772e890cc3096ad69b0d92abe11aac6d",
+      "race_instrumented_application": true
+    }
+  },
+  "fixtures": {
+    "owned-base-fixture": {
+      "source": "cmd/owned-base-fixture/main.go",
+      "build_exit": 0,
+      "binary_sha256": "52e69bad4ca66395edcd724b7316ef542f5f08eb946f23bada31d621c7e56e23",
+      "race_instrumented": false
+    },
+    "owned-standard-fixture": {
+      "source": "cmd/owned-standard-fixture/main.go",
+      "build_exit": 0,
+      "binary_sha256": "e5c0d613f2a559193fb49e81da2a59f8d69a81457d59d1ac02d24ef98df8eb8b",
+      "race_instrumented": false
+    }
+  },
+  "vet_run": false,
+  "full_module_acceptance": false
+}
