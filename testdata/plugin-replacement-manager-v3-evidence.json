@@ -1,0 +1,85 @@
+{
+  "scope": "First manager replacement slice, selected independent gate only; not complete removal or module acceptance",
+  "parent": "0d460e59d5bbbcdb9bc7f67707202cca2285b9e9",
+  "parent_tree": "550ad7a3ed009050b8312f85a40a6a2268fc8863",
+  "source_files": [
+    {
+      "path": "internal/app/runtime.go",
+      "sha": "731fe80d61e0700767f1f4d2a2fe0b65e0166f7e",
+      "sha256": "22bfa27ea8c15ce1e0b43a5e5210fc92aa38f98cc5561c383348f0729253f4ae",
+      "bytes": 19856,
+      "preimage": "b0ed71bd03a510880131940a6a8eb3b45ac001da"
+    },
+    {
+      "path": "internal/app/plugin_original_lifecycle.go",
+      "sha": "557196faf7695e304f2684eaea0e89414f0003cc",
+      "sha256": "e53dfdbf9fb7e8cb827c95ce6d880cccc2810b365e2c43c00acb61e2c8d047b8",
+      "bytes": 9088,
+      "preimage": "9881257f670dc231e09a5b02c05937ef71c02cec"
+    },
+    {
+      "path": "internal/app/plugin_original_direct_manager_test.go",
+      "sha": "1f8fea824df0887298276cc48b31dc6ff1cd08bb",
+      "sha256": "66e16659eb5dff222d9b91b860cf8ed7310b139075a30377e8d5021c0c404e83",
+      "bytes": 1919,
+      "preimage": null
+    },
+    {
+      "path": "internal/app/plugin_original_manager_configuration.go",
+      "sha": "a84e1223fb52c374905b259eee2790771eca66b2",
+      "sha256": "15c893520dd5bfb13d4605cf15f598c03423c8f187ef010bc568ea05f7db5b91",
+      "bytes": 750,
+      "preimage": null
+    }
+  ],
+  "input_go_files": 2338,
+  "input_drift": [],
+  "fixture_build_exit": 0,
+  "fixture_source": "cmd/owned-base-fixture/main.go",
+  "fixture_binary_sha256": "0752fb35c75fbfff4f3982c047b19b919020aba7590f40431a392e70543328ba",
+  "fixture_race_instrumented": false,
+  "runs": {
+    "normal": {
+      "exit": 0,
+      "root_results": [
+        {
+          "Time": "2026-10-24T03:24:28.812430244Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerStartsWithEmptyConfigWithoutLegacyRun",
+          "Elapsed": 0.28
+        }
+      ],
+      "package_results": [
+        {
+          "Time": "2026-10-24T03:24:28.816536115Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 0.447
+        }
+      ],
+      "log_sha256": "a51f1e63f2d0e92d2da019d7708c93951b884cf85cadedb5c34fbc73223657b7"
+    },
+    "race": {
+      "exit": 0,
+      "root_results": [
+        {
+          "Time": "2026-10-24T03:25:33.255153119Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalDirectManagerStartsWithEmptyConfigWithoutLegacyRun",
+          "Elapsed": 2.03
+        }
+      ],
+      "package_results": [
+        {
+          "Time": "2026-10-24T03:25:34.278008826Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 3.5460000000000003
+        }
+      ],
+      "log_sha256": "427ad6b29776561f6a5eb035703db201577db29becdb1071f0370423c4914b03"
+    }
+  }
+}

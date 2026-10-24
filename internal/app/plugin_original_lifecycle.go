@@ -4,80 +4,32 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
 	"sync"
 	"time"
 )
-
-// initializeOriginalPlugin executes the already-ported plugin initializer and
-// waits for that invocation, rather than reporting a queued initialization as
-// a completed original init_plugin call. It adds no request timeout or retry.
-// The existing worker owns its IPC and execution limits.
-func (a *App) initializeOriginalPlugin(ctx context.Context, instance string) (PluginRun, error) {
-	run, handled, err := a.enqueueOriginalCleanSeedInit(ctx, instance)
-	if !handled {
-		run, handled, err = a.enqueueOriginalWatcherInit(ctx, instance)
-	}
-	if !handled {
-		run, err = a.pluginStore.EnqueueRun(ctx, instance, "init", nil)
-	}
-	if err != nil {
-		return run, err
-	}
-	// Execute synchronously through the existing real SDK/host caller. A server
-	// worker may have claimed this exact row first; only then observe its result.
-	claimed, claimErr := a.pluginStore.claimSelectedRun(ctx, instance, run.ID)
-	if claimErr == nil {
-		if executeErr := a.executePluginRun(ctx, claimed); executeErr != nil {
-			return claimed, executeErr
-		}
-	} else if !errors.Is(claimErr, sql.ErrNoRows) {
-		return run, claimErr
-	}
-	tick := time.NewTicker(10 * time.Millisecond)
-	defer tick.Stop()
-	for {
-		current, e := a.pluginStore.Run(ctx, run.ID)
-		if e != nil {
-			return run, e
-		}
-		switch current.State {
-		case "succeeded":
-			return current, nil
-		case "failed", "canceled", "cancelled", "reconcile_pending":
-			return current, fmt.Errorf("plugin init_plugin failed: %s", current.ErrorCode)
-		}
-		select {
-		case <-ctx.Done():
-			return current, ctx.Err()
-		case <-tick.C:
-		}
-	}
-}
 
 // originalPluginInstance is the loaded Go calling object corresponding to the
 // Python instance in _running_plugins. Configuration is read by each native
 // initializer, including writes performed by the preceding initializer.
 // It is ephemeral and never inferred from installed/desired_enabled flags.
 type originalPluginInstance struct {
-	app                  *App
-	installation         PluginInstallation
-	handler              plugins.Handler
-	manifest             plugins.Manifest
-	methodMu             sync.Mutex
-	configMu             sync.RWMutex
-	appliedConfig        json.RawMessage
-	eventsEnabled        bool
-	nativeState          any
-	originalAbsentEngine any
-	external             bool
-	hostContract         string
-	sessionMu            sync.Mutex
-	session              *plugins.Client
-	sessionStarted       bool
+	app                   *App
+	installation          PluginInstallation
+	handler               plugins.Handler
+	manifest              plugins.Manifest
+	methodMu              sync.Mutex
+	configMu              sync.RWMutex
+	appliedConfig         json.RawMessage
+	eventsEnabled         bool
+	nativeState           any
+	originalAbsentEngine  any
+	originalAbsentWatcher any
+	external              bool
+	hostContract          string
+	sessionMu             sync.Mutex
+	session               *plugins.Client
+	sessionStarted        bool
 }
 
 type originalInitializingObjectKey struct{}
@@ -127,42 +79,23 @@ func captureOriginalAppliedConfiguration(ctx context.Context, value any) {
 	call.mu.Unlock()
 }
 
+// The manager calls the loaded implementation directly. Initialization is not
+// a queued job and has no config-revision, receipt or recovery prerequisite.
 func (p *originalPluginInstance) init(ctx context.Context) error {
 	p.methodMu.Lock()
 	defer p.methodMu.Unlock()
-	p.configMu.RLock()
-	previous := p.nativeState
-	p.configMu.RUnlock()
-	call := &originalInitializationCall{object: p, nativeBefore: previous}
-	if p.hostContract == pluginBaseSDKContract {
-		raw, _, err := p.app.readOriginalBaseConfigForInit(ctx, p.installation.InstanceID)
-		if err != nil {
-			return err
-		}
-		call.configForInit, call.configForInitRead = raw, true
+	if !p.external {
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
 	}
-	run, err := p.app.initializeOriginalPlugin(context.WithValue(ctx, originalInitializingObjectKey{}, call), p.installation.InstanceID)
-	if run.ID != "" {
-		p.app.pluginOriginalInitializingRuns.Delete(run.ID)
-		p.app.pluginStore.originalInitializingRuns.Delete(run.ID)
+	config, err := p.app.originalManagerConfiguration(ctx, p.installation.InstanceID)
+	if err != nil {
+		return err
 	}
-	call.mu.Lock()
-	captured, raw := call.captured, append(json.RawMessage(nil), call.applied...)
-	nativeState := call.nativeState
-	call.mu.Unlock()
-	if !captured && err == nil {
-		var invocation plugins.Invocation
-		if decodeErr := json.Unmarshal(run.Input, &invocation); decodeErr != nil {
-			return decodeErr
-		}
-		raw = append(json.RawMessage(nil), invocation.Config...)
-	}
-	// Keep actual partial native member mutation if direct init throws, as the
-	// original object survives that exception. Start failures discard the object.
-	if captured || err == nil {
+	call := &originalInitializationCall{object: p, configForInit: config, configForInitRead: true}
+	_, err = p.callSession(context.WithValue(ctx, originalInitializingObjectKey{}, call), plugins.Runner{Timeout: 10 * time.Second}, "init", config, nil)
+	if err == nil {
 		p.configMu.Lock()
-		p.appliedConfig = raw
-		p.nativeState = nativeState
+		p.appliedConfig = append(json.RawMessage(nil), config...)
 		p.configMu.Unlock()
 	}
 	return err
@@ -170,18 +103,15 @@ func (p *originalPluginInstance) init(ctx context.Context) error {
 
 func (a *App) startOriginalPlugin(ctx context.Context, instance string) *originalPluginInstance {
 	in, err := a.originalDirectoryInstallation(ctx, instance)
-	if err == nil && !in.DesiredEnabled {
-		// The retired staging flag is an internal Go worker eligibility bit,
-		// not the original plugin object's get_state. Installed disabled plugins
-		// are initialized by original start too. Their configuration is untouched.
-		_, err = a.Store.DB.ExecContext(ctx, `UPDATE plugin_installations SET desired_enabled=1 WHERE instance_id=?`, instance)
-		in.DesiredEnabled = err == nil
-	}
+
 	if err == nil {
 		implementation, resolveErr := a.resolvePluginImplementation(ctx, in)
 		manifest := implementation.Manifest
-		_, handler, _ := builtin.Lookup(in.PluginID)
 		if resolveErr != nil {
+			return nil
+		}
+		if !implementation.External {
+			a.log("WARN", "plugins", "adapter_unavailable", "插件尚未适配新的标准模块，未加载旧执行器", "", "")
 			return nil
 		}
 		meta, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.DB, instance)
@@ -189,7 +119,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			return nil
 		}
 		a.pluginOriginalClasses.Store(instance, originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""})
-		object := &originalPluginInstance{app: a, installation: in, handler: handler, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
+		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
 		err = object.init(ctx)
 		if err != nil && object.external {
 			_ = object.stopSession(context.WithoutCancel(ctx))
@@ -256,9 +186,8 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 	return nil
 }
 
-// stop follows the original loaded-object check. The Go worker is short-lived;
-// its existing handler is the ported stop_service method, while cancellation
-// and join close the instance's actual supervised work. Config/KV are untouched.
+// Only the manager decides stop order. Client.StopWithHost owns the actual
+// process shutdown/join; no legacy queue transition can veto this method.
 func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 	loaded, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
@@ -266,49 +195,24 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 		return nil
 	}
 	object := loaded.(*originalPluginInstance)
-
-	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE plugin_event_subscriptions SET active=0 WHERE instance_id=?`, instance); err != nil {
-		a.log("WARN", "plugins", "stop_failed", "插件事件处理器停止失败", "", "")
-		return err
-	}
 	object.configMu.Lock()
 	object.eventsEnabled = false
 	object.configMu.Unlock()
-	if err := a.stopOriginalInstanceResources(ctx, instance, object.installation.PluginID); err != nil {
-		a.log("WARN", "plugins", "stop_failed", "插件资源停止失败", "", "")
+	stopCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	if err := object.stopSession(stopCtx); err != nil {
+		a.log("ERROR", "plugins", "stop_failed", "插件停止方法失败", "", "")
 	}
-	transition, err := a.pluginStore.runSupervisor.beginTransition([]string{instance})
-	if err == nil {
-		for _, attempt := range transition.join.attempts {
-			if _, err = a.pluginStore.finishCanceledUnenteredAttempt(ctx, attempt); err != nil {
-				break
-			}
-		}
-		if err == nil {
-			err = transition.Wait(ctx)
-		}
-		if err == nil {
-			err = transition.releaseAfterResolution()
-		}
-		if err != nil {
-			_ = transition.quarantine()
+	a.pluginOriginalRunningMu.Lock()
+	defer a.pluginOriginalRunningMu.Unlock()
+	a.pluginOriginalClasses.Delete(instance)
+	a.pluginRunningInstances.Delete(instance)
+	for i, id := range a.pluginOriginalRunningOrder {
+		if id == instance {
+			a.pluginOriginalRunningOrder = append(a.pluginOriginalRunningOrder[:i], a.pluginOriginalRunningOrder[i+1:]...)
+			break
 		}
 	}
-	if err != nil {
-		a.log("WARN", "plugins", "stop_failed", "插件执行停止未完成", "", "")
-	}
-	func() {
-		a.pluginOriginalRunningMu.Lock()
-		a.pluginOriginalClasses.Delete(instance)
-		a.pluginRunningInstances.Delete(instance)
-		for n, id := range a.pluginOriginalRunningOrder {
-			if id == instance {
-				a.pluginOriginalRunningOrder = append(a.pluginOriginalRunningOrder[:n], a.pluginOriginalRunningOrder[n+1:]...)
-				break
-			}
-		}
-		a.pluginOriginalRunningMu.Unlock()
-	}()
 	return nil
 }
 
