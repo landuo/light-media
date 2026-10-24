@@ -1,0 +1,354 @@
+{
+  "source_repository": "https://github.com/jxxghp/MoviePilot",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "method": "AST extracted original web_message, MessageChain command branch, and Command method bodies; owned captures only",
+  "not_proof_of": [
+    "host authentication",
+    "Go compilation",
+    "SDK IPC",
+    "full MessageChain",
+    "external chat integrations"
+  ],
+  "sources_sha256": {
+    "api-apiv1.py": "82fa09ee97e3e60cdd24007a2a2d42f29097d4627feff245b747c68c0a07f163",
+    "api-message.py": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd",
+    "chain-message.py": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+    "command.py": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+    "core-config.py": "67f68c0c9da8fa6fe5272d9b1ab5feac156855002df357b4bb284cc420833207",
+    "core-security.py": "7c2f1920295d13a40979acc2f74554bdbb94010663909a281c0904d6e3db5040",
+    "db-user-oper.py": "89f914bb3915c9ed5cabeac65bb03ca7019751ed4a5204c015f50b03ea190ded",
+    "event.py": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+    "schema-types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "schemaEvent.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6"
+  },
+  "cases": [
+    {
+      "id": "declared-event-not-action-method",
+      "input": {
+        "id": "declared-event-not-action-method",
+        "text": "/owned \u001c甲 乙\n丙",
+        "data": {
+          "action": "not_a_method",
+          "nested": {
+            "values": [
+              "kept",
+              false,
+              null
+            ]
+          },
+          "big": 9007199254740993
+        }
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned \u001c甲 乙\n丙",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "nested": {
+              "values": [
+                "kept",
+                false,
+                null
+              ]
+            },
+            "big": 9007199254740993,
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin",
+            "arg_str": "甲 乙 丙"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "no-action",
+      "input": {
+        "id": "no-action",
+        "text": "/owned",
+        "data": {
+          "marker": "no-action",
+          "arg_str": "preset"
+        }
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "marker": "no-action",
+            "arg_str": "preset",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "null-data",
+      "input": {
+        "id": "null-data",
+        "text": "/owned",
+        "data": null
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "hidden-still-executable",
+      "input": {
+        "id": "hidden-still-executable",
+        "text": "/owned",
+        "show": false,
+        "data": {}
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "case-sensitive-command",
+      "input": {
+        "id": "case-sensitive-command",
+        "text": "/OWNED",
+        "data": {}
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/OWNED",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "unknown-command",
+      "input": {
+        "id": "unknown-command",
+        "text": "/missing",
+        "data": {}
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/missing",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "explicit-noai",
+      "input": {
+        "id": "explicit-noai",
+        "text": " /NOAI： /owned  second\n",
+        "data": {}
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned  second",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin",
+            "arg_str": "second"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "query-text-fallback",
+      "input": {
+        "id": "query-text-fallback",
+        "text": null,
+        "payload": {},
+        "query": "/owned query argument",
+        "data": {}
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned query argument",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin",
+            "arg_str": "query argument"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "body-overrides-query",
+      "input": {
+        "id": "body-overrides-query",
+        "text": "/owned body",
+        "query": "/missing",
+        "data": {}
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned body",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin",
+            "arg_str": "body"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "client-identity-not-trusted",
+      "input": {
+        "id": "client-identity-not-trusted",
+        "text": "/owned",
+        "extra": {
+          "source": "forged",
+          "user": "forged",
+          "channel": "飞书",
+          "event": "forged",
+          "data": {
+            "action": "forged"
+          }
+        },
+        "data": {
+          "action": "kept"
+        }
+      },
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "kept",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ],
+      "declaration_unchanged": true
+    },
+    {
+      "id": "explicit-ai-is-not-command",
+      "input": {
+        "id": "explicit-ai-is-not-command",
+        "text": "/AI owned",
+        "data": {}
+      },
+      "events": [],
+      "declaration_unchanged": true
+    }
+  ]
+}

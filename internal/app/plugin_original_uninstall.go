@@ -47,7 +47,9 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 			if _, _, compiled := builtin.Lookup(class.installation.PluginID); !compiled {
 				// Package roots are owned by the artifact manager; deleting this copied code
 				// does not remove configuration data paths or source/other instance packages.
+				a.pluginImplementationMu.Lock()
 				removeErr = os.RemoveAll(filepath.Join(a.pluginPackageRoot(), instance))
+				a.pluginImplementationMu.Unlock()
 			}
 			if removeErr == nil {
 				removeErr = a.writeOriginalCodeAlias(ctx, class.installation, false)

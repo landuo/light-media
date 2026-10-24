@@ -28,12 +28,7 @@ const pageScope = 'plugin-page-' + useId().replace(/[^A-Za-z0-9_-]/g, '_');
 const renderMode = ref<'vuetify' | 'vue'>('vuetify');
 const remote = shallowRef<Component>();
 const controller = new AbortController();
-const remoteAPI = createPluginRemoteAPI(
-  props.plugin.plugin_id,
-  props.plugin.instance_id,
-  controller.signal,
-  props.plugin.plugin_id === 'BrushFlowLanduo' ? () => emit('changed') : undefined,
-);
+const remoteAPI = shallowRef<ReturnType<typeof createPluginRemoteAPI>>();
 const loading = ref(true),
   error = ref(''),
   nodes = ref<PluginFormNode[]>([]);
@@ -50,12 +45,14 @@ async function load() {
     if (!['vuetify', 'vue'].includes(result?.render_mode)) throw new Error('插件页面返回格式无效');
     renderMode.value = result.render_mode;
     if (renderMode.value === 'vue') {
-      const component = await loadPluginRemote(
-        props.plugin.plugin_id,
+      const { component, descriptor } = await loadPluginRemote(
         props.plugin.instance_id,
         'Page',
+        { signal: controller.signal, version: props.plugin.version },
       );
       if (!active) return;
+      remoteAPI.value = createPluginRemoteAPI(descriptor.plugin_id, descriptor.instance_id,
+        controller.signal, () => emit('changed'));
       remote.value = markRaw(component);
     } else {
       if (!Array.isArray(result.page)) throw new Error('插件页面返回格式无效');
@@ -115,6 +112,7 @@ onUnmounted(() => {
       />
     </VCard>
     <VCard v-else class="plugin-data-card">
+      <PluginDialogCloseBtn v-if="!remote || error" aria-label="关闭插件详情" @click="emit('close')" />
       <VCardText class="pa-0">
         <p v-if="loading" class="pa-4" role="status">正在加载…</p>
         <VAlert v-if="error" type="error" variant="tonal" class="ma-4"

@@ -47,6 +47,9 @@ func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path s
 		return a.pluginNavigation(r.Context())
 	}
 	parts := strings.Split(path, "/")
+	if len(parts) == 2 && parts[1] == "frontend" && r.Method == http.MethodGet {
+		return a.originalPluginFrontend(r.Context(), parts[0])
+	}
 	if len(parts) == 2 && parts[1] == "clone" && r.Method == http.MethodPost {
 		return a.pluginCloneHTTP(w, r, parts[0])
 	}

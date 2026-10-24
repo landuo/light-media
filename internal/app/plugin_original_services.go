@@ -7,8 +7,8 @@ import (
 )
 
 func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginScheduleDefinition, error) {
-	p.methodMu.Lock()
-	defer p.methodMu.Unlock()
+	unlock := p.lockOriginalMethod()
+	defer unlock()
 	var defs []pluginScheduleDefinition
 	err := p.readSession(ctx, "get_service", &defs)
 	return defs, err

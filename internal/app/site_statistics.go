@@ -232,7 +232,12 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 	if valid != 1 {
 		return bad("JOB_CANCELLED", "站点刷新任务已取消")
 	}
+	newStandardRefresh := false
 	if anyData {
+		newStandardRefresh, err = standardBusinessFactIsNewTx(ctx, tx, domainEventID("site.refreshed", job.ID+":all"))
+		if err != nil {
+			return err
+		}
 		if err = recordDomainEventTx(ctx, tx, DomainEvent{EventID: domainEventID("site.refreshed", job.ID+":all"), Type: "site.refreshed", SiteID: "*", JobID: job.ID}); err != nil {
 			return err
 		}
@@ -242,6 +247,9 @@ func (a *App) runSiteRefresh(ctx context.Context, job Job) error {
 	}
 	if err = tx.Commit(); err != nil {
 		return err
+	}
+	if newStandardRefresh {
+		a.emitStandardSiteRefreshed(ctx, "*")
 	}
 	a.event(ctx, job, "INFO", "site_refresh", "progress", fmt.Sprintf("站点数据刷新完成（%d/%d）", done, total))
 	if total > 0 && !anyUpdated {

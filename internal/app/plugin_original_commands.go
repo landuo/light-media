@@ -1,25 +1,35 @@
 package app
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"light-media/internal/commandrouter"
 )
 
 // getCommands reads the already initialized native object's actual state and
 // invokes the existing original command declaration, never init or get_config.
 func (p *originalPluginInstance) getCommands(ctx context.Context) ([]map[string]any, error) {
-	p.methodMu.Lock()
-	defer p.methodMu.Unlock()
+	unlock := p.lockOriginalMethod()
+	defer unlock()
+	var raw json.RawMessage
+	if err := p.readSession(ctx, "get_command", &raw); err != nil {
+		return nil, err
+	}
 	var commands []map[string]any
-	err := p.readSession(ctx, "get_command", &commands)
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	err := decoder.Decode(&commands)
 	return commands, err
 }
 
 // initOriginalPluginCommands follows Command.init_commands: submit a complete
-// background rebuild, not a synchronous per-pid replacement. Delivery to the
-// external CommandChain is a separate remaining adapter, not claimed here.
+// background rebuild, not a synchronous per-pid replacement. Commands retain
+// their original event/data declaration; data.action is not an SDK method.
 func (a *App) initOriginalPluginCommands() {
-	a.wg.Add(1)
+	if !a.admitOriginalBackground() {
+		return
+	}
 	go func() {
 		defer a.wg.Done()
 		a.pluginOriginalCommandsMu.Lock()
@@ -49,7 +59,7 @@ func (a *App) initOriginalPluginCommands() {
 			}
 			for _, row := range rows {
 				name, ok := row["cmd"].(string)
-				if !ok {
+				if !ok || name == "" {
 					continue
 				}
 				row["pid"] = instance
@@ -66,7 +76,8 @@ func (a *App) registerOriginalPlugin(ctx context.Context, instance string) {
 	a.registerOriginalPluginAPIs(instance)
 }
 
-// The existing command ingress consumes the rebuilt instance-bound registry.
+// lookupOriginalPluginCommand returns registry metadata, never permission to
+// call data.action as a method. Original commands may omit action altogether.
 func (a *App) lookupOriginalPluginCommand(name string) (commandrouter.PluginCommand, string, bool) {
 	a.pluginOriginalCommandsMu.Lock()
 	defer a.pluginOriginalCommandsMu.Unlock()
@@ -82,14 +93,8 @@ func (a *App) lookupOriginalPluginCommand(name string) (commandrouter.PluginComm
 	if !ok {
 		return commandrouter.PluginCommand{}, "", false
 	}
-	data, ok := row["data"].(map[string]any)
-	if !ok {
-		return commandrouter.PluginCommand{}, "", false
-	}
-	action, ok := data["action"].(string)
-	if !ok {
-		return commandrouter.PluginCommand{}, "", false
-	}
+	data, _ := row["data"].(map[string]any)
+	action, _ := data["action"].(string)
 	desc, _ := row["desc"].(string)
 	return commandrouter.PluginCommand{Name: name, PluginID: loaded.(*originalPluginInstance).installation.PluginID, Action: action, Description: desc}, instance, true
 }

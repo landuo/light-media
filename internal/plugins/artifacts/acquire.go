@@ -44,6 +44,8 @@ type Request struct {
 type Acquired struct {
 	Manifest                             plugins.Manifest
 	ExecutablePath, SHA256, HostContract string
+	PackageSHA256                        string // complete immutable package identity; empty for legacy worker-only packages
+	Files                                []PackageFile
 	RepositoryURL                        string // inert source provenance, never host authority
 	Command                              plugins.Command
 	BackupWarning                        string // post-success backup refresh failure is nonfatal
@@ -60,13 +62,14 @@ type Release struct {
 	Artifacts []Artifact       `json:"artifacts"`
 }
 type Artifact struct {
-	Platform         string `json:"platform"`
-	URL              string `json:"url"`
-	SHA256           string `json:"sha256"`
-	Size             int64  `json:"size"`
-	Format           string `json:"format"` // executable, zip, or tar.gz
-	ExecutableSHA256 string `json:"executable_sha256"`
-	HostContract     string `json:"host_contract"`
+	Platform         string        `json:"platform"`
+	URL              string        `json:"url"`
+	SHA256           string        `json:"sha256"`
+	Size             int64         `json:"size"`
+	Format           string        `json:"format"` // executable, zip, or tar.gz
+	ExecutableSHA256 string        `json:"executable_sha256"`
+	HostContract     string        `json:"host_contract"`
+	Files            []PackageFile `json:"files,omitempty"`
 }
 
 // StageError distinguishes preflight rejection (old code untouched), failure
@@ -175,14 +178,19 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 	if digest(data) != strings.ToLower(artifact.ExecutableSHA256) {
 		return fail("prepare", errors.New("executable SHA256 mismatch"))
 	}
-	receipt, err := json.Marshal(struct {
-		Manifest      plugins.Manifest `json:"manifest"`
-		SHA256        string           `json:"sha256"`
-		HostContract  string           `json:"host_contract"`
-		RepositoryURL string           `json:"repository_url,omitempty"`
-	}{release.Manifest, digest(data), artifact.HostContract, req.RepositoryURL})
+	if err = verifyPackageTree(stage, artifact.Files, false); err != nil {
+		return fail("prepare", err)
+	}
+	packageSHA, err := packageDigest(release.Manifest, artifact.HostContract, artifact.Files)
 	if err != nil {
 		return fail("prepare", err)
+	}
+	receipt, err := json.Marshal(installedReceipt{Manifest: release.Manifest, SHA256: digest(data), HostContract: artifact.HostContract, RepositoryURL: req.RepositoryURL, Files: artifact.Files, PackageSHA256: packageSHA})
+	if err != nil {
+		return fail("prepare", err)
+	}
+	if int64(len(receipt)) > MaxIndexBytes {
+		return fail("prepare", errors.New("package receipt exceeds size bound"))
 	}
 	receiptFile, err := os.OpenFile(filepath.Join(stage, ".acquired.json"), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if err != nil {
@@ -214,7 +222,7 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 		}
 	}
 	executable = filepath.Join(target, filepath.FromSlash(release.Manifest.Entry))
-	return Acquired{BackupWarning: warning, Manifest: release.Manifest, ExecutablePath: executable, SHA256: digest(data), HostContract: artifact.HostContract, RepositoryURL: req.RepositoryURL, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return Acquired{BackupWarning: warning, Manifest: release.Manifest, ExecutablePath: executable, SHA256: digest(data), HostContract: artifact.HostContract, RepositoryURL: req.RepositoryURL, PackageSHA256: packageSHA, Files: artifact.Files, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }
 
 func selectArtifact(index Index, req Request) (Release, Artifact, error) {
@@ -276,6 +284,14 @@ func selectArtifact(index Index, req Request) (Release, Artifact, error) {
 	if a.Format != "executable" && a.Format != "zip" && a.Format != "tar.gz" {
 		return bad("unsupported artifact format")
 	}
+	if r.Manifest.Frontend != nil && a.Format == "executable" {
+		return bad("frontend assets require an archive artifact")
+	}
+	files, err := validatePackageFiles(r.Manifest, a.Files, a.ExecutableSHA256)
+	if err != nil {
+		return Release{}, Artifact{}, err
+	}
+	a.Files = files
 	if _, err := httpURL(a.URL); err != nil {
 		return Release{}, Artifact{}, err
 	}

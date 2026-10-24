@@ -66,12 +66,7 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if int64(len(receiptBytes)) > MaxIndexBytes {
 		return bad(errors.New("oversized receipt"))
 	}
-	var receipt struct {
-		Manifest      plugins.Manifest `json:"manifest"`
-		SHA256        string           `json:"sha256"`
-		HostContract  string           `json:"host_contract"`
-		RepositoryURL string           `json:"repository_url,omitempty"`
-	}
+	var receipt installedReceipt
 	dec := json.NewDecoder(strings.NewReader(string(receiptBytes)))
 	dec.DisallowUnknownFields()
 	if err = dec.Decode(&receipt); err != nil {
@@ -96,6 +91,20 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if err = validate(receipt.Manifest, receipt.HostContract); err != nil {
 		return bad(err)
 	}
+	files, err := validatePackageFiles(receipt.Manifest, receipt.Files, receipt.SHA256)
+	if err != nil {
+		return bad(err)
+	}
+	packageSHA, err := packageDigest(receipt.Manifest, receipt.HostContract, files)
+	if err != nil {
+		return bad(err)
+	}
+	if packageSHA != receipt.PackageSHA256 {
+		return bad(errors.New("installed package content identity mismatch"))
+	}
+	if err = verifyPackageTree(target, files, true); err != nil {
+		return bad(err)
+	}
 	executable := filepath.Join(target, filepath.FromSlash(receipt.Manifest.Entry))
 	info, err := os.Lstat(executable)
 	if err != nil {
@@ -116,5 +125,5 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if int64(len(b)) > MaxExpandedBytes || digest(b) != strings.ToLower(receipt.SHA256) {
 		return bad(errors.New("installed executable digest mismatch"))
 	}
-	return Acquired{Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return Acquired{Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, PackageSHA256: packageSHA, Files: files, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }

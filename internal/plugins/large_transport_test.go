@@ -132,29 +132,237 @@ func TestBudgetsAndErrorsRetainHostCallEvidence(t *testing.T) {
 		})
 	}
 }
+
+// The marker is published only by the actual child, after the transport stage
+// named by Scenario. ReadBytes counts complete setup lines plus the invocation
+// prefix (block_write) or the complete first chunk (block_ack).
+type blockedTransportReady struct {
+	PID       int    `json:"pid"`
+	Scenario  string `json:"scenario"`
+	ReadBytes int    `json:"read_bytes"`
+}
+
 func TestBlockedWriteAndACKCancellationReapActualChild(t *testing.T) {
 	for _, scenario := range []string{"block_write", "block_ack"} {
 		t.Run(scenario, func(t *testing.T) {
-			pidfile := t.TempDir() + "/pid"
-			start := time.Now()
-			_, e := (Runner{Timeout: 200 * time.Millisecond}).Run(context.Background(), largeCommand(t, scenario, pidfile), fixtureManifest(), "Fixture", "invoke", blobJSON(2<<20), nil)
-			if codeOf(e) != "execution_canceled" || time.Since(start) > 3*time.Second {
-				t.Fatal("blocked transport not canceled", e, time.Since(start))
+			readyfile := t.TempDir() + "/ready"
+			command, payload := largeCommand(t, scenario, readyfile), blobJSON(2<<20)
+			ctx, cancel := context.WithCancel(context.Background())
+			type outcome struct {
+				result RunResult
+				err    error
+				ended  time.Time
 			}
-			raw, er := os.ReadFile(pidfile)
-			if er != nil {
-				t.Fatal(er)
+			done := make(chan outcome, 1)
+			invoked := make(chan struct{}, 1)
+			finished := false
+			defer func() {
+				cancel()
+				if !finished {
+					select {
+					case <-done:
+					case <-time.After(3 * time.Second):
+						t.Error("fixture cleanup did not finish")
+					}
+				}
+			}()
+			started := time.Now()
+			go func() {
+				// This test controls cancellation after proven I/O readiness.
+				// It does not replace or extend any production Runner budget.
+				result, err := (Runner{ObservePhase: func(o RunObservation) {
+					if o.Phase == PhaseInvokeBegin && o.ContextState == RunContextActive {
+						select {
+						case invoked <- struct{}{}:
+						default:
+						}
+					}
+				}}).Run(ctx, command, fixtureManifest(), "Fixture", "invoke", payload, nil)
+				done <- outcome{result, err, time.Now()}
+			}()
+
+			// Startup is a fixture precondition, not part of the 200 ms
+			// blocked-I/O observation or the 3 s cancellation/reap bound.
+			startup := time.NewTimer(10 * time.Second)
+			defer startup.Stop()
+			poll := time.NewTicker(time.Millisecond)
+			defer poll.Stop()
+			var ready blockedTransportReady
+			for {
+				raw, err := os.ReadFile(readyfile)
+				if err == nil {
+					if json.Unmarshal(raw, &ready) != nil || ready.PID <= 0 || ready.Scenario != scenario || ready.ReadBytes <= 0 {
+						t.Fatalf("invalid child readiness: %q", raw)
+					}
+					break
+				}
+				if !errors.Is(err, os.ErrNotExist) {
+					t.Fatal("read child readiness", err)
+				}
+				select {
+				case got := <-done:
+					finished = true
+					t.Fatalf("Run returned before child readiness: err=%v result=%+v", got.err, got.result)
+				case <-startup.C:
+					t.Fatal("child did not reach blocked-transport readiness within the fixture startup guard")
+				case <-poll.C:
+				}
 			}
-			pid, er := strconv.Atoi(string(raw))
-			if er != nil {
-				t.Fatal(er)
+			readyAt := time.Now()
+			select {
+			case <-invoked:
+			default:
+				t.Fatal("child ready without successful parent handshake/negotiation and active invocation")
 			}
-			if er = syscall.Kill(pid, 0); !errors.Is(er, syscall.ESRCH) {
-				t.Fatal("child not reaped", pid, er)
+			if err := syscall.Kill(ready.PID, 0); err != nil {
+				t.Fatal("ready child is not alive", ready.PID, err)
 			}
+			bound := time.NewTimer(3 * time.Second)
+			defer bound.Stop()
+			observation := time.NewTimer(200 * time.Millisecond)
+			defer observation.Stop()
+			select {
+			case got := <-done:
+				finished = true
+				t.Fatalf("blocked exchange returned before cancellation: err=%v result=%+v", got.err, got.result)
+			case <-observation.C:
+			}
+			canceledAt := time.Now()
+			cancel()
+			var got outcome
+			select {
+			case got = <-done:
+				finished = true
+			case <-bound.C:
+				t.Fatal("blocked transport did not return within 3 s of readiness")
+			}
+			if got.ended.Before(canceledAt) || codeOf(got.err) != "execution_canceled" || len(got.result.Result) != 0 || got.result.HostCalls != 0 {
+				t.Fatalf("blocked transport cancellation lost evidence: err=%v result=%+v", got.err, got.result)
+			}
+			if scenario == "block_write" {
+				// The child stopped after one byte, and no physical chunk
+				// completed. Positive partial-write bytes rule out canceling
+				// during encoding or merely while waiting for an ACK.
+				if got.result.SentChunks != 0 || got.result.SentWireBytes < ready.ReadBytes {
+					t.Fatalf("not a partial blocked write: child=%+v result=%+v", ready, got.result)
+				}
+			} else if got.result.SentChunks != 1 || got.result.SentWireBytes != ready.ReadBytes {
+				t.Fatalf("not a complete chunk awaiting ACK: child=%+v result=%+v", ready, got.result)
+			}
+			if err := syscall.Kill(ready.PID, 0); !errors.Is(err, syscall.ESRCH) {
+				t.Fatal("child not reaped", ready.PID, err)
+			}
+			if elapsed := time.Since(readyAt); elapsed > 3*time.Second {
+				t.Fatal("child reap exceeded 3 s from readiness", elapsed)
+			}
+			t.Logf("actual child pid=%d ready_after=%s canceled_and_reaped_after=%s sent_bytes=%d sent_chunks=%d child_read_bytes=%d", ready.PID, readyAt.Sub(started), time.Since(readyAt), got.result.SentWireBytes, got.result.SentChunks, ready.ReadBytes)
 		})
 	}
 }
+
+// Keep the independent 200 ms whole-Run deadline contract. The actual child
+// deliberately withholds the handshake; this test does not pretend that a
+// deadline guarantees the child reached its first instruction or wrote a PID.
+func TestBlockedTransportStartupDeadlinePrecedesReadiness(t *testing.T) {
+	readyfile := t.TempDir() + "/ready"
+	invoked, waited := false, false
+	start := time.Now()
+	_, err := (Runner{Timeout: 200 * time.Millisecond, ObservePhase: func(o RunObservation) {
+		invoked = invoked || o.Phase == PhaseInvokeBegin
+		waited = waited || o.Phase == PhaseCleanupWaitEnd
+	}}).Run(context.Background(), largeCommand(t, "block_startup", readyfile), fixtureManifest(), "Fixture", "invoke", nil, nil)
+	if codeOf(err) != "execution_canceled" || invoked || !waited || time.Since(start) > 3*time.Second {
+		t.Fatal("whole-Run startup deadline changed", err, invoked, waited, time.Since(start))
+	}
+	if raw, readErr := os.ReadFile(readyfile); readErr == nil {
+		var ready blockedTransportReady
+		if json.Unmarshal(raw, &ready) != nil || ready.PID <= 0 || ready.Scenario != "block_startup" || ready.ReadBytes != 0 {
+			t.Fatalf("invalid startup child record: %q", raw)
+		}
+		if err := syscall.Kill(ready.PID, 0); !errors.Is(err, syscall.ESRCH) {
+			t.Fatal("startup child not reaped", ready.PID, err)
+		}
+	} else if !errors.Is(readErr, os.ErrNotExist) {
+		t.Fatal("read startup child record", readErr)
+	}
+}
+
+func blockedTransportWorker(t *testing.T, scenario, readyfile string) {
+	t.Helper()
+	ready := blockedTransportReady{PID: os.Getpid(), Scenario: scenario}
+	publish := func() {
+		raw, err := json.Marshal(ready)
+		if err != nil {
+			t.Fatal("encode child readiness", err)
+		}
+		if err := os.WriteFile(readyfile+".tmp", raw, 0600); err != nil {
+			t.Fatal("write child readiness", err)
+		}
+		if err := os.Rename(readyfile+".tmp", readyfile); err != nil {
+			t.Fatal("publish child readiness", err)
+		}
+	}
+	if scenario == "block_startup" {
+		publish()
+		time.Sleep(20 * time.Second)
+		os.Exit(0)
+	}
+	reader, writer := bufio.NewReaderSize(os.Stdin, 4096), json.NewEncoder(os.Stdout)
+	identity := Identity{PluginID: "Fixture", InstanceID: "Fixture", Version: "1.2.3"}
+	readCall := func(method string) Frame {
+		raw, err := reader.ReadBytes('\n')
+		if err != nil {
+			t.Fatal("read child setup/chunk", method, err)
+		}
+		ready.ReadBytes += len(raw)
+		var frame Frame
+		if json.Unmarshal(raw, &frame) != nil || frame.Protocol != ProtocolVersion || frame.Identity != identity || frame.Type != "call" || frame.Method != method {
+			t.Fatal("unexpected child setup/chunk", method)
+		}
+		return frame
+	}
+	reply := func(frame Frame, result json.RawMessage) {
+		if err := writer.Encode(Frame{Protocol: ProtocolVersion, ID: frame.ID, Type: "result", Identity: frame.Identity, Result: result}); err != nil {
+			t.Fatal("write child setup reply", frame.Method, err)
+		}
+	}
+	frame := readCall("handshake")
+	hello, err := json.Marshal(Handshake{Protocol: ProtocolVersion, PluginID: "Fixture", Version: "1.2.3", HostAPI: HostAPIVersion, Methods: fixtureManifest().Methods, Capabilities: fixtureManifest().Capabilities, Transport: &transportAdvertisement{Version: 1}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	reply(frame, hello)
+	frame = readCall("transport.negotiate")
+	var limits transportLimits
+	if strictJSON(frame.Payload, &limits) != nil || limits.valid() != nil {
+		t.Fatal("invalid child transport negotiation")
+	}
+	reply(frame, frame.Payload)
+	if scenario == "block_write" {
+		// ReadBytes consumed the setup newlines. The host cannot send any
+		// invocation before our negotiation reply, so this byte comes from
+		// the first invocation chunk, not leftover setup or payload encoding.
+		first, err := reader.ReadByte()
+		if err != nil || first != '{' {
+			t.Fatal("read first invocation byte", first, err)
+		}
+		ready.ReadBytes++
+	} else if scenario == "block_ack" {
+		frame = readCall("transport.chunk")
+		var chunk transportChunk
+		if strictJSON(frame.Payload, &chunk) != nil || chunk.Sequence != 0 || chunk.Last || chunk.LogicalType != "call" || len(chunk.Data) == 0 || chunk.TotalBytes <= len(chunk.Data) {
+			t.Fatal("invalid first invocation chunk")
+		}
+	} else {
+		t.Fatal("unknown blocked transport scenario", scenario)
+	}
+	publish()
+	// No more stdin reads and no chunk ACK. The parent must cancel Run and
+	// reap this actual process, not let a cooperative worker return success.
+	time.Sleep(20 * time.Second)
+	os.Exit(0)
+}
+
 func TestLargeWorker(t *testing.T) {
 	at := -1
 	for i, v := range os.Args {
@@ -181,25 +389,8 @@ func TestLargeWorker(t *testing.T) {
 		os.Exit(0)
 	}
 	if strings.HasPrefix(scenario, "block_") {
-		os.WriteFile(args[0], []byte(strconv.Itoa(os.Getpid())), 0600)
-		d, w := json.NewDecoder(os.Stdin), json.NewEncoder(os.Stdout)
-		var f Frame
-		if d.Decode(&f) != nil {
-			os.Exit(2)
-		}
-		h, _ := json.Marshal(Handshake{Protocol: 1, PluginID: "Fixture", Version: "1.2.3", HostAPI: 1, Methods: fixtureManifest().Methods, Capabilities: fixtureManifest().Capabilities, Transport: &transportAdvertisement{Version: 1}})
-		w.Encode(Frame{Protocol: 1, ID: f.ID, Type: "result", Identity: f.Identity, Result: h})
-		if d.Decode(&f) != nil {
-			os.Exit(2)
-		}
-		w.Encode(Frame{Protocol: 1, ID: f.ID, Type: "result", Identity: f.Identity, Result: f.Payload})
-		if scenario == "block_ack" {
-			if d.Decode(&f) != nil {
-				os.Exit(2)
-			}
-		}
-		time.Sleep(20 * time.Second)
-		os.Exit(0)
+		blockedTransportWorker(t, scenario, args[0])
+		return
 	}
 	var oldHost HostCaller
 	e := Serve(context.Background(), os.Stdin, os.Stdout, fixtureManifest(), func(ctx context.Context, method string, p json.RawMessage, host HostCaller) (json.RawMessage, error) {

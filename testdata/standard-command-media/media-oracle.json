@@ -1,0 +1,1231 @@
+{
+  "source_repository": "https://github.com/jxxghp/MoviePilot",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "method": "Original AST web_message, MessageImage under installed Pydantic, _is_agent_message, _handle_message_core and Command registry/dispatch method bodies; no translated normalization or command model",
+  "boundary": "The original MessageChain routes slash commands before media/AI handling even with normalized image objects. The restored bridge consumes only text and trusted identity, never fetches or executes media, and still explicitly rejects image-only/non-command/AI requests.",
+  "unknown_slash_with_image_events": [
+    {
+      "type": "command.excute",
+      "data": {
+        "cmd": "/not_registered",
+        "user": "owned-admin",
+        "channel": "Web",
+        "source": "owned-admin",
+        "processing_status": null
+      }
+    }
+  ],
+  "sources_sha256": {
+    "api-message.py": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd",
+    "chain-message.py": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+    "command.py": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+    "schema-message.py": "e5b2f504e2c5d470b74a33756e577e19ce3f9b5284f9a0e1e2d522d1e3955597",
+    "schema-types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+  },
+  "cases": [
+    {
+      "id": "absent",
+      "payload": {},
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-null",
+      "payload": {
+        "image": null
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-null",
+      "payload": {
+        "images": null
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-empty-array",
+      "payload": {
+        "image": []
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-empty-array",
+      "payload": {
+        "images": []
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": [],
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-empty-string",
+      "payload": {
+        "image": ""
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-empty-string-retains-ref",
+      "payload": {
+        "images": ""
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": [
+        ""
+      ],
+      "normalized_images": [
+        {
+          "ref": "",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "both-empty",
+      "payload": {
+        "image": "",
+        "images": []
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": [],
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "both-null",
+      "payload": {
+        "image": null,
+        "images": null
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-empty-object",
+      "payload": {
+        "image": {}
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-empty-object",
+      "payload": {
+        "images": {}
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": {},
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-false",
+      "payload": {
+        "image": false
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-false",
+      "payload": {
+        "images": false
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": false,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-zero",
+      "payload": {
+        "image": 0
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": null,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-zero",
+      "payload": {
+        "images": 0
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": 0,
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-empty-ref-object",
+      "payload": {
+        "images": {
+          "ref": ""
+        }
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": {
+        "ref": ""
+      },
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-list-empty-ref",
+      "payload": {
+        "images": [
+          ""
+        ]
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": [
+        ""
+      ],
+      "normalized_images": [
+        {
+          "ref": "",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-list-only-ignored",
+      "payload": {
+        "images": [
+          null,
+          false,
+          0,
+          {},
+          []
+        ]
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": [
+        null,
+        false,
+        0,
+        {},
+        []
+      ],
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-unsupported-list-value",
+      "payload": {
+        "image": [
+          "owned://image"
+        ]
+      },
+      "image_truthy": true,
+      "images_truthy": false,
+      "endpoint_images": [
+        [
+          "owned://image"
+        ]
+      ],
+      "normalized_images": null,
+      "has_normalized_images": false,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-single-ref",
+      "payload": {
+        "image": "owned://image"
+      },
+      "image_truthy": true,
+      "images_truthy": false,
+      "endpoint_images": [
+        "owned://image"
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-single-ref",
+      "payload": {
+        "images": "owned://image"
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": [
+        "owned://image"
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-list-ref",
+      "payload": {
+        "images": [
+          "owned://image"
+        ]
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": [
+        "owned://image"
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-object-ref",
+      "payload": {
+        "image": {
+          "ref": "owned://image"
+        }
+      },
+      "image_truthy": true,
+      "images_truthy": false,
+      "endpoint_images": [
+        {
+          "ref": "owned://image"
+        }
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-object-url",
+      "payload": {
+        "images": {
+          "url": "owned://image"
+        }
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": {
+        "url": "owned://image"
+      },
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "empty-image-preserves-images",
+      "payload": {
+        "image": "",
+        "images": [
+          "owned://image"
+        ]
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": [
+        "owned://image"
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "truthy-image-appended",
+      "payload": {
+        "image": "owned://second",
+        "images": [
+          "owned://first"
+        ]
+      },
+      "image_truthy": true,
+      "images_truthy": true,
+      "endpoint_images": [
+        "owned://first",
+        "owned://second"
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://first",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        },
+        {
+          "ref": "owned://second",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "truthy-image-replaces-string",
+      "payload": {
+        "image": "owned://image",
+        "images": ""
+      },
+      "image_truthy": true,
+      "images_truthy": false,
+      "endpoint_images": [
+        "owned://image"
+      ],
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image-null-images-empty-string",
+      "payload": {
+        "image": null,
+        "images": ""
+      },
+      "image_truthy": false,
+      "images_truthy": false,
+      "endpoint_images": [
+        ""
+      ],
+      "normalized_images": [
+        {
+          "ref": "",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fallback-url-after-empty-ref",
+      "payload": {
+        "images": {
+          "ref": "",
+          "url": "owned://image"
+        }
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": {
+        "ref": "",
+        "url": "owned://image"
+      },
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-object-image-url",
+      "payload": {
+        "images": {
+          "image_url": "owned://image"
+        }
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": {
+        "image_url": "owned://image"
+      },
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "images-object-file-url",
+      "payload": {
+        "images": {
+          "file_url": "owned://image"
+        }
+      },
+      "image_truthy": false,
+      "images_truthy": true,
+      "endpoint_images": {
+        "file_url": "owned://image"
+      },
+      "normalized_images": [
+        {
+          "ref": "owned://image",
+          "name": null,
+          "mime_type": null,
+          "size": null
+        }
+      ],
+      "has_normalized_images": true,
+      "is_agent_message": false,
+      "events": [
+        {
+          "type": "command.excute",
+          "data": {
+            "cmd": "/owned_command",
+            "user": "owned-admin",
+            "channel": "Web",
+            "source": "owned-admin",
+            "processing_status": null
+          }
+        },
+        {
+          "type": "plugin.action",
+          "data": {
+            "action": "not_a_method",
+            "channel": "Web",
+            "source": "owned-admin",
+            "user": "owned-admin"
+          }
+        }
+      ]
+    }
+  ]
+}

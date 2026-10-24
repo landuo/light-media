@@ -6,17 +6,17 @@ import * as Vue from 'vue';
 import { pluginFederationEntry } from '../src/features/plugin-federation.ts';
 import { createPluginRemoteAPI, remotePluginAPIPath } from '../src/features/plugin-remote-api.ts';
 
-test('original Vue entry uses only fixed same-origin assets and the selected installed instance', () => {
-  assert.equal(
-    pluginFederationEntry('SeedRescue', 'SeedRescue.music', 'Config'),
-    '/api/plugins/SeedRescue.music/frontend/assets/remoteEntry.js',
-  );
-  for (const args of [
-    ['Unknown', 'SeedRescue', 'Config'],
-    ['SeedRescue', '../other', 'Page'],
-    ['SeedRescue', 'SeedRescue', 'https://other.example/entry.js'],
-  ])
-    assert.throws(() => pluginFederationEntry(...args));
+test('standard Vue entry uses only metadata-bound immutable same-origin assets', () => {
+  const descriptor = {
+    instance_id: 'SeedRescue.music', plugin_id: 'SeedRescue', version: '1.0',
+    package_sha256: 'a'.repeat(64), contract: 'light-media.vue-federation/v1',
+    exposes: ['Config'], shared: ['vue'], api_contract: 'light-media.plugin-api/v1',
+    entry_path: '/plugins/SeedRescue.music/frontend/' + 'a'.repeat(64) + '/assets/remoteEntry.js',
+  };
+  assert.equal(pluginFederationEntry(descriptor, 'Config'), '/api' + descriptor.entry_path);
+  assert.throws(() => pluginFederationEntry(descriptor, 'Page'));
+  assert.throws(() => pluginFederationEntry({ ...descriptor, instance_id: '../other' }, 'Config'));
+  assert.throws(() => pluginFederationEntry({ ...descriptor, entry_path: 'https://other.example/remoteEntry.js' }, 'Config'));
 });
 
 test('original API URLs bind to the displayed instance without allowing other plugin APIs', () => {
@@ -42,10 +42,8 @@ test('original API URLs bind to the displayed instance without allowing other pl
     'plugin/SeedRescue/status\n',
   ])
     assert.throws(() => remotePluginAPIPath('SeedRescue', 'clone', path, 'GET'));
-  assert.throws(() => remotePluginAPIPath('SeedRescue', 'clone', 'plugin/SeedRescue/scan', 'GET'));
-  assert.throws(() =>
-    remotePluginAPIPath('SeedRescue', 'clone', 'plugin/SeedRescue/scan', 'DELETE'),
-  );
+  // The backend, not the frontend plugin-name list, authorizes route/method pairs.
+  assert.equal(remotePluginAPIPath('SeedRescue', 'clone', 'plugin/SeedRescue/scan', 'DELETE'), '/plugins/clone/api/scan');
 });
 
 test('source risk confirmation details and instance binding survive the actual fetch adapter', async () => {

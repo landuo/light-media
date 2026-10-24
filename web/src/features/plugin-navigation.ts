@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { hasOriginalPluginUI } from './plugin-remote-contract.ts';
+import { validPluginInstance } from './plugin-remote-contract.ts';
 
 export type PluginNavigationItem = {
   plugin_id: string;
@@ -33,7 +33,7 @@ export function createPluginNavigation(fetchItems: () => Promise<PluginNavigatio
         try {
           const items = await fetchItems();
           if (current !== epoch) return;
-          state.items = Array.isArray(items) ? items : [];
+          state.items = Array.isArray(items) ? items.filter((item) => validPluginInstance(item?.instance_id) && validPluginNavKey(item?.nav_key)) : [];
           state.loaded = true;
           return;
         } catch {
@@ -52,12 +52,21 @@ export function createPluginNavigation(fetchItems: () => Promise<PluginNavigatio
   return { state, ensure, reset };
 }
 
+export function validPluginNavKey(value: unknown): value is string {
+  return typeof value === 'string' && !!value && value.length <= 256 &&
+    value !== '.' && value !== '..' && !/[\\/?#\s\u0000-\u001f\u007f]/.test(value);
+}
 export function pluginNavigationTarget(item: PluginNavigationItem) {
-  if (
-    !hasOriginalPluginUI(item.plugin_id) ||
-    item.nav_key !== 'main' ||
-    !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,95}$/.test(item.instance_id)
-  )
+  if (!validPluginInstance(item.instance_id) || !validPluginNavKey(item.nav_key))
     throw new Error('插件全页入口无效');
-  return 'plugin-app/' + encodeURIComponent(item.instance_id) + '/main';
+  return 'plugin-app/' + encodeURIComponent(item.instance_id) + '/' + encodeURIComponent(item.nav_key);
+}
+export function parsePluginNavigationRoute(route: string) {
+  const parts = route.split('/');
+  if (parts.length !== 3 || parts[0] !== 'plugin-app') throw new Error('插件全页入口无效');
+  let instance: string, navKey: string;
+  try { instance = decodeURIComponent(parts[1]!); navKey = decodeURIComponent(parts[2]!); }
+  catch { throw new Error('插件全页入口无效'); }
+  if (!validPluginInstance(instance) || !validPluginNavKey(navKey)) throw new Error('插件全页入口无效');
+  return { instance, navKey };
 }

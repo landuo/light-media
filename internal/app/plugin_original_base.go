@@ -36,6 +36,7 @@ type originalBaseConfigValue struct {
 
 type originalBaseCallScope struct {
 	installation PluginInstallation
+	logCall      originalPluginLogCall
 	// validate must reject expired/replaced calls, not merely installed objects.
 	validate func(context.Context) error
 	// The host-owned recognized contract defines permitted namespace access;

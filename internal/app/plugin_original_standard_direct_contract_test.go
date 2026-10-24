@@ -169,12 +169,13 @@ func TestOriginalStandardDirectModuleEndToEnd(t *testing.T) {
 	}
 	a.dispatchOriginalPluginJobs(ctx, time.Now())
 	a.wg.Wait()
-	command, instance, found := a.lookupOriginalPluginCommand("/owned_standard")
+	_, instance, found := a.lookupOriginalPluginCommand("/owned_standard")
 	if !found || instance != ownedStandardFixtureID {
 		t.Fatal("actual command not registered")
 	}
-	if err := a.enqueueOriginalExternalCommand(ctx, object, command, "owned-user"); err != nil {
-		t.Fatal(err)
+	commandResponse := callTest(t, a.Handler(), "POST", "/api/v1/message/web", `{"text":"/owned_standard owned argument"}`, cookie, "")
+	if commandResponse.Code != http.StatusOK {
+		t.Fatal("authenticated original Web command", commandResponse.Code, commandResponse.Body.String())
 	}
 	a.broadcastOriginalPluginEvent(ctx, "owned.standard", json.RawMessage(`{"marker":"event"}`))
 	a.wg.Wait()
@@ -188,8 +189,12 @@ func TestOriginalStandardDirectModuleEndToEnd(t *testing.T) {
 		t.Fatal("actual direct http method", api.Code, api.Body.String())
 	}
 	executed := ownedStandardSnapshotRead(t, object)
-	if executed.InitCount != 2 || executed.Nonce != first.Nonce || executed.Calls["tick"] < 2 || executed.Calls["command"] != 1 || executed.Calls["event"] != 1 || executed.Calls["http"] != 1 {
+	if executed.InitCount != 2 || executed.Nonce != first.Nonce || executed.Calls["tick"] < 2 || executed.Calls["command"] != 1 || executed.Calls["event"] != 2 || executed.Calls["http"] != 1 {
 		t.Fatal("handlers did not execute on retained instance", executed.Calls)
+	}
+	var commandData map[string]any
+	if err := json.Unmarshal(executed.LastPayload["command"], &commandData); err != nil || commandData["channel"] != "Web" || commandData["source"] != "admin" || commandData["user"] != "admin" || commandData["arg_str"] != "owned argument" || commandData["tag"] != "command" {
+		t.Fatal("actual command event context", commandData, err)
 	}
 	if string(executed.LastPayload["tick"]) != `{"tag":"service"}` {
 		t.Fatal("service input was wrapped", string(executed.LastPayload["tick"]))

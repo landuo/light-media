@@ -41,14 +41,7 @@ function remoteLayout(layout?: { maxWidth?: unknown }) {
 }
 const remote = shallowRef<Component>();
 const controller = new AbortController();
-const remoteAPI = createPluginRemoteAPI(
-  props.plugin.plugin_id,
-  props.plugin.instance_id,
-  controller.signal,
-  props.plugin.plugin_id === "BrushFlowLanduo"
-    ? () => emit("changed")
-    : undefined,
-);
+const remoteAPI = shallowRef<ReturnType<typeof createPluginRemoteAPI>>();
 let active = true;
 const nodes = ref<PluginFormNode[]>([]),
   model = ref<Record<string, any>>({}),
@@ -88,19 +81,24 @@ async function load() {
   try {
     const form = await api(base + "/form");
     if (!active) return;
-    renderMode.value = form.render_mode || "vuetify";
-    if (!["vuetify", "vue"].includes(renderMode.value))
+    if (!form || !["vuetify", "vue"].includes(form.render_mode) ||
+        !form.model || typeof form.model !== "object" || Array.isArray(form.model) ||
+        (form.render_mode === "vuetify" && !Array.isArray(form.conf)))
       throw new Error("插件界面格式无效");
+    renderMode.value = form.render_mode;
     nodes.value = form.conf || [];
     model.value = form.model;
     revision.value = form.revision;
     if (renderMode.value === "vue") {
-      const component = await loadPluginRemote(
-        props.plugin.plugin_id,
+      const { component, descriptor } = await loadPluginRemote(
         props.plugin.instance_id,
         "Config",
+        { signal: controller.signal, version: props.plugin.version },
       );
-      if (active) remote.value = markRaw(component);
+      if (!active) return;
+      remoteAPI.value = createPluginRemoteAPI(descriptor.plugin_id, descriptor.instance_id,
+        controller.signal, () => emit("changed"));
+      remote.value = markRaw(component);
     }
   } catch (e) {
     if (active) error.value = errorText(e);
@@ -236,6 +234,7 @@ onUnmounted(() => {
       </VCardActions>
     </VCard>
     <VCard v-else class="plugin-config-card">
+      <PluginDialogCloseBtn v-if="!remote || error" :disabled="saving" aria-label="关闭配置" @click="emit('close')" />
       <VCardText class="pa-0">
         <VAlert
           v-if="supportNotice"
@@ -262,7 +261,7 @@ onUnmounted(() => {
           aria-label="正在保存配置"
         />
         <component
-          v-if="remote && !loading"
+          v-if="remote && !loading && !error"
           :is="remote"
           :initial-config="model"
           :api="remoteAPI"

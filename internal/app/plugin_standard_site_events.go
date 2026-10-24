@@ -1,0 +1,58 @@
+package app
+
+import (
+	"context"
+	"net/url"
+	"strings"
+)
+
+// The original endpoint has distinct create and edit payloads. Priority-only
+// batches and unrelated settings saves do not produce SiteUpdated.
+func (a *App) emitStandardSiteUpdated(ctx context.Context, site SiteConfig, created bool) {
+	domain := standardSiteEventDomain(site.BaseURL)
+	if created {
+		a.emitStandardBusinessEvent(ctx, "site.updated", map[string]any{"domain": domain})
+		return
+	}
+	identity, err := a.Store.nativeSiteByAppID(context.WithoutCancel(ctx), site.ID)
+	if err != nil || identity.State != "active" {
+		a.log("ERROR", "plugins", "business_event_identity", "插件站点更新事件身份无法核对", "", "")
+		return
+	}
+	a.emitStandardBusinessEvent(ctx, "site.updated", map[string]any{
+		"site_id":  identity.publicSourceID(),
+		"domain":   domain,
+		"name":     site.Name,
+		"site_url": strings.TrimRight(site.BaseURL, "/") + "/",
+	})
+}
+
+// Original StringUtils.get_url_domain deliberately differs from publicsuffix
+// and from an optional configured Domain. Keep its special-domain and >3-level
+// rules on the actual committed URL; do not silently modernize its semantics.
+func standardSiteEventDomain(value string) string {
+	if value == "" {
+		return ""
+	}
+	for _, special := range []string{"u2.dmhy.org", "pt.ecust.pp.ua", "pt.gtkpw.xyz", "pt.gtk.pw"} {
+		if strings.Contains(value, special) {
+			return special
+		}
+	}
+	host := value
+	if strings.HasPrefix(value, "http") {
+		parsed, err := url.Parse(value)
+		if err != nil {
+			return ""
+		}
+		host = parsed.Host
+	}
+	if host == "" {
+		return ""
+	}
+	parts := strings.Split(host, ".")
+	if len(parts) > 3 || len(parts) < 2 {
+		return host
+	}
+	return strings.Join(parts[len(parts)-2:], ".")
+}

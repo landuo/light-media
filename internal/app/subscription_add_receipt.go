@@ -214,6 +214,7 @@ func (a *App) runUISubscriptionAdd(ctx context.Context, j Job, key string) error
 		if e = tx.Commit(); e != nil {
 			return e
 		}
+		a.emitStandardSubscriptionAdded(ctx, snapshot.SubscriptionID, snapshot.Username, r.Input.Origin.MediaInfo)
 		r = current
 	}
 	if r.Stage == "added" || r.Stage == "statistics_pending" {

@@ -26,8 +26,8 @@ type originalDirectJob struct {
 }
 
 func (p *originalPluginInstance) callOriginalMethod(ctx context.Context, method string, input json.RawMessage) (plugins.RunResult, error) {
-	p.methodMu.Lock()
-	defer p.methodMu.Unlock()
+	unlock := p.lockOriginalMethod()
+	defer unlock()
 	if !originalObjectStillLoaded(p) {
 		return plugins.RunResult{}, bad("PLUGIN_NOT_LOADED", "插件对象已停止")
 	}
@@ -70,8 +70,10 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 		if grace > 0 && at.Sub(due) > grace {
 			continue
 		}
+		if !a.admitOriginalBackground() {
+			continue
+		}
 		job.running = true
-		a.wg.Add(1)
 		go func(job *originalDirectJob) {
 			defer a.wg.Done()
 			_, err := job.object.callOriginalMethod(ctx, job.definition.Handler, job.definition.Input)
@@ -104,7 +106,9 @@ func (a *App) broadcastOriginalPluginEvent(ctx context.Context, event string, da
 		if !declared || !enabled {
 			return true
 		}
-		a.wg.Add(1)
+		if !a.admitOriginalBackground() {
+			return false
+		}
 		go func() {
 			defer a.wg.Done()
 			_, err := object.callOriginalMethod(ctx, "event", mustOriginalEventJSON(event, data))
@@ -170,9 +174,12 @@ func (a *App) runOriginalPublicService(ctx context.Context, instance, id string)
 		state.mu.Unlock()
 		return bad("PLUGIN_BUSY", "定时服务正在运行")
 	}
+	if !a.admitOriginalBackground() {
+		state.mu.Unlock()
+		return bad("PLUGIN_NOT_LOADED", "插件管理器已停止")
+	}
 	job.running = true
 	state.mu.Unlock()
-	a.wg.Add(1)
 	go func() {
 		defer a.wg.Done()
 		_, err := job.object.callOriginalMethod(context.WithoutCancel(ctx), job.definition.Handler, job.definition.Input)

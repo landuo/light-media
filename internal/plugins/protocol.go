@@ -59,6 +59,7 @@ var methodPattern = regexp.MustCompile(`^[a-z][a-z0-9_.]{0,95}$`)
 // Manifest describes an executable package, not whether it has been tested or
 // migrated. Credentials belong in the host's encrypted configuration store.
 type Manifest struct {
+	Frontend             *Frontend        `json:"frontend,omitempty"`
 	RuntimeSupport       *RuntimeSupport  `json:"runtime_support,omitempty"`
 	SchemaVersion        int              `json:"schema_version"`
 	PluginID             string           `json:"plugin_id"`
@@ -84,6 +85,9 @@ type Manifest struct {
 }
 
 func (m Manifest) Validate() error {
+	if err := m.Frontend.Validate(); err != nil {
+		return err
+	}
 	if err := m.RuntimeSupport.Validate(); err != nil {
 		return err
 	}
@@ -177,6 +181,7 @@ type Frame struct {
 }
 
 type Handshake struct {
+	ConcurrentSession int                     `json:"concurrent_session,omitempty"`
 	Protocol          int                     `json:"protocol"`
 	PluginID          string                  `json:"plugin_id"`
 	Version           string                  `json:"version"`
@@ -205,6 +210,10 @@ type Command struct {
 }
 
 type Runner struct {
+	// ConcurrentCalls attempts explicit same-object multiplexing. An old
+	// worker retains the serial contract; RequireConcurrent rejects fallback.
+	ConcurrentCalls   bool
+	RequireConcurrent bool
 	// ObservePhase is nil by default; it does not alter execution policy.
 	ObservePhase     func(RunObservation)
 	MaxInputBytes    int
@@ -559,10 +568,11 @@ type SessionBinding struct {
 	Generation int64
 }
 
-// Client owns one worker object. Calls are sequential, not multiplexed. A
-// canceled/failed transport is terminal: recovering requires an explicit new
-// Start and reinitialization by the framework, never a silent restart.
+// Client owns one worker object. Multiplexing is used only after explicit
+// negotiation. Legacy sessions retain terminal cancellation semantics; a
+// concurrent session revokes only the canceled invocation. No silent restart.
 type Client struct {
+	concurrent    *concurrentClient
 	runner        Runner
 	manifest      Manifest
 	binding       SessionBinding
@@ -594,6 +604,11 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 	}
 	life, cancel := context.WithCancel(lifeCtx)
 	c := &Client{runner: runner, manifest: manifest, binding: binding, life: life, cancel: cancel, gate: make(chan struct{}, 1), done: make(chan struct{})}
+	defer func() {
+		if err == nil && c.concurrent != nil {
+			go c.concurrent.readLoop()
+		}
+	}()
 	c.manifest.Methods = slices.Clone(manifest.Methods)
 	c.manifest.Capabilities = slices.Clone(manifest.Capabilities)
 	cmd := exec.CommandContext(life, command.Path, command.Args...)
@@ -689,6 +704,23 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 		return nil, failure("session_mismatch")
 	}
 	s.scopedCallbacks = true
+	if runner.ConcurrentCalls || runner.RequireConcurrent {
+		if agreed.ConcurrentSession == 1 {
+			proposal := concurrentProposal{Version: 1, MaxCalls: maxConcurrentCalls, MaxHostCalls: runner.MaxHostCalls}
+			rawProposal, _ := json.Marshal(proposal)
+			raw, err = s.exchange("transport.concurrent", rawProposal)
+			if err != nil {
+				return nil, err
+			}
+			var accepted concurrentProposal
+			if strictJSON(raw, &accepted) != nil || accepted != proposal {
+				return nil, failure("concurrent_session_mismatch")
+			}
+			c.concurrent = newConcurrentClient(c, proposal)
+		} else if runner.RequireConcurrent {
+			return nil, failure("concurrent_session_unsupported")
+		}
+	}
 	if startup.Err() != nil || life.Err() != nil {
 		return nil, failure("execution_canceled")
 	}
@@ -696,11 +728,15 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 }
 
 // CallOptions changes only the current invocation's time budget, not the
-// negotiated wire/resource limits or worker lifetime. Timeout zero inherits
-// Start's timeout. ExcludeHostTime is always the explicit per-call policy.
+// negotiated wire/resource limits or worker lifetime. Unless CallerDeadlineOnly
+// is explicit, Timeout zero inherits Start's timeout. ExcludeHostTime is the
+// explicit per-call policy, not a change to other invocations.
 type CallOptions struct {
-	Timeout         time.Duration
-	ExcludeHostTime bool
+	// CallerDeadlineOnly is explicit source-owned business timing. It never
+	// changes startup or Stop resource deadlines. Timeout must be zero.
+	CallerDeadlineOnly bool
+	Timeout            time.Duration
+	ExcludeHostTime    bool
 }
 
 func (c *Client) defaultCallOptions() CallOptions {
@@ -717,10 +753,13 @@ func (c *Client) Call(ctx context.Context, method string, payload json.RawMessag
 // CallWithOptions uses fresh per-action timing policy without replacing the
 // live object. Invalid options are rejected before sending any invocation.
 func (c *Client) CallWithOptions(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions) (out RunResult, err error) {
-	if options.Timeout == 0 {
+	if options.CallerDeadlineOnly && options.Timeout != 0 {
+		return out, failure("invalid_limits")
+	}
+	if options.Timeout == 0 && !options.CallerDeadlineOnly {
 		options.Timeout = c.runner.Timeout
 	}
-	if options.Timeout < time.Millisecond || options.Timeout > 30*time.Minute {
+	if !options.CallerDeadlineOnly && (options.Timeout < time.Millisecond || options.Timeout > 30*time.Minute) {
 		return out, failure("invalid_limits")
 	}
 
@@ -729,6 +768,9 @@ func (c *Client) CallWithOptions(ctx context.Context, method string, payload jso
 	}
 	if ctx == nil || !methodPattern.MatchString(method) || method == "handshake" || method == "stop" || strings.HasPrefix(method, "transport.") || !slices.Contains(c.manifest.Methods, method) || len(payload) > MaxLogicalMessageBytes || len(payload) > 0 && !json.Valid(payload) {
 		return out, failure("invalid_invocation")
+	}
+	if c.concurrent != nil {
+		return c.concurrent.call(ctx, method, payload, host, options, false)
 	}
 	select {
 	case c.gate <- struct{}{}:
@@ -759,7 +801,7 @@ func (c *Client) exchange(ctx context.Context, method string, payload json.RawMe
 	parent, cancelParent := context.WithCancel(ctx)
 	stopLife := context.AfterFunc(c.life, cancelParent)
 	defer func() { stopLife(); cancelParent() }()
-	call, finish, budget := runnerContext(parent, options.Timeout, options.ExcludeHostTime)
+	call, finish, budget := invocationContext(parent, options)
 	s := c.session
 	s.resetEpoch()
 	s.ctx, s.host, s.hostBudget = call, host, budget
@@ -817,6 +859,9 @@ func (c *Client) StopWithHost(ctx context.Context, host HostHandler) error {
 		return failure("invalid_invocation")
 	}
 	c.stopRequested.Store(true)
+	if c.concurrent != nil {
+		return c.concurrent.stop(ctx, host)
+	}
 	select {
 	case c.gate <- struct{}{}:
 	default:

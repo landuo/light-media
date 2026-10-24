@@ -7,8 +7,8 @@ import (
 // getState calls the already-applied object's original state method. Adapters
 // not yet ported fail explicitly rather than guessing enabled from the DB.
 func (p *originalPluginInstance) getState(ctx context.Context) (bool, error) {
-	p.methodMu.Lock()
-	defer p.methodMu.Unlock()
+	unlock := p.lockOriginalMethod()
+	defer unlock()
 	var state any
 	err := p.readSession(ctx, "get_state", &state)
 	return sourceSubscriptionTruth(state), err

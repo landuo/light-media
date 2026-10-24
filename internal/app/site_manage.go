@@ -215,6 +215,7 @@ func (a *App) saveManagedSite(ctx context.Context, in SiteConfig) (any, error) {
 	if e := a.saveSettings(ctx, c); e != nil {
 		return nil, e
 	}
+	a.emitStandardSiteUpdated(ctx, in, found < 0)
 	return a.managedSites(ctx)
 }
 
@@ -399,11 +400,16 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 	if err = a.recordSiteAccountObservationTx(ctx, tx, current, snapshot); err != nil {
 		return siteSnapshot{}, err
 	}
+	newStandardRefresh := false
 	// This is a collected-data fact. MoviePilot emits it even when the DTO
 	// carries err_msg; connection health is reported separately above.
 	if snapshot.SourceData != nil || (hooks == nil && e == nil) {
 		if eventKey == "" {
 			eventKey = id("site_refresh_")
+		}
+		newStandardRefresh, err = standardBusinessFactIsNewTx(ctx, tx, domainEventID("site.refreshed", eventKey))
+		if err != nil {
+			return siteSnapshot{}, err
 		}
 		if err = recordDomainEventTx(ctx, tx, DomainEvent{EventID: domainEventID("site.refreshed", eventKey), Type: "site.refreshed", SiteID: key}); err != nil {
 			return siteSnapshot{}, err
@@ -429,6 +435,9 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 	}
 	if finishSystemError != nil {
 		finishSystemError(true)
+	}
+	if newStandardRefresh {
+		a.emitStandardSiteRefreshed(ctx, key)
 	}
 	a.log("INFO", "site", "userdata_refreshed", "站点用户数据刷新完成："+snapshot.Connection.Status, "", "")
 	return snapshot, nil

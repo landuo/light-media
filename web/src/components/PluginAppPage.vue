@@ -7,11 +7,12 @@ import { api, errorText } from '../api';
 import type { PluginCard } from '../features/plugin-forms';
 import { loadPluginRemote } from '../features/plugin-federation';
 import { createPluginRemoteAPI } from '../features/plugin-remote-api';
-import { hasOriginalPluginUI } from '../features/plugin-remote-contract';
+import { parsePluginNavigationRoute, type PluginNavigationItem } from '../features/plugin-navigation';
 
 const props = defineProps<{ route: string }>();
 const emit = defineEmits<{ changed: [] }>();
 const pluginID = ref('');
+const navKey = ref('');
 const remote = shallowRef<Component>();
 const remoteAPI = shallowRef<ReturnType<typeof createPluginRemoteAPI>>();
 const error = ref('');
@@ -20,22 +21,22 @@ let active = true;
 
 onMounted(async () => {
   try {
-    const parts = props.route.split('/');
-    if (parts.length !== 3 || parts[0] !== 'plugin-app' || parts[2] !== 'main')
-      throw new Error('插件全页入口无效');
-    const instance = decodeURIComponent(parts[1]!);
-    const cards = await api<PluginCard[]>('/plugins');
-    const plugin = cards.find((card) => card.instance_id === instance && card.installed);
-    if (!plugin || !hasOriginalPluginUI(plugin.plugin_id))
-      throw new Error('插件未安装或不提供全页入口');
-    const component = await loadPluginRemote(plugin.plugin_id, instance, 'AppPage');
+    const { instance, navKey: key } = parsePluginNavigationRoute(props.route);
+    const [cards, navigation] = await Promise.all([
+      api<PluginCard[]>('/plugins'), api<PluginNavigationItem[]>('/plugins/navigation'),
+    ]);
     if (!active) return;
-    pluginID.value = plugin.plugin_id;
+    const plugin = cards.find((card) => card.instance_id === instance && card.installed);
+    if (!plugin || !navigation.some((item) => item.instance_id === instance && item.nav_key === key))
+      throw new Error('插件未安装或未声明此全页入口');
+    const { component, descriptor } = await loadPluginRemote(instance, 'AppPage', {
+      signal: controller.signal, version: plugin.version,
+    });
+    if (!active) return;
+    pluginID.value = descriptor.plugin_id;
+    navKey.value = key;
     remoteAPI.value = createPluginRemoteAPI(
-      plugin.plugin_id,
-      instance,
-      controller.signal,
-      plugin.plugin_id === 'BrushFlowLanduo' ? () => emit('changed') : undefined,
+      descriptor.plugin_id, descriptor.instance_id, controller.signal, () => emit('changed'),
     );
     remote.value = markRaw(component);
   } catch (e) {
@@ -52,7 +53,7 @@ onUnmounted(() => {
     <section class="plugin-surface plugin-dialog-surface plugin-app-page">
       <VAlert v-if="error" type="error" class="ma-4" title="组件加载错误">{{ error }}</VAlert>
       <VSkeletonLoader v-else-if="!remote" class="ma-4" type="article, article, article" />
-      <component v-else :is="remote" :api="remoteAPI" nav-key="main" :plugin-id="pluginID" />
+      <component v-else :is="remote" :api="remoteAPI" :nav-key="navKey" :plugin-id="pluginID" />
     </section>
   </VThemeProvider>
 </template>

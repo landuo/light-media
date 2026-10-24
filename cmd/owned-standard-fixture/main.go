@@ -37,8 +37,8 @@ func manifest() plugins.Manifest {
 	m := plugins.Manifest{
 		SchemaVersion: 1, PluginID: "OwnedStandardFixture", Name: "Owned standard fixture", Version: fixtureVersion,
 		Runtime: "go-executable", Entry: "owned-standard-fixture", HostAPIMin: 1, HostAPIMax: 1,
-		Methods:      []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "close", "stop_service", "stop", "snapshot", "tick", "command", "event", "http"},
-		Capabilities: plugins.BaseMethods(), Events: []string{"owned.standard"}, HasPage: true,
+		Methods:      []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "close", "stop_service", "stop", "snapshot", "tick", "event", "http"},
+		Capabilities: plugins.BaseMethods(), Events: []string{"owned.standard", "command"}, HasPage: true,
 		APIs: []plugins.HTTPAPI{{Key: "echo", Path: "/echo", Methods: []string{"GET"}, Auth: "apikey"}},
 	}
 	if fixtureDashboardMethods == "multi" || fixtureDashboardMethods == "none" {
@@ -194,7 +194,26 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		return json.RawMessage(`[{"nav_key":"main","title":"Owned standard","section":"system","order":1}]`), nil
 	case "snapshot":
 		return o.snapshot(ctx, base, config)
-	case "tick", "command", "event":
+	case "tick", "event":
+		if method == "event" {
+			var event struct {
+				Type string          `json:"type"`
+				Data json.RawMessage `json:"data"`
+			}
+			if err := json.Unmarshal(raw, &event); err != nil {
+				return nil, err
+			}
+			if event.Type == "command" {
+				var data struct {
+					Action string `json:"action"`
+				}
+				if err := json.Unmarshal(event.Data, &data); err != nil || data.Action != "command" {
+					return nil, errors.New("invalid owned command event")
+				}
+				o.calls["command"]++
+				o.lastPayload["command"] = rawValue(event.Data)
+			}
+		}
 		if err := saveShared(ctx, base, config); err != nil {
 			return nil, err
 		}

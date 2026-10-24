@@ -38,6 +38,7 @@ type App struct {
 	pluginOriginalCommandsMu       sync.Mutex
 	pluginOriginalCommands         map[string]map[string]any
 	pluginOriginalServicesMu       sync.Mutex
+	pluginOriginalBackground       originalBackgroundAdmission
 	pluginOriginalDirectJobs       originalDirectJobs
 	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
 	pluginOriginalClasses          sync.Map // Original _plugins: imported compiled class, independent of running and installed.
@@ -208,6 +209,7 @@ func (a *App) Start(parent context.Context) {
 	a.log("INFO", "runtime", "recovery_checked", fmt.Sprintf("数据库版本1；启动恢复%d个未完成任务；自动化状态%s", a.Store.RecoveredJobs, initialControl), "", "")
 }
 func (a *App) Close() error {
+	a.closeOriginalBackgroundAdmission()
 	a.closeOriginalSessions()
 	a.systemMessages.close()
 	if a.cancel != nil {
@@ -321,6 +323,7 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()
+	a.emitStandardSiteDeletions(ctx, previous, c)
 	a.log("INFO", "settings", "updated", "连接和路径设置已更新", "", "")
 	return nil
 }

@@ -1,0 +1,93 @@
+{
+  "schema": "light-media.plugin-framework-validation-summary/v1",
+  "status": "Bounded framework stage verified; not complete framework or business-plugin acceptance.",
+  "repository": "landuo/light-media",
+  "branch": "dev/plugins-continuation",
+  "base_commit": "c066ec2221bf0d3d929139f4655d201ad095e9f5",
+  "source": {
+    "effective_paths": 5525,
+    "effective_manifest_sha256": "e837c52e55ac7d4c3b40f123a3ad5876e3e7ea77cac485e39ddfcccd2a8f2747",
+    "readiness_test": "internal/plugins/large_transport_test.go",
+    "production_go_changes_from_readiness_correction": 0,
+    "owned_worker_source_changes_from_readiness_correction": 0,
+    "later_safety_changes": "Four reference/document/oracle-hash files only; all Go and frontend bytes unchanged. The publication validation document is summarized without changing code."
+  },
+  "checks": {
+    "app": {
+      "modes": [
+        "normal",
+        "race"
+      ],
+      "passed_roots_each": 33,
+      "passed_nodes_each": 74,
+      "exit_each": 0,
+      "failures_each": 0,
+      "skips_each": 0
+    },
+    "sdk_artifacts": {
+      "modes": [
+        "normal",
+        "race"
+      ],
+      "passed_roots_each": 118,
+      "passed_nodes_each": 532,
+      "exit_each": 0,
+      "failures_each": 0,
+      "skips_each": 0
+    },
+    "focused_readiness": {
+      "modes": [
+        "normal",
+        "race"
+      ],
+      "passed_roots_each": 2,
+      "passed_nodes_each": 4,
+      "exit_each": 0,
+      "failures_each": 0,
+      "skips_each": 0
+    },
+    "vet_exit": 0,
+    "race_scope": "Both the parent tests and actual owned child workers were race-instrumented; this was not mock-only coverage.",
+    "counts": "Roots include terminal Test/Fuzz seed cases without subtest separators; nodes include subtests. This was not an extended fuzz campaign."
+  },
+  "production_web": {
+    "typecheck_exit": 0,
+    "build_exit": 0,
+    "dist_files": 100,
+    "dist_tree_sha256": "7ccf499b5a308d1b279388dee091d82a2365a08e12a857803a6b226892e0afc4",
+    "publication_dist_files": 124,
+    "preservation": "23 old hashed assets and the original Brush PNG remain; no deletion or equality with the 100-file build directory is claimed."
+  },
+  "browser": {
+    "assertions_passed": 17,
+    "assertions_total": 17,
+    "report_sha256": "9ed3be1be3b0a407235836cee362e68ad71fab181c00b50a48a86c0a6e894d64",
+    "scope": "Owned bridge using production Vue components: Config/Page/Dashboard/AppPage, dynamic imports/CSS, close/cancellation, clone/version isolation, invalid-root recovery and unauthenticated API rejection.",
+    "production_login_acceptance": false,
+    "remote_javascript_sandbox_claim": false
+  },
+  "retained_failure": {
+    "prior_sdk_race_exit": 1,
+    "failed_test": "TestBlockedWriteAndACKCancellationReapActualChild/block_write",
+    "observed": "The test could not read its expected child PID marker. The exact historical scheduling cause is unproven; a later pass does not establish it.",
+    "correction": "Test-only: wait for actual child partial-byte/full-chunk readiness, observe blocked I/O for 200 ms, cancel and require reaping within 3 s of readiness. A separate test retains the 200 ms whole-Run startup deadline.",
+    "production_transport_fix_claim": false
+  },
+  "safe_reference_oracle": {
+    "python_exit": 0,
+    "cases": 11,
+    "case_objects_unchanged": true,
+    "case_output_sha256": "c63fc96d534dbb52c9a6afb217ed34e8a8eb26e5405b33d60e40ecce5cd2fe86",
+    "script_unchanged": true,
+    "excerpt": "The configuration reference retains only API_V1_STR=/api/v1 with upstream provenance. Other configuration values are omitted; complete original bytes are not claimed.",
+    "execution": "The configuration excerpt is hashed, not imported or executed. Only its source hash changed in the oracle report.",
+    "go_rerun_after_reference_changes": false,
+    "coverage_limit": "Earlier Go/browser results cover unchanged code, not a new run against the revised reference bytes. The actual Python rerun proves unchanged 11-case output only."
+  },
+  "not_claimed": [
+    "Whole-repository coverage or all lifecycle interleavings.",
+    "Paused business-plugin restoration.",
+    "Submit/service-refresh/site/notification/downloader-write capabilities outside this commit."
+  ],
+  "evidence_policy": "Complete raw evidence, prior failures and artifact records remain retained separately; this project summary intentionally omits operational metadata and full artifact inventories."
+}

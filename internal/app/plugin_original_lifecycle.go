@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"light-media/internal/plugins"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -14,18 +15,20 @@ import (
 // session and reads manager configuration before each direct initializer.
 // It is ephemeral and never inferred from installed/desired_enabled flags.
 type originalPluginInstance struct {
-	app            *App
-	installation   PluginInstallation
-	manifest       plugins.Manifest
-	methodMu       sync.Mutex
-	configMu       sync.RWMutex
-	appliedConfig  json.RawMessage
-	eventsEnabled  bool
-	external       bool
-	hostContract   string
-	sessionMu      sync.Mutex
-	session        *plugins.Client
-	sessionStarted bool
+	app                   *App
+	installation          PluginInstallation
+	manifest              plugins.Manifest
+	methodMu              sync.Mutex
+	stopping              atomic.Bool
+	configMu              sync.RWMutex
+	appliedConfig         json.RawMessage
+	eventsEnabled         bool
+	external              bool
+	hostContract          string
+	frontendPackageSHA256 string // real installed content identity captured for this loaded object
+	sessionMu             sync.Mutex
+	session               *plugins.Client
+	sessionStarted        bool
 }
 
 type originalInitializingObjectKey struct{}
@@ -37,8 +40,8 @@ type originalInitializationCall struct{ object *originalPluginInstance }
 // The manager calls the loaded implementation directly. Initialization is not
 // a queued job and has no config-revision, receipt or recovery prerequisite.
 func (p *originalPluginInstance) init(ctx context.Context) error {
-	p.methodMu.Lock()
-	defer p.methodMu.Unlock()
+	unlock := p.lockOriginalMethod()
+	defer unlock()
 	if !p.external {
 		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
 	}
@@ -74,7 +77,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			return nil
 		}
 		a.pluginOriginalClasses.Store(instance, originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""})
-		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
+		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract, frontendPackageSHA256: implementation.PackageSHA256}
 		err = object.init(ctx)
 		if err != nil && object.external {
 			_ = object.stopSession(context.WithoutCancel(ctx))
@@ -150,6 +153,7 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 		return nil
 	}
 	object := loaded.(*originalPluginInstance)
+	object.stopping.Store(true)
 	object.configMu.Lock()
 	object.eventsEnabled = false
 	object.configMu.Unlock()

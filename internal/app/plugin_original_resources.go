@@ -17,7 +17,7 @@ func originalStandardCapabilityAllowed(contract, method string) bool {
 			return true
 		}
 	}
-	return contract == pluginResourcesSDKContract && method == plugins.BrushInventoryReadCapability
+	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability)
 }
 
 func originalResourceDecode(raw json.RawMessage, output any) error {
@@ -48,6 +48,12 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 	in := scope.installation
 	if identity.PluginID != in.PluginID || identity.InstanceID != in.InstanceID || identity.Version != in.Version {
 		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
+	}
+	if method == plugins.LogWriteCapability {
+		return a.pluginOriginalLogHost(ctx, scope, raw)
+	}
+	if method == plugins.DownloaderTasksReadCapability {
+		return a.originalDownloaderTasks(ctx, scope, raw)
 	}
 	var input struct{}
 	if err := originalResourceDecode(raw, &input); err != nil {

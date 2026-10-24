@@ -18,16 +18,19 @@ let active = true;
 const issues = computed(() => pluginPageIssues(props.item.elements || []));
 onMounted(async () => {
   try {
+    if (props.item.render_mode && !['vue', 'vuetify'].includes(props.item.render_mode))
+      throw new Error('插件仪表盘格式不受支持');
     if (props.item.render_mode === 'vue') {
       const cards = await api<PluginCard[]>('/plugins');
       const card = cards.find((x) => x.instance_id === props.item.id);
-      if (!card) throw Error('插件未安装');
-      const component = await loadPluginRemote(card.plugin_id, card.instance_id, 'Dashboard');
+      if (!card?.installed) throw Error('插件未安装');
+      if (!active) return;
+      const { component, descriptor } = await loadPluginRemote(card.instance_id, 'Dashboard', { signal: controller.signal, version: card.version });
       if (active) {
         remote.value = markRaw(component);
         remoteAPI.value = createPluginRemoteAPI(
-          card.plugin_id,
-          card.instance_id,
+          descriptor.plugin_id,
+          descriptor.instance_id,
           controller.signal,
         );
       }

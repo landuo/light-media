@@ -39,14 +39,6 @@ test('BrushFlow original API contract binds every route to the displayed instanc
     );
   }
   for (const [method, path] of [
-    ['POST', 'status'],
-    ['GET', 'settings'],
-    ['GET', 'tasks'],
-    ['POST', 'tasks/a'],
-    ['DELETE', 'tasks/a?state=all'],
-    ['GET', 'tasks/a/run'],
-    ['POST', 'tasks/a/delete'],
-    ['POST', 'tasks/a/run?plugin=other'],
     ['GET', 'tasks/../status'],
     ['GET', 'tasks/%2e%2e'],
     ['PUT', 'tasks/%2Fother'],
@@ -134,11 +126,11 @@ test('BrushFlow ten unchanged assets load all four original exports with actual 
     assert.equal(bytes.length, asset.bytes, asset.path);
     assert.equal(createHash('sha256').update(bytes).digest('hex'), asset.sha256, asset.path);
   }
-  const scope = pluginRemoteSharedScope(pluginID);
+  const scope = pluginRemoteSharedScope(['vue', 'vuetify']);
   assert.equal((await scope.vue[Vue.version].get())(), Vue);
   assert.equal((await scope.vuetify[Vuetify.version].get())(), Vuetify);
-  assert.equal(pluginRemoteSharedScope('SeedRescue').vuetify, undefined);
-  assert.throws(() => pluginRemoteSharedScope('Unknown'));
+  assert.equal(pluginRemoteSharedScope(['vue']).vuetify, undefined);
+  assert.throws(() => pluginRemoteSharedScope(['unknown']));
   const previousDocument = globalThis.document;
   const previousScope = globalThis.__federation_shared__;
   const links = [];
@@ -176,9 +168,12 @@ test('BrushFlow full-page navigation retains the displayed clone and original ma
     pluginNavigationTarget({ plugin_id: pluginID, instance_id: 'brush.2', nav_key: 'main' }),
     'plugin-app/brush.2/main',
   );
-  for (const name of ['Config', 'Page', 'Dashboard', 'AppPage'])
-    assert.equal(
-      pluginFederationEntry(pluginID, 'brush.2', name),
-      '/api/plugins/brush.2/frontend/assets/remoteEntry.js',
-    );
+  const descriptor = {
+    instance_id: 'brush.2', plugin_id: pluginID, version: '1.0', package_sha256: 'b'.repeat(64),
+    contract: 'light-media.vue-federation/v1', exposes: ['Config', 'Page', 'Dashboard', 'AppPage'],
+    shared: ['vue', 'vuetify'], api_contract: 'light-media.plugin-api/v1',
+    entry_path: '/plugins/brush.2/frontend/' + 'b'.repeat(64) + '/assets/remoteEntry.js',
+  };
+  for (const name of descriptor.exposes)
+    assert.equal(pluginFederationEntry(descriptor, name), '/api' + descriptor.entry_path);
 });

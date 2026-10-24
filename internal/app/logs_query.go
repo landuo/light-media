@@ -156,7 +156,7 @@ func validLogFilters(q map[string]string) (map[string]string, error) {
 		}
 		out[k] = v
 	}
-	if out["level"] != "" && out["level"] != "DEBUG" && out["level"] != "INFO" && out["level"] != "WARN" && out["level"] != "ERROR" {
+	if out["level"] != "" && out["level"] != "DEBUG" && out["level"] != "INFO" && out["level"] != "WARN" && out["level"] != "ERROR" && out["level"] != "CRITICAL" {
 		return nil, bad("INVALID_LOG_FILTER", "日志级别无效")
 	}
 	for _, k := range []string{"from", "to"} {

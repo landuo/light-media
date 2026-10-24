@@ -63,10 +63,12 @@ const searchComponent = computed(() =>
 const nav = [
   {
     label: '',
+    section: 'start',
     items: [['search', 'search', '搜索结果']],
   },
   {
     label: '发现',
+    section: 'discovery',
     items: [
       ['discover', 'star', '推荐'],
       ['explore', 'compass', '探索'],
@@ -75,6 +77,7 @@ const nav = [
   },
   {
     label: '订阅',
+    section: 'subscribe',
     items: [
       ['subscriptions?type=movie', 'movie', '电影'],
       ['subscriptions?type=tv', 'tv', '电视剧'],
@@ -83,6 +86,7 @@ const nav = [
   },
   {
     label: '整理',
+    section: 'organize',
     items: [
       ['downloads', 'download', '下载管理'],
       ['history', 'history', '整理历史'],
@@ -91,6 +95,7 @@ const nav = [
   },
   {
     label: '系统',
+    section: 'system',
     items: [
       ['sites', 'globe', '站点管理'],
       ['plugins', 'plugin', '插件'],
@@ -308,9 +313,9 @@ onUnmounted(() => {
               ui.status.counts.active_jobs
             }}</span></a
           >
-          <template v-if="group.label === '整理'">
+          <template>
             <a
-              v-for="item in pluginNavItems.items.filter((item) => item.section === 'organize')"
+              v-for="item in pluginNavItems.items.filter((item) => item.section === group.section)"
               :key="item.instance_id + ':' + item.nav_key"
               :href="'#' + pluginNavigationTarget(item)"
               :class="{ active: route === pluginNavigationTarget(item) }"

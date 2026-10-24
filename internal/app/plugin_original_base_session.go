@@ -24,6 +24,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 	}
 	var active atomic.Bool
 	active.Store(true)
+	logCall := originalPluginLogCall{id: id("pc_"), phase: phase}
 	validate := func(ctx context.Context) error {
 		if err := ctx.Err(); err != nil {
 			return err
@@ -33,6 +34,9 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		}
 		if !active.Load() {
 			return bad("PLUGIN_CALL_CLOSED", "插件公共方法调用已结束")
+		}
+		if p.stopping.Load() && phase != "stop" {
+			return bad("PLUGIN_CALL_CLOSED", "插件对象正在停止")
 		}
 		admitted := originalObjectStillLoaded(p)
 		if call, ok := callCtx.Value(originalInitializingObjectKey{}).(*originalInitializationCall); ok && call != nil && call.object == p {
@@ -64,7 +68,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		if !originalStandardCapabilityAllowed(p.hostContract, method) || !slices.Contains(p.manifest.Capabilities, method) {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "公共宿主契约未声明该方法")
 		}
-		scope := originalBaseCallScope{installation: p.installation, validate: validate}
+		scope := originalBaseCallScope{installation: p.installation, validate: validate, logCall: logCall}
 		if plugins.IsBaseMethod(method) {
 			return p.app.pluginOriginalBaseHost(ctx, scope, identity, method, raw)
 		}

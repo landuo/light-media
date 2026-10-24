@@ -45,8 +45,8 @@ func CloneInstalled(root, sourceCodeID, targetCodeID string, validate func(plugi
 	if err != nil {
 		return fail(err)
 	}
-	if cloned.SHA256 != source.SHA256 {
-		return fail(errors.New("copied executable digest differs from source"))
+	if cloned.SHA256 != source.SHA256 || cloned.PackageSHA256 != source.PackageSHA256 {
+		return fail(errors.New("copied package digest differs from source"))
 	}
 	return cloned, nil
 }

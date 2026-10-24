@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   createPluginNavigation,
   pluginNavigationTarget,
+  parsePluginNavigationRoute,
 } from '../src/features/plugin-navigation.ts';
 
 test('sidebar caches successful empty results and merges concurrent requests', async () => {
@@ -46,11 +47,11 @@ test('logout invalidates old in-flight results without discarding the new sessio
   const first = navigation.ensure();
   navigation.reset();
   const second = navigation.ensure();
-  requests[0]([{ title: 'old session' }]);
+  requests[0]([{ instance_id: 'old', nav_key: 'main', title: 'old session' }]);
   await first;
   assert.deepEqual(navigation.state.items, []);
   assert.equal(navigation.ensure(), second);
-  requests[1]([{ title: 'new session' }]);
+  requests[1]([{ instance_id: 'new', nav_key: 'main', title: 'new session' }]);
   await second;
   assert.equal(navigation.state.items[0].title, 'new session');
   navigation.reset();
@@ -68,9 +69,17 @@ test('sidebar full-page route preserves the chosen clone and source nav key', ()
     'plugin-app/SeedRescue2/main',
   );
   for (const item of [
-    { plugin_id: 'Unknown', instance_id: 'SeedRescue', nav_key: 'main' },
+    { plugin_id: 'AnySource', instance_id: 'clone', nav_key: '.' },
     { plugin_id: 'SeedRescue', instance_id: '../other', nav_key: 'main' },
     { plugin_id: 'SeedRescue', instance_id: 'SeedRescue', nav_key: '../../settings' },
   ])
     assert.throws(() => pluginNavigationTarget(item));
+});
+
+test('arbitrary standard source and non-main nav key survive route round trip', () => {
+  const item = { plugin_id: 'clone', instance_id: 'UnlistedSource.clone', nav_key: '任务:archive' };
+  const route = pluginNavigationTarget(item);
+  assert.deepEqual(parsePluginNavigationRoute(route), { instance: item.instance_id, navKey: item.nav_key });
+  for (const route of ['plugin-app/a', 'plugin-app/a/b/c', 'plugin-app/%/main', 'plugin-app/a/%2fother', 'plugin-app/a/..'])
+    assert.throws(() => parsePluginNavigationRoute(route));
 });

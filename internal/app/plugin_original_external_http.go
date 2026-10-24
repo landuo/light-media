@@ -19,8 +19,8 @@ func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallatio
 	if !object.external {
 		return plugins.HTTPResponse{}, bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件调用契约不匹配")
 	}
-	object.methodMu.Lock()
-	defer object.methodMu.Unlock()
+	unlock := object.lockOriginalMethod()
+	defer unlock()
 	check := func() error {
 		if current, ok := a.pluginRunningInstances.Load(in.InstanceID); !ok || current != object {
 			return bad("PLUGIN_SNAPSHOT_STALE", "插件调用对象已经被替换")
@@ -46,12 +46,11 @@ func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallatio
 	if err := check(); err != nil {
 		return plugins.HTTPResponse{}, err
 	}
-	select {
-	case a.pluginProcess <- struct{}{}:
-	case <-ctx.Done():
-		return plugins.HTTPResponse{}, ctx.Err()
+	release, err := object.acquireOriginalProcessSlot(ctx)
+	if err != nil {
+		return plugins.HTTPResponse{}, err
 	}
-	defer func() { <-a.pluginProcess }()
+	defer release()
 	if err := check(); err != nil {
 		return plugins.HTTPResponse{}, err
 	}

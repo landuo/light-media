@@ -116,12 +116,18 @@ func (a *App) handler() http.Handler {
 				return
 			}
 		}
+		if a.serveOriginalPluginFrontend(w, r) {
+			return
+		}
 		mux.ServeHTTP(w, r)
 	})
 }
 func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	p := strings.TrimPrefix(r.URL.Path, "/api/")
+	if a.standardWebCommandHTTP(w, r, p) {
+		return
+	}
 	if a.pluginServicesHTTP(w, r, p) {
 		return
 	}

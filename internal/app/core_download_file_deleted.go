@@ -216,6 +216,7 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 	if err = tx.Commit(); err != nil {
 		return err
 	}
+	a.emitStandardBusinessEvent(ctx, "downloadfile.deleted", map[string]any{"src": fact.Src, "hash": fact.Identity.Hash})
 	select {
 	case a.jobWake <- struct{}{}:
 	default:
@@ -653,7 +654,13 @@ func (a *App) commitCoreDownloadRemoval(ctx context.Context, r coreDownloadRemov
 			return err
 		}
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	if publish {
+		a.emitStandardDownloadDeleted(ctx, r.EventID)
+	}
+	return nil
 }
 
 func validateDownloadDeletedDomainEvent(in DomainEvent) (DomainEvent, error) {
