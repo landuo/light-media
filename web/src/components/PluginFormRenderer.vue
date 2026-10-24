@@ -2,7 +2,10 @@
 import { h, defineAsyncComponent, type Component } from 'vue';
 import { VForm } from 'vuetify/components/VForm';
 import { VDivider } from 'vuetify/components/VDivider';
-import { VRow, VCol } from 'vuetify/components/VGrid';
+import { VListSubheader } from 'vuetify/components/VList';
+import { VChip } from 'vuetify/components/VChip';
+import { pluginPageStyles } from '../features/plugin-page-styles';
+import { VRow, VCol, VSpacer } from 'vuetify/components/VGrid';
 import { VSwitch } from 'vuetify/components/VSwitch';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VTextField } from 'vuetify/components/VTextField';
@@ -19,13 +22,20 @@ import { VImg } from 'vuetify/components/VImg';
 import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/theme-monokai';
-import { pluginFieldProps, type PluginFormNode } from '../features/plugin-forms';
+import { pluginFieldProps, pluginNodeVisible, type PluginFormNode } from '../features/plugin-forms';
 import PluginDialogCloseBtn from './PluginDialogCloseBtn.vue';
 
-const props = defineProps<{ node: PluginFormNode; model: Record<string, any> }>();
+const props = defineProps<{
+  node: PluginFormNode;
+  model: Record<string, any>;
+  pageScope?: string;
+}>();
 const components: Record<string, Component | string> = {
   VForm,
   VDivider,
+  VSubheader: VListSubheader,
+  VSpacer,
+  VChip,
   VRow,
   VCol,
   VSwitch,
@@ -60,9 +70,22 @@ const components: Record<string, Component | string> = {
   td: 'td',
 };
 function render(node: PluginFormNode): any {
+  if (node.component === 'style') {
+    const css = props.pageScope ? pluginPageStyles(node.text, props.pageScope) : null;
+    return css === null ? null : h('style', {}, css);
+  }
   const component = components[node.component];
   if (!component) return null; // The dialog blocks save and reports unsupported nodes.
   const bound = pluginFieldProps(node.props || {}, props.model, node.component);
+  if (Object.hasOwn(node.props || {}, 'show'))
+    bound.style = [
+      bound.style,
+      { display: pluginNodeVisible(node.props || {}, props.model) ? '' : 'none' },
+    ];
+  if (node.component === 'VSubheader') {
+    bound.title = bound.text;
+    delete bound.text;
+  }
   if (node.component === 'a') bound.rel = 'noopener noreferrer';
   if (node.component === 'VImg' && /^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(bound.src || ''))
     bound.src = import.meta.env.BASE_URL + bound.src.slice(1);

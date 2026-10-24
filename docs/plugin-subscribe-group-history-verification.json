@@ -1,0 +1,263 @@
+{
+  "date": "2026-10-23",
+  "base_commit": "7dd5baf18a4823faf4620902063b4c7646fac6c6",
+  "production_delta": [],
+  "jsonrpc_sha256": "daef6dbdf0fc142014d292a6dda3910abc4f19f43fa2b003063683786466fd73",
+  "source_files": 5522,
+  "source_frozen_unchanged": true,
+  "actual_server_scope": "Real loopback HTTP App with ordinary production cmd/server --plugin-worker SubscribeGroup; same 4500 small/large synthetic history, original sort/full output, unchanged 10-second product budget, original full-row/full-cell/KV-read-only/reopen assertions.",
+  "race_scope": "App host instrumented; ordinary cmd/server child deliberately not instrumented. Does not replace existing race-child gate.",
+  "results": {
+    "normal": {
+      "exit": 0,
+      "roots": [
+        "TestSubscribeGroupLargeHistoryActualServerHTTP"
+      ],
+      "nodes": 3,
+      "leaves": 2,
+      "failures": [],
+      "skips": [],
+      "http_measurements": [
+        "plugin_subscribe_history_server_test.go:64: owned actual HTTP /api/plugins/install: status=200 bytes=308 elapsed=188.512133ms",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=1121108 elapsed=512.044228ms",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=969.904701ms",
+        "plugin_subscribe_history_server_test.go:139: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=887.72904ms"
+      ]
+    },
+    "race": {
+      "exit": 0,
+      "roots": [
+        "TestSubscribeGroupLargeHistoryActualServerHTTP"
+      ],
+      "nodes": 3,
+      "leaves": 2,
+      "failures": [],
+      "skips": [],
+      "http_measurements": [
+        "plugin_subscribe_history_server_test.go:64: owned actual HTTP /api/plugins/install: status=200 bytes=308 elapsed=328.632918ms",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=1121108 elapsed=1.414821306s",
+        "plugin_subscribe_history_server_test.go:87: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=4.027017916s",
+        "plugin_subscribe_history_server_test.go:139: owned actual HTTP /api/plugins/SubscribeGroup/page: status=200 bytes=2718608 elapsed=4.032951289s"
+      ]
+    },
+    "oracle-normal": {
+      "exit": 0,
+      "roots": [
+        "TestResultCodecFrozenLegacyEquivalence",
+        "TestTransportCodecOracleDependency"
+      ],
+      "nodes": 640,
+      "leaves": 639,
+      "failures": [],
+      "skips": [],
+      "http_measurements": []
+    },
+    "oracle-race": {
+      "exit": 0,
+      "roots": [
+        "TestResultCodecFrozenLegacyEquivalence",
+        "TestTransportCodecOracleDependency"
+      ],
+      "nodes": 640,
+      "leaves": 639,
+      "failures": [],
+      "skips": [],
+      "http_measurements": []
+    },
+    "frozen_files_unchanged": 5522
+  },
+  "original_race_child_failure": {
+    "retained": "testdata/plugins/subscribe-group-browser/remaining-race.jsonl",
+    "facts": "HTTP400 on 4500 large input at10.98s and after reopen; later isolated body-diagnostic run passed. Exact original error code was not captured.",
+    "resolved": false,
+    "interpretation": "Instrumented child cost approaches fixed budget; not proof of exact first failure cause."
+  },
+  "phase_diagnostic": {
+    "small_input": {
+      "budget_ms": 10000,
+      "encode_error": "<nil>",
+      "encode_ms": 379.872,
+      "encoded_bytes": 1121054,
+      "error_code": "",
+      "host_read_ms": 5.76,
+      "input_bytes": 13501,
+      "page_error": "<nil>",
+      "phases": [
+        {
+          "phase": "run_entered",
+          "context": "active",
+          "millis": 0.058
+        },
+        {
+          "phase": "start_begin",
+          "context": "active",
+          "millis": 1.036
+        },
+        {
+          "phase": "start_end",
+          "context": "active",
+          "millis": 2.103
+        },
+        {
+          "phase": "handshake_begin",
+          "context": "active",
+          "millis": 2.262
+        },
+        {
+          "phase": "handshake_end",
+          "context": "active",
+          "millis": 826.009
+        },
+        {
+          "phase": "negotiate_begin",
+          "context": "active",
+          "millis": 826.124
+        },
+        {
+          "phase": "negotiate_end",
+          "context": "active",
+          "millis": 827.203
+        },
+        {
+          "phase": "invoke_begin",
+          "context": "active",
+          "millis": 827.247
+        },
+        {
+          "phase": "invoke_end",
+          "context": "active",
+          "millis": 3131.413
+        },
+        {
+          "phase": "stop_begin",
+          "context": "active",
+          "millis": 3131.475
+        },
+        {
+          "phase": "stop_end",
+          "context": "active",
+          "millis": 3132.726
+        },
+        {
+          "phase": "wait_begin",
+          "context": "active",
+          "millis": 3132.815
+        },
+        {
+          "phase": "wait_end",
+          "context": "active",
+          "millis": 4153.981
+        },
+        {
+          "phase": "run_returned",
+          "context": "active",
+          "millis": 4154.099
+        }
+      ],
+      "raw_page_ms": 79.16,
+      "result_bytes": 1121054,
+      "runner_error": "<nil>",
+      "scope": "diagnostic direct Runner; not HTTP acceptance"
+    },
+    "large_input": {
+      "budget_ms": 10000,
+      "encode_error": "<nil>",
+      "encode_ms": 660.919,
+      "encoded_bytes": 2718554,
+      "error_code": "",
+      "host_read_ms": 98.748,
+      "input_bytes": 1827001,
+      "page_error": "<nil>",
+      "phases": [
+        {
+          "phase": "run_entered",
+          "context": "active",
+          "millis": 0.034
+        },
+        {
+          "phase": "start_begin",
+          "context": "active",
+          "millis": 0.355
+        },
+        {
+          "phase": "start_end",
+          "context": "active",
+          "millis": 1.048
+        },
+        {
+          "phase": "handshake_begin",
+          "context": "active",
+          "millis": 1.121
+        },
+        {
+          "phase": "handshake_end",
+          "context": "active",
+          "millis": 507.44
+        },
+        {
+          "phase": "negotiate_begin",
+          "context": "active",
+          "millis": 507.613
+        },
+        {
+          "phase": "negotiate_end",
+          "context": "active",
+          "millis": 508.325
+        },
+        {
+          "phase": "invoke_begin",
+          "context": "active",
+          "millis": 508.366
+        },
+        {
+          "phase": "invoke_end",
+          "context": "active",
+          "millis": 8856.998
+        },
+        {
+          "phase": "stop_begin",
+          "context": "active",
+          "millis": 8858.733
+        },
+        {
+          "phase": "stop_end",
+          "context": "active",
+          "millis": 8879.845
+        },
+        {
+          "phase": "wait_begin",
+          "context": "active",
+          "millis": 8880.334
+        },
+        {
+          "phase": "wait_end",
+          "context": "active",
+          "millis": 9910.972
+        },
+        {
+          "phase": "run_returned",
+          "context": "active",
+          "millis": 9911.435
+        }
+      ],
+      "raw_page_ms": 489.668,
+      "result_bytes": 2718554,
+      "runner_error": "<nil>",
+      "scope": "diagnostic direct Runner; not HTTP acceptance"
+    }
+  },
+  "withdrawn_optimization": {
+    "scope": "Success result/host_result typed envelope only",
+    "production_published": false,
+    "reason": "Payload depth10000 is rejected by frozen legacy nested RawMessage encoding but accepted by typed candidate.",
+    "retained_failure": "testdata/plugins/subscribe-group-history/depth-candidate-red.jsonl",
+    "action": "Restored production jsonrpc.go exact preimage; original dependency hash unchanged; 638 independent byte/error cases and original dependency guard pass normal/race."
+  },
+  "whole_plugin_complete": false,
+  "remaining": [
+    "Original all-race-child large history gate remains previously red; new real-server evidence is separately labelled, not a blanket race success.",
+    "Complete generic RSS Context consumer integration and arbitrary expanded16MiB history remain unverified.",
+    "User configuration/KV/reference production migration and deployment not performed."
+  ],
+  "browser_acceptance": "See plugin-subscribe-group-browser-verification.json; real six-field save/cancel/refresh/history/isolation accepted and launcher shutdown verified."
+}

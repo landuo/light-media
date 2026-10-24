@@ -164,14 +164,19 @@ func (o *Owner) enter(ctx context.Context, inv Invocation, config json.RawMessag
 	e := &execution{o: o, inv: inv, effective: inv.Binding, ctx: child, cancel: cancel, selected: map[string]Downloader{}, lists: map[string]bool{}, pins: map[string]Pin{}, readable: map[string]bool{}, releaseAction: releaseAction}
 	e.proofs = map[string]json.RawMessage{}
 	e.nativeSnapshots = map[string]map[string]json.RawMessage{}
-	e.machine = seed.New(e)
+	e.machine = nativeMachine(ctx)
+	if e.machine == nil {
+		e.machine = seed.New(e)
+	} else {
+		e.machine.Host = e
+	}
 	e.machine.Now = o.opts.Now
 	e.machine.Timezone = o.opts.Timezone
 	runtimeConfig := saved.Config
 	if len(o.runtimeConfig) > 0 {
 		runtimeConfig = o.runtimeConfig
 	}
-	if len(runtimeConfig) > 0 && inv.Action != "reload" && !(inv.Action == "init" && len(o.runtimeConfig) == 0) {
+	if nativeMachine(ctx) == nil && len(runtimeConfig) > 0 && inv.Action != "reload" && !(inv.Action == "init" && len(o.runtimeConfig) == 0) {
 		m, err := decodeConfig(runtimeConfig)
 		if err != nil {
 			cancel()
@@ -192,6 +197,9 @@ func (e *execution) finish(sourceErr error) error {
 	// even when a later source call fails, without inventing a public config save.
 	e.o.runtimeConfig = raw(e.machine.Config)
 	defer e.cancel()
+	if nativeMachine(e.ctx) != nil {
+		defer func() { e.machine.Host = nil }()
+	}
 	defer func() { <-e.o.gate }()
 	if e.releaseAction != nil {
 		defer e.releaseAction()
@@ -257,7 +265,7 @@ func (e *execution) finish(sourceErr error) error {
 			}
 			// onlyonce date+flag publication happened at its source SaveConfig boundary.
 			// get_service is a separate source method: cron failure does not erase it.
-			if sourceErr == nil && e.serviceErr == nil {
+			if nativeMachine(e.ctx) == nil && sourceErr == nil && e.serviceErr == nil {
 				spec, triggerErr := e.machine.ServiceTrigger()
 				if triggerErr != nil {
 					return triggerErr
@@ -272,7 +280,7 @@ func (e *execution) finish(sourceErr error) error {
 				}
 			}
 		}
-		if e.inv.EventID != "" {
+		if e.inv.EventID != "" && !originalServiceMatches(e.ctx, e.inv) {
 			t, ok := s.Triggers[e.inv.EventID]
 			if !ok || t.QueuedRunID != e.inv.RunID {
 				return ErrUnsafe
@@ -331,7 +339,7 @@ func (o *Owner) Configure(ctx context.Context, inv Invocation, config json.RawMe
 		return e.finish(err)
 	}
 	initErr := e.machine.Init(e.ctx, m)
-	if initErr == nil {
+	if nativeMachine(ctx) == nil && initErr == nil {
 		_, e.serviceErr = e.machine.ServiceTrigger()
 	}
 	return e.finish(initErr)
@@ -349,6 +357,11 @@ func (o *Owner) Execute(ctx context.Context, inv Invocation) error {
 		if inv.EventID != "" {
 			return e.finish(ErrUnsafe)
 		}
+		return e.finish(e.machine.Clean(e.ctx))
+	}
+	// A central public service occurrence is not a private trigger receipt.
+	// Its exact invocation has already passed fresh App proof and enter guards.
+	if originalServiceMatches(e.ctx, inv) {
 		return e.finish(e.machine.Clean(e.ctx))
 	}
 	t, ok := s.Triggers[inv.EventID]

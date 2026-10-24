@@ -2,11 +2,9 @@ package app
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
+	"light-media/internal/sites"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -15,9 +13,6 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
-
-	"light-media/internal/plugins"
-	"light-media/internal/sites"
 )
 
 type siteSystemFixture struct {
@@ -36,84 +31,6 @@ func siteSystemFixtures(t *testing.T) []siteSystemFixture {
 		t.Fatal("invalid oracle")
 	}
 	return f.Cases
-}
-func enqueueSystemFailureHTTP(t *testing.T, a *App) PluginRun {
-	t.Helper()
-	ctx := context.Background()
-	installation, err := a.pluginStore.Installation(ctx, "SiteStatistic")
-	if err != nil {
-		t.Fatal(err)
-	}
-	input := plugins.HTTPRequest{Key: "refresh_by_domain", Method: "GET", Path: "/refresh_by_domain", Params: map[string]string{}, Query: map[string][]string{"domain": {siteStatisticDomain(a.Settings().Sites[0])}}, CredentialMatches: map[string]bool{"apikey": true}, Headers: map[string]string{}}
-	a.pluginMu.Lock()
-	_, err = a.enqueuePluginHTTP(ctx, installation, input, pluginAPIScope{Key: input.Key, Method: input.Method, Authority: pluginAPIAuthority{Kind: "key", Proof: a.pluginAPIKeyProof(a.Settings().APIToken)}})
-	a.pluginMu.Unlock()
-	if err != nil {
-		t.Fatal(err)
-	}
-	run, err := a.pluginStore.ClaimRun(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return run
-}
-
-// Exercise the actual authenticated HTTP router as well as the real SDK host.
-// The owned test drives its queued worker explicitly, avoiding unrelated timers.
-func executeSystemFailureAPI(t *testing.T, a *App, cookie *http.Cookie, instance string) PluginRun {
-	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-	defer cancel()
-	server := httptest.NewServer(a.Handler())
-	defer func() { cancel(); server.Close() }()
-	target := server.URL + "/light-media/api/plugins/" + instance + "/api/refresh_by_domain?domain=" + url.QueryEscape(siteStatisticDomain(a.Settings().Sites[0])) + "&apikey=" + url.QueryEscape(a.Settings().APIToken) + "&instance_id=request-cannot-own-origin"
-	request, err := http.NewRequestWithContext(ctx, "GET", target, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	request.AddCookie(cookie)
-	type result struct {
-		response *http.Response
-		err      error
-	}
-	finished := make(chan result, 1)
-	go func() { response, err := server.Client().Do(request); finished <- result{response, err} }()
-	var run PluginRun
-	for {
-		run, err = a.pluginStore.claimRunForInstance(ctx, instance)
-		if err == nil {
-			break
-		}
-		if !errors.Is(err, sql.ErrNoRows) {
-			t.Fatal(err)
-		}
-		select {
-		case result := <-finished:
-			if result.response != nil {
-				result.response.Body.Close()
-			}
-			t.Fatal("HTTP API did not enqueue owned worker", result.err)
-		case <-ctx.Done():
-			t.Fatal(ctx.Err())
-		case <-time.After(10 * time.Millisecond):
-		}
-	}
-	a.executePluginRun(ctx, run)
-	select {
-	case result := <-finished:
-		if result.err != nil {
-			t.Fatal(result.err)
-		}
-		defer result.response.Body.Close()
-		body, err := io.ReadAll(result.response.Body)
-		var response map[string]any
-		if err != nil || result.response.StatusCode != http.StatusOK || json.Unmarshal(body, &response) != nil || response["success"] != false {
-			t.Fatal("native HTTP source no-data contract", result.response.StatusCode, string(body), err)
-		}
-	case <-ctx.Done():
-		t.Fatal(ctx.Err())
-	}
-	return run
 }
 
 func installSystemFailureSite(t *testing.T, a *App, kind, body string, gate func()) *atomic.Int32 {
@@ -157,6 +74,7 @@ func installSystemFailureSite(t *testing.T, a *App, kind, body string, gate func
 	}
 	return calls
 }
+
 func systemErrorReceipts(t *testing.T, a *App) []siteSystemErrorReceipt {
 	t.Helper()
 	rows, err := a.Store.DB.Query(`SELECT id FROM records WHERE kind='site_system_error' ORDER BY rowid`)
@@ -185,6 +103,7 @@ func systemErrorReceipts(t *testing.T, a *App) []siteSystemErrorReceipt {
 	}
 	return out
 }
+
 func requireSystemErrorCount(t *testing.T, a *App, want int) {
 	t.Helper()
 	var count int
@@ -195,62 +114,7 @@ func requireSystemErrorCount(t *testing.T, a *App, want int) {
 		t.Fatal("sealed source count", got, want)
 	}
 }
-func TestSiteSystemErrorsFourNativeParsersThroughAPIAndSSE(t *testing.T) {
-	cases := 0
-	for _, f := range siteSystemFixtures(t) {
-		if f.ModuleErrors != 2 || f.Kind == "throws" || f.Kind == "unsupported" {
-			continue
-		}
-		cases++
-		t.Run(f.Name, func(t *testing.T) {
-			a, cookie, _, _ := pluginHTTPFixture(t)
-			calls := installSystemFailureSite(t, a, f.Kind, f.Body, nil)
-			run := executeSystemFailureAPI(t, a, cookie, "SiteStatistic")
-			result, err := a.pluginStore.Run(context.Background(), run.ID)
-			if err != nil || result.State != "succeeded" || calls.Load() == 0 {
-				t.Fatal("real API invocation did not return no-data", result.State, err)
-			}
-			requireSystemErrorCount(t, a, 1)
-			r := systemErrorReceipts(t, a)[0]
-			if r.FailureKind != f.Name || r.Origin.ID != run.ID || r.Origin.Instance != run.InstanceID || r.Data.Type != "module" || r.Data.ModuleID != "IndexerModule" || r.Data.ModuleMethod != "refresh_userdata" || r.ModuleNameSource != siteSystemModuleNameSource {
-				t.Fatal("lost typed origin", r)
-			}
-			raw, _ := json.Marshal(r.Data)
-			var fields map[string]any
-			json.Unmarshal(raw, &fields)
-			if len(fields) != 6 || !strings.HasPrefix(r.Data.Traceback, siteNativeDiagnosticHeader) || strings.Contains(string(raw), "owned-synthetic") || strings.Contains(string(raw), "/workspace/") || strings.Contains(string(raw), f.Body) && len(f.Body) > 5 {
-				t.Fatal("unsafe or invented diagnostic", string(raw))
-			}
-			resp, reader := openSystemStream(t, a, cookie, "/api/system/message")
-			var message systemMessage
-			if json.Unmarshal([]byte(readSystemFrame(t, reader)), &message) != nil || message.Type != "system" || message.Title == nil || *message.Title != "站点索引发生了错误" || message.Text != siteNativeModuleErrorText(f.Name) || string(message.Note) != "null" {
-				t.Fatal("actual SSE lost helper payload", message)
-			}
-			resp.Body.Close()
-			if len(a.systemMessages.get("")) != 0 {
-				t.Fatal("native failure emitted duplicate helper")
-			}
-			// Cold recovery retains the typed source fact, not the ephemeral UI message.
-			requests := calls.Load()
-			dir := a.Dir
-			if err = a.Close(); err != nil {
-				t.Fatal(err)
-			}
-			cold, err := New(Options{DataDir: dir})
-			if err != nil {
-				t.Fatal(err)
-			}
-			defer cold.Close()
-			requireSystemErrorCount(t, cold, 1)
-			if calls.Load() != requests || len(cold.systemMessages.get("")) != 0 {
-				t.Fatal("cold receipt replayed parser/SSE")
-			}
-		})
-	}
-	if cases != 4 {
-		t.Fatal("oracle four branches changed", cases)
-	}
-}
+
 func TestSiteSystemErrorsFourNativeParsersThroughRefreshJob(t *testing.T) {
 	for _, f := range siteSystemFixtures(t) {
 		if f.ModuleErrors != 2 || f.Kind == "throws" || f.Kind == "unsupported" {
@@ -280,112 +144,7 @@ func TestSiteSystemErrorsFourNativeParsersThroughRefreshJob(t *testing.T) {
 		})
 	}
 }
-func TestSiteSystemErrorsConnectionDTOAndUntrustedFailuresDoNotEmit(t *testing.T) {
-	for _, f := range []siteSystemFixture{{Name: "connection-test", Kind: "mteam", Body: "{"}, {Name: "DTO-login", Kind: "jiayuan", Body: `<input type="password">`}, {Name: "DTO-business", Kind: "mteam", Body: `{"code":"1","message":"owned business denial"}`}, {Name: "unsupported-shape", Kind: "mteam", Body: `{"code":"0","data":[]}`}, {Name: "safety-limit", Kind: "mteam", Body: `{"code":"0","data":{"memberCount":{"uploaded":"9223372036854775808"}}}`}} {
-		t.Run(f.Name, func(t *testing.T) {
-			a, _, _, _ := pluginHTTPFixture(t)
-			installSystemFailureSite(t, a, f.Kind, f.Body, nil)
-			if f.Name == "connection-test" {
-				_, _ = a.refreshManagedSite(context.Background(), "known")
-			} else {
-				run := enqueueSystemFailureHTTP(t, a)
-				a.executePluginRun(context.Background(), run)
-			}
-			requireSystemErrorCount(t, a, 0)
-			if len(a.systemMessages.get("")) != 0 {
-				t.Fatal("non-module failure became system message")
-			}
-		})
-	}
-}
-func TestSiteSystemErrorRollbackDoesNotLeakHelperOrDedup(t *testing.T) {
-	a, _, _, _ := pluginHTTPFixture(t)
-	calls := installSystemFailureSite(t, a, "mteam", "{", nil)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_fail_system_event BEFORE INSERT ON domain_events WHEN json_extract(NEW.payload,'$.event_type')='system.error' BEGIN SELECT RAISE(ABORT,'owned event rollback'); END`); err != nil {
-		t.Fatal(err)
-	}
-	run := enqueueSystemFailureHTTP(t, a)
-	a.executePluginRun(context.Background(), run)
-	requireSystemErrorCount(t, a, 0)
-	if len(a.systemMessages.get("")) != 0 || len(a.systemMessages.recent) != 0 {
-		t.Fatal("rolled-back helper or duplicate key escaped")
-	}
-	requests := calls.Load()
-	if _, err := a.Store.DB.Exec(`DROP TRIGGER owned_fail_system_event`); err != nil {
-		t.Fatal(err)
-	}
-	// Existing admitted operation remains unknown and must not be recollected.
-	a.executePluginRun(context.Background(), run)
-	if calls.Load() != requests {
-		t.Fatal("unknown collection repeated network read")
-	}
-	next := enqueueSystemFailureHTTP(t, a)
-	a.executePluginRun(context.Background(), next)
-	requireSystemErrorCount(t, a, 1)
-	if len(a.systemMessages.get("")) == 0 {
-		t.Fatal("rollback left duplicate suppression behind")
-	}
-}
-func TestSiteSystemErrorRevocationAndCancellationBeforeCommit(t *testing.T) {
-	for _, mode := range []string{"key", "site", "installation", "cancel"} {
-		t.Run(mode, func(t *testing.T) {
-			a, _, _, _ := pluginHTTPFixture(t)
-			entered, release := make(chan struct{}), make(chan struct{})
-			var released atomic.Bool
-			unblock := func() {
-				if released.CompareAndSwap(false, true) {
-					close(release)
-				}
-			}
-			defer unblock()
-			var once atomic.Bool
-			installSystemFailureSite(t, a, "mteam", "{", func() {
-				if once.CompareAndSwap(false, true) {
-					close(entered)
-					<-release
-				}
-			})
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-			run := enqueueSystemFailureHTTP(t, a)
-			done := make(chan struct{})
-			go func() { a.executePluginRun(ctx, run); close(done) }()
-			select {
-			case <-entered:
-			case <-time.After(5 * time.Second):
-				t.Fatal("parser did not request owned fixture")
-			}
-			switch mode {
-			case "cancel":
-				cancel()
-			case "installation":
-				if _, err := a.Store.DB.Exec(`UPDATE plugin_installations SET desired_enabled=0 WHERE instance_id=?`, run.InstanceID); err != nil {
-					t.Fatal(err)
-				}
-			default:
-				c := a.Settings()
-				if mode == "key" {
-					c.APIToken = "owned-revoked-api-key"
-				} else {
-					c.Sites[0].Enabled = false
-				}
-				if err := a.saveSettings(context.Background(), c); err != nil {
-					t.Fatal(err)
-				}
-			}
-			unblock()
-			select {
-			case <-done:
-			case <-time.After(5 * time.Second):
-				t.Fatal("revoked invocation did not finish")
-			}
-			requireSystemErrorCount(t, a, 0)
-			if len(a.systemMessages.get("")) != 0 {
-				t.Fatal("revoked native failure escaped")
-			}
-		})
-	}
-}
+
 func TestSystemErrorDomainEventHasExclusiveTypedReference(t *testing.T) {
 	key := "sye_" + strings.Repeat("a", 64)
 	base := DomainEvent{Type: "system.error", SystemErrorID: key, EventID: domainEventID("system.error", key)}
@@ -433,19 +192,168 @@ func TestSiteSystemErrorDistinctNativeKindsKeepOriginalHelperDedup(t *testing.T)
 	}
 }
 
-func TestSiteSystemErrorCloneOriginComesFromVerifiedRun(t *testing.T) {
-	a, cookie, _, _ := pluginHTTPFixture(t)
-	installSystemFailureSite(t, a, "mteam", "{", nil)
-	const instance = "SiteStatistic_owned_clone"
-	statisticRouterInstall(t, a, instance)
-	run := executeSystemFailureAPI(t, a, cookie, instance)
-	requireSystemErrorCount(t, a, 1)
-	receipt := systemErrorReceipts(t, a)[0]
-	if receipt.Origin.Instance != instance || receipt.Origin.ID != run.ID {
-		t.Fatal("clone/request origin mismatch", receipt.Origin, run.ID)
+func TestSiteSystemErrorsFourCoreParsersThroughJobAndSSE(t *testing.T) {
+	cases := 0
+	for _, f := range siteSystemFixtures(t) {
+		if f.ModuleErrors != 2 || f.Kind == "throws" || f.Kind == "unsupported" {
+			continue
+		}
+		cases++
+		t.Run(f.Name, func(t *testing.T) {
+			a := newTestApp(t)
+			cookie := setupTestAdmin(t, a)
+			calls := installSystemFailureSite(t, a, f.Kind, f.Body, nil)
+			job := siteMessageClaimBatch(t, a)
+			err := a.runSiteRefresh(context.Background(), job)
+			if pluginErrorCodeInternal(err) != "SITE_STATISTICS_REFRESH_FAILED" || calls.Load() == 0 {
+				t.Fatal("real core invocation did not return no-data", err)
+			}
+			requireSystemErrorCount(t, a, 1)
+			r := systemErrorReceipts(t, a)[0]
+			if r.FailureKind != f.Name || r.Origin.Kind != "job" || r.Origin.ID != job.ID || r.Origin.Instance != "" || r.Data.Type != "module" || r.Data.ModuleID != "IndexerModule" || r.Data.ModuleMethod != "refresh_userdata" || r.ModuleNameSource != siteSystemModuleNameSource {
+				t.Fatal("lost typed origin", r)
+			}
+			raw, _ := json.Marshal(r.Data)
+			var fields map[string]any
+			json.Unmarshal(raw, &fields)
+			if len(fields) != 6 || !strings.HasPrefix(r.Data.Traceback, siteNativeDiagnosticHeader) || strings.Contains(string(raw), "owned-synthetic") || strings.Contains(string(raw), "/workspace/") || strings.Contains(string(raw), f.Body) && len(f.Body) > 5 {
+				t.Fatal("unsafe or invented diagnostic", string(raw))
+			}
+			resp, reader := openSystemStream(t, a, cookie, "/api/system/message")
+			var message systemMessage
+			if json.Unmarshal([]byte(readSystemFrame(t, reader)), &message) != nil || message.Type != "system" || message.Title == nil || *message.Title != "站点索引发生了错误" || message.Text != siteNativeModuleErrorText(f.Name) || string(message.Note) != "null" {
+				t.Fatal("actual SSE lost helper payload", message)
+			}
+			resp.Body.Close()
+			if len(a.systemMessages.get("")) != 0 {
+				t.Fatal("native failure emitted duplicate helper")
+			}
+			// Cold recovery retains the typed source fact, not the ephemeral UI message.
+			requests := calls.Load()
+			dir := a.Dir
+			if err = a.Close(); err != nil {
+				t.Fatal(err)
+			}
+			cold, err := New(Options{DataDir: dir})
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer cold.Close()
+			requireSystemErrorCount(t, cold, 1)
+			if calls.Load() != requests || len(cold.systemMessages.get("")) != 0 {
+				t.Fatal("cold receipt replayed parser/SSE")
+			}
+		})
 	}
-	// Clone identity is evidence, not a broadcast subscription or a separate FIFO.
-	if len(a.systemMessages.get("unrelated-instance")) == 0 || len(a.systemMessages.get(instance)) != 0 {
-		t.Fatal("clone helper was not shared destructive FIFO")
+	if cases != 4 {
+		t.Fatal("oracle four branches changed", cases)
+	}
+}
+
+func TestSiteSystemErrorsCoreConnectionDTOAndUntrustedFailuresDoNotEmit(t *testing.T) {
+	for _, f := range []siteSystemFixture{{Name: "connection-test", Kind: "mteam", Body: "{"}, {Name: "DTO-login", Kind: "jiayuan", Body: `<input type="password">`}, {Name: "DTO-business", Kind: "mteam", Body: `{"code":"1","message":"owned business denial"}`}, {Name: "unsupported-shape", Kind: "mteam", Body: `{"code":"0","data":[]}`}, {Name: "safety-limit", Kind: "mteam", Body: `{"code":"0","data":{"memberCount":{"uploaded":"9223372036854775808"}}}`}} {
+		t.Run(f.Name, func(t *testing.T) {
+			a := newTestApp(t)
+			installSystemFailureSite(t, a, f.Kind, f.Body, nil)
+			if f.Name == "connection-test" {
+				_, _ = a.refreshManagedSite(context.Background(), "known")
+			} else {
+				job := siteMessageClaimBatch(t, a)
+				_ = a.runSiteRefresh(context.Background(), job)
+			}
+			requireSystemErrorCount(t, a, 0)
+			if len(a.systemMessages.get("")) != 0 {
+				t.Fatal("non-module failure became system message")
+			}
+		})
+	}
+}
+
+func TestSiteSystemErrorCoreRollbackDoesNotLeakHelperOrDedup(t *testing.T) {
+	a := newTestApp(t)
+	calls := installSystemFailureSite(t, a, "mteam", "{", nil)
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_fail_system_event BEFORE INSERT ON domain_events WHEN json_extract(NEW.payload,'$.event_type')='system.error' BEGIN SELECT RAISE(ABORT,'owned event rollback'); END`); err != nil {
+		t.Fatal(err)
+	}
+	job := siteMessageClaimBatch(t, a)
+	_ = a.runSiteRefresh(context.Background(), job)
+	requireSystemErrorCount(t, a, 0)
+	if len(a.systemMessages.get("")) != 0 || len(a.systemMessages.recent) != 0 {
+		t.Fatal("rolled-back helper or duplicate key escaped")
+	}
+	requests := calls.Load()
+	if _, err := a.Store.DB.Exec(`DROP TRIGGER owned_fail_system_event`); err != nil {
+		t.Fatal(err)
+	}
+	// Existing admitted operation remains unknown and must not be recollected.
+	_ = a.runSiteRefresh(context.Background(), job)
+	if calls.Load() != requests {
+		t.Fatal("unknown collection repeated network read")
+	}
+	queued, err := a.enqueue(context.Background(), "site_refresh", map[string]string{"id": "next-system-error-after-rollback"}, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	next, err := a.claim(context.Background())
+	if err != nil || next.ID != queued.ID {
+		t.Fatal("independent core job not claimed", next.ID, err)
+	}
+	_ = a.runSiteRefresh(context.Background(), next)
+	requireSystemErrorCount(t, a, 1)
+	if len(a.systemMessages.get("")) == 0 {
+		t.Fatal("rollback left duplicate suppression behind")
+	}
+}
+
+func TestSiteSystemErrorCoreRevocationAndCancellationBeforeCommit(t *testing.T) {
+	for _, mode := range []string{"site", "cancel"} {
+		t.Run(mode, func(t *testing.T) {
+			a := newTestApp(t)
+			entered, release := make(chan struct{}), make(chan struct{})
+			var released atomic.Bool
+			unblock := func() {
+				if released.CompareAndSwap(false, true) {
+					close(release)
+				}
+			}
+			defer unblock()
+			var once atomic.Bool
+			installSystemFailureSite(t, a, "mteam", "{", func() {
+				if once.CompareAndSwap(false, true) {
+					close(entered)
+					<-release
+				}
+			})
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+			job := siteMessageClaimBatch(t, a)
+			done := make(chan struct{})
+			go func() { _ = a.runSiteRefresh(ctx, job); close(done) }()
+			select {
+			case <-entered:
+			case <-time.After(5 * time.Second):
+				t.Fatal("parser did not request owned fixture")
+			}
+			switch mode {
+			case "cancel":
+				cancel()
+			default:
+				c := a.Settings()
+				c.Sites[0].Enabled = false
+				if err := a.saveSettings(context.Background(), c); err != nil {
+					t.Fatal(err)
+				}
+			}
+			unblock()
+			select {
+			case <-done:
+			case <-time.After(5 * time.Second):
+				t.Fatal("revoked invocation did not finish")
+			}
+			requireSystemErrorCount(t, a, 0)
+			if len(a.systemMessages.get("")) != 0 {
+				t.Fatal("revoked native failure escaped")
+			}
+		})
 	}
 }

@@ -1,5 +1,7 @@
 package app
 
+// Direct registered API transport and request authority. The retired queued
+// API executor and its persisted invocation scopes are not part of this module.
 import (
 	"context"
 	"crypto/hmac"
@@ -10,31 +12,20 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"maps"
+	"light-media/internal/plugins"
 	"net/http"
 	"net/url"
 	"path"
 	"slices"
 	"strings"
 	"time"
-
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
 )
 
 type pluginAPIAuthority struct {
 	Kind  string `json:"kind"`
 	Proof string `json:"proof,omitempty"`
 }
-type pluginAPIScope struct {
-	Key       string             `json:"key"`
-	Method    string             `json:"method"`
-	RequestID string             `json:"request_id"`
-	Authority pluginAPIAuthority `json:"authority"`
-	// Only the host can mint these from the original observed query values.
-	// They remain inside encrypted api_scope, never worker HTTPRequest.
-	CredentialProofs map[string]string `json:"credential_proofs,omitempty"`
-}
+
 type pluginHTTPFailure struct {
 	Status int
 	Detail any
@@ -47,12 +38,14 @@ func apiKeyEqual(actual, expected string) bool {
 	a, b := sha256.Sum256([]byte(actual)), sha256.Sum256([]byte(expected))
 	return subtle.ConstantTimeCompare(a[:], b[:]) == 1
 }
+
 func (a *App) pluginAPIKeyProof(token string) string {
 	mac := hmac.New(sha256.New, a.Store.key)
 	mac.Write([]byte("light-media/plugin-api-key/v1\x00"))
 	mac.Write([]byte(token))
 	return hex.EncodeToString(mac.Sum(nil))
 }
+
 func (a *App) pluginHTTPAuthority(r *http.Request, auth string, native bool) (pluginAPIAuthority, *pluginHTTPFailure) {
 	fail := func(status int, detail string) (pluginAPIAuthority, *pluginHTTPFailure) {
 		return pluginAPIAuthority{}, &pluginHTTPFailure{status, detail}
@@ -98,6 +91,7 @@ func (a *App) pluginHTTPAuthority(r *http.Request, auth string, native bool) (pl
 	}
 	return fail(401, "Not authenticated")
 }
+
 func (a *App) validPluginBearer(ctx context.Context, hash string) bool {
 	var expires int64
 	err := a.Store.DB.QueryRowContext(ctx, `SELECT expires_at FROM sessions WHERE token_hash=?`, hash).Scan(&expires)
@@ -125,18 +119,18 @@ func pluginCustomPath(value string) (instance, endpoint string, native, matched 
 	}
 	return "", "", false, false
 }
+
 func pluginHTTPJSON(w http.ResponseWriter, status int, body any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "no-store")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(body)
 }
+
 func pluginHTTPError(w http.ResponseWriter, failure *pluginHTTPFailure) {
 	pluginHTTPJSON(w, failure.Status, map[string]any{"detail": failure.Detail})
 }
 
-// Custom endpoints bypass the management API envelope, not its installation,
-// identity or origin boundaries. No request may register a route or capability.
 func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool {
 	instance, endpoint, native, matched := pluginCustomPath(r.URL.Path)
 	if !matched {
@@ -155,11 +149,20 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{503, "Plugin storage unavailable"})
 		return true
 	}
-	manifest, _, exists := builtin.Lookup(installation.PluginID)
-	if err != nil || !installation.Installed || !installation.DesiredEnabled || !exists || manifest.Version != installation.Version {
+	implementation, implementationErr := a.resolvePluginInvocation(r.Context(), installation)
+	manifest := implementation.Manifest
+	if err != nil || implementationErr != nil {
 		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
 		return true
 	}
+	// Original get_plugin_apis exposes routes registered from loaded objects,
+	// irrespective of the plugin business-enabled setting.
+	registered, registeredOK := a.pluginRegisteredAPIs.Load(instance)
+	if !registeredOK {
+		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
+		return true
+	}
+	manifest.APIs = registered.([]plugins.HTTPAPI)
 	var api *plugins.HTTPAPI
 	var params map[string]string
 	allowed := []string{}
@@ -200,7 +203,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		return true
 	}
 	missing := []map[string]any{}
-	credentialProofs := map[string]string{}
 	input := plugins.HTTPRequest{RequestID: w.Header().Get("X-Request-ID"), Key: api.Key, Method: r.Method, Path: endpoint, Params: params, Query: map[string][]string{}, CredentialMatches: map[string]bool{}, Headers: map[string]string{}}
 	for key, values := range query {
 		input.Query[key] = slices.Clone(values)
@@ -216,9 +218,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 				value = values[len(values)-1]
 			}
 			input.CredentialMatches[parameter.Name] = apiKeyEqual(value, a.Settings().APIToken)
-			if api.Auth == "anonymous" && input.CredentialMatches[parameter.Name] {
-				credentialProofs[parameter.Name] = a.pluginAPIKeyProof(value)
-			}
 			delete(input.Query, parameter.Name)
 		}
 	}
@@ -239,9 +238,6 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 	}
 	if api.Body != "" && r.Body != nil {
 		bodyReader := io.Reader(http.MaxBytesReader(w, r.Body, 512<<10))
-		if brushFlowSnapshotOwner(installation.PluginID, installation.Version) {
-			bodyReader = r.Body
-		}
 		body, err := io.ReadAll(bodyReader)
 		if err != nil {
 			pluginHTTPError(w, &pluginHTTPFailure{413, "Request body too large"})
@@ -259,24 +255,11 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{422, []map[string]any{{"type": "missing", "loc": []string{"body"}, "msg": "Field required", "input": nil}}})
 		return true
 	}
-	a.pluginMu.Lock()
-	run, err := a.enqueuePluginHTTP(r.Context(), installation, input, pluginAPIScope{Key: api.Key, Method: r.Method, RequestID: w.Header().Get("X-Request-ID"), Authority: authority, CredentialProofs: credentialProofs})
-	a.pluginMu.Unlock()
-	if err == nil {
-		if installation.PluginID == "BrushFlowLanduo" && installation.Version == "5.2.15" {
-			if e := a.executeBrushFlowHTTP(r.Context(), run); e != nil {
-				pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin changed"})
-				return true
-			}
-		}
-		if installation.PluginID == "SeedRescue" && installation.Version == "1.6.3" {
-			if e := a.executeSeedRescueHTTP(r.Context(), run); e != nil {
-				pluginHTTPError(w, &pluginHTTPFailure{409, "Plugin changed"})
-				return true
-			}
-		}
-		a.wakePlugins()
-		response, err := a.waitPluginHTTP(r.Context(), run)
+	// A registered original API is already bound to a loaded instance. Its
+	// own implementation performs configuration edits. No first-write load,
+	// alternate configuration prepare/CAS, or extra framework init is inserted.
+	if implementation.External {
+		response, err := a.callOriginalExternalHTTP(r.Context(), installation, *api, input, authority)
 		if err != nil {
 			status := 502
 			var failure *APIError
@@ -297,133 +280,8 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		w.Write(response.Body)
 		return true
 	}
-	status, detail := 409, "Plugin changed"
-	var apiError *APIError
-	if errors.As(err, &apiError) {
-		switch apiError.Code {
-		case "PLUGIN_API_AUTH_REVOKED":
-			status, detail = 401, "API credential revoked"
-		case "PLUGIN_QUEUE_FULL":
-			status, detail = 503, "Plugin busy"
-		case "INVALID_PLUGIN_VALUE":
-			status, detail = 413, "Request too large"
-		}
-	}
-	pluginHTTPError(w, &pluginHTTPFailure{status, detail})
+	pluginHTTPError(w, &pluginHTTPFailure{404, "Plugin adapter unavailable"})
 	return true
-}
-
-func (a *App) enqueuePluginHTTP(ctx context.Context, installation PluginInstallation, input plugins.HTTPRequest, scope pluginAPIScope) (PluginRun, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return PluginRun{}, err
-	}
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return PluginRun{}, err
-	}
-	defer tx.Rollback()
-	var current int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations WHERE instance_id=? AND plugin_id=? AND version=? AND generation=? AND installed=1 AND desired_enabled=1`, installation.InstanceID, installation.PluginID, installation.Version, installation.Generation).Scan(&current); err != nil {
-		return PluginRun{}, err
-	}
-	if current != 1 {
-		return PluginRun{}, bad("PLUGIN_SNAPSHOT_STALE", "插件API实例已变化")
-	}
-	var total, local int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*),COALESCE(SUM(c.instance_id=?),0) FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id WHERE r.state IN ('pending','running')`, installation.InstanceID).Scan(&total, &local); err != nil {
-		return PluginRun{}, err
-	}
-	if total >= 64 || local >= 16 {
-		return PluginRun{}, bad("PLUGIN_QUEUE_FULL", "插件API执行队列已满")
-	}
-	if err = a.validatePluginHTTPAuthorityTx(ctx, tx, scope.Authority); err != nil {
-		return PluginRun{}, err
-	}
-	if scope.Authority.Kind == "anonymous" {
-		manifest, _, ok := builtin.Lookup(installation.PluginID)
-		if ok && manifest.Version == installation.Version {
-			for _, api := range manifest.APIs {
-				if api.Auth != "anonymous" || api.Key != scope.Key || !pluginHTTPHasQueryCredential(api) {
-					continue
-				}
-				params, route := api.Match(input.Path)
-				if input.Key != scope.Key || input.Method != scope.Method || input.RequestID != scope.RequestID || !slices.Contains(api.Methods, scope.Method) || !route || !maps.Equal(params, input.Params) {
-					return PluginRun{}, bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据与编译路由不一致")
-				}
-				if err = a.validatePluginHTTPQueryCredentials(api, input, scope); err != nil {
-					return PluginRun{}, err
-				}
-				break
-			}
-		}
-	}
-
-	raw, err := json.Marshal(input)
-	if err != nil {
-		return PluginRun{}, err
-	}
-	run, err := a.pluginStore.enqueueRunTx(ctx, tx, installation.InstanceID, "api", raw)
-	if err != nil {
-		return run, err
-	}
-	clear, _ := json.Marshal(scope)
-	sealed, err := a.pluginStore.seal("api_scope", run.InstanceID, run.ID, clear)
-	if err != nil {
-		return run, err
-	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_api_calls VALUES(?,?,?,?,?)`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, sealed); err != nil {
-		return run, err
-	}
-	return run, tx.Commit()
-}
-
-// Anonymous source APIs may inspect a key and return their own failure body.
-// A frozen true is not lasting authority: its original keyed proof must still
-// match the live token at admission and every subsequent native IO boundary.
-func pluginHTTPHasQueryCredential(api plugins.HTTPAPI) bool {
-	for _, parameter := range api.Query {
-		if parameter.Kind == "api_key" {
-			return true
-		}
-	}
-	return false
-}
-
-func (a *App) validatePluginHTTPQueryCredentials(api plugins.HTTPAPI, request plugins.HTTPRequest, scope pluginAPIScope) error {
-	if api.Auth != "anonymous" || !pluginHTTPHasQueryCredential(api) {
-		return nil
-	}
-	declared := map[string]bool{}
-	for _, parameter := range api.Query {
-		if parameter.Kind == "api_key" {
-			declared[parameter.Name] = true
-		}
-	}
-	for name := range scope.CredentialProofs {
-		if !declared[name] || !request.CredentialMatches[name] {
-			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据证明与请求不一致")
-		}
-	}
-	token := a.Settings().APIToken
-	for name, matched := range request.CredentialMatches {
-		if !declared[name] {
-			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据未声明")
-		}
-		if _, exposed := request.Query[name]; exposed {
-			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据未隔离")
-		}
-		if !matched {
-			continue
-		}
-		proof := scope.CredentialProofs[name]
-		if proof == "" {
-			return bad("PLUGIN_API_SCOPE_DENIED", "插件API查询凭据缺少原始宿主证明")
-		}
-		if token == "" || !hmac.Equal([]byte(proof), []byte(a.pluginAPIKeyProof(token))) {
-			return bad("PLUGIN_API_AUTH_REVOKED", "插件API凭据已变化或失效")
-		}
-	}
-	return nil
 }
 
 func (a *App) validatePluginHTTPAuthorityTx(ctx context.Context, tx *sql.Tx, authority pluginAPIAuthority) error {
@@ -443,144 +301,4 @@ func (a *App) validatePluginHTTPAuthorityTx(ctx context.Context, tx *sql.Tx, aut
 		}
 	}
 	return bad("PLUGIN_API_AUTH_REVOKED", "插件API凭据已变化或失效")
-}
-func (a *App) validatePluginHTTPRunTx(ctx context.Context, tx *sql.Tx, run PluginRun) (plugins.HTTPRequest, error) {
-	var input plugins.Invocation
-	var request plugins.HTTPRequest
-	var sealed []byte
-	if run.Action != "api" || json.Unmarshal(run.Input, &input) != nil || !pluginStrictJSON(input.Input, &request) {
-		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API执行输入无效")
-	}
-	var pluginID string
-	err := tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.version=? AND r.version=i.version AND r.state IN ('pending','running','succeeded') AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND (v.revision=c.config_revision OR (i.plugin_id='SeedRescue' AND i.version='1.6.3') OR (i.plugin_id='BrushFlowLanduo' AND i.version='5.2.15') OR (i.plugin_id='AutoSignIn' AND i.version='2.9.14'))`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed, &pluginID)
-	// A recovered site collection can advance its frozen message sequence, not
-	// invoke the SDK or recollect. Keep this grant narrower than ordinary APIs.
-	if err != nil && run.Action == "api" {
-		collection, found, proofErr := a.pluginStore.siteMessageCollectionForRun(ctx, tx, run)
-		if proofErr == nil && found && (collection.Stage == "collected" || collection.Stage == "complete") {
-			err = tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.plugin_id='SiteStatistic' AND i.version=? AND r.version=i.version AND r.action='api' AND r.state='reconcile_pending' AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND v.revision=c.config_revision`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed, &pluginID)
-		}
-	}
-	if err != nil && a.pluginStore.isCloudflareRun(ctx, tx, run) {
-		revision, proofErr := a.pluginStore.cloudflareAPIRevisionTx(ctx, tx, run)
-		if proofErr == nil {
-			err = tx.QueryRowContext(ctx, `SELECT c.scope,i.plugin_id FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.plugin_id='CloudflareSpeedTest' AND i.version=? AND r.version=i.version AND r.state IN ('running','succeeded') AND i.installed=1 AND i.desired_enabled=1 AND i.generation=c.generation AND r.generation=c.generation AND r.config_revision=c.config_revision AND v.revision=?`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version, revision).Scan(&sealed, &pluginID)
-		}
-	}
-	if err != nil {
-		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API执行未获得宿主授权")
-	}
-	if pluginID == "AutoSignIn" && run.Version == "2.9.14" {
-		handled, proofErr := a.pluginStore.autoSignInScheduleAdmissionTx(ctx, tx, run.InstanceID, run.Generation, run.ConfigRevision)
-		if proofErr != nil {
-			return request, proofErr
-		}
-		if !handled {
-			return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API配置授权链无效")
-		}
-	}
-	if pluginID == "BrushFlowLanduo" && run.Version == "5.2.15" {
-		if err = a.brushFlowHTTPRevisionTx(ctx, tx, run); err != nil {
-			return request, err
-		}
-	}
-	if pluginID == "SeedRescue" && run.Version == "1.6.3" {
-		if err = a.seedRescueHTTPRevisionTx(ctx, tx, run); err != nil {
-			return request, err
-		}
-	}
-	return a.validatePluginHTTPScopeTx(ctx, tx, run, request, pluginID, sealed)
-}
-
-// Shared scope validation grants no execution state by itself. Callers must
-// authenticate their own exact run or accepted-notice identity first.
-func (a *App) validatePluginHTTPScopeTx(ctx context.Context, tx *sql.Tx, run PluginRun, request plugins.HTTPRequest, pluginID string, sealed []byte) (plugins.HTTPRequest, error) {
-	var scope pluginAPIScope
-	raw, err := a.pluginStore.unseal("api_scope", run.InstanceID, run.ID, sealed)
-	if err != nil {
-		return request, err
-	}
-	if !pluginStrictJSON(raw, &scope) || scope.Key != request.Key || scope.Method != request.Method || scope.RequestID != request.RequestID {
-		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API授权与执行不一致")
-	}
-	manifest, _, available := builtin.Lookup(pluginID)
-	authorized := false
-	var queryAPI *plugins.HTTPAPI
-	if available && manifest.Version == run.Version {
-		for _, api := range manifest.APIs {
-			if api.Key != scope.Key || !slices.Contains(api.Methods, scope.Method) {
-				continue
-			}
-			params, matched := api.Match(request.Path)
-			if !matched || !maps.Equal(params, request.Params) {
-				continue
-			}
-			authorized = api.Auth == "anonymous" && scope.Authority.Kind == "anonymous" || api.Auth == "apikey" && scope.Authority.Kind == "key" || api.Auth == "bear" && slices.Contains([]string{"key", "session"}, scope.Authority.Kind)
-			if authorized {
-				copy := api
-				queryAPI = &copy
-				break
-			}
-		}
-	}
-	if !authorized {
-		return request, bad("PLUGIN_API_SCOPE_DENIED", "插件API未声明当前路由、方法或鉴权方式")
-	}
-	if queryAPI != nil {
-		if err = a.validatePluginHTTPQueryCredentials(*queryAPI, request, scope); err != nil {
-			return request, err
-		}
-	}
-	return request, a.validatePluginHTTPAuthorityTx(ctx, tx, scope.Authority)
-}
-func (a *App) validatePluginHTTPRun(ctx context.Context, run PluginRun) error {
-	tx, err := a.Store.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-	_, err = a.validatePluginHTTPRunTx(ctx, tx, run)
-	return err
-}
-func (a *App) waitPluginHTTP(ctx context.Context, run PluginRun) (plugins.HTTPResponse, error) {
-	timer := time.NewTicker(25 * time.Millisecond)
-	defer timer.Stop()
-	for {
-		current, err := a.pluginStore.Run(ctx, run.ID)
-		if err != nil {
-			return plugins.HTTPResponse{}, err
-		}
-		switch current.State {
-		case "succeeded":
-			if err := a.validatePluginHTTPRun(ctx, current); err != nil {
-				return plugins.HTTPResponse{}, err
-			}
-			var response plugins.HTTPResponse
-			if !pluginStrictJSON(current.Result, &response) {
-				return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件API响应无效")
-			}
-			responseErr := response.Validate()
-			owner, ownerErr := a.pluginStore.Installation(ctx, current.InstanceID)
-			if ownerErr != nil {
-				return response, ownerErr
-			}
-			if brushFlowSnapshotOwner(owner.PluginID, owner.Version) {
-				responseErr = validateBrushFlowHTTPResponse(response)
-			}
-			if responseErr != nil {
-				return response, bad("PLUGIN_API_RESPONSE_INVALID", "插件API响应无效")
-			}
-			return response, nil
-		case "failed", "cancelled", "reconcile_pending":
-			if current.ErrorCode == "PLUGIN_API_AUTH_REVOKED" {
-				return plugins.HTTPResponse{}, bad(current.ErrorCode, "插件API凭据已失效")
-			}
-			return plugins.HTTPResponse{}, bad("PLUGIN_API_EXECUTION_FAILED", "插件API执行失败或等待恢复")
-		}
-		select {
-		case <-ctx.Done():
-			return plugins.HTTPResponse{}, ctx.Err()
-		case <-timer.C:
-		}
-	}
 }

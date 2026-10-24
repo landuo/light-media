@@ -240,6 +240,9 @@ func (a *App) createUISubscription(ctx context.Context, in SubscriptionRequest, 
 	state, code := "succeeded", ""
 	if cause != nil {
 		state, code = "retry_wait", pluginErrorCodeInternal(cause)
+		if code == "PLUGIN_ADAPTER_UNAVAILABLE" {
+			state = "failed"
+		}
 	}
 	_, finishErr := a.finishJob(context.WithoutCancel(ctx), job, state, code, "网页新增订阅原始业务流程", time.Now().Add(time.Minute).Unix())
 	var r subscriptionAddReceipt

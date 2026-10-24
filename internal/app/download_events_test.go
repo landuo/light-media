@@ -11,7 +11,6 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
-	"time"
 
 	"light-media/internal/sites"
 )
@@ -73,46 +72,11 @@ func nativeProducerFixture(t *testing.T) (*App, NativeDownloadRequest, *atomic.I
 	return a, NativeDownloadRequest{SiteID: "producer-site", ResourceID: "101", Query: "Jade Dynasty", DownloaderID: "test-qb", DownloadPath: source, MediaType: "tv", TMDBID: 206484}, adds
 }
 
-func executeSubscribeDownloadWorker(t *testing.T, a *App) PluginRun {
-	t.Helper()
-	run := subscribeGroupClaim(t, a)
-	a.executePluginRun(context.Background(), run)
-	finished, err := a.pluginStore.Run(context.Background(), run.ID)
-	if err != nil || finished.State != "succeeded" {
-		t.Fatal("actual Go plugin worker failed", finished.State, finished.ErrorCode, err)
-	}
-	return finished
-}
-
-func TestNativeDownloadProducerThroughActualGoSubscribeWorker(t *testing.T) {
+func TestNativeDownloadProducerFreezesContextAndEventAuthority(t *testing.T) {
 	for _, known := range []bool{false, true} {
 		t.Run(map[bool]string{false: "unidentified", true: "identified"}[known], func(t *testing.T) {
 			a, in, adds := nativeProducerFixture(t)
 			ctx := context.Background()
-			useBuiltInPluginProcess(t, a)
-			cookie := setupTestAdmin(t, a)
-			response := callTest(t, a.Handler(), "POST", "/api/plugins/install", `{"plugin_id":"SubscribeGroup"}`, cookie, "")
-			if response.Code != 200 {
-				t.Fatal("install failed", response.Code, response.Body.String())
-			}
-			executeSubscribeDownloadWorker(t, a)
-			config, err := a.pluginStore.Config(ctx, "SubscribeGroup")
-			if err != nil {
-				t.Fatal(err)
-			}
-			raw, _ := json.Marshal(map[string]any{"revision": config.Revision, "config": subscribeDownloadConfig()})
-			response = callTest(t, a.Handler(), "PUT", "/api/plugins/SubscribeGroup/config", string(raw), cookie, "")
-			if response.Code != 200 {
-				t.Fatal("configuration failed", response.Code, response.Body.String())
-			}
-			executeSubscribeDownloadWorker(t, a)
-			request := subscriptionRequest(t)
-			request.DownloadPath = in.DownloadPath
-			request.RootID = ""
-			sub, err := a.saveSubscription(ctx, "", request)
-			if err != nil {
-				t.Fatal(err)
-			}
 			if !known {
 				in.TMDBID = 0
 				in.MediaType = ""
@@ -165,18 +129,6 @@ func TestNativeDownloadProducerThroughActualGoSubscribeWorker(t *testing.T) {
 				if _, err := a.downloadAddedSnapshot(ctx, forged); err == nil {
 					t.Fatal("forged download authority read Context")
 				}
-			}
-			if err = a.dispatchPluginEvents(ctx, time.Now()); err != nil {
-				t.Fatal(err)
-			}
-			executeSubscribeDownloadWorker(t, a)
-			updated := subscribeGroupRead(t, a, sub.ID)
-			if known {
-				if updated.Policy.FilterParams == nil || *updated.Policy.FilterParams.Include != "MARKER.+FixtureTeam" || *updated.Policy.FilterParams.Resolution != "4K|2160p|x2160" || !reflect.DeepEqual(updated.SiteIDs, []string{"producer-site"}) {
-					t.Fatal("actual download did not fill subscription", updated.Policy, updated.SiteIDs)
-				}
-			} else if !reflect.DeepEqual(updated, sub) {
-				t.Fatal("unidentified download claimed an unrelated subscription")
 			}
 			var sealed []byte
 			if err = a.Store.DB.QueryRow(`SELECT payload FROM records WHERE kind='download_added' AND id=?`, accepted.EventID).Scan(&sealed); err != nil || json.Valid(sealed) || bytes.Contains(sealed, []byte("FixtureTeam")) {

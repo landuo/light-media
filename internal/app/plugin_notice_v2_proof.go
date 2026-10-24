@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"regexp"
 
@@ -91,67 +90,6 @@ func (p *PluginStore) validateNoticeBusinessV2Steps(ctx context.Context, q plugi
 		if rendered == nil || noticeTruth(rendered.Snapshot.Fields["save_history"]) != (history == 1) {
 			return seedhost.ErrUnsafe
 		}
-	}
-	return nil
-}
-
-func (a *App) larkBusinessNoticeResultTx(ctx context.Context, tx *sql.Tx, core *pluginLarkCoreExecution, payload pluginLarkBusinessNotice, id string) (pluginNoticeV2Result, error) {
-	var out pluginNoticeV2Result
-	r, _, e := a.pluginStore.readNoticeRoute(ctx, tx, id)
-	if e != nil || r.Version != 2 || r.BusinessV2 == nil || !r.Complete || r.SourceError != "" || r.Count < 2 || r.LastSHA == "" {
-		return out, larkEvidenceError()
-	}
-	b := r.BusinessV2.Binding
-	if b.Instance != core.inbox.Instance || b.Generation != core.inbox.Generation || b.Inbox != core.inbox.ID || b.Ordinal != core.ordinal || b.CoreInputSHA != tokenHash(string(mustCleanSeedJSON(payload))) {
-		return out, larkEvidenceError()
-	}
-	return pluginNoticeV2Result{Version: 1, RouteID: r.ID, EnvelopeSHA: r.BusinessV2.EnvelopeSHA, BusinessSHA: r.BusinessV2.BusinessSHA, Count: r.Count, LastSHA: r.LastSHA, SourceReturned: true}, nil
-}
-
-func (a *App) larkCommitBusinessNotice(ctx context.Context, core *pluginLarkCoreExecution, payload pluginLarkBusinessNotice, id string) (pluginNoticeV2Result, error) {
-	var out pluginNoticeV2Result
-	tx, e := a.Store.DB.BeginTx(ctx, nil)
-	if e != nil {
-		return out, e
-	}
-	defer tx.Rollback()
-	if _, _, e = a.larkCoreScopeTx(ctx, tx, core); e != nil {
-		return out, e
-	}
-	out, e = a.larkBusinessNoticeResultTx(ctx, tx, core, payload, id)
-	if e != nil {
-		return out, e
-	}
-	if e = a.larkP0CommitTx(ctx, tx, "notice.post", out); e != nil {
-		return out, e
-	}
-	return out, tx.Commit()
-}
-
-func (a *App) requireLarkBusinessNoticeResultTx(ctx context.Context, tx *sql.Tx, core *pluginLarkCoreExecution, payload pluginLarkBusinessNotice) error {
-	_, f, e := a.larkCoreScopeTx(ctx, tx, core)
-	if e != nil {
-		return e
-	}
-	steps, e := a.pluginStore.larkInboxStepsTx(ctx, tx, f)
-	if e != nil || core.ordinal < 1 || core.ordinal >= len(steps) {
-		return larkEvidenceError()
-	}
-	previous := steps[core.ordinal-1]
-	if previous.Kind != "write" || previous.Operation != "notice.post" || previous.Phase != "confirmed" || previous.InputSHA != tokenHash(string(mustCleanSeedJSON(payload))) {
-		return larkEvidenceError()
-	}
-	var result pluginNoticeV2Result
-	if cleanupJournalStrict(previous.Result, &result) != nil || result.Version != 1 || !result.SourceReturned || result.SourceError != "" {
-		return larkEvidenceError()
-	}
-	r, _, e := a.pluginStore.readNoticeRoute(ctx, tx, result.RouteID)
-	if e != nil || r.Version != 2 || !r.Complete || r.SourceError != "" || r.BusinessV2 == nil || r.Count != result.Count || r.LastSHA != result.LastSHA || r.BusinessV2.EnvelopeSHA != result.EnvelopeSHA || r.BusinessV2.BusinessSHA != result.BusinessSHA {
-		return larkEvidenceError()
-	}
-	b := r.BusinessV2.Binding
-	if b.Instance != f.Instance || b.Generation != f.Generation || b.Inbox != f.ID || b.Ordinal != previous.Ordinal || b.CoreInputSHA != previous.InputSHA || !larkSameRaw(r.BusinessV2.Input, mustCleanSeedJSON(payload)) {
-		return larkEvidenceError()
 	}
 	return nil
 }

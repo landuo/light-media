@@ -173,15 +173,12 @@ func (a *App) worker(ctx context.Context) {
 			if errors.As(e, &api) {
 				code = api.Code
 			}
-			var pendingRefresh *pluginRefreshWait
-			if errors.As(e, &pendingRefresh) {
-				code, state, runAt = "PLUGIN_REFRESH_PENDING", "retry_wait", pendingRefresh.Until.Unix()
-			} else if code == "DOWNLOADER_DISABLED" {
+			if code == "DOWNLOADER_DISABLED" {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Minute).Unix()
 			} else if code == "AUTOMATION_PAUSED" {
 				state = "waiting_paused"
-			} else if j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
+			} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
 			}
@@ -196,9 +193,7 @@ func (a *App) worker(ctx context.Context) {
 			a.notifyFailed(ctx, j, message)
 		}
 		if changed {
-			if code == "PLUGIN_REFRESH_PENDING" {
-				a.log("DEBUG", j.Kind, code, message, j.WorkflowID, j.ID)
-			} else if e != nil {
+			if e != nil {
 				a.log("ERROR", j.Kind, code, message, j.WorkflowID, j.ID)
 			} else {
 				a.log("INFO", j.Kind, "completed", "任务完成", j.WorkflowID, j.ID)
@@ -224,7 +219,7 @@ func (a *App) safeRun(ctx context.Context, j Job) (err error) {
 	}
 	switch j.Kind {
 	case "lark_message":
-		return a.runLarkMessage(ctx, j, p.ID)
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "历史插件消息任务尚未适配新的标准模块")
 	case "site_refresh":
 		return a.runSiteRefresh(ctx, j)
 	case "download_file_deleted":

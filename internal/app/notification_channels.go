@@ -33,9 +33,6 @@ func notificationChannelSHA(f notificationChannelFact) string {
 	return tokenHash(string(mustCleanSeedJSON(f)))
 }
 func (p *PluginStore) initNotificationChannelsTx(ctx context.Context, tx *sql.Tx) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if _, e := tx.ExecContext(ctx, notificationChannelSchema); e != nil {
 		return e
 	}
@@ -139,9 +136,6 @@ func (p *PluginStore) NotificationChannels(ctx context.Context) (NotificationCha
 	return out, tx.Commit()
 }
 func (p *PluginStore) notificationChannelsSaveTx(ctx context.Context, tx *sql.Tx, revision int64, value []any) (NotificationChannelSnapshot, error) {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return NotificationChannelSnapshot{}, err
-	}
 	old, e := p.notificationChannelsReadTx(ctx, tx)
 	if e != nil {
 		return old, e
@@ -189,9 +183,6 @@ func (p *PluginStore) notificationChannelsSaveTx(ctx context.Context, tx *sql.Tx
 	return NotificationChannelSnapshot{next.Revision, copied}, nil
 }
 func (p *PluginStore) SaveNotificationChannels(ctx context.Context, revision int64, value []any) (NotificationChannelSnapshot, error) {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return NotificationChannelSnapshot{}, err
-	}
 	tx, e := p.store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return NotificationChannelSnapshot{}, e

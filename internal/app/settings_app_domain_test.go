@@ -44,7 +44,6 @@ func TestSettingsAppDomainHTTPPersistenceAndClear(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				a.autoSignInEnvironment = func() []string { return nil }
 			}
 			t.Cleanup(func() {
 				if a != nil {

@@ -51,10 +51,10 @@ func subscriptionStatsInstallSettings(t *testing.T, a *App, host string, share b
 		t.Fatal(e)
 	}
 }
-func TestSubscriptionStatsActualLarkAddHTTPAsyncColdAndLostACK(t *testing.T) {
+func TestSubscriptionStatsActualCoreCompletionHTTPAsyncColdAndLostACK(t *testing.T) {
 	for _, mode := range []string{"200", "500", "lost_http_reply", "disabled", "missing_settings", "invalid_source_settings", "intent_ack_lost", "finish_ack_lost", "cold_accepted", "cold_intent"} {
 		t.Run(mode, func(t *testing.T) {
-			a, core, ctx, request, saved, fixture := noticeV2SubscriptionFixture(t)
+			a, complete, ctx, fixture := subscriptionStatsCompletionFixture(t)
 			var calls atomic.Int32
 			var mu sync.Mutex
 			var body []byte
@@ -99,19 +99,17 @@ func TestSubscriptionStatsActualLarkAddHTTPAsyncColdAndLostACK(t *testing.T) {
 					t.Fatal(e)
 				}
 			}
-			ordinal := core.ordinal
-			if e := a.larkCompleteSourceSubscription(ctx, core, request, saved); e != nil {
+			if e := a.safeRun(ctx, complete); e != nil {
 				t.Fatal("async admission blocked successful source add", e)
 			}
-			if calls.Load() != 0 || fixture.Sends.Load() != 1 || noticeV2AddedCount(t, a) != 1 {
+			if calls.Load() != 0 || fixture.Sends.Load() != 1 || subscriptionStatsCompletedCount(t, a) != 1 {
 				t.Fatal("child HTTP ran in parent", calls.Load())
 			}
 			j, r := subscriptionStatsOnly(t, a)
 			if r.Stage != "accepted" {
 				t.Fatal(r.Stage)
 			}
-			core.ordinal = ordinal
-			if e := a.larkCompleteSourceSubscription(ctx, core, request, saved); e != nil {
+			if e := a.safeRun(ctx, complete); e != nil {
 				t.Fatal("actual parent readback failed", e)
 			}
 			subscriptionStatsOnly(t, a)
@@ -132,7 +130,6 @@ func TestSubscriptionStatsActualLarkAddHTTPAsyncColdAndLostACK(t *testing.T) {
 			}
 			if strings.HasPrefix(mode, "cold_") {
 				dir, settings := a.Dir, a.Settings()
-				core.release()
 				if e := a.Close(); e != nil {
 					t.Fatal(e)
 				}
@@ -213,15 +210,15 @@ func TestSubscriptionStatsActualLarkAddHTTPAsyncColdAndLostACK(t *testing.T) {
 				decodeErr := decoder.Decode(&fields)
 				gotPath, gotUID, gotAgent := path, uid, agent
 				mu.Unlock()
-				if decodeErr != nil || len(fields) != 16 || gotPath != "/subscribe/add" || gotUID != "owned-source-uid" || gotAgent != "owned-source-UA" || fields["season"] != json.Number("4") || fields["name"] != "诛仙" || fields["media_source"] != "themoviedb" || fields["media_id"] != "206484" {
-					t.Fatal("actual source add locals/headers were not sent", fields, gotPath, decodeErr)
+				if decodeErr != nil || len(fields) != 7 || gotPath != "/subscribe/done" || gotUID != "owned-source-uid" || gotAgent != "owned-source-UA" || fields["tmdbid"] == nil || fields["media_source"] != "themoviedb" {
+					t.Fatal("actual source completion locals/headers were not sent", fields, gotPath, decodeErr)
 				}
 			}
 			_ = a.safeRun(context.Background(), j)
-			if calls.Load() != wantedCalls || noticeV2AddedCount(t, a) != 1 {
+			if calls.Load() != wantedCalls || subscriptionStatsCompletedCount(t, a) != 1 {
 				t.Fatal("child retry changed parent or duplicated HTTP")
 			}
-			if _, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='subscription_added'`); e != nil {
+			if _, e = a.Store.DB.Exec(`DELETE FROM records WHERE kind='source_subscribe_complete'`); e != nil {
 				t.Fatal(e)
 			}
 			if e = a.safeRun(context.Background(), j); e == nil {
@@ -348,23 +345,23 @@ func TestSubscriptionStatsActualCompletionAcceptedFactsNoticeAndHTTP(t *testing.
 	}
 }
 
-func TestSubscriptionStatsAdmissionFailureRollsBackSourceAdded(t *testing.T) {
-	a, core, ctx, request, saved, _ := noticeV2SubscriptionFixture(t)
+func TestSubscriptionStatsAdmissionFailureRollsBackSourceCompletion(t *testing.T) {
+	a, complete, ctx, _ := subscriptionStatsCompletionFixture(t)
 	if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_stats_admission_failure BEFORE INSERT ON jobs WHEN NEW.kind='subscription_stats' BEGIN SELECT RAISE(ABORT,'owned admission failure'); END`); e != nil {
 		t.Fatal(e)
 	}
-	if e := a.larkCompleteSourceSubscription(ctx, core, request, saved); e == nil {
+	if e := a.safeRun(ctx, complete); e == nil {
 		t.Fatal("thread admission failure falsely returned successful parent")
 	}
 	var stats int
 	a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='subscription_stats'`).Scan(&stats)
-	if stats != 0 || noticeV2AddedCount(t, a) != 0 {
+	if stats != 0 || subscriptionStatsCompletedCount(t, a) != 0 {
 		t.Fatal("failed child admission committed a partial source added", stats)
 	}
 }
 
 func TestSubscriptionStatsActualHTTPReceiptWriteFailureBecomesUnknownWithoutRetry(t *testing.T) {
-	a, core, ctx, request, saved, _ := noticeV2SubscriptionFixture(t)
+	a, complete, ctx, _ := subscriptionStatsCompletionFixture(t)
 	var calls atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		calls.Add(1)
@@ -375,7 +372,7 @@ func TestSubscriptionStatsActualHTTPReceiptWriteFailureBecomesUnknownWithoutRetr
 	}))
 	defer server.Close()
 	subscriptionStatsInstallSettings(t, a, server.URL, true)
-	if e := a.larkCompleteSourceSubscription(ctx, core, request, saved); e != nil {
+	if e := a.safeRun(ctx, complete); e != nil {
 		t.Fatal(e)
 	}
 	j, r := subscriptionStatsOnly(t, a)
@@ -392,12 +389,12 @@ func TestSubscriptionStatsActualHTTPReceiptWriteFailureBecomesUnknownWithoutRetr
 	if e := a.safeRun(context.Background(), j); pluginErrorCodeInternal(e) != "SUBSCRIPTION_STATS_UNCONFIRMED" || calls.Load() != 1 {
 		t.Fatal("unknown original POST repeated", e, calls.Load())
 	}
-	if noticeV2AddedCount(t, a) != 1 {
+	if subscriptionStatsCompletedCount(t, a) != 1 {
 		t.Fatal("child persistence failure rolled back parent")
 	}
 }
 func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
-	a, core, ctx, request, saved, _ := noticeV2SubscriptionFixture(t)
+	a, complete, ctx, _ := subscriptionStatsCompletionFixture(t)
 	var calls atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { calls.Add(1); w.WriteHeader(200) }))
 	defer server.Close()
@@ -423,7 +420,7 @@ func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
 	if _, e = a.Store.DB.Exec(`UPDATE records SET payload=? WHERE kind='source_statistics_settings' AND id='main'`, sealed); e != nil {
 		t.Fatal(e)
 	}
-	if e = a.larkCompleteSourceSubscription(ctx, core, request, saved); e != nil {
+	if e = a.safeRun(ctx, complete); e != nil {
 		t.Fatal(e)
 	}
 	j, r := subscriptionStatsOnly(t, a)
@@ -451,7 +448,7 @@ func TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration(t *testing.T) {
 }
 
 func TestSubscriptionStatsCloseCancelsOwnedHTTPAndSealsUnknownBeforeDatabaseClosure(t *testing.T) {
-	a, core, ctx, request, saved, _ := noticeV2SubscriptionFixture(t)
+	a, complete, ctx, _ := subscriptionStatsCompletionFixture(t)
 	started := make(chan struct{})
 	release := make(chan struct{})
 	var calls atomic.Int32
@@ -466,7 +463,7 @@ func TestSubscriptionStatsCloseCancelsOwnedHTTPAndSealsUnknownBeforeDatabaseClos
 	}))
 	defer func() { close(release); server.Close() }()
 	subscriptionStatsInstallSettings(t, a, server.URL, true)
-	if e := a.larkCompleteSourceSubscription(ctx, core, request, saved); e != nil {
+	if e := a.safeRun(ctx, complete); e != nil {
 		t.Fatal(e)
 	}
 	job, receipt := subscriptionStatsOnly(t, a)
@@ -507,4 +504,44 @@ func TestSubscriptionStatsCloseCancelsOwnedHTTPAndSealsUnknownBeforeDatabaseClos
 	if _, _, e = a.beginSubscriptionStatistics(context.Background()); e == nil {
 		t.Fatal("closed App admitted another statistics operation")
 	}
+}
+
+// Keep child lifecycle tests on the genuine core producer after the old Lark
+// adapter was removed. Preparation executes real acquisition/import evidence.
+func subscriptionStatsCompletionFixture(t *testing.T) (*App, Job, context.Context, *noticeSourceFixture) {
+	t.Helper()
+	ctx := context.Background()
+	var a *App
+	var complete Job
+	var fixture *noticeSourceFixture
+	qualityActualMovieWorkflow(t, "normal", func(current *App, sub Subscription) {
+		a = current
+		fixture = installNoticeSourceFixtures(t, a, sub.Media, 0, 0)
+		prepare, err := scanJob(a.Store.DB.QueryRow(`SELECT `+jobColumns+` FROM jobs WHERE kind='subscription_completion_prepare' AND json_extract(payload,'$.id')=? ORDER BY rowid LIMIT 1`, sub.ID))
+		if err != nil {
+			t.Fatal(err)
+		}
+		prepare = qualityRunningJob(t, a, prepare)
+		if err = a.safeRun(ctx, prepare); err != nil {
+			t.Fatal("real source completion preparation failed", err)
+		}
+		complete, err = scanJob(a.Store.DB.QueryRow(`SELECT ` + jobColumns + ` FROM jobs WHERE kind='subscription_completion' ORDER BY rowid LIMIT 1`))
+		if err != nil {
+			t.Fatal(err)
+		}
+		complete = qualityRunningJob(t, a, complete)
+	})
+	if a == nil || complete.ID == "" || fixture == nil {
+		t.Fatal("actual core completion fixture did not reach its producer")
+	}
+	return a, complete, ctx, fixture
+}
+
+func subscriptionStatsCompletedCount(t *testing.T, a *App) int {
+	t.Helper()
+	var count int
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='source_subscribe_complete'`).Scan(&count); err != nil {
+		t.Fatal(err)
+	}
+	return count
 }

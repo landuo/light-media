@@ -2,7 +2,7 @@ package app
 
 // Instance management belongs to the host, not individual plugin workers.
 // Implementation identity remains immutable: presentation versions never select
-// executable code, and clones get fresh owner journals and no queued invocation.
+// executable code. Clones get independent namespaces and actual SDK objects.
 import (
 	"bytes"
 	"context"
@@ -16,6 +16,7 @@ import (
 	"unicode"
 
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/artifacts"
 	"light-media/internal/plugins/builtin"
 )
 
@@ -104,12 +105,9 @@ func validatePluginCloneRequest(in PluginCloneRequest) error {
 	return nil
 }
 
-// Clone creates a new namespace atomically. An existing ID, including a retained
-// tombstone, can never be overwritten/reinstalled through this operation.
-func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCloneRequest) (PluginInstallation, error) {
-	if err := p.checkPluginFormWrite(ctx, source, pluginFormWriteLifecycle); err != nil {
-		return PluginInstallation{}, err
-	}
+// The actual manager resolved the source class and copied its code before this
+// namespace write. Installed membership is not a clone lifecycle gate.
+func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, request PluginCloneRequest) (PluginInstallation, error) {
 	var out PluginInstallation
 	if !pluginStorageID.MatchString(source) {
 		return out, bad("INVALID_PLUGIN_CLONE", "来源实例编号无效")
@@ -129,23 +127,9 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 		return out, err
 	}
 	defer tx.Rollback()
-	var exists int
-	if err = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_installations WHERE instance_id=?`, target).Scan(&exists); err != nil {
-		return out, err
-	}
-	if exists != 0 {
-		return out, bad("PLUGIN_CLONE_CONFLICT", "分身编号已存在或保留了卸载数据，请使用其他后缀")
-	}
 	var sealed []byte
 	if err = tx.QueryRowContext(ctx, `SELECT instance_id,plugin_id,version,manifest_schema,manifest,desired_enabled,installed,generation FROM plugin_installations WHERE instance_id=?`, source).Scan(&out.InstanceID, &out.PluginID, &out.Version, &out.ManifestSchemaVersion, &sealed, &out.DesiredEnabled, &out.Installed, &out.Generation); err != nil {
 		return out, err
-	}
-	if !out.Installed {
-		return out, bad("PLUGIN_NOT_INSTALLED", "来源插件已卸载")
-	}
-	manifest, _, available := builtin.Lookup(out.PluginID)
-	if !available || manifest.Version != out.Version {
-		return out, bad("PLUGIN_IMPLEMENTATION_UNAVAILABLE", "来源插件的当前实现不可用，不能创建分身")
 	}
 	out.Manifest, err = p.unseal("manifest", source, "main", sealed)
 	if err != nil {
@@ -155,31 +139,8 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	if json.Unmarshal(out.Manifest, &storedManifest) != nil || storedManifest.Validate() != nil || storedManifest.PluginID != out.PluginID || storedManifest.Version != out.Version {
 		return out, bad("PLUGIN_INSTANCE_METADATA_INVALID", "来源实例与已认证实现元数据不一致")
 	}
-	if _, err = p.pluginUpdateReviewRead(ctx, tx, out); err != nil {
-		return out, err
-	}
-	// Never relabel imported/unclaimed references as native through a clone.
-	if err = p.requirePluginExecutionHandoffTx(ctx, tx, source); err != nil {
-		return out, err
-	}
-	if siteReferencePlugin(out.PluginID) {
-		protocol, e := p.readSiteReferenceProtocol(ctx, tx, out)
-		if e != nil {
-			return out, e
-		}
-		if protocol.Protocol != sourceSiteReferenceProtocol || (protocol.Source != "host-install/v1" && protocol.Source != "reset-empty/v1") {
-			return out, bad("PLUGIN_CLONE_REFERENCE_MIGRATION_REQUIRED", "来源实例仍绑定专用迁移引用，需先完成可复制引用的转换")
-		}
-	}
-	if isTorrentTransfer(out.PluginID) {
-		root, _, e := p.transferRootReadTx(ctx, tx, source, out.Generation)
-		if e != nil {
-			return out, e
-		}
-		if root.ReferenceProtocol != "native-downloader-name/v1" {
-			return out, bad("PLUGIN_CLONE_REFERENCE_MIGRATION_REQUIRED", "来源实例仍绑定专用下载器迁移引用")
-		}
-	}
+	manifest := storedManifest
+
 	raw := json.RawMessage(`{}`)
 	err = tx.QueryRowContext(ctx, `SELECT sealed FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, source).Scan(&sealed)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -191,23 +152,26 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 			return out, err
 		}
 	}
+	if cached, ok := ctx.Value(originalCloneConfigKey{}).(originalCloneConfiguration); ok && cached.source == source {
+		raw = cached.raw
+	}
 	var config map[string]json.RawMessage
-	if json.Unmarshal(raw, &config) != nil || config == nil {
+	if originalBaseJSONTruthy(raw) && json.Unmarshal(raw, &config) != nil {
 		return out, bad("INVALID_PLUGIN_CONFIG", "来源插件配置不是对象")
 	}
-	// Preserve the declared config shape: strict typed plugins need not accept
-	// an invented second spelling. The independent host staging gate remains
-	// false even when the plugin declares neither field.
-	for _, key := range []string{"enable", "enabled"} {
-		if _, exists := config[key]; exists {
-			config[key] = json.RawMessage(`false`)
-		}
+	// MoviePilot 8a83efe core/plugin.py clone_plugin: only a nonempty
+	// source dictionary is copied. Both enable spellings are written, even
+	// when absent in the source. Every other value is preserved verbatim.
+	copyConfig := len(config) != 0
+	if copyConfig {
+		config["enable"] = json.RawMessage(`false`)
+		config["enabled"] = json.RawMessage(`false`)
 	}
 	raw, err = json.Marshal(config)
 	if err != nil {
 		return out, err
 	}
-	if len(raw) > pluginValueLimit && !brushFlowSnapshotOwner(out.PluginID, out.Version) {
+	if len(raw) > pluginValueLimit {
 		return out, bad("INVALID_PLUGIN_VALUE", "分身配置超过大小上限")
 	}
 	sourceMeta, err := p.instanceMetadata(ctx, tx, source)
@@ -249,14 +213,20 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 		return out, err
 	}
 	out.InstanceID = target
-	out.DesiredEnabled = false
+	out.DesiredEnabled = true
 	out.Generation = 1
 	out.Installed = true
 	if err = p.installTx(ctx, tx, out); err != nil {
 		return out, err
 	}
-	if _, err = p.saveValueTx(ctx, tx, target, "config", "main", 0, raw); err != nil {
-		return out, err
+	if copyConfig {
+		configSealed, sealErr := p.seal("config", target, "main", raw)
+		if sealErr != nil {
+			return out, sealErr
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_values(instance_id,kind,item_key,revision,sealed,updated_at) VALUES(?,'config','main',1,?,?) ON CONFLICT(instance_id,kind,item_key) DO UPDATE SET revision=plugin_values.revision+1,sealed=excluded.sealed,updated_at=excluded.updated_at`, target, configSealed, now()); err != nil {
+			return out, err
+		}
 	}
 	raw, err = json.Marshal(metadata)
 	if err != nil {
@@ -266,15 +236,11 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 	if err != nil {
 		return out, err
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_instance_metadata(instance_id,sealed) VALUES(?,?)`, target, sealed); err != nil {
+	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_instance_metadata(instance_id,sealed) VALUES(?,?) ON CONFLICT(instance_id) DO UPDATE SET sealed=excluded.sealed`, target, sealed); err != nil {
 		return out, err
 	}
-	if err = p.cloneOrganizationMemberTx(ctx, tx, source, target); err != nil {
-		return out, err
-	}
-	// Return the actual target manifest, including its fresh lifecycle evidence,
-	// rather than the caller/source copy prepared before installTx.
-	out, err = p.pluginLifecycleInstallation(ctx, tx, target)
+	// Read the actual class metadata written by this transaction, not an old lifecycle marker.
+	out, err = p.managerInstallation(ctx, tx, target)
 	if err != nil {
 		return out, err
 	}
@@ -285,9 +251,6 @@ func (p *PluginStore) Clone(ctx context.Context, source string, request PluginCl
 }
 
 func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx, source, target string) error {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	org, err := p.organization(ctx, tx)
 	if err != nil {
 		return err
@@ -334,15 +297,82 @@ func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx,
 func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source string) (any, error) {
 	var request PluginCloneRequest
 	if err := decodePluginBody(w, r, &request); err != nil {
-		return nil, err
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
+	// The original FastAPI endpoint is synchronous (def); client disconnect
+	// does not cancel the already accepted method sequence.
+	ctx := context.WithoutCancel(r.Context())
 	a.pluginLifecycleMu.Lock()
 	defer a.pluginLifecycleMu.Unlock()
-	in, err := a.pluginStore.Clone(r.Context(), source, request)
-	if err != nil {
-		return nil, err
+	if _, exists := a.pluginOriginalClasses.Load(source); !exists {
+		return map[string]any{"success": false, "message": "原插件 " + source + " 不存在"}, nil
 	}
-	return map[string]any{"created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
+	if e := validatePluginCloneRequest(request); e != nil {
+		return map[string]any{"success": false, "message": e.Error()}, nil
+	}
+	target := source + strings.ToLower(request.Suffix)
+	if known, _, exists := builtin.Lookup(target); exists && known.PluginID == target {
+		return map[string]any{"success": false, "message": "分身插件 " + target + " 已存在"}, nil
+	}
+	if retained, e := a.pluginStore.Installation(ctx, target); e == nil {
+		present, e := a.originalCodeAliasPresent(ctx, retained)
+		if e != nil {
+			return map[string]any{"success": false, "message": "创建插件分身失败：" + e.Error()}, nil
+		}
+		if present {
+			return map[string]any{"success": false, "message": "分身插件 " + target + " 已存在"}, nil
+		}
+	} else if !errors.Is(e, sql.ErrNoRows) {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + e.Error()}, nil
+	}
+	sourceInstallation, lookupErr := a.pluginStore.Installation(ctx, source)
+	if lookupErr != nil {
+		return nil, lookupErr
+	}
+	implementation, lookupErr := a.resolvePluginImplementation(ctx, sourceInstallation)
+	if lookupErr != nil {
+		return nil, lookupErr
+	}
+	if implementation.External {
+		if _, copyErr := artifacts.CloneInstalled(a.pluginPackageRoot(), source, target, func(m plugins.Manifest, c string) error {
+			if m.PluginID != sourceInstallation.PluginID || m.Version != sourceInstallation.Version {
+				return bad("PLUGIN_IMPLEMENTATION_MISMATCH", "来源代码版本不匹配")
+			}
+			return validatePluginArtifactContract(m, c)
+		}); copyErr != nil {
+			return map[string]any{"success": false, "message": copyErr.Error()}, nil
+		}
+	}
+	cached, _, cacheErr := a.readOriginalBaseConfigForInit(ctx, source)
+	if cacheErr != nil {
+		return map[string]any{"success": false, "message": cacheErr.Error()}, nil
+	}
+	ctx = context.WithValue(ctx, originalCloneConfigKey{}, originalCloneConfiguration{source: source, raw: cached})
+	in, err := a.pluginStore.cloneOriginalClass(ctx, source, request)
+	if err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	if err = a.writeOriginalCodeAlias(ctx, in, true); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	// Port the real initializer calls at the HTTP boundary, not trace hooks.
+	// The enclosing stop/reload-event/register operations are implemented in
+	// the original lifecycle adapter; do not use the removed lazy-write path.
+	if err = a.initializeOriginalCloneCalls(ctx, in.InstanceID); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	tx, err := a.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	defer tx.Rollback()
+	if err = a.pluginStore.cloneOrganizationMemberTx(ctx, tx, source, in.InstanceID); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	if err = tx.Commit(); err != nil {
+		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	return map[string]any{"success": true, "message": "插件分身创建成功", "created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
 }
 
 func (p *PluginStore) presentInstance(ctx context.Context, in PluginInstallation, manifest plugins.Manifest) (pluginCard, error) {
@@ -368,4 +398,10 @@ func (p *PluginStore) presentInstance(ctx context.Context, in PluginInstallation
 func (p *PluginStore) defaultPluginReferenceCandidate(ctx context.Context, q pluginOrganizationReader, instance string) (bool, error) {
 	metadata, err := p.instanceMetadata(ctx, q, instance)
 	return metadata.SourceInstanceID == "", err
+}
+
+type originalCloneConfigKey struct{}
+type originalCloneConfiguration struct {
+	source string
+	raw    json.RawMessage
 }

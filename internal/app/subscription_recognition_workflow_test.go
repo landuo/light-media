@@ -4,11 +4,18 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"testing"
+	"time"
 
 	"light-media/internal/catalog"
 	"light-media/internal/decision"
@@ -143,7 +150,7 @@ func TestSubscriptionRecognitionActualSelectionContextSurvivesRestartAndRecheck(
 			// Use a no-op local list to suppress a global episode-changing rule.
 			// The complete original titles/files must pass real automatic checks.
 			local := "# synthetic-private-selected-word\nJade[.]Dynasty => Jade.Dynasty\n\n "
-			f := subscribeContinuationConfigFixture(t, subscribeDownloadConfig(), func(f *subscribeContinuation) {
+			f := newRecognitionSelectionFixture(t, func(f *recognitionSelectionFixture) {
 				f.request.CustomWords = subscriptionWordsRaw(t, local)
 				if err := f.app.saveRecognitionWords(ctx, 0, []string{"S04E0[12] => S04E01-E04"}); err != nil {
 					t.Fatal(err)
@@ -204,16 +211,13 @@ func TestSubscriptionRecognitionActualSelectionContextSurvivesRestartAndRecheck(
 			}
 			t.Cleanup(func() { _ = a.Close() })
 			f.app = a
-			useBuiltInPluginProcess(t, a)
-			firstJob, first := subscribeContinuationClaim(t, f)
+			firstJob, first := recognitionSelectionClaim(t, f)
 			if existingHash {
 				f.seedTask(first, 0)
 			}
-			subscribeContinuationRun(t, f, firstJob)
-			run, _ := subscribeContinuationEvent(t, a)
-			subscribeSDKExecute(t, a, run)
-			secondJob, second := subscribeContinuationClaim(t, f)
-			subscribeContinuationRun(t, f, secondJob)
+			recognitionSelectionRun(t, f, firstJob)
+			secondJob, second := recognitionSelectionClaim(t, f)
+			recognitionSelectionRun(t, f, secondJob)
 			wantAdds := int32(2)
 			if existingHash {
 				wantAdds = 1
@@ -247,7 +251,7 @@ func TestSubscriptionRecognitionActualSelectionContextSurvivesRestartAndRecheck(
 				t.Fatal("both actual accepted facts were not committed", facts)
 			}
 			// Completed file parsing also follows the selected snapshot, after
-			// the live subscription's internal revision and global words changed.
+			// the live global words and metadata options changed.
 			if err := a.Store.Get(ctx, "intent", second.ID, &second); err != nil {
 				t.Fatal(err)
 			}
@@ -339,5 +343,206 @@ func TestIntentRecognitionPreservesExplicitEmptyExtensionsAndLegacyGlobalFallbac
 	}
 	if _, err = a.intentRecognitionContext(ctx, Intent{ID: source.DownloadID, Hash: strings.Repeat("b", 40)}); err == nil {
 		t.Fatal("selected context could be rebound to another hash")
+	}
+}
+
+// Neutral HTTP/core portion of the former continuation fixture. No plugin
+// setup, worker or event consumer participates in this core recognition test.
+type recognitionSelectionFixture struct {
+	app       *App
+	sub       Subscription
+	request   SubscriptionRequest
+	adds      atomic.Int32
+	gate      atomic.Bool
+	entered   chan struct{}
+	release   chan struct{}
+	enterOnce sync.Once
+	freeOnce  sync.Once
+	listing   atomic.Value
+	seedTask  func(Intent, float64)
+}
+
+func newRecognitionSelectionFixture(t *testing.T, configure ...func(*recognitionSelectionFixture)) *recognitionSelectionFixture {
+	t.Helper()
+	f := &recognitionSelectionFixture{app: subscriptionTestApp(t), entered: make(chan struct{}), release: make(chan struct{})}
+	a, ctx := f.app, context.Background()
+	materials, hashes, titles := map[string][]byte{}, map[string]string{}, map[string]string{}
+	fragments := []string{}
+	for episode := 1; episode <= 3; episode++ {
+		key := fmt.Sprint(100 + episode)
+		title := fmt.Sprintf("Jade.Dynasty.S04E%02d.2160p.WEB-DL.HDR10-FixtureTeam", episode)
+		titles[key] = title
+		materials[key], hashes[key] = workflowTorrent(title + ".mkv")
+		fragments = append(fragments, strings.ReplaceAll(workflowHTML(title, "", true), "id=101", "id="+key))
+	}
+	var tasksMu sync.Mutex
+	tasks := map[string]map[string]any{}
+	f.seedTask = func(in Intent, progress float64) {
+		tasksMu.Lock()
+		defer tasksMu.Unlock()
+		task := workflowTask(in.Hash, progress)
+		task["save_path"], task["name"] = in.DownloadPath, in.ResourceTitle+".mkv"
+		tasks[in.Hash] = task
+	}
+	qb := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/api/v2/torrents/info":
+			tasksMu.Lock()
+			defer tasksMu.Unlock()
+			found := []any{}
+			for hash, task := range tasks {
+				if filter := r.URL.Query().Get("hashes"); filter == "" || filter == hash {
+					found = append(found, task)
+				}
+			}
+			workflowJSON(w, found)
+		case "/api/v2/torrents/add":
+			if err := r.ParseMultipartForm(4 << 20); err != nil {
+				t.Error(err)
+				http.Error(w, "bad form", 400)
+				return
+			}
+			file, _, err := r.FormFile("torrents")
+			if err != nil {
+				t.Error(err)
+				http.Error(w, "missing material", 400)
+				return
+			}
+			raw, err := io.ReadAll(file)
+			file.Close()
+			material, parseErr := metainfo.ParseMaterial(raw)
+			if err != nil || parseErr != nil {
+				t.Error("invalid actual submission material", err, parseErr)
+				http.Error(w, "invalid material", 400)
+				return
+			}
+			tasksMu.Lock()
+			if _, duplicate := tasks[material.Hash]; duplicate {
+				t.Error("same torrent was added twice")
+			}
+			task := workflowTask(material.Hash, 0)
+			task["save_path"] = r.FormValue("savepath")
+			task["name"] = material.Name
+			tasks[material.Hash] = task
+			tasksMu.Unlock()
+			f.adds.Add(1)
+			io.WriteString(w, "Ok.")
+		case "/api/v2/torrents/files":
+			tasksMu.Lock()
+			defer tasksMu.Unlock()
+			if task := tasks[r.URL.Query().Get("hash")]; task != nil {
+				workflowJSON(w, []any{map[string]any{"index": 0, "name": task["name"], "size": 1024, "progress": task["progress"], "priority": 1}})
+			} else {
+				workflowJSON(w, []any{})
+			}
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	t.Cleanup(qb.Close)
+	f.listing.Store(keywordFixtureListing(fragments...))
+	site := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/torrents.php":
+			if f.gate.Load() {
+				f.enterOnce.Do(func() { close(f.entered) })
+				select {
+				case <-f.release:
+				case <-r.Context().Done():
+					return
+				}
+			}
+			io.WriteString(w, f.listing.Load().(string))
+		case "/download.php":
+			if raw := materials[r.URL.Query().Get("id")]; raw != nil {
+				w.Write(raw)
+			} else {
+				http.NotFound(w, r)
+			}
+		default:
+			http.NotFound(w, r)
+		}
+	}))
+	t.Cleanup(site.Close)
+	t.Cleanup(func() { f.freeOnce.Do(func() { close(f.release) }) })
+	settings := a.Settings()
+	settings.Downloaders[0].BaseURL = qb.URL
+	source, pathErr := filepath.EvalSymlinks(t.TempDir())
+	if pathErr != nil {
+		t.Fatal(pathErr)
+	}
+	settings.AllowedRoots = []string{source}
+	for i := range settings.Roots {
+		settings.Roots[i].Path, pathErr = filepath.EvalSymlinks(settings.Roots[i].Path)
+		if pathErr != nil {
+			t.Fatal(pathErr)
+		}
+	}
+	settings.Sites = []SiteConfig{{Config: sites.Config{ID: "continuation-site", Name: "合成站点", Kind: "jiayuan", BaseURL: site.URL, Cookie: "synthetic-cookie"}, Enabled: true, DailyBudget: 10000}}
+	settings.RSSSites = []string{"continuation-site"}
+	if err := a.saveSettings(ctx, settings); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.saveResourceMetadataSettings(ctx, 0, resourceMetadataConfiguration{SourceMode: "rust", ReleaseGroups: []string{"FixtureTeam"}}); err != nil {
+		t.Fatal(err)
+	}
+	f.request = subscriptionRequest(t)
+	f.request.Keyword, f.request.DownloadPath, f.request.RootID = "Jade Dynasty", settings.AllowedRoots[0], ""
+	f.request.Episodes, f.request.TotalEpisodes = []int{1, 2}, 2
+	for _, setup := range configure {
+		setup(f)
+	}
+	var err error
+	f.sub, err = a.saveSubscription(ctx, "", f.request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.enqueue(ctx, "subscription", map[string]any{"id": f.sub.ID, "revision": f.sub.Revision}, "wf_continuation"); err != nil {
+		t.Fatal(err)
+	}
+	check, err := a.claim(ctx)
+	if err != nil || check.Kind != "subscription" {
+		t.Fatal("missing actual subscription check", err)
+	}
+	if err = a.safeRun(ctx, check); err != nil {
+		t.Fatal("actual subscription did not select resources", err)
+	}
+	if changed, err := a.finishJob(ctx, check, "succeeded", "", "", time.Now().Unix()); err != nil || !changed {
+		t.Fatal("check did not finish", err)
+	}
+	selected, err := a.Store.List(ctx, "intent", 100, 0)
+	if err != nil || len(selected) != 2 {
+		t.Fatal("check did not create two actual selected intents", len(selected), err)
+	}
+	for _, raw := range selected {
+		var in Intent
+		if json.Unmarshal(raw, &in) != nil || in.SubscriptionRevision != f.sub.Revision || in.SubscriptionID != f.sub.ID || len(in.Episodes) != 1 || in.Hash != hashes[in.ResourceID] || in.ResourceTitle != titles[in.ResourceID] {
+			t.Fatal("selected intent not bound to actual subscription/resource", in.ID)
+		}
+	}
+	return f
+}
+
+func recognitionSelectionClaim(t *testing.T, f *recognitionSelectionFixture) (Job, Intent) {
+	t.Helper()
+	job, err := f.app.claim(context.Background())
+	var body struct {
+		ID string `json:"id"`
+	}
+	var in Intent
+	if err != nil || job.Kind != "download" || json.Unmarshal(job.Payload, &body) != nil || f.app.Store.Get(context.Background(), "intent", body.ID, &in) != nil {
+		t.Fatal("missing selected core download", job.Kind, err)
+	}
+	return job, in
+}
+
+func recognitionSelectionRun(t *testing.T, f *recognitionSelectionFixture, job Job) {
+	t.Helper()
+	ctx := context.Background()
+	if err := f.app.safeRun(ctx, job); err != nil {
+		t.Fatal("selected core download failed", err)
+	}
+	if changed, err := f.app.finishJob(ctx, job, "succeeded", "", "", time.Now().Unix()); err != nil || !changed {
+		t.Fatal("selected download did not finish", err)
 	}
 }

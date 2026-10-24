@@ -115,8 +115,6 @@ func (a *App) handler() http.Handler {
 				a.writeError(w, r, &APIError{"UNAUTHORIZED", "请先登录", 401})
 				return
 			}
-			// The origin marker is minted only after authentication and CSRF checks.
-			r = pluginConfigSaveRequest(r)
 		}
 		mux.ServeHTTP(w, r)
 	})
@@ -124,9 +122,6 @@ func (a *App) handler() http.Handler {
 func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	p := strings.TrimPrefix(r.URL.Path, "/api/")
-	if a.pluginFrontendHTTP(w, r, p) {
-		return
-	}
 	if a.pluginServicesHTTP(w, r, p) {
 		return
 	}
@@ -144,7 +139,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	case p == "settings/api-token/reveal" && method == "POST":
 		out = map[string]string{"token": a.Settings().APIToken}
 	case p == "plugins" || strings.HasPrefix(p, "plugins/"):
-		out, e = a.pluginAPI(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "plugins"), "/"))
+		out, e = a.originalManagerHTTP(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "plugins"), "/"))
 	case p == "auth/status" && method == "GET":
 		out = map[string]any{"setup_required": !a.hasAdmin(), "authenticated": a.authenticated(r)}
 	case (p == "auth/login" || p == "auth/setup") && method == "POST":
@@ -647,6 +642,7 @@ func validateFNOSCredentialChange(incoming, previous FNConfig) error {
 }
 
 func (a *App) preserveSecrets(c *Settings) {
+	c.PluginMarkets = a.Settings().PluginMarkets
 	// The system settings form does not edit these controls. Its cached full
 	// snapshot must not overwrite newer changes made in the plugin/site flow.
 	c.IndexerSites = a.Settings().IndexerSites

@@ -7,11 +7,7 @@ import (
 	"errors"
 	"path/filepath"
 	"reflect"
-	"slices"
-	"sort"
 
-	"light-media/internal/catalog"
-	"light-media/internal/media"
 	"light-media/internal/metainfo"
 	"light-media/internal/sites"
 )
@@ -96,105 +92,7 @@ func (a *App) prepareDownloadSeasonProof(ctx context.Context, p *DownloadPreview
 	if len(wanted) == 0 {
 		return nil, nil
 	}
-	if p.Media.MediaType != "tv" || p.SubscriptionID != "" || len(wanted) < 2 || len(p.SelectedEpisodes) > 0 {
-		return nil, seasonScopeError()
-	}
-	core, ok := ctx.Value(pluginLarkCoreKey{}).(*pluginLarkCoreExecution)
-	if !ok || core == nil || core.inbox.ID == "" {
-		return nil, seasonScopeError()
-	}
-	if e := validateDownloadSeasonBasis(basis, wanted, mediaKey(p.Media), p.SiteID, p.ResourceID); e != nil {
-		return nil, e
-	}
-	expected := map[int]map[int]bool{}
-	known := []media.Episode{}
-	for _, request := range wanted {
-		if request.MediaType != "tv" || request.TMDBID != p.Media.ID || request.Season < 1 || expected[request.Season] != nil || len(request.Episodes) == 0 {
-			return nil, seasonScopeError()
-		}
-		expected[request.Season] = map[int]bool{}
-		season, e := a.season(ctx, p.Media.ID, request.Season)
-		if e != nil {
-			return nil, e
-		}
-		for _, ep := range season.Episodes {
-			known = append(known, media.Episode{Season: request.Season, Episode: ep.EpisodeNumber})
-		}
-		for _, ep := range request.Episodes {
-			if ep < 1 || expected[request.Season][ep] || !slices.ContainsFunc(season.Episodes, func(e catalog.Episode) bool { return e.EpisodeNumber == ep }) {
-				return nil, seasonScopeError()
-			}
-			expected[request.Season][ep] = true
-		}
-		if e := a.ensureNotExcluded(ctx, p.Media, request.Season, request.Episodes); e != nil {
-			return nil, e
-		}
-	}
-	result := &downloadSeasonProof{SourceBasis: append(json.RawMessage(nil), basis...), Version: 1, Kind: "download_preview", ID: p.ID, MediaKey: mediaKey(p.Media), Hash: m.Hash, SiteID: p.SiteID, ResourceID: p.ResourceID, LarkInbox: core.inbox.ID, Requested: wanted, Scopes: []downloadSeasonScope{}, Files: []downloadScopedFile{}}
-	acquired := map[int]map[int]bool{}
-	for _, file := range m.Files {
-		if !isVideo(file.Path) {
-			continue
-		}
-		parsed := a.parseMediaNameContext(ctx, filepath.Base(file.Path))
-		if parsed.Status != media.Parsed || parsed.Original == nil {
-			return nil, seasonScopeError()
-		}
-		resolved := media.Resolve(mediaKey(p.Media), *parsed.Original, media.Source{Site: p.SiteID}, p.Request.Mappings, known, nil)
-		if resolved.Status != media.Parsed || len(resolved.Standard) == 0 {
-			return nil, seasonScopeError()
-		}
-		f := downloadScopedFile{Path: file.Path, Size: file.Size, Episodes: []int{}}
-		for _, ep := range resolved.Standard {
-			if expected[ep.Season] == nil || !expected[ep.Season][ep.Episode] || f.Season != 0 && f.Season != ep.Season {
-				return nil, seasonScopeError()
-			}
-			f.Season = ep.Season
-			if acquired[ep.Season] == nil {
-				acquired[ep.Season] = map[int]bool{}
-			}
-			if acquired[ep.Season][ep.Episode] {
-				return nil, bad("REVIEW_SEASON_PACK", "多季包同一集包含多个视频版本，请人工核对")
-			}
-			acquired[ep.Season][ep.Episode] = true
-			f.Episodes = append(f.Episodes, ep.Episode)
-		}
-		target, e := a.target(ctx, SearchRequest{MediaType: "tv", TMDBID: p.Media.ID, Season: f.Season, Episodes: f.Episodes, Mappings: p.Request.Mappings}, false)
-		if e != nil {
-			return nil, e
-		}
-		actual := r
-		actual.Title = filepath.Base(file.Path)
-		actual.Subtitle = ""
-		actual.Size = file.Size
-		c := a.evaluateResourceContext(ctx, actual, target, decisionPolicy(Policy{}))
-		if !c.Accepted || c.NeedsConfirmation {
-			return nil, bad("REVIEW_FILE_IDENTITY", "多季包实际视频文件名不能确认目标身份，请手动核对")
-		}
-		sort.Ints(f.Episodes)
-		result.Files = append(result.Files, f)
-	}
-	seasons := []int{}
-	for season := range acquired {
-		seasons = append(seasons, season)
-	}
-	sort.Ints(seasons)
-	if len(seasons) < 2 || len(seasons) != len(expected) {
-		return nil, seasonScopeError()
-	}
-	for _, season := range seasons {
-		episodes := []int{}
-		for ep := range acquired[season] {
-			episodes = append(episodes, ep)
-		}
-		sort.Ints(episodes)
-		result.Scopes = append(result.Scopes, downloadSeasonScope{season, episodes})
-	}
-	p.Season = result.Scopes[0].Season
-	p.Episodes = qualityCopyNote(result.Scopes[0].Episodes)
-	p.Request.Season, p.Request.Episodes = p.Season, qualityCopyNote(p.Episodes)
-	p.SeasonScopeSHA = seasonScopeSHA(*result)
-	return result, nil
+	return nil, bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息插件多季下载入口尚未适配")
 }
 func (a *App) confirmDownloadSeasonProofTx(ctx context.Context, tx *sql.Tx, p DownloadPreview, in Intent) error {
 	proof, e := a.readDownloadSeasonProof(ctx, tx, "download_preview", p.ID, p.Hash, p.SeasonScopeSHA)

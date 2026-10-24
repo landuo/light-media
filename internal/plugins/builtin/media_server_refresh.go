@@ -51,7 +51,43 @@ const mediaServerRefreshForm = `[{"component":"VForm","content":[
  {"component":"VRow","content":[{"component":"VCol","props":{"cols":12},"content":[{"component":"VTextField","props":{"model":"delay","label":"延迟时间（秒）","placeholder":"0"}}]}]}
 ]}]`
 
+// OriginalMediaServerRefresh retains the actual initialized members. Its caller serializes
+// Handle and State; legacy SDK calls keep their historical per-call lifetime.
+type OriginalMediaServerRefresh struct {
+	config MediaServerRefreshConfiguration
+}
+
+func NewOriginalMediaServerRefresh() *OriginalMediaServerRefresh {
+	return &OriginalMediaServerRefresh{}
+}
+func (p *OriginalMediaServerRefresh) State() bool { return p.config.Enabled }
+func (p *OriginalMediaServerRefresh) Configuration() MediaServerRefreshConfiguration {
+	c := p.config
+	c.Delay = append(json.RawMessage(nil), c.Delay...)
+	c.MediaServers = append([]string(nil), c.MediaServers...)
+	return c
+}
+
 func HandleMediaServerRefresh(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	p := NewOriginalMediaServerRefresh()
+	// Legacy single-call SDK callers supply configuration on each invocation.
+	// Only this compatibility wrapper seeds non-init calls; a retained object's
+	// Handle always reads its own initialized members instead.
+	if method != "stop" && method != "config_form" {
+		var invocation plugins.Invocation
+		if json.Unmarshal(raw, &invocation) != nil {
+			return nil, errors.New("invalid media refresh invocation")
+		}
+		if invocation.Action != "init" && invocation.Action != "reload" {
+			if json.Unmarshal(invocation.Config, &p.config) != nil {
+				return nil, errors.New("invalid media refresh invocation")
+			}
+		}
+	}
+	return p.Handle(ctx, method, raw, host)
+}
+
+func (p *OriginalMediaServerRefresh) Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	if method == "stop" {
 		return json.RawMessage(`null`), nil // The host owns durable delays and draining.
 	}
@@ -76,8 +112,23 @@ func HandleMediaServerRefresh(ctx context.Context, method string, raw json.RawMe
 	}
 	var invocation plugins.Invocation
 	var config MediaServerRefreshConfiguration
-	if method != "invoke" || json.Unmarshal(raw, &invocation) != nil || json.Unmarshal(invocation.Config, &config) != nil {
+	if method != "invoke" || json.Unmarshal(raw, &invocation) != nil {
 		return nil, errors.New("invalid media refresh invocation")
+	}
+	if invocation.Action == "init" || invocation.Action == "reload" {
+		fields, err := originalStatelessConfigFields(invocation.Config)
+		if err != nil {
+			return nil, errors.New("invalid media refresh invocation")
+		}
+		if len(fields) > 0 {
+			if json.Unmarshal(invocation.Config, &config) != nil {
+				return nil, errors.New("invalid media refresh invocation")
+			}
+			p.config = config
+		}
+		config = p.config
+	} else {
+		config = p.config
 	}
 	delay, err := config.Duration()
 	if err != nil {

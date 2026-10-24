@@ -16,9 +16,6 @@ import (
 var notificationTemplateDefaults []byte
 
 func (p *PluginStore) initNotificationTemplatesTx(ctx context.Context, tx *sql.Tx) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if _, e := tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS notice_template_initialization(id TEXT PRIMARY KEY,source_sha TEXT NOT NULL)`); e != nil {
 		return e
 	}

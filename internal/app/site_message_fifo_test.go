@@ -3,14 +3,13 @@ package app
 import (
 	"context"
 	"fmt"
+	"light-media/internal/sites"
 	"net/http"
 	"net/http/httptest"
 	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
-
-	"light-media/internal/sites"
 )
 
 func siteMessageClosedFIFO(t *testing.T, a *App) *atomic.Int64 {
@@ -46,8 +45,6 @@ func siteMessageFIFOIDs(t *testing.T, a *App) []string {
 	return ids
 }
 
-// This hook crosses a real, test-owned HTTP boundary. It is not a live
-// notification account and does not claim production provider delivery.
 func siteMessageOwnedFIFOSender(t *testing.T, a *App) func() []string {
 	t.Helper()
 	var mu sync.Mutex
@@ -148,19 +145,19 @@ func TestSiteMessageAcceptedFIFOOutlivesLaterSourceFailureAndDoesNotBlockNext(t 
 	siteMessageColdDrainNoResend(t, a)
 }
 
-func TestSiteMessageRevokedQueuedGrantIsNotSentAndDoesNotBlockLaterFIFO(t *testing.T) {
-	for _, mode := range []string{"rotate_api_key", "disable_site"} {
+func TestSiteMessageCoreRevokedQueuedGrantIsNotSentAndDoesNotBlockLaterFIFO(t *testing.T) {
+	for _, mode := range []string{"disable_site", "connection"} {
 		t.Run(mode, func(t *testing.T) {
-			a, _, _, _ := pluginHTTPFixture(t)
+			a := newTestApp(t)
 			calls := siteMessageHTTPFixture(t, a, false)
 			ctx := context.Background()
 			clock := siteMessageClosedFIFO(t, a)
 			sent := siteMessageOwnedFIFOSender(t, a)
-			run := enqueueSyntheticPluginHTTP(t, a)
-			a.executePluginRun(ctx, run)
-			finished, err := a.pluginStore.Run(ctx, run.ID)
-			if err != nil || finished.State != "succeeded" || calls.Load() != 6 || len(sent()) != 0 {
-				t.Fatal("real API did not leave an accepted delayed message", finished.State, calls.Load(), sent(), err)
+			changedURL := siteMessageRevokedConnectionFixture(t)
+			job := siteMessageClaimBatch(t, a)
+			err := a.runSiteRefresh(ctx, job)
+			if err != nil || calls.Load() != 6 || len(sent()) != 0 {
+				t.Fatal("real core job did not leave an accepted delayed message", calls.Load(), sent(), err)
 			}
 			old := siteMessageFIFOIDs(t, a)
 			if len(old) != 1 {
@@ -168,8 +165,8 @@ func TestSiteMessageRevokedQueuedGrantIsNotSentAndDoesNotBlockLaterFIFO(t *testi
 			}
 			a.settingsMu.Lock()
 			settings := a.Settings()
-			if mode == "rotate_api_key" {
-				settings.APIToken = "owned-revoked-after-queue-key"
+			if mode == "connection" {
+				settings.Sites[0].BaseURL = changedURL
 			} else {
 				settings.Sites[0].Enabled = false
 			}
@@ -179,8 +176,7 @@ func TestSiteMessageRevokedQueuedGrantIsNotSentAndDoesNotBlockLaterFIFO(t *testi
 				t.Fatal(err)
 			}
 			// A separate enabled site and core job grant remain valid. Never
-			// re-enable the revoked API's site merely to build the next item.
-			job := siteMessageClaimBatch(t, a)
+			// re-enable the revoked source's site merely to build the next item.
 			next := siteMessageSeedCollectedDTO(t, a, job, "independent-valid", &sites.SourceUserData{MessageUnread: 1, Messages: [][]any{{"independent next", "date", "body"}}})
 			complete, err := a.finishSiteMessageCollection(ctx, next.ID)
 			if err != nil || complete.Stage != "complete" {
@@ -214,4 +210,16 @@ func TestSiteMessageRevokedQueuedGrantIsNotSentAndDoesNotBlockLaterFIFO(t *testi
 			siteMessageColdDrainNoResend(t, a)
 		})
 	}
+}
+
+// A legal, independently owned endpoint for connection-revocation setup only.
+// The core must reject the old grant before any request can reach this endpoint.
+func siteMessageRevokedConnectionFixture(t *testing.T) string {
+	t.Helper()
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Errorf("revoked site connection unexpectedly requested: %s", r.URL.Path)
+		http.Error(w, "must not request revoked origin", http.StatusInternalServerError)
+	}))
+	t.Cleanup(server.Close)
+	return server.URL
 }

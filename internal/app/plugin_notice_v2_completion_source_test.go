@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -11,7 +12,7 @@ import (
 func TestPluginNoticeV2CompletionBuildsOriginalMetaAndFreshMedia(t *testing.T) {
 	for _, best := range []bool{false, true} {
 		t.Run(map[bool]string{false: "subscribe", true: "best_version"}[best], func(t *testing.T) {
-			a, _, ctx, request, s, fixture := noticeV2SubscriptionFixture(t)
+			a, ctx, request, s, fixture := completionSourceCoreFixture(t)
 			original := map[string]any{"name": "完成时原名称 S03", "year": nil, "season": 4, "type": "电视剧", "tmdbid": s.Media.ID, "doubanid": nil, "bangumiid": nil, "anilistid": nil, "media_source": "themoviedb", "media_id": "206484", "best_version": best, "username": nil}
 			source, e := a.buildSubscriptionCompletionBusiness(ctx, s, mustCleanSeedJSON(original))
 			if e != nil {
@@ -50,4 +51,37 @@ func TestPluginNoticeV2CompletionBuildsOriginalMetaAndFreshMedia(t *testing.T) {
 			}
 		})
 	}
+}
+
+// Build and persist a real source-owned UI subscription without running a
+// removed Lark adapter or inventing an origin/receipt. The exact ordinary core
+// admission and mutation guards are the same ones used by runUISubscriptionAdd.
+func completionSourceCoreFixture(t *testing.T) (*App, context.Context, SubscriptionRequest, Subscription, *noticeSourceFixture) {
+	t.Helper()
+	a, request, fixture := uiSourceAddFixture(t)
+	ctx := context.Background()
+	input, err := a.buildUISubscriptionAdd(ctx, request, "owned-core-completion")
+	if err != nil {
+		t.Fatal(err)
+	}
+	identity, job, err := a.admitUISubscriptionAdd(ctx, input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	receipt, err := a.pluginStore.subscriptionAddReceipt(ctx, a.Store.DB, identity, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request = receipt.Input.Request
+	request.source = &receipt.Input.Origin
+	scope := &subscriptionAddExecution{a: a, Identity: identity, Job: job}
+	saved, err := a.saveSubscription(context.WithValue(ctx, subscriptionAddExecutionKey{}, scope), "", request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	persisted, err := a.pluginStore.subscriptionAddReceipt(ctx, a.Store.DB, identity, true)
+	if err != nil || persisted.Stage != "saved" || persisted.Saved == nil || persisted.Saved.SourceContextSHA != saved.SourceContextSHA || saved.SourceContextSHA != tokenHash(string(mustCleanSeedJSON(request.source))) {
+		t.Fatal("real core UI save did not atomically retain its source origin", err)
+	}
+	return a, ctx, request, saved, fixture
 }

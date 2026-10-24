@@ -302,9 +302,16 @@ var resolutionMatchers = compileRules(resolutionRules)
 var qualityMatchers = compileRules(qualityRules)
 var effectMatchers = compileRules(effectMatchRules)
 
+// The pinned source patterns are ASCII and use Python re.IGNORECASE. Go's
+// Unicode simple folding already includes long s and Kelvin K, but unlike
+// Python it does not join dotted/dotless I to ASCII i. Fold these two runes
+// only in the match input: unmatched user text must remain byte-for-byte
+// unchanged. This is not a general Python regular-expression translator.
+var parserCaseInput = strings.NewReplacer("\u0130", "i", "\u0131", "i")
+
 func ParseResolution(value string) string {
 	for i, re := range resolutionMatchers {
-		if re.MatchString(value) {
+		if re.MatchString(parserCaseInput.Replace(value)) {
 			return resolutionRules[i]
 		}
 	}
@@ -312,7 +319,7 @@ func ParseResolution(value string) string {
 }
 func normalize(value string, expressions []string, matchers []*regexp.Regexp) string {
 	for i, re := range matchers {
-		if re.MatchString(value) {
+		if re.MatchString(parserCaseInput.Replace(value)) {
 			value = expressions[i]
 		}
 	}

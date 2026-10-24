@@ -23,85 +23,77 @@ import (
 	"light-media/internal/catalog"
 	"light-media/internal/networkproxy"
 	"light-media/internal/plugins"
-	"light-media/internal/plugins/subscribegroup"
 )
 
 type App struct {
-	systemMessages          systemMessageRuntime
-	bigMemoryMode           bool // Trusted startup option; not worker or plugin configuration.
-	transferExtensions      nativeTransferExtensionRuntime
-	subscriptionStats       subscriptionStatsRuntime
-	recognitionMu           sync.Mutex
-	recognitionMatcher      atomic.Pointer[words.Matcher]
-	directoryFileMu         sync.Mutex
-	RestartRequested        chan struct{}
-	logs                    *runtimeLogger
-	logError                string
-	catMu                   sync.Mutex
-	mediaCategories         mediaCategoryRuntime
-	catClient               *catalog.Client
-	catCreds                TMDBConfig
-	catProxy                networkproxy.Config
-	metadataProxyMu         sync.Mutex
-	metadataProxyConfig     networkproxy.Config
-	metadataProxyClient     *http.Client
-	Store                   *Store
-	Dir                     string
-	web                     http.Handler
-	cfgMu                   sync.RWMutex
-	settingsMu              sync.Mutex
-	config                  Settings
-	controlMu               sync.Mutex
-	control                 string
-	activeWrites            int
-	logMu                   sync.Mutex
-	authMu                  sync.Mutex
-	authAttempts            map[string][]time.Time
-	jobWake                 chan struct{}
-	wg                      sync.WaitGroup
-	importMu                sync.Mutex
-	importSourceLink        func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
-	importAutoCommit        func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
-	subMu                   sync.Mutex
-	downloadMu              sync.Mutex
-	materialMu              sync.Mutex
-	materials               map[string][]byte
-	siteLocks               sync.Map
-	cancel                  context.CancelFunc
-	pluginMu                sync.Mutex
-	pluginIdentifiers       identifiersRuntime
-	pluginLifecycleMu       sync.Mutex
-	pluginStore             *PluginStore
-	pluginWake              chan struct{}
-	pluginProcess           chan struct{}
-	pluginCommand           func(string) (plugins.Command, error)
-	pluginHostsFile         string // Test seam; production always uses the container's /etc/hosts.
-	pluginProcessStats      pluginProcessSnapshotter
-	pluginServerStatus      pluginServerStatusRuntime
-	pluginRemoveLink        pluginRemoveLinkRuntime
-	pluginAutoSignIn        pluginAutoSignInRuntime
-	autoSignInEnvironment   func() []string               // Private startup-only seam; nil reads os.Environ.
-	autoSignInTjuptStartup  func() autoSignInTjuptStartup // Private trusted test input; nil uses only the startup environment and system roots.
-	pluginScrapeClean       pluginScrapeCleanRuntime
-	pluginCleanInvalidSeed  pluginCleanInvalidSeedRuntime
-	pluginAutoBackup        pluginAutoBackupRuntime
-	pluginIYUU              pluginIYUURuntime
-	pluginTransfer          pluginTransferRuntime
-	pluginCloudflare        pluginCloudflareRuntime
-	pluginSeedRescue        pluginSeedRescueRuntime
-	pluginBrushFlow         pluginBrushFlowRuntime
-	pluginLark              pluginLarkRuntime
-	pluginSitePeerAvailable func(string, string) bool      // Protocol-test seam; production uses the compiled catalog.
-	subscribeGroupCaches    map[string]subscribeGroupCache // pluginMu; deliberately empty after a cold App start.
-
-	pluginCleanupOutboxAudit pluginCleanupAuditCursor // pluginMu; bounded integrity audit, never an execution cursor.
-	pluginScrapeOutboxAudit  pluginScrapeAuditCursor
+	pluginOriginalBase             originalBaseState
+	pluginImplementationMu         sync.RWMutex
+	pluginOriginalInitializingRuns sync.Map
+	pluginOriginalEventsMu         sync.Mutex
+	pluginOriginalResetHandlers    []originalPluginDataResetHandler
+	pluginOriginalReloadQueue      []string
+	pluginOriginalEventDispatching bool
+	pluginOriginalRunningMu        sync.Mutex
+	pluginOriginalRunningOrder     []string
+	pluginOriginalCommandsMu       sync.Mutex
+	pluginOriginalCommands         map[string]map[string]any
+	pluginOriginalServicesMu       sync.Mutex
+	pluginOriginalDirectJobs       originalDirectJobs
+	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginOriginalClasses          sync.Map // Original _plugins: imported compiled class, independent of running and installed.
+	pluginRunningInstances         sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
+	systemMessages                 systemMessageRuntime
+	bigMemoryMode                  bool // Trusted startup option; not worker or plugin configuration.
+	transferExtensions             nativeTransferExtensionRuntime
+	subscriptionStats              subscriptionStatsRuntime
+	recognitionMu                  sync.Mutex
+	recognitionMatcher             atomic.Pointer[words.Matcher]
+	directoryFileMu                sync.Mutex
+	RestartRequested               chan struct{}
+	logs                           *runtimeLogger
+	logError                       string
+	catMu                          sync.Mutex
+	mediaCategories                mediaCategoryRuntime
+	catClient                      *catalog.Client
+	catCreds                       TMDBConfig
+	catProxy                       networkproxy.Config
+	metadataProxyMu                sync.Mutex
+	metadataProxyConfig            networkproxy.Config
+	metadataProxyClient            *http.Client
+	Store                          *Store
+	Dir                            string
+	web                            http.Handler
+	cfgMu                          sync.RWMutex
+	settingsMu                     sync.Mutex
+	config                         Settings
+	controlMu                      sync.Mutex
+	control                        string
+	activeWrites                   int
+	logMu                          sync.Mutex
+	authMu                         sync.Mutex
+	authAttempts                   map[string][]time.Time
+	jobWake                        chan struct{}
+	wg                             sync.WaitGroup
+	importMu                       sync.Mutex
+	importSourceLink               func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
+	importAutoCommit               func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
+	subMu                          sync.Mutex
+	downloadMu                     sync.Mutex
+	materialMu                     sync.Mutex
+	materials                      map[string][]byte
+	siteLocks                      sync.Map
+	cancel                         context.CancelFunc
+	pluginMu                       sync.Mutex
+	// Serialize original endpoint operations separately from live SDK calls.
+	// Shutdown may join workers and must not hold a callback snapshot lock.
+	pluginOriginalOperationMu sync.Mutex
+	pluginLifecycleMu         sync.Mutex
+	pluginStore               *PluginStore
+	pluginWake                chan struct{}
+	pluginProcess             chan struct{}
+	pluginCommand             func(string) (plugins.Command, error)
 }
 
-type subscribeGroupCache struct {
-	Generation, Revision int64
-	Rules                map[string]subscribegroup.Rule
-}
 type Options struct {
 	BigMemoryMode bool // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
 	DataDir       string
@@ -153,10 +145,7 @@ func New(opts Options) (*App, error) {
 	}
 	a.pluginStore, e = NewPluginStore(context.Background(), s)
 	if e == nil {
-		e = a.pluginStore.recoverPluginRuns(context.Background())
-		if e == nil {
-			e = a.loadRecognitionWords(context.Background())
-		}
+		e = a.loadRecognitionWords(context.Background())
 	}
 	if e != nil {
 		s.Close()
@@ -201,13 +190,7 @@ func New(opts Options) (*App, error) {
 func (a *App) Start(parent context.Context) {
 	ctx, cancel := context.WithCancel(parent)
 	a.cancel = cancel
-	if err := a.restoreScrapeFileCleanOwners(ctx); err != nil {
-		a.log("ERROR", "plugins", "scrape_restore_pending", "刮削清理状态待核对", "", "")
-	}
-	if err := a.restoreRemoveLinkOwners(ctx); err != nil {
-		a.log("ERROR", "plugins", "cleanup_restore_pending", "文件清理监听尚未恢复，已保留执行状态，请核对插件记录", "", "")
-	}
-	if err := a.initializeNativePlugins(ctx); err != nil {
+	if err := a.initializeOriginalPlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
 	}
 	for i := 0; i < 2; i++ {
@@ -217,13 +200,7 @@ func (a *App) Start(parent context.Context) {
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.scheduler(ctx) }()
 	a.wg.Add(1)
-	go func() { defer a.wg.Done(); a.pluginWorker(ctx) }()
-	a.wg.Add(1)
-	go func() { defer a.wg.Done(); a.pluginEventWorker(ctx) }()
-	a.wg.Add(1)
-	go func() { defer a.wg.Done(); a.pluginNoticeWorker(ctx) }()
-	a.wg.Add(1)
-	go func() { defer a.wg.Done(); a.pluginScheduleWorker(ctx) }()
+	go func() { defer a.wg.Done(); a.runOriginalPluginScheduler(ctx) }()
 	a.log("INFO", "runtime", "started", "服务已启动", "", "")
 	a.controlMu.Lock()
 	initialControl := a.control
@@ -231,6 +208,7 @@ func (a *App) Start(parent context.Context) {
 	a.log("INFO", "runtime", "recovery_checked", fmt.Sprintf("数据库版本1；启动恢复%d个未完成任务；自动化状态%s", a.Store.RecoveredJobs, initialControl), "", "")
 }
 func (a *App) Close() error {
+	a.closeOriginalSessions()
 	a.systemMessages.close()
 	if a.cancel != nil {
 		a.cancel()
@@ -238,13 +216,6 @@ func (a *App) Close() error {
 	a.stopSubscriptionStatistics()
 	a.wg.Wait()
 	a.closeSubscriptionStatisticsHTTP()
-	a.stopScrapeFileCleanPlugins()
-	a.stopRemoveLinkPlugins()
-	a.stopAutoSignInPlugins()
-	a.stopCleanInvalidSeedPlugins()
-	if a.cancel != nil {
-		a.stopMediaRefreshPlugins()
-	}
 	a.log("INFO", "runtime", "stopped", "服务已停止", "", "")
 	a.catMu.Lock()
 	if a.catClient != nil {
@@ -319,12 +290,7 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	if err := a.reconcileNativeSiteIdentitiesTx(ctx, tx, previous, c); err != nil {
 		return err
 	}
-	if effect == nil {
-		if err := a.followSiteControlsTx(ctx, tx, previous, &c); err != nil {
-			return err
-		}
-	}
-	if err := a.pruneDeletedSiteSubscriptionsTx(ctx, tx, previous, c); err != nil {
+	if err := a.pruneDeletedCoreSiteReferencesTx(ctx, tx, previous, &c); err != nil {
 		return err
 	}
 	if err := validateSettings(c); err != nil {
@@ -355,7 +321,6 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	a.cfgMu.Lock()
 	a.config = c
 	a.cfgMu.Unlock()
-	a.wakePlugins()
 	a.log("INFO", "settings", "updated", "连接和路径设置已更新", "", "")
 	return nil
 }

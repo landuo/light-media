@@ -35,6 +35,12 @@ func (a *App) catalogExploreImage(w http.ResponseWriter, r *http.Request) error 
 		if err != nil || st.Size() <= 0 || st.Size() > 8<<20 {
 			return false
 		}
+		contentType, err := catalogImageContentType(f)
+		if err != nil {
+			return false
+		}
+		// Cache filenames are not MIME evidence; inspect and rewind the bytes.
+		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Cache-Control", "private, max-age=86400")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		http.ServeContent(w, r, name, st.ModTime(), f)

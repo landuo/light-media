@@ -2,11 +2,8 @@ package app
 
 import (
 	"context"
-	"crypto/hmac"
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"light-media/internal/plugins"
 )
 
 // App-owned checks add the live API grant and site settings to the existing
@@ -80,84 +77,7 @@ func (a *App) requireSiteCollectionAuthorityModeTx(ctx context.Context, tx *sql.
 	if receipt.Origin.Kind != "api" {
 		return nil
 	}
-	run, err := a.pluginStore.scanPluginRun(tx.QueryRowContext(ctx, `SELECT `+pluginRunColumns+` FROM plugin_runs WHERE id=?`, receipt.Origin.ID))
-	if err != nil {
-		return err
-	}
-	bound, found, err := a.pluginStore.siteMessageCollectionForRun(ctx, tx, run)
-	if err != nil {
-		return err
-	}
-	if !found || bound.ID != receipt.ID {
-		return siteCollectionError()
-	}
-	// Authenticate mutable installation state separately from the immutable
-	// accepted route, so genuine revocation is distinct from missing proof.
-	var installed, enabled int
-	var generation, revision int64
-	var version string
-	if err = tx.QueryRowContext(ctx, `SELECT installed,desired_enabled,generation,version FROM plugin_installations WHERE instance_id=?`, run.InstanceID).Scan(&installed, &enabled, &generation, &version); err != nil {
-		return err
-	}
-	if installed != 1 || enabled != 1 || generation != run.Generation || version != run.Version {
-		return siteMessageAuthorityRevoked{}
-	}
-	if err = tx.QueryRowContext(ctx, `SELECT revision FROM plugin_values WHERE instance_id=? AND kind='config' AND item_key='main'`, run.InstanceID).Scan(&revision); err != nil {
-		return err
-	}
-	if revision != run.ConfigRevision {
-		return siteMessageAuthorityRevoked{}
-	}
-	if run.State == "canceled" || run.State == "cancelled" {
-		return siteMessageAuthorityRevoked{}
-	}
-	if accepted && run.State == "failed" && (receipt.Stage == "complete" || (receipt.Stage == "failed" && receipt.Failure != "")) {
-		var input plugins.Invocation
-		var request plugins.HTTPRequest
-		if json.Unmarshal(run.Input, &input) != nil || !pluginStrictJSON(input.Input, &request) {
-			return siteMessageNoticeEvidenceError()
-		}
-		if err = tx.QueryRowContext(ctx, `SELECT c.scope FROM plugin_api_calls c JOIN plugin_runs r ON r.id=c.run_id JOIN plugin_installations i ON i.instance_id=c.instance_id WHERE c.run_id=? AND c.instance_id=? AND c.generation=? AND c.config_revision=? AND i.plugin_id='SiteStatistic' AND r.action='api' AND r.state='failed' AND r.version=? AND r.generation=c.generation AND r.config_revision=c.config_revision`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision, run.Version).Scan(&sealed); err != nil {
-			return err
-		}
-		_, err = a.validatePluginHTTPScopeTx(ctx, tx, run, request, "SiteStatistic", sealed)
-	} else {
-		_, err = a.validatePluginHTTPRunTx(ctx, tx, run)
-	}
-	if err != nil {
-		var failure *APIError
-		if errors.As(err, &failure) && failure.Code == "PLUGIN_API_AUTH_REVOKED" {
-			return siteMessageAuthorityRevoked{}
-		}
-		return err
-	}
-
-	// The generic validator reads the in-memory settings projection for keys.
-	// Also verify the persisted key in this transaction: config commits precede
-	// cache publication, and a stale cache must not extend a revoked API grant.
-	if err = tx.QueryRowContext(ctx, `SELECT scope FROM plugin_api_calls WHERE run_id=? AND instance_id=? AND generation=? AND config_revision=?`, run.ID, run.InstanceID, run.Generation, run.ConfigRevision).Scan(&sealed); err != nil {
-		return err
-	}
-	raw, err := a.pluginStore.unseal("api_scope", run.InstanceID, run.ID, sealed)
-	if err != nil {
-		return err
-	}
-	var scope pluginAPIScope
-	if !pluginStrictJSON(raw, &scope) {
-		return siteCollectionError()
-	}
-	keyMatches := func(proof string) bool {
-		return settings.APIToken != "" && proof != "" && hmac.Equal([]byte(proof), []byte(a.pluginAPIKeyProof(settings.APIToken)))
-	}
-	if scope.Authority.Kind == "key" && !keyMatches(scope.Authority.Proof) {
-		return siteMessageAuthorityRevoked{}
-	}
-	for _, proof := range scope.CredentialProofs {
-		if !keyMatches(proof) {
-			return siteMessageAuthorityRevoked{}
-		}
-	}
-	return nil
+	return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件API消息来源尚未适配")
 }
 
 // A delayed queue entry may outlive normal source completion. Its dispatcher

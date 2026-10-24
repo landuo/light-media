@@ -104,6 +104,11 @@ THE SOFTWARE.
   margin-top: 16px !important;
 }
 
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mb-0),
+:where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mb-0) {
+  margin-bottom: 0px !important;
+}
+
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface) :is(.mb-2),
 :where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface):is(.mb-2) {
   margin-bottom: 8px !important;

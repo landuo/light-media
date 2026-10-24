@@ -2,9 +2,7 @@ package app
 
 import (
 	"context"
-	"crypto/sha256"
 	"database/sql"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -54,10 +52,6 @@ func identityRequire(t *testing.T, a *App, appID string) nativeSiteIdentity {
 		t.Fatal(err)
 	}
 	return v
-}
-func identityFixtureSourceFingerprint(s string) string {
-	b := sha256.Sum256([]byte("owned-independent-source-installation:" + s))
-	return hex.EncodeToString(b[:])
 }
 
 func TestNativeSiteIdentityActualHTTPStableRenameConcurrentAndRestart(t *testing.T) {
@@ -258,7 +252,6 @@ func TestNativeSiteIdentityActualSaveRollbackIncludesMappingConfigAndDeleteCache
 	}
 }
 func TestNativeSiteIdentityActualImportPreservesUnclaimedOriginalIDAndRollback(t *testing.T) {
-	ctx := context.Background()
 	a := newTestApp(t)
 	cookie := setupTestAdmin(t, a)
 	doc := json.RawMessage(`[{"id":42,"name":"Original","url":"https://alpha.example.com","cookie":"synthetic-only"}]`)
@@ -280,9 +273,6 @@ func TestNativeSiteIdentityActualImportPreservesUnclaimedOriginalIDAndRollback(t
 	}
 	if identityHTTP(t, a, cookie, "POST", "/api/sites/import", doc) != 200 || identityRequire(t, a, site.ID) != native || identityCount(t, a, "native_site_import_refs") != 1 {
 		t.Fatal("repeat import changed identity")
-	}
-	if _, err := a.migratedSiteIdentity(ctx, identityFixtureSourceFingerprint("not-registered"), 42); !errors.Is(err, sql.ErrNoRows) {
-		t.Fatal("read claimed source", err)
 	}
 	if identityCount(t, a, "native_site_migration_receipts") != 0 || identityCount(t, a, "native_site_source_snapshots") != 0 {
 		t.Fatal("import silently migrated selections")
@@ -358,72 +348,8 @@ func TestNativeSiteIdentityExplicitOldSettingsBootstrapAndReadOnlyQueries(t *tes
 		t.Fatal("reopen reallocated")
 	}
 }
-func TestNativeSiteIdentityMigrationRequiresIndependentSourceSnapshotExactOriginAndTombstone(t *testing.T) {
-	ctx := context.Background()
-	a := newTestApp(t)
-	if _, err := a.saveManagedSite(ctx, identityTestSite("Shared display name", "alpha.example.com")); err != nil {
-		t.Fatal(err)
-	}
-	site := a.Settings().Sites[0]
-	native := identityRequire(t, a, site.ID)
-	if _, err := a.saveManagedSite(ctx, identityTestSite("Shared display name", "beta.example.com")); err != nil {
-		t.Fatal(err)
-	}
-	other := a.Settings().Sites[1]
-	fp := identityFixtureSourceFingerprint("original-install-one")
-	snapshot, err := a.registerSiteIdentitySourceSnapshot(ctx, fp, []siteIdentitySourceEntry{{OriginalSourceID: 777, CanonicalOrigin: "https://alpha.example.com"}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 777, other.ID); err == nil {
-		t.Fatal("name/domain guess allowed")
-	}
-	if _, err = a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 778, site.ID); err == nil {
-		t.Fatal("unobserved original ID claimed")
-	}
-	receipt, err := a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 777, site.ID)
-	if err != nil || receipt.OriginalSourceID != 777 || receipt.NativeSourceID != native.SourceID {
-		t.Fatal(receipt, err)
-	}
-	repeated, err := a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 777, site.ID)
-	if err != nil || repeated != receipt {
-		t.Fatal("migration receipt not stable", err)
-	}
-	resolved, err := a.migratedSiteIdentity(ctx, fp, 777)
-	if err != nil || resolved != native {
-		t.Fatal("lookup", err)
-	}
-	if _, err = a.migratedSiteIdentity(ctx, identityFixtureSourceFingerprint("other-install"), 777); !errors.Is(err, sql.ErrNoRows) {
-		t.Fatal("cross-source numeric collision", err)
-	}
-	site.Name = "Renamed"
-	if _, err = a.saveManagedSite(ctx, site); err != nil {
-		t.Fatal(err)
-	}
-	if after, err := a.migratedSiteIdentity(ctx, fp, 777); err != nil || after != native {
-		t.Fatal("display rename changed migration", err)
-	}
-	if _, err = a.deleteManagedSite(ctx, site.ID); err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.migratedSiteIdentity(ctx, fp, 777); err == nil {
-		t.Fatal("tombstone resolved as live")
-	}
-	if _, err = a.saveManagedSite(ctx, identityTestSite("Again", "alpha.example.com")); err != nil {
-		t.Fatal(err)
-	}
-	replacement := a.Settings().Sites[len(a.Settings().Sites)-1]
-	if identityRequire(t, a, replacement.ID).SourceID == native.SourceID {
-		t.Fatal("recycled")
-	}
-	if _, err = a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 777, replacement.ID); err == nil {
-		t.Fatal("old source receipt rebound to new record")
-	}
-	if identityCount(t, a, "native_site_migration_receipts") != 1 {
-		t.Fatal("old receipt erased")
-	}
-}
-func TestNativeSiteIdentityMigrationReceiptAndMapTamperFailClosed(t *testing.T) {
+
+func TestNativeSiteIdentityMapTamperAndSettingsFailClosed(t *testing.T) {
 	ctx := context.Background()
 	a := newTestApp(t)
 	if _, err := a.saveManagedSite(ctx, identityTestSite("Alpha", "alpha.example.com")); err != nil {
@@ -431,26 +357,15 @@ func TestNativeSiteIdentityMigrationReceiptAndMapTamperFailClosed(t *testing.T) 
 	}
 	site := a.Settings().Sites[0]
 	original := identityRequire(t, a, site.ID)
-	fp := identityFixtureSourceFingerprint("owned")
-	snapshot, err := a.registerSiteIdentitySourceSnapshot(ctx, fp, []siteIdentitySourceEntry{{OriginalSourceID: 1, CanonicalOrigin: "https://alpha.example.com"}})
-	if err != nil {
+	if _, err := a.Store.DB.Exec(`UPDATE native_site_identities SET canonical_origin='https://beta.example.com' WHERE site_id=?`, site.ID); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 1, site.ID); err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.Store.DB.Exec(`UPDATE native_site_identities SET canonical_origin='https://beta.example.com' WHERE site_id=?`, site.ID); err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.Store.nativeSiteByID(ctx, original.SourceID); err == nil {
+	if _, err := a.Store.nativeSiteByID(ctx, original.SourceID); err == nil {
 		t.Fatal("tampered mapping accepted")
-	}
-	if _, err = a.migratedSiteIdentity(ctx, fp, 1); err == nil {
-		t.Fatal("tampered receipt backing accepted")
 	}
 	a.settingsMu.Lock()
 	config := a.Settings()
-	err = a.saveSettings(ctx, config)
+	err := a.saveSettings(ctx, config)
 	a.settingsMu.Unlock()
 	if err == nil {
 		t.Fatal("save silently repaired/claimed tampered mapping")
@@ -486,64 +401,5 @@ func TestNativeSiteIdentityActualSettingsAndPrioritiesShareAtomicProducer(t *tes
 	}
 	if identityRequire(t, a, one.ID).State != "deleted" || identityRequire(t, a, two.ID) != second {
 		t.Fatal("generic save bypassed tombstone")
-	}
-}
-func TestNativeSiteIdentityExplicitMigrationSQLRollbackNewSnapshotAndChangedOrigin(t *testing.T) {
-	ctx := context.Background()
-	a := newTestApp(t)
-	if _, err := a.saveManagedSite(ctx, identityTestSite("Alpha", "alpha.example.com")); err != nil {
-		t.Fatal(err)
-	}
-	site := a.Settings().Sites[0]
-	first := identityRequire(t, a, site.ID)
-	fp := identityFixtureSourceFingerprint("one")
-	snapshot, err := a.registerSiteIdentitySourceSnapshot(ctx, fp, []siteIdentitySourceEntry{{OriginalSourceID: 9, CanonicalOrigin: "https://alpha.example.com"}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.Store.DB.Exec(`CREATE TRIGGER owned_identity_migration_fail BEFORE INSERT ON native_site_migration_receipts BEGIN SELECT RAISE(ABORT,'owned migration failure'); END`); err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 9, site.ID); err == nil {
-		t.Fatal("SQL failure ignored")
-	}
-	if identityCount(t, a, "native_site_migration_receipts") != 0 || identityRequire(t, a, site.ID) != first {
-		t.Fatal("failed migration partly committed")
-	}
-	if _, err = a.Store.DB.Exec(`DROP TRIGGER owned_identity_migration_fail`); err != nil {
-		t.Fatal(err)
-	}
-	receipt, err := a.commitSiteIdentityMigration(ctx, snapshot.SnapshotID, 9, site.ID)
-	if err != nil {
-		t.Fatal(err)
-	}
-	newer, err := a.registerSiteIdentitySourceSnapshot(ctx, fp, []siteIdentitySourceEntry{{OriginalSourceID: 10, CanonicalOrigin: "https://beta.example.com"}, {OriginalSourceID: 9, CanonicalOrigin: "https://alpha.example.com"}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	replayed, err := a.commitSiteIdentityMigration(ctx, newer.SnapshotID, 9, site.ID)
-	if err != nil || replayed != receipt {
-		t.Fatal("new snapshot rebound existing receipt", err)
-	}
-	site.BaseURL = "https://changed.example.com"
-	if _, err = a.saveManagedSite(ctx, site); err != nil {
-		t.Fatal(err)
-	}
-	updated := identityRequire(t, a, site.ID)
-	if updated.SourceID != first.SourceID || updated.CanonicalOrigin == first.CanonicalOrigin {
-		t.Fatal("edit changed native numeric identity")
-	}
-	if _, err = a.migratedSiteIdentity(ctx, fp, 9); err == nil {
-		t.Fatal("old origin receipt silently followed new origin")
-	}
-	wrong, err := a.registerSiteIdentitySourceSnapshot(ctx, identityFixtureSourceFingerprint("wrong-origin"), []siteIdentitySourceEntry{{OriginalSourceID: 9, CanonicalOrigin: "https://sub.changed.example.com"}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err = a.commitSiteIdentityMigration(ctx, wrong.SnapshotID, 9, site.ID); err == nil {
-		t.Fatal("domain suffix guessed target")
-	}
-	if identityCount(t, a, "native_site_migration_receipts") != 1 {
-		t.Fatal("failed source claim wrote receipt")
 	}
 }

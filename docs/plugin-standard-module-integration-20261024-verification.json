@@ -1,0 +1,256 @@
+{
+  "source_manifest_sha256": "c868747e28ddb694546db42f85dc954b55f140c992f29366179f9cbd0082ad9d",
+  "source_files": 5446,
+  "final_verification": {
+    "completed_at": "2026-10-24T07:11:09.904330+00:00",
+    "source_manifest_sha256": "c868747e28ddb694546db42f85dc954b55f140c992f29366179f9cbd0082ad9d",
+    "source_files": 5446,
+    "drift": [],
+    "extra_files": [],
+    "symlinks": [],
+    "gates": {
+      "fixtures-build": 0,
+      "mime-normal": 0,
+      "full-normal": 0,
+      "full-race": 0,
+      "build-all": 0,
+      "vet-all": 0,
+      "final-gates": 0
+    },
+    "test_counts": {
+      "normal": {
+        "pass": 849,
+        "skip": 3
+      },
+      "race": {
+        "pass": 849,
+        "skip": 3
+      }
+    }
+  },
+  "packages": {
+    "full-normal": {
+      "exit": 0,
+      "root_counts": {
+        "light-media/internal/app": {
+          "pass": 622,
+          "skip": 2
+        },
+        "light-media/internal/plugins": {
+          "pass": 74
+        },
+        "light-media/internal/plugins/artifacts": {
+          "pass": 23
+        },
+        "light-media/internal/plugins/schedule": {
+          "pass": 4
+        },
+        "light-media/internal/sites": {
+          "pass": 68
+        },
+        "light-media/internal/catalog": {
+          "pass": 57,
+          "skip": 1
+        },
+        "light-media/web": {
+          "pass": 1
+        }
+      },
+      "root_totals": {
+        "pass": 849,
+        "skip": 3
+      },
+      "package_terminals": [
+        {
+          "Time": "2026-10-24T06:37:37.948335859Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 138.763
+        },
+        {
+          "Time": "2026-10-24T06:38:05.95399284Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins",
+          "Elapsed": 26.565
+        },
+        {
+          "Time": "2026-10-24T06:38:06.853877391Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/artifacts",
+          "Elapsed": 0.114
+        },
+        {
+          "Time": "2026-10-24T06:38:07.193847778Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/schedule",
+          "Elapsed": 0.023
+        },
+        {
+          "Time": "2026-10-24T06:38:09.899987963Z",
+          "Action": "pass",
+          "Package": "light-media/internal/sites",
+          "Elapsed": 0.829
+        },
+        {
+          "Time": "2026-10-24T06:38:11.144952218Z",
+          "Action": "pass",
+          "Package": "light-media/internal/catalog",
+          "Elapsed": 0.178
+        },
+        {
+          "Time": "2026-10-24T06:38:13.621737734Z",
+          "Action": "pass",
+          "Package": "light-media/web",
+          "Elapsed": 0.01
+        }
+      ],
+      "failures": [],
+      "race_reports": [],
+      "input_drift": [],
+      "source_manifest_sha256": "c868747e28ddb694546db42f85dc954b55f140c992f29366179f9cbd0082ad9d",
+      "jsonl_sha256": "70b765302f8a4611707475fbfe4383900aea2c485cd26d67ac00051a0e2457db",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "full-race": {
+      "exit": 0,
+      "root_counts": {
+        "light-media/internal/app": {
+          "pass": 622,
+          "skip": 2
+        },
+        "light-media/internal/plugins": {
+          "pass": 74
+        },
+        "light-media/internal/plugins/artifacts": {
+          "pass": 23
+        },
+        "light-media/internal/plugins/schedule": {
+          "pass": 4
+        },
+        "light-media/internal/sites": {
+          "pass": 68
+        },
+        "light-media/internal/catalog": {
+          "pass": 57,
+          "skip": 1
+        },
+        "light-media/web": {
+          "pass": 1
+        }
+      },
+      "root_totals": {
+        "pass": 849,
+        "skip": 3
+      },
+      "package_terminals": [
+        {
+          "Time": "2026-10-24T07:06:10.897335498Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 1603.016
+        },
+        {
+          "Time": "2026-10-24T07:08:49.789641511Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins",
+          "Elapsed": 156.619
+        },
+        {
+          "Time": "2026-10-24T07:08:52.287880472Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/artifacts",
+          "Elapsed": 1.302
+        },
+        {
+          "Time": "2026-10-24T07:08:53.932779007Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/schedule",
+          "Elapsed": 1.147
+        },
+        {
+          "Time": "2026-10-24T07:09:03.982048316Z",
+          "Action": "pass",
+          "Package": "light-media/internal/sites",
+          "Elapsed": 6.912
+        },
+        {
+          "Time": "2026-10-24T07:09:07.581638257Z",
+          "Action": "pass",
+          "Package": "light-media/internal/catalog",
+          "Elapsed": 1.5739999999999998
+        },
+        {
+          "Time": "2026-10-24T07:09:09.473984339Z",
+          "Action": "pass",
+          "Package": "light-media/web",
+          "Elapsed": 1.076
+        }
+      ],
+      "failures": [],
+      "race_reports": [],
+      "input_drift": [],
+      "source_manifest_sha256": "c868747e28ddb694546db42f85dc954b55f140c992f29366179f9cbd0082ad9d",
+      "jsonl_sha256": "7385ea6df5bef97d89eb208a9c01578396485686a14d64d30486c531e74d55e8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "frontend": {
+    "version": "0.4.18",
+    "icons_exit": 0,
+    "utilities_exit": 0,
+    "typecheck_exit": 0,
+    "vite_exit": 0,
+    "dist_files": 100,
+    "artifact_manifest_sha256": "fcfd1457c743a4e593d4e8eb3408370d5e511e07d1bcbd6ea5895e87439266a9",
+    "browser_scope": "Earlier module backend and isolated test transport, not final-main production login",
+    "isolated_browser_v4_result_sha256": "bc6d888b75198e38fcff0a6550b0cfd1790384916f461e4d94b810d425751e68"
+  },
+  "explicit_skips": [
+    "TestIsolatedDownloadersRealTransferAndImport",
+    "TestIsolatedFNOSProductWorkflow",
+    "TestExploreLivePublicProviders"
+  ],
+  "fixtures": [
+    {
+      "name": "api-null",
+      "sha256": "48f352131e6712b1f0470c2e668585bed255145c26a18a3d50cb4ea1ece358e4",
+      "bytes": 4086718
+    },
+    {
+      "name": "api-registration",
+      "sha256": "aa4263fc09565ba2764329e9beb6625a69d8e23a0176b3272394e5b9d8abdbe2",
+      "bytes": 4087118
+    },
+    {
+      "name": "owned-base",
+      "sha256": "52e078af733063144059d402b2169e27f9d9c946af7655cb0edbea34bba76617",
+      "bytes": 4103018
+    },
+    {
+      "name": "owned-module-v1",
+      "sha256": "4beb638b2956d9c03abc4527b9f82d28d9429c9346e3c628c39efe29e8a4ecec",
+      "bytes": 4105907
+    },
+    {
+      "name": "owned-module-v2",
+      "sha256": "0f5d1ad80c6634c8c86d9178ebbcb10b4f227d35413e6b140e7fcdf61853873a",
+      "bytes": 4105931
+    },
+    {
+      "name": "owned-standard-v1",
+      "sha256": "e23b83e115c8c632b24d69e9013152fbf2c22c8580fbd2cd1e61ac76c02813e1",
+      "bytes": 4120554
+    },
+    {
+      "name": "owned-standard-v2",
+      "sha256": "e5faa83bcf2f36b9f13f2a8f749ccfecb9c8439bcf35cd6857b215b7f32c69d5",
+      "bytes": 4120594
+    }
+  ],
+  "limitations": [
+    "Six official asset/evidence blobs were not materialized locally; preserved by identity.",
+    "No binary identity assertion after PNG restoration.",
+    "Legacy business plugins not adapted or accepted.",
+    "Browser and live deployment validation separate from these Go gates."
+  ]
+}

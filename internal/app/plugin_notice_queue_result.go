@@ -29,9 +29,6 @@ func (row pluginNoticeQueueRow) require(ctx context.Context, q pluginRemoveLinkJ
 }
 
 func (p *PluginStore) writePluginMessageIntentTx(ctx context.Context, tx *sql.Tx, q pluginNoticeQueueEntry) (pluginNoticeQueueRow, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return pluginNoticeQueueRow{}, err
-	}
 	var row pluginNoticeQueueRow
 	if q.State != "intent" {
 		return row, seedhost.ErrUnsafe
@@ -56,9 +53,6 @@ func (p *PluginStore) writePluginMessageIntentTx(ctx context.Context, tx *sql.Tx
 }
 
 func (p *PluginStore) finishPluginMessageRowTx(ctx context.Context, tx *sql.Tx, intent pluginNoticeQueueRow, q pluginNoticeQueueEntry) (pluginNoticeQueueRow, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return pluginNoticeQueueRow{}, err
-	}
 	var row pluginNoticeQueueRow
 	if intent.entry.State != "intent" || len(intent.sealed) == 0 || (q.State != "consumed" && q.State != "unknown" && !(q.State == "revoked" && q.ErrorCode == "NOTICE_AUTH_REVOKED" && q.Modules == 0 && q.FinishedAt != "")) || q.AttemptAt != intent.entry.AttemptAt || noticeQueueInitialSHA(q) != noticeQueueInitialSHA(intent.entry) {
 		return row, seedhost.ErrUnsafe
@@ -83,9 +77,6 @@ func (p *PluginStore) finishPluginMessageRowTx(ctx context.Context, tx *sql.Tx, 
 }
 
 func (p *PluginStore) commitPluginMessageRow(ctx context.Context, tx *sql.Tx, operation string, expected pluginNoticeQueueRow) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if err := p.commitNoticeTx(tx, operation); err != nil {
 		_ = tx.Rollback()
 		read, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)

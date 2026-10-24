@@ -83,7 +83,7 @@ func validateDomainEvent(in DomainEvent) (DomainEvent, error) {
 		in.SchemaVersion = 1
 	}
 	if in.Type == "plugin.triggered" {
-		return validatePluginTriggeredDomainEvent(in)
+		return invalid()
 	}
 	if in.PluginTriggerID != "" {
 		return invalid()

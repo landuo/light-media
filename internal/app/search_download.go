@@ -639,8 +639,6 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	return p, nil
 }
 func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool) (confirmed Intent, resultErr error) {
-	commitAttempted := false
-	defer func() { resultErr = larkP0Failure(ctx, commitAttempted, resultErr) }()
 	release, e := a.beginWrite()
 	if e != nil {
 		return Intent{}, e
@@ -683,12 +681,6 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	intent.DownloaderSnapshot = p.DownloaderSnapshot
 	intent.MaterialRef, intent.MaterialState, intent.Purpose = p.MaterialRef, p.MaterialState, materialPurpose
 	jobKind := "download"
-	if handle, ok := ctx.Value(pluginLarkP0CommitKey{}).(*pluginLarkP0Commit); ok && handle != nil {
-		if handle.a != a || handle.operation != "download.confirm" {
-			return intent, bad("LARK_CORE_SCOPE_DENIED", "下载确认与原消息授权不一致")
-		}
-		intent.LarkInbox, jobKind = handle.core.inbox.ID, "lark_download"
-	}
 	if grant, ok := ctx.Value(subscriptionAcquisitionKey{}).(*subscriptionAcquisitionGrant); ok {
 		if grant == nil || grant.a != a || grant.root == nil || intent.LarkInbox != "" {
 			return intent, acquisitionEvidence()
@@ -739,10 +731,6 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	if e = a.acquisitionConfirmTx(ctx, tx, p, intent, child); e != nil {
 		return intent, e
 	}
-	if e = a.larkP0CommitTx(ctx, tx, "download.confirm", intent); e != nil {
-		return intent, e
-	}
-	commitAttempted = true
 	return intent, tx.Commit()
 }
 func (a *App) runDownload(ctx context.Context, j Job, key string) error {
@@ -756,9 +744,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		return e
 	}
 	if j.Kind == "lark_download" || in.LarkInbox != "" {
-		if e := a.guardLarkDownloadChild(ctx, j, in); e != nil {
-			return e
-		}
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件下载任务尚未适配标准模块")
 	}
 	if in.State == "accepted" || in.State == "downloading" || in.State == "downloaded" || in.State == "imported" || in.State == "cancelled" {
 		// Acceptance and its event commit with the intent. A retried submission
@@ -1026,9 +1012,7 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	}
 	defer release()
 	if in.LarkInbox != "" {
-		if e = a.guardLarkDownloadChild(ctx, j, in); e != nil {
-			return e
-		}
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件下载任务尚未适配标准模块")
 	}
 	in.State = "submitting"
 	in.UpdatedAt = now()

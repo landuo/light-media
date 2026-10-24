@@ -656,11 +656,6 @@ func (a *App) commitCoreDownloadRemoval(ctx context.Context, r coreDownloadRemov
 	return tx.Commit()
 }
 
-func (p *PluginStore) historyFileEvent(ctx context.Context, q pluginRemoveLinkJournalReader, id string) (pluginDownloadFileEvent, error) {
-	f, err := p.historyDownloadFileFact(ctx, q, id)
-	return pluginDownloadFileEvent{Version: 1, ID: f.ID, Instance: "system", Generation: 1, Revision: 1, Src: f.Src, Hash: f.Identity.Hash}, err
-}
-
 func validateDownloadDeletedDomainEvent(in DomainEvent) (DomainEvent, error) {
 	invalid := func() (DomainEvent, error) { return in, bad("INVALID_DOMAIN_EVENT", "删种源事件身份无效") }
 	if in.PluginTriggerID != "" || in.SourceSiteID != 0 || in.NoticeID != "" || in.FileEventID != "" || (in.SubjectKind != "" && in.SubjectKind != "download_deleted") || (in.SubjectID != "" && in.SubjectID != in.DownloadDeletedID) || (in.Purpose != "" && in.Purpose != "download_deletion") {

@@ -12,8 +12,6 @@ import (
 
 	"light-media/internal/jinja/exec"
 	"light-media/internal/notice"
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 )
 
@@ -375,9 +373,7 @@ func (p *PluginStore) siteCollectionOwner(ctx context.Context, q subscriptionCom
 			return e
 		}
 	} else {
-		if e := q.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_runs r JOIN plugin_installations i ON i.instance_id=r.instance_id JOIN plugin_values v ON v.instance_id=i.instance_id AND v.kind='config' AND v.item_key='main' WHERE r.id=? AND r.instance_id=? AND r.generation=? AND r.config_revision=? AND r.version=? AND r.state IN ('running','reconcile_pending') AND i.generation=r.generation AND i.installed=1 AND i.desired_enabled=1 AND i.version=r.version AND v.revision=r.config_revision`, r.Origin.ID, r.Origin.Instance, r.Origin.Generation, r.Origin.Revision, r.Origin.Version).Scan(&count); e != nil {
-			return e
-		}
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件站点消息入口尚未适配标准模块")
 	}
 	if count != 1 {
 		return siteCollectionError()
@@ -620,13 +616,7 @@ func (a *App) guardSiteCollection(ctx context.Context, r siteMessageCollection) 
 		return e
 	}
 	if r.Origin.Kind == "api" {
-		run, e := a.pluginStore.Run(ctx, r.Origin.ID)
-		if e != nil {
-			return e
-		}
-		if e = a.validatePluginHTTPRun(ctx, run); e != nil {
-			return e
-		}
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件站点消息入口尚未适配标准模块")
 	}
 	return nil
 }
@@ -852,49 +842,7 @@ func (a *App) resumeSiteMessageCollections(ctx context.Context) error {
 	return first
 }
 func (a *App) finishSiteMessageAPI(ctx context.Context, r siteMessageCollection) error {
-	p := a.pluginStore
-	run, e := p.Run(ctx, r.Origin.ID)
-	if e != nil {
-		return e
-	}
-	// A synchronous failure remains failed; reconciliation is not permission to
-	// turn an already delivered source exception into a successful API result.
-	if run.State != "running" && run.State != "reconcile_pending" {
-		return nil
-	}
-	if _, e = p.siteStatisticReceipt(ctx, run); e == nil {
-		return nil
-	} else if !errors.Is(e, sql.ErrNoRows) {
-		return e
-	}
-	if e = a.guardSiteCollection(ctx, r); e != nil {
-		return e
-	}
-	body := builtin.SiteStatisticResponse(false, "站点 "+r.Origin.Domain+" 刷新数据失败，未获取到数据", map[string]any{})
-	if r.Snapshot.SourceData != nil {
-		body = builtin.SiteStatisticResponse(true, "站点 "+r.Origin.Domain+" 刷新成功", siteStatisticAPIData(r.Snapshot))
-	}
-	response, e := plugins.JSONHTTPResponse(200, body)
-	if e != nil {
-		return e
-	}
-	a.pluginMu.Lock()
-	defer a.pluginMu.Unlock()
-	tx, e := a.Store.DB.BeginTx(ctx, nil)
-	if e != nil {
-		return e
-	}
-	defer tx.Rollback()
-	if _, e = a.validatePluginHTTPRunTx(ctx, tx, run); e != nil {
-		return e
-	}
-	if e = a.requireSiteCollectionCompleteTx(ctx, tx, r); e != nil {
-		return e
-	}
-	if _, e = p.saveSiteStatisticReceiptTx(ctx, tx, run, json.RawMessage(response)); e != nil {
-		return e
-	}
-	return tx.Commit()
+	return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件站点消息入口尚未适配标准模块")
 }
 
 // Verify normal-return proofs without entering a new route or requiring an

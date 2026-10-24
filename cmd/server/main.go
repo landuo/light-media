@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"golang.org/x/sys/unix"
 	"light-media/internal/app"
-	"light-media/internal/plugins"
-	"light-media/internal/plugins/builtin"
 	"light-media/web"
 	"net/http"
 	"os"
@@ -21,25 +19,12 @@ import (
 )
 
 func main() {
-	var addr, dir, pluginWorker string
+	var addr, dir string
 	var bootstrap bool
 	flag.StringVar(&addr, "listen", "127.0.0.1:3120", "HTTP listen address")
 	flag.StringVar(&dir, "data-dir", "./data", "local data directory")
 	flag.BoolVar(&bootstrap, "bootstrap-stdin", false, "one-time encrypted configuration and administrator bootstrap from stdin")
-	flag.StringVar(&pluginWorker, "plugin-worker", "", "run a compiled plugin over the private stdio protocol")
 	flag.Parse()
-	if pluginWorker != "" {
-		manifest, handle, exists := builtin.Lookup(pluginWorker)
-		if !exists {
-			fatal("unknown_plugin")
-		}
-		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-		defer stop()
-		if plugins.Serve(ctx, os.Stdin, os.Stdout, manifest, handle) != nil {
-			fatal("plugin_worker_failed")
-		}
-		return
-	}
 	absolute, e := filepath.Abs(dir)
 	if e != nil {
 		fatal("invalid_data_directory")

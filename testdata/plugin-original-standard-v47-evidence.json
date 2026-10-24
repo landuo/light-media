@@ -1,0 +1,827 @@
+{
+  "stage": "standard-native-market-v47-partial",
+  "source_sha256": {
+    "cmd/owned-module-fixture/main.go": "c5b48a9524a4769133f829c03b7106561a3a88c800845cf1ab040d79b4f0b975",
+    "internal/app/plugin_original_state.go": "297db94d5c6d7bece4fb20c2cbb7c8863440c1d0091807b90eb0505e46a53978",
+    "internal/app/plugin_original_services.go": "28123726106bb5d8dec7ae3fd76c80f25df22c0673f8cd734033c8677081c584",
+    "internal/app/plugin_iyuu_owner.go": "b9632d71c235031496cb72060a219ec9d4c2678537da5d3ed91641c77e8406ff",
+    "internal/app/plugin_runtime.go": "4d0eaa0df9cfb68a3d1d6ffc7ff9dc6bbe33a0df75e7c83e01e70bf4f6fefff8",
+    "internal/app/plugin_original_commands.go": "149f2dc1ef5ba36345dfe89c5ba3b73aea62991b5288415691bf9e0f47e8d134",
+    "internal/app/plugin_original_lifecycle.go": "2bb0235a9a8e11f1e4642d53ec92f06aaf456edc42469f2334206c257e778523",
+    "internal/app/plugin_runs.go": "7f40f53f4b51e81617f21b53ed99ab778df8a07aa5252ad4423e302aad9a6b89",
+    "internal/app/plugin_original_session.go": "3a4f5e5a008b79b30ea803e5ad73ee8c5f6a6c11fc0a3b09cbbbaab48bc143f5",
+    "internal/app/plugin_store.go": "a5d3f59dc07758352c5fbdd908c0e7e763d65675885c3ec9f21b0619650934de",
+    "internal/app/plugin_lark_commands.go": "4decccb8503b272dea330a06905ed9c01a93f25239e190d7886b5eb99568d9b1",
+    "internal/app/plugin_event_admission.go": "4c9e93da6ebbe29911065d032cb7371b751857a5ff78fa1d148fcd3375470203",
+    "internal/app/plugin_custom_api.go": "03d4aae1a38ec7af04b8007ab94d36fc1283e6e479a44942c860adf8718c8b9c",
+    "internal/app/plugin_original_stop.go": "91ebdadc806d76098941197a83d1766d3d7f6bf2c3a36b45a2528c48f0317daa",
+    "internal/app/plugin_schedules.go": "f3d9f3a4885599c4d2aa7e04b45b3e56edb9ea750235069a208b8b9faeb9cf27",
+    "internal/plugins/transport_codec_equivalence_test.go": "33aacacabbde775b04423144550dd2861caacd1be6a96e84dcdc3d936eebee1b",
+    "internal/plugins/artifacts/inspect.go": "4cf1bc71be1c1c3147eb82af0eeba05090cfa956125d0b8fa8896f221fd931a0",
+    "internal/plugins/artifacts/acquire.go": "48b3cc3859bda625581574413f59da2e79e7312f1bdc582e264dbb35f16a1966",
+    "internal/plugins/artifacts/installed.go": "de50c496463608b64da126eb8cd66bce5c60ae450ea277c416168b0fd570e4ea",
+    "internal/app/plugin_original_artifact_registration_order_test.go": "69da888e7b49d39a32b4d5eebd322b1b463c275082444a0971dc853b94f8e088",
+    "internal/app/plugin_original_machine_methods.go": "85096de3609c037d70dd73613a5dc6b53cac0678187752ce757f0836cf9848cc",
+    "internal/app/plugin_original_api_methods.go": "88fadd91f78a9d3f7057fd662ab518e83b4384dd781ac1e13d2a46fbb65d4ec4",
+    "internal/app/plugin_original_api_methods_test.go": "2b85475e64aecd653010bd8b7deba62ac78f1f3392a0e3c21c523bea3df4c525",
+    "internal/app/plugin_original_machine_methods_test.go": "09f7256fec6ec9f85063359c3c3cf9d53a03b8f50c3de163ccd7ce5cbad2bd49",
+    "cmd/original-api-fixture/main.go": "bcb2a0e7508b1d213d44f9afc06ca6d36bb870318e436421defb4841e1f96bc9",
+    "internal/app/plugin_seed_rescue_execution.go": "0082878109bd9d4f160cd22f1fc44c29d2de9de771116a0d95c232bd7babdf7a",
+    "internal/app/plugin_original_machine_init_test.go": "0e1c6bfe2a924da817ffbdadb0fc730487eb6f5542231974b87bb26545047003",
+    "internal/app/plugin_cloudflare_owner.go": "abfc571b05765b46704530688ca503fe39b194605cfb2dbb31898a3c9131f11f",
+    "internal/app/plugin_original_seed_service.go": "deb952c1440a0a4d51e982583006f3be4496c637b56a961d68f0eefa7a22f111",
+    "internal/app/plugin_original_seed_service_scope_test.go": "5f63647be411f7f85a8e25da8d22bbbd66a757579a2fd374651442fadbb3ac95",
+    "internal/app/plugin_original_api_registration_test.go": "b47bc9241ac79dc0c09329bbfc0d27fce80014bc52c527940d27735d220532ea",
+    "internal/app/plugin_seed_rescue_native.go": "19a0315c356393eaac7c38ccc2be6a7580d71f2e8db45d0d9ed275bbfd2012ce",
+    "cmd/original-api-registration-fixture/main.go": "583eacdd89ea85b3a2f9643e631de0261a790db146cff027cb21b36928c67077",
+    "internal/app/plugin_original_builtin_objects.go": "c5c0e585ffc0540f7cb9f20eebd1ffbc3682a1fa9f23473331ea1cc5e37663e8",
+    "internal/app/plugin_original_stateless_methods.go": "4a4fff1365a9f1e91260526e9d1fdd1d368c536a8cba98c84e22bae8c4696cf9",
+    "internal/app/plugin_site_statistic.go": "cdee9805f94fa2ba75c7a7fff22a859734732b536bfe33e63dbbde80724572f3",
+    "internal/app/plugin_media.go": "b509bb10d09a3f79d9ee89644df35e4157da0ef0bfcbf2d9371032437b7d2ca6",
+    "internal/app/plugin_original_stateless_methods_test.go": "8e189c4ceb1d6e41d88dd876c5c3c4db6f8c900fdd4791bf6a6a599e9aaf51d2",
+    "internal/plugins/builtin/site_statistic.go": "54b3b2b1f2ba7dc5d90979d0f791c94a3a90132dde6da4d54030a1c148df59af",
+    "internal/plugins/builtin/media_server_refresh.go": "28243d0bb67930ce8bb319c69e3018392b82f7a627b689c7f4690111f35a07d7",
+    "internal/plugins/builtin/merge_site_switch.go": "93c530659f0fe2e34fdea1c789a894db1d57f842dbce93a82a529f6f460a7dba",
+    "internal/plugins/builtin/original_stateless_config.go": "3195766495d2e31d9f45e70ee1f699986e19c42e4ac117daa42b2cfcaab6a10d",
+    "internal/plugins/builtin/category_editor.go": "d7cd93a89658c9736828fea62a7cf2f3089be6c6433b7b45d573ce3cc4f2d470",
+    "internal/plugins/builtin/original_stateless_instances_test.go": "a3d6551d283d515d2cc50ba7e617f17ed7e6b405ae2ebe9d5f1ae3d86b86bdf5",
+    "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+    "internal/plugins/jsonrpc_validation_equivalence_test.go": "9193df828f624736dd8bf5b4b35a6ef657450a550bd8bf1930e8ae100856dfea",
+    "internal/app/plugin_remove_link_owner.go": "7f73eeee33547e815a66286551b3caf292c2923e2aae38c1f97198dcb96de436",
+    "internal/app/plugin_original_external_http.go": "703e025ee78af53af7b5c4805c6bf6e28bb40a80150259a69b14d414812c5890",
+    "internal/app/plugin_original_watcher_idle.go": "c30b9562cf2255d812ca1a1059c6526aa1427ad83435fc90ff150e11c8b593f4",
+    "internal/app/plugin_original_external_http_boundary_test.go": "5d3ed73762bdf21d08d94edc1771ab1dcf9149735e44045c7705243b000ec0b8",
+    "internal/app/plugin_original_watcher_idle_test.go": "d7795f597c49398b22d099c4482cbf743a1c1827aaddb10c7c7d9c30549de883",
+    "internal/app/plugin_site_controls.go": "9e183916e04fff57e1f608aeabdad65582277b30962d10cbff8036edef495832",
+    "internal/app/plugin_original_watcher_methods.go": "5f80cb14d28cb38ea01f947b353393d98257e168582f95db258360ae37a596d9",
+    "internal/app/plugin_original_watcher_methods_test.go": "d60724692a510ccbd3887ef76215b366e0bc6419795a80b8ba247d8dc4b8d64d",
+    "internal/app/plugin_scrape_clean_owner.go": "bb56f240806cb61fa67ee2ae87abb46bb89bc263d3242e2a8e3bf077efd3d5ca",
+    "internal/app/plugin_original_builtin_object_integration_test.go": "baf3fb4d755e428d7cb8ad57d01eafcd829d43797367b0ddd0dff913acec2ff3",
+    "internal/plugins/removelink/host/original_state.go": "0e96467a41a87659e53df3c70ace944a2238cb5703b38722c49e4ae1898c780a",
+    "internal/plugins/removelink/host/original_state_test.go": "5351a3c09f81a584a078cccc7bb7457e729c78a45c51d3afba02fd87b17973a4",
+    "internal/plugins/removelink/host/original_machine.go": "3f02007b6a13b0df5cefffe05d0c9e34247b3e9ef4f9bd3fe9cf5878f599fc1c",
+    "internal/plugins/scrapefileclean/host/original_state.go": "10d3f8dea0826fb104b52989f0d0f5279f2f9c2dcec28d5c9792105ffb1f28fc",
+    "internal/plugins/scrapefileclean/host/original_state_test.go": "3e54e430ae858774dca922b4d21dbfc7d1a908a9c4ae70cba1bde5bc425c3c7e",
+    "internal/plugins/scrapefileclean/host/original_machine.go": "287c66b1f3016066045e8ed0bc00f1ef164acd205d66114f6dd9c1bc3900697f",
+    "internal/app/plugin_clean_invalid_seed_owner.go": "bf54194770a7e0c4a138df000cfaed3f74f559c78a541a4eddb9b40927c04316",
+    "internal/app/plugin_original_engine_methods.go": "e5451a79c7c02db882bed4aa17bdccaf8992c039546bead75069e03cbc7695e6",
+    "internal/app/plugin_site_control_normalization.go": "691f4ceafa549375e16ce622e8023d8f9924d89d60fa7427d4389198f1770177",
+    "internal/app/plugin_autosignin_host.go": "9409888e71b879265123bfc4db5d152e415a0e1308494c66eb9605205dd5b625",
+    "internal/app/plugin_autosignin_journal.go": "87513393f5134eec9d68bd47768086d482388fdf19ec6f128875406807422d95",
+    "internal/app/plugin_original_engine_methods_test.go": "214486806220726f8afa06357914871ee32bafe4b7090add871999fd441f9224",
+    "internal/plugins/cleaninvalidseed/host/owner.go": "055e727cff3b35f81047f887702e3bc2083b74ca5a3d7dd26f0d9882236e384e",
+    "internal/plugins/cleaninvalidseed/host/native_object_test.go": "e71db718551ee536052cd779e6bd598c1707298ab8944627de8c022f210dc32c",
+    "internal/plugins/cleaninvalidseed/host/native_object.go": "9b2774493645895ebefa8f0ceb18fbb4c20299fe533c9ce26389a38674168c8b",
+    "internal/plugins/autosignin/durable/controller.go": "65e81ccbc9de637dbfebd8f0a825f3306026719320d59ccf909b21f64c4c3044",
+    "internal/plugins/autosignin/durable/native_object_test.go": "6fc81102effddc7cf3f555f61d7f6515df59a052415852c918905035dc58904e",
+    "internal/app/plugin_brush_flow_dispatch.go": "8dd4664b99575889eaad619a08e86aa7f5bcef8d180377c7f25ded0c68fc7e34",
+    "internal/app/plugin_original_remaining_methods.go": "c9d47e1494dffbf3303a268718a37f8f22b4795dda412090826084451b27d6cb",
+    "internal/app/plugin_original_remaining_methods_test.go": "e5622eaa749fa3692420a7ce2146b00c85248fa907b1833c91a618e5e22a1b64",
+    "internal/app/plugin_subscribe_group.go": "818e6f4320630ffac48600907b96fa50fcc79e739c9ed118a9c91dd2f05ec9ef",
+    "internal/app/plugin_original_engine_app_integration_test.go": "d9666b1de0218f8b931990ff5f3c191c5a87f837f7022ced0b7deadd932d4d24",
+    "internal/app/plugin_original_watcher_enqueue.go": "373fff8cd948e9c53bc5510f7eed10429e272b5235fb6e52bded9d5e85a03fb1",
+    "internal/app/plugin_identifiers.go": "113593e906bcff0af896a7d3db750813b3d117dca72e498ac80ae8f5a84e8064",
+    "internal/plugins/brushflow/original_retained_init_test.go": "d71a20eaada1067fbde444c0444bef2f6a4de71eeef4c378bcc43b1d754a8ed5",
+    "internal/plugins/brushflow/core.go": "61d296ae3dae8283e902ebfdf990fb3c77ad7b2e8616b8815ce80d45c0656136",
+    "internal/app/plugin_original_artifact_dispatch_test.go": "f9017f8845eebd6ccca86cbc90c7900884ef6597c15f00ccd74340ee0330cadb",
+    "internal/app/plugin_original_external_dispatch.go": "783d0b743c3be85f03c17abc5295ccec91acd276f2bac0e9f93695f8deeaec4f",
+    "internal/app/plugin_original_clean_seed_init.go": "2ae0f015bbfe34528247574fe717880ed40b9452bdf7f606a48421680fa6de2c",
+    "internal/app/plugin_autosignin_schedules.go": "f71f222ecae442abce46e88b54359c33ee941288ea4f9f2295284b0627eb78a6",
+    "internal/app/plugin_original_engine_diagnostic_test.go": "f20c2d5a6e288ca0a6ecd62c9eb0e5aaa5165af18181fe8a3cee37a5838af766",
+    "internal/app/plugin_original_service_queue.go": "5ea0087582a9145e474baf1fd2c7933c4881ccd41782e037ce45c314b1f8d592",
+    "internal/app/plugin_original_service_invocation.go": "9f623d32c12779a4fb8c23833296153ca30e5fca8b2474816b878bac5d3a43e5",
+    "internal/app/http.go": "4f78d44f284ab97e1f49c45ae99022151449ccceb8d8a59f29242fd343ea72cb",
+    "internal/app/types.go": "10b32273563d58c07c8eb7ab64683ee672896c18fd56bc6c37f06c419f29d5aa",
+    "internal/app/plugin_http.go": "1c711afed9fa54f41fa299f2682c64f2f5afb640ce49b73696a724964e559166",
+    "internal/app/plugin_original_markets.go": "38635cb204e40b3d8e78b3b44fb432f81e7a29ba892be74f792402b2f66caf53",
+    "internal/plugins/artifacts/provenance_test.go": "22bca6efd3d26bf31dfb2dafea82eb8ff5cc10d2d9f8459e7d9982e430e621a0",
+    "internal/plugins/artifacts/discover.go": "80464458899742684a962c646b5ae37f54a378882f6aff041b2ff872c8417d31",
+    "internal/plugins/artifacts/discover_test.go": "b493d914a048bc78f82ff23b2b03f1bbfaf23b22c7ae4fcb42107204da92559a",
+    "internal/app/plugin_original_market_sources_test.go": "34c81b86be69f1f88ce952705feafe41e3f8a92d81cf4757f93da616a7dee852",
+    "internal/app/plugin_original_absent_engine_init.go": "2aa2883bcaf020e91bf584871782facb283582a9ca70ba1323102b967198e0a6",
+    "internal/app/plugin_original_absent_engine_init_test.go": "2d4768b91766e903ed65e45480a50faa61a32051012fbd1239f69209854f00f2",
+    "internal/app/plugin_clean_invalid_seed_barrier.go": "cc66aece915bf043439fa2e3fc974db606d356d4f4cfbb14733d015cd4faf63f",
+    "internal/app/plugin_original_engine_service_due_test.go": "a6015b297d859cdf2f9adf138fd3158600d2193041b2cab4c0043d100f5391f4",
+    "internal/app/plugin_original_native_service.go": "e3f3d282e5f356beda83081ef99e80cfb7f95df5f5af48cd7b149532e44b75f0",
+    "internal/plugins/cleaninvalidseed/host/original_service_test.go": "1d5c8fb7fe3111c60e7897169f441152f22122343c2fe5dd7ca2c0cfedaa7fe3",
+    "cmd/owned-service-fixture/main.go": "cf5770dcddb2dd574b2af0b89d99a082bcb4866269634097835b4f6bb5c7e1e2"
+  },
+  "normal": {
+    "roots": 57,
+    "passed": 57,
+    "exit_code": 0,
+    "input_drift": [],
+    "app_elapsed_seconds": 81.907
+  },
+  "race": {
+    "roots": 57,
+    "passed": 57,
+    "exit_code": 0,
+    "input_drift": [],
+    "app_elapsed_seconds": 239.282
+  },
+  "root_results": {
+    "normal": [
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalAbsentEngineInitThenConfigureSameObject",
+        "Action": "pass",
+        "Elapsed": 0.95
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalAPIMethodActualWorker",
+        "Action": "pass",
+        "Elapsed": 0.39
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalAPIMethodNativeDeclarations",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalAPIRegistrationActualHTTPAndClone",
+        "Action": "pass",
+        "Elapsed": 0.67
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalArtifactDueServiceCallsLoadedHandler",
+        "Action": "pass",
+        "Elapsed": 0.55
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalArtifactRegisteredCommandCallsLoadedInstance",
+        "Action": "pass",
+        "Elapsed": 0.51
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalArtifactManagerStateBeforeDeclarations",
+        "Action": "pass",
+        "Elapsed": 0.5
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppNoneAndEmptyInitRetainActualObjects",
+        "Action": "pass",
+        "Elapsed": 0.31
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppMediaEmptyInitKeepsMembersAndIsolation",
+        "Action": "pass",
+        "Elapsed": 0.08
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppCategoryHostFailureRetainsMember",
+        "Action": "pass",
+        "Elapsed": 0.05
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppSiteOnceMemberDiffersFromPersistedConfig",
+        "Action": "pass",
+        "Elapsed": 0.05
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppMediaRealHostErrorRetainsMembers",
+        "Action": "pass",
+        "Elapsed": 0.05
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineAppStartRepeatAndClone",
+        "Action": "pass",
+        "Elapsed": 1.75
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineAppDiagnosticV2",
+        "Action": "pass",
+        "Elapsed": 1.31
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineMethodsReadMembersWithoutStore",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineMethodsCanceledAndMissing",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineCaptureSeparatesFreshAndRepeat",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineActualDueSignInNoSites",
+        "Action": "pass",
+        "Elapsed": 2.98
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineActualDueCleanNoDownloaders",
+        "Action": "pass",
+        "Elapsed": 59.97
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalExternalHTTPRejectsActualNullResponse",
+        "Action": "pass",
+        "Elapsed": 0.24
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+        "Action": "pass",
+        "Elapsed": 0.28
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+        "Action": "pass",
+        "Elapsed": 0.24
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitCloudflarePrivatePublicSeparation",
+        "Action": "pass",
+        "Elapsed": 0.56
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitCloudflareNewObjectDoesNotWarmOldState",
+        "Action": "pass",
+        "Elapsed": 0.39
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitSeedPublicServicesOnly",
+        "Action": "pass",
+        "Elapsed": 0.65
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitCommitFailureRetainsPartialMachine",
+        "Action": "pass",
+        "Elapsed": 0.78
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalMachineMethodsCloudflareRetained",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalMachineMethodsSeedRetained",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalMachineMethodsMissingCancelledUnsupported",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+        "Action": "pass",
+        "Elapsed": 0.35
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppRemoteRetainsActualMember",
+        "Action": "pass",
+        "Elapsed": 0.6
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppRemotePartialFailure",
+        "Action": "pass",
+        "Elapsed": 0.38
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppSubscribeCategoryAndEmpty",
+        "Action": "pass",
+        "Elapsed": 0.56
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppBrushCapturesActualObject",
+        "Action": "pass",
+        "Elapsed": 0.44
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAbsentMemberNeverReconstructs",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppRemoteServicesSeparatePrivateOnce",
+        "Action": "pass",
+        "Elapsed": 0.43
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalSeedServiceScopeIdentityAndRevocation",
+        "Action": "pass",
+        "Elapsed": 0.46
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessRetainedMembers",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessMissingCaptureNeverDecodesConfig",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessMergeLiveDependencies",
+        "Action": "pass",
+        "Elapsed": 0.05
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessMergeOriginalDependencyNames",
+        "Action": "pass",
+        "Elapsed": 0.04
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessInitializationCapturesMediaState",
+        "Action": "pass",
+        "Elapsed": 0.04
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessRejectsTypedNilAndLegacySnapshot",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherIdleActualApp",
+        "Action": "pass",
+        "Elapsed": 1.6
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherIdlePartialAndNoAuthority",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherIdleToActiveActualApp",
+        "Action": "pass",
+        "Elapsed": 1.27
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsRealRemoveLinkOwner",
+        "Action": "pass",
+        "Elapsed": 0.28
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsRealScrapeOwner",
+        "Action": "pass",
+        "Elapsed": 0.55
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsInertCaptureGap",
+        "Action": "pass",
+        "Elapsed": 0.44
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsSourceDeclarations",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/plugins/autosignin/durable",
+        "Test": "TestNativeEngineRetainsIdentityAndDetachesClock",
+        "Action": "pass",
+        "Elapsed": 0.02
+      },
+      {
+        "Package": "light-media/internal/plugins/autosignin/durable",
+        "Test": "TestNativeEngineFailedInitKeepsActualPartialMembers",
+        "Action": "pass",
+        "Elapsed": 0.01
+      },
+      {
+        "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+        "Test": "TestNativeMachineRetainsMembersWithoutRuntimeDecode",
+        "Action": "pass",
+        "Elapsed": 0.03
+      },
+      {
+        "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+        "Test": "TestNativeMachineFailedInitKeepsActualPartialMembers",
+        "Action": "pass",
+        "Elapsed": 0.03
+      },
+      {
+        "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+        "Test": "TestOriginalServiceMarkerBoundToExactInvocationAndMachine",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Test": "TestOriginalRetainedInitKeepsPostNormalizePartialObject",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Test": "TestOriginalRetainedInitAndLegacyNewShareImplementation",
+        "Action": "pass",
+        "Elapsed": 0
+      }
+    ],
+    "race": [
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalAbsentEngineInitThenConfigureSameObject",
+        "Action": "pass",
+        "Elapsed": 5.25
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalAPIMethodActualWorker",
+        "Action": "pass",
+        "Elapsed": 2.63
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalAPIMethodNativeDeclarations",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalAPIRegistrationActualHTTPAndClone",
+        "Action": "pass",
+        "Elapsed": 3.89
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalArtifactDueServiceCallsLoadedHandler",
+        "Action": "pass",
+        "Elapsed": 3.74
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalArtifactRegisteredCommandCallsLoadedInstance",
+        "Action": "pass",
+        "Elapsed": 3.41
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalArtifactManagerStateBeforeDeclarations",
+        "Action": "pass",
+        "Elapsed": 3.92
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppNoneAndEmptyInitRetainActualObjects",
+        "Action": "pass",
+        "Elapsed": 2.69
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppMediaEmptyInitKeepsMembersAndIsolation",
+        "Action": "pass",
+        "Elapsed": 0.7
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppCategoryHostFailureRetainsMember",
+        "Action": "pass",
+        "Elapsed": 0.72
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppSiteOnceMemberDiffersFromPersistedConfig",
+        "Action": "pass",
+        "Elapsed": 0.7
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalBuiltinAppMediaRealHostErrorRetainsMembers",
+        "Action": "pass",
+        "Elapsed": 0.59
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineAppStartRepeatAndClone",
+        "Action": "pass",
+        "Elapsed": 11.93
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineAppDiagnosticV2",
+        "Action": "pass",
+        "Elapsed": 12.07
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineMethodsReadMembersWithoutStore",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineMethodsCanceledAndMissing",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineCaptureSeparatesFreshAndRepeat",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineActualDueSignInNoSites",
+        "Action": "pass",
+        "Elapsed": 8.84
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalEngineActualDueCleanNoDownloaders",
+        "Action": "pass",
+        "Elapsed": 59.91
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalExternalHTTPRejectsActualNullResponse",
+        "Action": "pass",
+        "Elapsed": 4.98
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+        "Action": "pass",
+        "Elapsed": 5.84
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+        "Action": "pass",
+        "Elapsed": 2.5
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitCloudflarePrivatePublicSeparation",
+        "Action": "pass",
+        "Elapsed": 3.94
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitCloudflareNewObjectDoesNotWarmOldState",
+        "Action": "pass",
+        "Elapsed": 3.88
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitSeedPublicServicesOnly",
+        "Action": "pass",
+        "Elapsed": 5.84
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMachineInitCommitFailureRetainsPartialMachine",
+        "Action": "pass",
+        "Elapsed": 7.9
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalMachineMethodsCloudflareRetained",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalMachineMethodsSeedRetained",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalMachineMethodsMissingCancelledUnsupported",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+        "Action": "pass",
+        "Elapsed": 2.72
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppRemoteRetainsActualMember",
+        "Action": "pass",
+        "Elapsed": 5.54
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppRemotePartialFailure",
+        "Action": "pass",
+        "Elapsed": 2.77
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppSubscribeCategoryAndEmpty",
+        "Action": "pass",
+        "Elapsed": 5.59
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppBrushCapturesActualObject",
+        "Action": "pass",
+        "Elapsed": 4.99
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAbsentMemberNeverReconstructs",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalRemainingAppRemoteServicesSeparatePrivateOnce",
+        "Action": "pass",
+        "Elapsed": 3.8
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestPluginOriginalSeedServiceScopeIdentityAndRevocation",
+        "Action": "pass",
+        "Elapsed": 4.09
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessRetainedMembers",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessMissingCaptureNeverDecodesConfig",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessMergeLiveDependencies",
+        "Action": "pass",
+        "Elapsed": 0.49
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessMergeOriginalDependencyNames",
+        "Action": "pass",
+        "Elapsed": 0.47
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessInitializationCapturesMediaState",
+        "Action": "pass",
+        "Elapsed": 0.54
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalStatelessRejectsTypedNilAndLegacySnapshot",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherIdleActualApp",
+        "Action": "pass",
+        "Elapsed": 15.48
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherIdlePartialAndNoAuthority",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherIdleToActiveActualApp",
+        "Action": "pass",
+        "Elapsed": 12.43
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsRealRemoveLinkOwner",
+        "Action": "pass",
+        "Elapsed": 2.87
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsRealScrapeOwner",
+        "Action": "pass",
+        "Elapsed": 3
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsInertCaptureGap",
+        "Action": "pass",
+        "Elapsed": 4.46
+      },
+      {
+        "Package": "light-media/internal/app",
+        "Test": "TestOriginalWatcherMethodsSourceDeclarations",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/plugins/autosignin/durable",
+        "Test": "TestNativeEngineRetainsIdentityAndDetachesClock",
+        "Action": "pass",
+        "Elapsed": 0.03
+      },
+      {
+        "Package": "light-media/internal/plugins/autosignin/durable",
+        "Test": "TestNativeEngineFailedInitKeepsActualPartialMembers",
+        "Action": "pass",
+        "Elapsed": 0.01
+      },
+      {
+        "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+        "Test": "TestNativeMachineRetainsMembersWithoutRuntimeDecode",
+        "Action": "pass",
+        "Elapsed": 0.15
+      },
+      {
+        "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+        "Test": "TestNativeMachineFailedInitKeepsActualPartialMembers",
+        "Action": "pass",
+        "Elapsed": 0.08
+      },
+      {
+        "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+        "Test": "TestOriginalServiceMarkerBoundToExactInvocationAndMachine",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Test": "TestOriginalRetainedInitKeepsPostNormalizePartialObject",
+        "Action": "pass",
+        "Elapsed": 0
+      },
+      {
+        "Package": "light-media/internal/plugins/brushflow",
+        "Test": "TestOriginalRetainedInitAndLegacyNewShareImplementation",
+        "Action": "pass",
+        "Elapsed": 0
+      }
+    ]
+  },
+  "sdk_separate": {
+    "ordinary_roots": 72,
+    "race_roots": 72,
+    "jsonrpc_sha256": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b"
+  },
+  "artifacts_separate": {
+    "ordinary_roots": 23,
+    "race_roots": 23
+  },
+  "excluded": [
+    "untested shared Base layer",
+    "market frontend",
+    "full browser/full project acceptance"
+  ]
+}

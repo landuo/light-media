@@ -57,9 +57,6 @@ func validateNoticeMessageBackingTx(ctx context.Context, tx *sql.Tx, event Domai
 	return nil
 }
 func (a *App) publishPluginNoticeTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute, ordinal int, data notice.Object) (any, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return nil, err
-	}
 	id := "pnm_" + a.pluginStore.noticeID("publication", r.ID, ordinal)
 	raw, err := cleanupJournalJSON(data)
 	if err != nil {
@@ -146,9 +143,6 @@ func noticeQueueInitialSHA(q pluginNoticeQueueEntry) string {
 	return tokenHash(string(mustCleanSeedJSON(q)))
 }
 func (a *App) acceptPluginMessageTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute, ordinal int, call notice.Call) (any, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return nil, err
-	}
 	if len(call.Args) != 1 || call.Args[0] != "post_message" {
 		return nil, seedhost.ErrUnsafe
 	}
@@ -223,9 +217,6 @@ func (p *PluginStore) readPluginMessage(ctx context.Context, qry pluginRemoveLin
 	return q, nil
 }
 func (p *PluginStore) savePluginMessageTx(ctx context.Context, tx *sql.Tx, q pluginNoticeQueueEntry) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	sealed, err := p.noticeSeal("queue", q.ID, q)
 	if err != nil {
 		return err
@@ -242,9 +233,6 @@ func (p *PluginStore) savePluginMessageTx(ctx context.Context, tx *sql.Tx, q plu
 }
 
 func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, operation string, expected pluginNoticeQueueEntry) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if err := p.commitNoticeTx(tx, operation); err != nil {
 		_ = tx.Rollback()
 		readCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
@@ -257,19 +245,13 @@ func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, opera
 	return nil
 }
 
-// Actual registered MessageChain modules consume the authenticated queue call.
-// Their private producers freeze recipients; neither queue JSON nor an SDK can
-// select a transport or acquire a native owner grant.
+// The former native MessageChain adapter is removed. Until a standard sender
+// is adapted, ordinary core delivery reports unavailability without selecting
+// a transport, constructing an old owner, or pretending to have sent.
 func (a *App) sendPluginMessageModules(ctx context.Context, q pluginNoticeQueueEntry) (int, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return 0, err
-	}
-	return a.larkMessageModules(ctx, q)
+	return 0, bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息发送插件尚未适配新的标准模块")
 }
 func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	release, err := a.pluginStore.noticeLock(ctx, "queue/"+id)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -291,6 +273,9 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 		return nil
 	}
 	if q.State == "consumed" || q.State == "unknown" {
+		if q.ErrorCode == "PLUGIN_ADAPTER_UNAVAILABLE" {
+			return bad(q.ErrorCode, "消息发送插件尚未适配新的标准模块")
+		}
 		return nil
 	}
 	if q.State == "intent" {
@@ -370,6 +355,10 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	q.State = "consumed"
 	if sendErr != nil {
 		q.ErrorCode = "NOTICE_MODULE_FAILED"
+		var unavailable *APIError
+		if errors.As(sendErr, &unavailable) && unavailable.Code == "PLUGIN_ADAPTER_UNAVAILABLE" {
+			q.ErrorCode = unavailable.Code
+		}
 		if errors.Is(sendErr, seedhost.ErrUnknown) {
 			q.State = "unknown"
 			q.ErrorCode = "NOTICE_SEND_UNCONFIRMED"
@@ -400,13 +389,13 @@ func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	if revokedErr != nil && q.Direct {
 		return revokedErr
 	}
-	return nil // Original MessageQueue._send consumes callback errors.
+	if q.ErrorCode == "PLUGIN_ADAPTER_UNAVAILABLE" {
+		return sendErr
+	}
+	return nil // Preserve existing callback-error consumption for adapted core senders.
 }
 
 func invokePluginNoticeSender(ctx context.Context, send func(context.Context, pluginNoticeQueueEntry) (int, error), q pluginNoticeQueueEntry) (modules int, err error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return 0, err
-	}
 	defer func() {
 		if recover() != nil {
 			modules = 0
@@ -416,9 +405,6 @@ func invokePluginNoticeSender(ctx context.Context, send func(context.Context, pl
 	return send(ctx, q)
 }
 func (a *App) drainPluginMessages(ctx context.Context, limit int) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if limit < 1 || limit > 200 {
 		return seedhost.ErrUnsafe
 	}

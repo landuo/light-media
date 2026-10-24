@@ -18,7 +18,7 @@ type pluginNoticeDriver struct {
 	a       *App
 	id      string
 	cursor  int
-	failure *removeLinkSourceFailure
+	failure *noticeSourceFailure
 }
 
 func noticeValue(raw json.RawMessage) (any, error) {
@@ -43,9 +43,6 @@ func sourceNoticeError(err error) string {
 	return "RuntimeError"
 }
 func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, apply func(*sql.Tx, pluginNoticeRoute, int) (any, error)) (any, error) {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return nil, err
-	}
 	raw, err := cleanupJournalJSON(input)
 	if err != nil {
 		return nil, err
@@ -60,9 +57,6 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	r, steps, err := d.a.pluginStore.readNoticeRoute(ctx, tx, d.id)
 	if err != nil {
 		return nil, seedhost.ErrUnknown
-	}
-	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
-		return nil, err
 	}
 	if ordinal < r.Count {
 		s := steps[ordinal]
@@ -83,7 +77,7 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	}
 	value, err := apply(tx, r, ordinal)
 	if err != nil {
-		d.failure = &removeLinkSourceFailure{Kind: kind, Ordinal: ordinal, InputSHA: inputSHA}
+		d.failure = &noticeSourceFailure{Kind: kind, Ordinal: ordinal, InputSHA: inputSHA}
 		return nil, err
 	}
 	output, err := cleanupJournalJSON(value)
@@ -117,9 +111,6 @@ func (d *pluginNoticeDriver) step(ctx context.Context, kind string, input any, a
 	return noticeValue(output)
 }
 func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	tx, err := d.a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -132,25 +123,11 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 	if r.Count != d.cursor {
 		return seedhost.ErrUnknown
 	}
-	if err = d.a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, r); err != nil {
-		return err
-	}
 	if err = d.a.requireNoticeV2ExecutionTx(ctx, tx, r); err != nil {
 		return err
 	}
 	r.Complete = true
 	r.SourceError = sourceNoticeError(sourceErr)
-	if err = d.a.pluginStore.finishAutoSignInNoticeTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
-		return seedhost.ErrUnknown
-	}
-	if err = d.a.pluginStore.finishRemoveLinkSourceTx(ctx, tx, r, d.cursor, sourceErr, d.failure); err != nil {
-		return seedhost.ErrUnknown
-	}
-	if r.Kind == "site_statistic" {
-		if err = d.a.pluginStore.finishSiteStatisticNoticeTx(ctx, tx, r); err != nil {
-			return seedhost.ErrUnknown
-		}
-	}
 	if err = d.a.pluginStore.saveNoticeRouteTx(ctx, tx, r); err != nil {
 		return seedhost.ErrUnknown
 	}
@@ -170,9 +147,6 @@ func (d *pluginNoticeDriver) finish(ctx context.Context, sourceErr error) error 
 // callbacks. A callback replays only its own recorded result; it never repeats a
 // publication, an accepted core queue call or an external attempt.
 func (a *App) runNoticeRoute(ctx context.Context, id string) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	release, err := a.pluginStore.noticeLock(ctx, "route/"+id)
 	if err != nil {
 		return seedhost.ErrUnknown
@@ -181,26 +155,19 @@ func (a *App) runNoticeRoute(ctx context.Context, id string) error {
 	return a.runNoticeRouteLocked(ctx, id)
 }
 func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if _, err := a.pluginStore.noticePeriods(ctx); err != nil {
 		return seedhost.ErrUnknown
 	}
 	initial, _, err := a.pluginStore.readNoticeRoute(ctx, a.Store.DB, id)
 	if err != nil {
+		var unavailable *APIError
+		if errors.As(err, &unavailable) && unavailable.Code == "PLUGIN_ADAPTER_UNAVAILABLE" {
+			return err
+		}
 		return seedhost.ErrUnknown
 	}
-	if initial.Kind == "auto_signin" {
-		tx, guardErr := a.Store.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
-		if guardErr != nil {
-			return seedhost.ErrUnknown
-		}
-		guardErr = a.pluginStore.requireAutoSignInNoticeExecutionTx(ctx, tx, initial)
-		_ = tx.Rollback()
-		if guardErr != nil {
-			return seedhost.ErrUnknown
-		}
+	if initial.Version != 2 {
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "原插件通知来源尚未适配")
 	}
 	if initial.Complete {
 		if initial.SourceError != "" {
@@ -208,175 +175,17 @@ func (a *App) runNoticeRouteLocked(ctx context.Context, id string) error {
 		}
 		return nil
 	}
-	if initial.Version == 2 {
-		return a.runNoticeBusinessV2(ctx, initial)
-	}
-	var fields notice.Object
-	if cleanupJournalStrict(initial.Envelope, &fields) != nil {
-		return seedhost.ErrUnknown
-	}
-	env, err := notice.NewEnvelope(fields)
-	if err != nil {
-		return seedhost.ErrUnknown
-	}
-	d := &pluginNoticeDriver{a: a, id: id}
-	// This is a real host settings read, kept separate from the source envelope.
-	value, err := d.step(ctx, "superuser", nil, func(tx *sql.Tx, _ pluginNoticeRoute, _ int) (any, error) {
-		name, err := a.pluginStore.noticePreference(ctx, tx, "superuser", "")
-		if err != nil {
-			return nil, err
-		}
-		if name != nil {
-			return name, nil
-		}
-		var user string
-		err = tx.QueryRowContext(ctx, `SELECT username FROM admin WHERE id=1`).Scan(&user)
-		if errors.Is(err, sql.ErrNoRows) {
-			return "admin", nil
-		}
-		return user, err
-	})
-	if err != nil {
-		if errors.Is(err, seedhost.ErrUnknown) || errors.Is(err, seedhost.ErrUnsafe) || ctx.Err() != nil {
-			return seedhost.ErrUnknown
-		}
-		if finishErr := d.finish(ctx, err); finishErr != nil {
-			return finishErr
-		}
-		return &seed.SourceError{Type: sourceNoticeError(err), Operation: "post_message"}
-	}
-	superuser, ok := value.(string)
-	if !ok {
-		err = notice.SourceError{Class: "TypeError"}
-		if finishErr := d.finish(ctx, err); finishErr != nil {
-			return finishErr
-		}
-		return &seed.SourceError{Type: "TypeError", Operation: "post_message"}
-	}
-	router := notice.Router{Dependencies: notice.Dependencies{
-		Superuser: superuser,
-		SaveHistory: func(_ context.Context, v notice.Object) error {
-			_, err := d.step(ctx, "history", v, func(tx *sql.Tx, r pluginNoticeRoute, _ int) (any, error) {
-				if r.Kind == "auto_signin" {
-					return a.pluginStore.autoSignInNoticeHistoryTx(ctx, tx, r, v)
-				}
-				if r.HistoryID == "" || !bytes.Equal(mustCleanSeedJSON(v), r.Envelope) {
-					return nil, seedhost.ErrUnsafe
-				}
-				return map[string]any{"history_id": r.HistoryID}, nil
-			})
-			return err
-		},
-		NotificationSwitch: func(_ context.Context, key any) (any, error) {
-			return d.step(ctx, "switch", key, func(tx *sql.Tx, _ pluginNoticeRoute, _ int) (any, error) {
-				s, ok := key.(string)
-				if !ok {
-					return nil, notice.SourceError{Class: "AttributeError"}
-				}
-				return a.pluginStore.noticePreference(ctx, tx, "switch", s)
-			})
-		},
-		UserSettings: func(_ context.Context, key any) (any, error) {
-			return d.step(ctx, "user", key, func(tx *sql.Tx, _ pluginNoticeRoute, _ int) (any, error) {
-				s, ok := key.(string)
-				if !ok {
-					return nil, notice.SourceError{Class: "TypeError"}
-				}
-				return a.pluginStore.noticePreference(ctx, tx, "user", s)
-			})
-		},
-		NoticeMessage: func(_ context.Context, data notice.Object) error {
-			_, err := d.step(ctx, "publish", data, func(tx *sql.Tx, r pluginNoticeRoute, ordinal int) (any, error) {
-				return a.publishPluginNoticeTx(ctx, tx, r, ordinal, data)
-			})
-			return err
-		},
-		QueueCall: func(_ context.Context, call notice.Call) error {
-			value, err := d.step(ctx, "queue", call, func(tx *sql.Tx, r pluginNoticeRoute, ordinal int) (any, error) {
-				return a.acceptPluginMessageTx(ctx, tx, r, ordinal, call)
-			})
-			if err != nil {
-				return err
-			}
-			out, ok := value.(map[string]any)
-			if !ok {
-				return seedhost.ErrUnknown
-			}
-			queueID, ok := out["id"].(string)
-			if !ok {
-				return seedhost.ErrUnknown
-			}
-			direct, ok := out["direct"].(bool)
-			if !ok {
-				return seedhost.ErrUnknown
-			}
-			if direct {
-				return a.attemptPluginMessage(ctx, queueID)
-			}
-			return nil
-		},
-	}}
-	err = router.Post(ctx, env, notice.Business{}, notice.Object{"current_time": initial.CurrentTime})
-	if errors.Is(err, seedhost.ErrUnknown) || errors.Is(err, seedhost.ErrUnsafe) || ctx.Err() != nil {
-		return seedhost.ErrUnknown
-	}
-	if finishErr := d.finish(ctx, err); finishErr != nil {
-		return finishErr
-	}
-	if err != nil {
-		return &seed.SourceError{Type: sourceNoticeError(err), Operation: "post_message"}
-	}
-	return nil
+	return a.runNoticeBusinessV2(ctx, initial)
 }
 
 // The actual native source waits here after its local journal transaction has
 // committed. The live grant authenticates this call; route facts alone cannot
 // fabricate source continuation/config/file/downloader authority.
-func (c *pluginCleanInvalidSeedCore) AfterNotice(ctx context.Context, inv seedhost.Invocation, n seedhost.Notice) error {
-	lease, err := c.active(ctx, inv)
-	if err != nil {
-		return seedhost.ErrUnknown
-	}
-	tx, err := c.o.a.Store.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return seedhost.ErrUnknown
-	}
-	state, _, err := c.o.j.read(ctx, tx)
-	if err != nil {
-		_ = tx.Rollback()
-		return seedhost.ErrUnknown
-	}
-	r, ok := state.Runs[inv.RunID]
-	effect := seedhost.Effect{Binding: inv.Binding, Authority: r.Effective, ConfigReceipt: r.ConfigReceipt, RunID: inv.RunID, ID: n.ID, Kind: "notice", Phase: "confirmed", Args: n.Payload}
-	if !ok || !cleanSeedHasGrant(lease, effect) {
-		_ = tx.Rollback()
-		return seedhost.ErrUnknown
-	}
-	if _, err = c.verifyTx(ctx, tx, lease, inv, effect); err != nil {
-		_ = tx.Rollback()
-		return seedhost.ErrUnknown
-	}
-	token := c.o.j.token("outbox", n.ID, -1)
-	if _, err = readCleanSeedPrivateNotice(ctx, tx, c.o.j, token); err != nil {
-		_ = tx.Rollback()
-		return seedhost.ErrUnknown
-	}
-	receipt, err := cleanSeedReadReceipt(ctx, tx, c.o.j, n.ID)
-	_ = tx.Rollback()
-	var proof pluginCleanInvalidSeedNoticeReceipt
-	if err != nil || cleanupJournalStrict(receipt.Payload, &proof) != nil || proof.RouteID == "" {
-		return seedhost.ErrUnknown
-	}
-	return c.o.a.runNoticeRoute(ctx, proof.RouteID)
-}
 
 // Accepted facts can finish their own routing after a crash without replaying
 // the original Clean function or granting its interrupted run new effects.
 
 func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if limit < 1 || limit > 200 {
 		return seedhost.ErrUnsafe
 	}
@@ -441,8 +250,11 @@ func (a *App) resumePluginNoticeRoutes(ctx context.Context, limit int) error {
 	if err := a.resumeSiteMessageCollections(ctx); err != nil && first == nil {
 		first = err
 	}
-	if err := p.reconcileSiteStatisticNoticeRuns(ctx); err != nil && first == nil {
-		first = err
-	}
 	return first
+}
+
+type noticeSourceFailure struct {
+	Kind     string
+	Ordinal  int
+	InputSHA string
 }

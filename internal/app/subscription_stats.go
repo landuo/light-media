@@ -156,15 +156,7 @@ func (a *App) enqueueSubscriptionCompletionStatsTx(ctx context.Context, tx *sql.
 	_, e := a.enqueueSubscriptionStatsTx(ctx, tx, subscriptionStatsInput{Operation: "done", Completion: &identity, Subscribe: append([]byte(nil), subscribe...), MediaInfo: append([]byte(nil), mediaInfo...)}, wf)
 	return e
 }
-func (a *App) enqueueLarkSubscriptionStatsTx(ctx context.Context, tx *sql.Tx, core *pluginLarkCoreExecution, subscription Subscription, payload sourceBusinessNotice, eventID string) error {
-	handle, ok := ctx.Value(pluginLarkP0CommitKey{}).(*pluginLarkP0Commit)
-	if !ok || handle == nil || handle.a != a || handle.core != core || handle.operation != "subscription.added" || handle.ordinal != core.ordinal {
-		return subscriptionStatsEvidenceError()
-	}
-	input := subscriptionStatsLark{Instance: core.inbox.Instance, Generation: core.inbox.Generation, Inbox: core.inbox.ID, Ordinal: core.ordinal, InputSHA: handle.inputSHA, EventID: eventID, SubscriptionID: subscription.ID, Notice: payload}
-	_, e := a.enqueueSubscriptionStatsTx(ctx, tx, subscriptionStatsInput{Operation: "add", Lark: &input}, core.job.WorkflowID)
-	return e
-}
+
 func (a *App) validateSubscriptionStatsSource(ctx context.Context, q pluginRemoveLinkJournalReader, r subscriptionStatsReceipt, running Job) (cause error) {
 	phase := "envelope"
 	defer func() {
@@ -220,54 +212,7 @@ func (a *App) validateSubscriptionStatsSource(ctx context.Context, q pluginRemov
 			return subscriptionStatsEvidenceError()
 		}
 	case "add":
-		if r.Input.Lark == nil || r.Input.Completion != nil || len(r.Input.Subscribe) != 0 || len(r.Input.MediaInfo) != 0 {
-			return subscriptionStatsEvidenceError()
-		}
-		phase = "lark_root"
-		b := r.Input.Lark
-		root, e := a.pluginStore.larkRootRead(ctx, q, b.Instance, b.Generation)
-		if e != nil {
-			return e
-		}
-		f, ok := root.Inboxes[b.Inbox]
-		if !ok {
-			return subscriptionStatsEvidenceError()
-		}
-		steps, e := a.pluginStore.larkInboxStepsTx(ctx, q, f)
-		if e != nil || b.Ordinal < 1 || b.Ordinal >= len(steps) {
-			return subscriptionStatsEvidenceError()
-		}
-		phase = "lark_added_step"
-		step := steps[b.Ordinal]
-		var event string
-		if step.Kind != "write" || step.Operation != "subscription.added" || step.Phase != "confirmed" || step.InputSHA != b.InputSHA || json.Unmarshal(step.Result, &event) != nil || event != b.EventID {
-			return subscriptionStatsEvidenceError()
-		}
-		phase = "lark_added_input"
-		want := struct {
-			Subscription string
-			Username     json.RawMessage
-			Notice       pluginLarkBusinessNotice
-		}{b.SubscriptionID, mustCleanSeedJSON(b.Notice.Envelope["username"]), b.Notice}
-		if tokenHash(string(mustCleanSeedJSON(want))) != b.InputSHA {
-			return subscriptionStatsEvidenceError()
-		}
-		phase = "lark_notice_step"
-		previous := steps[b.Ordinal-1]
-		var result pluginNoticeV2Result
-		if previous.Operation != "notice.post" || previous.Kind != "write" || previous.Phase != "confirmed" || previous.InputSHA != tokenHash(string(mustCleanSeedJSON(b.Notice))) || cleanupJournalStrict(previous.Result, &result) != nil || !result.SourceReturned || result.SourceError != "" {
-			return subscriptionStatsEvidenceError()
-		}
-		phase = "lark_notice_route"
-		route, _, e := a.pluginStore.readNoticeRoute(ctx, q, result.RouteID)
-		if e != nil || !route.Complete || route.SourceError != "" || route.Count != result.Count || route.LastSHA != result.LastSHA || route.BusinessV2 == nil || route.BusinessV2.EnvelopeSHA != result.EnvelopeSHA || route.BusinessV2.BusinessSHA != result.BusinessSHA || !bytes.Equal(route.BusinessV2.Input, mustCleanSeedJSON(b.Notice)) {
-			return subscriptionStatsEvidenceError()
-		}
-		phase = "lark_added_event"
-		var added subscriptionAddedSnapshot
-		if e = a.readQualitySealed(ctx, q, "subscription_added", b.EventID, &added); e != nil || added.SubscriptionID != b.SubscriptionID || !bytes.Equal(added.Username, mustCleanSeedJSON(b.Notice.Envelope["username"])) {
-			return subscriptionStatsEvidenceError()
-		}
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "旧插件订阅统计入口尚未适配标准模块")
 	default:
 		return subscriptionStatsEvidenceError()
 	}

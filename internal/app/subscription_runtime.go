@@ -132,8 +132,6 @@ func validateSubscriptionPolicy(p Policy) error {
 }
 func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionRequest) (saved Subscription, resultErr error) {
 	sourceInputSHA := tokenHash(string(mustCleanSeedJSON(larkSourceSubscriptionInput(in))))
-	commitAttempted := false
-	defer func() { resultErr = larkP0Failure(ctx, commitAttempted, resultErr) }()
 	customWords, wordsErr := subscriptionWordsInput(in.CustomWords)
 	if wordsErr != nil {
 		return Subscription{}, wordsErr
@@ -385,10 +383,6 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 			if e = a.commitUISubscriptionSaveTx(ctx, tx, sourceInputSHA, duplicateSubscription, true); e != nil {
 				return old, e
 			}
-			if e = a.larkP0CommitTx(ctx, tx, "subscription.save", duplicateSubscription); e != nil {
-				return old, e
-			}
-			commitAttempted = true
 			return duplicateSubscription, tx.Commit()
 		}
 		return old, bad("DUPLICATE_SUBSCRIPTION", "该作品及季已有订阅，请编辑现有订阅")
@@ -450,10 +444,6 @@ func (a *App) saveSubscription(ctx context.Context, key string, in SubscriptionR
 	if e = a.commitUISubscriptionSaveTx(ctx, tx, sourceInputSHA, s, false); e != nil {
 		return s, e
 	}
-	if e = a.larkP0CommitTx(ctx, tx, "subscription.save", s); e != nil {
-		return s, e
-	}
-	commitAttempted = true
 	if e = tx.Commit(); e != nil {
 		return s, e
 	}

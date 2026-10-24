@@ -179,7 +179,7 @@ func TestNativeSiteDeletedActualProducersRollbackIdentitySettingsCacheAndEvent(t
 	}
 }
 
-func TestNativeSiteDeletedActualEventCollectionAuthenticatesTombstoneBeforeCursor(t *testing.T) {
+func TestNativeSiteDeletedSourceReadAuthenticatesTombstoneWithoutQueue(t *testing.T) {
 	for _, corruption := range []string{"none", "proof", "numeric-id", "payload", "missing-fact", "sealed-fact"} {
 		t.Run(corruption, func(t *testing.T) {
 			a := newTestApp(t)
@@ -188,29 +188,12 @@ func TestNativeSiteDeletedActualEventCollectionAuthenticatesTombstoneBeforeCurso
 				t.Fatal("create")
 			}
 			site := a.Settings().Sites[0]
-			p := a.pluginStore
-			installStoredPlugin(t, p, "consumer")
-			if _, _, err := p.SaveConfigAndQueue(context.Background(), "consumer", 0, map[string]any{"enabled": true}); err != nil {
-				t.Fatal(err)
-			}
-			run, err := p.ClaimRun(context.Background())
-			if err != nil || run.InstanceID != "consumer" {
-				t.Fatal(run.InstanceID, err)
-			}
-			if err = p.configureEventSubscription(context.Background(), run, "refresh", []string{"site.deleted"}, 0, true); err != nil {
-				t.Fatal(err)
-			}
-			if err = finishClaimedFixtureRun(context.Background(), p, run, "succeeded", "", nil); err != nil {
-				t.Fatal(err)
-			}
-			var before int64
-			if err = a.Store.DB.QueryRow(`SELECT cursor FROM plugin_event_subscriptions WHERE instance_id='consumer'`).Scan(&before); err != nil {
-				t.Fatal(err)
-			}
 			if identityHTTP(t, a, cookie, "DELETE", "/api/sites/manage/"+site.ID, nil) != 200 {
 				t.Fatal("delete")
 			}
 			event := siteDeletedTestEvents(t, a)[0]
+			wantSource := identityRequire(t, a, site.ID).publicSourceID()
+			var err error
 			switch corruption {
 			case "proof":
 				_, err = a.Store.DB.Exec(`UPDATE native_site_identities SET proof='corrupted' WHERE site_id=?`, site.ID)
@@ -229,22 +212,26 @@ func TestNativeSiteDeletedActualEventCollectionAuthenticatesTombstoneBeforeCurso
 			if err != nil {
 				t.Fatal(err)
 			}
-			for i := 0; i < 2; i++ {
-				err = a.dispatchPluginEvents(context.Background(), time.Now())
-				if corruption == "none" && err != nil || corruption != "none" && err == nil {
-					t.Fatal("wrong authenticated collection result", corruption, err)
-				}
-			}
-			var after int64
-			if err = a.Store.DB.QueryRow(`SELECT cursor FROM plugin_event_subscriptions WHERE instance_id='consumer'`).Scan(&after); err != nil {
+			var beforePayload []byte
+			if err = a.Store.DB.QueryRow(`SELECT payload FROM domain_events WHERE event_id=?`, event.EventID).Scan(&beforePayload); err != nil {
 				t.Fatal(err)
 			}
-			want := 0
-			if corruption == "none" {
-				want = 1
+			beforeFacts := identityCount(t, a, "native_site_deletions")
+			for i := 0; i < 2; i++ {
+				data, readErr := a.Store.siteDeletedSourceData(context.Background(), a.Store.DB, event)
+				if corruption == "none" && readErr != nil || corruption != "none" && readErr == nil {
+					t.Fatal("wrong authenticated source read result", corruption, readErr)
+				}
+				if corruption == "none" && (len(data) != 1 || data["site_id"] != wantSource) {
+					t.Fatal("source event lost original numeric identity", data)
+				}
 			}
-			if pluginEventCount(t, a, "plugin_event_deliveries") != want || pluginEventCount(t, a, "plugin_event_batches") != want || corruption != "none" && before != after {
-				t.Fatal("collection omitted authentication or advanced failed cursor", corruption, before, after)
+			var afterPayload []byte
+			if err = a.Store.DB.QueryRow(`SELECT payload FROM domain_events WHERE event_id=?`, event.EventID).Scan(&afterPayload); err != nil {
+				t.Fatal(err)
+			}
+			if !reflect.DeepEqual(beforePayload, afterPayload) || identityCount(t, a, "native_site_deletions") != beforeFacts {
+				t.Fatal("source read rewrote durable event or invented a missing deletion fact", corruption)
 			}
 		})
 	}

@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	"light-media/internal/jinja/exec"
@@ -68,25 +67,7 @@ func (p *PluginStore) validateNoticeBusinessV2(ctx context.Context, q pluginRemo
 	}
 	switch b.Binding.Kind {
 	case "lark_core":
-		if b.Binding.SiteMessage != nil || b.Binding.Added != nil || b.Binding.Completion != nil || b.Binding.Ordinal < 0 || r.Token != p.noticeID("lark-business", b.Binding.Inbox, b.Binding.Ordinal) || r.EffectID != b.Binding.Inbox+"/"+fmt.Sprint(b.Binding.Ordinal) || b.Binding.CoreInputSHA != tokenHash(string(b.Input)) {
-			return seedhost.ErrUnsafe
-		}
-		root, e := p.larkRootRead(ctx, q, r.Instance, r.Generation)
-		if e != nil {
-			return e
-		}
-		f, ok := root.Inboxes[b.Binding.Inbox]
-		if !ok {
-			return seedhost.ErrUnsafe
-		}
-		steps, e := p.larkInboxStepsTx(ctx, q, f)
-		if e != nil || b.Binding.Ordinal >= len(steps) {
-			return seedhost.ErrUnsafe
-		}
-		s := steps[b.Binding.Ordinal]
-		if s.Kind != "write" || s.Operation != "notice.post" || s.InputSHA != b.Binding.CoreInputSHA {
-			return seedhost.ErrUnsafe
-		}
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息插件来源尚未适配")
 	case "site_message":
 		if e := p.validateSiteMessageNoticeBinding(ctx, q, r); e != nil {
 			return e
@@ -124,65 +105,6 @@ func (p *PluginStore) validateNoticeBusinessV2(ctx context.Context, q pluginRemo
 	return nil
 }
 
-func (a *App) initLarkBusinessNotice(ctx context.Context, core *pluginLarkCoreExecution, payload pluginLarkBusinessNotice) (string, error) {
-	input, e := larkBusinessNoticeContext(payload)
-	if e != nil {
-		return "", e
-	}
-	encoded, e := noticeV2PackContext(input)
-	if e != nil {
-		return "", e
-	}
-	env, e := notice.NewEnvelope(payload.Envelope)
-	if e != nil {
-		return "", e
-	}
-	tx, e := a.Store.DB.BeginTx(ctx, nil)
-	if e != nil {
-		return "", e
-	}
-	defer tx.Rollback()
-	_, f, e := a.larkCoreScopeTx(ctx, tx, core)
-	if e != nil {
-		return "", e
-	}
-	handle, ok := ctx.Value(pluginLarkP0CommitKey{}).(*pluginLarkP0Commit)
-	rawInput := mustCleanSeedJSON(payload)
-	if !ok || handle == nil || handle.a != a || handle.core != core || handle.operation != "notice.post" || handle.ordinal != core.ordinal || handle.inputSHA != tokenHash(string(rawInput)) {
-		return "", larkEvidenceError()
-	}
-	steps, e := a.pluginStore.larkInboxStepsTx(ctx, tx, f)
-	if e != nil || core.ordinal != len(steps)-1 || steps[core.ordinal].Phase != "intent" || steps[core.ordinal].Operation != "notice.post" || steps[core.ordinal].InputSHA != handle.inputSHA {
-		return "", larkEvidenceError()
-	}
-	b := &pluginNoticeV2Business{Version: 1, Projection: sourceBusinessProjection(payload), Binding: pluginNoticeV2Binding{Kind: "lark_core", Instance: f.Instance, Generation: f.Generation, Inbox: f.ID, Ordinal: core.ordinal, CoreInputSHA: handle.inputSHA}, Input: rawInput, Context: encoded, Kwargs: payload.Kwargs, EnvelopeSHA: tokenHash(string(mustCleanSeedJSON(env.Dump()))), BusinessSHA: noticeV2BusinessSHA(encoded, payload.Kwargs)}
-	p := a.pluginStore
-	token := p.noticeID("lark-business", f.ID, core.ordinal)
-	stamp := p.noticeNow()
-	r := pluginNoticeRoute{Version: 2, ID: p.noticeID("route", f.Instance, f.Generation, token), Kind: "business", Instance: f.Instance, Generation: f.Generation, Token: token, EffectID: f.ID + "/" + fmt.Sprint(core.ordinal), AcceptedSHA: tokenHash(string(mustCleanSeedJSON(b))), Envelope: mustCleanSeedJSON(env.Dump()), CreatedAt: stamp.UTC().Format(time.RFC3339Nano), CurrentTime: stamp.Local().Format("2006-01-02 15:04:05"), BusinessV2: b}
-	var count int
-	if e = tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM plugin_notice_routes WHERE id=?`, r.ID).Scan(&count); e != nil || count != 0 {
-		return "", larkEvidenceError()
-	}
-	sealed, e := p.noticeSeal("route", r.ID, r)
-	if e != nil {
-		return "", e
-	}
-	if _, e = tx.ExecContext(ctx, `INSERT INTO plugin_notice_routes VALUES(?,?,?,?,?)`, r.ID, r.Instance, r.Generation, r.Token, sealed); e != nil {
-		return "", e
-	}
-	if e = p.commitNoticeTx(tx, "business_accept"); e != nil {
-		_ = tx.Rollback()
-		readCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
-		defer cancel()
-		stored, _, readErr := p.readNoticeRoute(readCtx, a.Store.DB, r.ID)
-		if readErr != nil || !larkSameRaw(mustCleanSeedJSON(stored), mustCleanSeedJSON(r)) {
-			return "", seedhost.ErrUnknown
-		}
-	}
-	return r.ID, nil
-}
-
 func (p *PluginStore) noticeTemplateHelper() *noticetemplate.Helper {
 	p.notices.mu.Lock()
 	defer p.notices.mu.Unlock()
@@ -193,9 +115,6 @@ func (p *PluginStore) noticeTemplateHelper() *noticetemplate.Helper {
 }
 
 func (a *App) runNoticeBusinessV2(ctx context.Context, initial pluginNoticeRoute) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if e := a.requireNoticeV2Execution(ctx, initial); e != nil {
 		return e
 	}

@@ -269,8 +269,8 @@ func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
 	if e = a.recordDownloadAddedTx(ctx, tx, event, snapshot); e != nil {
 		return e
 	}
-	if e = a.larkAcceptDownloadChildTx(ctx, tx, in, j); e != nil {
-		return e
+	if in.LarkInbox != "" {
+		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息插件下载入口尚未适配")
 	}
 	if e = a.acceptAcquisitionChildTx(ctx, tx, j, in); e != nil {
 		return e

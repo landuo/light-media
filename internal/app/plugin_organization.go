@@ -168,9 +168,6 @@ func validatePluginOrganization(in PluginOrganization) error {
 }
 
 func (p *PluginStore) saveOrganizationTx(ctx context.Context, tx *sql.Tx, in PluginOrganization) (PluginOrganization, error) {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return PluginOrganization{}, err
-	}
 	if err := validatePluginOrganization(in); err != nil {
 		return PluginOrganization{}, err
 	}
@@ -198,9 +195,6 @@ func (p *PluginStore) saveOrganizationTx(ctx context.Context, tx *sql.Tx, in Plu
 }
 
 func (p *PluginStore) SaveOrganization(ctx context.Context, in PluginOrganization) (PluginOrganization, error) {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return PluginOrganization{}, err
-	}
 	in.orderPresent = true
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
@@ -217,9 +211,6 @@ func (p *PluginStore) SaveOrganization(ctx context.Context, in PluginOrganizatio
 // Both regular uninstall and PluginUnInstall use this same transaction. Folder
 // appearance/unknown fields and PluginOrder are retained, as in the original.
 func (p *PluginStore) removeOrganizationMemberTx(ctx context.Context, tx *sql.Tx, instance string) error {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	organization, err := p.organization(ctx, tx)
 	if err != nil {
 		return err

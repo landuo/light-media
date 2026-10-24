@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { VCard, VCardText } from 'vuetify/components/VCard';
-import { VBtn } from 'vuetify/components/VBtn';
-import { VMenu } from 'vuetify/components/VMenu';
-import { VList, VListItem } from 'vuetify/components/VList';
-import { VIcon } from 'vuetify/components/VIcon';
-import type { PluginCard } from '../features/plugin-forms';
-import iconColors from '../features/plugin-icon-colors.json';
-import { safePluginIcon } from '../features/plugin-clone';
+import { computed, ref, watch } from "vue";
+import { VCard, VCardText } from "vuetify/components/VCard";
+import { VBtn } from "vuetify/components/VBtn";
+import { VMenu } from "vuetify/components/VMenu";
+import { VList, VListItem } from "vuetify/components/VList";
+import { VIcon } from "vuetify/components/VIcon";
+import type { PluginCard } from "../features/plugin-forms";
+import iconColors from "../features/plugin-icon-colors.json";
+import { safePluginIcon } from "../features/plugin-clone";
 
 const props = defineProps<{
   plugin: PluginCard;
@@ -17,32 +17,37 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
 const iconFailed = ref(false);
-const sourceIcon = computed(() => props.plugin.icon || '');
-const sourceIconName = computed(() => sourceIcon.value.split('/').at(-1) || '');
-const displayVersion = computed(() => props.plugin.display_version ?? props.plugin.version);
+const sourceIcon = computed(() => props.plugin.icon || "");
+const sourceIconName = computed(() => sourceIcon.value.split("/").at(-1) || "");
+const displayVersion = computed(
+  () => props.plugin.display_version ?? props.plugin.version,
+);
 const iconName = computed(() => {
   const name = sourceIconName.value;
   return !iconFailed.value &&
     /^[A-Za-z0-9_.-]+\.(?:png|jpe?g)$/i.test(name) &&
     Object.hasOwn(iconColors, name)
     ? name
-    : 'plugin.png';
+    : "plugin.png";
 });
 const iconPath = computed(() => {
   if (
     iconFailed.value ||
     Object.hasOwn(iconColors, sourceIconName.value) ||
-    !sourceIcon.value.includes('/') ||
-    sourceIcon.value.startsWith('../')
+    !sourceIcon.value.includes("/") ||
+    sourceIcon.value.startsWith("../")
   )
     return safePluginIcon(iconName.value);
-  return safePluginIcon(sourceIcon.value) || safePluginIcon('plugin.png');
+  return safePluginIcon(sourceIcon.value) || safePluginIcon("plugin.png");
 });
 const coverStyle = computed(() => {
   // These colors are generated with MoviePilot's ColorThief quality=20 from
   // the bundled original icons, keeping the original cover offline and stable.
-  const color = (iconColors as Record<string, string>)[iconName.value] || '#28a9e1';
-  return { background: `linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, .5)), ${color}` };
+  const color =
+    (iconColors as Record<string, string>)[iconName.value] || "#28a9e1";
+  return {
+    background: `linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, .5)), ${color}`,
+  };
 });
 watch(sourceIcon, () => {
   iconFailed.value = false;
@@ -53,14 +58,25 @@ watch(sourceIcon, () => {
     <VCard
       class="plugin-card"
       :class="{ sortable }"
-      :ripple="!sortable"
-      @click="!sortable && emit('action', 'open', plugin)"
+      :ripple="!sortable && plugin.available !== false"
+      @click="
+        !sortable &&
+        plugin.available !== false &&
+        emit('action', 'open', plugin)
+      "
     >
       <div class="plugin-card-cover" :style="coverStyle">
-        <div class="plugin-card-title" :title="plugin.name + ' v' + displayVersion">
-          <span class="plugin-state-dot" :class="{ active: plugin.state }"></span>
+        <div
+          class="plugin-card-title"
+          :title="plugin.name + ' v' + displayVersion"
+        >
+          <span
+            class="plugin-state-dot"
+            :class="{ active: plugin.state }"
+          ></span>
           <span class="plugin-card-name"
-            >{{ plugin.name }} <span class="plugin-version">v{{ displayVersion }}</span></span
+            >{{ plugin.name }}
+            <span class="plugin-version">v{{ displayVersion }}</span></span
           >
         </div>
         <div class="plugin-card-description">
@@ -76,6 +92,9 @@ watch(sourceIcon, () => {
           </div>
         </div>
       </div>
+      <p v-if="plugin.available === false" role="status" class="pa-3 mb-0">
+        {{ plugin.unavailable_reason || "插件暂不可用" }}
+      </p>
       <VCardText class="plugin-card-footer">
         <div class="plugin-author">
           <VIcon class="author-avatar" icon="mdi-github" size="20" />
@@ -93,18 +112,13 @@ watch(sourceIcon, () => {
           v-if="!plugin.installed"
           size="small"
           variant="text"
-          :disabled="busy || !!plugin.restore_review_blocked_reason"
-          :title="plugin.restore_review_blocked_reason || undefined"
-          @click.stop="
-            emit('action', plugin.restore_review ? 'restore-reviewed' : 'install', plugin)
+          :disabled="busy || plugin.available === false"
+          :title="
+            (plugin.available === false && plugin.unavailable_reason) ||
+            undefined
           "
-          >{{
-            plugin.restore_review
-              ? '恢复为待确认'
-              : plugin.restore_review_blocked_reason
-                ? '恢复暂不可用'
-                : '安装'
-          }}</VBtn
+          @click.stop="emit('action', 'install', plugin)"
+          >安装</VBtn
         >
         <VMenu
           v-else-if="!sortable"
@@ -136,33 +150,35 @@ watch(sourceIcon, () => {
             />
             <VListItem
               title="设置"
+              :disabled="plugin.available === false"
               prepend-icon="mdi-cog-outline"
               @click="emit('action', 'settings', plugin)"
             />
             <VListItem
               title="分身"
               prepend-icon="mdi-content-copy"
-              :disabled="busy"
-              @click="!busy && emit('action', 'clone', plugin)"
+              :disabled="busy || plugin.available === false"
+              @click="
+                !busy &&
+                plugin.available !== false &&
+                emit('action', 'clone', plugin)
+              "
             />
             <VListItem
-              v-if="plugin.has_update && plugin.update"
-              :title="'更新至 v' + plugin.update.target_version"
+              v-if="
+                plugin.has_update &&
+                plugin.repo_url &&
+                plugin.repository_version &&
+                !plugin.source_instance_id
+              "
+              :title="'更新至 v' + plugin.repository_version"
               prepend-icon="mdi-update"
-              @click="emit('action', 'update', plugin)"
-            />
-            <VListItem
-              v-if="plugin.update_review_pending"
-              title="更新已迁移，打开设置确认执行意图"
-              @click="emit('action', 'settings', plugin)"
-            />
-            <VListItem
-              v-if="plugin.update_blocked_reason"
-              disabled
-              :title="'更新暂不可用：' + plugin.update_blocked_reason"
+              :disabled="plugin.available === false"
+              @click="emit('action', 'repository-update', plugin)"
             />
             <VListItem
               title="重置"
+              :disabled="plugin.available === false"
               prepend-icon="mdi-cancel"
               base-color="warning"
               @click="emit('action', 'reset', plugin)"
@@ -174,11 +190,6 @@ watch(sourceIcon, () => {
               @click="emit('action', 'uninstall', plugin)"
             />
             <VListItem
-              title="执行记录"
-              prepend-icon="mdi-history"
-              @click="emit('action', 'runs', plugin)"
-            />
-            <VListItem
               title="查看日志"
               prepend-icon="mdi-file-document-outline"
               @click="emit('action', 'logs', plugin)"
@@ -186,7 +197,12 @@ watch(sourceIcon, () => {
           </VList>
         </VMenu>
       </VCardText>
-      <VIcon v-if="plugin.has_update" class="plugin-update" icon="mdi-new-box" color="white" />
+      <VIcon
+        v-if="plugin.has_update"
+        class="plugin-update"
+        icon="mdi-new-box"
+        color="white"
+      />
     </VCard>
     <VBtn
       v-if="inFolder && !sortable"

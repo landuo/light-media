@@ -1,0 +1,1277 @@
+{
+  "ref": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "pass": 12,
+  "fail": 0,
+  "cases": [
+    {
+      "case": "endpoint_clone_nonempty_preserves_triggers",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": true,
+            "clearcache": true,
+            "plugin_ids": [
+              "OwnedTarget"
+            ],
+            "count": 0,
+            "empty": "",
+            "enable": false,
+            "enabled": false
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "clearcache": true,
+            "plugin_ids": [
+              "OwnedTarget"
+            ],
+            "count": 0,
+            "empty": "",
+            "enable": false,
+            "enabled": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "clearcache": true,
+            "plugin_ids": [
+              "OwnedTarget"
+            ],
+            "count": 0,
+            "empty": "",
+            "enable": false,
+            "enabled": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "close",
+          "Sourceowned"
+        ],
+        [
+          "stop_service",
+          "Sourceowned"
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "clearcache": true,
+            "plugin_ids": [
+              "OwnedTarget"
+            ],
+            "count": 0,
+            "empty": "",
+            "enable": false,
+            "enabled": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "initial_config": {
+          "onlyonce": true,
+          "clearcache": true,
+          "plugin_ids": [
+            "OwnedTarget"
+          ],
+          "count": 0,
+          "empty": ""
+        },
+        "clone_init_count": 3,
+        "reload_event_count": 2,
+        "clone_config": {
+          "onlyonce": true,
+          "clearcache": true,
+          "plugin_ids": [
+            "OwnedTarget"
+          ],
+          "count": 0,
+          "empty": "",
+          "enable": false,
+          "enabled": false
+        },
+        "source_config": {
+          "onlyonce": true,
+          "clearcache": true,
+          "plugin_ids": [
+            "OwnedTarget"
+          ],
+          "count": 0,
+          "empty": ""
+        },
+        "source_kv": "source-only",
+        "clone_kv_copied": false,
+        "synthetic_init_consumes_once": false
+      }
+    },
+    {
+      "case": "endpoint_clone_empty_config",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {}
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "close",
+          "Sourceowned"
+        ],
+        [
+          "stop_service",
+          "Sourceowned"
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {}
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "initial_config": {},
+        "clone_init_count": 2,
+        "reload_event_count": 2,
+        "clone_config": null,
+        "source_config": {},
+        "source_kv": "source-only",
+        "clone_kv_copied": false,
+        "synthetic_init_consumes_once": false
+      }
+    },
+    {
+      "case": "endpoint_clone_null_config",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {}
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "close",
+          "Sourceowned"
+        ],
+        [
+          "stop_service",
+          "Sourceowned"
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {}
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "initial_config": null,
+        "clone_init_count": 2,
+        "reload_event_count": 2,
+        "clone_config": null,
+        "source_config": null,
+        "source_kv": "source-only",
+        "clone_kv_copied": false,
+        "synthetic_init_consumes_once": false
+      }
+    },
+    {
+      "case": "endpoint_clone_rereads_config_changed_by_init",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": false,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": false,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "close",
+          "Sourceowned"
+        ],
+        [
+          "stop_service",
+          "Sourceowned"
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": false,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "initial_config": {
+          "onlyonce": true,
+          "enabled": true
+        },
+        "clone_init_count": 3,
+        "reload_event_count": 2,
+        "clone_config": {
+          "onlyonce": false,
+          "enabled": false,
+          "enable": false
+        },
+        "source_config": {
+          "onlyonce": true,
+          "enabled": true
+        },
+        "source_kv": "source-only",
+        "clone_kv_copied": false,
+        "synthetic_init_consumes_once": true
+      }
+    },
+    {
+      "case": "endpoint_clone_empty-first",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {}
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "close",
+          "Sourceowned"
+        ],
+        [
+          "stop_service",
+          "Sourceowned"
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {}
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "synthetic_boundary_behavior": "empty-first",
+        "clone_init_count": 2,
+        "reload_event_count": 2,
+        "clone_config": {},
+        "clone_class_present": true,
+        "clone_running": true,
+        "clone_installed": true,
+        "clone_directory_present": true,
+        "registration_order": [
+          "jobs.register",
+          "commands.register",
+          "api.register"
+        ]
+      }
+    },
+    {
+      "case": "endpoint_clone_raise-first",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "synthetic.init.raise",
+          "Sourceowned",
+          1
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "synthetic_boundary_behavior": "raise-first",
+        "clone_init_count": 2,
+        "reload_event_count": 2,
+        "clone_config": {
+          "onlyonce": true,
+          "enabled": false,
+          "enable": false
+        },
+        "clone_class_present": true,
+        "clone_running": true,
+        "clone_installed": true,
+        "clone_directory_present": true,
+        "registration_order": [
+          "jobs.register",
+          "commands.register",
+          "api.register"
+        ]
+      }
+    },
+    {
+      "case": "endpoint_clone_raise-all",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "synthetic.init.raise",
+          "Sourceowned",
+          1
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "synthetic.init.raise",
+          "Sourceowned",
+          2
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "jobs.register",
+          "Sourceowned"
+        ],
+        [
+          "commands.register",
+          "Sourceowned"
+        ],
+        [
+          "api.register",
+          "Sourceowned"
+        ],
+        [
+          "folder.clone",
+          "Source",
+          "Sourceowned"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true,
+          "message": "插件分身创建成功"
+        },
+        "synthetic_boundary_behavior": "raise-all",
+        "clone_init_count": 2,
+        "reload_event_count": 2,
+        "clone_config": {
+          "onlyonce": true,
+          "enabled": false,
+          "enable": false
+        },
+        "clone_class_present": true,
+        "clone_running": false,
+        "clone_installed": true,
+        "clone_directory_present": true,
+        "registration_order": [
+          "jobs.register",
+          "commands.register",
+          "api.register"
+        ]
+      }
+    },
+    {
+      "case": "endpoint_clone_raise-second",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source",
+            "Sourceowned"
+          ]
+        ],
+        [
+          "config.set",
+          "plugin.Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Sourceowned"
+          }
+        ],
+        [
+          "init",
+          "Sourceowned",
+          {
+            "onlyonce": true,
+            "enabled": false,
+            "enable": false
+          }
+        ],
+        [
+          "synthetic.init.raise",
+          "Sourceowned",
+          2
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": false,
+          "message": "创建插件分身失败：owned synthetic init failure 2"
+        },
+        "synthetic_boundary_behavior": "raise-second",
+        "clone_init_count": 2,
+        "reload_event_count": 1,
+        "clone_config": {
+          "onlyonce": true,
+          "enabled": false,
+          "enable": false
+        },
+        "clone_class_present": true,
+        "clone_running": true,
+        "clone_installed": true,
+        "clone_directory_present": true,
+        "registration_order": []
+      }
+    },
+    {
+      "case": "endpoint_save_exact_order",
+      "status": "pass",
+      "events": [
+        [
+          "config.set",
+          "plugin.Source",
+          {
+            "enabled": true,
+            "onlyonce": true
+          }
+        ],
+        [
+          "init",
+          "Source",
+          {
+            "enabled": true,
+            "onlyonce": true
+          }
+        ],
+        [
+          "event.enable",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true
+        },
+        "config": {
+          "enabled": true,
+          "onlyonce": true
+        },
+        "loaded": [
+          "Source"
+        ]
+      }
+    },
+    {
+      "case": "endpoint_reset_composed_stop_reload_register",
+      "status": "pass",
+      "events": [
+        [
+          "event.send",
+          "reset",
+          {
+            "plugin_id": "Source",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "event.disable",
+          "Source"
+        ],
+        [
+          "close",
+          "Source"
+        ],
+        [
+          "stop_service",
+          "Source"
+        ],
+        [
+          "modules.clear",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "config.delete",
+          "plugin.Source"
+        ],
+        [
+          "data.delete",
+          "Source"
+        ],
+        [
+          "modules.clear",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "init",
+          "Source",
+          {}
+        ],
+        [
+          "event.disable",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ],
+        [
+          "event.send",
+          "PluginReload",
+          {
+            "plugin_id": "Source"
+          }
+        ],
+        [
+          "jobs.register",
+          "Source"
+        ],
+        [
+          "commands.register",
+          "Source"
+        ],
+        [
+          "api.register",
+          "Source"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true
+        },
+        "config_absent": true,
+        "data_absent": true,
+        "loaded": [
+          "Source"
+        ]
+      }
+    },
+    {
+      "case": "endpoint_uninstall_ordinary_order",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          []
+        ],
+        [
+          "api.remove",
+          "Source"
+        ],
+        [
+          "jobs.remove",
+          "Source"
+        ],
+        [
+          "folder.remove",
+          "Source"
+        ],
+        [
+          "event.disable",
+          "Source"
+        ],
+        [
+          "close",
+          "Source"
+        ],
+        [
+          "stop_service",
+          "Source"
+        ],
+        [
+          "modules.clear",
+          "Source"
+        ],
+        [
+          "cache.clear"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true
+        },
+        "clone": false,
+        "config_retained": true,
+        "kv_retained": true,
+        "code_directory_retained": true
+      }
+    },
+    {
+      "case": "endpoint_uninstall_clone_order",
+      "status": "pass",
+      "events": [
+        [
+          "installed",
+          [
+            "Source"
+          ]
+        ],
+        [
+          "api.remove",
+          "Sourceowned"
+        ],
+        [
+          "jobs.remove",
+          "Sourceowned"
+        ],
+        [
+          "config.delete",
+          "plugin.Sourceowned"
+        ],
+        [
+          "data.delete",
+          "Sourceowned"
+        ],
+        [
+          "folder.remove",
+          "Sourceowned"
+        ],
+        [
+          "event.disable",
+          "Sourceowned"
+        ],
+        [
+          "close",
+          "Sourceowned"
+        ],
+        [
+          "stop_service",
+          "Sourceowned"
+        ],
+        [
+          "modules.clear",
+          "Sourceowned"
+        ],
+        [
+          "cache.clear"
+        ]
+      ],
+      "result": {
+        "response": {
+          "success": true
+        },
+        "clone": true,
+        "config_retained": false,
+        "kv_retained": false,
+        "code_directory_retained": false
+      }
+    }
+  ],
+  "scope": "Unchanged selected original core+endpoint AST bodies composed. Original start/stop/reload/config/clone plus endpoint clone/reload/register/save/reset/uninstall execute; discovery parses synthetic metadata and registration/store/events are recording boundaries. No real application/network/user files."
+}

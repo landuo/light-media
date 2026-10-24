@@ -98,7 +98,7 @@ func openSourceSettingsTarget(ctx context.Context, dir string, apply bool) (*sou
 	}
 
 	var active int
-	if tx.QueryRowContext(ctx, `SELECT (SELECT COUNT(*) FROM jobs WHERE state IN ('running','queued'))+(SELECT COUNT(*) FROM plugin_runs WHERE state IN ('pending','running','reconcile_pending'))`).Scan(&active) != nil || active != 0 {
+	if tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM jobs WHERE state IN ('running','queued')`).Scan(&active) != nil || active != 0 {
 		return nil, errors.New("source_settings_target_has_active_work")
 	}
 	success = true

@@ -2,28 +2,22 @@ package app
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
+	"light-media/internal/sites"
 	"net/http"
 	"strings"
 	"testing"
-
-	"light-media/internal/plugins"
 )
 
-func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
+func TestSiteMessageImportedSettingCorePolicyAndConnection(t *testing.T) {
 	for _, mode := range []string{"source-false", "source-true", "explicit-false", "explicit-true", "revoke-before-mark", "corrupt-proof"} {
 		t.Run(mode, func(t *testing.T) {
-			a, _, _, _ := pluginHTTPFixture(t)
+			a := newTestApp(t)
 			ctx := context.Background()
 			enabled := mode != "source-false" && mode != "explicit-true"
 			c := a.Settings()
-			c.Sites[0].BaseURL = "https://rousi.pro/"
-			c.Sites[0].Kind = "rousi"
-			c.Sites[0].Cookie = ""
-			c.Sites[0].APIKey = "owned-profile"
-			c.Sites[0].Token = "owned-mail-token"
+			c.Sites = []SiteConfig{{Config: sites.Config{ID: "known", Kind: "rousi", Name: "owned", BaseURL: "https://rousi.pro/", APIKey: "owned-profile"}, SiteOptions: SiteOptions{Domain: "known.example", Token: "owned-mail-token"}, Enabled: true}}
 			c.ReadSiteMessages = nil
 			if mode == "explicit-false" {
 				v := false
@@ -51,7 +45,6 @@ func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
 				t.Fatal(e)
 			}
 			defer cold.Close()
-			useBuiltInPluginProcess(t, cold)
 			if mode == "corrupt-proof" {
 				if _, e = cold.Store.DB.Exec(`UPDATE records SET payload=zeroblob(length(payload)) WHERE kind='source_site_message_settings'`); e != nil {
 					t.Fatal(e)
@@ -86,40 +79,16 @@ func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
 				}
 				return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": {"application/json"}}, Body: io.NopCloser(strings.NewReader(body)), Request: r}, nil
 			})
-			run := enqueueSyntheticPluginHTTP(t, cold)
-			cold.executePluginRun(ctx, run)
-			finished, e := cold.pluginStore.Run(ctx, run.ID)
+			job := siteMessageClaimBatch(t, cold)
+			err := cold.runSiteRefresh(ctx, job)
 			wantSuccess := mode != "revoke-before-mark" && mode != "corrupt-proof"
-			if e != nil {
-				t.Fatal(e)
+			if wantSuccess != (err == nil) {
+				t.Fatal("core policy outcome changed", mode, err)
 			}
-			if wantSuccess {
-				if finished.State != "succeeded" {
-					t.Fatal("source API did not settle", finished.State, finished.ErrorCode)
-				}
-				receipt, e := cold.pluginStore.siteStatisticReceipt(ctx, run)
-				if e != nil {
-					t.Fatal(e)
-				}
-				var response plugins.HTTPResponse
-				if json.Unmarshal(receipt, &response) != nil {
-					t.Fatal("invalid SDK receipt")
-				}
-				var result struct{ Success bool }
-				if json.Unmarshal(response.Body, &result) != nil || !result.Success {
-					t.Fatal("source outcome mismatch")
-				}
-			} else {
-				code := "SITE_CHANGED"
-				if mode == "corrupt-proof" {
-					code = "PLUGIN_HOST_FAILED"
-				}
-				if finished.State != "failed" || finished.ErrorCode != code {
-					t.Fatal("revoked/unconfirmed setting did not fail", finished.State, finished.ErrorCode)
-				}
+			if !wantSuccess {
 				var published int
-				if e = cold.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_site_statistic_operations)`).Scan(&published); e != nil || published != 0 {
-					t.Fatal("revoked/unconfirmed setting published account data/event/receipt", published, e)
+				if e = cold.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history','notification'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&published); e != nil || published != 0 {
+					t.Fatal("revoked/unconfirmed setting published account data/event/notification", published, e)
 				}
 			}
 			want := []string{"/api/v1/profile"}
@@ -136,10 +105,9 @@ func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
 				t.Fatal("imported flag/user override/revocation changed IO", paths, want)
 			}
 			if mode == "revoke-before-mark" {
-				// A synchronous guard denial is terminal, unlike interrupted
-				// admission. Reopening cannot recollect, mark read, or post.
-				collection, found, err := cold.pluginStore.siteMessageCollectionForRun(ctx, cold.Store.DB, run)
-				if err != nil || !found || collection.Stage != "aborted" || collection.Failure != "SITE_CHANGED" {
+				id := cold.pluginStore.noticeID("site-collection", "job", job.ID, "known")
+				collection, err := cold.pluginStore.readSiteMessageCollection(ctx, cold.Store.DB, id)
+				if err != nil || collection.Stage != "aborted" || collection.Failure != "SITE_CHANGED" {
 					t.Fatal("missing terminal local denial", collection.Stage, err)
 				}
 				before := len(paths)
@@ -154,12 +122,12 @@ func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
 				if err = restarted.resumePluginNoticeRoutes(ctx, 200); err != nil {
 					t.Fatal(err)
 				}
-				terminal, err := restarted.pluginStore.Run(ctx, run.ID)
-				if err != nil || terminal.State != "failed" || terminal.ErrorCode != "SITE_CHANGED" || len(paths) != before {
-					t.Fatal("cold restart retried terminal denied read", terminal.State, paths, err)
+				terminal, err := restarted.pluginStore.readSiteMessageCollection(ctx, restarted.Store.DB, id)
+				if err != nil || terminal.Stage != "aborted" || terminal.Failure != "SITE_CHANGED" || len(paths) != before {
+					t.Fatal("cold restart retried terminal denied read", terminal.Stage, paths, err)
 				}
 				var visible int
-				if err = restarted.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history','notification'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_site_statistic_operations)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&visible); err != nil || visible != 0 {
+				if err = restarted.Store.DB.QueryRow(`SELECT (SELECT COUNT(*) FROM records WHERE kind IN ('site_connection','site_stats_latest','site_stats_history','notification'))+(SELECT COUNT(*) FROM domain_events)+(SELECT COUNT(*) FROM plugin_message_queue)`).Scan(&visible); err != nil || visible != 0 {
 					t.Fatal("denied admission published effects", visible, err)
 				}
 			}
@@ -168,7 +136,6 @@ func TestSiteMessageImportedSettingActualSDKAndRevocation(t *testing.T) {
 				if projection["effective_read_site_messages"] != nil || projection["read_site_messages_error"] == nil || projection["read_site_messages"] != nil {
 					t.Fatal("corrupt proof was displayed as a known message preference")
 				}
-				// Plain native connection tests do not depend on the source-only receipt.
 				if _, e = cold.refreshManagedSite(ctx, "known"); e != nil {
 					t.Fatal(e)
 				}

@@ -1,0 +1,980 @@
+{
+  "scope": "Partial Base-only v48 selected validation; not complete module acceptance",
+  "parent": "b920eabefc0cb852ae328b2202bb072f79dbd5c8",
+  "parent_tree": "952fce7362b58bae660591c26733bb7e9b337cf7",
+  "changed_code": [
+    {
+      "path": "internal/app/plugin_implementation.go",
+      "sha": "cb8ebccefa863d9ea157aa366e320bac482832c5",
+      "sha256": "ab0a3a9daf790720161a8661c36ec19442cb127bd86c1d6779914da4f4ba61f0",
+      "bytes": 4394
+    },
+    {
+      "path": "internal/app/plugin_original_uninstall.go",
+      "sha": "c45aeab3d3d34072d2f3a788cd091d9fdd2e3a76",
+      "sha256": "8c9fe276f507ea7af7cbca814c70f9d77f2c12c904e0d918ccb782509759aec5",
+      "bytes": 2889
+    },
+    {
+      "path": "internal/app/runtime.go",
+      "sha": "b0ed71bd03a510880131940a6a8eb3b45ac001da",
+      "sha256": "6aa84e7b68f34e0259f972c44ac81e217e928d11fa7632c8c291c9420c6a0493",
+      "bytes": 20690
+    },
+    {
+      "path": "internal/app/plugin_original_lifecycle.go",
+      "sha": "9881257f670dc231e09a5b02c05937ef71c02cec",
+      "sha256": "9b87967aa426362f2d579ccc9caf82345a54c84477dd31465772a420a9de751b",
+      "bytes": 12392
+    },
+    {
+      "path": "internal/app/plugin_runs.go",
+      "sha": "e4f5c1a39dedcc8742d3299e5615fc4632166b62",
+      "sha256": "477072687dca0c4b9fdf2f6bc96191aef15bd8cc327952de3e3552edb6307408",
+      "bytes": 39328
+    },
+    {
+      "path": "internal/app/plugin_instances.go",
+      "sha": "bafe0cc5f375c8f41b33d644bef77678686e7cf1",
+      "sha256": "b951993e8e4ee724fd6cea434b63aa18fe2d8a7f5b567b66a62066ede4eb8090",
+      "bytes": 18088
+    },
+    {
+      "path": "internal/app/plugin_original_session.go",
+      "sha": "8cad088568b9eaa895a6ec9d935ddee33d91497c",
+      "sha256": "efcc3a7b698d04bb778fb4a9b3f35e59db62a422a90faf00a5ecd83ec3bf7a5a",
+      "bytes": 5280
+    },
+    {
+      "path": "internal/app/plugin_store.go",
+      "sha": "63205c795315670fc9428356e64ed3626af2d681",
+      "sha256": "e97d2840907ab75fc1559dc0223ceb72da55c40f0f15bccec257a111c5be1c9f",
+      "bytes": 58467
+    },
+    {
+      "path": "internal/app/plugin_original_reset.go",
+      "sha": "39d59103bc017fb380270a73f7075d858b67fae0",
+      "sha256": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+      "bytes": 1000
+    },
+    {
+      "path": "internal/app/plugin_original_config.go",
+      "sha": "e6d61d90e6f3dfe279c52d3006464bd1dc194b81",
+      "sha256": "fe4d4eac99dda3cca7d2f6453d2beaa3f8441d437708df1b3199965c87932a66",
+      "bytes": 4958
+    },
+    {
+      "path": "internal/app/plugin_original_artifact_dispatch_test.go",
+      "sha": "e959746fc081f9cb54534c550646b7c24be279a9",
+      "sha256": "305a49fac1362799ea5cbddb9d95554358289b8dd2ea1b11715df5cf8d577e2b",
+      "bytes": 7097
+    },
+    {
+      "path": "cmd/owned-base-fixture/main.go",
+      "sha": "3c0a93b045ead0890f64d8cfa730e0d1aa44d9a2",
+      "sha256": "c02a359c40c704476912591372e2911e52654c58c60c18bd57bebd0fb276722c",
+      "bytes": 4976
+    },
+    {
+      "path": "internal/app/plugin_original_base.go",
+      "sha": "f5e4c4b5a4c3f2c136801abb82f7cc71de01d0c8",
+      "sha256": "9e42b8e9d374e250604a2959bbfa4337e6ac2f39d0fc44e9bd11d85d79f3442f",
+      "bytes": 18853
+    },
+    {
+      "path": "internal/app/plugin_original_base_http_test.go",
+      "sha": "d59f3fa894bf282ced8f2016d893192a97bb2501",
+      "sha256": "234f8fffa1d46668ac2629a50e0f138d5a2735f5d4f24247dc2fbb8d7a74f4bf",
+      "bytes": 1240
+    },
+    {
+      "path": "internal/app/plugin_original_base_schema.go",
+      "sha": "79816546ec559484b56463979f2d98f52b10721c",
+      "sha256": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+      "bytes": 2240
+    },
+    {
+      "path": "internal/app/plugin_original_base_schema_test.go",
+      "sha": "7e3cb3c150eccc8eaad0a17ba70cff6e01875751",
+      "sha256": "6906422cbabfd06a6b84118e2c91d2256bfe18fb050c096ac91de49bdda3baf3",
+      "bytes": 3031
+    },
+    {
+      "path": "internal/app/plugin_original_base_sdk_test.go",
+      "sha": "27092f60eb79589e8ba63f809175f450750e1011",
+      "sha256": "b8d210b2e5bab66174eb891f38bdc89ffd316bbd6989e4063928644c65e75170",
+      "bytes": 14894
+    },
+    {
+      "path": "internal/app/plugin_original_base_session.go",
+      "sha": "dfb4304dc912e24a779f454cb2c75c1fd46ed749",
+      "sha256": "4ec78b81c3ceab548e4bd97d577a9944b375d08117cf309d245ead30651bdb25",
+      "bytes": 2708
+    },
+    {
+      "path": "internal/app/plugin_original_base_test.go",
+      "sha": "4efe67c403f408fb0c8b359a1e888821eaccfe4b",
+      "sha256": "55077bd3fcbd6b1a72cd45c908296b12814dd5ef696a1a112fb21905f319adcd",
+      "bytes": 13618
+    },
+    {
+      "path": "internal/plugins/base.go",
+      "sha": "be7d3c9f9a8449242bd0bc1a80ad8814893ee976",
+      "sha256": "909d4597731ef88bd72bbb3e926c00437edb188bb7a52136de87764726bc0454",
+      "bytes": 3554
+    },
+    {
+      "path": "internal/plugins/base_test.go",
+      "sha": "4d8b3936e6a3efffc1b2d7dd817b0f9f29d260bf",
+      "sha256": "c6579e22603e50a85e609d90cf7a3987ed726cfd736f0a53d1e54ea7aa845418",
+      "bytes": 1978
+    }
+  ],
+  "runs": {
+    "normal": {
+      "mode": "normal",
+      "reaped": true,
+      "exit": 0,
+      "roots": 75,
+      "passed": 75,
+      "failed": [],
+      "skipped": [],
+      "drift": [],
+      "packages": [
+        {
+          "Time": "2026-10-23T22:24:11.106350157Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 92.124
+        },
+        {
+          "Time": "2026-10-23T22:24:11.355114729Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins",
+          "Elapsed": 0.053
+        },
+        {
+          "Time": "2026-10-23T22:24:12.61382552Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 0.096
+        },
+        {
+          "Time": "2026-10-23T22:24:13.826074312Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Elapsed": 0.114
+        },
+        {
+          "Time": "2026-10-23T22:24:14.721825154Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/brushflow",
+          "Elapsed": 0.016
+        }
+      ],
+      "root_tests": [
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalAbsentEngineInitThenConfigureSameObject",
+          "Elapsed": 0.53
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalAPIMethodActualWorker",
+          "Elapsed": 0.28
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalAPIMethodNativeDeclarations",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalAPIRegistrationActualHTTPAndClone",
+          "Elapsed": 0.52
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalArtifactDueServiceCallsLoadedHandler",
+          "Elapsed": 0.55
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalArtifactRegisteredCommandCallsLoadedInstance",
+          "Elapsed": 0.5
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalArtifactManagerStateBeforeDeclarations",
+          "Elapsed": 0.5
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseConfigHTTPUsesCurrentCacheWithoutInitialization",
+          "Elapsed": 0.29
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseNamespaceMigrationPreservesRowsAndDeclarations",
+          "Elapsed": 0.02
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKConfigUpdateThenSameCallRead",
+          "Elapsed": 0.29
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKCloneDefaultsAndExplicitNamespaces",
+          "Elapsed": 0.49
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKUnknownNamespaceWithoutInstallation",
+          "Elapsed": 0.26
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop",
+          "Elapsed": 0.39
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKKeyedAndAllDataDeletion",
+          "Elapsed": 0.33
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache",
+          "Elapsed": 0.39
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBasePythonJSONEquality",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseOwnedStorageRowsAndConfigCache",
+          "Elapsed": 0.27
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseUnknownNamespaceRequiresSchemaSupport",
+          "Elapsed": 0.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseOwnedDataPathBoundaries",
+          "Elapsed": 0.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseHostRejectsUnboundScopeBeforeEffects",
+          "Elapsed": 0.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseDataPathRejectsInsideRootAliases",
+          "Elapsed": 0.19
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseConfigObservesExternalWrites",
+          "Elapsed": 0.28
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseFailedWriteRetainsCacheUntilExternalChange",
+          "Elapsed": 0.24
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppNoneAndEmptyInitRetainActualObjects",
+          "Elapsed": 0.28
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppMediaEmptyInitKeepsMembersAndIsolation",
+          "Elapsed": 0.07
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppCategoryHostFailureRetainsMember",
+          "Elapsed": 0.07
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppSiteOnceMemberDiffersFromPersistedConfig",
+          "Elapsed": 0.07
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppMediaRealHostErrorRetainsMembers",
+          "Elapsed": 0.08
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineAppStartRepeatAndClone",
+          "Elapsed": 1.4
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineAppDiagnosticV2",
+          "Elapsed": 1.91
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineMethodsReadMembersWithoutStore",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineMethodsCanceledAndMissing",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineCaptureSeparatesFreshAndRepeat",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineActualDueSignInNoSites",
+          "Elapsed": 10.1
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineActualDueCleanNoDownloaders",
+          "Elapsed": 59.98
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalExternalHTTPRejectsActualNullResponse",
+          "Elapsed": 0.24
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+          "Elapsed": 0.27
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+          "Elapsed": 0.25
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitCloudflarePrivatePublicSeparation",
+          "Elapsed": 0.45
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitCloudflareNewObjectDoesNotWarmOldState",
+          "Elapsed": 0.4
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitSeedPublicServicesOnly",
+          "Elapsed": 0.63
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitCommitFailureRetainsPartialMachine",
+          "Elapsed": 0.81
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalMachineMethodsCloudflareRetained",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalMachineMethodsSeedRetained",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalMachineMethodsMissingCancelledUnsupported",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+          "Elapsed": 0.31
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppRemoteRetainsActualMember",
+          "Elapsed": 0.57
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppRemotePartialFailure",
+          "Elapsed": 0.4
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppSubscribeCategoryAndEmpty",
+          "Elapsed": 0.58
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppBrushCapturesActualObject",
+          "Elapsed": 0.53
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAbsentMemberNeverReconstructs",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppRemoteServicesSeparatePrivateOnce",
+          "Elapsed": 0.44
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalSeedServiceScopeIdentityAndRevocation",
+          "Elapsed": 0.48
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessRetainedMembers",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessMissingCaptureNeverDecodesConfig",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessMergeLiveDependencies",
+          "Elapsed": 0.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessMergeOriginalDependencyNames",
+          "Elapsed": 0.04
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessInitializationCapturesMediaState",
+          "Elapsed": 0.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessRejectsTypedNilAndLegacySnapshot",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherIdleActualApp",
+          "Elapsed": 1.63
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherIdlePartialAndNoAuthority",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherIdleToActiveActualApp",
+          "Elapsed": 1.37
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsRealRemoveLinkOwner",
+          "Elapsed": 0.26
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsRealScrapeOwner",
+          "Elapsed": 0.29
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsInertCaptureGap",
+          "Elapsed": 0.45
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsSourceDeclarations",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins",
+          "Test": "TestBaseWrapperPreservesTargetAndNone",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins",
+          "Test": "TestBaseMethodVocabularyIsBounded",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Test": "TestNativeEngineRetainsIdentityAndDetachesClock",
+          "Elapsed": 0.01
+        },
+        {
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Test": "TestNativeEngineFailedInitKeepsActualPartialMembers",
+          "Elapsed": 0.01
+        },
+        {
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Test": "TestNativeMachineRetainsMembersWithoutRuntimeDecode",
+          "Elapsed": 0.04
+        },
+        {
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Test": "TestNativeMachineFailedInitKeepsActualPartialMembers",
+          "Elapsed": 0.03
+        },
+        {
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Test": "TestOriginalServiceMarkerBoundToExactInvocationAndMachine",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/brushflow",
+          "Test": "TestOriginalRetainedInitKeepsPostNormalizePartialObject",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/brushflow",
+          "Test": "TestOriginalRetainedInitAndLegacyNewShareImplementation",
+          "Elapsed": 0
+        }
+      ],
+      "log_sha256": "dda3a3772c7d4a5b5e05d19111c5a7676c9d234ff0fbe475ad86db143325056f"
+    },
+    "race": {
+      "mode": "race",
+      "reaped": true,
+      "exit": 0,
+      "roots": 75,
+      "passed": 75,
+      "failed": [],
+      "skipped": [],
+      "drift": [],
+      "packages": [
+        {
+          "Time": "2026-10-23T22:31:00.445528801Z",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 329.253
+        },
+        {
+          "Time": "2026-10-23T22:31:03.359522764Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins",
+          "Elapsed": 1.301
+        },
+        {
+          "Time": "2026-10-23T22:31:06.926835268Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Elapsed": 1.325
+        },
+        {
+          "Time": "2026-10-23T22:31:10.388077034Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Elapsed": 1.432
+        },
+        {
+          "Time": "2026-10-23T22:31:13.365530783Z",
+          "Action": "pass",
+          "Package": "light-media/internal/plugins/brushflow",
+          "Elapsed": 1.116
+        }
+      ],
+      "root_tests": [
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalAbsentEngineInitThenConfigureSameObject",
+          "Elapsed": 7.62
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalAPIMethodActualWorker",
+          "Elapsed": 4.87
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalAPIMethodNativeDeclarations",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalAPIRegistrationActualHTTPAndClone",
+          "Elapsed": 6.1
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalArtifactDueServiceCallsLoadedHandler",
+          "Elapsed": 3.82
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalArtifactRegisteredCommandCallsLoadedInstance",
+          "Elapsed": 3.46
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalArtifactManagerStateBeforeDeclarations",
+          "Elapsed": 3.51
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseConfigHTTPUsesCurrentCacheWithoutInitialization",
+          "Elapsed": 2.51
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseNamespaceMigrationPreservesRowsAndDeclarations",
+          "Elapsed": 0.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKConfigUpdateThenSameCallRead",
+          "Elapsed": 2.37
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKCloneDefaultsAndExplicitNamespaces",
+          "Elapsed": 4.1
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKUnknownNamespaceWithoutInstallation",
+          "Elapsed": 2.31
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop",
+          "Elapsed": 3
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKKeyedAndAllDataDeletion",
+          "Elapsed": 4.88
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache",
+          "Elapsed": 6.29
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBasePythonJSONEquality",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseOwnedStorageRowsAndConfigCache",
+          "Elapsed": 2.21
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseUnknownNamespaceRequiresSchemaSupport",
+          "Elapsed": 0.52
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseOwnedDataPathBoundaries",
+          "Elapsed": 0.53
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseHostRejectsUnboundScopeBeforeEffects",
+          "Elapsed": 0.57
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseDataPathRejectsInsideRootAliases",
+          "Elapsed": 2.2
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseConfigObservesExternalWrites",
+          "Elapsed": 2.23
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBaseFailedWriteRetainsCacheUntilExternalChange",
+          "Elapsed": 2.18
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppNoneAndEmptyInitRetainActualObjects",
+          "Elapsed": 3.48
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppMediaEmptyInitKeepsMembersAndIsolation",
+          "Elapsed": 0.99
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppCategoryHostFailureRetainsMember",
+          "Elapsed": 0.84
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppSiteOnceMemberDiffersFromPersistedConfig",
+          "Elapsed": 0.81
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalBuiltinAppMediaRealHostErrorRetainsMembers",
+          "Elapsed": 0.75
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineAppStartRepeatAndClone",
+          "Elapsed": 13.18
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineAppDiagnosticV2",
+          "Elapsed": 13.11
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineMethodsReadMembersWithoutStore",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineMethodsCanceledAndMissing",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineCaptureSeparatesFreshAndRepeat",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineActualDueSignInNoSites",
+          "Elapsed": 48.28
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalEngineActualDueCleanNoDownloaders",
+          "Elapsed": 59.79
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalExternalHTTPRejectsActualNullResponse",
+          "Elapsed": 2.62
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+          "Elapsed": 2.26
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+          "Elapsed": 2.07
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitCloudflarePrivatePublicSeparation",
+          "Elapsed": 4.12
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitCloudflareNewObjectDoesNotWarmOldState",
+          "Elapsed": 4.06
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitSeedPublicServicesOnly",
+          "Elapsed": 6.16
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMachineInitCommitFailureRetainsPartialMachine",
+          "Elapsed": 8.38
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalMachineMethodsCloudflareRetained",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalMachineMethodsSeedRetained",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalMachineMethodsMissingCancelledUnsupported",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+          "Elapsed": 3.12
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppRemoteRetainsActualMember",
+          "Elapsed": 5.63
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppRemotePartialFailure",
+          "Elapsed": 2.94
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppSubscribeCategoryAndEmpty",
+          "Elapsed": 5.94
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppBrushCapturesActualObject",
+          "Elapsed": 5.98
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAbsentMemberNeverReconstructs",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalRemainingAppRemoteServicesSeparatePrivateOnce",
+          "Elapsed": 3.97
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestPluginOriginalSeedServiceScopeIdentityAndRevocation",
+          "Elapsed": 4.88
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessRetainedMembers",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessMissingCaptureNeverDecodesConfig",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessMergeLiveDependencies",
+          "Elapsed": 0.58
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessMergeOriginalDependencyNames",
+          "Elapsed": 0.59
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessInitializationCapturesMediaState",
+          "Elapsed": 0.61
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalStatelessRejectsTypedNilAndLegacySnapshot",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherIdleActualApp",
+          "Elapsed": 16.75
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherIdlePartialAndNoAuthority",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherIdleToActiveActualApp",
+          "Elapsed": 24.05
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsRealRemoveLinkOwner",
+          "Elapsed": 3.11
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsRealScrapeOwner",
+          "Elapsed": 2.81
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsInertCaptureGap",
+          "Elapsed": 4.57
+        },
+        {
+          "Package": "light-media/internal/app",
+          "Test": "TestOriginalWatcherMethodsSourceDeclarations",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins",
+          "Test": "TestBaseWrapperPreservesTargetAndNone",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins",
+          "Test": "TestBaseMethodVocabularyIsBounded",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Test": "TestNativeEngineRetainsIdentityAndDetachesClock",
+          "Elapsed": 0.03
+        },
+        {
+          "Package": "light-media/internal/plugins/autosignin/durable",
+          "Test": "TestNativeEngineFailedInitKeepsActualPartialMembers",
+          "Elapsed": 0.01
+        },
+        {
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Test": "TestNativeMachineRetainsMembersWithoutRuntimeDecode",
+          "Elapsed": 0.18
+        },
+        {
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Test": "TestNativeMachineFailedInitKeepsActualPartialMembers",
+          "Elapsed": 0.09
+        },
+        {
+          "Package": "light-media/internal/plugins/cleaninvalidseed/host",
+          "Test": "TestOriginalServiceMarkerBoundToExactInvocationAndMachine",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/brushflow",
+          "Test": "TestOriginalRetainedInitKeepsPostNormalizePartialObject",
+          "Elapsed": 0
+        },
+        {
+          "Package": "light-media/internal/plugins/brushflow",
+          "Test": "TestOriginalRetainedInitAndLegacyNewShareImplementation",
+          "Elapsed": 0
+        }
+      ],
+      "log_sha256": "4c88e3dfae1a55c4aba7c81f0984513dc9317208935496433dd6940a619a529c"
+    }
+  },
+  "owned_base_fixture": {
+    "source_path": "cmd/owned-base-fixture/main.go",
+    "binary_sha256": "0cd619feedcbf2701b6531f8aedc31bff89b3b0c852b2bced1da933e67f08103",
+    "binary_included": false
+  }
+}

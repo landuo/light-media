@@ -38,10 +38,12 @@ async function submit() {
   if (Object.keys(errors.value).length) return;
   busy.value = true;
   try {
-    const result = await api<PluginCloneResult>(
+    const result = await api<PluginCloneResult & { success?: boolean; message?: string }>(
       '/plugins/' + encodeURIComponent(props.plugin.instance_id) + '/clone',
       { ...form },
     );
+    if (result?.success === false)
+      throw new APIError('PLUGIN_CLONE_FAILED', result.message || '插件分身创建失败', '');
     if (
       result?.created !== true ||
       result.instance_id !== instanceId.value ||

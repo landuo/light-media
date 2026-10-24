@@ -44,6 +44,13 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		if e != nil || st.Size() <= 0 || st.Size() > 8<<20 {
 			return false
 		}
+		contentType, e := catalogImageContentType(f)
+		if e != nil {
+			return false
+		}
+		// The cache uses .img names, whose system MIME mapping is not an image
+		// type on every host. Trust the bounded cache bytes, not that suffix.
+		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Cache-Control", "private, max-age=86400")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		http.ServeContent(w, r, name, st.ModTime(), f)
@@ -94,6 +101,9 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		e = bad("IMAGE_SIZE", "图片超过大小限制")
 	}
 	if e == nil {
+		_, e = catalogImageContentType(tmp)
+	}
+	if e == nil {
 		e = tmp.Sync()
 	}
 	closeErr := tmp.Close()
@@ -111,6 +121,28 @@ func (a *App) catalogImage(w http.ResponseWriter, r *http.Request) error {
 		return bad("IMAGE_UNAVAILABLE", "图片缓存不可访问")
 	}
 	return nil
+}
+
+// Inspect both new downloads and existing cache entries. The upstream header
+// alone cannot establish the response type, and ServeContent needs offset zero
+// after inspection to preserve full-body, HEAD and Range behavior.
+func catalogImageContentType(f *os.File) (string, error) {
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return "", err
+	}
+	var header [512]byte
+	n, err := io.ReadFull(f, header[:])
+	if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
+		return "", err
+	}
+	contentType := http.DetectContentType(header[:n])
+	if contentType != "image/jpeg" && contentType != "image/png" && contentType != "image/webp" {
+		return "", bad("IMAGE_UNAVAILABLE", "图片服务返回了非图片内容")
+	}
+	if _, err = f.Seek(0, io.SeekStart); err != nil {
+		return "", err
+	}
+	return contentType, nil
 }
 
 func (a *App) pruneCatalogImages(dir string) {

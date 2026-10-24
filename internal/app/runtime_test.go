@@ -19,7 +19,6 @@ func newTestApp(t *testing.T) *App {
 	if e != nil {
 		t.Fatal(e)
 	}
-	a.autoSignInEnvironment = func() []string { return nil }
 	t.Cleanup(func() { _ = a.Close() })
 	return a
 }

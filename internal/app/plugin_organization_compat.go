@@ -29,9 +29,6 @@ func organizationCompatResponse(success bool, message string) pluginOrganization
 // reads and saves in one transaction, so a folder edit cannot overwrite a
 // concurrently saved PluginOrder or unrelated folder properties.
 func (p *PluginStore) mutateOrganization(ctx context.Context, change func(*PluginOrganization) (bool, error)) error {
-	if err := p.checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err

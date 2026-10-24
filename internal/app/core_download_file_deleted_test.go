@@ -277,8 +277,8 @@ func TestCoreDownloadFileDeletedSourceNoOpAndDefaultRouting(t *testing.T) {
 		if e := a.Store.DB.QueryRow(`SELECT file_event_id FROM plugin_download_file_events WHERE file_event_id LIKE 'hfe_%'`).Scan(&key); e != nil {
 			t.Fatal(e)
 		}
-		p, e := a.pluginStore.downloadFileEvent(context.Background(), a.Store.DB, key)
-		if e != nil || p.Hash != "" {
+		p, e := a.pluginStore.historyDownloadFileFact(context.Background(), a.Store.DB, key)
+		if e != nil || p.Identity.Hash != "" {
 			t.Fatal("source event", e)
 		}
 	})

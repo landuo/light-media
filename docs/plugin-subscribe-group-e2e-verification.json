@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-23",
+  "scope": "SubscribeGroup Unicode parser actual loopback HTTP -> durable subscription.added -> ordinary cmd/server --plugin-worker -> subscription/history transaction -> HTTP readback. Regression tests cover prior added/downloaded/receipt restart/cache/authority/selected-intent paths.",
+  "task_branch": "plugins/subscribe-group",
+  "production_base": "c01ced21a297fefe4eb940115b5a347bcffbbb25",
+  "published_go_files_exactly_matched": 2102,
+  "new_layer": "One App end-to-end test, no production changes from production_base.",
+  "source_files": 5518,
+  "source_manifest_sha256": "d42ff96850dea9e47f464abbe70663671269d262854be35bbd9669bc739c5138",
+  "normal": {
+    "roots": 11,
+    "nodes": 15,
+    "failures": [],
+    "skips": [],
+    "exit": 0,
+    "source_manifest_sha256": "d42ff96850dea9e47f464abbe70663671269d262854be35bbd9669bc739c5138",
+    "new_test_only": true
+  },
+  "race": {
+    "roots": 11,
+    "nodes": 15,
+    "failures": [],
+    "skips": [],
+    "exit": 0,
+    "source_manifest_sha256": "d42ff96850dea9e47f464abbe70663671269d262854be35bbd9669bc739c5138",
+    "race_parent": true,
+    "ordinary_server_child": true
+  },
+  "normal_seconds": 7.05,
+  "race_seconds": 34.08,
+  "roots": [
+    "TestSubscribeGroupUnicodeRulesActualServerHTTP",
+    "TestSubscribeGroupAddedActualOutboxFieldsHistoryAndSearch",
+    "TestSubscribeGroupInitClearIsAtomicAndSourceFullReplacement",
+    "TestSubscribeGroupAddedLateFailureAndRestartRetry",
+    "TestSubscribeGroupCategoryCacheWarmReloadAndColdRestart",
+    "TestSubscribeGroupDownloadRangeFillCurrentRowsHistoryAndDedupAtomic",
+    "TestSubscribeGroupDownloadSingleSeasonAndRSSScope",
+    "TestSubscribeGroupDownloadLateSQLFailureRollsBackAndExactRetry",
+    "TestSubscribeGroupRPCRejectsPatchesViewWritesAndForeignIdentity",
+    "TestSubscribeGroupFillKeepsActualSelectedIntentBatchUsable",
+    "TestSubscribeGroupFillCategoryKeepsAlreadySelectedIntentBatchUsable"
+  ],
+  "original_reference": "testdata/plugins/subscribe-group-parser-oracle.json",
+  "oracle_source_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+  "retained_failure": {
+    "path": "testdata/plugins/subscribe-group-parser/e2e-v1-test-expectation-failure.jsonl",
+    "meaning": "Initial new test incorrectly expected no core subscription-created notice. Existing core behavior emits one. Corrected test requires exactly one owned-loopback notice, original title and authenticated same-subscription identity. This is a test expectation failure, not a product red/green.",
+    "production_changed": false
+  },
+  "safety": "Owned loopback HTTP, synthetic metadata/downloaders/subscriptions only. No real account, subscription, external notification or media changed.",
+  "browser_acceptance": false,
+  "whole_plugin_complete": false,
+  "deployment_or_private_data_migration": false,
+  "full_repository_ci_claim": false,
+  "remaining": [
+    "Real-browser configuration, history and cancel/reopen acceptance.",
+    "Remaining existing plugin acceptance paths, including large-history scope, must be inventoried.",
+    "Complete RSS Context integration and arbitrary 16MiB expanded history remain explicitly unverified; this test does not claim them.",
+    "Actual user configuration/KV/reference migration and deployment not performed."
+  ]
+}

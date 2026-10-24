@@ -1,0 +1,313 @@
+{
+  "stage": "original-install-native-object-v26",
+  "scope": "partial module checkpoint; no full acceptance",
+  "normal": {
+    "session": 59214,
+    "exit_code": 0,
+    "reaped": true,
+    "ended": "2026-10-23T19:41:25.140381876Z",
+    "roots": 34,
+    "leaf_cases": 65,
+    "passed_roots": [
+      "TestPluginOriginalAutoBackupPrivateOnceStopKeepsSibling",
+      "TestPluginOriginalAutoBackupPublicRegisterAndPrivateStopSeparate",
+      "TestPluginOriginalAutoBackupDirectReinitReusesObjectAndConsumesOnce",
+      "TestPluginOriginalAutoBackupStopOutsideInvocationSQLFailureRetry",
+      "TestPluginOriginalCloneInitializerCalls",
+      "TestPluginOriginalCloneInitExceptionSemantics",
+      "TestPluginOriginalCloneRejectsInstalledSourceWithoutClass",
+      "TestPluginOriginalCloneLoadedUninstalledSourceAndReuseDeletedCode",
+      "TestPluginOriginalNeverInstalledCompiledReloadAndSave",
+      "TestPluginOriginalConfigurationHTTPSequence",
+      "TestPluginOriginalConfigurationInitErrorKeepsSavedConfigAndObject",
+      "TestPluginOriginalForceDataClearDoesNotReapplyUnknownEffect",
+      "TestPluginOriginalInstallExistingClassReloadsAndPreservesVersion",
+      "TestPluginOriginalInstallUnavailableAcquisitionDoesNotMutate",
+      "TestPluginOriginalBundledPOSTFirstInstallWithoutFormDefaults",
+      "TestPluginOriginalNativeDataClearStartsEmptyNamespaceKeepsFiles",
+      "TestPluginOriginalRegistryPUTThreeStates",
+      "TestPluginOriginalUninstalledExplicitReloadAndReset",
+      "TestPluginOriginalUnknownRegistryHTTPNoObject",
+      "TestPluginOriginalReloadBroadcastInvokesActualCustomHosts",
+      "TestPluginOriginalStopEventFailureKeepsRunningObject",
+      "TestPluginOriginalResetChainRunsBeforeStopAndContinuesAfterHandlerError",
+      "TestPluginOriginalResetClearsTargetAndReloadsOnce",
+      "TestPluginOriginalResetDataDeleteFailureKeepsEarlierConfigDeletion",
+      "TestPluginOriginalDirectEmptyInitRetainsNativeMembers",
+      "TestPluginOriginalTransferAppliedServiceCheckpoint",
+      "TestPluginOriginalIYUUAppliedServiceCheckpoint",
+      "TestPluginOriginalServicesIgnoreUnappliedStoredConfiguration",
+      "TestPluginOriginalPartialNativeObjectDoesNotRequireCheckpointRestore",
+      "TestPluginOriginalStartupLoadsDisabledAndAbsentConfig",
+      "TestPluginOriginalStartSetsEventsFromAppliedObject",
+      "TestPluginOriginalStartStateFailureRetainsStoredObject",
+      "TestPluginOriginalStopReleasesOnlyOwnedServerStatusProbe",
+      "TestPluginOriginalUninstallClassAndCodeSequence"
+    ],
+    "drift": [],
+    "race": "not run"
+  },
+  "race": {
+    "session": 90071,
+    "exit_code": 0,
+    "reaped": true,
+    "ended": "2026-10-23T19:49:53.587889949Z",
+    "roots": 34,
+    "leaf_cases": 65,
+    "passed_roots": [
+      "TestPluginOriginalAutoBackupPrivateOnceStopKeepsSibling",
+      "TestPluginOriginalAutoBackupPublicRegisterAndPrivateStopSeparate",
+      "TestPluginOriginalAutoBackupDirectReinitReusesObjectAndConsumesOnce",
+      "TestPluginOriginalAutoBackupStopOutsideInvocationSQLFailureRetry",
+      "TestPluginOriginalCloneInitializerCalls",
+      "TestPluginOriginalCloneInitExceptionSemantics",
+      "TestPluginOriginalCloneRejectsInstalledSourceWithoutClass",
+      "TestPluginOriginalCloneLoadedUninstalledSourceAndReuseDeletedCode",
+      "TestPluginOriginalNeverInstalledCompiledReloadAndSave",
+      "TestPluginOriginalConfigurationHTTPSequence",
+      "TestPluginOriginalConfigurationInitErrorKeepsSavedConfigAndObject",
+      "TestPluginOriginalForceDataClearDoesNotReapplyUnknownEffect",
+      "TestPluginOriginalInstallExistingClassReloadsAndPreservesVersion",
+      "TestPluginOriginalInstallUnavailableAcquisitionDoesNotMutate",
+      "TestPluginOriginalBundledPOSTFirstInstallWithoutFormDefaults",
+      "TestPluginOriginalNativeDataClearStartsEmptyNamespaceKeepsFiles",
+      "TestPluginOriginalRegistryPUTThreeStates",
+      "TestPluginOriginalUninstalledExplicitReloadAndReset",
+      "TestPluginOriginalUnknownRegistryHTTPNoObject",
+      "TestPluginOriginalReloadBroadcastInvokesActualCustomHosts",
+      "TestPluginOriginalStopEventFailureKeepsRunningObject",
+      "TestPluginOriginalResetChainRunsBeforeStopAndContinuesAfterHandlerError",
+      "TestPluginOriginalResetClearsTargetAndReloadsOnce",
+      "TestPluginOriginalResetDataDeleteFailureKeepsEarlierConfigDeletion",
+      "TestPluginOriginalDirectEmptyInitRetainsNativeMembers",
+      "TestPluginOriginalTransferAppliedServiceCheckpoint",
+      "TestPluginOriginalIYUUAppliedServiceCheckpoint",
+      "TestPluginOriginalServicesIgnoreUnappliedStoredConfiguration",
+      "TestPluginOriginalPartialNativeObjectDoesNotRequireCheckpointRestore",
+      "TestPluginOriginalStartupLoadsDisabledAndAbsentConfig",
+      "TestPluginOriginalStartSetsEventsFromAppliedObject",
+      "TestPluginOriginalStartStateFailureRetainsStoredObject",
+      "TestPluginOriginalStopReleasesOnlyOwnedServerStatusProbe",
+      "TestPluginOriginalUninstallClassAndCodeSequence"
+    ],
+    "failed": [],
+    "skipped": [],
+    "drift": []
+  },
+  "inputs": [
+    {
+      "path": "internal/app/plugin_auto_backup_owner.go",
+      "sha256": "b5c7dc92f3cdf923aee23961fdd401bbc42eab18295351645a843d0da4bd2eac"
+    },
+    {
+      "path": "internal/app/plugin_custom_api.go",
+      "sha256": "f2eac08b6ecb6a45554c1b1ccb2645f4e66ebf1525cebd01b440d3979df90d58"
+    },
+    {
+      "path": "internal/app/plugin_deferred.go",
+      "sha256": "63975162083d68f336d0aba41c74d64ce4bcee558826f9d02fbfd704f90bc504"
+    },
+    {
+      "path": "internal/app/plugin_event_admission.go",
+      "sha256": "9cd071efe8767bf374db136e41c5ba5356fc001ffee5e249da121a80e2d9d968"
+    },
+    {
+      "path": "internal/app/plugin_instances.go",
+      "sha256": "edc4bbb0417f2ef8a991e786a7288819c001ec3c01e7803816b276d001f071f3"
+    },
+    {
+      "path": "internal/app/plugin_iyuu_owner.go",
+      "sha256": "285c658f95e410f27a4737346c2e929a0df5f376355a5f2daf0fc38f110e45a1"
+    },
+    {
+      "path": "internal/app/plugin_lark_commands.go",
+      "sha256": "4e1dd379a993ebc215cd129f1f2d8d54d91da568aaaea60bfa6ecd10614c8119"
+    },
+    {
+      "path": "internal/app/plugin_lifecycle_mode.go",
+      "sha256": "76c2cd1cc46c81ed1efbb94cd02d4c038668502eeb6e76bdae90fe822b4de402"
+    },
+    {
+      "path": "internal/app/plugin_original_auto_backup_object_test.go",
+      "sha256": "6b07e350ad45169b9e731dff673af6bf2dc9671f181051690d9fba35aa74d138"
+    },
+    {
+      "path": "internal/app/plugin_original_clone_port_test.go",
+      "sha256": "e4e042493dd90704f948aa115f72e86da74c75f2fb760f98481ff32a63e2fd7e"
+    },
+    {
+      "path": "internal/app/plugin_original_clone_registry_test.go",
+      "sha256": "1913586be0275a68457136511ffaaa93b193bbb2dc5e8dce8eda59d1e1246e61"
+    },
+    {
+      "path": "internal/app/plugin_original_commands.go",
+      "sha256": "5145c4ec46fbebccba4c1d026c452a2d9cdecfc400d641a700fc62fa25cc0e15"
+    },
+    {
+      "path": "internal/app/plugin_original_compiled_namespace_test.go",
+      "sha256": "6f0bd93257653a00bf2269f2c1b8b736d8d8658bfe551202dd704e6fe5b3c756"
+    },
+    {
+      "path": "internal/app/plugin_original_config.go",
+      "sha256": "abbf6702bf3e85eb798c8c4a456b3bbe892ef63ec1610fed21d627836d509c3f"
+    },
+    {
+      "path": "internal/app/plugin_original_config_test.go",
+      "sha256": "92da640c98163dc8dccbcd9e662dcb3044204100427d7ee071f2c22b0820a220"
+    },
+    {
+      "path": "internal/app/plugin_original_data.go",
+      "sha256": "dc311b1bdc025df3effa08a90684c9408b5c120f37d28ee8abde681d61bbc6b5"
+    },
+    {
+      "path": "internal/app/plugin_original_events.go",
+      "sha256": "0852eca325578ed1060e4a68996aa7020e343dec352f67d593c6a83ff2841a35"
+    },
+    {
+      "path": "internal/app/plugin_original_folders.go",
+      "sha256": "bb4503ac49bddbb1caacc6f6db55e1ae13d487422fe33639f8c640a3577d48d6"
+    },
+    {
+      "path": "internal/app/plugin_original_force_data_test.go",
+      "sha256": "8a41eb60d48ae22781b36f628f07d6f4c3126252ca4886f6d3560143301363c7"
+    },
+    {
+      "path": "internal/app/plugin_original_install.go",
+      "sha256": "d8ef70d5e8ea1ce9da49664c4ceeffa4b5c08d0fb78cbaf00e1d0c173bafe9d4"
+    },
+    {
+      "path": "internal/app/plugin_original_install_sequence_test.go",
+      "sha256": "c01056cbb9dc32986187f3fec645ff75a037a660bae45babd80842fcbf6c8190"
+    },
+    {
+      "path": "internal/app/plugin_original_lifecycle.go",
+      "sha256": "14f25ff9f7a6a951a3395c997e32959f32efd7bbff00fd1f5c6602329832dc9b"
+    },
+    {
+      "path": "internal/app/plugin_original_native_data_test.go",
+      "sha256": "82298bedf127a0a04520f03bf765344f799e16ceb1b21a6d049f64dd7d54ccdf"
+    },
+    {
+      "path": "internal/app/plugin_original_order.go",
+      "sha256": "bbf86507d29b0c07af359ba8938aecdea87fd7966431f7be2d49b819ffac30be"
+    },
+    {
+      "path": "internal/app/plugin_original_registry.go",
+      "sha256": "08d8f3c37f84de4bdd100b63ea5ed41927699c6fb78a4c61549766dd50ba3986"
+    },
+    {
+      "path": "internal/app/plugin_original_registry_http_test.go",
+      "sha256": "79293c36c968f8677644ec8ccf65f48761512f0bf7b27828a523615f9093e94f"
+    },
+    {
+      "path": "internal/app/plugin_original_reload_event_test.go",
+      "sha256": "3e920465fe7a88b9565a81ff5def04562670cc3af8074fc0e60e94f17d3945a1"
+    },
+    {
+      "path": "internal/app/plugin_original_reset.go",
+      "sha256": "b7a76dbc76d6ece8883e6a6646649b4b163f7f666c4e974f48b4b20c089df72f"
+    },
+    {
+      "path": "internal/app/plugin_original_reset_event.go",
+      "sha256": "17822cac87773fae0bbb22442faf4d448f8d3d2ea2786bbdaa743f6560f98bc7"
+    },
+    {
+      "path": "internal/app/plugin_original_reset_event_test.go",
+      "sha256": "cce4889f7e59105d27608e824ef96b67706780a9e7f33ae9486d72fd49c814e5"
+    },
+    {
+      "path": "internal/app/plugin_original_reset_sequence_test.go",
+      "sha256": "3216f1f6cb70b83b4139d968667592b1952e9c8d4b536d2f64af0ee01a371346"
+    },
+    {
+      "path": "internal/app/plugin_original_reset_sql_failure_test.go",
+      "sha256": "4facbdfd598ffe1dba9d24422dadab28861360982aea5586b27518c1341bc0ff"
+    },
+    {
+      "path": "internal/app/plugin_original_retained_state_test.go",
+      "sha256": "c8b292bf8af72bda405699a82626c323996c121809515448fa53319cb6a68d80"
+    },
+    {
+      "path": "internal/app/plugin_original_service_state_test.go",
+      "sha256": "a3354c047f6bc1c846950f30a13f595a618812d6b86116e51f5c662b6eab56bf"
+    },
+    {
+      "path": "internal/app/plugin_original_services.go",
+      "sha256": "72cb457fb590db5775c1294e91a80ddc179a6c484ce61e90b34c27b28ab18405"
+    },
+    {
+      "path": "internal/app/plugin_original_startup.go",
+      "sha256": "24f91d990f90a00614acd496cae8a002b4963a3303739f3704140a2e80dbb367"
+    },
+    {
+      "path": "internal/app/plugin_original_startup_test.go",
+      "sha256": "4ade4462112501408ec7bed6014f47854d39af9397d7d6f106ca46b2cced1ba5"
+    },
+    {
+      "path": "internal/app/plugin_original_state.go",
+      "sha256": "4ef4e28faca73b80d4d3b6d706d55436a811f121676962da39adb024d7e0e987"
+    },
+    {
+      "path": "internal/app/plugin_original_state_test.go",
+      "sha256": "10f01088496b8c70877ca1e920190d0a64c28f2dd8dbbcf4cd302d7488121282"
+    },
+    {
+      "path": "internal/app/plugin_original_stop.go",
+      "sha256": "1b390f445f3066e479185d555755bea292f4853030a374ccde5e2c08c36faf8c"
+    },
+    {
+      "path": "internal/app/plugin_original_stop_resources_test.go",
+      "sha256": "80936cbaa9ac6df902ceb30c2403b2aab0786b71ec156601cdbbc7c77cdfbdc3"
+    },
+    {
+      "path": "internal/app/plugin_original_uninstall.go",
+      "sha256": "50ddde03660b1dee084b743f52d308421cf854aef0ae9940f34999d3002c1b0e"
+    },
+    {
+      "path": "internal/app/plugin_original_uninstall_sequence_test.go",
+      "sha256": "9281380408643bd50272543e5263f12a9b1ec61d53b617b7469f42771aacb2c4"
+    },
+    {
+      "path": "internal/app/plugin_run_supervisor.go",
+      "sha256": "beb0be3fe7632695d50ba791d214c4b822c3e705895ac223263908bb01042cf0"
+    },
+    {
+      "path": "internal/app/plugin_runs.go",
+      "sha256": "a1a500215d5f68739ef2ea923a465035fafd463c73a7d587322c01767378f11f"
+    },
+    {
+      "path": "internal/app/plugin_runtime.go",
+      "sha256": "d793631e79db66328e7ceb82d581f5c09b8d34637c4fba18ccc54304a991464e"
+    },
+    {
+      "path": "internal/app/plugin_schedules.go",
+      "sha256": "61f69eb890d885d4c897f940f2c3184ee1a0768e4d9e576723ee11481e06eca5"
+    },
+    {
+      "path": "internal/app/plugin_store.go",
+      "sha256": "928b7af759905947ebd3e33ad7f84d43d15101e39717c07a77b214d15800cbc9"
+    },
+    {
+      "path": "internal/app/plugin_transfer_owner.go",
+      "sha256": "84a0adf32832ec1c5fc604fc5991a413047078ef1459bb14b007a2901e1a021d"
+    },
+    {
+      "path": "internal/app/runtime.go",
+      "sha256": "1a79b548e37f04cae17617e38f046108527695a6351f6600b4b7e19ed61e41cd"
+    },
+    {
+      "path": "internal/plugins/cleaninvalidseed/host/state.go",
+      "sha256": "7b1406576947517125897d951b7e396385724590dc3c4b3f74cfe9ca31558cb4"
+    }
+  ],
+  "historical_failures": [
+    "v22/v23/v24 absent native initialization blocked",
+    "v25 compile-only nonexistent test manifest wrapper",
+    "v25b shared deferred config join and private scheduler eligibility failures"
+  ],
+  "unintegrated": [
+    "artifact acquisition and resolver",
+    "persistent SDK session App binding"
+  ],
+  "source_reference": "MoviePilot 8a83efeacd3e26b82be495e17d50146e31c96a60"
+}

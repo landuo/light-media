@@ -1,12 +1,8 @@
 package app
 
 import (
-	"bytes"
 	"context"
-	"crypto/hmac"
-	"crypto/sha256"
 	"database/sql"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -18,7 +14,7 @@ import (
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
 )
 
-const pluginNoticeSchema = pluginAutoSignInSourceSchema + siteStatisticNoticeSchema + removeLinkSourceResultSchema + `
+const pluginNoticeSchema = `
 CREATE TABLE IF NOT EXISTS plugin_notice_routes(id TEXT PRIMARY KEY,instance_id TEXT NOT NULL,generation INTEGER NOT NULL,source_token TEXT NOT NULL,sealed BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS plugin_notice_route_steps(route_id TEXT NOT NULL,ordinal INTEGER NOT NULL,sealed BLOB NOT NULL,PRIMARY KEY(route_id,ordinal));
 CREATE TABLE IF NOT EXISTS plugin_notice_publications(id TEXT PRIMARY KEY,route_id TEXT NOT NULL,ordinal INTEGER NOT NULL,sealed BLOB NOT NULL);
@@ -96,13 +92,6 @@ func (p *PluginStore) noticeNow() time.Time {
 	}
 	return time.Now()
 }
-func (p *PluginStore) noticeID(kind string, v ...any) string {
-	b := mustCleanSeedJSON(v)
-	m := hmac.New(sha256.New, p.store.key)
-	m.Write([]byte("plugin-notice/v1/" + kind + "\x00"))
-	m.Write(b)
-	return hex.EncodeToString(m.Sum(nil))
-}
 
 type pluginNoticeRoute struct {
 	BusinessV2                                                               *pluginNoticeV2Business `json:",omitempty"`
@@ -164,18 +153,7 @@ func (p *PluginStore) noticeUnseal(kind, id string, b []byte, v any) error {
 	}
 	return nil
 }
-func (p *PluginStore) initCleanNoticeRouteTx(ctx context.Context, tx *sql.Tx, j *pluginCleanInvalidSeedJournal, box pluginCleanInvalidSeedPrivateNotice, accepted []byte) (string, string, error) {
-	token := j.token("outbox", box.Notice.ID, -1)
-	r := pluginNoticeRoute{Version: 1, ID: p.noticeID("route", j.instance, j.generation, token), Kind: "clean_seed", Instance: j.instance, Generation: j.generation, Token: token, EffectID: box.Notice.ID, AcceptedSHA: tokenHash(string(accepted)), Envelope: box.Envelope, CreatedAt: box.CreatedAt, CurrentTime: box.CurrentTime, HistoryID: box.HistoryID, HistoryDigest: box.HistoryDigest}
-	sealed, err := p.noticeSeal("route", r.ID, r)
-	if err != nil {
-		return "", "", err
-	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO plugin_notice_routes VALUES(?,?,?,?,?)`, r.ID, r.Instance, r.Generation, r.Token, sealed); err != nil {
-		return "", "", err
-	}
-	return r.ID, noticeInitialSHA(r), nil
-}
+
 func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJournalReader, id string) (pluginNoticeRoute, []pluginNoticeStep, error) {
 	var r pluginNoticeRoute
 	if !pluginStorageDigest.MatchString(id) {
@@ -195,67 +173,13 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if (!v1Kind && !v2Kind) || r.ID != id || r.Instance != instance || r.Generation != generation || r.Token != token || r.Count < 0 || r.Count > pluginNoticeStepLimit || !pluginStorageID.MatchString(instance) || generation < 1 || id != p.noticeID("route", instance, generation, token) {
 		return r, nil, seedhost.ErrUnsafe
 	}
-	if v2Kind {
-		if err := p.validateNoticeBusinessV2(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "auto_signin" {
-		if err := p.validateAutoSignInNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "remove_link" {
-		if err := p.validateRemoveLinkNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "site_statistic" {
-		if err := p.validateSiteStatisticNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "scrape_clean" {
-		if err := p.validateScrapeNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "transfer" {
-		if err := p.validateTransferNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "brush_flow" {
-		if err := p.validateBrushFlowNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "seed_rescue" {
-		if err := p.validateSeedRescueNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "cloudflare" {
-		if err := p.validateCloudflareNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "auto_backup" {
-		if err := p.validateAutoBackupNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else if r.Kind == "iyuu" {
-		if err := p.validateIYUUNotice(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	} else {
-		j := &pluginCleanInvalidSeedJournal{p: p, instance: instance, generation: generation}
-		box, err := readCleanSeedPrivateNotice(ctx, q, j, token)
-		if err != nil {
-			return r, nil, err
-		}
-		raw := mustCleanSeedJSON(box)
-		if r.EffectID != box.Notice.ID || r.AcceptedSHA != tokenHash(string(raw)) || !bytes.Equal(r.Envelope, box.Envelope) || r.HistoryID != box.HistoryID || !hmac.Equal(r.HistoryDigest, box.HistoryDigest) || r.CreatedAt != box.CreatedAt || r.CurrentTime != box.CurrentTime {
-			return r, nil, seedhost.ErrUnsafe
-		}
-		receipt, err := cleanSeedReadReceipt(ctx, q, j, box.Notice.ID)
-		var anchor pluginCleanInvalidSeedNoticeReceipt
-		if err != nil || cleanupJournalStrict(receipt.Payload, &anchor) != nil || anchor.RouteID != id || anchor.RouteInitialSHA != noticeInitialSHA(r) {
-			return r, nil, seedhost.ErrUnsafe
-		}
-
+	if !v2Kind {
+		return r, nil, bad("PLUGIN_ADAPTER_UNAVAILABLE", "原插件通知来源尚未适配")
 	}
+	if err := p.validateNoticeBusinessV2(ctx, q, r); err != nil {
+		return r, nil, err
+	}
+
 	rows, err := q.QueryContext(ctx, `SELECT ordinal,sealed FROM plugin_notice_route_steps WHERE route_id=? ORDER BY ordinal`, id)
 	if err != nil {
 		return r, nil, err
@@ -288,19 +212,6 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	if err = rows.Close(); err != nil {
 		return r, nil, err
 	}
-	if r.Kind == "auto_signin" {
-		if err := p.validateAutoSignInSourceResult(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-		if err := p.validateAutoSignInNoticeSteps(ctx, q, r, steps); err != nil {
-			return r, nil, err
-		}
-	}
-	if r.Kind == "remove_link" {
-		if err := p.validateRemoveLinkSourceResult(ctx, q, r); err != nil {
-			return r, nil, err
-		}
-	}
 	if v2Kind {
 		if err := p.validateNoticeBusinessV2Steps(ctx, q, r, steps); err != nil {
 			return r, nil, err
@@ -309,9 +220,6 @@ func (p *PluginStore) readNoticeRoute(ctx context.Context, q pluginRemoveLinkJou
 	return r, steps, nil
 }
 func (p *PluginStore) saveNoticeRouteTx(ctx context.Context, tx *sql.Tx, r pluginNoticeRoute) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	sealed, err := p.noticeSeal("route", r.ID, r)
 	if err != nil {
 		return err
@@ -331,9 +239,6 @@ func (p *PluginStore) saveNoticeRouteTx(ctx context.Context, tx *sql.Tx, r plugi
 // These methods are host-only; importing real settings still requires its own
 // authenticated source/reference migration receipt and management UI.
 func (p *PluginStore) putNoticePreferenceTx(ctx context.Context, tx *sql.Tx, kind, key string, value any) error {
-	if err := (*PluginStore)(nil).checkPluginFormWrite(ctx, "", pluginFormWriteLifecycle); err != nil {
-		return err
-	}
 	if kind != "switch" && kind != "user" && kind != "window" && kind != "superuser" && kind != "templates" {
 		return seedhost.ErrUnsafe
 	}

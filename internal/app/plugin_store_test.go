@@ -47,132 +47,28 @@ func pluginErrorCode(err error) string {
 	return ""
 }
 
-func TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData(t *testing.T) {
-	ctx := context.Background()
-	dir := t.TempDir()
-	s, err := OpenStore(dir)
-	if err != nil {
-		t.Fatal(err)
-	}
-	open := true
-	t.Cleanup(func() {
-		if open {
-			_ = s.Close()
-		}
-	})
-	p, err := NewPluginStore(ctx, s)
-	if err != nil {
-		t.Fatal(err)
-	}
-	for _, instance := range []string{"SyntheticPlugin", "SyntheticPlugin.clone"} {
-		installStoredPlugin(t, p, instance)
-	}
-	secret := "synthetic-private-password-not-visible-847291"
-	config, err := p.SaveConfig(ctx, "SyntheticPlugin", 0, map[string]any{"password": secret, "enabled": true, "onlyonce": true})
-	if err != nil || config.Revision != 1 {
-		t.Fatal(config, err)
-	}
-	if _, err = p.SaveData(ctx, "SyntheticPlugin", "history", 0, map[string]string{"token": secret}); err != nil {
-		t.Fatal(err)
-	}
-	if _, err = p.SaveData(ctx, "SyntheticPlugin.clone", "history", 0, []string{"clone-only"}); err != nil {
-		t.Fatal(err)
-	}
-	imported := pluginImportFixture(t, p, "d", "migrated")
-	receipt, err := p.Import(ctx, imported)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err = p.SaveConfig(ctx, "SyntheticPlugin", 0, map[string]bool{"stale": true}); pluginErrorCode(err) != "PLUGIN_REVISION_CONFLICT" {
-		t.Fatal("stale config save was accepted", err)
-	}
-	for _, path := range []string{"light-media.db", "light-media.db-wal"} {
-		raw, readErr := os.ReadFile(filepath.Join(dir, path))
-		if readErr != nil && !os.IsNotExist(readErr) {
-			t.Fatal(readErr)
-		}
-		if bytes.Contains(raw, []byte(secret)) || bytes.Contains(raw, []byte("clone-only")) || bytes.Contains(raw, []byte("synthetic-migration-private")) || bytes.Contains(raw, []byte("synthetic-history-private")) {
-			t.Fatal("private plugin values leaked to database storage", path)
-		}
-	}
-	public, _ := json.Marshal(config)
-	if bytes.Contains(public, []byte(secret)) || bytes.Contains(public, []byte("value")) {
-		t.Fatal("storage metadata serialization exposed a value", string(public))
-	}
-	beforeRestart, err := p.Installation(ctx, "SyntheticPlugin")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err = s.Close(); err != nil {
-		t.Fatal(err)
-	}
-	open = false
-	s, err = OpenStore(dir)
-	if err != nil {
-		t.Fatal(err)
-	}
-	open = true
-	p, err = NewPluginStore(ctx, s)
-	if err != nil {
-		t.Fatal(err)
-	}
-	got, err := p.Config(ctx, "SyntheticPlugin")
-	if err != nil || !bytes.Equal(got.Value, config.Value) || got.Revision != config.Revision {
-		t.Fatal("restart lost config", got, err)
-	}
-	clone, err := p.Data(ctx, "SyntheticPlugin.clone", "history")
-	if err != nil || string(clone.Value) != `["clone-only"]` {
-		t.Fatal("instances shared a data namespace", clone, err)
-	}
-	installation, err := p.Installation(ctx, "SyntheticPlugin")
-	expected := storedPluginFixture("SyntheticPlugin")
-	if err != nil || !installation.Installed || installation.DesiredEnabled || installation.InstanceID != expected.InstanceID || installation.PluginID != expected.PluginID || installation.Version != expected.Version || installation.ManifestSchemaVersion != expected.ManifestSchemaVersion || installation.Generation != 1 {
-		t.Fatal("prepared installation was changed or enabled", installation, err)
-	}
-	// Lifecycle authority is a deliberate private host extension, authenticated
-	// with this installation's manifest AEAD. Validate its complete binding,
-	// rather than accepting arbitrary new fields or rewriting plugin metadata.
-	if state, err := pluginLifecycleState(installation); err != nil || state != pluginLifecycleCold {
-		t.Fatal("restart lost the authenticated cold lifecycle binding", state, err)
-	}
-	if !bytes.Equal(installation.Manifest, beforeRestart.Manifest) {
-		t.Fatal("restart changed the persisted manifest")
-	}
-	var actualFields, expectedFields map[string]json.RawMessage
-	if err = json.Unmarshal(installation.Manifest, &actualFields); err != nil {
-		t.Fatal(err)
-	}
-	if err = json.Unmarshal(expected.Manifest, &expectedFields); err != nil {
-		t.Fatal(err)
-	}
-	delete(actualFields, pluginLifecycleField)
-	if !reflect.DeepEqual(actualFields, expectedFields) {
-		t.Fatal("restart changed plugin-owned manifest fields", actualFields, expectedFields)
-	}
-	public, _ = json.Marshal(installation)
-	if bytes.Contains(public, []byte("manifest\"")) || bytes.Contains(public, []byte("runtime_enabled")) {
-		t.Fatal("installation projection exposed private manifest or claimed runtime state", string(public))
-	}
-	restartedRun, err := p.Migration(ctx, imported.RunID)
-	if err != nil || restartedRun.State != "imported" {
-		t.Fatal("restart lost migration state", restartedRun, err)
-	}
-	restartedReceipt, err := p.Import(ctx, imported)
-	if err != nil || restartedReceipt != receipt {
-		t.Fatal("restart lost idempotent migration receipt", restartedReceipt, err)
-	}
-}
-
 func TestPluginStoreRejectsCiphertextMovedAcrossInstanceKindAndKey(t *testing.T) {
 	ctx := context.Background()
-	s, p := pluginStoreFixture(t)
+	a := newTestApp(t)
+	s, p := a.Store, a.pluginStore
 	for _, instance := range []string{"one", "two"} {
 		installStoredPlugin(t, p, instance)
-		if _, err := p.SaveConfig(ctx, instance, 0, map[string]string{"secret": instance}); err != nil {
+		config, err := json.Marshal(map[string]string{"secret": instance})
+		if err != nil {
+			t.Fatal(err)
+		}
+		a.pluginOriginalBase.mu.Lock()
+		_, err = a.originalBaseUpdateConfigLocked(ctx, instance, config)
+		a.pluginOriginalBase.mu.Unlock()
+		if err != nil {
 			t.Fatal(err)
 		}
 		for _, key := range []string{"main", "other"} {
-			if _, err := p.SaveData(ctx, instance, key, 0, map[string]string{"value": key}); err != nil {
+			value, err := json.Marshal(map[string]string{"value": key})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := p.originalBaseSaveData(ctx, instance, key, value); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -202,201 +98,214 @@ func TestPluginStoreRejectsCiphertextMovedAcrossInstanceKindAndKey(t *testing.T)
 	}
 }
 
-func pluginImportFixture(t *testing.T, p *PluginStore, source, target string) PluginImport {
+// Use the real shared Base writer, not the retired native CAS/config queue.
+func retainedStoreSaveConfig(t *testing.T, a *App, instance string, value any) PluginStoredValue {
 	t.Helper()
-	run, err := p.BeginMigration(context.Background(), strings.Repeat(source, 64), "OldSyntheticPlugin", target)
+	raw, err := json.Marshal(value)
 	if err != nil {
 		t.Fatal(err)
 	}
-	installation := storedPluginFixture(target)
-	installation.DesiredEnabled = true // Source intent cannot activate import.
-	return PluginImport{RunID: run.ID, Installation: installation,
-		Config: json.RawMessage(`{"password":"synthetic-migration-private","enabled":true,"onlyonce":true}`),
-		Data:   map[string]json.RawMessage{"history": json.RawMessage(`[{"token":"synthetic-history-private"}]`)}}
+	a.pluginOriginalBase.mu.Lock()
+	_, err = a.originalBaseUpdateConfigLocked(context.Background(), instance, raw)
+	a.pluginOriginalBase.mu.Unlock()
+	if err != nil {
+		t.Fatal(err)
+	}
+	stored, err := a.pluginStore.Config(context.Background(), instance)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return stored
 }
 
-func TestPluginStoreMigrationImportIsAtomicIdempotentAndNeverActivates(t *testing.T) {
+func TestPluginStoreRestartPersistsEncryptedConfigAndNamespacedData(t *testing.T) {
 	ctx := context.Background()
-	s, p := pluginStoreFixture(t)
-	installStoredPlugin(t, p, "unrelated")
-	if _, err := p.SaveConfig(ctx, "unrelated", 0, map[string]string{"cookie": "unrelated-secret"}); err != nil {
+	a := newTestApp(t)
+	dir, p := a.Dir, a.pluginStore
+	for _, instance := range []string{"SyntheticPlugin", "SyntheticPlugin.clone"} {
+		installStoredPlugin(t, p, instance)
+	}
+	secret := "synthetic-private-password-not-visible-847291"
+	config := retainedStoreSaveConfig(t, a, "SyntheticPlugin", map[string]any{"password": secret, "enabled": true, "onlyonce": true})
+	if config.Revision != 1 {
+		t.Fatal(config)
+	}
+	data, err := json.Marshal(map[string]string{"token": secret})
+	if err != nil {
 		t.Fatal(err)
 	}
-	var unrelated []byte
-	if err := s.DB.QueryRow(`SELECT sealed FROM plugin_values WHERE instance_id='unrelated'`).Scan(&unrelated); err != nil {
+	if err = p.originalBaseSaveData(ctx, "SyntheticPlugin", "history", data); err != nil {
 		t.Fatal(err)
 	}
-	in := pluginImportFixture(t, p, "a", "converted")
-	receipt, err := p.Import(ctx, in)
-	if err != nil || receipt.State != "imported" {
-		t.Fatal(receipt, err)
-	}
-	run, err := p.Migration(ctx, in.RunID)
-	if err != nil || run.State != "imported" {
-		t.Fatal(run, err)
-	}
-	if err := p.SetMigrationState(ctx, run.ID, "running", "", map[string]bool{"retry": true}); pluginErrorCode(err) != "PLUGIN_MIGRATION_TERMINAL" {
-		t.Fatal("completed migration state was overwritten", err)
-	}
-	installation, _ := p.Installation(ctx, "converted")
-	if installation.DesiredEnabled || !installation.Installed {
-		t.Fatal("migration activated a plugin", installation)
-	}
-	var jobs int
-	if err := s.DB.QueryRow(`SELECT COUNT(*) FROM jobs`).Scan(&jobs); err != nil || jobs != 0 {
-		t.Fatal("migration scheduled onlyonce or other execution", jobs, err)
-	}
-	got, _ := p.Config(ctx, "converted")
-	if !bytes.Equal(got.Value, in.Config) {
-		t.Fatal("import did not preserve source config", string(got.Value))
-	}
-	if _, err := p.SaveConfig(ctx, "converted", got.Revision, map[string]string{"password": "user-edited"}); err != nil {
+	if err = p.originalBaseSaveData(ctx, "SyntheticPlugin.clone", "history", json.RawMessage(`["clone-only"]`)); err != nil {
 		t.Fatal(err)
 	}
-	newRun, err := p.BeginMigration(ctx, run.SourceFingerprint, run.SourcePluginID, run.InstanceID)
-	if err != nil || newRun.ID != run.ID || newRun.State != "imported" {
-		t.Fatal("migration preview was not idempotent", newRun, err)
+	// The standard Base takes no expected-revision grant. An unchanged value
+	// must retain the original durable row/revision instead of issuing a write.
+	a.pluginOriginalBase.mu.Lock()
+	unchanged, err := a.originalBaseUpdateConfigLocked(ctx, "SyntheticPlugin", config.Value)
+	a.pluginOriginalBase.mu.Unlock()
+	if err != nil || string(unchanged) != "null" {
+		t.Fatal("unchanged Base write", string(unchanged), err)
 	}
-	repeated, err := p.Import(ctx, in)
-	if err != nil || repeated != receipt {
-		t.Fatal("identical import did not return original receipt", repeated, err)
+	current, err := p.Config(ctx, "SyntheticPlugin")
+	if err != nil || current.Revision != config.Revision || !bytes.Equal(current.Value, config.Value) {
+		t.Fatal("unchanged Base write replaced config", current, err)
 	}
-	got, _ = p.Config(ctx, "converted")
-	if !bytes.Contains(got.Value, []byte("user-edited")) || got.Revision != 2 {
-		t.Fatal("replayed migration reverted user config", string(got.Value))
-	}
-	in.Config = json.RawMessage(`{"password":"changed-source"}`)
-	if _, err := p.Import(ctx, in); pluginErrorCode(err) != "PLUGIN_MIGRATION_CONFLICT" {
-		t.Fatal("same migration identity overwrote data", err)
-	}
-	var current []byte
-	if err := s.DB.QueryRow(`SELECT sealed FROM plugin_values WHERE instance_id='unrelated'`).Scan(&current); err != nil || !bytes.Equal(current, unrelated) {
-		t.Fatal("import altered unrelated plugin", err)
-	}
-	for _, value := range []any{receipt, run} {
-		public, _ := json.Marshal(value)
-		if bytes.Contains(public, []byte("synthetic-migration-private")) || bytes.Contains(public, []byte("details")) || bytes.Contains(public, []byte("digest")) {
-			t.Fatal("migration metadata exposed private input", string(public))
+	for _, path := range []string{"light-media.db", "light-media.db-wal"} {
+		raw, readErr := os.ReadFile(filepath.Join(dir, path))
+		if readErr != nil && !os.IsNotExist(readErr) {
+			t.Fatal(readErr)
+		}
+		if bytes.Contains(raw, []byte(secret)) || bytes.Contains(raw, []byte("clone-only")) {
+			t.Fatal("private plugin values leaked to database storage", path)
 		}
 	}
-}
-
-func TestPluginStoreMigrationReceiptFailureRollsBackWholeImport(t *testing.T) {
-	ctx := context.Background()
-	s, p := pluginStoreFixture(t)
-	in := pluginImportFixture(t, p, "b", "rollback")
-	if _, err := s.DB.Exec(`CREATE TRIGGER synthetic_receipt_failure BEFORE INSERT ON plugin_migration_receipts BEGIN SELECT RAISE(ABORT,'synthetic receipt failure'); END;`); err != nil {
+	public, _ := json.Marshal(config)
+	if bytes.Contains(public, []byte(secret)) || bytes.Contains(public, []byte("value")) {
+		t.Fatal("storage metadata serialization exposed a value", string(public))
+	}
+	beforeRestart, err := p.Installation(ctx, "SyntheticPlugin")
+	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := p.Import(ctx, in); err == nil {
-		t.Fatal("simulated late persistence error was ignored")
-	}
-	for _, table := range []string{"plugin_installations", "plugin_values", "plugin_migration_receipts"} {
-		var count int
-		if err := s.DB.QueryRow(`SELECT COUNT(*) FROM ` + table).Scan(&count); err != nil || count != 0 {
-			t.Fatal("partial import survived rollback", table, count, err)
-		}
-	}
-	run, err := p.Migration(ctx, in.RunID)
-	if err != nil || run.State != "planned" {
-		t.Fatal("failed import advanced its run", run, err)
-	}
-	if err := p.SetMigrationState(ctx, run.ID, "failed", "SYNTHETIC_FAILURE", map[string]string{"private": "synthetic-hidden-failure-detail"}); err != nil {
+	if err = a.Close(); err != nil {
 		t.Fatal(err)
 	}
-	run, err = p.Migration(ctx, in.RunID)
-	if err != nil || run.State != "failed" || run.ErrorCode != "SYNTHETIC_FAILURE" || !bytes.Contains(run.Details, []byte("synthetic-hidden-failure-detail")) {
-		t.Fatal("migration diagnostic state was lost", run, err)
-	}
-	var sealed []byte
-	if err := s.DB.QueryRow(`SELECT details FROM plugin_migration_runs WHERE id=?`, run.ID).Scan(&sealed); err != nil || bytes.Contains(sealed, []byte("synthetic-hidden-failure-detail")) {
-		t.Fatal("migration details stored as plaintext", err)
-	}
-	if _, err := s.DB.Exec(`DROP TRIGGER synthetic_receipt_failure`); err != nil {
+	reopened, err := New(Options{DataDir: dir})
+	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := p.Import(ctx, in); err != nil {
-		t.Fatal("retry could not finish the rolled back import", err)
+	t.Cleanup(func() { _ = reopened.Close() })
+	p = reopened.pluginStore
+	got, err := p.Config(ctx, "SyntheticPlugin")
+	if err != nil || !bytes.Equal(got.Value, config.Value) || got.Revision != config.Revision {
+		t.Fatal("restart lost config", got, err)
+	}
+	clone, err := p.Data(ctx, "SyntheticPlugin.clone", "history")
+	if err != nil || string(clone.Value) != `["clone-only"]` {
+		t.Fatal("instances shared a data namespace", clone, err)
+	}
+	installation, err := p.Installation(ctx, "SyntheticPlugin")
+	expected := storedPluginFixture("SyntheticPlugin")
+	if err != nil || !installation.Installed || installation.DesiredEnabled || installation.InstanceID != expected.InstanceID || installation.PluginID != expected.PluginID || installation.Version != expected.Version || installation.ManifestSchemaVersion != expected.ManifestSchemaVersion || installation.Generation != 1 {
+		t.Fatal("prepared installation was changed or enabled", installation, err)
+	}
+	if !bytes.Equal(installation.Manifest, beforeRestart.Manifest) {
+		t.Fatal("restart changed the persisted manifest")
+	}
+	var actualFields, expectedFields map[string]json.RawMessage
+	if err = json.Unmarshal(installation.Manifest, &actualFields); err != nil {
+		t.Fatal(err)
+	}
+	if err = json.Unmarshal(expected.Manifest, &expectedFields); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(actualFields, expectedFields) {
+		t.Fatal("restart changed plugin-owned manifest fields", actualFields, expectedFields)
+	}
+	public, _ = json.Marshal(installation)
+	if bytes.Contains(public, []byte("manifest\"")) || bytes.Contains(public, []byte("runtime_enabled")) {
+		t.Fatal("installation projection exposed private manifest or claimed runtime state", string(public))
 	}
 }
 
 func TestPluginStoreUninstallPreservesAndResetDeletesOnlyTargetValues(t *testing.T) {
 	ctx := context.Background()
-	_, p := pluginStoreFixture(t)
-	for _, instance := range []string{"one", "two"} {
-		installStoredPlugin(t, p, instance)
-		if _, err := p.SaveConfig(ctx, instance, 0, map[string]string{"password": instance}); err != nil {
-			t.Fatal(err)
-		}
-		if _, err := p.SaveData(ctx, instance, "history", 0, []int{1, 2, 3}); err != nil {
+	a, cookie, _ := originalBaseSDKFixture(t)
+	p := a.pluginStore
+	oneID, twoID := ownedBaseFixtureID, ownedBaseFixtureID+"storagepeer"
+	clone := callTest(t, a.Handler(), "POST", "/api/plugins/"+oneID+"/clone", `{"suffix":"StoragePeer"}`, cookie, "")
+	assertOriginalRegistrySuccess(t, clone.Code, clone.Body.Bytes())
+	for _, instance := range []string{oneID, twoID} {
+		retainedStoreSaveConfig(t, a, instance, map[string]string{"password": instance})
+		if err := p.originalBaseSaveData(ctx, instance, "history", json.RawMessage(`[1,2,3]`)); err != nil {
 			t.Fatal(err)
 		}
 	}
-	one, _ := p.Config(ctx, "one")
-	two, _ := p.Config(ctx, "two")
-	if err := p.Uninstall(ctx, "one"); err != nil {
-		t.Fatal(err)
-	}
-	retained, err := p.Config(ctx, "one")
+	one, _ := p.Config(ctx, oneID)
+	two, _ := p.Config(ctx, twoID)
+	uninstall := callTest(t, a.Handler(), "DELETE", "/api/plugins/"+oneID, "", cookie, "")
+	assertOriginalRegistrySuccess(t, uninstall.Code, uninstall.Body.Bytes())
+	retained, err := p.Config(ctx, oneID)
 	if err != nil || !reflect.DeepEqual(retained, one) {
 		t.Fatal("uninstall deleted retained config", retained, err)
 	}
-	if _, err := p.SaveConfig(ctx, "one", retained.Revision, map[string]bool{"ignored": true}); pluginErrorCode(err) != "PLUGIN_NOT_INSTALLED" {
-		t.Fatal("uninstalled plugin mutated retained data", err)
+	installation, err := p.Installation(ctx, oneID)
+	if err != nil || installation.Installed {
+		t.Fatal("uninstall kept installed membership", installation, err)
 	}
-	installStoredPlugin(t, p, "one")
-	retained, _ = p.Config(ctx, "one")
+	// The independent neutral installation record can be reinstalled without
+	// rewriting retained Base config or data; no old lifecycle grant is created.
+	if err = p.Install(ctx, installation); err != nil {
+		t.Fatal(err)
+	}
+	retained, _ = p.Config(ctx, oneID)
 	if !reflect.DeepEqual(retained, one) {
 		t.Fatal("reinstall discarded retained config")
 	}
-	if err := p.Reset(ctx, "one"); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := p.Config(ctx, "one"); !errors.Is(err, sql.ErrNoRows) {
+	reset := callTest(t, a.Handler(), "POST", "/api/plugins/"+oneID+"/reset", `{}`, cookie, "")
+	assertOriginalRegistrySuccess(t, reset.Code, reset.Body.Bytes())
+	if _, err := p.Config(ctx, oneID); !errors.Is(err, sql.ErrNoRows) {
 		t.Fatal("reset retained config", err)
 	}
-	if _, err := p.Data(ctx, "one", "history"); !errors.Is(err, sql.ErrNoRows) {
+	if _, err := p.Data(ctx, oneID, "history"); !errors.Is(err, sql.ErrNoRows) {
 		t.Fatal("reset retained KV", err)
 	}
-	got, err := p.Config(ctx, "two")
+	got, err := p.Config(ctx, twoID)
 	if err != nil || !reflect.DeepEqual(got, two) {
 		t.Fatal("reset affected another plugin", got, err)
 	}
-	installation, err := p.Installation(ctx, "one")
+	installation, err = p.Installation(ctx, oneID)
 	if err != nil || !installation.Installed {
 		t.Fatal("reset uninstalled the package", installation, err)
 	}
-	conflicting := storedPluginFixture("one")
+	conflicting := installation
 	conflicting.PluginID = "UnrelatedPlugin"
 	if err := p.Install(ctx, conflicting); pluginErrorCode(err) != "PLUGIN_INSTANCE_CONFLICT" {
 		t.Fatal("another plugin took over an existing instance", err)
 	}
 }
 
-func TestPluginStoreRejectsImportOverExistingTargetAndInvalidValues(t *testing.T) {
+func TestPluginStoreNeutralInstallationAndValueValidation(t *testing.T) {
 	ctx := context.Background()
-	s, p := pluginStoreFixture(t)
+	a := newTestApp(t)
+	s, p := a.Store, a.pluginStore
 	installStoredPlugin(t, p, "existing")
-	if _, err := p.SaveConfig(ctx, "existing", 0, map[string]string{"password": "keep"}); err != nil {
-		t.Fatal(err)
+	before := retainedStoreSaveConfig(t, a, "existing", map[string]string{"password": "keep"})
+	conflicting := storedPluginFixture("existing")
+	conflicting.PluginID = "UnrelatedPlugin"
+	if err := p.Install(ctx, conflicting); pluginErrorCode(err) != "PLUGIN_INSTANCE_CONFLICT" {
+		t.Fatal("another plugin took over a preexisting installation", err)
 	}
-	in := pluginImportFixture(t, p, "c", "existing")
-	if _, err := p.Import(ctx, in); pluginErrorCode(err) != "PLUGIN_IMPORT_TARGET_EXISTS" {
-		t.Fatal("migration overwrote a preexisting installation", err)
-	}
-	for _, value := range []any{nil, []string{"not-a-config"}, json.RawMessage(`{`), map[string]string{"oversized": strings.Repeat("x", pluginValueLimit)}} {
-		if _, err := p.SaveConfig(ctx, "existing", 1, value); err == nil {
+	for _, raw := range []json.RawMessage{json.RawMessage(`{`), json.RawMessage(`{"oversized":"` + strings.Repeat("x", pluginValueLimit) + `"}`)} {
+		a.pluginOriginalBase.mu.Lock()
+		_, err := a.originalBaseUpdateConfigLocked(ctx, "existing", raw)
+		a.pluginOriginalBase.mu.Unlock()
+		if err == nil {
 			t.Fatal("invalid config was accepted")
 		}
 	}
-	for _, key := range []string{"", "line\nbreak", strings.Repeat("x", 257)} {
-		if _, err := p.SaveData(ctx, "existing", key, 0, "invalid"); err == nil {
+	for _, key := range []string{"line\nbreak", strings.Repeat("x", 257)} {
+		if err := p.originalBaseSaveData(ctx, "existing", key, json.RawMessage(`"invalid"`)); err == nil {
 			t.Fatal("invalid key was accepted", key)
 		}
 	}
 	got, err := p.Config(ctx, "existing")
-	if err != nil || string(got.Value) != `{"password":"keep"}` || got.Revision != 1 {
+	if err != nil || string(got.Value) != `{"password":"keep"}` || got.Revision != before.Revision {
 		t.Fatal("rejected writes changed config", got, err)
+	}
+	// Object-only validation remains a real manifest requirement, not a
+	// fabricated restriction on the original Base's arbitrary JSON values.
+	for _, value := range []any{nil, []string{"not-a-manifest"}} {
+		in := storedPluginFixture("invalid")
+		in.Manifest, err = json.Marshal(value)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := validatePluginInstallation(in); err == nil {
+			t.Fatal("invalid manifest was accepted")
+		}
 	}
 	if _, err := s.DB.Exec(`UPDATE plugin_storage_schema SET version=2`); err != nil {
 		t.Fatal(err)

@@ -34,7 +34,41 @@ var siteStatisticForm json.RawMessage
 func SiteStatisticManifest() plugins.Manifest {
 	return plugins.Manifest{SchemaVersion: 1, PluginID: "SiteStatistic", Name: "站点数据统计", Description: "站点统计数据图表。", Icon: "statistic.png", Version: "1.9.7", Author: "lightolly,jxxghp", AuthorURL: "https://github.com/lightolly", Runtime: "go-executable", Entry: "light-media", HostAPIMin: 1, HostAPIMax: 1, Methods: []string{"config_form", "invoke", "page", "dashboard", "stop"}, Capabilities: []string{"site.statistics.read", "site.statistics.configure", "site.statistics.refresh", "site.statistics.notify", "site.statistics.refresh_domain"}, HasPage: true, Dashboards: []string{"default"}, APIs: []plugins.HTTPAPI{{Key: "refresh_by_domain", Path: "/refresh_by_domain", Methods: []string{"GET"}, Auth: "apikey", Query: []plugins.HTTPParameter{{Name: "domain", Kind: "string", Required: true}, {Name: "apikey", Kind: "api_key", Required: true}}}}}
 }
+
+// OriginalSiteStatistic retains the actual initialized members. Its caller serializes
+// Handle and State; legacy SDK calls keep their historical per-call lifetime.
+type OriginalSiteStatistic struct{ config SiteStatisticConfiguration }
+
+func NewOriginalSiteStatistic() *OriginalSiteStatistic {
+	return &OriginalSiteStatistic{config: SiteStatisticConfiguration{DashboardType: "today"}}
+}
+func (p *OriginalSiteStatistic) State() bool { return p.config.Enabled }
+func (p *OriginalSiteStatistic) Configuration() SiteStatisticConfiguration {
+	c := p.config
+	c.StatisticSites = append([]SiteReference(nil), c.StatisticSites...)
+	return c
+}
+
 func HandleSiteStatistic(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+	p := NewOriginalSiteStatistic()
+	// Legacy single-call SDK callers supply configuration on each invocation.
+	// Only this compatibility wrapper seeds non-init calls; a retained object's
+	// Handle always reads its own initialized members instead.
+	if method != "stop" && method != "config_form" {
+		var invocation plugins.Invocation
+		if json.Unmarshal(raw, &invocation) != nil {
+			return nil, errors.New("invalid statistic invocation")
+		}
+		if invocation.Action != "init" && invocation.Action != "reload" {
+			if json.Unmarshal(invocation.Config, &p.config) != nil {
+				return nil, errors.New("invalid statistic invocation")
+			}
+		}
+	}
+	return p.Handle(ctx, method, raw, host)
+}
+
+func (p *OriginalSiteStatistic) Handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	if method == "stop" {
 		return json.RawMessage(`null`), nil
 	}
@@ -43,7 +77,33 @@ func HandleSiteStatistic(ctx context.Context, method string, raw json.RawMessage
 	}
 	var invocation plugins.Invocation
 	var config SiteStatisticConfiguration
-	if json.Unmarshal(raw, &invocation) != nil || json.Unmarshal(invocation.Config, &config) != nil || config.Validate() != nil {
+	if json.Unmarshal(raw, &invocation) != nil {
+		return nil, errors.New("invalid statistic invocation")
+	}
+	if method == "invoke" && (invocation.Action == "init" || invocation.Action == "reload") {
+		fields, err := originalStatelessConfigFields(invocation.Config)
+		if err != nil {
+			return nil, errors.New("invalid statistic invocation")
+		}
+		if len(fields) > 0 {
+			if json.Unmarshal(invocation.Config, &config) != nil {
+				return nil, errors.New("invalid statistic invocation")
+			}
+			if config.DashboardType == "" {
+				config.DashboardType = "today"
+			}
+			p.config = config
+		}
+		config = p.config
+		// Source writes config["onlyonce"] before its host work. A None input
+		// with a retained true member fails there; do not clear that member.
+		if fields == nil && config.OnlyOnce {
+			return nil, errors.New("SiteStatistic onlyonce requires a configuration object")
+		}
+	} else {
+		config = p.config
+	}
+	if config.Validate() != nil {
 		return nil, errors.New("invalid statistic invocation")
 	}
 	if method == "invoke" {

@@ -36,6 +36,8 @@ type Dependencies struct {
 	Timezone  string
 }
 type Controller struct {
+	// Engine is an opt-in literal plugin object. The caller serializes access.
+	Engine       *source.Engine
 	Journal      Journal
 	Binding      Binding
 	DigestKey    [32]byte
@@ -151,12 +153,19 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 	execution := &Execution{Store: c.Journal, Binding: c.Binding, RunID: runID, Epoch: run.Epoch, DigestKey: c.DigestKey}
 	main := execution.Lane("main", "")
 	clock := execution.Lane("main-clock", "")
-	engine, err := source.NewAtZone(inventory, clock.Clock(ctx, now), zone)
-	if err != nil {
-		return nil, err
-	}
-	if err = engine.Restore(runtime, history); err != nil {
-		return nil, err
+	engine := c.Engine
+	if engine == nil {
+		engine, err = source.NewAtZone(inventory, clock.Clock(ctx, now), zone)
+		if err != nil {
+			return nil, err
+		}
+		if err = engine.Restore(runtime, history); err != nil {
+			return nil, err
+		}
+	} else {
+		// Every admitted invocation receives fresh authority, never an old lane.
+		engine.Now = clock.Clock(ctx, now)
+		defer func() { engine.Now = now; engine.Effects = nil }()
 	}
 	engine.Inventory = inventory
 	effect := func(e source.Effect) error {
@@ -321,6 +330,10 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 			oldData := engine.Data
 			engine, err = source.NewAtZone(inventory, clock.Clock(ctx, now), zone)
 			if err == nil {
+				if c.Engine != nil {
+					*c.Engine = *engine
+					engine = c.Engine
+				}
 				engine.Data = oldData
 				engine.Effects = effect
 				config := command.Config
@@ -345,7 +358,7 @@ func (c *Controller) Execute(ctx context.Context, runID string, command Command)
 	default:
 		err = ErrConflict
 	}
-	if err == nil && (command.Action == "init" || command.Action == "reload" || command.Action == "cold_init") {
+	if c.Engine == nil && err == nil && (command.Action == "init" || command.Action == "reload" || command.Action == "cold_init") {
 		choose := c.Dependencies.RandomInt
 		if choose == nil {
 			choose = defaultChoose

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"light-media/internal/notice"
+	"light-media/internal/sites"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -14,14 +16,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
-
-	"light-media/internal/notice"
-	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
-	"light-media/internal/sites"
 )
 
-// Producer expectations are the pinned SiteChain methods, not a guessed
-// notification UI. These are synthetic DTOs, separate from HTTP parser evidence.
 func TestSiteMessageProducerSourceOrderAndMetadata(t *testing.T) {
 	level := "Power User"
 	snapshot := siteSnapshot{SourceData: &sites.SourceUserData{MessageUnread: 2, Ratio: .5, UserLevel: &level, Messages: [][]any{{"heading", "date", "body", "owned-source", "ignored"}, {nil, nil, nil}}}}
@@ -110,8 +106,6 @@ func TestSiteMessageProducerSummaryTruthinessAndOriginalVIPRegex(t *testing.T) {
 	}
 }
 
-// Every request is served by this owned loopback fixture. The response bodies
-// are existing source-parser fixtures, not real accounts or live site traffic.
 func siteMessageHTTPFixture(t *testing.T, a *App, duplicate bool, lowRatio ...bool) *atomic.Int32 {
 	t.Helper()
 	raw, err := os.ReadFile("../../testdata/plugins/site-nexus-account-original-oracle.json")
@@ -202,48 +196,6 @@ func siteMessageHistory(t *testing.T, a *App) []Notification {
 	return result
 }
 
-func TestSiteMessageActualAPIRepeatedNoSourceAndColdNoRecollection(t *testing.T) {
-	a, _, _, _ := pluginHTTPFixture(t)
-	calls := siteMessageHTTPFixture(t, a, true)
-	ctx := context.Background()
-	for i := 0; i < 2; i++ {
-		run := enqueueSyntheticPluginHTTP(t, a)
-		a.executePluginRun(ctx, run)
-		finished, err := a.pluginStore.Run(ctx, run.ID)
-		if err != nil || finished.State != "succeeded" {
-			t.Fatal("actual API chain did not return normally", finished.State, finished.ErrorCode, err)
-		}
-		if _, err = a.pluginStore.siteStatisticReceipt(ctx, run); err != nil {
-			t.Fatal("normal API return missing", err)
-		}
-		if got := siteMessageHistory(t, a); len(got) != 2*(i+1) {
-			t.Fatal("source-less rows were deduplicated or repeated", len(got))
-		}
-	}
-	beforeCalls := calls.Load()
-	before := siteMessageHistory(t, a)
-	for _, n := range before {
-		if n.MType != "站点" || n.Title != "【站点 合成站点 消息】" || n.Message != "时间：None\n标题：title\n内容：\nNone" {
-			t.Fatal("actual Router history differs from source", n)
-		}
-	}
-	dir := a.Dir
-	if err := a.Close(); err != nil {
-		t.Fatal(err)
-	}
-	cold, err := New(Options{DataDir: dir})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer cold.Close()
-	if err = cold.resumePluginNoticeRoutes(ctx, 200); err != nil {
-		t.Fatal(err)
-	}
-	if calls.Load() != beforeCalls || !reflect.DeepEqual(siteMessageHistory(t, cold), before) {
-		t.Fatal("cold recovery re-collected, marked read, or duplicated history")
-	}
-}
-
 func siteMessageClaimBatch(t *testing.T, a *App) Job {
 	t.Helper()
 	ctx := context.Background()
@@ -266,66 +218,43 @@ func siteMessageClaimBatch(t *testing.T, a *App) Job {
 	return claimed
 }
 
-func TestSiteMessageActualBatchTwoStatisticClonesCollectOnlyOnce(t *testing.T) {
-	a := newTestApp(t)
-	calls := siteMessageHTTPFixture(t, a, false)
-	statisticRouterInstall(t, a, "SiteStatistic")
-	statisticRouterInstall(t, a, "SiteStatistic_owned_clone")
-	ctx := context.Background()
-	job := siteMessageClaimBatch(t, a)
-	if err := a.runSiteRefresh(ctx, job); err != nil {
+func siteMessageSeedCollectedDTO(t *testing.T, a *App, job Job, siteID string, dto *sites.SourceUserData) siteMessageCollection {
+	t.Helper()
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Errorf("frozen source DTO unexpectedly recollected over HTTP: %s", r.URL)
+		http.Error(w, "must not recollect", http.StatusInternalServerError)
+	}))
+	t.Cleanup(server.Close)
+	site := SiteConfig{Config: sites.Config{ID: siteID, Kind: "jiayuan", Name: "合成来源站", BaseURL: server.URL, Cookie: "synthetic-only"}, SiteOptions: SiteOptions{Domain: siteID + ".invalid"}, Enabled: true}
+	settings := a.Settings()
+	settings.Sites = append(settings.Sites, site)
+	if err := a.saveSettings(context.Background(), settings); err != nil {
 		t.Fatal(err)
 	}
-	before := calls.Load()
-	if before != 6 {
-		t.Fatal("core collection request sequence changed", before)
-	}
-	if histories := siteMessageHistory(t, a); len(histories) != 1 {
-		t.Fatal("core producer should emit once, not once per clone", histories)
-	}
-	if err := a.dispatchPluginEvents(ctx, time.Now()); err != nil {
+	origin := siteCollectionOrigin{Kind: "job", ID: job.ID, Generation: int64(job.Generation)}
+	r := siteMessageCollection{Version: 1, Stage: "collected", Origin: origin, Name: site.Name, URL: site.BaseURL, PolicyVersion: "site-chain/1528176/v1:", ReadMessages: true, SiteEnabled: site.Enabled, EventKey: job.ID + ":" + siteID, Snapshot: siteSnapshot{SiteID: siteID, ConfigKey: a.managedSiteKey(site), Name: site.Name, Domain: site.Domain, SourceOutcome: "data", SourceData: dto}}
+	r.ID = a.pluginStore.noticeID("site-collection", origin.Kind, origin.ID, siteID)
+	r.InputSHA = siteCollectionInputSHA(r)
+	if err := freezeSiteCollectionRows(&r); err != nil {
 		t.Fatal(err)
 	}
-	for _, instance := range []string{"SiteStatistic", "SiteStatistic_owned_clone"} {
-		// Zero-delay subscriptions create one invocation per event. Both the
-		// collected-site fact and '*' batch completion are real inputs. Equal
-		// created_at timestamps do not promise their random run-ID ordering.
-		seen := map[string]int{}
-		for ordinal := 0; ordinal < 2; ordinal++ {
-			run := statisticRouterClaim(t, a, instance)
-			var payload []byte
-			if err := a.Store.DB.QueryRow(`SELECT e.payload FROM plugin_event_batches b JOIN plugin_event_deliveries d ON d.batch_id=b.id JOIN domain_events e ON e.event_id=d.event_id WHERE b.run_id=? AND b.instance_id=?`, run.ID, instance).Scan(&payload); err != nil {
-				t.Fatal(err)
-			}
-			var event DomainEvent
-			if json.Unmarshal(payload, &event) != nil || event.Type != "site.refreshed" {
-				t.Fatal("wrong event invocation", string(payload))
-			}
-			seen[event.SiteID]++
-			statisticRouterExecute(t, a, run)
-		}
-		if len(seen) != 2 || seen["known"] != 1 || seen["*"] != 1 {
-			t.Fatal("clone did not consume both original events", instance, seen)
-		}
-		var pending int
-		if err := a.Store.DB.QueryRow(`SELECT count(*) FROM plugin_runs WHERE instance_id=? AND action='event' AND state='pending'`, instance).Scan(&pending); err != nil || pending != 0 {
-			t.Fatal("clone event left unexecuted", instance, pending, err)
-		}
+	r.SnapshotSHA = siteCollectionSnapshotSHA(r)
+	r.Steps = siteMessageBusinesses(r.Name, r.URL, r.Snapshot)
+	tx, err := a.Store.DB.BeginTx(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
 	}
-	if calls.Load() != before {
-		t.Fatal("statistics clone recollected site userdata")
+	defer tx.Rollback()
+	if err = recordDomainEventTx(context.Background(), tx, DomainEvent{EventID: domainEventID("site.refreshed", r.EventKey), Type: "site.refreshed", SiteID: siteID}); err != nil {
+		t.Fatal(err)
 	}
-	var coreDetails, cloneSummaries int
-	for _, n := range siteMessageHistory(t, a) {
-		if n.Title == "【站点 合成站点 消息】" {
-			coreDetails++
-		} else {
-			cloneSummaries++
-		}
+	if err = a.pluginStore.saveSiteMessageCollection(context.Background(), tx, r); err != nil {
+		t.Fatal(err)
 	}
-	if coreDetails != 1 || cloneSummaries != 2 {
-		t.Fatal("core and per-clone event notices were conflated", coreDetails, cloneSummaries)
+	if err = tx.Commit(); err != nil {
+		t.Fatal(err)
 	}
+	return r
 }
 
 func TestSiteMessagePostUnknownStopsBatchButPreservesCollectedFact(t *testing.T) {
@@ -385,212 +314,14 @@ func TestSiteMessagePostUnknownStopsBatchButPreservesCollectedFact(t *testing.T)
 	}
 }
 
-func TestSiteMessageActualAPIPostReturnAndUnknownSenderNeverResent(t *testing.T) {
-	for _, mode := range []string{"false_return", "unknown_sender", "business_accept", "route_step", "route_finish", "queue_intent", "queue_finish"} {
-		t.Run(mode, func(t *testing.T) {
-			a, _, _, _ := pluginHTTPFixture(t)
-			calls := siteMessageHTTPFixture(t, a, false)
-			var sends atomic.Int32
-			var fault atomic.Bool
-			a.pluginStore.notices.afterCommit = func(stage string) error {
-				if stage == mode && fault.CompareAndSwap(false, true) {
-					return errors.New("owned committed response lost")
-				}
-				return nil
-			}
-			a.pluginStore.notices.send = func(context.Context, pluginNoticeQueueEntry) (int, error) {
-				sends.Add(1)
-				if mode == "unknown_sender" {
-					return 1, seedhost.ErrUnknown
-				}
-				if mode == "false_return" {
-					return 0, nil
-				}
-				return 1, nil
-			}
-			run := enqueueSyntheticPluginHTTP(t, a)
-			a.executePluginRun(context.Background(), run)
-			finished, err := a.pluginStore.Run(context.Background(), run.ID)
-			if err != nil || finished.State != "succeeded" {
-				t.Fatal("normal source return changed into failure", finished.State, finished.ErrorCode, err)
-			}
-			if mode != "false_return" && mode != "unknown_sender" && !fault.Load() {
-				t.Fatal("commit boundary was not exercised", mode)
-			}
-			if calls.Load() != 6 || sends.Load() != 1 || len(siteMessageHistory(t, a)) != 1 {
-				t.Fatal("source sequence duplicated", calls.Load(), sends.Load())
-			}
-			ids := noticeRouteTestIDs(t, a, "plugin_message_queue")
-			if len(ids) != 1 {
-				t.Fatal("expected one genuine queue receipt", ids)
-			}
-			q, err := a.pluginStore.readPluginMessage(context.Background(), a.Store.DB, ids[0])
-			if err != nil {
-				t.Fatal(err)
-			}
-			if mode == "unknown_sender" && q.State != "unknown" {
-				t.Fatal("unknown send was treated as known", q.State)
-			}
-			dir := a.Dir
-			if err = a.Close(); err != nil {
-				t.Fatal(err)
-			}
-			cold, err := New(Options{DataDir: dir})
-			if err != nil {
-				t.Fatal(err)
-			}
-			defer cold.Close()
-			cold.pluginStore.notices.send = func(context.Context, pluginNoticeQueueEntry) (int, error) { sends.Add(1); return 1, nil }
-			if err = cold.resumePluginNoticeRoutes(context.Background(), 200); err != nil {
-				t.Fatal(err)
-			}
-			if calls.Load() != 6 || sends.Load() != 1 || len(siteMessageHistory(t, cold)) != 1 {
-				t.Fatal("cold recovery repeated known or unknown effects", calls.Load(), sends.Load())
-			}
-		})
-	}
-}
-
-func TestSiteMessageCollectionFactCommitFailureBlocksRecollection(t *testing.T) {
-	a, _, _, _ := pluginHTTPFixture(t)
-	calls := siteMessageHTTPFixture(t, a, false)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_collection_fact_failure BEFORE UPDATE ON records WHEN OLD.kind='site_message_collection' BEGIN SELECT RAISE(ABORT,'owned collection fact rollback'); END`); err != nil {
-		t.Fatal(err)
-	}
-	run := enqueueSyntheticPluginHTTP(t, a)
-	a.executePluginRun(context.Background(), run)
-	finished, err := a.pluginStore.Run(context.Background(), run.ID)
-	if err != nil || finished.State == "succeeded" {
-		t.Fatal("failed fact transaction reported success", finished.State, err)
-	}
-	if calls.Load() != 6 {
-		t.Fatal("fixture never completed source requests", calls.Load())
-	}
-	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history", "notification"} {
-		var count int
-		if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind=?`, kind).Scan(&count); err != nil || count != 0 {
-			t.Fatal("fact transaction leaked partial state", kind, count, err)
-		}
-	}
-	var events, admitted int
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed'`).Scan(&events); err != nil || events != 0 {
-		t.Fatal("rolled-back fact emitted event", events, err)
-	}
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='site_message_collection'`).Scan(&admitted); err != nil || admitted != 1 {
-		t.Fatal("request admission was not durable", admitted, err)
-	}
-	if _, err = a.Store.DB.Exec(`DROP TRIGGER owned_collection_fact_failure`); err != nil {
-		t.Fatal(err)
-	}
-	dir := a.Dir
-	if err = a.Close(); err != nil {
-		t.Fatal(err)
-	}
-	cold, err := New(Options{DataDir: dir})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer cold.Close()
-	_ = cold.resumeSiteMessageCollections(context.Background())
-	if calls.Load() != 6 || len(siteMessageHistory(t, cold)) != 0 {
-		t.Fatal("unknown collection was re-requested or its messages invented")
-	}
-}
-
-func TestSiteMessageFinalAPIReceiptFailurePreservesFactAndNeverRefetches(t *testing.T) {
-	a, _, _, _ := pluginHTTPFixture(t)
-	calls := siteMessageHTTPFixture(t, a, false)
-	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_final_api_failure BEFORE INSERT ON plugin_site_statistic_operations BEGIN SELECT RAISE(ABORT,'owned normal-return receipt rollback'); END`); err != nil {
-		t.Fatal(err)
-	}
-	run := enqueueSyntheticPluginHTTP(t, a)
-	a.executePluginRun(context.Background(), run)
-	finished, err := a.pluginStore.Run(context.Background(), run.ID)
-	if err != nil || finished.State == "succeeded" {
-		t.Fatal("missing API completion reported success", finished.State, err)
-	}
-	var snapshot siteSnapshot
-	if err = a.Store.Get(context.Background(), "site_connection", "known", &snapshot); err != nil || snapshot.SourceData == nil {
-		t.Fatal("final return failure rolled back the earlier source save", err)
-	}
-	var events int
-	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed'`).Scan(&events); err != nil || events != 1 {
-		t.Fatal("final receipt failure changed the earlier source event", events, err)
-	}
-	if calls.Load() != 6 || len(siteMessageHistory(t, a)) != 1 {
-		t.Fatal("final receipt failure changed completed message side effect")
-	}
-	if _, err = a.Store.DB.Exec(`DROP TRIGGER owned_final_api_failure`); err != nil {
-		t.Fatal(err)
-	}
-	dir := a.Dir
-	if err = a.Close(); err != nil {
-		t.Fatal(err)
-	}
-	cold, err := New(Options{DataDir: dir})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer cold.Close()
-	if err = cold.resumePluginNoticeRoutes(context.Background(), 200); err != nil {
-		t.Fatal(err)
-	}
-	if calls.Load() != 6 || len(siteMessageHistory(t, cold)) != 1 {
-		t.Fatal("cold final-receipt reconciliation re-collected or resent")
-	}
-	recovered, err := cold.pluginStore.Run(context.Background(), run.ID)
-	if err != nil || recovered.State != "succeeded" {
-		t.Fatal("cold local receipt completion did not finish original API run", recovered.State, recovered.ErrorCode, err)
-	}
-	if _, err = cold.pluginStore.siteStatisticReceipt(context.Background(), run); err != nil {
-		t.Fatal("cold normal-return receipt missing", err)
-	}
-}
-
-// This fixture supplies a frozen synthetic module DTO, not HTTP parser evidence.
-// The job ownership, sealed collection, Router, history SQL and completion proof
-// are real. It exercises optional source metadata no native parser currently emits.
-func siteMessageSeedCollectedDTO(t *testing.T, a *App, job Job, siteID string, dto *sites.SourceUserData) siteMessageCollection {
-	t.Helper()
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		t.Errorf("frozen source DTO unexpectedly recollected over HTTP: %s", r.URL)
-		http.Error(w, "must not recollect", http.StatusInternalServerError)
-	}))
-	t.Cleanup(server.Close)
-	site := SiteConfig{Config: sites.Config{ID: siteID, Kind: "jiayuan", Name: "合成来源站", BaseURL: server.URL, Cookie: "synthetic-only"}, SiteOptions: SiteOptions{Domain: siteID + ".invalid"}, Enabled: true}
-	settings := a.Settings()
-	settings.Sites = append(settings.Sites, site)
-	if err := a.saveSettings(context.Background(), settings); err != nil {
-		t.Fatal(err)
-	}
-	origin := siteCollectionOrigin{Kind: "job", ID: job.ID, Generation: int64(job.Generation)}
-	r := siteMessageCollection{Version: 1, Stage: "collected", Origin: origin, Name: site.Name, URL: site.BaseURL, PolicyVersion: "site-chain/1528176/v1:", ReadMessages: true, SiteEnabled: site.Enabled, EventKey: job.ID + ":" + siteID, Snapshot: siteSnapshot{SiteID: siteID, ConfigKey: a.managedSiteKey(site), Name: site.Name, Domain: site.Domain, SourceOutcome: "data", SourceData: dto}}
-	r.ID = a.pluginStore.noticeID("site-collection", origin.Kind, origin.ID, siteID)
-	r.InputSHA = siteCollectionInputSHA(r)
-	if err := freezeSiteCollectionRows(&r); err != nil {
-		t.Fatal(err)
-	}
-	r.SnapshotSHA = siteCollectionSnapshotSHA(r)
-	r.Steps = siteMessageBusinesses(r.Name, r.URL, r.Snapshot)
-	tx, err := a.Store.DB.BeginTx(context.Background(), nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer tx.Rollback()
-	if err = recordDomainEventTx(context.Background(), tx, DomainEvent{EventID: domainEventID("site.refreshed", r.EventKey), Type: "site.refreshed", SiteID: siteID}); err != nil {
-		t.Fatal(err)
-	}
-	if err = a.pluginStore.saveSiteMessageCollection(context.Background(), tx, r); err != nil {
-		t.Fatal(err)
-	}
-	if err = tx.Commit(); err != nil {
-		t.Fatal(err)
-	}
-	return r
-}
-
 func TestSiteMessageGlobalActualHistorySourceDedupAndDeletion(t *testing.T) {
 	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 4 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 4)
+		}
+	})
 	ctx := context.Background()
 	job := siteMessageClaimBatch(t, a)
 	first := siteMessageSeedCollectedDTO(t, a, job, "first", &sites.SourceUserData{MessageUnread: 4, Messages: [][]any{{"one", "date", "body", "shared/source:42"}, {"two", "date", "body", "shared/source:42"}, {"same", "date", "body"}, {"same", "date", "body"}}})
@@ -624,6 +355,12 @@ func TestSiteMessageGlobalActualHistorySourceDedupAndDeletion(t *testing.T) {
 
 func TestSiteMessageMalformedLaterRowRetainsPriorPostAndStopsRatio(t *testing.T) {
 	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 1 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 1)
+		}
+	})
 	job := siteMessageClaimBatch(t, a)
 	r := siteMessageSeedCollectedDTO(t, a, job, "short-row", &sites.SourceUserData{MessageUnread: 3, Ratio: .5, Messages: [][]any{{"first", "date", "body"}, {"short"}, {"never", "date", "body"}}})
 	finished, err := a.finishSiteMessageCollection(context.Background(), r.ID)
@@ -646,6 +383,12 @@ func TestSiteMessageMalformedLaterRowRetainsPriorPostAndStopsRatio(t *testing.T)
 
 func TestSiteMessageReclaimedJobUsesCurrentLeaseWithoutRecollecting(t *testing.T) {
 	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 1 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 1)
+		}
+	})
 	ctx := context.Background()
 	original := siteMessageClaimBatch(t, a)
 	r := siteMessageSeedCollectedDTO(t, a, original, "reclaimed", &sites.SourceUserData{MessageUnread: 1, Messages: [][]any{{"frozen", "date", "body"}}})
@@ -670,13 +413,16 @@ func TestSiteMessageReclaimedJobUsesCurrentLeaseWithoutRecollecting(t *testing.T
 	}
 }
 
-// These cases freeze synthetic raw module DTOs. They exercise the real core job,
-// sequential Router and history, but do not claim that a native HTTP parser
-// currently emits scalar/dictionary message rows.
 func TestSiteMessageRawLaterScalarFailsOnlyAfterFirstRealPost(t *testing.T) {
 	for _, rawRow := range []string{"null", "42", "true"} {
 		t.Run(rawRow, func(t *testing.T) {
 			a := newTestApp(t)
+			sent := siteMessageOwnedFIFOSender(t, a)
+			t.Cleanup(func() {
+				if got := len(sent()); got != 1 {
+					t.Errorf("owned HTTP sender count = %d, want %d", got, 1)
+				}
+			})
 			job := siteMessageClaimBatch(t, a)
 			var dto sites.SourceUserData
 			raw := `{"message_unread":3,"ratio":0.5,"message_unread_contents":[["first","date","body"],` + rawRow + `,["never","date","body"]]}`
@@ -714,6 +460,12 @@ func TestSiteMessageRawLaterScalarFailsOnlyAfterFirstRealPost(t *testing.T) {
 
 func TestSiteMessageRawStringAndOrderedDictionaryFollowPythonUnpack(t *testing.T) {
 	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 2 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 2)
+		}
+	})
 	job := siteMessageClaimBatch(t, a)
 	var dto sites.SourceUserData
 	raw := `{"message_unread":2,"message_unread_contents":["题日文源外",{"z-head":10,"a-date":20,"m-body":30,"dict-source":40,"ignored":50}]}`
@@ -739,6 +491,12 @@ func TestSiteMessageRawStringAndOrderedDictionaryFollowPythonUnpack(t *testing.T
 
 func TestSiteMessageLaterNotificationValidationPreservesFirstPost(t *testing.T) {
 	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 1 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 1)
+		}
+	})
 	job := siteMessageClaimBatch(t, a)
 	var dto sites.SourceUserData
 	// [] is false in Python, so source existence is not queried. It still fails
@@ -766,25 +524,126 @@ func TestSiteMessageLaterNotificationValidationPreservesFirstPost(t *testing.T) 
 	}
 }
 
-func TestSiteStatisticAPIDataPreservesRawMessageRows(t *testing.T) {
-	// API serialization evidence only, not an HTTP parser capability claim.
-	rawRows := `[null,42,true,"题日文源",{"z-head":1,"a-date":2,"m-body":3},["head","date","body","source",99]]`
-	var dto sites.SourceUserData
-	if err := json.Unmarshal([]byte(`{"message_unread":6,"message_unread_contents":`+rawRows+`}`), &dto); err != nil {
-		t.Fatal("DTO discarded scalar rows before API serialization", err)
+func TestSiteMessageActualCoreRepeatedNoSourceAndColdNoRecollection(t *testing.T) {
+	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 4 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 4)
+		}
+	})
+	calls := siteMessageHTTPFixture(t, a, true)
+	ctx := context.Background()
+	for i := 0; i < 2; i++ {
+		job := siteMessageClaimBatch(t, a)
+		if err := a.runSiteRefresh(ctx, job); err != nil {
+			t.Fatal("actual core chain did not return normally", err)
+		}
+		if changed, err := a.finishJob(ctx, job, "succeeded", "", "", time.Now().Unix()); err != nil || !changed {
+			t.Fatal("real core worker completion missing", changed, err)
+		}
+		if got := siteMessageHistory(t, a); len(got) != 2*(i+1) {
+			t.Fatal("source-less rows were deduplicated or repeated", len(got))
+		}
 	}
-	data := siteStatisticAPIData(siteSnapshot{SourceData: &dto})
-	encoded, err := json.Marshal(data["message_unread_contents"])
+	beforeCalls := calls.Load()
+	before := siteMessageHistory(t, a)
+	for _, n := range before {
+		if n.MType != "站点" || n.Title != "【站点 合成站点 消息】" || n.Message != "时间：None\n标题：title\n内容：\nNone" {
+			t.Fatal("actual Router history differs from source", n)
+		}
+	}
+	dir := a.Dir
+	if err := a.Close(); err != nil {
+		t.Fatal(err)
+	}
+	cold, err := New(Options{DataDir: dir})
 	if err != nil {
 		t.Fatal(err)
 	}
-	var want, got any
-	if json.Unmarshal([]byte(rawRows), &want) != nil || json.Unmarshal(encoded, &got) != nil || !reflect.DeepEqual(got, want) {
-		t.Fatal("API replaced raw rows with array-only projection", string(encoded))
+	defer cold.Close()
+	if err = cold.resumePluginNoticeRoutes(ctx, 200); err != nil {
+		t.Fatal(err)
 	}
-	// The ordered dictionary is significant to later Python unpacking, even
-	// though ordinary API object equality does not expose its insertion order.
-	if !strings.Contains(string(encoded), `{"z-head":1,"a-date":2,"m-body":3}`) {
-		t.Fatal("API DTO roundtrip reordered source dictionary keys", string(encoded))
+	if calls.Load() != beforeCalls || !reflect.DeepEqual(siteMessageHistory(t, cold), before) {
+		t.Fatal("cold recovery re-collected, marked read, or duplicated history")
+	}
+}
+
+func TestSiteMessageActualCoreBatchCollectsAndPublishesOnce(t *testing.T) {
+	a := newTestApp(t)
+	sent := siteMessageOwnedFIFOSender(t, a)
+	t.Cleanup(func() {
+		if got := len(sent()); got != 1 {
+			t.Errorf("owned HTTP sender count = %d, want %d", got, 1)
+		}
+	})
+	calls := siteMessageHTTPFixture(t, a, false)
+	ctx := context.Background()
+	job := siteMessageClaimBatch(t, a)
+	if err := a.runSiteRefresh(ctx, job); err != nil {
+		t.Fatal(err)
+	}
+	before := calls.Load()
+	if before != 6 {
+		t.Fatal("core collection request sequence changed", before)
+	}
+	if histories := siteMessageHistory(t, a); len(histories) != 1 {
+		t.Fatal("core producer should emit once, not once per clone", histories)
+	}
+	var siteEvents, batchEvents int
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed' AND json_extract(payload,'$.site_id')='known'`).Scan(&siteEvents); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed' AND json_extract(payload,'$.site_id')='*'`).Scan(&batchEvents); err != nil {
+		t.Fatal(err)
+	}
+	if siteEvents != 1 || batchEvents != 1 || calls.Load() != before {
+		t.Fatal("core batch lost original single-site/all-site fact order or repeated collection", siteEvents, batchEvents, calls.Load())
+	}
+}
+
+func TestSiteMessageCoreCollectionFactCommitFailureBlocksRecollection(t *testing.T) {
+	a := newTestApp(t)
+	calls := siteMessageHTTPFixture(t, a, false)
+	if _, err := a.Store.DB.Exec(`CREATE TRIGGER owned_collection_fact_failure BEFORE UPDATE ON records WHEN OLD.kind='site_message_collection' BEGIN SELECT RAISE(ABORT,'owned collection fact rollback'); END`); err != nil {
+		t.Fatal(err)
+	}
+	job := siteMessageClaimBatch(t, a)
+	err := a.runSiteRefresh(context.Background(), job)
+	if err == nil {
+		t.Fatal("failed core fact transaction reported success")
+	}
+	if calls.Load() != 6 {
+		t.Fatal("fixture never completed source requests", calls.Load())
+	}
+	for _, kind := range []string{"site_connection", "site_stats_latest", "site_stats_history", "notification"} {
+		var count int
+		if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind=?`, kind).Scan(&count); err != nil || count != 0 {
+			t.Fatal("fact transaction leaked partial state", kind, count, err)
+		}
+	}
+	var events, admitted int
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM domain_events WHERE json_extract(payload,'$.event_type')='site.refreshed'`).Scan(&events); err != nil || events != 0 {
+		t.Fatal("rolled-back fact emitted event", events, err)
+	}
+	if err = a.Store.DB.QueryRow(`SELECT count(*) FROM records WHERE kind='site_message_collection'`).Scan(&admitted); err != nil || admitted != 1 {
+		t.Fatal("request admission was not durable", admitted, err)
+	}
+	if _, err = a.Store.DB.Exec(`DROP TRIGGER owned_collection_fact_failure`); err != nil {
+		t.Fatal(err)
+	}
+	dir := a.Dir
+	if err = a.Close(); err != nil {
+		t.Fatal(err)
+	}
+	cold, err := New(Options{DataDir: dir})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer cold.Close()
+	_ = cold.resumeSiteMessageCollections(context.Background())
+	if calls.Load() != 6 || len(siteMessageHistory(t, cold)) != 0 {
+		t.Fatal("unknown collection was re-requested or its messages invented")
 	}
 }
