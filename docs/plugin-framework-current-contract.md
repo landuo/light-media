@@ -1,3 +1,7 @@
+# Historical framework contract (retired)
+
+This 2026-10-23 document describes the retired framework. It is historical evidence, not the current development guide. Its queue, immutable revision and native receipt prerequisites MUST NOT be reintroduced into the standard manager. See [the current finite module acceptance baseline](plugin-framework-acceptance-baseline.md). The overall framework remains unfinished; concrete plugin/provider work is paused.
+
 # Plugin framework: current integrated contract
 
 This document indexes the reviewed framework contract as of 2026-10-23. It

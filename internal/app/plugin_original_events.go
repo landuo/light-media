@@ -13,5 +13,5 @@ func (a *App) emitOriginalPluginReload(instance string) {
 	}
 	go func() { defer a.wg.Done(); a.updateOriginalPluginJobs(context.Background(), instance) }()
 	raw, _ := json.Marshal(map[string]string{"plugin_id": instance})
-	a.broadcastOriginalPluginEvent(context.Background(), "plugin_reload", raw)
+	a.broadcastOriginalPluginEvent(context.Background(), "plugin.reload", raw)
 }

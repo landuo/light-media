@@ -1,0 +1,59 @@
+{
+  "source_baseline": "c039e6238a866c35b8bf85675ad6aa60cfff0615",
+  "ordinary": {
+    "sdk_roots": 5,
+    "app_roots": 11,
+    "skip": 0
+  },
+  "race": {
+    "sdk_roots": 5,
+    "app_roots": 11,
+    "skip": 0,
+    "worker_race": true
+  },
+  "vet_exit": 0,
+  "negative_exit": 1,
+  "negative_reason": "first mutation lost",
+  "command_shape_negative_exit": 1,
+  "original_command_oracle_cases": 34,
+  "input_drift": [],
+  "missing_baseline_binary_paths": 46,
+  "scope": "Generic command.register metadata, shared mutable chain and Reset producer, broadcast target/canonical names; not full framework or provider delivery.",
+  "input_manifest_sha256": "e5269bf68b13884aff9d928bb0e8a5345d5e7da4b47f6ccb1f19c5c422cd0950",
+  "source_oracles": {
+    "command_register_actual_methods_cases": 34,
+    "event_target_actual_methods_cases": 42,
+    "upstream_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "boundaries": "Owned environment/provider boundaries, not external service delivery or a full source deployment."
+  },
+  "prior_gate": "14+14 pre-fix roots retained; not substituted for this 16+16 post-fix gate.",
+  "tested_changed_go_sha256": {
+    "cmd/owned-command-register-fixture/main.go": "e5171f09ff218a009727cefa218eb1a5bcdcbe5498eca530c7289b523200eaad",
+    "cmd/owned-event-target-fixture/main.go": "86db7b31acdce94cf6f75c2cbc5a1d1b5b300841c91d92011d3cc1c3c1c37f0a",
+    "cmd/owned-handler-order-fixture/main.go": "fa0f4af054847b09b7ee3a68e705fbb085a5c20de184f36c3747ca87c86b3ac3",
+    "cmd/owned-reset-generic-fixture/main.go": "93ea249a7da628a8848a2216f1868212acbfdcd7544904ac0ec9a2c3eb19a821",
+    "internal/app/plugin_original_chain_event.go": "5bf974f05f7afa9c89924b926d5803fc5030cc8ae25cb3d95880b4a5b884c909",
+    "internal/app/plugin_original_command_register.go": "0246ac02a8edfe8ea8a5cf35f457bd5bcaa9e6f2a07a3f340f9131870e3763d5",
+    "internal/app/plugin_original_command_register_shape_test.go": "e12f2bd9375300801818e8f327a42efe17c9f9e84a7bdca22c824d6525c1fc4d",
+    "internal/app/plugin_original_command_register_test.go": "eec05e6a6cefe78520e527dae9317becbb1f076a663445cb6e9acea32e76cff7",
+    "internal/app/plugin_original_commands.go": "0dcdc0dfa3ce9490d5c284b2e58913346d7aa318144cec2726d533056ec6a4ac",
+    "internal/app/plugin_original_direct_dispatch.go": "f0fbbdacf635cbe38a910f34cb9be4e320cdf86c1921ad411f5c3ecb8914de5f",
+    "internal/app/plugin_original_event_target.go": "74161a0ac71a1ee13432563a267d7339577f6d1779fbed34c10362f5f506d1ad",
+    "internal/app/plugin_original_event_target_owned_test.go": "3f130bd1d10b8ed4f219daebe9827c2e8ac6ac02e8700e84261d9ace1e1db15f",
+    "internal/app/plugin_original_event_target_test.go": "18c776e099ddffe2b15b86915ea6358e52a3b66b83fe7e02da3b5146228dbc44",
+    "internal/app/plugin_original_events.go": "0a31c2b29e575c41b69c30f9dd549e8e0bd6de1430fa818a6c991ea51a1f34fa",
+    "internal/app/plugin_original_handler_order_test.go": "d0b7d0b5eaabd9e84c5b72c6c302ef799781658be32b6bc1db98718c13532769",
+    "internal/app/plugin_original_lifecycle.go": "8f5ed7e73910b848fd7bb8973542aea76c36f75a7d706f42856caecf186cb4c9",
+    "internal/app/plugin_original_mutable_event.go": "985b7c3eca3a46f4c3591b793b54d191ddfc19bc0200a12db86085809703809f",
+    "internal/app/plugin_original_mutable_event_test.go": "2895ab76f91660c4f4f67e0da01da49804a15ca1b194707afa7c3b69c011f621",
+    "internal/app/plugin_original_reset_chain_test.go": "9e1a0337f38f6b2027df1a5e210c07d35d5b93c279ce003f5e18a78a348655a7",
+    "internal/app/plugin_original_reset_event.go": "3e3ca06a7339d97078e6c32a03375e112bb07bbe0965e464fcd66792373dcb20",
+    "internal/app/plugin_original_reset_generic_test.go": "c8a9cf99a2d6e893782c0c92e3e5b88e1a2db521f50929ddf2706b57acb4c72d",
+    "internal/app/runtime.go": "ab04b4502aae2c4425e19ea8601d6a3080367d8351bc984cb9dcf4afeb6aea0b",
+    "internal/plugins/chain_handler.go": "5165fd223c2e167d2a3390ff32d35809a26b1e4f65f0071b93df9fd0e934471b",
+    "internal/plugins/chain_handler_test.go": "0ec665c4d797c937b062304bee52c8a3f0f8b42f45f5154ae8c3dc608fed71cf",
+    "internal/plugins/mutable_event.go": "dd349f91332e2f041fc62d3bad84f1ae783783b28ea3e31c4533ce5c6abb08cb",
+    "internal/plugins/mutable_event_test.go": "9b4fb91df20083531c978fec8539f7e5026345581fc8cf0e04850f88d4727e89",
+    "internal/plugins/protocol.go": "6a4f2a60c1365f1a1f57212ff6bcbe1498f9842f632baf1eccec6577a45dc961"
+  }
+}

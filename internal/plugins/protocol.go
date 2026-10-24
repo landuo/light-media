@@ -77,6 +77,7 @@ type Manifest struct {
 	// plugin_order=9999 must export 9999, not omit it.
 	PluginOrder          int                      `json:"plugin_order,omitempty"`
 	ResetHandlers        []PluginDataResetHandler `json:"reset_handlers,omitempty"`
+	ChainHandlers        []ChainHandler           `json:"chain_handlers,omitempty"`
 	Frontend             *Frontend                `json:"frontend,omitempty"`
 	RuntimeSupport       *RuntimeSupport          `json:"runtime_support,omitempty"`
 	SchemaVersion        int                      `json:"schema_version"`
@@ -103,6 +104,9 @@ type Manifest struct {
 }
 
 func (m Manifest) Validate() error {
+	if err := m.validateChainHandlers(); err != nil {
+		return err
+	}
 	if len(m.ResetHandlers) > 64 {
 		return failure("invalid_manifest")
 	}
@@ -113,7 +117,7 @@ func (m Manifest) Validate() error {
 		}
 		resetMethods[handler.Method] = true
 	}
-	// Legacy events:[plugin_data_reset] remains one event method at priority10.
+	// Legacy events:[plugin.data.reset] remains one event method at priority10.
 	// Explicit handlers replace that shorthand rather than invoke it twice.
 
 	if err := m.Frontend.Validate(); err != nil {

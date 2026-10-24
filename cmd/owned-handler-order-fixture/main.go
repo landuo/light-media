@@ -27,7 +27,7 @@ func manifest() plugins.Manifest {
 	if defaultDeclaration == "true" {
 		m.PluginOrder = 0
 		m.ResetHandlers = nil
-		m.Events = []string{"plugin_data_reset"}
+		m.Events = []string{"plugin.data.reset"}
 	}
 	return m
 }

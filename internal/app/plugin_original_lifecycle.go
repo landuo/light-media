@@ -90,7 +90,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			}
 			a.pluginRunningInstances.Store(instance, object)
 			a.pluginOriginalRunningMu.Unlock()
-			a.registerOriginalObjectResetHandlers(object)
+			a.registerOriginalObjectChainHandlers(object)
 			object.finishOriginalInitialization(true)
 			// Original start stores the object before get_state/event registration.
 			// A later exception is caught without rolling back that stored object.
@@ -150,7 +150,7 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 // Only the manager decides stop order. Client.StopWithHost owns the actual
 // process shutdown/join; no legacy queue transition can veto this method.
 func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
-	a.unregisterOriginalObjectResetHandlers(instance)
+	a.unregisterOriginalObjectChainHandlers(instance)
 	loaded, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
 		a.stopOriginalUnpublishedSubmissions(ctx, instance)

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"light-media/internal/commandrouter"
 )
 
@@ -26,7 +27,11 @@ func (p *originalPluginInstance) getCommands(ctx context.Context) ([]map[string]
 // initOriginalPluginCommands follows Command.init_commands: submit a complete
 // background rebuild, not a synchronous per-pid replacement. Commands retain
 // their original event/data declaration; data.action is not an SDK method.
-func (a *App) initOriginalPluginCommands() {
+func (a *App) initOriginalPluginCommands(requested ...string) {
+	pid := ""
+	if len(requested) > 0 {
+		pid = requested[0]
+	}
 	if !a.admitOriginalBackground() {
 		return
 	}
@@ -67,12 +72,20 @@ func (a *App) initOriginalPluginCommands() {
 			}
 		}
 		a.pluginOriginalCommands = commands
+		// Execution is rebuilt before the menu-only interception, including cancel.
+		if _, err := a.prepareOriginalCommandRegistration(context.Background(), pid); err != nil {
+			if errors.Is(err, errOriginalCommandRegisterProviderUnavailable) {
+				a.log("WARN", "plugins", "command_registration_unavailable", "命令菜单元数据已准备，核心尚无菜单注册提供方", "", "")
+			} else {
+				a.log("ERROR", "plugins", "command_registration_failed", "命令菜单事件数据无效，注册未完成", "", "")
+			}
+		}
 	}()
 }
 
 func (a *App) registerOriginalPlugin(ctx context.Context, instance string) {
 	a.updateOriginalPluginJobs(ctx, instance)
-	a.initOriginalPluginCommands()
+	a.initOriginalPluginCommands(instance)
 	a.registerOriginalPluginAPIs(instance)
 }
 

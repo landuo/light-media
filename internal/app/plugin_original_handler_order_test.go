@@ -168,7 +168,7 @@ func TestOriginalManifestStartupAndResetActualWorkers(t *testing.T) {
 			Type string                       `json:"type"`
 			Data originalPluginDataResetEvent `json:"data"`
 		}
-		if err := json.Unmarshal(row.Input, &e); err != nil || e.Type != "plugin_data_reset" || e.Data.PluginID != alpha.PluginID || !e.Data.ResetConfig || !e.Data.ResetData {
+		if err := json.Unmarshal(row.Input, &e); err != nil || e.Type != "plugin.data.reset" || e.Data.PluginID != alpha.PluginID || !e.Data.ResetConfig || !e.Data.ResetData {
 			t.Fatalf("actual reset envelope %+v %v", e, err)
 		}
 	}
@@ -197,7 +197,7 @@ func TestOriginalManifestStartupAndResetActualWorkers(t *testing.T) {
 	a.sendOriginalPluginDataReset(ctx, alpha.PluginID)
 	assertOrderTrace(t, trace, []string{"alpha:reset_first", "alpha:reset_second", "default:event"})
 	a.pluginOriginalEventsMu.Lock()
-	for _, h := range a.pluginOriginalResetHandlers {
+	for _, h := range a.pluginOriginalChainHandlers["plugin.data.reset"] {
 		if h.Instance == clone {
 			t.Error("stopped clone handler retained")
 		}

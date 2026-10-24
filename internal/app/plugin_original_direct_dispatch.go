@@ -91,8 +91,18 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 // Broadcast uses the loaded registration and its current event-enabled flag.
 // Each callback is independently submitted, as in the original EventManager.
 func (a *App) broadcastOriginalPluginEvent(ctx context.Context, event string, data json.RawMessage) {
+	data, target, restricted, err := originalBroadcastEventData(event, data)
+	if err != nil {
+		a.log("ERROR", "plugins", "event_invalid", "插件事件数据编码失败", "", "")
+		return
+	}
 	a.pluginRunningInstances.Range(func(_, value any) bool {
 		object := value.(*originalPluginInstance)
+		// InstanceID is the manager-bound source class identity, including a
+		// clone's renamed class. The shared artifact PluginID is not a target.
+		if restricted && object.installation.InstanceID != target {
+			return true
+		}
 		declared := false
 		for _, name := range object.manifest.Events {
 			if name == event {

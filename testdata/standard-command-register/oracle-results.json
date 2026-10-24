@@ -1,0 +1,4259 @@
+{
+  "scope": "Only original Command registration method bodies and original schema/DictUtils; owned eventmanager/provider boundaries. No Go comparison execution or notification channels.",
+  "python_pydantic": "2.13.4",
+  "source_verification": "source-verification.json",
+  "methods": [
+    {
+      "file": "command.py",
+      "symbol": "Command.__init_commands_background",
+      "start": 163,
+      "end": 230,
+      "body_ast_sha256": "19e43a3d051a3babb2f62352523b84bcc16cc1046ab1b0298d9c3361ca13bf56"
+    },
+    {
+      "file": "command.py",
+      "symbol": "Command.__trigger_register_commands_event",
+      "start": 232,
+      "end": 267,
+      "body_ast_sha256": "234fc26728dcfc879b62396c196466c9717e54b9415f741b22bb0bb468655afc"
+    },
+    {
+      "file": "command.py",
+      "symbol": "Command.__build_plugin_commands",
+      "start": 269,
+      "end": 289,
+      "body_ast_sha256": "5ae863c4a4905a03c63bc472b808bb298d810bd08630ce520f37aabe9bcc7722"
+    }
+  ],
+  "passed_cases": 34,
+  "cases": [
+    {
+      "case": "no_handlers",
+      "pid": null,
+      "previous": null,
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [
+        {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        }
+      ],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "unchanged",
+      "pid": null,
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "cancel_over_force",
+      "pid": "Owned",
+      "previous": {
+        "/old": {
+          "description": "retained"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": true,
+        "source": "Owned"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/old": {
+          "description": "retained"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "changed_subset",
+      "pid": null,
+      "previous": null,
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/plugin": {
+            "description": "menu-only",
+            "opaque": 900719925474099312345
+          },
+          "/unknown": {
+            "description": "discard"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [
+        {
+          "/plugin": {
+            "description": "menu-only",
+            "opaque": 900719925474099312345
+          }
+        }
+      ],
+      "registered": {
+        "/plugin": {
+          "description": "menu-only",
+          "opaque": 900719925474099312345
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "hidden_known_name_can_return",
+      "pid": null,
+      "previous": null,
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/hidden": {
+            "description": "explicitly selected"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [
+        {
+          "/hidden": {
+            "description": "explicitly selected"
+          }
+        }
+      ],
+      "registered": {
+        "/hidden": {
+          "description": "explicitly selected"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "force_unchanged",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        }
+      ],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "source_mismatch_unchanged",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Other"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "startup_unscoped_unchanged",
+      "pid": null,
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "empty_skip",
+      "pid": null,
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {},
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "empty_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {},
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "unknown_only_skip",
+      "pid": null,
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/unknown": {}
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "unknown_only_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/unknown": {}
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "provider_failure_keeps_selected_snapshot",
+      "pid": null,
+      "previous": null,
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/plugin": {
+            "description": "new"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [
+        {
+          "/plugin": {
+            "description": "new"
+          }
+        }
+      ],
+      "registered": {
+        "/plugin": {
+          "description": "new"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": [
+        "Error occurred during command initialization in background: owned provider failure"
+      ]
+    },
+    {
+      "case": "truthy_list_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": [
+          "not",
+          "a",
+          "dict"
+        ],
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "truthy_list_skip",
+      "pid": null,
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": [
+          "not",
+          "a",
+          "dict"
+        ],
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "truthy_string_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": "not-a-dict",
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "truthy_string_skip",
+      "pid": null,
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": "not-a-dict",
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "truthy_integer_skip_errors_before_filter",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": 7,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": [
+        "Error occurred during command initialization in background: object of type 'int' has no len()"
+      ]
+    },
+    {
+      "case": "truthy_integer_force_errors_before_filter",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": 7,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": [
+        "Error occurred during command initialization in background: object of type 'int' has no len()"
+      ]
+    },
+    {
+      "case": "truthy_boolean_skip_errors_before_filter",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": true,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": [
+        "Error occurred during command initialization in background: object of type 'bool' has no len()"
+      ]
+    },
+    {
+      "case": "truthy_boolean_force_errors_before_filter",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": true,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": [
+        "Error occurred during command initialization in background: object of type 'bool' has no len()"
+      ]
+    },
+    {
+      "case": "falsey_zero_skip",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": 0,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_zero_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": 0,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_false_skip",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": false,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_false_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": false,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_null_skip",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": null,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_null_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": null,
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_empty_list_skip",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": [],
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_empty_list_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": [],
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_empty_string_skip",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": "",
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "provider_calls": [],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_empty_string_force",
+      "pid": "Owned",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": "",
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "Owned"
+      },
+      "provider_calls": [
+        {}
+      ],
+      "registered": {},
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "explicit_empty_pid_matches_empty_source",
+      "pid": "",
+      "previous": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": ""
+      },
+      "provider_calls": [
+        {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        }
+      ],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "falsey_event_data_falls_back",
+      "pid": null,
+      "previous": {},
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": null,
+      "provider_calls": [
+        {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        }
+      ],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    },
+    {
+      "case": "mutate_then_falsey_event_data",
+      "pid": null,
+      "previous": {},
+      "initial": {
+        "commands": {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        },
+        "origin": "CommandChain",
+        "service": null,
+        "cancel": false,
+        "source": "未知拦截源"
+      },
+      "final_event_data": null,
+      "provider_calls": [
+        {
+          "/preset": {
+            "type": "preset",
+            "description": "core",
+            "category": "management"
+          },
+          "/uncategorized": {
+            "type": "preset",
+            "description": "no category",
+            "category": null
+          },
+          "/plugin": {
+            "type": "plugin",
+            "description": "plugin description",
+            "category": "owned",
+            "pid": "Owned"
+          },
+          "/other": {
+            "type": "other",
+            "description": "other input",
+            "category": "other",
+            "pid": "Other"
+          }
+        }
+      ],
+      "registered": {
+        "/preset": {
+          "type": "preset",
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "type": "preset",
+          "description": "no category",
+          "category": null
+        },
+        "/plugin": {
+          "type": "plugin",
+          "description": "plugin description",
+          "category": "owned",
+          "pid": "Owned"
+        },
+        "/other": {
+          "type": "other",
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "execution": {
+        "/preset": {
+          "description": "core",
+          "category": "management"
+        },
+        "/uncategorized": {
+          "description": "no category"
+        },
+        "/plugin": {
+          "pid": "Owned",
+          "description": "plugin description",
+          "category": "owned",
+          "show": true,
+          "data": {
+            "etype": "owned.action",
+            "data": {
+              "action": "never_an_sdk_method"
+            }
+          }
+        },
+        "/hidden": {
+          "pid": "Owned",
+          "description": "hidden",
+          "category": null,
+          "show": false,
+          "data": {
+            "etype": "owned.action",
+            "data": {}
+          }
+        },
+        "/other": {
+          "description": "other input",
+          "category": "other",
+          "pid": "Other"
+        }
+      },
+      "errors": []
+    }
+  ]
+}

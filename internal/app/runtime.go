@@ -26,66 +26,67 @@ import (
 )
 
 type App struct {
-	pluginOriginalBase             originalBaseState
-	pluginImplementationMu         sync.RWMutex
-	pluginOriginalInitializingRuns sync.Map
-	pluginOriginalEventsMu         sync.Mutex
-	pluginOriginalResetHandlers    []originalPluginDataResetHandler
-	pluginOriginalReloadQueue      []string
-	pluginOriginalEventDispatching bool
-	pluginOriginalRunningMu        sync.Mutex
-	pluginOriginalRunningOrder     []string
-	pluginOriginalCommandsMu       sync.Mutex
-	pluginOriginalCommands         map[string]map[string]any
-	pluginOriginalServicesMu       sync.Mutex
-	pluginOriginalBackground       originalBackgroundAdmission
-	pluginOriginalDirectJobs       originalDirectJobs
-	pluginRegisteredAPIs           sync.Map // Exact instance routes refreshed by original register_plugin_api.
-	pluginOriginalClasses          sync.Map // Original _plugins: imported compiled class, independent of running and installed.
-	pluginSubmittedObjects         sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
-	pluginRunningInstances         sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
-	systemMessages                 systemMessageRuntime
-	bigMemoryMode                  bool // Trusted startup option; not worker or plugin configuration.
-	transferExtensions             nativeTransferExtensionRuntime
-	subscriptionStats              subscriptionStatsRuntime
-	recognitionMu                  sync.Mutex
-	recognitionMatcher             atomic.Pointer[words.Matcher]
-	directoryFileMu                sync.Mutex
-	RestartRequested               chan struct{}
-	logs                           *runtimeLogger
-	logError                       string
-	catMu                          sync.Mutex
-	mediaCategories                mediaCategoryRuntime
-	catClient                      *catalog.Client
-	catCreds                       TMDBConfig
-	catProxy                       networkproxy.Config
-	metadataProxyMu                sync.Mutex
-	metadataProxyConfig            networkproxy.Config
-	metadataProxyClient            *http.Client
-	Store                          *Store
-	Dir                            string
-	web                            http.Handler
-	cfgMu                          sync.RWMutex
-	settingsMu                     sync.Mutex
-	config                         Settings
-	controlMu                      sync.Mutex
-	control                        string
-	activeWrites                   int
-	logMu                          sync.Mutex
-	authMu                         sync.Mutex
-	authAttempts                   map[string][]time.Time
-	jobWake                        chan struct{}
-	wg                             sync.WaitGroup
-	importMu                       sync.Mutex
-	importSourceLink               func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
-	importAutoCommit               func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
-	subMu                          sync.Mutex
-	downloadMu                     sync.Mutex
-	materialMu                     sync.Mutex
-	materials                      map[string][]byte
-	siteLocks                      sync.Map
-	cancel                         context.CancelFunc
-	pluginMu                       sync.Mutex
+	pluginOriginalBase               originalBaseState
+	pluginImplementationMu           sync.RWMutex
+	pluginOriginalInitializingRuns   sync.Map
+	pluginOriginalEventsMu           sync.Mutex
+	pluginOriginalChainHandlers      map[string][]originalMutableEventHandler
+	pluginOriginalReloadQueue        []string
+	pluginOriginalEventDispatching   bool
+	pluginOriginalRunningMu          sync.Mutex
+	pluginOriginalRunningOrder       []string
+	pluginOriginalCommandsMu         sync.Mutex
+	pluginOriginalCommands           map[string]map[string]any
+	pluginOriginalRegisteredCommands map[string]json.RawMessage
+	pluginOriginalServicesMu         sync.Mutex
+	pluginOriginalBackground         originalBackgroundAdmission
+	pluginOriginalDirectJobs         originalDirectJobs
+	pluginRegisteredAPIs             sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginOriginalClasses            sync.Map // Original _plugins: imported compiled class, independent of running and installed.
+	pluginSubmittedObjects           sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
+	pluginRunningInstances           sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
+	systemMessages                   systemMessageRuntime
+	bigMemoryMode                    bool // Trusted startup option; not worker or plugin configuration.
+	transferExtensions               nativeTransferExtensionRuntime
+	subscriptionStats                subscriptionStatsRuntime
+	recognitionMu                    sync.Mutex
+	recognitionMatcher               atomic.Pointer[words.Matcher]
+	directoryFileMu                  sync.Mutex
+	RestartRequested                 chan struct{}
+	logs                             *runtimeLogger
+	logError                         string
+	catMu                            sync.Mutex
+	mediaCategories                  mediaCategoryRuntime
+	catClient                        *catalog.Client
+	catCreds                         TMDBConfig
+	catProxy                         networkproxy.Config
+	metadataProxyMu                  sync.Mutex
+	metadataProxyConfig              networkproxy.Config
+	metadataProxyClient              *http.Client
+	Store                            *Store
+	Dir                              string
+	web                              http.Handler
+	cfgMu                            sync.RWMutex
+	settingsMu                       sync.Mutex
+	config                           Settings
+	controlMu                        sync.Mutex
+	control                          string
+	activeWrites                     int
+	logMu                            sync.Mutex
+	authMu                           sync.Mutex
+	authAttempts                     map[string][]time.Time
+	jobWake                          chan struct{}
+	wg                               sync.WaitGroup
+	importMu                         sync.Mutex
+	importSourceLink                 func(int, string, int, string, int) error // Owned syscall-failure seam; nil uses actual Linkat.
+	importAutoCommit                 func(*sql.Tx) error                       // Owned lost-ack seam; nil uses actual Commit.
+	subMu                            sync.Mutex
+	downloadMu                       sync.Mutex
+	materialMu                       sync.Mutex
+	materials                        map[string][]byte
+	siteLocks                        sync.Map
+	cancel                           context.CancelFunc
+	pluginMu                         sync.Mutex
 	// Serialize original endpoint operations separately from live SDK calls.
 	// Shutdown may join workers and must not hold a callback snapshot lock.
 	pluginOriginalOperationMu sync.Mutex
