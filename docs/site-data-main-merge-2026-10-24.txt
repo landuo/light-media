@@ -1,0 +1,20 @@
+站点数据／肉丝修复合并 main（2026-10-24）
+
+用户明确要求合并并推送 main。
+主分支基线：2660602d9bda9e6458adc9cfa2f0dba371391cf5。
+修复分支：codex/site-data-rousi，cb9551bcf2facd9a7b3f9d147dba0df70018b0ea。
+使用原工作树 /Users/accidia/projects/light-media，正常双亲合并，未复制代码或创建新 clone。
+
+冲突处理
+- main 已有完整的 SourceUserStats、账户历史投影、独立 MessageToken 和消息撤销验证。保留 main 的 internal/sites/rousi.go、rousi_test.go、stats.go、client.go，以及 internal/app/site_manage.go、site_transfer.go、site_rousi_test.go，不用生产分支的精简适配覆盖已有实现。
+- 接入实机对照的 SiteUserDataDialog、每日数据与增量计算，保留 main 的 Authorization 编辑和凭据占位兼容逻辑，同时保留双方的前端回归测试。
+- 保留旧 nexusphp 肉丝配置在冷启动时选择专用适配的修复；新测试存为 site_rousi_native_test.go，账户历史断言使用 main 的 managedSiteAccount 投影，不改原有消息和原账户历史测试。
+- web/dist 不选任一方旧快照，从合并源码重新构建；保留主分支全部现有插件资产并纳入新弹框。
+
+验证
+- 前端类型检查、生产构建、262 项前端测试通过。
+- internal/sites 全包普通测试通过，含原肉丝完整协议参考样本。
+- 站点管理、肉丝、旧配置冷启动、导入导出、原生站点身份相关 Go 普通检查通过；肉丝、账户投影、原生身份与消息源相关竞态检查通过。
+- go vet ./internal/sites ./internal/app、Linux amd64 CGO_ENABLED=0 编译通过。
+- 非生成资源冲突标记与空白检查通过；生成的第三方 ApexCharts 字符串保留构建器输出。
+本次为主分支集成，未重新部署 main。线上 v0.4.16 仍对应修复源码 056f295，与此前发布记录及二进制哈希一致；main 中其余尚未验收插件不会因此进入线上。旧的主分支全量 Go 已知失败清单仍见 main-sync-2026-10-24.json，本次没有将专项检查描述为全仓测试全绿。

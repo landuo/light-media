@@ -6,6 +6,7 @@ import ts from 'typescript';
 import * as vue from 'vue';
 import * as transfer from '../src/features/site-transfer.ts';
 import * as resources from '../src/features/resources.ts';
+import * as siteData from '../src/features/site-data.ts';
 
 const fixtures = () => ({
   supported: [],
@@ -116,10 +117,18 @@ async function mount(t, name, options = {}) {
   };
   const module = { exports: {} };
   new Function('require', 'exports', sourceFor(name))((dependency) => {
-    if (/^vuetify\/components\/(VTextField|VSelect|VTextarea)$/.test(dependency)) {
+    if (/^vuetify\/components\//.test(dependency)) {
       const component = dependency.split('/').at(-1);
+      if (component === 'VCard')
+        return Object.fromEntries(
+          ['VCard', 'VCardItem', 'VCardTitle', 'VCardText'].map((name) => [name, { name }]),
+        );
+      if (component === 'VGrid') return { VRow: { name: 'VRow' }, VCol: { name: 'VCol' } };
       return { [component]: { name: component } };
     }
+    if (dependency === 'vuetify') return { useDisplay: () => ({ mdAndUp: vue.ref(true) }) };
+    if (dependency === 'vue3-apexcharts') return { name: 'VueApexCharts' };
+    if (dependency === '../features/site-data') return siteData;
     if (dependency === 'vue')
       return {
         ...vue,
@@ -176,7 +185,12 @@ async function mount(t, name, options = {}) {
       if (node == null) return;
       if (Array.isArray(node)) return node.forEach(visit);
       list.push(node);
-      if (typeof node === 'object') visit(node.children);
+      if (typeof node === 'object') {
+        if (node.children && !Array.isArray(node.children) && typeof node.children === 'object') {
+          for (const [key, slot] of Object.entries(node.children))
+            if (!key.startsWith('_') && typeof slot === 'function') visit(slot());
+        } else visit(node.children);
+      }
     }
     visit(render({}, []));
     return list;
@@ -627,6 +641,118 @@ test('single-site resource browse loads recent items, searches and paginates usi
   const download = view.nodes().find((node) => node.type?.name === 'AddDownloadDialog');
   assert.equal(download.props.candidate.resource.site_id, 'one');
   assert.deepEqual(download.props.request, { query: 'Example', page: 2, browse: true });
+});
+
+test('Rousi URL selects API credentials for add, edit and credential refresh', async (t) => {
+  const view = await mount(t, 'SiteManager', {
+    api: async (path, body, method, fixture) => {
+      if (path === '/sites/manage' && !body) {
+        Object.assign(fixture.data.sites[0].config, {
+          kind: 'rousi',
+          base_url: 'https://rousi.pro',
+        });
+        fixture.data.sites[0].credential_state = { api_key: true };
+        return fixture.data;
+      }
+    },
+  });
+  await view.click('更新 示例一 凭据');
+  assert.equal(view.label('API Key').props.type, 'password');
+  await view.click('关闭站点编辑');
+  await view.click('添加站点');
+  await view.update('站点网址', 'https://www.rousi.pro');
+  assert.ok(view.label('API Key'));
+  await view.update('API Key', 'synthetic-passkey');
+  await view.submit();
+  assert.equal(view.fixture.requests.at(-1).body.api_key, 'synthetic-passkey');
+});
+
+test('site data dialog plots daily history and observed distribution; failed refresh keeps last success', async (t) => {
+  const site = fixtures().sites[0];
+  site.stats = {
+    level: 'VIP',
+    bonus: 8,
+    uploaded: 3 * 1024 ** 3,
+    downloaded: 1024 ** 3,
+    seeding: 2,
+    seeding_info: [
+      [7, 1024 ** 3],
+      [12, 2 * 1024 ** 3],
+    ],
+    captured_at: '2026-10-24T02:00:00Z',
+  };
+  let deny = false;
+  const view = await mount(t, 'SiteUserDataDialog', {
+    props: { site },
+    api: async (path) => {
+      if (path.endsWith('/history'))
+        return {
+          items: [
+            { stats: site.stats },
+            { stats: { uploaded: 1024 ** 3, downloaded: 0, captured_at: '2026-10-23T02:00:00Z' } },
+          ],
+        };
+      if (path.endsWith('/refresh'))
+        return {
+          sites: [
+            {
+              ...site,
+              connection: deny
+                ? { status: 'failed', error: 'site_authentication_failed' }
+                : { status: 'ok' },
+            },
+          ],
+        };
+    },
+  });
+  assert.match(view.text(), /总做种体积/);
+  assert.match(view.text(), /\+2.00 GB/);
+  const charts = () => view.nodes().filter((node) => node.type?.name === 'VueApexCharts');
+  assert.deepEqual(
+    charts()[0].props.series.map((s) => s.data),
+    [
+      [1, 3],
+      [0, 1],
+    ],
+  );
+  assert.deepEqual(charts()[1].props.series[0].data, [
+    [7, 1],
+    [12, 2],
+  ]);
+  await view.click('刷新站点数据');
+  assert.equal(view.fixture.events[0][0], 'refreshed');
+  deny = true;
+  await view.click('刷新站点数据');
+  assert.match(view.text(), /site_authentication_failed/);
+  assert.match(view.text(), /显示上次成功数据/);
+  assert.deepEqual(
+    charts()[0].props.series.map((s) => s.data),
+    [
+      [1, 3],
+      [0, 1],
+    ],
+  );
+});
+
+test('a closed site data dialog discards late refresh results', async (t) => {
+  let finish;
+  const site = fixtures().sites[0];
+  const view = await mount(t, 'SiteUserDataDialog', {
+    props: { site },
+    api: async (path) => {
+      if (path.endsWith('/history')) return { items: [] };
+      if (path.endsWith('/refresh'))
+        return new Promise((resolve) => {
+          finish = resolve;
+        });
+    },
+  });
+  const pending = view.click('刷新站点数据');
+  await Promise.resolve();
+  view.unmount();
+  finish({ sites: [site] });
+  await pending;
+  assert.equal(view.fixture.events.length, 0);
 });
 
 test('Rousi edit opens API credentials and submits its independent mailbox token without exposing saved values', async (t) => {

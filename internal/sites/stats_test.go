@@ -28,7 +28,7 @@ func TestUserStatsNexusDoesNotConfuseZeroUnknownOrOtherUsers(t *testing.T) {
 			}
 			fmt.Fprint(w, `<a href="logout.php">退出</a><table><tr><td>等级</td><td><img title="Elite User"></td></tr><tr><td>加入日期</td><td>2023-01-02</td></tr></table>`)
 		case "/getusertorrentlistajax.php":
-			fmt.Fprint(w, `<table><tr><th>名称</th><th>大小</th></tr><tr><td><a href="details.php?id=9">synthetic</a></td><td>1.5 GiB</td></tr></table>`)
+			fmt.Fprint(w, `<table><tr><th>名称</th><th>大小</th><th>做种者</th></tr><tr><td><a href="details.php?id=9">synthetic</a></td><td>1.5 GiB</td><td>7</td></tr></table>`)
 		default:
 			t.Errorf("unexpected endpoint %s", r.URL.Path)
 		}
@@ -50,6 +50,9 @@ func TestUserStatsNexusDoesNotConfuseZeroUnknownOrOtherUsers(t *testing.T) {
 	}
 	if s.Bonus == nil || *s.Bonus != 12345.5 || s.Seeding == nil || *s.Seeding != 1 || s.SeedingBytes == nil || *s.SeedingBytes != 1610612736 || s.Leeching != nil {
 		t.Fatalf("observed/unknown %+v", s)
+	}
+	if len(s.SeedingInfo) != 1 || s.SeedingInfo[0] != [2]int64{7, 1610612736} {
+		t.Fatal("missing observed distribution", s.SeedingInfo)
 	}
 	if len(paths) != 3 || s.Sources["seeding_bytes"] == "" {
 		t.Fatal(paths, s.Sources)
@@ -98,9 +101,9 @@ func TestUserStatsMTeamUsesNativeFieldsAndAllSeedingPages(t *testing.T) {
 		case "/api/member/getUserTorrentList":
 			pages++
 			if pages == 1 {
-				fmt.Fprint(w, `{"code":"0","data":{"total":"2","data":[{"torrent":{"id":"13","size":"1000"}}]}}`)
+				fmt.Fprint(w, `{"code":"0","data":{"total":"2","data":[{"torrent":{"id":"13","size":"1000","source":"4"}}]}}`)
 			} else {
-				fmt.Fprint(w, `{"code":"0","data":{"total":"2","data":[{"torrent":{"id":"14","size":"2000"}}]}}`)
+				fmt.Fprint(w, `{"code":"0","data":{"total":"2","data":[{"torrent":{"id":"14","size":"2000","source":"8"}}]}}`)
 			}
 		default:
 			t.Errorf("unexpected %s", r.URL.Path)
@@ -112,6 +115,9 @@ func TestUserStatsMTeamUsesNativeFieldsAndAllSeedingPages(t *testing.T) {
 	s, e := c.UserStats(context.Background())
 	if e != nil {
 		t.Fatal(e)
+	}
+	if len(s.SeedingInfo) != 2 || s.SeedingInfo[0] != [2]int64{4, 1000} || s.SeedingInfo[1] != [2]int64{8, 2000} {
+		t.Fatal("missing all-page distribution", s.SeedingInfo)
 	}
 	if pages != 2 || s.SeedingBytes == nil || *s.SeedingBytes != 3000 || s.Bonus == nil || *s.Bonus != 0 || s.Leeching == nil || *s.Leeching != 0 || !s.RatioInfinite || s.Level != "Elite User" {
 		t.Fatalf("native stats %+v pages=%d", s, pages)
