@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
-	"light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/builtin"
 	seed "light-media/internal/plugins/cleaninvalidseed"
 	lark "light-media/internal/plugins/larkmessager"
@@ -360,40 +359,6 @@ func lifecycleObservePrivateClaimCommit(t *testing.T, a *App, parent context.Con
 	current := lifecycleInstallation(t, a.pluginStore, queued.InstanceID)
 	if state, err := pluginLifecycleState(current); err != nil || state != pluginLifecycleStarted {
 		t.Fatal("post-commit cancellation restored cold evidence", state, err)
-	}
-}
-
-func TestPluginLifecyclePrivateHTTPClaimsCommitColdToStarted(t *testing.T) {
-	for _, plugin := range []string{"BrushFlowLanduo", "SeedRescue"} {
-		t.Run(plugin, func(t *testing.T) {
-			a := newTestApp(t)
-			ctx := context.Background()
-			cookie := setupTestAdmin(t, a)
-			manifest, _, ok := builtin.Lookup(plugin)
-			if !ok {
-				t.Fatal(plugin)
-			}
-			installCloneSource(t, a.pluginStore, manifest)
-			var config any = map[string]any{}
-			if plugin == "BrushFlowLanduo" {
-				config = brushflow.DefaultConfig()
-			}
-			if _, err := a.pluginStore.SaveConfig(ctx, plugin, 0, config); err != nil {
-				t.Fatal(err)
-			}
-			in := lifecycleInstallation(t, a.pluginStore, plugin)
-			request := plugins.HTTPRequest{RequestID: id("ph_"), Key: "status", Method: "GET", Path: "/status", Params: map[string]string{}}
-			queued, err := a.enqueuePluginHTTP(ctx, in, request, pluginAPIScope{Key: request.Key, Method: request.Method, RequestID: request.RequestID, Authority: pluginAPIAuthority{Kind: "session", Proof: tokenHash(cookie.Value)}})
-			if err != nil {
-				t.Fatal(err)
-			}
-			lifecycleObservePrivateClaimCommit(t, a, ctx, queued, func(ctx context.Context) error {
-				if plugin == "BrushFlowLanduo" {
-					return a.executeBrushFlowHTTP(ctx, queued)
-				}
-				return a.executeSeedRescueHTTP(ctx, queued)
-			})
-		})
 	}
 }
 

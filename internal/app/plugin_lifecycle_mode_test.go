@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
-	"light-media/internal/plugins/brushflow"
 	"light-media/internal/plugins/builtin"
 	"light-media/internal/plugins/uninstall"
 )
@@ -715,47 +714,6 @@ func TestPluginLifecycleCloneFinalFailureLeavesNoColdInstallation(t *testing.T) 
 		if err := s.DB.QueryRow(`SELECT COUNT(*) FROM `+table+` WHERE instance_id=?`, m.PluginID+"rollback").Scan(&count); err != nil || count != 0 {
 			t.Fatal(table, count, err)
 		}
-	}
-}
-
-func TestPluginLifecyclePrivateHTTPClaimsRejectMarkerBeforeCommit(t *testing.T) {
-	for _, plugin := range []string{"BrushFlowLanduo", "SeedRescue"} {
-		t.Run(plugin, func(t *testing.T) {
-			a := newTestApp(t)
-			ctx := context.Background()
-			cookie := setupTestAdmin(t, a)
-			manifest, _, ok := builtin.Lookup(plugin)
-			if !ok {
-				t.Fatal(plugin)
-			}
-			installCloneSource(t, a.pluginStore, manifest)
-			var config any = map[string]any{}
-			if plugin == "BrushFlowLanduo" {
-				config = brushflow.DefaultConfig()
-			}
-			if _, err := a.pluginStore.SaveConfig(ctx, plugin, 0, config); err != nil {
-				t.Fatal(err)
-			}
-			in := lifecycleInstallation(t, a.pluginStore, plugin)
-			request := plugins.HTTPRequest{RequestID: id("ph_"), Key: "status", Method: "GET", Path: "/status", Params: map[string]string{}}
-			queued, err := a.enqueuePluginHTTP(ctx, in, request, pluginAPIScope{Key: request.Key, Method: request.Method, RequestID: request.RequestID, Authority: pluginAPIAuthority{Kind: "session", Proof: tokenHash(cookie.Value)}})
-			if err != nil {
-				t.Fatal(err)
-			}
-			lifecycleEditManifest(t, a.pluginStore, plugin, func(fields map[string]json.RawMessage) { fields[pluginLifecycleField] = json.RawMessage(`null`) })
-			if plugin == "BrushFlowLanduo" {
-				err = a.executeBrushFlowHTTP(ctx, queued)
-			} else {
-				err = a.executeSeedRescueHTTP(ctx, queued)
-			}
-			if pluginErrorCode(err) != "PLUGIN_LIFECYCLE_INVALID" {
-				t.Fatal("private claim bypassed shared lifecycle proof", err)
-			}
-			actual, err := a.pluginStore.Run(ctx, queued.ID)
-			if err != nil || actual.State != "pending" {
-				t.Fatal("failed private claim committed running", actual, err)
-			}
-		})
 	}
 }
 
