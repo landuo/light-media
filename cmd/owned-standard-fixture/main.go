@@ -16,6 +16,10 @@ import (
 // fixtureVersion is set only when building a distinct owned test artifact.
 var fixtureVersion = "1.0"
 
+// A link-time test-only switch keeps the ordinary fixture manifest unchanged.
+// Each variant is a genuine executable whose handshake declares its methods.
+var fixtureDashboardMethods = ""
+
 type object struct {
 	mu          sync.Mutex
 	initCount   int
@@ -30,13 +34,26 @@ type object struct {
 }
 
 func manifest() plugins.Manifest {
-	return plugins.Manifest{
+	m := plugins.Manifest{
 		SchemaVersion: 1, PluginID: "OwnedStandardFixture", Name: "Owned standard fixture", Version: fixtureVersion,
 		Runtime: "go-executable", Entry: "owned-standard-fixture", HostAPIMin: 1, HostAPIMax: 1,
 		Methods:      []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "close", "stop_service", "stop", "snapshot", "tick", "command", "event", "http"},
 		Capabilities: plugins.BaseMethods(), Events: []string{"owned.standard"}, HasPage: true,
 		APIs: []plugins.HTTPAPI{{Key: "echo", Path: "/echo", Methods: []string{"GET"}, Auth: "apikey"}},
 	}
+	if fixtureDashboardMethods == "multi" || fixtureDashboardMethods == "none" {
+		m.Methods = append(m.Methods, "get_dashboard_meta")
+	}
+	if fixtureDashboardMethods == "none" {
+		methods := make([]string, 0, len(m.Methods))
+		for _, method := range m.Methods {
+			if method != "get_dashboard" {
+				methods = append(methods, method)
+			}
+		}
+		m.Methods = methods
+	}
+	return m
 }
 
 func rawValue(raw json.RawMessage) json.RawMessage {
@@ -96,11 +113,13 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 	}
 	config = rawValue(config)
 	var controls struct {
-		RenderMode  json.RawMessage `json:"render_mode"`
-		Sidebar     json.RawMessage `json:"sidebar_nav"`
-		FailState   bool            `json:"fail_state"`
-		FailRender  bool            `json:"fail_render"`
-		FailSidebar bool            `json:"fail_sidebar"`
+		RenderMode        json.RawMessage `json:"render_mode"`
+		Sidebar           json.RawMessage `json:"sidebar_nav"`
+		FailState         bool            `json:"fail_state"`
+		FailRender        bool            `json:"fail_render"`
+		FailSidebar       bool            `json:"fail_sidebar"`
+		DashboardMeta     json.RawMessage `json:"dashboard_meta"`
+		FailDashboardMeta bool            `json:"fail_dashboard_meta"`
 	}
 	if err := json.Unmarshal(config, &controls); err != nil {
 		return nil, err
@@ -158,6 +177,11 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		return json.RawMessage(`[[{"component":"VSwitch","props":{"model":"enabled","label":"Enabled"}},{"component":"VTextField","props":{"model":"key","label":"Owned value"}}],{"enabled":false,"key":"form-default"}]`), nil
 	case "get_page":
 		return json.RawMessage(`[{"component":"VCard","text":"Owned standard page"}]`), nil
+	case "get_dashboard_meta":
+		if controls.FailDashboardMeta {
+			return nil, errors.New("owned dashboard metadata failure")
+		}
+		return rawValue(controls.DashboardMeta), nil
 	case "get_dashboard":
 		return json.RawMessage(`[{},{},[{"component":"VCard","text":"Owned standard dashboard"}]]`), nil
 	case "get_sidebar_nav":

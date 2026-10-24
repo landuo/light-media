@@ -40,6 +40,9 @@ func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path s
 	if path == "market" && r.Method == http.MethodGet {
 		return a.pluginCards(r.Context(), true)
 	}
+	if path == "dashboard/meta" && r.Method == http.MethodGet {
+		return a.originalPluginDashboardMetadata(r.Context()), nil
+	}
 	if path == "navigation" && r.Method == http.MethodGet {
 		return a.pluginNavigation(r.Context())
 	}

@@ -1,0 +1,110 @@
+{
+  "base_commit": "026591a5d5457461c2b5502621f6e938bfe2c54f",
+  "scope": "two production files only; owned fixture and focused tests; no restored plugin implementations",
+  "baseline": {
+    "exit": 1,
+    "actual_status": 404,
+    "code": "NOT_FOUND",
+    "test": "TestOriginalDashboardMetadataHTTPEmptyAuthAndMethod",
+    "jsonl_sha256": "4fb3d347621d69c1daba127b7953a5944a89358696dc6f59f089b1c2003da446"
+  },
+  "corrected_main026": [
+    {
+      "mode": "normal",
+      "counts": {
+        "pass": 6
+      },
+      "roots": [
+        [
+          "TestOriginalDashboardMetadataActualSDKCustomCloneName",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataHTTPEmptyAuthAndMethod",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKDefaultAndDisabled",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKMissingDashboardBeforeState",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKMultiAndFalseyContract",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKExceptionsAndInsertionOrder",
+          "pass"
+        ]
+      ],
+      "sha256": "a50eddc744e796c62b1c92744f8985258aa5711f0258e4045f2444cfe93ff621"
+    },
+    {
+      "mode": "race",
+      "counts": {
+        "pass": 6
+      },
+      "roots": [
+        [
+          "TestOriginalDashboardMetadataActualSDKCustomCloneName",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataHTTPEmptyAuthAndMethod",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKDefaultAndDisabled",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKMissingDashboardBeforeState",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKMultiAndFalseyContract",
+          "pass"
+        ],
+        [
+          "TestOriginalDashboardMetadataActualSDKExceptionsAndInsertionOrder",
+          "pass"
+        ]
+      ],
+      "sha256": "c977a8eae680f477176e3223083519f7b9db8750d9541227c56d1bd2ce28c214"
+    }
+  ],
+  "browser": {
+    "report_sha256": "8aad32a297e3cb8fabb2055ca92f51923258e173b42751fbc64e722311fbbd15",
+    "production_component_sha256": "70178c53a99716f7b64d4b4f5292e04ade43456291a43bf3888a8b29b7b8af5e",
+    "bridge_binary_sha256": "479e670fa1a4dfa15a94cc432dc22f4be8a9e84684abed83edfb0fd8458ada7c",
+    "ui_tree_sha256": "0686fe73f73b033ec3bb205af7cf24e4b72c99f86b4ae322a4b8196fa2075dfb",
+    "passed_ui": [
+      "Install real SystemProcess1.1 from marketplace",
+      "Enable SystemProcess and save with refresh0",
+      "Click top Plugin Dashboard navigation",
+      "Open dashboard settings; real SystemProcess metadata candidate visible",
+      "Select candidate then close without save; reopen remains unselected",
+      "Select and save; actual process table and owned PID3420 bridge.test row render",
+      "Browser reload preserves dashboard display and selected state",
+      "Deselect and save hides dashboard; browser reload remains empty and selection false",
+      "Select and save again restores actual table and owned row"
+    ],
+    "limitations": [
+      "Production login/session shell not tested",
+      "MPServerStatus networking/dashboard not in scope",
+      "Automatic timed refresh not tested because refresh0 was explicitly selected; browser reload and live re-render tested",
+      "Layout editing/resizing and responsive breakpoints not in this requested scope"
+    ],
+    "normal_shutdown": true
+  },
+  "known_separate_restoration_gate": {
+    "ordinary_pass": 846,
+    "ordinary_fail": 1,
+    "ordinary_skip": 2,
+    "failed_root": "TestUISubscriptionCloseWaitsActualAsyncReceiptBeforeDatabaseClosure",
+    "status": "investigation open; not counted as hotfix gate success"
+  }
+}
