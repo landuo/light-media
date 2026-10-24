@@ -16,6 +16,7 @@ import (
 // native owner operation or relaxes an existing compiled business version pin.
 const pluginPureSDKContract = "light-media.sdk-pure/v1"
 const pluginBaseSDKContract = "light-media.sdk-base/v1"
+const pluginResourcesSDKContract = "light-media.sdk-resources/v1"
 
 type pluginImplementation struct {
 	Manifest     plugins.Manifest
@@ -29,11 +30,11 @@ func validatePluginArtifactContract(m plugins.Manifest, contract string) error {
 	if err := m.Validate(); err != nil {
 		return err
 	}
-	if contract != pluginPureSDKContract && contract != pluginBaseSDKContract {
+	if contract != pluginPureSDKContract && contract != pluginBaseSDKContract && contract != pluginResourcesSDKContract {
 		return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件制品声明的宿主契约尚不受支持")
 	}
 	for _, capability := range m.Capabilities {
-		if contract != pluginBaseSDKContract || !plugins.IsBaseMethod(capability) {
+		if !originalStandardCapabilityAllowed(contract, capability) {
 			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件宿主能力不属于已知契约")
 		}
 	}

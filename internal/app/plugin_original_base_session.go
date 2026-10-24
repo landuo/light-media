@@ -19,7 +19,7 @@ type originalBaseStopCall struct {
 // Each SDK exchange gets a new authority closure. Neither a plugin's stored
 // callback nor a replacement object can borrow this phase after it closes.
 func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context, phase string, fallback plugins.HostHandler) (plugins.HostHandler, func()) {
-	if p.hostContract != pluginBaseSDKContract {
+	if p.hostContract != pluginBaseSDKContract && p.hostContract != pluginResourcesSDKContract {
 		return fallback, func() {}
 	}
 	var active atomic.Bool
@@ -61,9 +61,13 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		return nil
 	}
 	return func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
-		if !plugins.IsBaseMethod(method) || !slices.Contains(p.manifest.Capabilities, method) {
+		if !originalStandardCapabilityAllowed(p.hostContract, method) || !slices.Contains(p.manifest.Capabilities, method) {
 			return nil, bad("PLUGIN_CAPABILITY_DENIED", "公共宿主契约未声明该方法")
 		}
-		return p.app.pluginOriginalBaseHost(ctx, originalBaseCallScope{installation: p.installation, validate: validate}, identity, method, raw)
+		scope := originalBaseCallScope{installation: p.installation, validate: validate}
+		if plugins.IsBaseMethod(method) {
+			return p.app.pluginOriginalBaseHost(ctx, scope, identity, method, raw)
+		}
+		return p.app.pluginOriginalResourceHost(ctx, scope, identity, method, raw)
 	}, func() { active.Store(false) }
 }

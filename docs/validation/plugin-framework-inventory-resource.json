@@ -1,0 +1,93 @@
+{
+  "base_commit": "5b7f82a2aac745687df381023ab28d5ebf0e0ec9",
+  "source_manifest_sha256": "04183b5cabf2a26c972378696e189cf3f3e09e5725042f894de7c07fb99539fb",
+  "source_paths": 5458,
+  "drift": [],
+  "gates": {
+    "normal": {
+      "exit": 0,
+      "top_level_pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "jsonl_sha256": "4c41cc88766e733ba2759c7d8aa50ab063f01b6b5684912bd02572c544601393"
+    },
+    "race": {
+      "exit": 0,
+      "top_level_pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "jsonl_sha256": "a5f74f3d86061130f81f3757fff739e37924402d2cf62d3f8fd1941545ae08b0"
+    },
+    "regression-v2-normal": {
+      "exit": 0,
+      "top_level_pass": 17,
+      "fail": 0,
+      "skip": 0,
+      "jsonl_sha256": "5fdf8a2b822b601e2905154d9eff4cb52ddf52882be6b03773d674153cb9fce3"
+    },
+    "regression-v3-race": {
+      "exit": 0,
+      "top_level_pass": 17,
+      "fail": 0,
+      "skip": 0,
+      "jsonl_sha256": "61caf4024069a9e32dad2b393bf537cd937870c4e1e38b21e675143c32385ea8"
+    },
+    "sdk-v3-normal": {
+      "exit": 0,
+      "top_level_pass": 74,
+      "fail": 0,
+      "skip": 0,
+      "jsonl_sha256": "db090d4043adddfa26489b9e0c259d222d4264d01c0afb15931f59ad03a86c0c"
+    },
+    "sdk-v3-race": {
+      "exit": 0,
+      "top_level_pass": 74,
+      "fail": 0,
+      "skip": 0,
+      "jsonl_sha256": "435b8996936e80dc96bf60f6a85e61dbb80737a5d28618d41370d4dce88157f9"
+    }
+  },
+  "vet_exit": 0,
+  "workers": {
+    "normal-allowed": {
+      "sha256": "0cc026438fc6ff6179a3f941bc5fdebe2aba9c980ca94370fee488dbc53bcd35",
+      "race_instrumented": false
+    },
+    "normal-base": {
+      "sha256": "55783baf5ba0e4b18862cd5c69972137f306a56879f3f624c3be1488969ae015",
+      "race_instrumented": false
+    },
+    "normal-denied": {
+      "sha256": "2cfd914c1e18e251592a4939f3ac60bfc8e1e57e9cac8dbf168c9efe97794697",
+      "race_instrumented": false
+    },
+    "normal-module": {
+      "sha256": "2c741529369930547762456e5a5e115eb576df009ac1fc6c10073fba14b63c2e",
+      "race_instrumented": false
+    },
+    "normal-standard": {
+      "sha256": "ecd35ee4a2c02ba39ab9bb5693b8e7d878134ff74a3cfd3b458c168431759c43",
+      "race_instrumented": false
+    },
+    "race-allowed": {
+      "sha256": "22fea5b675faf11430764bfe4a937a4890656f98c00d7027677ea7b02dff8a23",
+      "race_instrumented": true
+    },
+    "race-base": {
+      "sha256": "db7a6e1ae139b57bfd5646f8982c7c28c3e3cd1605cd6f52273fd2f5a187e7d5",
+      "race_instrumented": true
+    },
+    "race-denied": {
+      "sha256": "7a6c32eed9d657dce00b4cf3386b2f9da32e95265ff72575f2867de04b24c381",
+      "race_instrumented": true
+    },
+    "race-module": {
+      "sha256": "e4ca2fa710d58f0f613436efe3756bf61feace80ec45feda4d3577f8cbfc756d",
+      "race_instrumented": true
+    },
+    "race-standard": {
+      "sha256": "82f76bc8360c30eacc96d66cebc85ba7084b6e37c2fafe8efc3cc40863d5b273",
+      "race_instrumented": true
+    }
+  }
+}

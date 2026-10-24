@@ -110,7 +110,7 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 	}
 	if object != nil {
 		config, err := a.pluginStore.Config(ctx, instance)
-		if object.hostContract == pluginBaseSDKContract {
+		if object.hostContract == pluginBaseSDKContract || object.hostContract == pluginResourcesSDKContract {
 			var present bool
 			config.Value, present, err = a.readOriginalBaseConfigForInit(ctx, instance)
 			if err == nil && !present {
