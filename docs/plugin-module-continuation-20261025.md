@@ -12,13 +12,13 @@
 
 唯一状态对照表为 [plugin-module-parity-matrix.md](plugin-module-parity-matrix.md)，以 50 节为索引；旧 G01–G28 记录只作历史证据。混合内容分开核实，不能据旧测试通过直接升级为验收通过。恢复上下文先读本节及唯一对照表，然后继续当前项。
 
-工作树 `/Users/accidia/projects/light-media`，分支 `dev/plugins-continuation`，基线 `7fc62635bc4a8f37068a14c2680161df7ccfb5ed`。本轮开始时所有已跟踪改动保存于 `work/plugin-module-scoped-20261025/before.patch`，未跟踪文件保存于同目录 `before-untracked.tar.gz`。不覆盖旧改动，不修改原系统。提交、推送、合并、部署结果分别如实报告；本轮没有新的发布授权。
+工作树 `/Users/accidia/projects/light-media`，当前分支 `main`。平台开发起点为 `dev/plugins-continuation@7fc62635bc4a8f37068a14c2680161df7ccfb5ed`；当时改动快照在 `work/plugin-module-scoped-20261025/`。本次发布前另存完整已跟踪/未跟踪快照于 `work/deploy-main-20261029/`。用户已于2026-10-29明确授权提交/推送main、删除远程非main分支和更新NAS；产品提交及实际交付见上方发布记录，不修改旧MoviePilot系统。
 
 范围内状态仅用：待实现、已实现待验证、验收通过、阻塞。每项验收通过必须同时绑定原版源码位置、目标位置、实际验证证据；测试需覆盖真实宿主入口、浏览器、失败、重启和分身隔离。仅编译、接口存在、单测或 HTTP 200 均不构成完成。
 
 ## 当前状态（2026-10-29）
 
-46/46；约定范围内的插件模块迁移完成。22/44/45/46按用户要求排除；普通事件、命令、调度与47身份provider保留。第43项197方法/231直调+1间接调用有完整源码→目标→差异/证据映射；第50项52清单2854份记录、315源码位置、595份旧证据及当前编译输入均核验通过。实机/回放/合成/触屏模拟分型，原失败和必要适配保留，无未验证项、未解释差异或阻塞。最终报告validation/plugin-module-final-20261029.json；最后Linux/IAB93证据绑定main73add6db，556前端通过。已停止测试进程/隧道并清理本地291、远端241个构建制品和临时数据。分支dev/plugins-continuation、HEAD7fc62635；成果仍为本地未提交改动，未推送、未合并、未部署，不能算main交付。
+46/46；约定范围内的插件模块迁移完成。22/44/45/46按用户要求排除；普通事件、命令、调度与47身份provider保留。第43项197方法/231直调+1间接调用有完整源码→目标→差异/证据映射；第50项52清单2854份记录、315源码位置、595份旧证据及当前编译输入均核验通过。实机/回放/合成/触屏模拟分型，原失败和必要适配保留，无未验证项、未解释差异或阻塞。最终报告validation/plugin-module-final-20261029.json；最后Linux/IAB93证据绑定main73add6db，556前端通过。已停止测试进程/隧道并清理本地291、远端241个构建制品和临时数据。2026-10-29已按新授权提交平台962fdf35并合入main，产品发布提交b1d9381e已推送；NAS现有light-media容器已用同提交构建的Linux程序更新，版本0.4.19、healthy。前端556项、SDK/编译及HelloTest宿主链回归通过，生产配置/密钥/7个旧插件记录保持。远程21个非main分支已删除且提交在本地refs/archive/remote-deletion-20261029/保留。完整部署证据、旧业务插件适配边界及浏览器登录页验证范围见 [发布记录](plugin-module-main-publish-20261029.json)。
 
 ## 2026-10-26 范围更新
 
@@ -66,9 +66,11 @@ platform8已封存并完成以下增量实机验收：main54e6c370…、shared t
 
 当前仍40/46，不因部分SDK门增加整项。root已接原生命名、真实overwrite registry（替换旧23插件白名单）、写入前intercept、提交后transfer.complete/failed及分离字幕/音轨事件、本地StorageBase具体实例方法；ParsePath复用services固定源实现。34场景17.227s PASS（12rename/8intercept/8真实文件历史/6存储provider），真返回成功却无文件及篡改复制字节均失败，源保留。20+7固定源码oracle与初红harness保留。latest顺序/provider list/delete已按固定源3案例及9真实SDK/文件案例通过6.146s；新main54e6c370实机2.10s和IAB45真实硬链接/同inode+哈希/历史/分身/冷启258.53s通过，不回算旧platform7。详细映射/必要适配/原始SHA见validation/plugin-transfer-events-20261027/result.json。Settings辅助识别普通开关与Catalog季集无id key已补，待下版前端验收。
 
-### 2026-10-28 当前续接点
+### 2026-10-29 当前续接点
 
-46/46；约定范围内的插件模块迁移完成。22/44/45/46按用户要求排除；普通事件、命令、调度与47身份provider保留。第43项197方法/231直调+1间接调用有完整源码→目标→差异/证据映射；第50项52清单2854份记录、315源码位置、595份旧证据及当前编译输入均核验通过。实机/回放/合成/触屏模拟分型，原失败和必要适配保留，无未验证项、未解释差异或阻塞。最终报告validation/plugin-module-final-20261029.json；最后Linux/IAB93证据绑定main73add6db，556前端通过。已停止测试进程/隧道并清理本地291、远端241个构建制品和临时数据。分支dev/plugins-continuation、HEAD7fc62635；成果仍为本地未提交改动，未推送、未合并、未部署，不能算main交付。
+46/46；约定范围内的插件模块迁移完成。22/44/45/46按用户要求排除；普通事件、命令、调度与47身份provider保留。第43项197方法/231直调+1间接调用有完整源码→目标→差异/证据映射；第50项52清单2854份记录、315源码位置、595份旧证据及当前编译输入均核验通过。实机/回放/合成/触屏模拟分型，原失败和必要适配保留，无未验证项、未解释差异或阻塞。最终报告validation/plugin-module-final-20261029.json；最后Linux/IAB93证据绑定main73add6db，556前端通过。已停止测试进程/隧道并清理本地291、远端241个构建制品和临时数据。2026-10-29已按新授权提交平台962fdf35并合入main，产品发布提交b1d9381e已推送；NAS现有light-media容器已用同提交构建的Linux程序更新，版本0.4.19、healthy。前端556项、SDK/编译及HelloTest宿主链回归通过，生产配置/密钥/7个旧插件记录保持。远程21个非main分支已删除且提交在本地refs/archive/remote-deletion-20261029/保留。完整部署证据、旧业务插件适配边界及浏览器登录页验证范围见 [发布记录](plugin-module-main-publish-20261029.json)。
+
+以下各增量段落为当时执行过程；其中“未提交/未推送/未部署”和剩余项只描述该历史阶段，不替代上述当前交付状态。
 
 main45r2 电影蓝光目录刮削增量已验收（42/46不变）：4 条固定 MediaChain AST 实跑与6个真实SDK目录/SQL故障/冷恢复/外来成员场景，关联48.999s、race46.464s通过。main533d5e1/testb7ab2463，3731/4214编译输入稳定；Linux1.87s、IAB85门210.14s通过，实际62B NFO/19B STREAM历史、取消冷启重试、再次冷启零整理/NFO重放、删除目标连同旁车且源保留。初红目录检查、测试generation、缺夹具环境与Linux未配对file_list均保留；主程序最后两次Linux相同。详validation/plugin-transfer-bluray-scrape-20261028.json。IAB85/34465及owned服务/临时目录已清理。下一项：存储name/path映射、late-list异常新建空TransferInfo（控制provider顺序）、TV recursive=False多余list；之后197/199/81普通宿主最终审计。无外部阻塞，未提交推送部署。
 

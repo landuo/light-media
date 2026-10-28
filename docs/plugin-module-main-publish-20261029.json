@@ -1,13 +1,13 @@
 {
   "date": "2026-10-29",
   "authorization": "User explicitly authorized commit/integrate/push main, delete every remote head except main, and update existing NAS light-media container using pushed main.",
-  "phase": "validated_for_main_push",
+  "phase": "deployed_verified",
   "scope": "Accepted46/46 plugin platform and HelloTest example; merge existing main dropdown fixes. Other parallel/plugin business branches are archived locally rather than bulk-integrated.",
   "platform_commit": "962fdf35db72cab4698253b3eb910ce3a52c545c",
   "main_parent": "9af1a461dcf062d39df8bc158fbf832762a6a3d5",
   "remote_platform_not_bulk_merged": {
     "commit": "54ef2baed3d1885efb674f54273542edd9fc7613",
-    "reason": "Parallel older/narrow interface implementations overlap accepted platform; keep verified newer behavior. Complete original commits preserved in refs/archive/pre-main-cleanup-20261029/* before remote deletion."
+    "reason": "Parallel older/narrow interface implementations overlap the accepted platform; the attempted integration was aborted after conflicting SDK/event contracts failed compilation. Only the accepted current platform and existing main UI fixes were integrated. All original remote heads remain in local archival refs; no other business plugin branch was bulk-integrated."
   },
   "checks": {
     "frontend": {
@@ -18,7 +18,13 @@
     "sdk": "internal/plugins21.389s, artifacts2.065s, schedule0.942s, networkproxy1.358s passed",
     "compile": "go test ./... -run ^$ passed",
     "web_build": "vue-tsc and production build passed",
-    "sdk_initial_failure": "macOS /var symlink test roots rejected; rerun with canonical workspace TMPDIR passed; no guard weakened."
+    "sdk_initial_failure": "macOS /var symlink test roots rejected; rerun with canonical workspace TMPDIR passed; no guard weakened.",
+    "hello_example": {
+      "result": "passed",
+      "scenario_seconds": 1.83,
+      "package_seconds": 4.711,
+      "coverage": "Actual App/router/Go worker install, configuration, invocation, clone isolation, cold recovery, uninstall and reset. Isolated test data; not production NAS plugin execution."
+    }
   },
   "nas_before": {
     "host": "192.168.8.129",
@@ -143,12 +149,84 @@
       "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/production/v0.4.15"
     }
   ],
-  "remaining": [
-    "push main",
-    "verify/build exact pushed source",
-    "isolated NAS data compatibility check",
-    "backup and update existing light-media",
-    "delete remote non-main heads and verify",
-    "publish deployment result"
-  ]
+  "remaining": [],
+  "complete": true,
+  "source_commit": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+  "build": {
+    "source_commit": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+    "remote_main_at_build": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+    "command": [
+      "go",
+      "build",
+      "-tags",
+      "modernconly",
+      "-buildvcs=false",
+      "-trimpath",
+      "-ldflags=-s -w",
+      "-o",
+      "/Users/accidia/projects/light-media/work/deploy-main-20261029/light-media-server",
+      "./cmd/server"
+    ],
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "sha256": "aff040a489fafc2fdd8b24f438f4496587dd099f029ac5358b675e028cd50c29",
+    "bytes": 47370402,
+    "input_count": 3746,
+    "changed_inputs": [],
+    "seconds": 3.194,
+    "go_build_info": "/Users/accidia/projects/light-media/work/deploy-main-20261029/light-media-server: go1.26.2\n\tpath\tlight-media/cmd/server\n\tmod\tlight-media\t(devel)\t\n\tdep\tgithub.com/andybalholm/brotli\tv1.2.6\th1:ftYnfj6usCp+UGV5kSJ3+chpMQgU+gJf/AxsUQ52REI=\n\tdep\tgithub.com/antchfx/htmlquery\tv1.3.7\th1:KCUklE1EO/xm6iS3CWx6iatFlcnENBk4I4UYa2pBmLU=\n\tdep\tgithub.com/antchfx/xpath\tv1.3.9\th1:muXJSod6jRzhsiUjvduNSxsRSptFZ2GOJ1oMD1QkPSA=\n\tdep\tgithub.com/aquasecurity/go-pep440-version\tv0.0.2-0.20260224065243-f9bba28c51a4\th1:QC8nsF3LvAGHUxkr5bvcekaUQPE9Zk4jyMugyg5Fxy0=\n\tdep\tgithub.com/aquasecurity/go-version\tv0.0.1\th1:4cNl516agK0TCn5F7mmYN+xVs1E3S45LkgZk3cbaW2E=\n\tdep\tgithub.com/dlclark/regexp2/v2\tv2.9.0\th1:kKj+BlRuUhZzJk8B3yOBxWKxDFnx2Ilq4e7KNdq/Mxk=\n\tdep\tgithub.com/dustin/go-humanize\tv1.0.1\th1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=\n\tdep\tgithub.com/golang/groupcache\tv0.0.0-20241129210726-2c02b8208cf8\th1:f+oWsMOmNPc8JmEHVZIycC7hBoQxHH9pNKQORJNozsQ=\n\tdep\tgithub.com/google/uuid\tv1.6.0\th1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=\n\tdep\tgithub.com/json-iterator/go\tv1.1.12\th1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=\n\tdep\tgithub.com/klauspost/compress\tv1.20.3\th1:zWNoFqq/lSuYQRim3dUXlXeA0IqwuZGicdG5ZTfY5j4=\n\tdep\tgithub.com/markusmobius/go-dateparser\tv1.4.7\n\t=>\t./third_party/go-dateparser\t(devel)\t\n\t\n\tdep\tgithub.com/markusmobius/go-dateutil/v2\tv2.9.1\th1:5g4V8s1vg/EAmhu/g14VQcHgocNf8H8VD4IzOfZg+1Y=\n\tdep\tgithub.com/modern-go/concurrent\tv0.0.0-20180306012644-bacd9c7ef1dd\th1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=\n\tdep\tgithub.com/modern-go/reflect2\tv1.0.2\th1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=\n\tdep\tgithub.com/pkg/errors\tv0.9.1\th1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=\n\tdep\tgithub.com/remyoudompheng/bigfft\tv0.0.0-20230129092748-24d4a6f8daec\th1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=\n\tdep\tgithub.com/sirupsen/logrus\tv1.9.3\th1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=\n\tdep\tgo.yaml.in/yaml/v3\tv3.0.5\th1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=\n\tdep\tgolang.org/x/crypto\tv0.58.0\th1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=\n\tdep\tgolang.org/x/exp\tv0.0.0-20260908205506-85c1c2202aba\th1:Ck8QetSgk912qxWLMCKxd0in+aiyBQyDSMae6e/xmpU=\n\tdep\tgolang.org/x/net\tv0.61.0\th1:RR+6j/BTBCrggOLugxa+66R8FvoN6MHlzDlZIbN9YFw=\n\tdep\tgolang.org/x/sys\tv0.49.0\th1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=\n\tdep\tgolang.org/x/text\tv0.43.0\th1:1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=\n\tdep\tgolang.org/x/xerrors\tv0.0.0-20231012003039-104605ab7028\th1:+cNy6SZtPcJQH3LJVLOSmiC7MMxXNOb3PU/VUEz+EhU=\n\tdep\tmodernc.org/libc\tv1.77.1\th1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=\n\tdep\tmodernc.org/mathutil\tv1.7.1\th1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=\n\tdep\tmodernc.org/memory\tv1.12.1\th1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=\n\tdep\tmodernc.org/sqlite\tv1.60.1\th1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-tags=modernconly\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
+  },
+  "git": {
+    "branch": "main",
+    "product_source_pushed": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+    "remote_main_at_deployment": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+    "remote_non_main_branches_deleted": 21,
+    "remote_heads_after_deletion": [
+      "main"
+    ],
+    "archive_namespace": "refs/archive/remote-deletion-20261029/",
+    "local_history_preserved": true,
+    "force_push_used": false,
+    "publication_followup": "The containing documentation/evidence-only commit follows the deployed source commit. Executable/compiler/embed inputs are verified unchanged and the Linux binary is reproduced byte-for-byte; source_commit identifies the actual deployment build."
+  },
+  "nas_preflight": {
+    "result": "safe and normal startup passed",
+    "environment": "Actual NAS Docker, network none, no media mounts; isolated production SQLite backup copy",
+    "protected_data_unchanged": true,
+    "temporary_containers_removed": true,
+    "temporary_data_removed": true
+  },
+  "nas_deployment": {
+    "source_commit": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+    "binary_sha256": "aff040a489fafc2fdd8b24f438f4496587dd099f029ac5358b675e028cd50c29",
+    "previous_binary_sha256": "fc617ab2691df052d16052aae669d71a90b74e4b9f30b6e6f330aaa4301bffcf",
+    "backup_dir": "/vol2/1000/docker/light-media/deployment-backups/main-b1d9381e-20261029",
+    "status": "deployed_verified",
+    "container_before": "1e97919b2cc65be4d0db8fd2be7f12a69c3c6529abf6d4865736099c33970beb",
+    "container_after": "1c47cc9d0e4fe66ea561e202ff68027bdeede038bbd3b742b111f74a9cb65247",
+    "health": "healthy",
+    "elapsed_seconds": 11.614,
+    "protected_data_unchanged": true,
+    "mounts_env_args_unchanged": true,
+    "version": "0.4.19",
+    "url": "http://192.168.8.129:3120/",
+    "other_containers_not_restarted": true,
+    "database_config_administrator_key_and_installed_records_preserved": true,
+    "rollback_performed": false,
+    "release_path": "/vol2/1000/docker/light-media/releases/main-b1d9381e"
+  },
+  "live_checks": {
+    "http": "Root and /light-media/ index plus 24 referenced JS/CSS assets per prefix match committed web/dist bytes; existing administrator remains configured; anonymous plugin endpoint returns 401.",
+    "browser": "Actual existing Chrome tab reloaded and login screen rendered. Screenshot and DOM archived. No matching light-media/光影 credentials in Bitwarden; no login attempted.",
+    "boundary": "NAS authenticated feature reacceptance is not claimed. Platform acceptance remains bound to the earlier isolated Linux/browser evidence; this record verifies deployment and persistence."
+  },
+  "limitations": [
+    "The 7 preexisting native business plugin installations and configurations are preserved; their adaptation to the standard Go worker platform is outside this release. Their business behavior is not claimed working.",
+    "MoviePilot old service, other containers and site/downloader/media global configuration were not modified."
+  ],
+  "evidence_manifest": "testdata/plugin-module-main-publish-20261029/manifest.json"
 }

@@ -1,0 +1,21 @@
+{
+  "release_source_commit": "b1d9381ebaa41d03bd33d8af49bef968fa99025a",
+  "verification": "After documentation/evidence update: all original compiler/embed inputs unchanged and rebuilt Linux binary matches deployed SHA exactly.",
+  "input_count": 3746,
+  "changed_inputs": [],
+  "binary_sha256": "aff040a489fafc2fdd8b24f438f4496587dd099f029ac5358b675e028cd50c29",
+  "seconds": 0.17,
+  "command": [
+    "go",
+    "build",
+    "-tags",
+    "modernconly",
+    "-buildvcs=false",
+    "-trimpath",
+    "-ldflags=-s -w",
+    "-o",
+    "/Users/accidia/projects/light-media/work/deploy-main-20261029/light-media-server",
+    "./cmd/server"
+  ],
+  "product_changes_in_followup": false
+}
