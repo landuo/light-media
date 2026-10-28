@@ -220,9 +220,12 @@
     "release_path": "/vol2/1000/docker/light-media/releases/main-b1d9381e"
   },
   "live_checks": {
-    "http": "Root and /light-media/ index plus 24 referenced JS/CSS assets per prefix match committed web/dist bytes; existing administrator remains configured; anonymous plugin endpoint returns 401.",
+    "http": "Root and /light-media/ index plus 25 referenced JS/CSS assets per prefix match committed web/dist bytes; existing administrator remains configured; anonymous plugin endpoint returns 401.",
     "browser": "Actual existing Chrome tab reloaded and login screen rendered. Screenshot and DOM archived. No matching light-media/光影 credentials in Bitwarden; no login attempted.",
-    "boundary": "NAS authenticated feature reacceptance is not claimed. Platform acceptance remains bound to the earlier isolated Linux/browser evidence; this record verifies deployment and persistence."
+    "boundary": "NAS authenticated feature reacceptance is not claimed. Platform acceptance remains bound to the earlier isolated Linux/browser evidence; this record verifies deployment and persistence.",
+    "assets_per_prefix": 25,
+    "final_nas_probe": "testdata/plugin-module-main-publish-20261029/nas-final-check.json",
+    "other_containers_note": "At upgrade all three observed non-target containers retained PID/StartedAt. The later final read-only probe still finds MoviePilot and qb unchanged, but brushflow-promotion-guard is absent; this deployment never targeted it. Only light-media was stopped/recreated."
   },
   "limitations": [
     "The 7 preexisting native business plugin installations and configurations are preserved; their adaptation to the standard Go worker platform is outside this release. Their business behavior is not claimed working.",

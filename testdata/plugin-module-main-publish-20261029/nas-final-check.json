@@ -1,0 +1,25 @@
+{
+  "container": "light-media",
+  "id": "1c47cc9d0e4fe66ea561e202ff68027bdeede038bbd3b742b111f74a9cb65247",
+  "health": "healthy",
+  "binary_sha256": "aff040a489fafc2fdd8b24f438f4496587dd099f029ac5358b675e028cd50c29",
+  "other_containers_final_probe": {
+    "moviepilot": {
+      "present": true,
+      "unchanged_since_upgrade": true
+    },
+    "qb": {
+      "present": true,
+      "unchanged_since_upgrade": true
+    },
+    "brushflow-promotion-guard": {
+      "present": false,
+      "upgrade_check": "Original upgrade verified unchanged; final read-only probe finds no such container. This deployment did not target that container."
+    }
+  },
+  "staging_data_removed": true,
+  "healthz": {
+    "status": "ok",
+    "version": "0.4.19"
+  }
+}
