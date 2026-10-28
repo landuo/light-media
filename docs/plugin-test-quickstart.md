@@ -1,6 +1,6 @@
 # 新建、安装和使用一个 Go 测试插件
 
-适用于 `dev/plugins-continuation` 重构后的插件平台。该功能尚未提交或部署到 main；旧部署不能直接按本文验证。
+适用于包含完整 Go 插件平台与 HelloTest 示例的版本。main 发布及 NAS 部署状态见[发布记录](plugin-module-main-publish-20261029.json)；旧部署不能直接按本文验证。
 
 完整示例在 [`cmd/hello-test/main.go`](../cmd/hello-test/main.go)，打包工具在 [`examples/hello-test/build.mjs`](../examples/hello-test/build.mjs)。示例没有定时任务：只在点击“运行一次”时保存一句话并增加计数。
 

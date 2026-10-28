@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-25",
+  "production_source_commit": "238bc01df1c44e605e22de1624f297e94000239f",
+  "main_merge_commit": "e2897579c53552d4b10bcb32d4049953480f9097",
+  "main_base": "5b7f82a2aac745687df381023ab28d5ebf0e0ec9",
+  "product_source_files_changed": [
+    "internal/app/runtime.go",
+    "web/package-lock.json",
+    "web/package.json",
+    "web/src/forms.css"
+  ],
+  "production_frontend_tests": {
+    "passed": 202,
+    "failed": 0
+  },
+  "production_frontend_build": "passed",
+  "production_go_web_embed_test": "passed",
+  "production_linux_build_and_isolated_NAS_startup": "passed",
+  "production_live_dropdown_geometry": "no horizontal overflow for both multi and single menus",
+  "main_frontend_build": "passed",
+  "main_frontend_tests": {
+    "tests": 364,
+    "passed": 348,
+    "failed": 16
+  },
+  "main_baseline_reproduction": {
+    "ref": "5b7f82a2aac745687df381023ab28d5ebf0e0ec9",
+    "files": [
+      "plugin-action-feedback.test.mjs",
+      "plugin-clone.test.mjs"
+    ],
+    "failed_names_identical": true,
+    "failures": [
+      "configuration template with unavailable notice and disabled save compiles",
+      "pending update review has an actionable settings entry scoped to the exact clone",
+      "retained clone restore action is cold and uses the exact instance snapshot",
+      "review-required migration points to current settings without claiming execution",
+      "unavailable card rejects restore-reviewed without HTTP or dialogs",
+      "unavailable card rejects update without HTTP or dialogs",
+      "unavailable card template disables mutations but keeps source link and uninstall",
+      "unavailable direct restoreReviewed rejects bypass with fallback reason",
+      "unavailable retained version cannot fall through to ordinary install",
+      "update confirmation sends the captured instance snapshot and does not claim initialization passed",
+      "update menu exists only for an executable compiled offer, not a display version",
+      "update: HTTP 200 business failure is shown without success or navigation",
+      "update: supported success {\"initialization\":{\"id\":\"legacy\"}} preserves request identity",
+      "update: supported success {\"review_pending\":true} preserves request identity",
+      "update: supported success {\"success\":true} preserves request identity",
+      "update: supported success {} preserves request identity"
+    ]
+  },
+  "scope_note": "Main-only plugin test failures reproduce on the unmodified remote main; the independently deployed production baseline passed all 202 frontend tests. No in-progress work from the original plugin worktree was deployed."
+}

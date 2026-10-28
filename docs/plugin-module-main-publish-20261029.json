@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-29",
+  "authorization": "User explicitly authorized commit/integrate/push main, delete every remote head except main, and update existing NAS light-media container using pushed main.",
+  "phase": "validated_for_main_push",
+  "scope": "Accepted46/46 plugin platform and HelloTest example; merge existing main dropdown fixes. Other parallel/plugin business branches are archived locally rather than bulk-integrated.",
+  "platform_commit": "962fdf35db72cab4698253b3eb910ce3a52c545c",
+  "main_parent": "9af1a461dcf062d39df8bc158fbf832762a6a3d5",
+  "remote_platform_not_bulk_merged": {
+    "commit": "54ef2baed3d1885efb674f54273542edd9fc7613",
+    "reason": "Parallel older/narrow interface implementations overlap accepted platform; keep verified newer behavior. Complete original commits preserved in refs/archive/pre-main-cleanup-20261029/* before remote deletion."
+  },
+  "checks": {
+    "frontend": {
+      "pass": 556,
+      "fail": 0,
+      "skip": 0
+    },
+    "sdk": "internal/plugins21.389s, artifacts2.065s, schedule0.942s, networkproxy1.358s passed",
+    "compile": "go test ./... -run ^$ passed",
+    "web_build": "vue-tsc and production build passed",
+    "sdk_initial_failure": "macOS /var symlink test roots rejected; rerun with canonical workspace TMPDIR passed; no guard weakened."
+  },
+  "nas_before": {
+    "host": "192.168.8.129",
+    "container": "light-media",
+    "image": "alpine:3.22",
+    "binary": "/vol2/1000/docker/light-media/light-media-server",
+    "data": "/vol2/1000/docker/light-media/data",
+    "compose": "/vol2/1000/docker/light-media/compose.yaml",
+    "binary_sha256": "fc617ab2691df052d16052aae669d71a90b74e4b9f30b6e6f330aaa4301bffcf",
+    "running_jobs": 0,
+    "existing_installed_plugins": 7
+  },
+  "branch_archives": [
+    {
+      "remote_branch": "codex/site-52pt-pttime",
+      "commit": "06cb53d70bcaf2cc839ded841452033738f1e300",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/codex/site-52pt-pttime"
+    },
+    {
+      "remote_branch": "codex/site-data-rousi",
+      "commit": "cb9551bcf2facd9a7b3f9d147dba0df70018b0ea",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/codex/site-data-rousi"
+    },
+    {
+      "remote_branch": "codex/site-management-statistics-icons",
+      "commit": "fdbaa3115f3ef02b5289ca27f6c62640582a4396",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/codex/site-management-statistics-icons"
+    },
+    {
+      "remote_branch": "dev/plugins-accepted-primitives-20261026",
+      "commit": "3e8c14697734123a4fbaa3745f64b63691d3da2f",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/dev/plugins-accepted-primitives-20261026"
+    },
+    {
+      "remote_branch": "dev/plugins-continuation",
+      "commit": "54ef2baed3d1885efb674f54273542edd9fc7613",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/dev/plugins-continuation"
+    },
+    {
+      "remote_branch": "dev/ui",
+      "commit": "9c4bed4e577fc86aefa3305a3d5c69cad371cc11",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/dev/ui"
+    },
+    {
+      "remote_branch": "fix/dropdown-menu-overflow",
+      "commit": "064b35fda8d644cbbf4acbd7ddc82e567879fd12",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/fix/dropdown-menu-overflow"
+    },
+    {
+      "remote_branch": "main",
+      "commit": "9af1a461dcf062d39df8bc158fbf832762a6a3d5",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/main"
+    },
+    {
+      "remote_branch": "plugins/auto-backup",
+      "commit": "3325238fe58400456d0aceb244b7bebb9c093efa",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/auto-backup"
+    },
+    {
+      "remote_branch": "plugins/auto-sign-in",
+      "commit": "c06b21bde40d253fdedead98410513c52d6f05a8",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/auto-sign-in"
+    },
+    {
+      "remote_branch": "plugins/brush-flow-landuo",
+      "commit": "e5ee0ad043243b9c0dbf944ba90b7b1fe0e84733",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/brush-flow-landuo"
+    },
+    {
+      "remote_branch": "plugins/brush-flow-landuo-standard",
+      "commit": "e1db495ff238fe51eb017d752f34f54880eef3ee",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/brush-flow-landuo-standard"
+    },
+    {
+      "remote_branch": "plugins/framework-lifecycle",
+      "commit": "e1fd711e6e1bb26d9f36c893c56c6f0196eb99eb",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/framework-lifecycle"
+    },
+    {
+      "remote_branch": "plugins/iyuu-auto-seed",
+      "commit": "61cc7d5c3823bf3615321fcc00cc13b760c37dfa",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/iyuu-auto-seed"
+    },
+    {
+      "remote_branch": "plugins/merge-message-notify",
+      "commit": "c5c4d9f1d61d204d96de362bf7e790cffc3bbd41",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/merge-message-notify"
+    },
+    {
+      "remote_branch": "plugins/remove-link",
+      "commit": "f68f45e0fb75dc3ad6e2136910097684fc5919f4",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/remove-link"
+    },
+    {
+      "remote_branch": "plugins/shared-renderer",
+      "commit": "026591a5d5457461c2b5502621f6e938bfe2c54f",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/shared-renderer"
+    },
+    {
+      "remote_branch": "plugins/standard-category-editor",
+      "commit": "026591a5d5457461c2b5502621f6e938bfe2c54f",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/standard-category-editor"
+    },
+    {
+      "remote_branch": "plugins/standard-mp-server-status",
+      "commit": "026591a5d5457461c2b5502621f6e938bfe2c54f",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/standard-mp-server-status"
+    },
+    {
+      "remote_branch": "plugins/standard-system-process",
+      "commit": "026591a5d5457461c2b5502621f6e938bfe2c54f",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/standard-system-process"
+    },
+    {
+      "remote_branch": "plugins/subscribe-group",
+      "commit": "78c783a0e117c74fdb760c1573476fdd5f96a2c3",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/plugins/subscribe-group"
+    },
+    {
+      "remote_branch": "production/v0.4.15",
+      "commit": "4d4b79d8dab523daf40c06889a54ec5c0c615ab6",
+      "local_archive_ref": "refs/archive/pre-main-cleanup-20261029/production/v0.4.15"
+    }
+  ],
+  "remaining": [
+    "push main",
+    "verify/build exact pushed source",
+    "isolated NAS data compatibility check",
+    "backup and update existing light-media",
+    "delete remote non-main heads and verify",
+    "publish deployment result"
+  ]
+}
